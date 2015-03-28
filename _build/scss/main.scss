@@ -1,0 +1,817 @@
+@import "bourbon/bourbon";
+@import "grid-settings";
+@import "neat/neat";
+
+@import "html5-boilerplate/main";
+
+//@import "font-awesome/font-awesome";
+
+$borderColor:rgb(160,160,160);
+$black:rgb(10,10,10);
+$white:rgb(250,250,250);
+
+body {
+    font-family: Gill Sans,Gill Sans MT,Calibri,sans-serif; 
+}
+
+%subtle-link {
+    text-decoration:none;
+    color:inherit;
+    color:currentColor;
+    &:hover {
+        
+    }
+}
+
+%monospaced {
+    font-family: monospace; /* Andale Mono,AndaleMono, */
+}
+
+%smaller {
+    font-size:0.86em;
+}
+
+%inverted {
+    background:$black;
+    color:$white;
+}
+
+%bottom-seperated {
+    padding-bottom:0.5em;
+    border-bottom:1px solid lighten($borderColor,24%);
+}
+
+%top-seperated {
+    padding-bottom:0.5em;
+    border-top:1px solid lighten($borderColor,24%);
+}
+
+pre,code {
+    @extend %monospaced;
+}
+
+.image {
+    img {
+        max-width:100%;
+    }
+}
+
+.unaligned {
+    text-align:center;
+}
+
+button {
+    border-radius:0.4em;
+    &[type="submit"] {
+        cursor:pointer;
+    }
+}
+
+button, .btn {
+    margin:0 auto;
+    border:none;
+
+    .contextual & {
+        padding:0 0.42em;
+        font-size:0.86em;
+        background:transparent;
+        color:inherit;
+    }  
+    
+    &:not(.nued) {
+        background:$black;
+        color:$white;
+        padding:0.24em 0.42em;
+        //font-size:1.4em;
+        .contextual & {
+            color:lighten($black,82%);
+            background:lighten($black,36%);
+        }   
+    }
+}
+
+button.muted {
+    background:lighten($black,50%);
+}
+
+button:disabled {
+    opacity:0.678;
+}
+
+
+
+.eureka-wrapper {
+    border:1px solid $borderColor;
+    border-radius:0.4em;
+    
+    > footer {
+       margin-top:0.5em;
+       text-align:center;
+       border-top:1px solid lighten($borderColor,24%);
+       padding:0.5em;
+       @include display(flex);
+       > * {
+           @include flex-grow(1);
+           @include flex-shrink(0);
+           margin-right:0.5em;
+           &:last-of-type {
+               margin-right:0;
+           }
+       }
+   }
+    
+}
+
+.eureka {
+    padding:0.5em 0.5em 0 0.5em;
+    
+    //min-height:42em;
+}
+
+.eureka__row-image {
+    code {
+        display:inline-block;
+    }
+}
+
+
+
+.greedy {
+    width:100%;
+}
+
+%clickable {
+    cursor:pointer;
+}
+
+.clickable {
+    @extend %clickable;
+}
+
+.eureka {
+    @include display(flex);
+    @include align-items(stretch);
+    @include justify-content(flex-start);
+    @include flex-wrap(nowrap);
+    > .pathbrowser {
+        @include flex-grow(0);
+        @include flex-shrink(0);
+        @include flex-basis(12em);
+        border-right:1px solid lighten($borderColor,24%);
+        margin-right:0.5em;
+        padding-right:0.5em;
+        @include display(flex);
+        @include flex-direction(column);
+        > .pathbrowser__topbar {
+            @extend %bottom-seperated;
+            @include flex-grow(0);
+            @include flex-basis(2rem);
+            
+            @include display(flex);
+            height:2rem;
+            padding-right:0.5em;
+            > select {
+                @include flex-grow(1);
+                @include flex-basis(100%);
+            }
+        }
+        > .tree {
+            margin-top:0.5em;
+            @include flex-grow(1);
+            @include flex-shrink(1);
+            font-size:0.86em;
+            overflow:auto;
+            a {
+                color:currentColor;
+                text-decoration:none;
+            }
+            ul {
+                padding:0;
+                margin:0;
+                list-style-type:none;
+            }
+            li {
+                ul {
+                    padding:0 0 0 1em;
+                }
+                &:focus,&.active {
+                    font-weight:bold;
+                }
+            }
+        }
+        > footer {
+            @extend %top-seperated;
+            padding-top:0.5em;
+            padding-bottom:0;
+            
+            button {
+                background:transparent;
+                color:inherit;
+                font-size:1.2em;
+            }
+            
+            @include flex-grow(0);
+            > nav {
+                @include display(flex);
+                > a,form {
+                    @include flex-grow(1);
+                    text-align:center;
+                }
+            }
+            
+        }
+    }
+    > .stage {
+        @include flex-grow(1);
+        @include flex-shrink(1);
+        @include flex-basis(100%);
+        //@include flex-direction(column);
+    }
+    
+    
+    > .stage > .eureka__topbar {
+        @include flex-grow(0);
+        @include flex-shrink(0);
+        @include flex-basis(3rem);
+        //height:2rem;
+    }
+    > .stage > .eureka-table {
+        @include flex-grow(1);
+        @include flex-shrink(0);
+        //@include flex-basis(42em);
+    }
+    input[type="radio"] {
+        margin-right:0.2em;
+    }
+}
+
+.eureka__topbar-nav {
+    > a {
+        padding:0.1em 0.2em 0 0.2em;
+        &.current {
+            background:rgb(220,220,220);
+        }
+    }
+}
+
+.eureka-table {
+    @include align-items(stretch);
+    @include display(flex);
+    @include flex-direction(column);
+    @include justify-content(flex-center);
+    
+    > footer {
+        margin-top:1em;
+    }
+    > table {
+        display:block;
+        
+        .view-a &, .view-b &, .view-d & {
+            max-height:32em;
+            overflow-y:auto;
+        }
+
+        @include flex-grow(1);
+        @include flex-shrink(0);
+        @include flex-basis(auto);
+        //max-height:38em;
+        @include align-items(stretch);
+        @include display(flex);
+        @include flex-direction(column);
+        @include justify-content(flex-center);
+        
+        .view-a & {
+            > thead > tr > th, > tbody > tr > td {
+                &:last-of-type {
+                    padding-right:1em;
+                }
+            }
+            > thead > tr > th {
+                &:last-of-type {
+                    padding-right:2em;
+                }
+            }
+        }
+        
+        > thead {
+            .view-a & {
+                display:block;
+            }
+            .view-b &, .view-c &, .view-d & {
+                display:none;
+            }
+            @include flex-grow(0);
+            @include flex-shrink(0);
+            @include flex-basis(2em);
+            
+            @include display(flex);
+            > tr {
+                @include flex-grow(1);
+                @include flex-shrink(0);
+                @include flex-basis(100%);
+                
+                @include display(flex);
+                > th {
+                    @include flex-grow(1);
+                    @include flex-shrink(0);
+                    @include flex-basis(auto);
+                    text-align:left;
+                    
+                    padding:0 0.4em;
+                    .view-a & {
+                        text-align:right;
+                        padding-right:1em;
+                        &:first-of-type {
+                            @include flex-grow(12); /* #janky #shame */
+                        }   
+                    }
+                }
+            }
+            
+            .view-a & {
+                @include justify-content(flex-end);
+            }
+            
+        }
+        > tbody {
+            @include flex-grow(1);
+            @include flex-shrink(1);
+            //max-height:36em;
+            @include flex-basis(auto);
+            text-align:center;
+            display:block;
+            @include align-items(stretch);
+            @include display(flex);
+            //@include flex-direction(column);
+            @include flex-direction(row);
+            @include justify-content(flex-center);
+            @include flex-wrap(wrap);
+            
+            .view-a & {
+                > tr {
+                    display:block;
+                    
+                    @include flex-grow(1);
+                    @include flex-shrink(0);
+                    @include flex-basis(100%);
+                    
+                    .pathname {
+                        padding-right:1em;
+                    }
+                }
+            }
+            
+            .view-b & {
+                @include align-items(flex-start);
+                //@include box-pack(center);
+                @include justify-content(flex-start);
+                @include flex-wrap(wrap);
+                
+                //overflow-y:auto;
+                //overflow-x:hidden;
+                
+                img {
+                    max-width:100%;
+                    height:auto;
+                }
+            }
+            .view-c & {
+                @include align-items(stretch);
+                @include display(flex);
+                @include flex-direction(row);
+                @include justify-content(flex-center);
+                @include flex-wrap(nowrap);
+                
+                padding-bottom:1.2em;
+                
+                overflow-y:hidden;
+                overflow-x:auto;
+            }
+            .view-d & {
+                @include justify-content(flex-center);
+                @include flex-direction(row);
+                @include align-items(center);
+            }
+            
+            > tr {
+                cursor:default;
+                display:inline-block;
+                margin:0;
+                padding:0;
+                @include flex-grow(0);
+                @include flex-shrink(0);
+                @include flex-basis(100%);
+                @include align-self(flex-start);
+                .view-d & {
+                    @include flex-basis(auto);
+                }
+                > td {
+                    display:block;
+                    @include flex-grow(0);
+                    @include flex-shrink(0);
+                    @include flex-basis(10em);
+                    overflow:hidden;
+                    text-align:center;
+
+                    .view-a & {
+                        @include display(flex);
+                        @include justify-content(flex-end);
+                    }
+
+                    .view-b & {
+                        display:none;
+                        .pathname {
+                            display:none;
+                        }
+                        &.eureka__row-image {
+                            display:inline-block;    
+                        }
+                    }
+                    
+                    .view-c &, .view-d & {
+                        @include flex-grow(1);
+                        @include flex-basis(100%);
+                        &:not(.eureka__row-image) {
+                            display:none;
+                        }
+                        /*
+                        &.eureka__row-image {
+                            .image {
+                            }
+                        }
+                        */
+                        .pathname {
+                            display:none;
+                        }
+                    }
+                    
+                    .view-d & {
+                        @include flex-basis(auto);
+                    }
+                }
+                
+                .view-a & {
+                    @include align-items(stretch);
+                    @include display(flex);
+                    > td {
+                        @include flex(1);
+                        @include display(flex);
+                        @include align-items(stretch);
+                        @include flex-wrap(nowrap);
+                        > .image {
+                            @include flex-grow(4);
+                            @include flex-shrink(0);
+                            @include flex-basis(auto);
+                            
+                            @include display(flex);
+                            @include flex-direction(row);
+                            
+                            > input[type="radio"] {
+                                @include flex-grow(0);
+                                @include flex-shrink(0);
+                                @include flex-basis(auto);
+                            }
+                            
+                            > img {
+                                @include flex-grow(0);
+                                @include flex-shrink(0);
+                                @include flex-basis(auto);
+                            }
+                        } 
+                        > .pathname {
+                            @include flex-grow(0);
+                        }
+                    }
+                    > td.eureka__row-image {
+                        @include flex-grow(4);
+                        @include flex-shrink(0);
+                        text-align:left;
+                        overflow:hidden;
+                        img {
+                            width:auto;
+                            max-height:140px;
+                        }
+                        //@include flex-basis(100%);
+                    }
+                }
+                
+                &:focus, &.focused {
+                    .view-a & {
+                        > td.eureka__row-image {
+                            img {
+                                max-height:none;
+                            }
+                        }
+                    }
+                }
+                
+                &:focus {
+                    /*
+                    ~ tr {
+                        opacity:0.5;
+                    }
+                    opacity:1;
+                    */
+                }
+                
+                .view-c & {
+                    @include flex-basis(8em);
+                    &.focused, &:focus {
+                        @include flex-basis(auto);
+                    }
+                }
+                
+                .view-b & {
+                    @include flex-basis(200px);
+                    @include flex-shrink(1);
+                    .image {
+                        max-width:200px;
+                    }
+                    &.focused, &:focus {
+                        .image {
+                            max-width:none;
+                        }
+                    }
+                }
+                
+                .view-b & {
+                    @include flex-basis(200px);
+                    margin:2px;
+                    &.focused, &:focus {
+                        //opacity:0.5;
+                        @include flex-basis(100%);
+                        td > {
+                            @include flex-basis(100%);
+                        }
+                    }
+                }
+                
+            }
+        }
+    }
+    
+    
+    .image {
+        display:inline-block;
+        position:relative;
+        .view-b &, .view-c & {
+            display:block;
+        }
+
+        height:auto;
+    }
+    a {
+        @extend %subtle-link;
+    }
+    time {
+        @extend %monospaced;
+    }
+    table {
+        padding-top:1em;
+        thead {
+            th {
+                position:relative;
+                padding:0 1em 0 0;
+                text-align:right;
+            }
+            .fa-sort {
+                position:absolute;
+                top:0.2em;
+                right:0;
+                @extend %smaller;
+                cursor:pointer;
+            }
+        }
+        tbody {
+            //max-height:38em;
+            overflow-y:auto;
+            .view-c & {
+                //overflow:auto;
+            }
+            tr {
+                td {
+                    text-align:right;
+                    &:first-of-type {
+                        text-align:left;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.eureka-table > table > tbody > tr.contextual {
+    html.js &, .view-b &, .view-c &, .view-d & {
+        display:none;
+    }
+    .view-a & {
+        //display:block;
+        //@include display(flex);    
+    }
+    text-align:left;
+    
+    @include justify-content(flex-start);
+    background:lighten($black,82%);
+    border-top:1px solid lighten($black,54%);
+    border-bottom:1px solid lighten($black,54%);
+    color:lighten($black,36%);
+    nav {
+        padding:0 0.5em;
+        @include flex(1);
+    }
+}
+
+.view-a tr.eureka__row {
+    &:focus,&.focused {
+        + tr.contextual {
+            html.js & {
+                display:table-row;
+                @include flex(1 0 100%);
+            }
+        }
+    }
+    
+}
+
+tbody.filtered {
+    > tr {
+        &:not(.visible) {
+            display:none;
+        }
+    }
+}
+
+.flexible_row {
+    @include display(flex);
+    @include justify-content(center);
+    @include align-items(center);
+    text-align:center;
+    > * {
+      @include flex(1 0 auto);
+    }
+    > form.tag {
+        text-align:left;
+        
+    }
+}
+
+footer.proceed {
+    button,.btn {
+        font-size:1.24em;
+        
+    }
+}
+
+.contextual__nav {
+    > a {
+        margin-right:0.5em;  
+        text-align:center;
+        cursor:pointer;
+    }
+    > form.tag {
+        @include display(flex);
+        @include justify-content(center);
+        @include align-items(center);
+        padding:0 1em;
+        > label {
+            @include flex(0);
+            @include flex-shrink(0);
+            @include flex-basis(auto);
+        }
+        > input[type="text"] {
+            @include flex-grow(4);
+            @include flex-shrink(1);
+            @include flex-basis(auto);
+            margin:0 0.5em;
+        }
+        > button[type="submit"] {
+            @include flex-grow(0);
+            @include flex-shrink(0);
+            @include flex-basis(4em);
+        }
+    }
+    button,.btn {
+        padding:0;
+    }
+}
+
+tr.contextual {
+    > td {
+        > form {
+            @include display(flex);
+            @include align-items(center);
+        }
+    }
+}
+
+.eureka__topbar {
+    @extend %bottom-seperated;
+    //margin-bottom:1em;
+    font-size:1.2em;
+    
+    @include align-items(stretch);
+    @include display(flex);
+    @include flex-direction(row);
+    @include justify-content(flex-start);
+    > nav {
+        @include flex-grow(1);
+        @include flex-shrink(0);
+        @include flex-basis(4em);
+        
+        @include display(flex);
+        > a, .browse-select {
+            margin-right:0.4em;
+            display:inline-block;
+        }
+        .browse-select {
+            padding-right:0.5em;
+            margin-right:0.7em;
+            border-right:1px solid $borderColor;
+            @include display(flex);
+            
+            label {
+                font-size:0.72em;
+                line-height:2em;
+            }
+            form {
+                button.nued {
+                    background:$black;
+                    color:$white;
+                    .fa-chevron-right {
+                        color:currentColor;
+                    }
+                }
+            }
+            .browsing {
+                margin-right:0.5em;
+            }
+            select {
+                margin:0;
+            }
+            .fa {
+                color:lighten($black,40%);
+            }
+        }
+        > a {
+            html.js & {
+                @extend %clickable;
+            }
+            html.no-js & {
+                color:lighten($black,40%);
+            }
+        }
+    }
+    > form {
+       @include flex-grow(1);
+       @include flex-shrink(0);
+       @include flex-basis(auto);
+       
+       @include align-items(stretch);
+       @include display(flex);
+       @include flex-direction(row);
+       @include justify-content(flex-end);
+       > input {
+           font-size:inherit;
+           padding:0.1em 0.2em;
+           @include flex-grow(1);
+           @include flex-shrink(0);
+           @include flex-basis(auto);
+           
+           max-width:32em;
+       }
+    }
+}
+
+.eureka__row-image {
+    .view-d & {
+        @include display(flex);
+        @include flex-direction(column);
+        @include flex-wrap(nowrap);
+        > .image {
+            text-align:center;
+            @include flex(1 0 auto);
+            //@include flex-basis(100%);
+            //width:100%;
+            img {
+                margin:0 auto;
+            }
+        }
+        > code {
+            //@include flex-basis(100%);
+            //width:100%;
+            @include flex(1 0 auto);
+        }
+    }
+    .pathname {
+        //display:block;
+        white-space:nowrap;
+        .view-b &, .view-c & {
+            display:block;
+            text-align:right;    
+        }
+    }
+    input[type="radio"] {
+        margin:1em 1em 0 0.5em;
+    }
+}
+

@@ -1,0 +1,61 @@
+{
+  "name": "eureka-browser",
+  "version": "0.0.0",
+  "author": {
+    "name": "JP DeVries",
+    "url": "http://devries.jp"
+  },
+  "homepage": "http://markup.tips",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jpdevries/eureka"
+  },
+  "bugs": {
+    "url": "https://github.com/jpdevries/eureka/issues"
+  },
+  "dependencies": {
+    "bourbon": "4.2.1",
+    "neat": "1.7.2",
+    "html5-boilerplate": "5.0.0",
+    "font-awesome": "4.3.0"
+  },
+  "exportsOverride": {
+    "bourbon": {
+      "": "app/assets/stylesheets/"
+    },
+    "neat": {
+      "": "app/assets/stylesheets/"
+    },
+    "html5-boilerplate": {
+      "css": [
+        "dist/css/main.css",
+        "dist/css/normalize.css"
+      ],
+      "js": [
+        "dist/js"
+      ],
+      "": [
+        "dist/.htaccess",
+        "dist/favicon.ico",
+        "dist/humans.txt",
+        "dist/index.html",
+        "dist/robots.txt",
+        "dist/apple-touch-icon-precomposed.png"
+      ]
+    },
+    "font-awesome": {
+      "scss": [
+        "scss"
+      ],
+      "fonts": [
+        "fonts"
+      ],
+      "less": [
+        "less"
+      ],
+      "css": [
+        "css"
+      ]
+    }
+  }
+}
