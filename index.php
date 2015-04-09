@@ -521,7 +521,6 @@
         }());
         </script>   
              
-        <script src="assets/js/plugins.js?nc=<?php echo time() ?>"></script>
         <script src="assets/js/eureka.js?nc=<?php echo time() ?>"></script>
         
         <script>
@@ -530,8 +529,7 @@
                     uid:'media-browser_0',
                     locale:'en-US',
                     mediaSource:0,
-                    currentDirectory:'',
-                    currentView:'view-b'
+                    currentDirectory:undefined
                 });
             }());
         </script>

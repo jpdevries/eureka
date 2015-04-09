@@ -71,12 +71,12 @@ module.exports = function(grunt) {
 			}
 			
 			,
-			h5bp: {
+			eureka: {
 				src: [
-					'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>es5/plugins.js',
-					'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>es5/eureka.js'
+					'<%= dirs.js %>plugins.js',
+					'<%= dirs.js %>eureka.js'
 				],
-				dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>es5/eureka-dev.js', 
+				dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.js', 
 			}
 			
 		},
@@ -118,8 +118,8 @@ module.exports = function(grunt) {
 			},
 			
 			js: {
-				files: ['<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>*','!<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>**/*-dev.js*','!<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>**/*-min.js*'],
-				tasks: ['concat', 'growl:concat', 'uglify', 'growl:uglify']
+				files: ['<%= dirs.js %>*','!<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>**/*-dev.js*','!<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>**/*-min.js*'],
+				tasks: ['concat','growl:concat']
 			}
 		},
 		clean: { /* take out the trash */
@@ -224,6 +224,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-6to5');
 
 	grunt.registerTask('default', ['sass:dist', 'cssmin', 'growl:sass', 'growl:watch', 'watch']);
-	grunt.registerTask('build', ['clean:prebuild', 'bower', 'copy', 'sass:dev', 'growl:sass', 'clean:postbuild']);
+	grunt.registerTask('build', ['clean:prebuild', 'bower', 'copy', 'sass:dev','concat', 'growl:sass', 'clean:postbuild']);
 	grunt.registerTask('expand', ['sass:dev', 'growl:sass', 'growl:expand']);
 };

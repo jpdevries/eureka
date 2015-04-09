@@ -154,6 +154,7 @@ switch($dir) {
 $data = array(
 	"total" => count($results),
 	"cd" => "$dir",
+    "cs" => $mediaSource,
     "results" => $results
 );
 
