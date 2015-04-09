@@ -2,6 +2,8 @@
 @import "grid-settings";
 @import "neat/neat";
 
+@import "spec/tacular";
+
 @import "html5-boilerplate/main";
 
 //@import "font-awesome/font-awesome";
@@ -126,11 +128,20 @@ button:disabled {
     padding:0.5em 0.5em 0 0.5em;
     
     //min-height:42em;
+    &.view-a {
+        @include media($gtTabletP) {
+            max-height:42em;
+        }
+    }
 }
 
 .eureka__row-image {
     code {
         display:inline-block;
+        text-align:center;
+        @include media($gtTabletP) {
+            text-align:left;
+        }
     }
 }
 
@@ -153,15 +164,34 @@ button:disabled {
     @include align-items(stretch);
     @include justify-content(flex-start);
     @include flex-wrap(nowrap);
+    @include flex-direction(column);
+    @include media($gtTabletP) {
+        @include flex-direction(row);
+    }
     > .pathbrowser {
         @include flex-grow(0);
         @include flex-shrink(0);
-        @include flex-basis(12em);
-        border-right:1px solid lighten($borderColor,24%);
+        
         margin-right:0.5em;
         padding-right:0.5em;
         @include display(flex);
         @include flex-direction(column);
+        
+        @include media($tabletP) {
+            .pathbrowser__topbar, .tree {
+                display:none !important;
+            }
+        }
+        
+        @include media($gtTabletP) {
+            @include flex-basis(12em);
+        }
+        
+        margin-bottom:0.5em;
+        @include media($gtTabletP) {
+            margin-bottom:0;
+            border-right:1px solid lighten($borderColor,24%);
+        }
         > .pathbrowser__topbar {
             @extend %bottom-seperated;
             @include flex-grow(0);
@@ -184,6 +214,7 @@ button:disabled {
             a {
                 color:currentColor;
                 text-decoration:none;
+                cursor:pointer;
             }
             ul {
                 padding:0;
@@ -191,17 +222,34 @@ button:disabled {
                 list-style-type:none;
             }
             li {
-                ul {
+                > ul {
+                    html.js & {
+                        display:none;
+                    }
                     padding:0 0 0 1em;
                 }
                 &:focus,&.active {
-                    font-weight:bold;
+                    > .path {
+                        font-weight:bold;
+                    }
+                }
+                &.open {
+                    html.js & {
+                        > ul {
+                            display:block;
+                        }    
+                    }
                 }
             }
         }
         > footer {
             @extend %top-seperated;
-            padding-top:0.5em;
+            @include media($tabletP) {
+                border-width:0;
+            }
+            @include media($gtTabletP) {
+                padding-top:0.5em;
+            }
             padding-bottom:0;
             
             button {
@@ -214,8 +262,10 @@ button:disabled {
             > nav {
                 @include display(flex);
                 > a,form {
-                    @include flex-grow(1);
+                    @include flex-grow(0);
+                    @include flex-basis(50%);
                     text-align:center;
+                    
                 }
             }
             
@@ -223,9 +273,24 @@ button:disabled {
     }
     > .stage {
         @include flex-grow(1);
-        @include flex-shrink(1);
-        @include flex-basis(100%);
+        @include media($gtTabletP) {
+            @include flex-grow(1);
+            @include flex-shrink(1);
+            @include flex-basis(100%);
+        }
         //@include flex-direction(column);
+    }
+    
+    &.view-c {
+        //@-moz-document url-prefix() { /* #janky #shame #hack */
+            //overflow-x:auto;
+        //}
+        > .stage {
+            @include flex-grow(0);
+            @include flex-shrink(1);
+            @include flex-basis(100%);
+            max-width:100%;
+        }
     }
     
     
@@ -234,6 +299,7 @@ button:disabled {
         @include flex-shrink(0);
         @include flex-basis(3rem);
         //height:2rem;
+        
     }
     > .stage > .eureka-table {
         @include flex-grow(1);
@@ -246,10 +312,16 @@ button:disabled {
 }
 
 .eureka__topbar-nav {
-    > a {
+    > a, .view-btns > a {
         padding:0.1em 0.2em 0 0.2em;
         &.current {
             background:rgb(220,220,220);
+        }
+    }
+    
+    .view-c-btn {
+        @-moz-document url-prefix() { /* #janky #shame #hack https://twitter.com/mrktps/status/581889013574868992 */
+            display:none;
         }
     }
 }
@@ -267,8 +339,10 @@ button:disabled {
         display:block;
         
         .view-a &, .view-b &, .view-d & {
-            max-height:32em;
-            overflow-y:auto;
+            @include media($gtTabletP) {
+                max-height:32em;
+                overflow-y:auto;
+            }
         }
 
         @include flex-grow(1);
@@ -281,9 +355,72 @@ button:disabled {
         @include justify-content(flex-center);
         
         .view-a & {
+            
+            
+
+            @include media($tabletP) {
+                //display: block; 
+            	/* Force table to not be like tables anymore */
+            	thead, tbody, th, td, tr { 
+            		//display: block; 
+            	}
+	
+            	/* Hide table headers (but not display: none;, for accessibility) */
+            	thead tr { 
+            		position: absolute;
+            		top: -9999px;
+            		left: -9999px;
+            	}
+	
+                tr:not(.contextual) {
+                	td { 
+                		/* Behave  like a "row" */
+                		border: none;
+                		border-bottom: 1px solid #eee; 
+                		position: relative;
+                		padding-left: 35%; 
+                	}
+                    
+                    td.eureka__row-image { 
+                        padding-left:0; 
+                    }
+	
+                	td:before { 
+                		/* Now like a table header */
+                		position: absolute;
+                		/* Top/left values mimic padding */
+                		top: 0.1em;
+                		left: 0.1em;
+                		width: 25%; 
+                        padding-left:0.5em;
+                		padding-right: 0.5em; 
+                		white-space: nowrap;
+                	}
+                }
+                
+                
+	
+            	
+	
+            	/*
+            	Label the data
+            	*/
+            	td:nth-of-type(1):before { content: "Name"; }
+            	td:nth-of-type(2):before { content: "Dimensions"; }
+            	td:nth-of-type(3):before { content: "File Size"; }
+            	td:nth-of-type(4):before { content: "Edited On"; }
+                tr.contextual td:before { display:none }
+            }
+            
+            
+            
+            
+            
             > thead > tr > th, > tbody > tr > td {
                 &:last-of-type {
-                    padding-right:1em;
+                    @include media($gtTabletP) {
+                        padding-right:1em;
+                    }
                 }
             }
             > thead > tr > th {
@@ -386,11 +523,18 @@ button:disabled {
                 
                 overflow-y:hidden;
                 overflow-x:auto;
+
+                //@-moz-document url-prefix() { /* #janky #shame #hack */
+                    //overflow-x:hidden;
+                //}
             }
             .view-d & {
                 @include justify-content(flex-center);
                 @include flex-direction(row);
                 @include align-items(center);
+                > tr {
+                    max-width:100%;
+                }
             }
             
             > tr {
@@ -416,6 +560,13 @@ button:disabled {
                     .view-a & {
                         @include display(flex);
                         @include justify-content(flex-end);
+                        
+                        &.eureka__row-image {
+                            @include flex-direction(column);
+                            @include media($gtTabletP) {
+                                @include flex-direction(row);
+                            }
+                        }
                     }
 
                     .view-b & {
@@ -453,11 +604,22 @@ button:disabled {
                 .view-a & {
                     @include align-items(stretch);
                     @include display(flex);
+                    @include flex-direction(column);
+                    @include media($gtTabletP) {
+                        @include flex-direction(row);
+                    }
                     > td {
                         @include flex(1);
                         @include display(flex);
                         @include align-items(stretch);
                         @include flex-wrap(nowrap);
+                        min-height:1.6em;
+                        padding-top:0.3em;
+                        padding-right:0.5em;
+                        text-align:left;
+                        @include media($gtTabletP) {
+                            min-height:none;
+                        }
                         > .image {
                             @include flex-grow(4);
                             @include flex-shrink(0);
@@ -584,7 +746,9 @@ button:disabled {
         }
         tbody {
             //max-height:38em;
-            overflow-y:auto;
+            @include media($gtTabletP) {
+                overflow-y:auto;
+            }
             .view-c & {
                 //overflow:auto;
             }
@@ -626,7 +790,12 @@ button:disabled {
         + tr.contextual {
             html.js & {
                 display:table-row;
-                @include flex(1 0 100%);
+                @include flex-grow(1);
+                @include flex-shrink(0);
+                @include flex-basis(100%);
+                > td > nav {
+
+                }
             }
         }
     }
@@ -643,11 +812,25 @@ tbody.filtered {
 
 .flexible_row {
     @include display(flex);
-    @include justify-content(center);
-    @include align-items(center);
+    //@include flex-direction(column);
+    @include flex-wrap(wrap);
+    @include justify-content(start);
+    @include justify-content(flex-start);
+    @include align-items(flex-start);
+    @include media($gtTabletP) {
+        //@include flex-direction(row);
+        @include flex-wrap(no-wrap);
+        @include justify-content(center);
+        @include align-items(center);
+    }
+    
     text-align:center;
     > * {
       @include flex(1 0 auto);
+      margin:0.2em 0;
+      @include media($gtTabletP) {
+          margin:0;
+      }
     }
     > form.tag {
         text-align:left;
@@ -711,29 +894,91 @@ tr.contextual {
     
     @include align-items(stretch);
     @include display(flex);
-    @include flex-direction(row);
+    @include flex-direction(column);
     @include justify-content(flex-start);
+    @include media($gtTabletP) { 
+        @include flex-direction(row);
+    }
     > nav {
         @include flex-grow(1);
         @include flex-shrink(0);
-        @include flex-basis(4em);
+        @include flex-wrap(wrap);
+        
+        @include media($gtTabletP) {
+            @include flex-basis(4em);
+            @include flex-wrap(nowrap);
+        }
         
         @include display(flex);
-        > a, .browse-select {
-            margin-right:0.4em;
+        > a, .view-btns > a, .browse-select {
+            @include media($gtTabletP) {
+                margin-right:0.4em;
+            }
             display:inline-block;
         }
-        .browse-select {
-            padding-right:0.5em;
-            margin-right:0.7em;
-            border-right:1px solid $borderColor;
+        .pathbrowser_toggle {
+            width:12%;
+            min-width:1.2em;
+            @include media($tabletP) {
+                display:none;
+            }
+            @include media($gtTabletP) {
+                width:auto;
+            }
+        }
+        .view-btns {
             @include display(flex);
+            //@include align-items(center);
+            @include justify-content(center);
+            @include flex-grow(1);
+            width:100%;
+            text-align:center;
+            @include media($gtTabletP) {
+                width:auto;
+                @include flex-grow(0);
+            }
+            > a {
+                margin-right:0;
+                @include flex-grow(1);
+                cursor:pointer;
+                &.view-c-btn {
+                    @include media($tabletP) {
+                        display:none;
+                    }
+                }
+            }
+        }
+        .browse-select {
+            width:88%;
+            @include display(flex);
+            @include align-items(flex-end);
+            @include justify-content(flex-end);
+            margin-bottom:0.5em;
+            @include media($gtTabletP) {
+                width:auto;
+                margin-bottom:0;
+                @include justify-content(flex-start);
+                
+                &.tablet-p-hidden {
+                    display:none;
+                }
+                
+            }
             
+            //@include flex-grow(4);
+            
+            @include media($gtTabletP) {
+                padding-right:0.5em;
+                margin-right:0.7em;
+                border-right:1px solid $borderColor;
+            }
             label {
                 font-size:0.72em;
                 line-height:2em;
+                //@include flex(1);
             }
             form {
+                //@include flex(4);
                 button.nued {
                     background:$black;
                     color:$white;
@@ -770,6 +1015,10 @@ tr.contextual {
        @include display(flex);
        @include flex-direction(row);
        @include justify-content(flex-end);
+       margin-top:0.5em;
+       @include media($gtTabletP) {
+           margin-top:0;
+       }
        > input {
            font-size:inherit;
            padding:0.1em 0.2em;

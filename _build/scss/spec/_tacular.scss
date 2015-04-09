@@ -1,0 +1,244 @@
+$desktop: max-width 990px 12 !default;
+$cinema: max-width 1400px 12 !default;
+$iphoneP: max-width 480px 4 !default;
+$mobile: max-width 640px 4 !default;
+$tabletP: max-width 768px 12 !default;
+$tabletL: max-width 1024px 12 !default; 
+
+$gtDesktop: min-width 991px 12 !default;
+$gtCinema: min-width 1401px 12 !default;
+$gtiphoneP: min-width 481px 4 !default;
+$gtMobile: min-width 641px 12 !default;
+$gtTabletP: min-width 769px 12 !default;
+$gtTabletL: min-width 1025px 12 !default;
+
+@mixin luminosity($brightness:normal) {
+    @media screen and (luminosity:$brightness) {
+        @content;
+    }
+}
+
+@mixin luminosity-js($brightness:"normal") {
+
+    @if $brightness == "dim" {
+        body[data-luminosity="dim"] { /* luminosity-js */
+            @content;
+        }
+    }
+}
+
+$topMost:99999 !default;
+$too-wide:em(1200) !default;
+
+%greedy {
+    width:100%;
+    @include media($too-wide) {
+        width:auto;
+    }
+}
+
+%very-greedy {
+    width:100%;
+}
+
+%code {
+    font-family: monospace, serif;
+}
+
+%clickable {
+    cursor:pointer;
+}
+
+%lightcaps {
+    text-transform:uppercase;
+    font-size:0.86em;
+    font-weight:inherit;
+}
+
+%smallcaps {
+    @extend %lightcaps;
+    font-weight:bold;
+}
+
+%unaligned {
+    text-align:center;
+}
+
+%shrinkable {
+    max-width:100%;
+}
+
+%contained {
+    max-width:100%;
+}
+
+%vulnerable {
+    margin:0;
+}
+
+@mixin dropzone($bg:rgb(230,230,230), $minHeight:6em, $borderRadius:1.4em, $border:0.2em dashed darken(rgb(230,230,230),12%)) {
+    background:$bg;
+    min-height:$minHeight;
+    border-radius:$borderRadius;
+    border:$border;    
+}
+
+@mixin emphatic-link($fontSize:0.82em) {
+    @extend %smallcaps;
+    font-size:$fontSize;  
+}
+
+@mixin tip($fontSize:0.678em) {
+    @extend %clickable;
+    @extend %smallcaps;
+    font-size:$fontSize;
+}
+
+@mixin optional-at-root($sel) {
+  @at-root #{if(not &, $sel, selector-append(&, $sel))} {
+    @content;
+  }
+}
+
+/*
+http://stackoverflow.com/a/17181946
+*/
+@mixin placeholder {
+  @include optional-at-root('::-webkit-input-placeholder') {
+    @content;
+  }
+
+  @include optional-at-root(':-moz-placeholder') {
+    @content;
+  }
+
+  @include optional-at-root('::-moz-placeholder') {
+    @content;
+  }
+
+  @include optional-at-root(':-ms-input-placeholder') {
+    @content;
+  }
+}
+
+/*
+http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
+*/
+@mixin print-styles($map, $keys...){
+ $i: 1;
+ $length: length($keys);
+ @while $length >= $i  {
+   $map: map-get($map, nth($keys, $i));
+   $i: $i + 1;
+ }
+ 
+ @each $property, $value in $map {
+   @if type-of($value) != map {
+     #{$property}: $value;
+   }
+ }
+}
+
+@mixin scrollable($props:(
+  maxHeight:8em,
+  overflowY:auto,
+  maxWidth:100%,
+  overflowX:auto
+)) {
+    $maxHeight:map-get($props,maxHeight);
+    $overflowY:map-get($props,overflowY);
+    $maxWidth:map-get($props,maxWidth);
+    $overflowX:map-get($props,overflowX);
+    
+    @include media($gtMobile) {
+        @if $maxHeight != null { max-height:$maxHeight; }
+        @if $overflowY != null { overflow-y:$overflowY; }
+        
+        @if $maxWidth != null { max-width:maxWidth; }
+        @if $overflowX != null { overflow-x:overflowX; }
+    }
+}
+
+@mixin table-border-radius-fallback($borderRadius:0.5em) {
+    @if $borderRadius != null {
+        *border-collapse: collapse; /* IE7 and lower */
+        border-collapse: separate !important;
+        border-spacing: 0;
+        border-radius:$borderRadius;
+    }
+}
+
+@mixin pretty-table($props:(
+      tablePadding:0 0.2em 0.2em 0.2em,
+      gutter:1em,
+      paddingTop:1em,
+      paddingBottom:0.6em,
+      border:1px solid darken(rgb(240,240,240),12%),
+      borderRadius:0.5em,
+      trOdd:null,
+      trEven:(
+        background:rgb(240,240,240),
+        border-top:1px solid darken(rgb(240,240,240),12%),
+        border-bottom:1px solid darken(rgb(240,240,240),12%)
+      )
+    )) {        
+        
+    $tablePadding:map-get($props,tablePadding);
+    $gutter:map-get($props,gutter);
+    $paddingTop:map-get($props,paddingTop);
+    $paddingBottom:map-get($props,paddingBottom);
+    $border:map-get($props,border);
+    $borderRadius:map-get($props,borderRadius);
+    $trEven:map-get($props,trEven);
+    $trOdd:map-get($props,trOdd);
+
+    @if $tablePadding != null { padding:$tablePadding; }
+    @if $border != null { border:$border; }
+    @if $borderRadius != null { @include table-border-radius-fallback($borderRadius); }
+    @if $paddingTop != null {
+        thead > tr:first-of-type {
+            th {
+                padding-top:$paddingTop;
+            }
+        }
+    }
+    @if $paddingBottom != null {
+        tbody > tr:last-of-type {
+            td {
+                padding-bottom:$paddingBottom;
+            }
+        }     
+    }
+    @if $gutter != null {
+        > thead tr, > tbody tr {
+            > td, > th {
+                &:first-of-type {
+                    padding-left:$gutter;
+                    padding-right:$gutter;
+                }
+            }
+        }   
+    }
+    @if type-of($trEven) == map {
+        > tbody > tr:nth-child(even) {
+            @include print-styles($trEven);
+        }   
+    }
+    @if type-of($trOdd) == map {
+        > tbody > tr:nth-child(odd) {
+            @include print-styles($trOdd);
+        }   
+    }
+}
+
+%dropzone {
+    @include dropzone();
+}
+
+%emphatic-link {
+    @include emphatic-link();
+}
+
+%tip {
+    @include tip();
+}

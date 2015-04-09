@@ -73,20 +73,35 @@ module.exports = function(grunt) {
 			,
 			h5bp: {
 				src: [
-					'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>plugins.js',
-					'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>main.js'
+					'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>es5/plugins.js',
+					'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>es5/eureka.js'
 				],
-				dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>main-dev.js', 
+				dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>es5/eureka-dev.js', 
 			}
 			
 		},
+        '6to5': {
+            options: {
+                modules: 'common'
+            },
+
+            build: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>',
+                    src: ['./plugins.js','./eureka.js'],
+                    dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>/es5/',
+                }],
+            }
+        },
 		uglify: {
 			main: {
 				options: {
-					report: 'min'
+					report: 'min',
+                    screwIE8:true
 				},
 				files: {
-					'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>main-min.js': ['<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>main-dev.js']
+					'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>es5/eureka-min.js': ['<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>es5/eureka-dev.js']
 				}
 				
 			}
@@ -206,6 +221,7 @@ module.exports = function(grunt) {
 	
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-6to5');
 
 	grunt.registerTask('default', ['sass:dist', 'cssmin', 'growl:sass', 'growl:watch', 'watch']);
 	grunt.registerTask('build', ['clean:prebuild', 'bower', 'copy', 'sass:dev', 'growl:sass', 'clean:postbuild']);
