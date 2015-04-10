@@ -68,6 +68,7 @@ module.exports = function(grunt) {
 		concat: {
 			options: {
 				separator: '',
+                banner:'/* do not touch this file. see _build/*.js */\n'
 			}
 			
 			,
@@ -76,7 +77,7 @@ module.exports = function(grunt) {
 					'<%= dirs.js %>plugins.js',
 					'<%= dirs.js %>eureka.js'
 				],
-				dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.js', 
+				dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.min.js', 
 			}
 			
 		},

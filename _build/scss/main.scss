@@ -6,11 +6,11 @@
 
 @import "html5-boilerplate/main";
 
-//@import "font-awesome/font-awesome";
-
 $borderColor:rgb(160,160,160);
 $black:rgb(10,10,10);
 $white:rgb(250,250,250);
+
+$topBarH:4.2rem;
 
 body {
     font-family: Gill Sans,Gill Sans MT,Calibri,sans-serif; 
@@ -100,11 +100,61 @@ button:disabled {
     opacity:0.678;
 }
 
+html.no-touch, html.no-touch body, html.no-touch body > form {
+    @include media($gtMobile) {
+        height:100%;
+        margin:0;
+    }
+}
 
+.eureka__topbar-nav,.pathbrowser__topbar {
+    h4 {
+        font-size:1rem;
+    }
+}
 
 .eureka-wrapper {
     border:1px solid $borderColor;
     border-radius:0.4em;
+    
+    html.no-touch & {
+        @include media($gtMobile) {
+            height:100%;
+            
+            @include display(flex);
+            @include flex-direction(column);
+            
+            > .eureka {
+                @include flex-grow(1);
+                .stage {
+                    @include display(flex);
+                    width:100%;
+                    @include flex-direction(column);
+                    @include flex-wrap(nowrap);
+                    > .eureka-table {
+                        @include flex-grow(8);
+                        @include flex-basis(100%);
+                        > table {
+                            > thead {
+                                @include flex-basis(2em);
+                            }
+                            > tbody {
+                                @include flex-basis(100%);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            > .proceed {
+                @include flex-grow(0);
+                @include flex-basis(4em);
+                min-height:4em;
+                width:100%;
+                //@include align-self(flex-end);
+            }
+        }
+    }
     
     > footer {
        margin-top:0.5em;
@@ -130,7 +180,7 @@ button:disabled {
     //min-height:42em;
     &.view-a {
         @include media($gtTabletP) {
-            max-height:42em;
+            //max-height:42em;
         }
     }
 }
@@ -144,8 +194,6 @@ button:disabled {
         }
     }
 }
-
-
 
 .greedy {
     width:100%;
@@ -195,14 +243,22 @@ button:disabled {
         > .pathbrowser__topbar {
             @extend %bottom-seperated;
             @include flex-grow(0);
-            @include flex-basis(2rem);
+            h3,h4,h5,h6 {
+                margin:0;
+            }
+            //@include flex-basis(2rem);
+            @include flex-direction(column);
             
             @include display(flex);
-            height:2rem;
+            //height:2rem;
             padding-right:0.5em;
+            @include media($gtTabletP) {
+                @include flex-basis($topBarH);
+            }
+            
             > select {
-                @include flex-grow(1);
-                @include flex-basis(100%);
+                //@include flex-grow(1);
+                //@include flex-basis(100%);
             }
         }
         > .tree {
@@ -261,7 +317,7 @@ button:disabled {
             @include flex-grow(0);
             > nav {
                 @include display(flex);
-                > a,form {
+                > a,>form, >.form {
                     @include flex-grow(0);
                     @include flex-basis(50%);
                     text-align:center;
@@ -288,16 +344,18 @@ button:disabled {
         > .stage {
             @include flex-grow(0);
             @include flex-shrink(1);
-            @include flex-basis(100%);
+            //@include flex-basis(auto);
             max-width:100%;
+            @include media($gtMobile) {
+                @include flex-basis(100%);
+            }
         }
     }
-    
     
     > .stage > .eureka__topbar {
         @include flex-grow(0);
         @include flex-shrink(0);
-        @include flex-basis(3rem);
+        @include flex-basis($topBarH);
         //height:2rem;
         
     }
@@ -311,8 +369,10 @@ button:disabled {
     }
 }
 
+
+
 .eureka__topbar-nav {
-    > a, .view-btns > a {
+    > a, .view-btns a {
         padding:0.1em 0.2em 0 0.2em;
         &.current {
             background:rgb(220,220,220);
@@ -340,7 +400,7 @@ button:disabled {
         
         .view-a &, .view-b &, .view-d & {
             @include media($gtTabletP) {
-                max-height:32em;
+                //max-height:32em;
                 overflow-y:auto;
             }
         }
@@ -355,9 +415,6 @@ button:disabled {
         @include justify-content(flex-center);
         
         .view-a & {
-            
-            
-
             @include media($tabletP) {
                 //display: block; 
             	/* Force table to not be like tables anymore */
@@ -397,11 +454,7 @@ button:disabled {
                 		white-space: nowrap;
                 	}
                 }
-                
-                
-	
-            	
-	
+
             	/*
             	Label the data
             	*/
@@ -411,11 +464,7 @@ button:disabled {
             	td:nth-of-type(4):before { content: "Edited On"; }
                 tr.contextual td:before { display:none }
             }
-            
-            
-            
-            
-            
+
             > thead > tr > th, > tbody > tr > td {
                 &:last-of-type {
                     @include media($gtTabletP) {
@@ -903,14 +952,63 @@ tr.contextual {
         @include flex-grow(1);
         @include flex-shrink(0);
         @include flex-wrap(wrap);
+        @include flex-direction(column);
+        
+        a {
+            cursor:pointer;
+        }
+        
+        > header {
+            @include display(flex);
+            @include flex-wrap(nowrap);
+            @include flex-direction(column);
+            @include media($gtMobile) {
+                @include flex-direction(row);
+            }
+            > h4 {
+                @include flex-grow(1);
+                width:100%;
+                text-align:center;
+                margin:0.5em 0;
+                @include media($gtMobile) {
+                    width:auto;
+                    text-align:left;
+                    @include flex-grow(4);
+                    margin:0;
+                }
+            }
+            > form {
+                @include flex-grow(1);
+                @include display(flex);
+                @include align-self(flex-end);
+                width:100%;
+                @include media($gtMobile) {
+                    width:auto;
+                }
+                > input[type="search"] {
+                    @include flex-grow(1);
+                }
+            }
+        }
+        
+        > .eureka__topbar-nav__select {
+            @include display(flex);
+            @include align-items(center);
+            @include justify-content(flex-start);
+            @include flex-direction(column);
+            @include media($gtMobile) {
+                @include flex-direction(row);
+            }
+            padding-top:0.5em;
+        }
         
         @include media($gtTabletP) {
-            @include flex-basis(4em);
+            @include flex-basis(14em);
             @include flex-wrap(nowrap);
         }
         
         @include display(flex);
-        > a, .view-btns > a, .browse-select {
+        > a, .view-btns a, .browse-select {
             @include media($gtTabletP) {
                 margin-right:0.4em;
             }
@@ -919,6 +1017,7 @@ tr.contextual {
         .pathbrowser_toggle {
             width:12%;
             min-width:1.2em;
+            @include align-self(flex-start);
             @include media($tabletP) {
                 display:none;
             }
@@ -931,13 +1030,25 @@ tr.contextual {
             //@include align-items(center);
             @include justify-content(center);
             @include flex-grow(1);
+            
+            @include align-self(flex-end);
             width:100%;
             text-align:center;
+            > nav {
+                @include media($mobile) {
+                    @include display(flex);
+                    @include flex-basis(100%);
+                    > a {
+                        @include flex-grow(1);
+                    }
+                }
+            }
             @include media($gtTabletP) {
                 width:auto;
-                @include flex-grow(0);
+                @include flex-grow(12);
+                @include justify-content(flex-end);
             }
-            > a {
+            a {
                 margin-right:0;
                 @include flex-grow(1);
                 cursor:pointer;
@@ -951,13 +1062,21 @@ tr.contextual {
         .browse-select {
             width:88%;
             @include display(flex);
-            @include align-items(flex-end);
-            @include justify-content(flex-end);
-            margin-bottom:0.5em;
+            @include align-items(center);
+            @include justify-content(center);
+            @include flex-direction(column);
+            margin-bottom:1em;
+            @include media($gtMobile) {
+                margin-bottom:0;
+            }
             @include media($gtTabletP) {
                 width:auto;
                 margin-bottom:0;
+                @include flex-basis(14em);
+                @include align-items(flex-start);
                 @include justify-content(flex-start);
+                @include flex-direction(row);
+                padding-left:1em;
                 
                 &.tablet-p-hidden {
                     display:none;
@@ -970,7 +1089,7 @@ tr.contextual {
             @include media($gtTabletP) {
                 padding-right:0.5em;
                 margin-right:0.7em;
-                border-right:1px solid $borderColor;
+                //border-right:1px solid $borderColor;
             }
             label {
                 font-size:0.72em;
@@ -1063,4 +1182,3 @@ tr.contextual {
         margin:1em 1em 0 0.5em;
     }
 }
-
