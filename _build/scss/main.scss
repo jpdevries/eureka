@@ -220,6 +220,9 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
                 width:100%;
             }
         }
+        @include media($gtTabletP) {
+            max-height:100%;
+        }
     }
     
     > footer {
@@ -441,7 +444,9 @@ html.no-touch {
     > .stage > .eureka__topbar {
         @extend %ungrowable; //@include flex-grow(0);
         @extend %flex-shrink-1; //@include flex-shrink(1);
-        @include flex-basis($topBarH * 1.4);
+        @include media($gtTabletP) {
+            @include flex-basis($topBarH * 1.4);
+        }
         .hack-firefox & {
             @include firefox-hack() {
                 @include flex-basis(14%);
@@ -563,13 +568,6 @@ html.no-touch {
                 tr.contextual td:before { display:none }
             }
 
-            > thead > tr > th, > tbody > tr > td {
-                &:last-of-type {
-                    @include media($gtTabletP) {
-                        padding-right:1em;
-                    }
-                }
-            }
             > thead > tr > th {
                 &:last-of-type {
                     padding-right:2em;
@@ -592,21 +590,26 @@ html.no-touch {
             > tr {
                 @extend %growable; //@include flex-grow(1);
                 @extend %unshrinkable; //@include flex-shrink(0);
+                @extend %justify-content-flex-end; //@include justify-content(flex-end);
                 @include flex-basis(100%);
                 
                 @extend %flexible-parent; //@include display(flex); 
                 > th {
-                    @extend %growable; //@include flex-grow(1);
+                    //@extend %growable; //@include flex-grow(1);
+                    @include flex-grow(0);
                     @extend %unshrinkable; //@include flex-shrink(0);
                     @extend %flex-basis-auto; //@include flex-basis(auto);
                     text-align:left;
-                    
+                    margin:0 1em;
                     padding:0 0.4em;
+                    &:last-of-type {
+                        margin-right:0;
+                    }
                     .view-a & {
                         text-align:right;
                         padding-right:1em;
                         &:first-of-type {
-                            @include flex-grow(12); /* #janky #shame */
+                            //@include flex-grow(12); /* #janky #shame */
                         }   
                     }
                 }

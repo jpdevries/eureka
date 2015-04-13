@@ -495,13 +495,14 @@ EurekaView.prototype.assignFilterListeners = function () {
         document.getElementById(that.getController().getModel().getUID()).querySelector('.eureka-table > table > tbody').classList.remove('filtered');
     }
     function filterView(value) {
-        var rows = document.querySelectorAll(".eureka-table tbody > tr:not(.contextual)");
+        var rows = that.getElement().querySelectorAll(".eureka-table tbody > tr:not(.contextual)");
         for (var i = 0; i < rows.length; i++) {
             var row = rows[i];
             var show = false;
-            if (row.getAttribute('data-tokens')) {
-                var tokens = row.getAttribute('data-tokens').split('||');
-                tokens.push(row.getAttribute('data-filename'));
+            var tokens = [row.getAttribute('data-filename')];
+            if (row.getAttribute('data-tokens')) tokens = tokens.concat(row.getAttribute('data-tokens').split('||'));
+
+            (function(){
                 for (var _i = 0; _i < tokens.length; _i++) {
                     var token = tokens[_i];
                     if (value.length && (token == value || token.indexOf(value) > -1)) {
@@ -509,7 +510,8 @@ EurekaView.prototype.assignFilterListeners = function () {
                         break;
                     }
                 }
-            }
+            })();
+
             if (!show) {
                 row.classList.add('hidden');
                 row.classList.remove('visible');
@@ -794,7 +796,7 @@ EurekaView.prototype.paintJSON = function (data) {
         tr.appendChild(tdFilesizeCell);
         tr.appendChild(tdEditedOnCell);
         tbodyHTML += tr.outerHTML;
-        tbodyHTML += createContextualRow().outerHTML;
+        
         function createContextualRow() {
             var tr = document.createElement('tr');
             tr.classList.add('contextual');
@@ -937,6 +939,8 @@ EurekaView.prototype.paintJSON = function (data) {
             tr.appendChild(td);
             return tr;
         }
+        
+        tbodyHTML += createContextualRow().outerHTML;
     }
     document.querySelector('#media-browser_0 .eureka-table > table > tbody').innerHTML = tbodyHTML;
     // bolden the correct tree item
@@ -1218,13 +1222,14 @@ EurekaController.prototype.init = function () {
             var source = new EurekaMediaSourceDTO(sources[i].opts);
             var id = source.getID();
             //var title = source.getTitle();
-            requestMediaListings(source);
+            
             function requestMediaListings(source) {
                 var id = source.getID();
                 ajax.get(that.getModel().getListSourceRequestURL(), { s: id, headers:that.getModel().getXHRHeaders() }, function (data) {
                     that.getView().updateMediaSourceListings(data);
                 });
             }
+            requestMediaListings(source);
         }
     });
     ajax.get(that.getModel().getListSourcesRequestURL(), {headers:that.getModel().getXHRHeaders()}, function (data) {

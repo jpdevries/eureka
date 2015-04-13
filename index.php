@@ -14,7 +14,7 @@
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" async>
         
         <style>
-            @media screen and (min-width: 641px) {
+            @media screen and (min-width: 769px) { /* holy grail layout */
               html.no-touch #page-wrapper {
                 height: 100%;
                 max-height:100vh;
@@ -106,7 +106,7 @@
                                                             <option>assets/images</option>
                                                         </optgroup>
                                                         <optgroup label="Assets" data-source="1">
-                                                            <option>assets</option>
+                                                            <option selected>assets</option>
                                                             <option value="">assets/images</option>
                                                         </optgroup>
                                                         <optgroup label="Amazon S3" data-source="2">
@@ -595,32 +595,34 @@
                 /*
                   this is probably a more reliable way than checking the userAgent...
                 */
-                document.addEventListener('DOMContentLoaded',function(){
-                    var mediaBrowser = document.getElementById('media-browser_0'); // dangerous but more optimal to not looks these up each resize
-                    var eurekaWrapper = mediaBrowser.parentNode;
-                    var eurekaTable = mediaBrowser.querySelector('.eureka-table');
+                if(!Modernizr.touch) {
+                    document.addEventListener('DOMContentLoaded',function(){
+                        var mediaBrowser = document.getElementById('media-browser_0'); // dangerous but more optimal to not looks these up each resize
+                        var eurekaWrapper = mediaBrowser.parentNode;
+                        var eurekaTable = mediaBrowser.querySelector('.eureka-table');
                     
-                    document.querySelector('.hack-firefox.eureka-wrapper').classList.remove('hack-firefox'); // remove the CSS patch :/
+                        document.querySelector('.hack-firefox.eureka-wrapper').classList.remove('hack-firefox'); // remove the CSS patch :/
                     
-                    if(eurekaTable.offsetHeight > eurekaWrapper.offsetHeight) { // eurekaTable might be too tall now
-                        try {
-                            console.log('uh oh, we detect a flexbox bug');
-                        } catch(e) {}
+                        if(eurekaTable.offsetHeight > eurekaWrapper.offsetHeight) { // eurekaTable might be too tall now
+                            try {
+                                console.log('uh oh, we detect a flexbox bug');
+                            } catch(e) {}
                         
-                        function handleResize() {       
-                            // i hope i don't get in trouble for doing other browsers homework...
-                            var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-                            var dh = (eurekaWrapper.offsetHeight - eurekaWrapper.querySelector('.eureka__topbar').offsetHeight - eurekaWrapper.querySelector('footer.proceed').offsetHeight);
-                            dh -= (16*1.5); //1.5ems of margin
+                            function handleResize() {       
+                                // i hope i don't get in trouble for doing other browsers homework...
+                                var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+                                var dh = (eurekaWrapper.offsetHeight - eurekaWrapper.querySelector('.eureka__topbar').offsetHeight - eurekaWrapper.querySelector('footer.proceed').offsetHeight);
+                                dh -= (16*1.5); //1.5ems of margin
                             
-                            eurekaTable.style.height = eurekaTable.style.maxHeight = eurekaTable.style.flexBasis = dh + 'px'; 
-                        }
+                                eurekaTable.style.height = eurekaTable.style.maxHeight = eurekaTable.style.flexBasis  = (w <= 768) ? null : dh + 'px'; 
+                            }
                         
-                        window.addEventListener('resize',handleResize, false); // we'll be here all night folks...
-                        handleResize();
-                    }
+                            window.addEventListener('resize',handleResize, false); // we'll be here all night folks...
+                            handleResize();
+                        }
 
-                });
+                    });
+                }
             })();
             </script>
     </body>
