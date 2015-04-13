@@ -1,0 +1,107 @@
+%flexible-parent {
+    @include display(flex); /* flexible parent */
+}
+
+%flex-direction-column {
+    @extend %flex-direction-column; //@include flex-direction(column);
+}
+
+%ungrowable {
+    @include flex-grow(0);
+}
+
+%flex-grow-1 {
+    @include flex-grow(1);
+}
+
+%growable {
+    @extend %flex-grow-1;
+}
+
+%flex-shrink-0 {
+    @include flex-shrink(0);
+}
+
+%unshrinkable {
+    @extend %flex-shrink-0;
+}
+
+%flex-shrink-1 {
+    @include flex-shrink(1);
+}
+
+%shrinkable { // alias for %flex-shrink-1
+    @include flex-shrink(1);
+}
+
+%flex-direction-column {
+    @include flex-direction(column);
+}
+
+%align-items-stretch {
+    @include align-items(stretch);
+}
+
+%justify-content-flex-start {
+    @include justify-content(flex-start);
+}
+
+%justify-content-center {
+    @include justify-content(center);
+}
+
+%flex-direction-row {
+    @include flex-direction(row);
+}
+
+%justify-content-flex-end {
+    @include justify-content(flex-end);
+}
+
+%align-items-flex-start {
+    @include align-items(flex-start);
+}
+
+%align-items-stretch {
+    @include align-items(stretch);
+}
+
+%flex-wrap-nowrap {
+    @include flex-wrap(nowrap);
+}
+
+%flex-unwrappable {
+    @extend %flex-wrap-nowrap;
+}
+
+%flex-wrap-wrap {
+    @include flex-wrap(wrap);
+}
+
+%flex-wrappable {
+    @extend %flex-wrap-wrap;
+}
+
+%align-self-flex-end {
+    @include align-self(flex-end);
+}
+
+%align-items-center {
+    @include align-items(center);
+}
+
+%align-self-flex-start {
+    @include align-self(flex-start);
+}
+
+%flex-basis-auto {
+    @include flex-basis(auto);
+}
+
+%flex-basis-all {
+    @include flex-basis(100%);
+}
+
+%flex-basis-none {
+    @include flex-basis(0%); // http://philipwalton.com/articles/normalizing-cross-browser-flexbox-bugs/#avoiding-unitless-flex-basis
+}

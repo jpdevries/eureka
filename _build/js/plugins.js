@@ -68,7 +68,7 @@ ajax.x = function() {
     return xhr;
 };
 
-ajax.send = function(url, callback, method, data, sync) {
+ajax.send = function(url, callback, method, data, sync, headers) {
     var x = ajax.x();
     x.open(method, url, sync);
     x.onreadystatechange = function() {
@@ -79,6 +79,16 @@ ajax.send = function(url, callback, method, data, sync) {
     if (method == 'POST') {
         x.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     }
+    if(headers !== undefined) {
+        for(var i = 0; i < headers.length; i++) {
+            var obj = headers[i];
+            for (var key in obj) {
+              if (obj.hasOwnProperty(key)) {
+                  x.setRequestHeader(key,obj[key]);
+              }
+            }
+        }
+    }
     x.send(data)
 };
 
@@ -87,7 +97,7 @@ ajax.get = function(url, data, callback, sync) {
     for (var key in data) {
         query.push(encodeURIComponent(key) + '=' + encodeURIComponent(data[key]));
     }
-    ajax.send(url + '?' + query.join('&'), callback, 'GET', null, sync)
+    ajax.send(url + '?' + query.join('&'), callback, 'GET', null, sync, data.headers !== undefined ? data.headers : null)
 };
 
 ajax.post = function(url, data, callback, sync) {

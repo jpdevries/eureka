@@ -10,3 +10,7 @@ _build/scss/html5-boilerplate
 
 assets/css/font-awesome*.css
 assets/fonts/
+
+.baseDir.ts
+.baseDir.js
+.baseDir.js.map

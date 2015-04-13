@@ -21,26 +21,61 @@
                 padding:0.5em;
               }
             }
+            @-moz-document url-prefix() { /* disable "holy-grail" layout for firefox because it still doesn't understand flexbox  #janky #shame #hack */
+                html.no-touch #page-wrapper {
+                    height:auto;
+                    max-height:none;
+                }
+            }
         </style>
+        <script>var MODx = {siteId:'foo'};</script>
     </head>
     <body>
-        <div id="page-wrapper">            
+        <div id="page-wrapper" class="hack-firefox">            
             <div class="view-a eureka" id="media-browser_0"></div><!-- max-height may be used in CSS just to show how it can be condensed when needed (think modal) -->
         </div>
         
-        <script src="assets/js/muckboot.eureka.js?nc=<?php echo time() ?>"></script>
+        <script src="assets/js/muckboot.eureka.min.js?nc=<?php echo time() ?>"></script>
         <script src="assets/js/eureka.min.js?nc=<?php echo time() ?>"></script>
         
         <script>
             (function(){
-                var $muckboot = new MuckBoot({
+                var $muckboot = new MuckBoot({ // paint the DOM
                     id:'media-browser_0'
                 });
-                var $eureka = new Eureka({
+                var $eureka = new Eureka({ // init the Eureka component
                     uid:'media-browser_0',
                     locale:'en-US',
                     mediaSource:0,
-                    currentDirectory:undefined
+                    currentDirectory:undefined,
+                    directoryRequestURL:'fakepi/listdirectory.php',
+                    listSourceRequestURL:'fakepi/listsource.php',
+                    listSourcesRequestURL:'fakepi/listsources.php',
+                    headers: [{
+                        'modAuth': MODx.siteId,
+                        'Powered-By': 'Eureka in MODX Revolution'
+                    }]
+                });
+                
+                // NOTE: "event" system is kinda experimental and may change
+                // currently the Eureka class (MVC) dispatches events from the eureka component itself (div.eureka)
+                // listen for when a file is renamed
+                document.getElementById('media-browser_0').addEventListener('EurekaFileRename',function(e){
+                    console.log('EurekaFileRename');
+                    console.log(e.data);
+                    // make XHR 
+                });
+                
+                // listen for when a media item has been chosen
+                document.getElementById('media-browser_0').addEventListener('EurekaFoundIt',function(e){
+                    console.log('EurekaFoundIt');
+                    console.log(e.data);
+                });
+                
+                // listen for when a media item has been deleted
+                document.getElementById('media-browser_0').addEventListener('EurekaUnlink',function(e){
+                    console.log('EurekaUnlink');
+                    console.log(e.data);
                 });
             }());
         </script>

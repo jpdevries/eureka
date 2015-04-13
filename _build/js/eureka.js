@@ -1,125 +1,9 @@
-/**
- * Get closest DOM element up the tree that contains a class, ID, or data attribute
- * @param  {Node} elem The base element
- * @param  {String} selector The class, id, data attribute, or tag to look for
- * @return {Node} Null if no match
- */
-var getClosest = function (elem, selector) {
-    var firstChar = selector.charAt(0);
-    // Get closest match
-    for (; elem && elem !== document; elem = elem.parentNode) {
-        // If selector is a class
-        if (firstChar === '.') {
-            if (elem.classList.contains(selector.substr(1))) {
-                return elem;
-            }
-        }
-        // If selector is an ID
-        if (firstChar === '#') {
-            if (elem.id === selector.substr(1)) {
-                return elem;
-            }
-        }
-        // If selector is a data attribute
-        if (firstChar === '[') {
-            if (elem.hasAttribute(selector.substr(1, selector.length - 2))) {
-                return elem;
-            }
-        }
-        // If selector is a tag
-        if (elem.tagName.toLowerCase() === selector) {
-            return elem;
-        }
-    }
-    return false;
-};
-/* http://stackoverflow.com/a/18078705/4671250 */
-var ajax = {};
-ajax.x = function () {
-    if (typeof XMLHttpRequest !== 'undefined') {
-        return new XMLHttpRequest();
-    }
-    var versions = [
-        "MSXML2.XmlHttp.5.0",
-        "MSXML2.XmlHttp.4.0",
-        "MSXML2.XmlHttp.3.0",
-        "MSXML2.XmlHttp.2.0",
-        "Microsoft.XmlHttp"
-    ];
-    var xhr;
-    for (var i = 0; i < versions.length; i++) {
-        try {
-            xhr = new ActiveXObject(versions[i]);
-            break;
-        }
-        catch (e) {
-        }
-    }
-    return xhr;
-};
-ajax.send = function (url, callback, method, data, sync) {
-    var x = ajax.x();
-    x.open(method, url, sync);
-    x.onreadystatechange = function () {
-        if (x.readyState == 4) {
-            callback(x.responseText);
-        }
-    };
-    if (method == 'POST') {
-        x.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    }
-    x.send(data);
-};
-ajax.get = function (url, data, callback, sync) {
-    var query = [];
-    for (var key in data) {
-        query.push(encodeURIComponent(key) + '=' + encodeURIComponent(data[key]));
-    }
-    ajax.send(url + '?' + query.join('&'), callback, 'GET', null, sync);
-};
-ajax.post = function (url, data, callback, sync) {
-    var query = [];
-    for (var key in data) {
-        query.push(encodeURIComponent(key) + '=' + encodeURIComponent(data[key]));
-    }
-    ajax.send(url, callback, 'POST', query.join('&'), sync);
-};
-/* http://stackoverflow.com/a/28896535/4671250 */
-function formatFileSize(size) {
-    var sizes = [' Bytes', ' KB', ' MB', ' GB', ' TB', ' PB', ' EB', ' ZB', ' YB'];
-    for (var i = 1; i < sizes.length; i++) {
-        if (size < Math.pow(1024, i))
-            return (Math.round((size / Math.pow(1024, i - 1)) * 100) / 100) + sizes[i - 1];
-    }
-    return size;
-}
-function getSelectedOption(select) {
-    var options = select.querySelectorAll('option');
-    for (var i = 0; i < options.length; i++) {
-        var option = options[i];
-        if (option.selected)
-            return option;
-    }
-}
-/* http://stackoverflow.com/a/20591261/4671250 */
-function extend(target) {
-    for (var i = 1; i < arguments.length; ++i) {
-        var from = arguments[i];
-        if (typeof from !== 'object')
-            continue;
-        for (var j in from) {
-            if (from.hasOwnProperty(j)) {
-                target[j] = typeof from[j] === 'object'
-                    ? extend({}, target[j], from[j])
-                    : from[j];
-            }
-        }
-    }
-    return target;
-}
 var Eureka = function (opts) {
+    this.headers = opts.headers;
+    
     opts = extend({}, {
-        useLocalStorage: true
+        useLocalStorage: true,
+        editable: true
     }, opts);
     var currentView = 'view-a';
     var navTreeHidden = false;
@@ -137,9 +21,13 @@ var Eureka = function (opts) {
     var defaults = {
         currentView: currentView,
         navTreeHidden: navTreeHidden,
-        currentDirectory: currentDirectory
+        currentDirectory: currentDirectory,
+        directoryRequestURL:'fakepi/listdirectory.php',
+        listSourceRequestURL:'fakepi/listsource.php',
+        listSourcesRequestURL:'fakepi/listsources.php',
     };
     this.opts = extend({}, defaults, opts);
+    this.opts.headers = this.headers;
     // model notifies the controller of updates
     var eurekaModel = new EurekaModel(this.opts);
     // view paints the DOM and listens to it
@@ -201,6 +89,7 @@ EurekaMediaSourceDTO.prototype.setTitle = function (title) {
 };
 var EurekaModel = function (opts) {
     //if(EurekaModel.instance !== undefined) return EurekaModel.instance;
+    var headers = opts.headers;
     var defaults = {
         locale: 'en-US',
         debug: false,
@@ -212,8 +101,10 @@ var EurekaModel = function (opts) {
         navTreeHidden: undefined
     };
     this.controller = null;
+    this.selected = null;
     this.sources = [];
     this.opts = extend({}, defaults, opts);
+    this.opts.headers = headers;
     if (typeof (Storage) === "undefined")
         this.opts.useLocalStorage = false;
 };
@@ -245,6 +136,18 @@ EurekaModel.prototype.getUID = function () {
 };
 EurekaModel.prototype.setUID = function (uid) {
     this.opts.uid = uid;
+};
+EurekaModel.prototype.renameFile = function (fileName, newFilename) {
+    var e = new Event('EurekaFileRename');
+    e.data = {
+        fileName: fileName,
+        newFilename: newFilename,
+        cd: this.getController().getModel().getCurrentMediaSource(),
+        cs: this.getController().getModel().getCurrentDirectory(),
+        path: this.getController().getModel().getCurrentDirectory() + fileName,
+        newPath: this.getController().getModel().getCurrentDirectory() + newFilename
+    };
+    this.getController().getView().getElement().dispatchEvent(e);
 };
 EurekaModel.prototype.setCurrentMediaSource = function (currentMediaSource, dispatch) {
     if (dispatch === undefined)
@@ -319,6 +222,60 @@ EurekaModel.prototype.setMediaSourcesData = function (data) {
     }
     this.setSources(sources);
 };
+EurekaModel.prototype.deleteFile = function (filename, tr) {
+    var that = this;
+    var e = new Event('EurekaUnlink');
+    e.data = {
+        filename: tr.getAttribute('data-filename'),
+        timestamp: tr.getAttribute('data-timestamp'),
+        src: tr.querySelector('.image img').getAttribute('src'),
+        dimensions: [tr.getAttribute('data-dimensions-w'), tr.getAttribute('data-dimensions-h')],
+        filesize: parseInt(tr.getAttribute('data-filesize-bytes'))
+    };
+    that.getController().getView().getElement().dispatchEvent(e);
+};
+EurekaModel.prototype.setChoosenMediaItem = function (filename) {
+    var that = this;
+    var tr = getEurekaRowByFileName(filename); // #more reliable than tr.eureka__row.focused
+    var e = new Event('EurekaFoundIt');
+    e.data = {
+        filename: filename,
+        timestamp: tr.getAttribute('data-timestamp'),
+        src: tr.querySelector('.image img').getAttribute('src'),
+        dimensions: [tr.getAttribute('data-dimensions-w'), tr.getAttribute('data-dimensions-h')],
+        filesize: parseInt(tr.getAttribute('data-filesize-bytes'))
+    };
+    that.getController().getView().getElement().dispatchEvent(e);
+    function getEurekaRowByFileName(filename) {
+        var trs = that.getController().getView().getElement().querySelectorAll('tr.eureka__row');
+        for (var i = 0; i < trs.length; i++) {
+            var tr = trs[i];
+            if (tr.getAttribute('data-filename') == filename)
+                return tr;
+        }
+        return false;
+    }
+};
+EurekaModel.prototype.getSelected = function () {
+    return this.selected;
+};
+EurekaModel.prototype.setSelected = function (filename) {
+    this.selected = filename;
+};
+EurekaModel.prototype.getXHRHeaders = function() {
+    return this.opts.headers;
+}
+EurekaModel.prototype.getListDirectoryRequestURL = function() {
+  return this.opts.directoryRequestURL;
+};
+
+EurekaModel.prototype.getListSourceRequestURL = function() {
+  return this.opts.listSourceRequestURL;
+};
+
+EurekaModel.prototype.getListSourcesRequestURL = function() {
+  return this.opts.listSourcesRequestURL;
+};
 /*  __
 /\ \/\ \  __
 \ \ \ \ \/\_\     __   __  __  __
@@ -337,6 +294,13 @@ EurekaView.prototype.getController = function () {
 EurekaView.prototype.setController = function (controller) {
     this.controller = controller;
 };
+EurekaView.prototype.assignFooterProceedListeners = function () {
+    var that = this;
+    that.getElement().parentNode.querySelector('footer.proceed button.cta').addEventListener('click', function (e) {
+        e.preventDefault();
+        that.getController().getModel().setChoosenMediaItem(that.getController().getModel().getSelected());
+    });
+};
 EurekaView.prototype.init = function () {
     var that = this;
     function showSidebar() {
@@ -347,7 +311,9 @@ EurekaView.prototype.init = function () {
         that.getController().getModel().setNavTreeHidden(false);
         var toggle = document.getElementById('media-browser_0__pathbrowser_toggle').getElementsByTagName("i")[0];
         toggle.classList.remove('fa-toggle-right');
+        toggle.classList.remove('icon-toggle-right');
         toggle.classList.add('fa-toggle-left');
+        toggle.classList.add('icon-toggle-left');
         tog.title = tog.getAttribute('data-title-close');
     }
     function hideSidebar() {
@@ -358,7 +324,9 @@ EurekaView.prototype.init = function () {
         that.getController().getModel().setNavTreeHidden(true);
         var toggle = document.getElementById('media-browser_0__pathbrowser_toggle').getElementsByTagName("i")[0];
         toggle.classList.add('fa-toggle-right');
+        toggle.classList.add('icon-toggle-right');
         toggle.classList.remove('fa-toggle-left');
+        toggle.classList.remove('icon-toggle-left');
         tog.title = tog.getAttribute('data-title-open');
     }
     document.getElementById('media-browser_0__pathbrowser_toggle').addEventListener('click', function (e) {
@@ -370,18 +338,9 @@ EurekaView.prototype.init = function () {
         else {
             hideSidebar();
         }
-        /*var toggle = this.getElementsByTagName("i")[0];
-        if(toggle.classList.contains('fa-toggle-right')) {
-            toggle.classList.remove('fa-toggle-right');
-            toggle.classList.add('fa-toggle-left');
-            this.title = this.getAttribute('data-title-close');
-        } else {
-            toggle.classList.add('fa-toggle-right');
-            toggle.classList.remove('fa-toggle-left');
-            this.title = this.getAttribute('data-title-open');
-        }*/
     });
     this.assignViewButtonListeners();
+    this.assignFooterProceedListeners();
     this.assignBrowsingSelectOptGroupListeners();
     this.getElement().querySelector('.eureka__topbar-nav .view-btns a[data-view="' + this.getController().getModel().getCurrentView() + '"]').dispatchEvent(new Event('click'));
     if (this.getController().getModel().getNavTreeHidden() === true) {
@@ -436,6 +395,7 @@ EurekaView.prototype.assignViewButtonListeners = function () {
     }
 };
 EurekaView.prototype.assignARIAKeyListeners = function () {
+    var that = this;
     // ARIA focus support for non-contextual rows
     (function () {
         function setFocused(el) {
@@ -446,14 +406,27 @@ EurekaView.prototype.assignARIAKeyListeners = function () {
                     current.classList.remove('focused');
             }
             el.classList.add('focused');
+            var _cta = that.getProceedFooter().querySelector('button.cta');
+            _cta.removeAttribute('disabled');
+            _cta.classList.remove('muted');
+            that.getController().getModel().setSelected(el.getAttribute('data-filename'));
+        }
+        function handleBlur(el) {
+            var contextual = document.getElementById('eureka_contextual__' + el.getAttribute('data-safe-filename'));
+            contextual.focus();
+            //that.getProceedFooter().querySelector('button.cta').classList.add('muted');
+            that.getProceedFooter().querySelector('button.cta').classList.remove('go');
         }
         var rows = document.querySelectorAll(".eureka-table tbody > tr:not(.contextual)");
         for (var i = 0; i < rows.length; i++) {
             var current = rows[i];
             current.addEventListener('focus', function (e) {
                 e.preventDefault();
-                var _as = document.querySelectorAll(".eureka-table tbody > tr:not(.contextual)");
+                //var _as = document.querySelectorAll(".eureka-table tbody > tr:not(.contextual)");
                 setFocused(this);
+            }, false);
+            current.addEventListener('blur', function (e) {
+                handleBlur(this);
             }, false);
         }
     }());
@@ -571,7 +544,9 @@ EurekaView.prototype.populateTree = function (data) {
             folder.classList.add('folder');
             var fa = document.createElement('i');
             fa.classList.add('fa');
+            fa.classList.add('icon');
             fa.classList.add('fa-folder');
+            fa.classList.add('icon-folder');
             fa.classList.add('folder');
             folder.appendChild(fa);
             folder.innerHTML += '&nbsp;';
@@ -601,6 +576,9 @@ EurekaView.prototype.populateTree = function (data) {
 EurekaView.prototype.getElement = function () {
     return document.getElementById(this.getController().getModel().getUID());
 };
+EurekaView.prototype.getProceedFooter = function () {
+    return this.getElement().parentNode.querySelector('footer.proceed');
+};
 EurekaView.prototype.handleTreePathClicked = function (el) {
     var that = this;
     function deactivatePaths() {
@@ -612,7 +590,7 @@ EurekaView.prototype.handleTreePathClicked = function (el) {
         }
     }
     var source = that.getController().getModel().getCurrentMediaSource();
-    ajax.get('fakepi/listdirectory.php', { s: source, dir: el.getAttribute('data-cd') }, function (data) {
+    ajax.get(that.getController().getModel().getListDirectoryRequestURL(), { s: source, dir: el.getAttribute('data-cd'), headers:that.getController().getModel().getXHRHeaders() }, function (data) {
         that.paintJSON(data);
     });
     var li = getClosest(el, 'li');
@@ -641,7 +619,7 @@ EurekaView.prototype.assignMediaBrowserOptGroupListeners = function () {
         // update the model to reflect the now current media source
         that.getController().getModel().setCurrentMediaSource(getClosest(selected, 'optgroup').getAttribute('data-source'));
         // fetch current media source's directories
-        ajax.get('fakepi/listsource.php', { s: that.getController().getModel().getCurrentMediaSource() }, function (data) {
+        ajax.get(that.getController().getModel().getListSourceRequestURL(), { s: that.getController().getModel().getCurrentMediaSource(), headers:that.getController().getModel().getXHRHeaders() }, function (data) {
             that.getController().getView().populateTree(data);
         });
     });
@@ -658,12 +636,16 @@ EurekaView.prototype.assignTreeFolderListeners = function () {
             var li = getClosest(this, 'li');
             if (_closing) {
                 _icon.classList.remove('fa-folder-open');
+                _icon.classList.remove('icon-folder-open');
                 _icon.classList.add('fa-folder');
+                _icon.classList.add('icon-folder');
                 li.classList.remove('open');
             }
             else {
                 _icon.classList.remove('fa-folder');
+                _icon.classList.remove('icon-folder');
                 _icon.classList.add('fa-folder-open');
+                _icon.classList.add('icon-folder-open');
                 li.classList.add('open');
             }
         });
@@ -674,7 +656,7 @@ EurekaView.prototype.assignSelectListeners = function () {
     var mediaSourceSelect = document.getElementById('media-browser_0__mediasource-select');
     mediaSourceSelect.addEventListener('change', function () {
         that.getController().getModel().setCurrentMediaSource(this.value);
-        ajax.get('fakepi/listsource.php', { s: that.getController().getModel().getCurrentMediaSource().toString() }, function (data) {
+        ajax.get(that.getController().getModel().getListSourceRequestURL(), { s: that.getController().getModel().getCurrentMediaSource().toString(), headers:that.getController().getModel().getXHRHeaders() }, function (data) {
             that.getController().getView().populateTree(data);
         });
     });
@@ -704,7 +686,9 @@ EurekaView.prototype.paint = function () {
     this.assignFilterListeners();
     this.assignSortBtnListeners();
     this.assignARIAKeyListeners();
+    this.assignContextualClickListeners();
     this.assignDraggableListeners();
+    //this.assignContextualRowListeners();
 };
 EurekaView.prototype.paintTree = function (data) {
     data = JSON.parse(data);
@@ -719,7 +703,9 @@ EurekaView.prototype.paintTree = function (data) {
             folder.classList.add('folder');
             var folderOpenIcon = document.createElement('i');
             folderOpenIcon.classList.add('fa');
+            folderOpenIcon.classList.add('icon');
             folderOpenIcon.classList.add('fa-folder');
+            folderOpenIcon.classList.add('icon-folder');
             folder.appendChild(folderOpenIcon);
             var path = document.createElement('a');
             path.classList.add('path');
@@ -744,6 +730,7 @@ EurekaView.prototype.paintTree = function (data) {
     this.assignTreeListeners();
 };
 EurekaView.prototype.paintJSON = function (data) {
+    var that = this;
     data = JSON.parse(data);
     var model = this.getController().getModel();
     model.setCurrentMediaSource(data.cs, false);
@@ -753,20 +740,24 @@ EurekaView.prototype.paintJSON = function (data) {
     for (var i = 0; i < results.length; i++) {
         var result = results[i];
         var filename = result.filename;
+        var safeFileName = filename.replace(/[!\"#$%&'\(\)\*\+,\.\/:;<=>\?\@\[\\\]\^`\{\|\}~]/g, '');
         var src = result.src;
         var filesize = result.filesize;
         var dimensions = result.dimensions;
         var editedon = parseInt(result.editedon);
         var tr = document.createElement("tr");
-        tr.setAttribute('contenteditable', true);
+        tr.classList.add('eureka__row');
+        //tr.setAttribute('contenteditable', true);
+        tr.setAttribute('tabindex', "0");
         tr.setAttribute('data-tokens', '');
         tr.setAttribute('data-filename', filename);
+        tr.setAttribute('data-safe-filename', safeFileName);
         tr.setAttribute('data-dimensions-w', dimensions.split('x')[0]);
         tr.setAttribute('data-dimensions-h', dimensions.split('x')[1]);
         tr.setAttribute('data-filesize-bytes', filesize);
         tr.setAttribute('data-timestamp', editedon);
         var td = document.createElement("td");
-        td.setAttribute('contenteditable', true);
+        td.setAttribute('contenteditable', false);
         td.classList.add('eureka__row-image');
         var imgD = document.createElement('div');
         imgD.classList.add('image');
@@ -774,8 +765,8 @@ EurekaView.prototype.paintJSON = function (data) {
         img.setAttribute('src', src);
         imgD.appendChild(img);
         var code = document.createElement('code');
-        code.setAttribute('contenteditable', false);
-        code.setAttribute('tabfocus', '-1');
+        code.setAttribute('contenteditable', true);
+        code.setAttribute('tabindex', '-1');
         code.setAttribute('sorta-draggable', true);
         code.innerHTML = filename;
         td.appendChild(imgD);
@@ -803,6 +794,149 @@ EurekaView.prototype.paintJSON = function (data) {
         tr.appendChild(tdFilesizeCell);
         tr.appendChild(tdEditedOnCell);
         tbodyHTML += tr.outerHTML;
+        tbodyHTML += createContextualRow().outerHTML;
+        function createContextualRow() {
+            var tr = document.createElement('tr');
+            tr.classList.add('contextual');
+            tr.setAttribute('id', 'eureka_contextual__' + safeFileName);
+            //tr.setAttribute('tabindex','0');
+            var td = document.createElement('td');
+            td.setAttribute('colspan', '4');
+            function createFlexibleNav() {
+                var nav = document.createElement('nav');
+                nav.classList.add('flexible_row');
+                nav.classList.add('contextual__nav');
+                function createExpandBtn() {
+                    var a = document.createElement('a');
+                    a.classList.add('expand');
+                    a.setAttribute('href', src);
+                    a.setAttribute('target', '_blank');
+                    a.setAttribute('tabindex', '0');
+                    var fa = document.createElement('i');
+                    fa.classList.add('fa');
+                    fa.classList.add('icon');
+                    fa.classList.add('fa-expand');
+                    fa.classList.add('icon-expand');
+                    a.appendChild(fa);
+                    a.innerHTML += ' Expand';
+                    return a;
+                }
+                function createChooseBtn() {
+                    var a = document.createElement('a');
+                    a.classList.add('choose');
+                    a.setAttribute('href', src);
+                    a.setAttribute('target', '_blank');
+                    a.setAttribute('tabindex', '0');
+                    var fa = document.createElement('i');
+                    fa.classList.add('fa');
+                    fa.classList.add('icon');
+                    fa.classList.add('fa-check-circle-o');
+                    fa.classList.add('icon-check-circle-o');
+                    a.appendChild(fa);
+                    a.innerHTML += ' Choose';
+                    return a;
+                }
+                function createRenameBtn() {
+                    var a = document.createElement('a');
+                    a.classList.add('rename');
+                    //a.setAttribute('href',src);
+                    a.setAttribute('target', '_blank');
+                    a.setAttribute('tabindex', '0');
+                    var fa = document.createElement('i');
+                    fa.classList.add('fa');
+                    fa.classList.add('icon');
+                    fa.classList.add('fa-edit');
+                    fa.classList.add('icon-edit');
+                    a.appendChild(fa);
+                    a.innerHTML += ' Rename';
+                    return a;
+                }
+                function createTrashBtn() {
+                    var a = document.createElement('a');
+                    a.classList.add('dangerous');
+                    a.classList.add('trash');
+                    a.setAttribute('target', '_blank');
+                    a.setAttribute('tabindex', '0');
+                    var fa = document.createElement('i');
+                    fa.classList.add('fa');
+                    fa.classList.add('icon');
+                    fa.classList.add('fa-trash');
+                    fa.classList.add('icon-trash');
+                    a.appendChild(fa);
+                    a.innerHTML += ' Delete';
+                    return a;
+                }
+                nav.appendChild(createExpandBtn());
+                nav.appendChild(createChooseBtn());
+                if (that.getController().getModel().opts.editable && document.execCommand)
+                    nav.appendChild(createRenameBtn()); // should probably polyfill or just juse a standard text input instead #janky? #shame?
+                if (that.getController().getModel().opts.editable)
+                    nav.appendChild(createTrashBtn());
+                //nav.appendChild(createFlexibleNavTagForm());
+                //nav.appendChild(createFlexibleNavShareForm());
+                function createFlexibleNavTagForm() {
+                    var form = document.createElement('form');
+                    form.classList.add('tag');
+                    form.setAttribute('method', 'post');
+                    form.setAttribute('action', '#');
+                    var label = document.createElement('label');
+                    label.setAttribute('title', 'Tagging this media item will make it easier to find');
+                    var fa = document.createElement('i');
+                    fa.classList.add('fa');
+                    fa.classList.add('icon');
+                    fa.classList.add('fa-tag');
+                    fa.classList.add('icon-tag');
+                    label.appendChild(fa);
+                    label.innerHTML += ' Tag:';
+                    var input = document.createElement('input');
+                    input.setAttribute('type', 'text');
+                    input.setAttribute('placeholder', 'Tag this media item');
+                    input.setAttribute('tabindex', '-1');
+                    form.appendChild(label);
+                    form.appendChild(input);
+                    return form;
+                }
+                function createFlexibleNavShareForm() {
+                    var form = document.createElement('form');
+                    form.classList.add('share');
+                    form.setAttribute('action', '#');
+                    form.setAttribute('title', "Share " + filename + " with other");
+                    form.appendChild(createMediaSourceInput());
+                    form.appendChild(createMediaItemInput());
+                    var button = document.createElement('button');
+                    button.classList.add('nued');
+                    button.setAttribute('type', 'submit');
+                    button.setAttribute('tabindex', '0');
+                    var fa = document.createElement('i');
+                    fa.classList.add('fa');
+                    fa.classList.add('icon');
+                    fa.classList.add('fa-share-square-o');
+                    fa.classList.add('icon-share-square-o');
+                    button.appendChild(fa);
+                    button.innerHTML += ' Share';
+                    form.appendChild(button);
+                    function createMediaSourceInput() {
+                        var input = document.createElement('input');
+                        input.setAttribute('type', 'hidden');
+                        input.setAttribute('name', 'mediasource');
+                        input.setAttribute('value', '0');
+                        return input;
+                    }
+                    function createMediaItemInput() {
+                        var input = document.createElement('input');
+                        input.setAttribute('type', 'hidden');
+                        input.setAttribute('name', 'mediaitem');
+                        input.setAttribute('value', filename);
+                        return input;
+                    }
+                    return form;
+                }
+                return nav;
+            }
+            td.appendChild(createFlexibleNav());
+            tr.appendChild(td);
+            return tr;
+        }
     }
     document.querySelector('#media-browser_0 .eureka-table > table > tbody').innerHTML = tbodyHTML;
     // bolden the correct tree item
@@ -820,6 +954,143 @@ EurekaView.prototype.paintJSON = function (data) {
         this.getElement().querySelector('.pathbrowser__topbar > select').value = data.cs;
     }
     catch (e) {
+    }
+    this.paint();
+};
+EurekaView.prototype.assignContextualClickListeners = function (e) {
+    var that = this;
+    that.assignContexualCodeFocusListeners();
+    assignChooseListeners();
+    assignRenameListeners();
+    assignDeleteListeners();
+    function assignChooseListeners() {
+        var anchors = that.getElement().querySelectorAll('tr.contextual a.choose');
+        for (var i = 0; i < anchors.length; i++) {
+            var anchor = anchors[i];
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                handleChooseClicked(this);
+            }, false);
+            anchor.addEventListener('focus', function (e) {
+                that.getElement().parentNode.querySelector('footer.proceed .cta').classList.add('go');
+                that.getElement().parentNode.querySelector('footer.proceed .cta').disabled = false;
+                that.getElement().parentNode.querySelector('footer.proceed .cta').removeAttribute('disabled');
+            }, false);
+            anchor.addEventListener('blur', function (e) {
+                that.getElement().parentNode.querySelector('footer.proceed .cta').classList.remove('go');
+                //that.getElement().parentNode.querySelector('footer.proceed .cta').disabled = true;
+                //that.getElement().parentNode.querySelector('footer.proceed .cta').setAttribute('disabled','disabled');
+            }, false);
+            anchor.addEventListener('mouseover',function(e) {
+                that.getElement().parentNode.querySelector('footer.proceed .cta').classList.add('go');
+            }, false);
+            anchor.addEventListener('mouseout',function(e) {
+                that.getElement().parentNode.querySelector('footer.proceed .cta').classList.remove('go');
+            }, false);
+        }
+        function handleChooseClicked(anchor) {
+            var contextual = getClosest(anchor, 'tr');
+            var mediaRow = contextual.previousSibling;
+            that.getController().getModel().setChoosenMediaItem(mediaRow.getAttribute('data-filename'));
+        }
+    }
+    function assignDeleteListeners() {
+        var anchors = document.querySelectorAll('tr.contextual a.trash');
+        for (var i = 0; i < anchors.length; i++) {
+            var anchor = anchors[i];
+            anchor.addEventListener('click', function (e) {
+                handleTrashClicked(this);
+            }, false);
+            anchor.addEventListener('focus', function (e) {
+                this.addEventListener('keydown', handleTrashKeyDown, false);
+            }, false);
+            anchor.removeEventListener('blur', function (e) {
+                this.removeEventListener('keydown', handleTrashKeyDown, false);
+            }, false);
+        }
+        function handleTrashClicked(anchor) {
+            var contextual = getClosest(anchor, 'tr');
+            var mediaRow = contextual.previousSibling;
+            var nextRow = contextual.nextSibling;
+            that.getController().getModel().deleteFile(mediaRow.getAttribute('data-filename'), mediaRow);
+            mediaRow.remove();
+            contextual.remove();
+            try {
+                nextRow.focus();
+            }
+            catch (e) { }
+        }
+        function handleTrashKeyDown(e) {
+            if (e.keyCode === 13) {
+                handleTrashClicked(this);
+            }
+        }
+    }
+    function assignRenameListeners() {
+        var anchors = document.querySelectorAll('tr.contextual a.rename');
+        for (var i = 0; i < anchors.length; i++) {
+            var anchor = anchors[i];
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                var code = getCodeToFocus(this);
+                selectCode(code);
+            }, false);
+            anchor.addEventListener('focus', function (e) {
+                this.addEventListener('keydown', handleAnchorKeyDown, false);
+            }, false);
+            anchor.addEventListener('blur', function (e) {
+                this.removeEventListener('keydown', handleAnchorKeyDown, false);
+            }, false);
+        }
+        function handleAnchorKeyDown(e) {
+            var code = getCodeToFocus(this);
+            var tr = getClosest(this, '.contextual').previousSibling;
+            if (e.keyCode === 13) {
+                e.preventDefault();
+                e.stopPropagation();
+                selectCode(code);
+            }
+        }
+        function selectCode(code) {
+            code.focus();
+            try {
+                code.select(); // if you think about it contenteditable nodes should probably be selectable...
+            }
+            catch (e) { }
+            // consider selecting also
+        }
+        function getCodeToFocus(anchor) {
+            var tr = getClosest(anchor, 'tr');
+            var mediaRow = tr.previousSibling;
+            var code = mediaRow.querySelector('.eureka__row-image code[contenteditable="true"]');
+            return code;
+        }
+    }
+};
+EurekaView.prototype.assignContexualCodeFocusListeners = function () {
+    var that = this;
+    var codes = this.getElement().querySelectorAll('tr.eureka__row .eureka__row-image code[contenteditable="true"]');
+    for (var i = 0; i < codes.length; i++) {
+        var code = codes[i];
+        code.addEventListener('focus', function () {
+            this.addEventListener('keydown', handleCodeKeyPress, false);
+        }, false);
+        function handleCodeKeyPress(e) {
+            if (e.keyCode === 13) {
+                e.preventDefault();
+                var tr = this.parentNode.parentNode; // #janky? :/
+                var contextual = tr.nextSibling;
+                var filename = tr.getAttribute('data-filename');
+                code.contentEditable = false;
+                var newFilename = this.innerHTML;
+                that.getController().getModel().renameFile(filename, newFilename);
+                var next = contextual.querySelector('nav > a.rename');
+                next.focus();
+                window.getSelection().collapse(next, 0);
+                return false;
+            }
+            return true;
+        }
     }
 };
 // ensure the optgroups are always sorted in order of their respective media source ids
@@ -932,12 +1203,12 @@ EurekaController.prototype.init = function () {
         that.getModel().setCurrentView(e.currentView, false);
     });
     eureka.addEventListener('eurekaCurrentDirectoryChange', function (e) {
-        ajax.get('fakepi/listdirectory.php', { s: that.getModel().getCurrentMediaSource(), dir: e.currentDirectory }, function (data) {
+        ajax.get(that.getModel().getListDirectoryRequestURL(), { s: that.getModel().getCurrentMediaSource(), dir: e.currentDirectory, headers:that.getModel().getXHRHeaders() }, function (data) {
             that.getView().paintJSON(data);
         });
     });
     eureka.addEventListener('eurekaMediaSourceChange', function (e) {
-        ajax.get('fakepi/listsource.php', { s: e.currentMediaSource }, function (data) {
+        ajax.get(that.getModel().getListSourceRequestURL(), { s: e.currentMediaSource, headers:that.getModel().getXHRHeaders() }, function (data) {
             that.getView().paintTree(data);
         });
     });
@@ -950,13 +1221,13 @@ EurekaController.prototype.init = function () {
             requestMediaListings(source);
             function requestMediaListings(source) {
                 var id = source.getID();
-                ajax.get('fakepi/listsource.php', { s: id }, function (data) {
+                ajax.get(that.getModel().getListSourceRequestURL(), { s: id, headers:that.getModel().getXHRHeaders() }, function (data) {
                     that.getView().updateMediaSourceListings(data);
                 });
             }
         }
     });
-    ajax.get('fakepi/listsources.php', {}, function (data) {
+    ajax.get(that.getModel().getListSourcesRequestURL(), {headers:that.getModel().getXHRHeaders()}, function (data) {
         that.getModel().setMediaSourcesData(data);
     });
 };

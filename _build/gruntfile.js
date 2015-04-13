@@ -95,6 +95,14 @@ module.exports = function(grunt) {
                 }],
             }
         },
+        
+        ts: {
+            default : {
+                src: ["<%= dirs.js %>*.ts"],
+                outDir:'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>'
+            }
+        },
+
 		uglify: {
 			main: {
 				options: {
@@ -102,7 +110,7 @@ module.exports = function(grunt) {
                     screwIE8:true
 				},
 				files: {
-					'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>es5/eureka-min.js': ['<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>es5/eureka-dev.js']
+                    '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>muckboot.eureka.min.js': ['<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>muckboot.eureka.js']
 				}
 				
 			}
@@ -115,7 +123,7 @@ module.exports = function(grunt) {
 			
 			scss: {
 				files: '<%= dirs.scss %>**/*.scss',
-				tasks: ['sass:dev', 'growl:sass']
+				tasks: ['sass:dev', 'growl:sass','cssmin']
 			},
 			
 			js: {
@@ -223,8 +231,10 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-6to5');
+    
+    grunt.loadNpmTasks("grunt-ts");
 
 	grunt.registerTask('default', ['sass:dist', 'cssmin', 'growl:sass', 'growl:watch', 'watch']);
-	grunt.registerTask('build', ['clean:prebuild', 'bower', 'copy', 'sass:dev','concat', 'growl:sass', 'clean:postbuild']);
+	grunt.registerTask('build', ['clean:prebuild', 'bower', 'copy', 'sass:dev','cssmin','concat','uglify', 'growl:sass', 'clean:postbuild']);
 	grunt.registerTask('expand', ['sass:dev', 'growl:sass', 'growl:expand']);
 };
