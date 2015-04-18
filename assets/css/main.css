@@ -268,14 +268,14 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
   -ms-flex-positive: 0;
 }
 
-.eureka-wrapper, .eureka-wrapper > footer > *, .eureka > .pathbrowser > .tree, .eureka-table > table, .eureka-table > table > thead > tr, .eureka-table > table > tbody, .view-a .eureka-table > table > tbody > tr, .view-c .eureka-table > table > tbody > tr > td, .view-d .eureka-table > table > tbody > tr > td, html.js .eureka-table > table > tbody > tr.contextual, .view-b .eureka-table > table > tbody > tr.contextual, .view-c .eureka-table > table > tbody > tr.contextual, .view-d .eureka-table > table > tbody > tr.contextual, html.js .view-a tr.eureka__row:focus + tr.contextual, html.js .view-a tr.eureka__row.focused + tr.contextual, .eureka__topbar > nav, .eureka__topbar > nav > header > h4, .eureka__topbar > nav > header > form, .eureka__topbar > nav > header > form > input[type="search"], .eureka__topbar > nav .view-btns, .eureka__topbar > nav .view-btns a, .eureka__topbar > form, .eureka__topbar > form > input, .view-d .eureka__row-image > .image, .view-d .eureka__row-image > code, .eureka > .stage > .eureka-table {
+.view-a .eureka-table > table > tbody > tr.contextual.visible, html.js .view-a tr.eureka__row:focus + tr.contextual, html.js .view-a tr.eureka__row.focused + tr.contextual, .eureka-wrapper, .eureka-wrapper > footer > *, .eureka > .pathbrowser > .tree, .eureka-table > table, .eureka-table > table > thead > tr, .eureka-table > table > tbody, .view-a .eureka-table > table > tbody > tr, .view-c .eureka-table > table > tbody > tr > td, .view-d .eureka-table > table > tbody > tr > td, .view-a .eureka-table > table > tbody > tr.contextual, .eureka__topbar > nav, .eureka__topbar > nav > header > h4, .eureka__topbar > nav > header > form, .eureka__topbar > nav > header > form > input[type="search"], .eureka__topbar > nav .view-btns, .eureka__topbar > nav .view-btns a, .eureka__topbar > form, .eureka__topbar > form > input, .view-d .eureka__row-image > .image, .view-d .eureka__row-image > code, .eureka > .stage > .eureka-table {
   -webkit-flex-grow: 1;
   -moz-flex-grow: 1;
   flex-grow: 1;
   -ms-flex-positive: 1;
 }
 
-.eureka-wrapper > footer > *, .eureka > .pathbrowser, .eureka > .pathbrowser > .tree, .eureka > .stage > .eureka-table, .eureka-table > table > thead, .eureka-table > table > thead > tr, .eureka-table > table > thead > tr > th, .eureka-table > table > tbody > tr, .eureka-table > table > tbody > tr > td, .view-a .eureka-table > table > tbody > tr > td > .image, .view-a .eureka-table > table > tbody > tr > td > .image > input[type="radio"], .view-a .eureka-table > table > tbody > tr > td > .image > img, .view-a .eureka-table > table > tbody > tr > td.eureka__row-image, html.js .eureka-table > table > tbody > tr.contextual, .view-b .eureka-table > table > tbody > tr.contextual, .view-c .eureka-table > table > tbody > tr.contextual, .view-d .eureka-table > table > tbody > tr.contextual, html.js .view-a tr.eureka__row:focus + tr.contextual, html.js .view-a tr.eureka__row.focused + tr.contextual, .contextual__nav > form.tag > label, .contextual__nav > form.tag > button[type="submit"], .eureka__topbar > nav, .eureka__topbar > form, .eureka__topbar > form > input, .view-d .eureka__row-image > .image, .view-d .eureka__row-image > code {
+.view-a .eureka-table > table > tbody > tr.contextual.visible, html.js .view-a tr.eureka__row:focus + tr.contextual, html.js .view-a tr.eureka__row.focused + tr.contextual, .eureka-wrapper > footer > *, .eureka > .pathbrowser, .eureka > .pathbrowser > .tree, .eureka > .stage > .eureka-table, .eureka-table > table > thead, .eureka-table > table > thead > tr, .eureka-table > table > thead > tr > th, .eureka-table > table > tbody > tr, .eureka-table > table > tbody > tr > td, .view-a .eureka-table > table > tbody > tr > td > .image, .view-a .eureka-table > table > tbody > tr > td > .image > input[type="radio"], .view-a .eureka-table > table > tbody > tr > td > .image > img, .view-a .eureka-table > table > tbody > tr > td.eureka__row-image, .view-a .eureka-table > table > tbody > tr.contextual, .contextual__nav > form.tag > label, .contextual__nav > form.tag > button[type="submit"], .eureka__topbar > nav, .eureka__topbar > form, .eureka__topbar > form > input, .view-d .eureka__row-image > .image, .view-d .eureka__row-image > code {
   -webkit-flex-shrink: 0;
   -moz-flex-shrink: 0;
   flex-shrink: 0;
@@ -441,14 +441,14 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
   -ms-flex-preferred-size: auto;
 }
 
-.view-a .eureka-table > table > tbody > tr, .eureka-table > table > tbody > tr, .view-c .eureka-table > table > tbody > tr > td, .view-d .eureka-table > table > tbody > tr > td, .view-a .eureka-table > table > tbody > tr > td > .image > input[type="radio"], .view-b .eureka-table > table > tbody > tr.focused, .view-b .eureka-table > table > tbody > tr:focus, html.js .view-a tr.eureka__row:focus + tr.contextual, html.js .view-a tr.eureka__row.focused + tr.contextual {
+.view-a .eureka-table > table > tbody > tr.contextual.visible, html.js .view-a tr.eureka__row:focus + tr.contextual, html.js .view-a tr.eureka__row.focused + tr.contextual, .view-a .eureka-table > table > tbody > tr, .eureka-table > table > tbody > tr, .view-c .eureka-table > table > tbody > tr > td, .view-d .eureka-table > table > tbody > tr > td, .view-a .eureka-table > table > tbody > tr > td > .image > input[type="radio"], .view-b .eureka-table > table > tbody > tr.focused, .view-b .eureka-table > table > tbody > tr:focus {
   -webkit-flex-basis: 100%;
   -moz-flex-basis: 100%;
   flex-basis: 100%;
   -ms-flex-preferred-size: 100%;
 }
 
-html.js .eureka-table > table > tbody > tr.contextual, .view-b .eureka-table > table > tbody > tr.contextual, .view-c .eureka-table > table > tbody > tr.contextual, .view-d .eureka-table > table > tbody > tr.contextual {
+.view-a .eureka-table > table > tbody > tr.contextual {
   -webkit-flex-basis: 0%;
   -moz-flex-basis: 0%;
   flex-basis: 0%;
@@ -501,6 +501,12 @@ html.no-touch .dangerous:hover {
   background: #197a00;
   color: #fafafa;
   border-color: #135c00;
+}
+
+.view-a .eureka-table > table > tbody > tr.contextual.visible, html.js .view-a tr.eureka__row:focus + tr.contextual, html.js .view-a tr.eureka__row.focused + tr.contextual {
+  position: relative;
+  top: auto;
+  left: auto;
 }
 
 button {
@@ -615,11 +621,12 @@ button[type="submit"] {
     -moz-flex-grow: 1;
     flex-grow: 1;
     -ms-flex-positive: 1;
-    height: 100%;
     -webkit-flex-basis: 100%;
     -moz-flex-basis: 100%;
     flex-basis: 100%;
     -ms-flex-preferred-size: 100%;
+    height: auto;
+    -ms-flex-preferred-size: auto;
   }
   html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table > table > thead {
     -webkit-flex-basis: 2em;
@@ -1225,7 +1232,7 @@ html.no-flexbox .eureka-table > table > tbody > tr > td {
   color: #666666;
 }
 .view-b .eureka-table > table > tbody > tr.contextual, .view-c .eureka-table > table > tbody > tr.contextual, .view-d .eureka-table > table > tbody > tr.contextual {
-  display: none;
+  display: none !important;
 }
 html.js .eureka-table > table > tbody > tr.contextual, .view-b .eureka-table > table > tbody > tr.contextual, .view-c .eureka-table > table > tbody > tr.contextual, .view-d .eureka-table > table > tbody > tr.contextual {
   position: absolute;
@@ -1241,12 +1248,6 @@ html.js .eureka-table > table > tbody > tr.contextual, .view-b .eureka-table > t
   -moz-flex: 1;
   -ms-flex: 1;
   flex: 1;
-}
-
-html.js .view-a tr.eureka__row:focus + tr.contextual, html.js .view-a tr.eureka__row.focused + tr.contextual {
-  position: relative;
-  top: auto;
-  left: auto;
 }
 
 tbody.filtered > tr:not(.visible) {

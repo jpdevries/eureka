@@ -1,3 +1,5 @@
+/// <reference path="DefinitelyTyped/modernizr.d.ts" />
+
 var MuckBoot;
 (function(){
     var d = document;
@@ -11,7 +13,7 @@ var MuckBoot;
         this.muck();
         
         /* http://stackoverflow.com/a/20591261/4671250 */
-        function extend (target) {
+        function extend (target:any = {}, t:any = null, j:any = null) {
             for(var i=1; i<arguments.length; ++i) {
                 var from = arguments[i];
                 if(typeof from !== 'object') continue;
@@ -245,7 +247,6 @@ var MuckBoot;
                             })(),
                             (function(){
                                 var a = d.createElement('a');
-                                a.classList.add('current');
                                 a.classList.add('view-b-btn');
                                 a.setAttribute('data-view','view-b');
                                 a.setAttribute('data-view-target',opts.id);
@@ -263,7 +264,6 @@ var MuckBoot;
                             })(),
                             (function(){
                                 var a = d.createElement('a');
-                                a.classList.add('current');
                                 a.classList.add('view-d-btn');
                                 a.setAttribute('data-view','view-d');
                                 a.setAttribute('data-view-target',opts.id);
@@ -285,7 +285,6 @@ var MuckBoot;
                             btns.push(
                                 (function(){
                                     var a = d.createElement('a');
-                                    a.classList.add('current');
                                     a.classList.add('view-c-btn');
                                     a.setAttribute('data-view','view-c');
                                     a.setAttribute('data-view-target',opts.id);

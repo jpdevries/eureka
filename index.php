@@ -537,26 +537,31 @@
         }());
         </script>   
              
-        <script src="assets/js/eureka.min.js?nc=<?php echo time() ?>"></script>
+        <script src="assets/js/eureka.js?nc=<?php echo time() ?>"></script>
         
         <script>
             (function(){
-                var $eureka = new Eureka({
+                var $eureka = new Eureka({ // init the Eureka component
                     uid:'media-browser_0',
-                    editable:false, // set to false to remove rename and delete features
                     locale:'en-US',
                     mediaSource:0,
                     currentDirectory:undefined,
+                    directoryRequestURL:'fakepi/listdirectory.php',
+                    listSourceRequestURL:'fakepi/listsource.php',
+                    listSourcesRequestURL:'fakepi/listsources.php',
                     headers: [{
                         'modAuth': MODx.siteId,
                         'Powered-By': 'Eureka in MODX Revolution'
                     }]
                 });
                 
+                // NOTE: "event" system is kinda experimental and may change
+                // currently the Eureka class (MVC) dispatches events from the eureka component itself (div.eureka)
                 // listen for when a file is renamed
                 document.getElementById('media-browser_0').addEventListener('EurekaFileRename',function(e){
                     console.log('EurekaFileRename');
                     console.log(e.data);
+                    // make XHR 
                 });
                 
                 // listen for when a media item has been chosen

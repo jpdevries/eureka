@@ -8,7 +8,10 @@ var MuckBoot;
         this.opts = extend({}, defaults, opts);
         this.opts = opts;
         this.muck();
-        function extend(target) {
+        function extend(target, t, j) {
+            if (target === void 0) { target = {}; }
+            if (t === void 0) { t = null; }
+            if (j === void 0) { j = null; }
             for (var i = 1; i < arguments.length; ++i) {
                 var from = arguments[i];
                 if (typeof from !== 'object')
@@ -180,7 +183,6 @@ var MuckBoot;
                             })(),
                             (function () {
                                 var a = d.createElement('a');
-                                a.classList.add('current');
                                 a.classList.add('view-b-btn');
                                 a.setAttribute('data-view', 'view-b');
                                 a.setAttribute('data-view-target', opts.id);
@@ -195,7 +197,6 @@ var MuckBoot;
                             })(),
                             (function () {
                                 var a = d.createElement('a');
-                                a.classList.add('current');
                                 a.classList.add('view-d-btn');
                                 a.setAttribute('data-view', 'view-d');
                                 a.setAttribute('data-view-target', opts.id);
@@ -212,7 +213,6 @@ var MuckBoot;
                         if (Modernizr !== undefined && !Modernizr.touch) {
                             btns.push((function () {
                                 var a = d.createElement('a');
-                                a.classList.add('current');
                                 a.classList.add('view-c-btn');
                                 a.setAttribute('data-view', 'view-c');
                                 a.setAttribute('data-view-target', opts.id);

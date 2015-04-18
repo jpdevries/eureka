@@ -14,3 +14,9 @@ assets/fonts/
 .baseDir.ts
 .baseDir.js
 .baseDir.js.map
+
+.tscache
+
+npm-debug.log
+
+_build/ts/DefinitelyTyped

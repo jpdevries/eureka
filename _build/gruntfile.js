@@ -9,6 +9,7 @@ module.exports = function(grunt) {
 			assets: 'assets/',
 			css: 'css/',
 			js:  'js/',
+            ts:  'ts/',
 			img: 'img/',
 			font: 'font/'
 		},
@@ -97,9 +98,17 @@ module.exports = function(grunt) {
         },
         
         ts: {
-            default : {
-                src: ["<%= dirs.js %>*.ts"],
-                outDir:'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>'
+            es5 : {
+                target:'es5',
+                failOnTypeErrors:false,
+                src: ["<%= dirs.ts %>plugins.ts","<%= dirs.ts %>eureka.typescript.ts"],
+                out:'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.js'
+            },
+            muckboot : {
+                target:'es5',
+                failOnTypeErrors:false,
+                src: ["<%= dirs.ts %>muckboot.eureka.ts"],
+                out:'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>muckboot.eureka.js'
             }
         },
 
@@ -110,7 +119,9 @@ module.exports = function(grunt) {
                     screwIE8:true
 				},
 				files: {
-                    '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>muckboot.eureka.min.js': ['<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>muckboot.eureka.js']
+                    '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>muckboot.eureka.min.js': ['<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>muckboot.eureka.js'],
+                    '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.min.js': ['<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.js'],
+                    '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.min.js': ['<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.js']
 				}
 				
 			}
@@ -125,10 +136,9 @@ module.exports = function(grunt) {
 				files: '<%= dirs.scss %>**/*.scss',
 				tasks: ['sass:dev', 'growl:sass','cssmin']
 			},
-			
-			js: {
-				files: ['<%= dirs.js %>*','!<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>**/*-dev.js*','!<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>**/*-min.js*'],
-				tasks: ['concat','growl:concat']
+			ts: {
+				files: ['<%= dirs.ts %>*'],
+				tasks: ['ts','growl:ts','uglify','growl:uglify']
 			}
 		},
 		clean: { /* take out the trash */
@@ -164,6 +174,10 @@ module.exports = function(grunt) {
 			uglify: {
 				title: "grunt",
 				message: "JavaScript minified."
+			},
+			ts: {
+				title: "grunt",
+				message: "JavaScript created from TypeScript."
 			}
 		}
 	};
@@ -186,16 +200,21 @@ module.exports = function(grunt) {
 			expand: true
 		}]
 	};
+    
+	initConfig.copy["DefinitelyTyped"] = {
+		files: [{
+			src: 'DefinitelyTyped/modernizr.d.ts',
+			cwd: '<%= dirs.lib %>',
+			dest: '<%= dirs.ts %>',
+			expand: true
+		}]
+	};
 	
 	
 	initConfig.copy["font-awesome"] = {
 		files: [
 			{
-				
 				src: '<%= dirs.lib %>font-awesome/scss/**/*.scss',
-				
-
-				
 				dest: '<%= dirs.scss %>font-awesome/',
 				
 				expand: true,
@@ -234,7 +253,7 @@ module.exports = function(grunt) {
     
     grunt.loadNpmTasks("grunt-ts");
 
-	grunt.registerTask('default', ['sass:dist', 'cssmin', 'growl:sass', 'growl:watch', 'watch']);
-	grunt.registerTask('build', ['clean:prebuild', 'bower', 'copy', 'sass:dev','cssmin','concat','uglify', 'growl:sass', 'clean:postbuild']);
+	grunt.registerTask('default', ['growl:watch', 'watch']);
+	grunt.registerTask('build', ['clean:prebuild', 'bower', 'copy', 'sass:dev','cssmin','uglify', 'growl:sass', 'clean:postbuild']);
 	grunt.registerTask('expand', ['sass:dev', 'growl:sass', 'growl:expand']);
 };

@@ -20,6 +20,9 @@
     "font-awesome": "4.3.0"
   },
   "exportsOverride": {
+    "DefinitelyTyped": {
+        "": "modernizr"
+    },
     "bourbon": {
       "": "app/assets/stylesheets/"
     },
@@ -57,5 +60,8 @@
         "css"
       ]
     }
+  },
+  "devDependencies": {
+    "DefinitelyTyped": "*"
   }
 }

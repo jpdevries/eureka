@@ -88,6 +88,16 @@ $danger:darken(red,8%);
     }
 }
 
+%visible-contextual {
+    //display:table-row;
+    position:relative;
+    top:auto;
+    left:auto;
+    @extend %growable; //@include flex-grow(1);
+    @extend %unshrinkable; //@include flex-shrink(0);
+    @extend %flex-basis-all; //@include flex-basis(100%);
+}
+
 .dangerous {
     @extend %dangerous;
 }
@@ -199,8 +209,10 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
                     @include flex-wrap(nowrap);
                     > .eureka-table {
                         @include flex-grow(1);
-                        height:100%;
-                        @include flex-basis(100%);
+                        //height:100%;
+                        @include flex-basis(100%); // ie doesn't seem to like this, it lets .eureka-table get too big and overlap the top bar (I think this is an IE flexbox bug...)
+                        height:auto;
+                        -ms-flex-preferred-size:auto; // #janky ^^
                         > table {
                             > thead {
                                 @include flex-basis(2em);
@@ -917,19 +929,20 @@ html.no-touch {
 .eureka-table > table > tbody > tr.contextual {
     line-height:2em;
     .view-b &, .view-c &, .view-d & {
-        display:none; // ok to hide even from #a11y
+        display:none !important; // ok to hide even from #a11y
     }
     html.js &, .view-b &, .view-c &, .view-d & {
-        position:absolute; // not display non for #a11y
+        position:absolute; // not display:none for #a11y
         top:-99999em;
         left:-99999em;
+    }
+    .view-a & {
         @extend %growable; //@include flex-grow(1);
         @extend %unshrinkable; //@include flex-shrink(0);
         @extend %flex-basis-none; //@include flex-basis(0);
-    }
-    .view-a & {
-        //display:block;
-        //@include display(flex);    
+        &.visible {
+            @extend %visible-contextual;
+        }    
     }
     text-align:left;
     
@@ -949,13 +962,7 @@ html.no-touch {
     &:focus,&.focused {
         + tr.contextual {
             html.js & {
-                //display:table-row;
-                position:relative;
-                top:auto;
-                left:auto;
-                @extend %growable; //@include flex-grow(1);
-                @extend %unshrinkable; //@include flex-shrink(0);
-                @extend %flex-basis-all; //@include flex-basis(100%);
+                @extend %visible-contextual;
             }
         }
     }

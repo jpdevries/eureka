@@ -35,8 +35,8 @@
             <div class="view-a eureka" id="media-browser_0"></div><!-- max-height may be used in CSS just to show how it can be condensed when needed (think modal) -->
         </div>
         
-        <script src="assets/js/muckboot.eureka.min.js?nc=<?php echo time() ?>"></script>
-        <script src="assets/js/eureka.min.js?nc=<?php echo time() ?>"></script>
+        <script src="assets/js/muckboot.eureka.js?nc=<?php echo time() ?>"></script>
+        <script src="assets/js/eureka.js?nc=<?php echo time() ?>"></script>
         
         <script>
             (function(){
@@ -46,14 +46,15 @@
                 var $eureka = new Eureka({ // init the Eureka component
                     uid:'media-browser_0',
                     locale:'en-US',
-                    mediaSource:0,
+                    mediaSource:undefined,
                     currentDirectory:undefined,
                     directoryRequestURL:'fakepi/listdirectory.php',
                     listSourceRequestURL:'fakepi/listsource.php',
                     listSourcesRequestURL:'fakepi/listsources.php',
+                    debug:false, // will trace debugging info to console.log
                     headers: [{
                         'modAuth': MODx.siteId,
-                        'Powered-By': 'Eureka in MODX Revolution'
+                        'Powered-By': 'Eureka by Markup.tips'
                     }]
                 });
                 
