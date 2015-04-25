@@ -14,14 +14,13 @@
     "url": "https://github.com/jpdevries/eureka/issues"
   },
   "dependencies": {
-    "bourbon": "4.2.1",
-    "neat": "1.7.2",
+    "html5-file-uploader": "git://github.com/jpdevries/html5-file-uploader.git#a0367a276344068f34362046233f478ca3e30fd5",
     "html5-boilerplate": "5.0.0",
     "font-awesome": "4.3.0"
   },
   "exportsOverride": {
     "DefinitelyTyped": {
-        "": "modernizr"
+      "": "modernizr"
     },
     "bourbon": {
       "": "app/assets/stylesheets/"
@@ -62,6 +61,8 @@
     }
   },
   "devDependencies": {
-    "DefinitelyTyped": "*"
+    "DefinitelyTyped": "*",
+    "bourbon": "4.2.1",
+    "neat": "1.7.2"
   }
 }

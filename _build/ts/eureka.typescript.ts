@@ -1,4 +1,6 @@
+/// <reference path="DefinitelyTyped/modernizr.d.ts" />
 /// <reference path="./plugins.ts" />
+declare var html5Upload; // tell typescript compiler we can assume this will be set http://stackoverflow.com/a/26275242/4671250
 
 class Eureka {
     private _model:EurekaModel;
@@ -86,6 +88,8 @@ class EurekaModel {
     private _editable:boolean = true;
     private _headers:Array<Object> = [];
     private _debug:Boolean = false;
+    private _confirmBeforeDelete:Boolean = true;
+    private _fileUploadURL:string = '/file/upload';
     
     private _directoryRequestURL:string = '';
     private _listSourceRequestURL:string = '';
@@ -107,8 +111,10 @@ class EurekaModel {
         if(opts.directoryRequestURL !== undefined) this._directoryRequestURL = opts.directoryRequestURL;
         if(opts.listSourceRequestURL !== undefined) this._listSourceRequestURL = opts.listSourceRequestURL;
         if(opts.listSourcesRequestURL !== undefined) this._listSourcesRequestURL = opts.listSourcesRequestURL;
+        if(opts.fileUploadURL !== undefined) this._fileUploadURL = opts.fileUploadURL;
         
         if(opts.debug === true) this._debug = opts.debug;
+        if(opts.confirmBeforeDelete !== undefined) this._confirmBeforeDelete = opts.confirmBeforeDelete;
         
         if(this._useLocalStorage) {
             if(this.getLocalStorage('currentMediaSource')) this._mediaSource = this.getLocalStorage('currentMediaSource');
@@ -123,12 +129,32 @@ class EurekaModel {
         return false;
     }
     
+    getAlertBeforeDelete() {
+        return this._confirmBeforeDelete;
+    }
+    
+    getFileUploadURL() {
+        return this._fileUploadURL;
+    }
+    
+    setFileUploadURL(val) {
+        this._fileUploadURL = val;
+    }
+    
+    setAlertBeforeDelete(val) {
+        this._confirmBeforeDelete = val;
+    }
+    
     getDebug() {
         return this._debug;
     }
     
     setDebug(debug) {
         this._debug = debug;
+    }
+    
+    getHeaders() {
+        return this._headers;
     }
     
     getUID(){
@@ -357,10 +383,113 @@ class EurekaView {
     }
     init(){
         var that = this;
+        function assignShortcutListeners() {
+            document.addEventListener('keydown', function(event) {
+                if (event.ctrlKey && event.which === 186) { // ctrl ; to toggle sidebar
+                    var e = document.createEvent('Event');
+                    e.initEvent('click', true, true);
+                    
+                    console.log(that.getController().getModel().getUID() + '__pathbrowser_toggle');
+                    document.getElementById(that.getController().getModel().getUID() + '__pathbrowser_toggle').dispatchEvent(e);
+                }
+                if (event.altKey && event.ctrlKey && (event.which >= 48 && event.which <= 57)) {
+                    try {
+                        var btns = that.getElement().querySelectorAll('.view-btns > nav > a');
+                        var btn:HTMLElement = <HTMLElement>(btns[event.which-48-1]);
+                        if(btn) {
+                            var e = document.createEvent('Event');
+                            e.initEvent('click', true, true);
+                            
+                            btn.dispatchEvent(e);
+                        }
+                    } catch(e) {}
+                }
+                if (event.altKey && !event.ctrlKey && (event.which >= 48 && event.which <= 57)) { // alt 1-9
+                    function setSelectOptGroup(select:HTMLSelectElement,group)  {
+                        function getOptGroup() : Element {
+                            var optgroups = select.querySelectorAll('optgroup');
+                            for(var i = 0; i < optgroups.length; i++) {
+                                var optgroup:Element = (<Element>optgroups[i]);
+                                if(optgroup.getAttribute('data-source') == group) return optgroup;
+                            }
+                            return null;
+                        }
+                        var optGroup:Element = getOptGroup();
+                        if(optGroup) {
+                            console.log(optGroup);
+                            select.value = (<HTMLOptionElement>optGroup.querySelector('option')).value;
+                        }
+                    }
+                    function setSelectOption(select,value) {
+                        function hasOption(val) {
+                            var options = select.querySelectorAll('option');
+                            for(var i = 0; i < options.length; i++) {
+                                if(((<HTMLOptionElement>(options[i])).value) == val) return true; 
+                            }
+                            return false;
+                        }
+                        if(hasOption((event.which - 48).toString())) {
+                            select.value = value;
+                        }
+                    }
+                    setSelectOption(
+                        <HTMLSelectElement>(document.getElementById(that.getController().getModel().getUID() + '__mediasource-select')),
+                        (event.which - 48).toString()
+                    );
+                    setSelectOptGroup(
+                        <HTMLSelectElement>(document.getElementById(that.getController().getModel().getUID() + '__browsing')),
+                        (event.which - 48).toString()
+                    );
+                }
+                
+                if(event.which === 8 && document.activeElement) { // delete to delete
+                    var e = document.createEvent('Event');
+                    e.initEvent('click', true, true);
+                    
+                    try {
+                        (<HTMLElement>document.activeElement.nextSibling).querySelector('a.trash').dispatchEvent(e);
+                    } catch(e) {}
+                } 
+                
+                if(event.altKey && event.which === 32 && document.activeElement) { // space to expand
+                    try {
+                        var e = document.createEvent('Event');
+                        e.initEvent('click', true, true);
+                        
+                        (<HTMLElement>document.activeElement.nextSibling).querySelector('a.expand').dispatchEvent(e);
+                    } catch(e) {}
+                }
+                
+                if(event.which === 13 && document.activeElement) { // enter to choose
+                    try {
+                        var e = document.createEvent('Event');
+                        e.initEvent('click', true, true);
+                        
+                        (<HTMLElement>document.activeElement.nextSibling).querySelector('a.choose').dispatchEvent(e);
+                    } catch(e) {}
+                }
+                
+                if(event.ctrlKey && event.which === 82) { // ctrl r to rename
+                    try {
+                        var e = document.createEvent('Event');
+                        e.initEvent('click', true, true);
+                        
+                        (<HTMLElement>document.activeElement.nextSibling).querySelector('a.rename').dispatchEvent(e);
+                    } catch(e) {}
+                }
+                
+                if(event.ctrlKey && event.which === 70) { // ctrl f to filter
+                    try {
+                        document.getElementById(that.getController().getModel().getUID() + '__filter-images').focus();
+                    } catch(e) {}
+                }
+            });
+        }
         function showSidebar() {
             var tog = document.getElementById(that.getController().getModel().getUID() + '__pathbrowser_toggle');
             var el = document.getElementById(tog.getAttribute('data-toggle-target'));
             el.classList.remove('hidden');
+            document.getElementById(that.getController().getModel().getUID()).classList.add('sidebar-open');
             //document.querySelectorAll('#media-browser_0 .browse-select')[0].classList.add('tablet-p-hidden');
             (<HTMLElement>that.getElement().querySelector('.browse-select')).classList.add('tablet-p-hidden');
             that.getController().getModel().setNavTreeHidden(false);
@@ -374,7 +503,9 @@ class EurekaView {
         function hideSidebar() {
             var tog = document.getElementById(that.getController().getModel().getUID() + '__pathbrowser_toggle');
             var el = document.getElementById(tog.getAttribute('data-toggle-target'));
+            
             el.classList.add('hidden');
+            document.getElementById(that.getController().getModel().getUID()).classList.remove('sidebar-open');
             //document.querySelectorAll('#media-browser_0 .browse-select')[0].classList.remove('tablet-p-hidden');
             (<HTMLElement>that.getElement().querySelector('.browse-select')).classList.remove('tablet-p-hidden');
             that.getController().getModel().setNavTreeHidden(true);
@@ -385,6 +516,7 @@ class EurekaView {
             toggle.classList.remove('icon-toggle-left');
             tog.title = tog.getAttribute('data-title-open');
         }
+        
         document.getElementById(that.getController().getModel().getUID() + '__pathbrowser_toggle').addEventListener('click', function (e) {
             var el = document.getElementById(this.getAttribute('data-toggle-target'));
             e.preventDefault();
@@ -400,11 +532,11 @@ class EurekaView {
         this.assignBrowsingSelectOptGroupListeners();
         this.assignMediaBrowserOptGroupListeners();
         
-        
-        
         this.assignSelectListeners();
         this.assignSortBtnListeners();
         this.assignFilterListeners();
+        
+        assignShortcutListeners();
 
         var e = document.createEvent('Event');
         e.initEvent('click', true, true);
@@ -413,7 +545,110 @@ class EurekaView {
         if (this.getController().getModel().getNavTreeHidden() === true) {
             hideSidebar();
         }
+        
+        // if a droptarget exists and a modern mouse enabled browser is being used
+        var dropContainer = document.getElementById(that.getController().getModel().getUID()).querySelector('.dropzone') || null;
+        if (html5Upload !== undefined && !Modernizr.touch && html5Upload.fileApiSupported() && dropContainer) {
+            html5Upload.initialize({
+                // URL that handles uploaded files
+                uploadUrl: that.getController().getModel().getFileUploadURL(),
+
+                // HTML element on which files should be dropped (optional)
+                dropContainer: dropContainer,
+
+                // HTML file input element that allows to select files (optional)
+                //inputField: document.getElementById('upload-input'),
+
+                // Key for the file data (optional, default: 'file')
+                key: 'File',
+
+                // Additional data submitted with file (optional)
+                data: that.getController().getModel().getHeaders(), // NOTE: could also send additional data here
+
+                // Maximum number of simultaneous uploads
+                // Other uploads will be added to uploads queue (optional)
+                maxSimultaneousUploads: 4,
+
+                // Callback for each dropped or selected file
+                // It receives one argument, add callbacks 
+                // by passing events map object: file.on({ ... })
+
+                onFileAdded: function (file) {
+                    function removeMessages() {
+                        var rs = dropContainer.querySelector('.progress').querySelectorAll('h2,p');
+                        for(var i = 0; i < rs.length; i++) {
+                            (<any>rs[i]).remove();
+                        }
+                    }
+                    removeMessages();
+                    // make a really unique identifer
+                    var id = file.fileName.replace(/[!\"#$%&'\(\)\*\+,\.\/:;<=>\?\@\[\\\]\^`\{\|\}~]/g, '') + file.fileSize.toString().replace(/[!\"#$%&'\(\)\*\+,\.\/:;<=>\?\@\[\\\]\^`\{\|\}~]/g, '');
+                    
+                    var bar = document.createElement('div');
+                    bar.classList.add('bar');
+                    
+                    bar.setAttribute('id',id);
+                    bar.title = file.fileName + ' is preparing for upload.';
+                    
+                    var pill = document.createElement('div');
+                    pill.setAttribute('style','right:100%');
+                    
+                    bar.appendChild(pill);
+                    
+                    var dropzone:HTMLElement = <HTMLElement>document.getElementById(that.getController().getModel().getUID()).querySelector('.dropzone');
+                    dropzone.classList.remove('complete');
+                    dropzone.classList.add('uploading');
+                    
+                    dropzone.querySelector('.progress').appendChild(bar);
+
+                    file.on({
+                        // Called after received response from the server
+                        onCompleted: function (response) {
+                            bar.setAttribute('title', file.fileName + ' has uploaded');
+                            
+                            if(dropzone.querySelectorAll('.bar').length >= 2)(<any>bar).remove();
+                            if(dropzone.querySelectorAll('.bar').length < 2) { // everything is up
+                                setInterval(function(){
+                                    (<HTMLElement>dropzone.querySelector('.progress')).innerHTML = '';
+                                    dropzone.classList.remove('uploading');
+                                    dropzone.classList.add('complete');
+                            
+                                    (function(){ // wait a bit, then show the complete message
+                                        var div = dropzone.querySelector('.progress');
+                                        var h2 = document.createElement('h2');
+                                        var icon = document.createElement('i');
+                                        icon.setAttribute('class','fa fa-check-circle-o');
+                                        h2.appendChild(icon);
+                                        div.appendChild(h2);
+                            
+                                        var span = document.createElement('span');
+                                        span.setAttribute('title','files here...');
+                                        span.innerHTML = 'Your files';
+                            
+                                        var p = document.createElement('p');
+                                        p.appendChild(span);
+                                        p.innerHTML += ' have been successfully uploaded.<br><a href="#">Upload&nbsp;more.</a>';
+                                        div.appendChild(p);
+                                    })();
+                                }, 640);
+                            }
+                            
+                        },
+
+                        // Called during upload progress, first parameter
+                        // is decimal value from 0 to 100.
+                        onProgress: function (progress, fileSize, uploadedBytes) {
+                            bar.setAttribute('title', file.fileName + 'is ' + progress + '% uploaded');
+                            pill.setAttribute('style','right:' + (100-progress).toString() + '%');
+                        }
+                    });
+                }
+            });
+        } else {
+            if(dropContainer) (<any>dropContainer).remove(); // remove the drop container because we can't use it
+        }
     }
+    
     assignBrowsingSelectOptGroupListeners(){
         var that = this;
         
@@ -478,13 +713,19 @@ class EurekaView {
                 var _cta = (<HTMLElement>that.getProceedFooter().querySelector('button.cta'));
                 _cta.removeAttribute('disabled');
                 _cta.classList.remove('muted');
+                
+                _cta.classList.add('go');
                 that.getController().getModel().setSelected(el.getAttribute('data-filename'));
             }
             function handleBlur(el) {
                 var contextual = document.getElementById('eureka_contextual__' + el.getAttribute('data-safe-filename'));
                 contextual.focus();
                 //that.getProceedFooter().querySelector('button.cta').classList.add('muted');
-                (<HTMLElement>that.getProceedFooter().querySelector('button.cta')).classList.remove('go');
+                var _cta = (<HTMLElement>that.getProceedFooter().querySelector('button.cta'));
+                _cta.classList.remove('go');
+                
+                _cta.setAttribute('disabled');
+                _cta.classList.add('muted');
             }
             var rows = document.querySelectorAll(".eureka-table tbody > tr:not(.contextual)");
             for (var i = 0; i < rows.length; i++) {
@@ -599,7 +840,7 @@ class EurekaView {
                 (<HTMLElement>document.getElementById(that.getController().getModel().getUID()).querySelector('.eureka-table > table > tbody')).classList.add('filtered');
             }
         }
-        var input = document.getElementById('media-browser_0__filter-images');
+        var input = document.getElementById(that.getController().getModel().getUID() + '__filter-images');
         input.addEventListener("input", function (e) {
             if (this.value) {
                 filterView(this.value);
@@ -645,7 +886,7 @@ class EurekaView {
         }
         data = JSON.parse(data);
         var results = data.results;
-        var _ul = (<HTMLElement>document.querySelector('#media-browser_0__pathbrowser nav.tree > ul'));
+        var _ul = (<HTMLElement>document.querySelector('#' + this.getController().getModel().getUID() + '__pathbrowser nav.tree > ul'));
         this.emptyTree();
         _ul.innerHTML = '';
         PrintResults(results, _ul);
@@ -1029,7 +1270,7 @@ class EurekaView {
         
             tbodyHTML += createContextualRow().outerHTML;
         }
-        (<HTMLElement>document.querySelector('#media-browser_0 .eureka-table > table > tbody')).innerHTML = tbodyHTML;
+        (<HTMLElement>document.querySelector('#' + this.getController().getModel().getUID() + ' .eureka-table > table > tbody')).innerHTML = tbodyHTML;
         // bolden the correct tree item
         try {
             (<HTMLElement>this.getElement().querySelector('nav.tree li.active')).classList.remove('active');
@@ -1072,12 +1313,12 @@ class EurekaView {
                     //that.getElement().parentNode.querySelector('footer.proceed .cta').disabled = true;
                     //that.getElement().parentNode.querySelector('footer.proceed .cta').setAttribute('disabled','disabled');
                 }, false);
-                anchor.addEventListener('mouseover',function(e) {
+                /*anchor.addEventListener('mouseover',function(e) {
                     (<HTMLElement>(<HTMLElement>that.getElement().parentNode).querySelector('footer.proceed .cta')).classList.add('go');
                 }, false);
                 anchor.addEventListener('mouseout',function(e) {
                     (<HTMLElement>(<HTMLElement>that.getElement().parentNode).querySelector('footer.proceed .cta')).classList.remove('go');
-                }, false);
+                }, false);*/
             }
             function handleChooseClicked(anchor) {
                 var contextual = that.getClosest(anchor, 'tr');
@@ -1103,6 +1344,13 @@ class EurekaView {
                 var contextual:any = that.getClosest(anchor, 'tr');
                 var mediaRow:any = (<HTMLElement>contextual.previousSibling);
                 var nextRow:HTMLElement = (<HTMLElement>contextual.nextSibling);
+                
+                // give them a way out
+                if(that.getController().getModel().getAlertBeforeDelete() && !window.confirm('Are you sure you want to delete ' + mediaRow.getAttribute('data-filename') + '?')) {
+                    return false;
+                }
+                
+                // proceed
                 that.getController().getModel().deleteFile(mediaRow.getAttribute('data-filename'), mediaRow);
                 
                 function remove(el) {

@@ -31,7 +31,7 @@ module.exports = function(grunt) {
 					banner: '/*!\n*  <%= pkg.title %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n*/'
 				},
 				files: {
-					'<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>main.min.css': '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>main.css'
+					'<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.min.css': '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.css'
 				}
 			}
 		},
@@ -43,7 +43,7 @@ module.exports = function(grunt) {
 					compass: false
 				},
 				files: {
-					'<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>main.css': '<%= dirs.scss %>main.scss'
+					'<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.css': '<%= dirs.scss %>main.scss'
 				}
 			},
 			dev: {
@@ -52,7 +52,7 @@ module.exports = function(grunt) {
 					compass: false
 				},
 				files: {
-					'<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>main.css': '<%= dirs.scss %>main.scss'
+					'<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.css': '<%= dirs.scss %>main.scss'
 				}
 			}
 		},
@@ -67,36 +67,25 @@ module.exports = function(grunt) {
 		},
 		
 		concat: {
-			options: {
-				separator: '',
-                banner:'/* do not touch this file. see _build/*.js */\n'
-			}
-			
-			,
+			plugins: {
+    			options: {
+    				separator: '',
+                    banner:'/* do not touch this file. see _build/*.js */\n'
+    			},
+				src: [
+                    '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>vendor/html5Upload.js',
+					'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.js'
+				],
+				dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.js', 
+			},
 			eureka: {
 				src: [
-					'<%= dirs.js %>plugins.js',
-					'<%= dirs.js %>eureka.js'
+					'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.js'
 				],
 				dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.min.js', 
 			}
 			
 		},
-        '6to5': {
-            options: {
-                modules: 'common'
-            },
-
-            build: {
-                files: [{
-                    expand: true,
-                    cwd: '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>',
-                    src: ['./plugins.js','./eureka.js'],
-                    dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>/es5/',
-                }],
-            }
-        },
-        
         ts: {
             es5 : {
                 target:'es5',
@@ -120,7 +109,7 @@ module.exports = function(grunt) {
 				},
 				files: {
                     '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>muckboot.eureka.min.js': ['<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>muckboot.eureka.js'],
-                    '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.min.js': ['<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.js'],
+                    '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>/vendor/html5Upload.min.js': ['<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>/vendor/html5Upload.js'],
                     '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.min.js': ['<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.js']
 				}
 				
@@ -138,7 +127,7 @@ module.exports = function(grunt) {
 			},
 			ts: {
 				files: ['<%= dirs.ts %>*'],
-				tasks: ['ts','growl:ts','uglify','growl:uglify']
+				tasks: ['ts','growl:ts','concat','uglify','growl:uglify']
 			}
 		},
 		clean: { /* take out the trash */
@@ -209,6 +198,13 @@ module.exports = function(grunt) {
 			expand: true
 		}]
 	};
+    
+	initConfig.copy["html5-file-uploader"] = {
+		files: [{
+			src: '<%= dirs.lib %>html5-file-uploader/Html5UploadDemo/Scripts/src/html5Upload.js',
+			dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>vendor/html5Upload.js'
+		}]
+	};
 	
 	
 	initConfig.copy["font-awesome"] = {
@@ -249,11 +245,10 @@ module.exports = function(grunt) {
 	
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-6to5');
     
     grunt.loadNpmTasks("grunt-ts");
 
 	grunt.registerTask('default', ['growl:watch', 'watch']);
-	grunt.registerTask('build', ['clean:prebuild', 'bower', 'copy', 'sass:dev','cssmin','uglify', 'growl:sass', 'clean:postbuild']);
+	grunt.registerTask('build', ['clean:prebuild', 'bower', 'copy', 'sass:dev','cssmin','concat','uglify', 'growl:sass', 'clean:postbuild']);
 	grunt.registerTask('expand', ['sass:dev', 'growl:sass', 'growl:expand']);
 };

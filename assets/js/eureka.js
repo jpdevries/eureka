@@ -1,3 +1,254 @@
+/* do not touch this file. see _build/*.js */
+/*jslint unparam: true, browser: true, devel: true */
+var html5Upload = (function(){
+    'use strict';
+
+    var module = {},
+        noop = function () { },
+        console = window.console || { log: noop },
+        supportsFileApi;
+
+    // Upload manager constructor:
+    function UploadManager(options) {
+        var self = this;
+        self.dropContainer = options.dropContainer;
+        self.inputField = options.inputField;
+        self.uploadsQueue = [];
+        self.activeUploads = 0;
+        self.data = options.data;
+        self.key = options.key;
+        self.maxSimultaneousUploads = options.maxSimultaneousUploads || -1;
+        self.onFileAdded = options.onFileAdded || noop;
+        self.uploadUrl = options.uploadUrl;
+        self.onFileAddedProxy = function (upload) {
+            console.log('Event: onFileAdded, file: ' + upload.fileName);
+            self.onFileAdded(upload);
+        };
+
+        self.initialize();
+    }
+
+    // FileUpload proxy class:
+    function FileUpload(file) {
+        var self = this;
+
+        self.file = file;
+        self.fileName = file.name;
+        self.fileSize = file.size;
+        self.uploadSize = file.size;
+        self.uploadedBytes = 0;
+        self.eventHandlers = {};
+        self.events = {
+            onProgress: function (fileSize, uploadedBytes) {
+                var progress = uploadedBytes / fileSize * 100;
+                console.log('Event: upload onProgress, progress = ' + progress + ', fileSize = ' + fileSize + ', uploadedBytes = ' + uploadedBytes);
+                (self.eventHandlers.onProgress || noop)(progress, fileSize, uploadedBytes);
+            },
+            onStart: function () {
+                console.log('Event: upload onStart');
+                (self.eventHandlers.onStart || noop)();
+            },
+            onCompleted: function (data) {
+                console.log('Event: upload onCompleted, data = ' + data);
+                file = null;
+                (self.eventHandlers.onCompleted || noop)(data);
+            }
+        };
+    }
+
+    FileUpload.prototype = {
+        on: function (eventHandlers) {
+            this.eventHandlers = eventHandlers;
+        }
+    };
+
+    UploadManager.prototype = {
+
+        initialize: function () {
+            console.log('Initializing upload manager');
+            var manager = this,
+                dropContainer = manager.dropContainer,
+                inputField = manager.inputField,
+                cancelEvent = function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                },
+                dragOverOnClass = function(e){
+                    cancelEvent(e);
+                    dropContainer.classList.add('drag-over');
+                },
+                dragOverOffClass = function(e){
+                    cancelEvent(e);
+                    dropContainer.classList.remove('drag-over');
+                };
+
+            if (dropContainer) {
+                /*
+                 * Original code
+                manager.on(dropContainer, 'dragover', cancelEvent);
+                manager.on(dropContainer, 'dragenter', cancelEvent);
+                manager.on(dropContainer, 'drop', function (e) {
+                    cancelEvent(e);
+                    manager.processFiles(e.dataTransfer.files);
+                });
+                */
+                
+                manager.on(dropContainer, 'dragenter', dragOverOnClass);
+                manager.on(dropContainer, 'dragover', dragOverOnClass);
+                manager.on(dropContainer, 'dragleave', dragOverOffClass);
+                manager.on(dropContainer, 'drop', function (e) {
+                    cancelEvent(e);
+                    dragOverOffClass(e);
+                    manager.processFiles(e.dataTransfer.files);
+                });
+            }
+
+            if (inputField) {
+                manager.on(inputField, 'change', function () {
+                    manager.processFiles(this.files);
+                });
+            }
+        },
+
+        processFiles: function (files) {
+            console.log('Processing files: ' + files.length);
+            var manager = this,
+                len = files.length,
+                file,
+                upload,
+                i;
+
+            for (i = 0; i < len; i += 1) {
+                file = files[i];
+                if (file.size === 0) {
+                    alert('Files with files size zero cannot be uploaded or multiple file uploads are not supported by your browser');
+                    break;
+                }
+
+                upload = new FileUpload(file);
+                manager.uploadFile(upload);
+            }
+        },
+
+        uploadFile: function (upload) {
+            var manager = this;
+
+            manager.onFileAdded(upload);
+
+            // Queue upload if maximum simultaneous uploads reached:
+            if (manager.activeUploads === manager.maxSimultaneousUploads) {
+                console.log('Queue upload: ' + upload.fileName);
+                manager.uploadsQueue.push(upload);
+                return;
+            }
+
+            manager.ajaxUpload(upload);
+        },
+
+        ajaxUpload: function (upload) {
+            var manager = this,
+                xhr,
+                formData,
+                fileName,
+                file = upload.file,
+                prop,
+                data = manager.data,
+                key = manager.key || 'file';
+
+            console.log('Beging upload: ' + upload.fileName);
+            manager.activeUploads += 1;
+
+            xhr = new window.XMLHttpRequest();
+            formData = new window.FormData();
+            fileName = file.name;
+
+            xhr.open('POST', manager.uploadUrl);
+
+            // Triggered when upload starts:
+            xhr.upload.onloadstart = function () {
+                // File size is not reported during start!
+                console.log('Upload started: ' + fileName);
+                upload.events.onStart();
+            };
+
+            // Triggered many times during upload:
+            xhr.upload.onprogress = function (event) {
+                if (!event.lengthComputable) {
+                    return;
+                }
+
+                // Update file size because it might be bigger than reported by the fileSize:
+                upload.events.onProgress(event.total, event.loaded);
+            };
+
+            // Triggered when upload is completed:
+            xhr.onload = function (event) {
+                console.log('Upload completed: ' + fileName);
+
+                // Reduce number of active uploads:
+                manager.activeUploads -= 1;
+
+                upload.events.onCompleted(event.target.responseText);
+
+                // Check if there are any uploads left in a queue:
+                if (manager.uploadsQueue.length) {
+                    manager.ajaxUpload(manager.uploadsQueue.shift());
+                }
+            };
+
+            // Triggered when upload fails:
+            xhr.onerror = function () {
+                console.log('Upload failed: ', upload.fileName);
+            };
+
+            // Append additional data if provided:
+            if (data) {
+                for (prop in data) {
+                    if (data.hasOwnProperty(prop)) {
+                        console.log('Adding data: ' + prop + ' = ' + data[prop]);
+                        formData.append(prop, data[prop]);
+                    }
+                }
+            }
+
+            // Append file data:
+            formData.append(key, file);
+
+            // Initiate upload:
+            xhr.send(formData);
+        },
+
+        // Event handlers:
+        on: function (element, eventName, handler) {
+            if (!element) {
+                return;
+            }
+            if (element.addEventListener) {
+                element.addEventListener(eventName, handler, false);
+            } else if (element.attachEvent) {
+                element.attachEvent('on' + eventName, handler);
+            } else {
+                element['on' + eventName] = handler;
+            }
+        }
+    };
+
+    module.fileApiSupported = function () {
+        if (typeof supportsFileApi !== 'boolean') {
+            var input = document.createElement("input");
+            input.setAttribute("type", "file");
+            supportsFileApi = !!input.files;
+        }
+
+        return supportsFileApi;
+    };
+
+    module.initialize = function (options) {
+        return new UploadManager(options);
+    };
+
+    return module;
+}());
 var AJAX = (function () {
     function AJAX() {
         this.x = new XMLHttpRequest();
@@ -111,6 +362,8 @@ var EurekaModel = (function () {
         this._editable = true;
         this._headers = [];
         this._debug = false;
+        this._confirmBeforeDelete = true;
+        this._fileUploadURL = '/file/upload';
         this._directoryRequestURL = '';
         this._listSourceRequestURL = '';
         this._listSourcesRequestURL = '';
@@ -143,8 +396,12 @@ var EurekaModel = (function () {
             this._listSourceRequestURL = opts.listSourceRequestURL;
         if (opts.listSourcesRequestURL !== undefined)
             this._listSourcesRequestURL = opts.listSourcesRequestURL;
+        if (opts.fileUploadURL !== undefined)
+            this._fileUploadURL = opts.fileUploadURL;
         if (opts.debug === true)
             this._debug = opts.debug;
+        if (opts.confirmBeforeDelete !== undefined)
+            this._confirmBeforeDelete = opts.confirmBeforeDelete;
         if (this._useLocalStorage) {
             if (this.getLocalStorage('currentMediaSource'))
                 this._mediaSource = this.getLocalStorage('currentMediaSource');
@@ -161,11 +418,26 @@ var EurekaModel = (function () {
             return localStorage.getItem(id);
         return false;
     };
+    EurekaModel.prototype.getAlertBeforeDelete = function () {
+        return this._confirmBeforeDelete;
+    };
+    EurekaModel.prototype.getFileUploadURL = function () {
+        return this._fileUploadURL;
+    };
+    EurekaModel.prototype.setFileUploadURL = function (val) {
+        this._fileUploadURL = val;
+    };
+    EurekaModel.prototype.setAlertBeforeDelete = function (val) {
+        this._confirmBeforeDelete = val;
+    };
     EurekaModel.prototype.getDebug = function () {
         return this._debug;
     };
     EurekaModel.prototype.setDebug = function (debug) {
         this._debug = debug;
+    };
+    EurekaModel.prototype.getHeaders = function () {
+        return this._headers;
     };
     EurekaModel.prototype.getUID = function () {
         return this._uid;
@@ -386,10 +658,110 @@ var EurekaView = (function () {
     };
     EurekaView.prototype.init = function () {
         var that = this;
+        function assignShortcutListeners() {
+            document.addEventListener('keydown', function (event) {
+                if (event.ctrlKey && event.which === 186) {
+                    var e = document.createEvent('Event');
+                    e.initEvent('click', true, true);
+                    console.log(that.getController().getModel().getUID() + '__pathbrowser_toggle');
+                    document.getElementById(that.getController().getModel().getUID() + '__pathbrowser_toggle').dispatchEvent(e);
+                }
+                if (event.altKey && event.ctrlKey && (event.which >= 48 && event.which <= 57)) {
+                    try {
+                        var btns = that.getElement().querySelectorAll('.view-btns > nav > a');
+                        var btn = (btns[event.which - 48 - 1]);
+                        if (btn) {
+                            var e = document.createEvent('Event');
+                            e.initEvent('click', true, true);
+                            btn.dispatchEvent(e);
+                        }
+                    }
+                    catch (e) {
+                    }
+                }
+                if (event.altKey && !event.ctrlKey && (event.which >= 48 && event.which <= 57)) {
+                    function setSelectOptGroup(select, group) {
+                        function getOptGroup() {
+                            var optgroups = select.querySelectorAll('optgroup');
+                            for (var i = 0; i < optgroups.length; i++) {
+                                var optgroup = optgroups[i];
+                                if (optgroup.getAttribute('data-source') == group)
+                                    return optgroup;
+                            }
+                            return null;
+                        }
+                        var optGroup = getOptGroup();
+                        if (optGroup) {
+                            console.log(optGroup);
+                            select.value = optGroup.querySelector('option').value;
+                        }
+                    }
+                    function setSelectOption(select, value) {
+                        function hasOption(val) {
+                            var options = select.querySelectorAll('option');
+                            for (var i = 0; i < options.length; i++) {
+                                if (((options[i]).value) == val)
+                                    return true;
+                            }
+                            return false;
+                        }
+                        if (hasOption((event.which - 48).toString())) {
+                            select.value = value;
+                        }
+                    }
+                    setSelectOption((document.getElementById(that.getController().getModel().getUID() + '__mediasource-select')), (event.which - 48).toString());
+                    setSelectOptGroup((document.getElementById(that.getController().getModel().getUID() + '__browsing')), (event.which - 48).toString());
+                }
+                if (event.which === 8 && document.activeElement) {
+                    var e = document.createEvent('Event');
+                    e.initEvent('click', true, true);
+                    try {
+                        document.activeElement.nextSibling.querySelector('a.trash').dispatchEvent(e);
+                    }
+                    catch (e) {
+                    }
+                }
+                if (event.altKey && event.which === 32 && document.activeElement) {
+                    try {
+                        var e = document.createEvent('Event');
+                        e.initEvent('click', true, true);
+                        document.activeElement.nextSibling.querySelector('a.expand').dispatchEvent(e);
+                    }
+                    catch (e) {
+                    }
+                }
+                if (event.which === 13 && document.activeElement) {
+                    try {
+                        var e = document.createEvent('Event');
+                        e.initEvent('click', true, true);
+                        document.activeElement.nextSibling.querySelector('a.choose').dispatchEvent(e);
+                    }
+                    catch (e) {
+                    }
+                }
+                if (event.ctrlKey && event.which === 82) {
+                    try {
+                        var e = document.createEvent('Event');
+                        e.initEvent('click', true, true);
+                        document.activeElement.nextSibling.querySelector('a.rename').dispatchEvent(e);
+                    }
+                    catch (e) {
+                    }
+                }
+                if (event.ctrlKey && event.which === 70) {
+                    try {
+                        document.getElementById(that.getController().getModel().getUID() + '__filter-images').focus();
+                    }
+                    catch (e) {
+                    }
+                }
+            });
+        }
         function showSidebar() {
             var tog = document.getElementById(that.getController().getModel().getUID() + '__pathbrowser_toggle');
             var el = document.getElementById(tog.getAttribute('data-toggle-target'));
             el.classList.remove('hidden');
+            document.getElementById(that.getController().getModel().getUID()).classList.add('sidebar-open');
             that.getElement().querySelector('.browse-select').classList.add('tablet-p-hidden');
             that.getController().getModel().setNavTreeHidden(false);
             var toggle = document.getElementById(that.getController().getModel().getUID() + '__pathbrowser_toggle').getElementsByTagName("i")[0];
@@ -403,6 +775,7 @@ var EurekaView = (function () {
             var tog = document.getElementById(that.getController().getModel().getUID() + '__pathbrowser_toggle');
             var el = document.getElementById(tog.getAttribute('data-toggle-target'));
             el.classList.add('hidden');
+            document.getElementById(that.getController().getModel().getUID()).classList.remove('sidebar-open');
             that.getElement().querySelector('.browse-select').classList.remove('tablet-p-hidden');
             that.getController().getModel().setNavTreeHidden(true);
             var toggle = document.getElementById(that.getController().getModel().getUID() + '__pathbrowser_toggle').getElementsByTagName("i")[0];
@@ -429,11 +802,80 @@ var EurekaView = (function () {
         this.assignSelectListeners();
         this.assignSortBtnListeners();
         this.assignFilterListeners();
+        assignShortcutListeners();
         var e = document.createEvent('Event');
         e.initEvent('click', true, true);
         that.getElement().querySelector('.eureka__topbar-nav .view-btns a[data-view="' + that.getController().getModel().getCurrentView() + '"]').dispatchEvent(e);
         if (this.getController().getModel().getNavTreeHidden() === true) {
             hideSidebar();
+        }
+        var dropContainer = document.getElementById(that.getController().getModel().getUID()).querySelector('.dropzone') || null;
+        if (html5Upload !== undefined && !Modernizr.touch && html5Upload.fileApiSupported() && dropContainer) {
+            html5Upload.initialize({
+                uploadUrl: that.getController().getModel().getFileUploadURL(),
+                dropContainer: dropContainer,
+                key: 'File',
+                data: that.getController().getModel().getHeaders(),
+                maxSimultaneousUploads: 4,
+                onFileAdded: function (file) {
+                    function removeMessages() {
+                        var rs = dropContainer.querySelector('.progress').querySelectorAll('h2,p');
+                        for (var i = 0; i < rs.length; i++) {
+                            rs[i].remove();
+                        }
+                    }
+                    removeMessages();
+                    var id = file.fileName.replace(/[!\"#$%&'\(\)\*\+,\.\/:;<=>\?\@\[\\\]\^`\{\|\}~]/g, '') + file.fileSize.toString().replace(/[!\"#$%&'\(\)\*\+,\.\/:;<=>\?\@\[\\\]\^`\{\|\}~]/g, '');
+                    var bar = document.createElement('div');
+                    bar.classList.add('bar');
+                    bar.setAttribute('id', id);
+                    bar.title = file.fileName + ' is preparing for upload.';
+                    var pill = document.createElement('div');
+                    pill.setAttribute('style', 'right:100%');
+                    bar.appendChild(pill);
+                    var dropzone = document.getElementById(that.getController().getModel().getUID()).querySelector('.dropzone');
+                    dropzone.classList.remove('complete');
+                    dropzone.classList.add('uploading');
+                    dropzone.querySelector('.progress').appendChild(bar);
+                    file.on({
+                        onCompleted: function (response) {
+                            bar.setAttribute('title', file.fileName + ' has uploaded');
+                            if (dropzone.querySelectorAll('.bar').length >= 2)
+                                bar.remove();
+                            if (dropzone.querySelectorAll('.bar').length < 2) {
+                                setInterval(function () {
+                                    dropzone.querySelector('.progress').innerHTML = '';
+                                    dropzone.classList.remove('uploading');
+                                    dropzone.classList.add('complete');
+                                    (function () {
+                                        var div = dropzone.querySelector('.progress');
+                                        var h2 = document.createElement('h2');
+                                        var icon = document.createElement('i');
+                                        icon.setAttribute('class', 'fa fa-check-circle-o');
+                                        h2.appendChild(icon);
+                                        div.appendChild(h2);
+                                        var span = document.createElement('span');
+                                        span.setAttribute('title', 'files here...');
+                                        span.innerHTML = 'Your files';
+                                        var p = document.createElement('p');
+                                        p.appendChild(span);
+                                        p.innerHTML += ' have been successfully uploaded.<br><a href="#">Upload&nbsp;more.</a>';
+                                        div.appendChild(p);
+                                    })();
+                                }, 640);
+                            }
+                        },
+                        onProgress: function (progress, fileSize, uploadedBytes) {
+                            bar.setAttribute('title', file.fileName + 'is ' + progress + '% uploaded');
+                            pill.setAttribute('style', 'right:' + (100 - progress).toString() + '%');
+                        }
+                    });
+                }
+            });
+        }
+        else {
+            if (dropContainer)
+                dropContainer.remove();
         }
     };
     EurekaView.prototype.assignBrowsingSelectOptGroupListeners = function () {
@@ -491,12 +933,16 @@ var EurekaView = (function () {
                 var _cta = that.getProceedFooter().querySelector('button.cta');
                 _cta.removeAttribute('disabled');
                 _cta.classList.remove('muted');
+                _cta.classList.add('go');
                 that.getController().getModel().setSelected(el.getAttribute('data-filename'));
             }
             function handleBlur(el) {
                 var contextual = document.getElementById('eureka_contextual__' + el.getAttribute('data-safe-filename'));
                 contextual.focus();
-                that.getProceedFooter().querySelector('button.cta').classList.remove('go');
+                var _cta = that.getProceedFooter().querySelector('button.cta');
+                _cta.classList.remove('go');
+                _cta.setAttribute('disabled');
+                _cta.classList.add('muted');
             }
             var rows = document.querySelectorAll(".eureka-table tbody > tr:not(.contextual)");
             for (var i = 0; i < rows.length; i++) {
@@ -605,7 +1051,7 @@ var EurekaView = (function () {
                 document.getElementById(that.getController().getModel().getUID()).querySelector('.eureka-table > table > tbody').classList.add('filtered');
             }
         }
-        var input = document.getElementById('media-browser_0__filter-images');
+        var input = document.getElementById(that.getController().getModel().getUID() + '__filter-images');
         input.addEventListener("input", function (e) {
             if (this.value) {
                 filterView(this.value);
@@ -653,7 +1099,7 @@ var EurekaView = (function () {
         }
         data = JSON.parse(data);
         var results = data.results;
-        var _ul = document.querySelector('#media-browser_0__pathbrowser nav.tree > ul');
+        var _ul = document.querySelector('#' + this.getController().getModel().getUID() + '__pathbrowser nav.tree > ul');
         this.emptyTree();
         _ul.innerHTML = '';
         PrintResults(results, _ul);
@@ -1018,7 +1464,7 @@ var EurekaView = (function () {
             }
             tbodyHTML += createContextualRow().outerHTML;
         }
-        document.querySelector('#media-browser_0 .eureka-table > table > tbody').innerHTML = tbodyHTML;
+        document.querySelector('#' + this.getController().getModel().getUID() + ' .eureka-table > table > tbody').innerHTML = tbodyHTML;
         try {
             this.getElement().querySelector('nav.tree li.active').classList.remove('active');
         }
@@ -1058,12 +1504,6 @@ var EurekaView = (function () {
                 anchor.addEventListener('blur', function (e) {
                     that.getElement().parentNode.querySelector('footer.proceed .cta').classList.remove('go');
                 }, false);
-                anchor.addEventListener('mouseover', function (e) {
-                    that.getElement().parentNode.querySelector('footer.proceed .cta').classList.add('go');
-                }, false);
-                anchor.addEventListener('mouseout', function (e) {
-                    that.getElement().parentNode.querySelector('footer.proceed .cta').classList.remove('go');
-                }, false);
             }
             function handleChooseClicked(anchor) {
                 var contextual = that.getClosest(anchor, 'tr');
@@ -1089,6 +1529,9 @@ var EurekaView = (function () {
                 var contextual = that.getClosest(anchor, 'tr');
                 var mediaRow = contextual.previousSibling;
                 var nextRow = contextual.nextSibling;
+                if (that.getController().getModel().getAlertBeforeDelete() && !window.confirm('Are you sure you want to delete ' + mediaRow.getAttribute('data-filename') + '?')) {
+                    return false;
+                }
                 that.getController().getModel().deleteFile(mediaRow.getAttribute('data-filename'), mediaRow);
                 function remove(el) {
                     try {

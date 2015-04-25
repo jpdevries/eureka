@@ -8,19 +8,21 @@
         <meta name="description" content="HTML-first crack at a Flexible Media Browser">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="stylesheet" href="assets/css/main.css?nc=<?php echo time() ?>">
+        <link rel="stylesheet" href="assets/css/eureka.css?nc=<?php echo time() ?>">
         <script src="assets/js/vendor/modernizr-2.8.3.min.js"></script>
         
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" async>
         
         <style>
-            @media screen and (min-width: 769px) { /* holy grail layout */
-              html.no-touch #page-wrapper {
-                height: 100%;
-                max-height:100vh;
-                margin: 0;
-                padding:0.5em;
-              }
+            html,body {
+                margin:0;
+                padding:0;
+            }
+            html.no-touch #page-wrapper {
+              height: 96vh;
+              margin: 0;
+              padding:2vh;
+              
             }
         </style> 
         <script>var MODx = {siteId:'foo'};</script>
@@ -29,7 +31,7 @@
         <form>
             <div id="page-wrapper">            
                     <div class="hack-firefox eureka-wrapper"><!-- Eureka Media Browser -->                        
-                        <div class="view-a eureka" id="media-browser_0"><!-- max-height may be used in CSS just to show how it can be condensed when needed (think modal) -->
+                        <div class="view-a eureka sidebar-open" id="media-browser_0"><!-- max-height may be used in CSS just to show how it can be condensed when needed (think modal) -->
                             <!-- initially open, this side navigation adds a a/synchronous tree browser to traverse media source directories  -->
                             <nav id="media-browser_0__pathbrowser" class="pathbrowser">
                                 <div class="pathbrowser__topbar">
@@ -62,6 +64,38 @@
                                 </nav>
                                 <!-- upload & create directory buttons -->
                                 <footer>
+                                    <!--script>document.write('<div class="dropzone" title="Drag &amp; Drop files here to upload them"></div>')</script-->
+                                    <div class="droparea progress">
+                                        <div class="dropzone" title="Drag &amp; Drop files here to upload them">
+                                            <!-- this is the uploading state. set div.dropzone.uploading class -->
+                                            <div class="progress">
+                                                <div class="bar" title="image_a.jpg is 22% done uploading">
+                                                    <div style="right:88%"></div>
+                                                </div>
+                                                <div class="bar" title="image_b.jpg is 67% done uploading">
+                                                    <div style="right:33%"></div>
+                                                </div>
+                                            </div>
+                                            <!-- this is the complete state. set div.dropzone.complete class -->
+                                            <!--div class="progress">
+                                                <div>
+                                                    <h2>
+                                                        <i class="fa fa-check-circle-o"></i>
+                                                    </h2>
+                                                    <p><span title="file_a.jpg, file_b.jpg, file_c.jpg" style="cursor:default">Your files</span> have been successfully uploaded.<br><a href="#">Upload&nbsp;more.</a></p>
+                                                </div>
+                                            </div-->
+                                            <!-- this is the error state. let's hope you don't need to set div.dropzone.error class -->
+                                            <!--div class="progress">
+                                                <div>
+                                                    <h2>
+                                                        <i class="fa fa-times-circle"></i>
+                                                    </h2>
+                                                    <p>Oh no,<br>One or more files&nbsp;were not&nbsp;uploaded.<br><a href="#">More info</a>.</p>
+                                                </div>
+                                            </div-->
+                                        </div>
+                                    </div>
                                     <nav>
                                         <form action="#">
                                             <input type="hidden" name="mediasource" value="0">
@@ -97,7 +131,7 @@
                                             <script>document.write('<a id="media-browser_0__pathbrowser_toggle" class="pathbrowser_toggle" title="Close Navigation Tree" data-title-close="Close Navigation Tree" data-title-open="Open Navigation Tree" data-toggle-target="media-browser_0__pathbrowser"><i class="fa fa-toggle-left"></i></a>');</script>
                                             <!-- when the navigation tree is closed this accessible a/synchronous form will be available to change directories  -->
                                             <div id="media-browser_0__browse-select" class="tablet-p-hidden browse-select">
-                                                <label for="media-browser_0__browsing" class="browsing">Browse:</label>
+                                                <label for="media-browser_0__browsing" class="browsing">Browsing:</label>
                                                 <form aciton="#" id="media-browser_0__browsing">
                                                     <select>
                                                         <!-- each media source is an optgroup -->
@@ -117,6 +151,12 @@
                                                     <noscript>
                                                         <button type="submit" class="nued">Go&nbsp;<i class="fa fa-chevron-right"></i></button>
                                                     </noscript>
+                                                </form>
+                                            </div>
+                                            <div id="media-browser_0__upload" class="upload-form">
+                                                <label for="media-browser_0__upload-form">Upload:</label>
+                                                <form action="#" id="media-browser_0__upload-form">
+                                                    <input id="upload-input" multiple="multiple" name="uploadFiles" type="file">
                                                 </form>
                                             </div>
                                             <!-- these buttons change our layouts when clicked. notice we only assign them titles for .js users -->

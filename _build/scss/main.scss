@@ -1,5 +1,7 @@
 @import "bourbon/bourbon";
 @import "grid-settings";
+
+$border-box-sizing:false;
 @import "neat/neat";
 
 @import "spec/tacular";
@@ -15,8 +17,8 @@ $white:rgb(250,250,250);
 $contextualBG:lighten($black,82%);
 $contextualBorder:lighten($black,54%);
 $contextualColor:lighten($black,36%);
-$goGreen:rgb(33,163,0);
-
+$goGreen:rgb(33,163,0) !default;
+$goGreen:#297aa7;
 $topBarH:4.8rem;
 
 %subtle-link {
@@ -41,14 +43,40 @@ $topBarH:4.8rem;
     color:$white;
 }
 
-%bottom-seperated {
+@mixin bottom-seperated() {
     padding-bottom:0.5em;
     border-bottom:1px solid lighten($borderColor,24%);
 }
 
-%top-seperated {
+%bottom-seperated {
+    @include bottom-seperated;
+}
+
+@mixin top-seperated() {
     padding-bottom:0.5em;
     border-top:1px solid lighten($borderColor,24%);
+}
+
+%top-seperated {
+    @include top-seperated;
+}
+
+@mixin left-seperated() {
+    padding-left:0.5em;
+    border-left:1px solid lighten($borderColor,24%);
+}
+
+%left-seperated {
+    @include left-seperated;
+}
+
+@mixin right-seperated() {
+    padding-right:0.5em;
+    border-right:1px solid lighten($borderColor,24%);
+}
+
+%right-seperated {
+    @include right-seperated;
 }
 
 $danger:darken(red,8%);
@@ -72,9 +100,9 @@ $danger:darken(red,8%);
 }
 
 %green-bg {
-    background:darken($goGreen,8%);
+    background:$goGreen;
     color:$white;
-    border-color:darken($goGreen,14%);
+    border-color:darken($goGreen,8%);
 }
 
 %go {
@@ -96,6 +124,20 @@ $danger:darken(red,8%);
     @extend %growable; //@include flex-grow(1);
     @extend %unshrinkable; //@include flex-shrink(0);
     @extend %flex-basis-all; //@include flex-basis(100%);
+}
+
+@if $border-box-sizing == false { 
+  .eureka-wrapper { // http://bit.ly/1qk2tVR
+    @include box-sizing(border-box);
+  }
+
+  .eureka-wrapper { 
+    *,
+    &:before,
+    &:after {
+      @include box-sizing(inherit);
+    }
+  }
 }
 
 .dangerous {
@@ -161,14 +203,14 @@ button {
     }
 }
 
-
-
+/*
 html.no-touch, html.no-touch body, html.no-touch body > form {
     @include media($gtMobile) {
-        height:100%;
+        //height:100%;
         margin:0;
     }
 }
+*/
 
 .eureka__topbar-nav,.pathbrowser__topbar {
     h4 {
@@ -192,45 +234,42 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
     @extend %growable; //@include flex-grow(1);
 
     html.no-touch & {
-        
-        @include media($gtMobile) {
-            //height:100%;
-            
-            @include display(flex); 
-            @include flex-direction(column);
-            //@include justify-content(flex-end);
-            > .eureka {
-                @include flex-grow(1);
-                @include flex-basis(100%);
-                .stage {
-                    @include display(flex);
-                    width:100%;
-                    @include flex-direction(column);
-                    @include flex-wrap(nowrap);
-                    > .eureka-table {
-                        @include flex-grow(1);
-                        //height:100%;
-                        @include flex-basis(100%); // ie doesn't seem to like this, it lets .eureka-table get too big and overlap the top bar (I think this is an IE flexbox bug...)
-                        height:auto;
-                        -ms-flex-preferred-size:auto; // #janky ^^
-                        > table {
-                            > thead {
-                                @include flex-basis(2em);
-                            }
-                            > tbody {
-                                @include flex-basis(100%);
-                            }
+        @include media($gtMobile) {        
+        }
+        @include display(flex); 
+        @include flex-direction(column);
+        //@include justify-content(flex-end);
+        > .eureka {
+            @include flex-grow(1);
+            @include flex-basis(100%);
+            .stage {
+                @include display(flex);
+                width:100%;
+                @include flex-direction(column);
+                @include flex-wrap(nowrap);
+                > .eureka-table {
+                    @include flex-grow(1);
+                    //height:100%;
+                    @include flex-basis(100%); // ie doesn't seem to like this, it lets .eureka-table get too big and overlap the top bar (I think this is an IE flexbox bug...)
+                    height:auto;
+                    -ms-flex-preferred-size:auto; // #janky ^^
+                    > table {
+                        > thead {
+                            @include flex-basis(2em);
+                        }
+                        > tbody {
+                            @include flex-basis(100%);
                         }
                     }
                 }
             }
-            
-            > .proceed {
-                @include flex-grow(0);
-                @include flex-basis(4em);
-                min-height:4em;
-                width:100%;
-            }
+        }
+        
+        > .proceed {
+            @include flex-grow(0);
+            @include flex-basis(4em);
+            min-height:4em;
+            width:100%;
         }
         @include media($gtTabletP) {
             max-height:100%;
@@ -322,8 +361,10 @@ html.no-touch {
         @extend %ungrowable; // @include flex-grow(0);
         @extend %unshrinkable; //@include flex-shrink(0);
         
-        margin-right:0.5em;
-        padding-right:0.5em;
+        @include media($gtMobile) {
+            margin-right:0.5em;
+            padding-right:0.5em;
+        }
         @extend %flexible-parent; // @include display(flex);
         @extend %flex-direction-column; //@include flex-direction(column);
         
@@ -409,10 +450,128 @@ html.no-touch {
             }
             padding-bottom:0;
             
-            button {
+            .droparea {
+                @extend %bottom-seperated;
+            }
+            
+            .dropzone {
+                min-height:8.6em;
+                font-size:1.4em;
+                background:desaturate(#cddce6,100%);
+                border:2px dashed desaturate(darken(#cddce6,8%),100%);
+                border-radius:0.4em;
+                //margin-bottom:0.25em;
+                text-align:center;
+                
+                @extend %flexible-parent; //@include display(flex); 
+                @extend %justify-content-center; //@include justify-content(flex-center);
+                @extend %flex-direction-column; //@include flex-direction(column);
+                //@extend %align-items-center; // @include align-items(center);
+                
+                color:darken(desaturate(#cddce6,100%),42%);
+
+                
+                html.touch & {
+                    display:none;
+                }
+                
+                &.uploading {
+                    background:lighten(#b2b9c5,4%);
+                    border-color:darken(#b2b9c5,26%);
+                }
+                
+                &.complete {
+                    background:lighten(#aecd98,6%);
+                    border-color:darken(#aecd98,6%);
+                    color:darken(#aecd98,26%);
+                    .progress {
+                        background:lighten(#aecd98,6%);
+                        @extend %justify-content-center;
+                    }
+                    a {
+                        color:darken(darken(#aecd98,26%),8%);
+                    }
+                }
+                
+                &.error {
+                    background:lighten(#e75154,16%);
+                    border-color:darken(#e75154,6%);
+                    color:darken(#e75154,26%);
+                    .progress {
+                        background:lighten(#e75154,16%);
+                        @extend %justify-content-center;
+                    }
+                    a {
+                        color:darken(darken(#e75154,26%),8%);
+                    }
+                }
+                
+                p {
+                    margin:0 1em 1em 1em;
+                    padding:0 1em;
+                    font-size:0.678em;
+                }
+                a {
+                    text-decoration:none;
+                    cursor:pointer;
+                }
+                
+                .progress {
+                    @include flex-grow(1);
+                    
+                    background:darken(desaturate(#cddce6,100%),8%); 
+                    
+                    border-radius:0.4em;
+                    
+                    @extend %flexible-parent; //@include display(flex); 
+                    @extend %justify-content-flex-start; //@include justify-content(flex-center);
+                    @extend %flex-direction-column; //@include flex-direction(column);
+                    //@extend %align-items-center; // @include align-items(center);
+            
+                    > .bar {
+                        @include flex-grow(1);
+                        min-height:1em;
+                        position:relative;
+                        background:lighten(#b2b9c5,4%);
+                        &:first-of-type {
+                            border-top-left-radius:0.4em;
+                            border-top-right-radius:0.4em;
+                            > div {
+                                border-top-left-radius:0.4em;
+                                border-top-right-radius:0.4em;
+                            }
+                        }
+                        &:last-of-type {
+                            border-bottom-left-radius:0.4em;
+                            border-bottom-right-radius:0.4em;
+                            > div {
+                                border-bottom-left-radius:0.4em;
+                                border-bottom-right-radius:0.4em;
+                            }
+                        }
+                        &:nth-of-type(even) {
+                            > div {
+                                background:darken(#b2b9c5,12%); 
+                                border:1px solid darken(#b2b9c5,16%);
+                            }
+                        }
+                        > div {
+                            position:absolute;
+                            top:0;
+                            left:0;
+                            bottom:0;
+                            background:darken(#b2b9c5,8%); 
+                            border:1px solid darken(#b2b9c5,12%);
+                        }
+                    }
+                }
+            }
+            
+            button,.btn {
                 background:transparent;
                 color:inherit;
                 font-size:1.2em;
+                @include flex-basis(auto);
             }
             
             @include flex-grow(0);
@@ -697,6 +856,7 @@ html.no-touch {
                 @extend %align-items-center; //@include align-items(center);
                 > tr {
                     max-width:100%;
+                    margin:0 0.25em 0.5em 0.25em; 
                 }
             }
             
@@ -990,8 +1150,9 @@ tbody.filtered {
     
     text-align:center;
     > * {
+      display:inline-block;
       @include flex(1 0 auto);
-      margin:0.2em 0;
+      margin:0; //0.2em 0;
       @include media($gtTabletP) {
           margin:0;
       }
@@ -1015,6 +1176,8 @@ footer.proceed {
         text-align:center;
         cursor:pointer;
         display:block;
+        border-top:1px solid transparent;
+        border-bottom:1px solid transparent;
         &:focus,&.focused,&:hover {
             color:$contextualBG;
             background:$contextualColor;
@@ -1079,7 +1242,7 @@ tr.contextual {
     @include media($gtTabletP) { 
         @include flex-direction(row);
     }
-    > nav {
+    .eureka__topbar-nav {
         @extend %growable; //@include flex-grow(1);
         @extend %unshrinkable; //@include flex-shrink(0);
         @extend %flex-wrappable; //@include flex-wrap(wrap);
@@ -1134,7 +1297,7 @@ tr.contextual {
         }
         
         @include media($gtMobile) {
-            @include flex-basis(14em);
+            //@include flex-basis(14em);
             @include flex-wrap(nowrap);
         }
         
@@ -1175,7 +1338,7 @@ tr.contextual {
                     }
                 }
             }
-            @include media($gtTabletP) {
+            @include media($gtMobile) {
                 width:auto;
                 @include flex-grow(12);
                 @include justify-content(flex-end);
@@ -1202,10 +1365,10 @@ tr.contextual {
             @include media($gtMobile) {
                 margin-bottom:0;
             }
-            @include media($gtTabletP) {
+            @include media($gtMobile) {
                 width:auto;
                 margin-bottom:0;
-                @include flex-basis(14em);
+                //@include flex-basis(14em);
                 @include align-items(flex-start);
                 @include justify-content(flex-start);
                 @include flex-direction(row);
@@ -1217,18 +1380,23 @@ tr.contextual {
                 
             }
             
-            @include media($gtTabletP) {
+            @include media($gtMobile) {
                 padding-right:0.5em;
-                margin-right:0.7em;
+                margin-right:0;
+                //margin-right:0.7em;
                 //border-right:1px solid $borderColor;
             }
-            label {
-                font-size:0.72em;
-                line-height:2em;
-                //@include flex(1);
+            
+            > label {
+                text-align:center;
+                @include media($gtMobile) {
+                    text-align:inherit;
+                }
             }
+            
             form {
                 //@include flex(4);
+                //margin-top:0.2em;
                 button.nued {
                     background:$black;
                     color:$white;
@@ -1245,6 +1413,40 @@ tr.contextual {
             }
             .fa {
                 color:lighten($black,40%);
+            }
+        }
+        .browse-select, .upload-form {
+            > label {
+                font-size:0.72em;
+                line-height:2em;
+                margin:0 0.5em 0 0 !important;
+                //@include flex(1);
+            }
+        }
+        .upload-form {
+            @extend %flexible-parent; //@include display(flex);
+            margin-bottom:1em;
+            /*html.no-touch & {
+                @include media($mobile) {
+                    display:none; // #janky?    
+                }
+            }
+            html.no-touch .sidebar-open & {
+                @include media($mobile) {
+                    display:none; // #janky?    
+                }
+            }*/
+            @include media($gtMobile) {
+                @include left-seperated;
+                margin-bottom:0;
+            }
+            //@extend %justify-content-center; //@include justify-content(center);
+            @include flex-grow(4);
+            
+            .sidebar-open & {
+                position:absolute;
+                top:-99999em;
+                left:-99999em;
             }
         }
         > a {

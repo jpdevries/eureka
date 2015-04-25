@@ -26,13 +26,15 @@ var MuckBoot;
         }
     };
     MuckBoot.prototype.muck = function () {
+        var that = this;
         var eureka = d.createElement('div');
         eureka.classList.add('view-a');
         eureka.classList.add('eureka');
+        eureka.classList.add('sidebar-open');
         eureka.setAttribute('id', this.opts.id);
         function createPathBrowser(opts) {
             var nav = d.createElement('nav');
-            nav.setAttribute('id', 'media-browser_0__pathbrowser');
+            nav.setAttribute('id', opts.id + '__pathbrowser');
             nav.classList.add('pathbrowser');
             function createPathBrowserTopBar() {
                 var div = d.createElement('div');
@@ -87,6 +89,18 @@ var MuckBoot;
                     nav.appendChild(btn);
                     return nav;
                 }
+                function createPathBrowserFooterSearchBtn() {
+                    var btn = d.createElement('a');
+                    btn.classList.add('btn');
+                    btn.setAttribute('href', '#' + that.opts.id + '__filter-images');
+                    var i = d.createElement('i');
+                    i.classList.add('fa');
+                    i.classList.add('fa-search');
+                    i.classList.add('icon');
+                    i.classList.add('icon-search');
+                    btn.appendChild(i);
+                    return btn;
+                }
                 function createPathBrowserFooterUploadForm() {
                     var form = d.createElement('form');
                     form.appendChild(createPathBrowserFooterMediaSourceInput());
@@ -94,7 +108,7 @@ var MuckBoot;
                     var btn = d.createElement('button');
                     btn.setAttribute('type', 'submit');
                     btn.setAttribute('class', 'nued');
-                    btn.setAttribute('title', 'Create a new directory');
+                    btn.setAttribute('title', 'Upload a file');
                     var fa = d.createElement('i');
                     fa.classList.add('fa');
                     fa.classList.add('fa-upload');
@@ -105,6 +119,20 @@ var MuckBoot;
                     return form;
                 }
                 createPathBrowserFooterCreateNewForm();
+                if (that.opts.showDropArea) {
+                    (function () {
+                        var da = d.createElement('div');
+                        da.classList.add('droparea');
+                        var dz = d.createElement('div');
+                        dz.classList.add('dropzone');
+                        dz.setAttribute('title', 'Drag & Drop files here to upload them');
+                        var dzm = d.createElement('div');
+                        dzm.classList.add('progress');
+                        dz.appendChild(dzm);
+                        da.appendChild(dz);
+                        footer.appendChild(da);
+                    })();
+                }
                 nav.appendChild(createPathBrowserFooterUploadForm());
                 footer.appendChild(nav);
                 return footer;
@@ -160,6 +188,26 @@ var MuckBoot;
                         label.innerHTML = 'Browse';
                         div.appendChild(label);
                         div.appendChild(createEurekaTopbarBrowseSelectForm());
+                        return div;
+                    }
+                    function createEurekaTopBarUploadForm() {
+                        var div = d.createElement('div');
+                        div.setAttribute('id', opts.id + '__upload');
+                        div.classList.add('upload-form');
+                        var label = d.createElement('label');
+                        label.setAttribute('for', opts.id + '__upload-form');
+                        label.innerHTML = 'Upload:';
+                        var form = d.createElement('form');
+                        form.setAttribute('action', '#');
+                        form.setAttribute('id', opts.id + '__upload-form');
+                        var input = d.createElement('input');
+                        input.setAttribute('id', 'upload-input');
+                        input.setAttribute('multiple', 'multiple');
+                        input.setAttribute('name', 'uploadFiles');
+                        input.setAttribute('type', 'file');
+                        form.appendChild(input);
+                        div.appendChild(label);
+                        div.appendChild(form);
                         return div;
                     }
                     function createEurekaTopBarViewBtns() {
@@ -246,6 +294,7 @@ var MuckBoot;
                         div.classList.add('eureka__topbar-nav__select');
                         div.appendChild(createEurekaTopBarNavToggleBtn());
                         div.appendChild(createEurekaTopBarBrowseSelect());
+                        div.appendChild(createEurekaTopBarUploadForm());
                         div.appendChild(createEurekaTopBarViewBtns());
                         return div;
                     }
