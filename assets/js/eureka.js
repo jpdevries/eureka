@@ -249,6 +249,257 @@ var html5Upload = (function(){
 
     return module;
 }());
+/* do not touch this file. see _build/*.js */
+/*jslint unparam: true, browser: true, devel: true */
+var html5Upload = (function(){
+    'use strict';
+
+    var module = {},
+        noop = function () { },
+        console = window.console || { log: noop },
+        supportsFileApi;
+
+    // Upload manager constructor:
+    function UploadManager(options) {
+        var self = this;
+        self.dropContainer = options.dropContainer;
+        self.inputField = options.inputField;
+        self.uploadsQueue = [];
+        self.activeUploads = 0;
+        self.data = options.data;
+        self.key = options.key;
+        self.maxSimultaneousUploads = options.maxSimultaneousUploads || -1;
+        self.onFileAdded = options.onFileAdded || noop;
+        self.uploadUrl = options.uploadUrl;
+        self.onFileAddedProxy = function (upload) {
+            console.log('Event: onFileAdded, file: ' + upload.fileName);
+            self.onFileAdded(upload);
+        };
+
+        self.initialize();
+    }
+
+    // FileUpload proxy class:
+    function FileUpload(file) {
+        var self = this;
+
+        self.file = file;
+        self.fileName = file.name;
+        self.fileSize = file.size;
+        self.uploadSize = file.size;
+        self.uploadedBytes = 0;
+        self.eventHandlers = {};
+        self.events = {
+            onProgress: function (fileSize, uploadedBytes) {
+                var progress = uploadedBytes / fileSize * 100;
+                console.log('Event: upload onProgress, progress = ' + progress + ', fileSize = ' + fileSize + ', uploadedBytes = ' + uploadedBytes);
+                (self.eventHandlers.onProgress || noop)(progress, fileSize, uploadedBytes);
+            },
+            onStart: function () {
+                console.log('Event: upload onStart');
+                (self.eventHandlers.onStart || noop)();
+            },
+            onCompleted: function (data) {
+                console.log('Event: upload onCompleted, data = ' + data);
+                file = null;
+                (self.eventHandlers.onCompleted || noop)(data);
+            }
+        };
+    }
+
+    FileUpload.prototype = {
+        on: function (eventHandlers) {
+            this.eventHandlers = eventHandlers;
+        }
+    };
+
+    UploadManager.prototype = {
+
+        initialize: function () {
+            console.log('Initializing upload manager');
+            var manager = this,
+                dropContainer = manager.dropContainer,
+                inputField = manager.inputField,
+                cancelEvent = function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                },
+                dragOverOnClass = function(e){
+                    cancelEvent(e);
+                    dropContainer.classList.add('drag-over');
+                },
+                dragOverOffClass = function(e){
+                    cancelEvent(e);
+                    dropContainer.classList.remove('drag-over');
+                };
+
+            if (dropContainer) {
+                /*
+                 * Original code
+                manager.on(dropContainer, 'dragover', cancelEvent);
+                manager.on(dropContainer, 'dragenter', cancelEvent);
+                manager.on(dropContainer, 'drop', function (e) {
+                    cancelEvent(e);
+                    manager.processFiles(e.dataTransfer.files);
+                });
+                */
+                
+                manager.on(dropContainer, 'dragenter', dragOverOnClass);
+                manager.on(dropContainer, 'dragover', dragOverOnClass);
+                manager.on(dropContainer, 'dragleave', dragOverOffClass);
+                manager.on(dropContainer, 'drop', function (e) {
+                    cancelEvent(e);
+                    dragOverOffClass(e);
+                    manager.processFiles(e.dataTransfer.files);
+                });
+            }
+
+            if (inputField) {
+                manager.on(inputField, 'change', function () {
+                    manager.processFiles(this.files);
+                });
+            }
+        },
+
+        processFiles: function (files) {
+            console.log('Processing files: ' + files.length);
+            var manager = this,
+                len = files.length,
+                file,
+                upload,
+                i;
+
+            for (i = 0; i < len; i += 1) {
+                file = files[i];
+                if (file.size === 0) {
+                    alert('Files with files size zero cannot be uploaded or multiple file uploads are not supported by your browser');
+                    break;
+                }
+
+                upload = new FileUpload(file);
+                manager.uploadFile(upload);
+            }
+        },
+
+        uploadFile: function (upload) {
+            var manager = this;
+
+            manager.onFileAdded(upload);
+
+            // Queue upload if maximum simultaneous uploads reached:
+            if (manager.activeUploads === manager.maxSimultaneousUploads) {
+                console.log('Queue upload: ' + upload.fileName);
+                manager.uploadsQueue.push(upload);
+                return;
+            }
+
+            manager.ajaxUpload(upload);
+        },
+
+        ajaxUpload: function (upload) {
+            var manager = this,
+                xhr,
+                formData,
+                fileName,
+                file = upload.file,
+                prop,
+                data = manager.data,
+                key = manager.key || 'file';
+
+            console.log('Beging upload: ' + upload.fileName);
+            manager.activeUploads += 1;
+
+            xhr = new window.XMLHttpRequest();
+            formData = new window.FormData();
+            fileName = file.name;
+
+            xhr.open('POST', manager.uploadUrl);
+
+            // Triggered when upload starts:
+            xhr.upload.onloadstart = function () {
+                // File size is not reported during start!
+                console.log('Upload started: ' + fileName);
+                upload.events.onStart();
+            };
+
+            // Triggered many times during upload:
+            xhr.upload.onprogress = function (event) {
+                if (!event.lengthComputable) {
+                    return;
+                }
+
+                // Update file size because it might be bigger than reported by the fileSize:
+                upload.events.onProgress(event.total, event.loaded);
+            };
+
+            // Triggered when upload is completed:
+            xhr.onload = function (event) {
+                console.log('Upload completed: ' + fileName);
+
+                // Reduce number of active uploads:
+                manager.activeUploads -= 1;
+
+                upload.events.onCompleted(event.target.responseText);
+
+                // Check if there are any uploads left in a queue:
+                if (manager.uploadsQueue.length) {
+                    manager.ajaxUpload(manager.uploadsQueue.shift());
+                }
+            };
+
+            // Triggered when upload fails:
+            xhr.onerror = function () {
+                console.log('Upload failed: ', upload.fileName);
+            };
+
+            // Append additional data if provided:
+            if (data) {
+                for (prop in data) {
+                    if (data.hasOwnProperty(prop)) {
+                        console.log('Adding data: ' + prop + ' = ' + data[prop]);
+                        formData.append(prop, data[prop]);
+                    }
+                }
+            }
+
+            // Append file data:
+            formData.append(key, file);
+
+            // Initiate upload:
+            xhr.send(formData);
+        },
+
+        // Event handlers:
+        on: function (element, eventName, handler) {
+            if (!element) {
+                return;
+            }
+            if (element.addEventListener) {
+                element.addEventListener(eventName, handler, false);
+            } else if (element.attachEvent) {
+                element.attachEvent('on' + eventName, handler);
+            } else {
+                element['on' + eventName] = handler;
+            }
+        }
+    };
+
+    module.fileApiSupported = function () {
+        if (typeof supportsFileApi !== 'boolean') {
+            var input = document.createElement("input");
+            input.setAttribute("type", "file");
+            supportsFileApi = !!input.files;
+        }
+
+        return supportsFileApi;
+    };
+
+    module.initialize = function (options) {
+        return new UploadManager(options);
+    };
+
+    return module;
+}());
 var AJAX = (function () {
     function AJAX() {
         this.x = new XMLHttpRequest();
@@ -355,7 +606,7 @@ var EurekaModel = (function () {
         this._sources = [];
         this._navTreeHidden = false;
         this._useLocalStorage = true;
-        this._currentDirectory = '';
+        this._currentDirectory = './';
         this._currentView = 'view-a';
         this._locale = 'en-US';
         this._selected = '';
@@ -363,7 +614,6 @@ var EurekaModel = (function () {
         this._headers = [];
         this._debug = false;
         this._confirmBeforeDelete = true;
-        this._fileUploadURL = '/file/upload';
         this._directoryRequestURL = '';
         this._listSourceRequestURL = '';
         this._listSourcesRequestURL = '';
@@ -413,6 +663,41 @@ var EurekaModel = (function () {
                 this._currentView = this.getLocalStorage('currentView');
         }
     }
+    Object.defineProperty(EurekaModel, "EurekaFoundIt", {
+        get: function () {
+            return "EurekaFoundIt";
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(EurekaModel, "EurekaFileRename", {
+        get: function () {
+            return "EurekaFileRename";
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(EurekaModel, "EurekaUnlink", {
+        get: function () {
+            return "EurekaUnlink";
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(EurekaModel, "EurekaDirectoryCreated", {
+        get: function () {
+            return "EurekaDirectoryCreated";
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(EurekaModel, "EurekaDirectoryOpened", {
+        get: function () {
+            return "EurekaDirectoryOpened";
+        },
+        enumerable: true,
+        configurable: true
+    });
     EurekaModel.prototype.getLocalStorage = function (id) {
         if (localStorage.getItem(id) !== undefined && localStorage.getItem(id) !== 'undefined')
             return localStorage.getItem(id);
@@ -492,6 +777,8 @@ var EurekaModel = (function () {
     };
     EurekaModel.prototype.setCurrentDirectory = function (currentDirectory, dispatch) {
         if (dispatch === void 0) { dispatch = true; }
+        if (currentDirectory === undefined || currentDirectory === 'undefined')
+            currentDirectory = '';
         this._currentDirectory = currentDirectory;
         if (this._useLocalStorage)
             localStorage.setItem('currentDirectory', currentDirectory);
@@ -660,6 +947,7 @@ var EurekaView = (function () {
         var that = this;
         function assignShortcutListeners() {
             document.addEventListener('keydown', function (event) {
+                console.log(event);
                 if (event.ctrlKey && event.which === 186) {
                     var e = document.createEvent('Event');
                     e.initEvent('click', true, true);
@@ -748,6 +1036,24 @@ var EurekaView = (function () {
                     catch (e) {
                     }
                 }
+                if (event.ctrlKey && event.which === 78) {
+                    try {
+                        var e = document.createEvent('Event');
+                        e.initEvent('click', true, true);
+                        that.getElement().querySelector('.create-new').dispatchEvent(e);
+                    }
+                    catch (e) {
+                    }
+                }
+                if (event.ctrlKey && event.which === 85) {
+                    try {
+                        var e = document.createEvent('Event');
+                        e.initEvent('click', true, true);
+                        document.getElementById(that.getController().getModel().getUID() + '__upload-input').dispatchEvent(e);
+                    }
+                    catch (e) {
+                    }
+                }
                 if (event.ctrlKey && event.which === 70) {
                     try {
                         document.getElementById(that.getController().getModel().getUID() + '__filter-images').focus();
@@ -802,6 +1108,8 @@ var EurekaView = (function () {
         this.assignSelectListeners();
         this.assignSortBtnListeners();
         this.assignFilterListeners();
+        this.assignCreateNewDirectoryListener();
+        this.assignUploadListeners();
         assignShortcutListeners();
         var e = document.createEvent('Event');
         e.initEvent('click', true, true);
@@ -814,6 +1122,7 @@ var EurekaView = (function () {
             html5Upload.initialize({
                 uploadUrl: that.getController().getModel().getFileUploadURL(),
                 dropContainer: dropContainer,
+                inputField: document.getElementById(that.getController().getModel().getUID() + '__upload-input'),
                 key: 'File',
                 data: that.getController().getModel().getHeaders(),
                 maxSimultaneousUploads: 4,
@@ -851,7 +1160,7 @@ var EurekaView = (function () {
                                         var div = dropzone.querySelector('.progress');
                                         var h2 = document.createElement('h2');
                                         var icon = document.createElement('i');
-                                        icon.setAttribute('class', 'fa fa-check-circle-o');
+                                        icon.setAttribute('class', 'fa fa-check-circle-o icon icon-check-circle-o');
                                         h2.appendChild(icon);
                                         div.appendChild(h2);
                                         var span = document.createElement('span');
@@ -877,6 +1186,30 @@ var EurekaView = (function () {
             if (dropContainer)
                 dropContainer.remove();
         }
+        if (that.getController().getModel().getFileUploadURL() === undefined || that.getController().getModel().getFileUploadURL() == '') {
+            try {
+                that.getElement().querySelector('.pathbrowser footer').remove();
+            }
+            catch (e) {
+            }
+            try {
+                that.getElement().querySelector('.upload-form').remove();
+            }
+            catch (e) {
+            }
+        }
+    };
+    EurekaView.prototype.assignUploadListeners = function () {
+        var that = this;
+        that.getElement().querySelector('.pathbrowser .upload-files').addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            (function () {
+                var e = document.createEvent('Event');
+                e.initEvent('click', true, true);
+                document.getElementById(that.getController().getModel().getUID() + '__upload-input').dispatchEvent(e);
+            })();
+        });
     };
     EurekaView.prototype.assignBrowsingSelectOptGroupListeners = function () {
         var that = this;
@@ -889,6 +1222,69 @@ var EurekaView = (function () {
             var source = optgroup.getAttribute('data-source');
             that.getController().getModel().setCurrentMediaSource(source, false);
             that.getController().getModel().setCurrentDirectory(option.getAttribute('value'));
+        });
+    };
+    EurekaView.prototype.assignCreateNewDirectoryListener = function () {
+        var that = this;
+        that.getElement().querySelector('.create-new').addEventListener('click', function (e) {
+            var li = document.createElement('li');
+            var folder = document.createElement('a');
+            folder.classList.add('folder');
+            folder.innerHTML = '&nbsp;<i class="fa icon fa-folder icon-folder"></i>';
+            var path = document.createElement('a');
+            path.classList.add('path');
+            path.setAttribute('title', 'Browse this directory');
+            path.setAttribute('data-cd', '');
+            path.setAttribute('contenteditable', 'true');
+            path.innerHTML = 'new folder';
+            li.appendChild(folder);
+            li.appendChild(path);
+            li.appendChild(document.createElement('ul'));
+            setTimeout(function () {
+                path.focus();
+                try {
+                    path.select();
+                }
+                catch (e) {
+                }
+            }, 240);
+            var ul = (that.getElement().querySelector('.pathbrowser .tree li.active > ul') || that.getElement().querySelector('.pathbrowser .tree > ul'));
+            ul.classList.add('open');
+            (ul.parentNode).classList.add('open');
+            try {
+                (ul.previousSibling).previousSibling.querySelector('.fa').setAttribute('class', 'fa icon fa-folder-open icon-folder-open');
+            }
+            catch (e) {
+            }
+            path.addEventListener('focus', function (e) {
+                this.addEventListener('keydown', handleKeyDown, false);
+            }, false);
+            path.addEventListener('blur', function (e) {
+                this.removeEventListener('keydown', handleKeyDown, false);
+            }, false);
+            function handleKeyDown(e) {
+                if (e.keyCode === 13) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log(this);
+                    console.log(this.previousSibling);
+                    this.blur();
+                    this.setAttribute('contenteditable', 'false');
+                    that.getElement().querySelector('button.create-new').focus();
+                    var foldername = this.innerHTML;
+                    var e = document.createEvent('CustomEvent');
+                    e.initCustomEvent('EurekaDirectoryCreated', true, true, {
+                        data: {
+                            newdirectory: foldername,
+                            cd: that.getController().getModel().getCurrentDirectory(),
+                            s: that.getController().getModel().getCurrentMediaSource(),
+                            path: that.getController().getModel().getCurrentDirectory() + foldername
+                        }
+                    });
+                    that.getElement().dispatchEvent(e);
+                }
+            }
+            ul.appendChild(li);
         });
     };
     EurekaView.prototype.assignViewButtonListeners = function () {
@@ -1089,8 +1485,9 @@ var EurekaView = (function () {
                 path.classList.add('path');
                 li.appendChild(folder);
                 li.appendChild(path);
+                var _ul = document.createElement("ul");
+                li.appendChild(_ul);
                 if (result.children !== undefined && result.children.length) {
-                    var _ul = document.createElement("ul");
                     PrintResults(result.children, _ul);
                     li.appendChild(_ul);
                 }
@@ -1165,6 +1562,7 @@ var EurekaView = (function () {
                 var _icon = this.querySelector('.fa');
                 var _closing = _icon.classList.contains('fa-folder-open');
                 var li = that.getClosest(this, 'li');
+                var dataCD = this.nextSibling.getAttribute('data-cd');
                 if (_closing) {
                     _icon.classList.remove('fa-folder-open');
                     _icon.classList.remove('icon-folder-open');
@@ -1178,6 +1576,15 @@ var EurekaView = (function () {
                     _icon.classList.add('fa-folder-open');
                     _icon.classList.add('icon-folder-open');
                     li.classList.add('open');
+                    var e = document.createEvent('CustomEvent');
+                    (e).initCustomEvent(EurekaModel.EurekaDirectoryOpened, true, true, {
+                        data: {
+                            cd: that.getController().getModel().getCurrentDirectory(),
+                            s: that.getController().getModel().getCurrentMediaSource(),
+                            path: dataCD
+                        }
+                    });
+                    that.getElement().dispatchEvent(e);
                 }
             });
         }
@@ -1244,10 +1651,10 @@ var EurekaView = (function () {
                 path.innerHTML = ' ' + result.path;
                 li.appendChild(folder);
                 li.appendChild(path);
+                var _ul = document.createElement("ul");
+                li.appendChild(_ul);
                 if (result.children !== undefined && result.children.length) {
-                    var _ul = document.createElement("ul");
                     printTreeNavResults(result.children, _ul);
-                    li.appendChild(_ul);
                 }
                 ul.appendChild(li);
             }

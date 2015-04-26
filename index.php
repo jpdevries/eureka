@@ -65,7 +65,7 @@
                                 <!-- upload & create directory buttons -->
                                 <footer>
                                     <!--script>document.write('<div class="dropzone" title="Drag &amp; Drop files here to upload them"></div>')</script-->
-                                    <div class="droparea progress">
+                                    <div class="droparea">
                                         <div class="dropzone" title="Drag &amp; Drop files here to upload them">
                                             <!-- this is the uploading state. set div.dropzone.uploading class -->
                                             <div class="progress">
@@ -100,14 +100,14 @@
                                         <form action="#">
                                             <input type="hidden" name="mediasource" value="0">
                                             <input type="hidden" name="mediapath" value="assets/images">
-                                            <button type="submit" class="nued" title="Create a new directory in assets/images">
+                                            <button type="submit" class="nued create-new" title="Create a new directory in assets/images">
                                                 <i class="fa fa-plus-square"></i>
                                             </button>
                                         </form>
                                         <form action="#">
                                             <input type="hidden" name="mediasource" value="0">
                                             <input type="hidden" name="mediapath" value="assets/images">
-                                            <button type="submit" class="nued" title="Upload media to assets/images">
+                                            <button type="submit" class="nued upload-files" title="Upload media to assets/images">
                                                 <i class="fa fa-upload"></i>
                                             </button>
                                         </form>
@@ -586,6 +586,7 @@
                     locale:'en-US',
                     mediaSource:0,
                     currentDirectory:undefined,
+                    fileUploadURL:'/file/upload',
                     directoryRequestURL:'fakepi/listdirectory.php',
                     listSourceRequestURL:'fakepi/listsource.php',
                     listSourcesRequestURL:'fakepi/listsources.php',

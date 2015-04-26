@@ -20,3 +20,5 @@ assets/fonts/
 npm-debug.log
 
 _build/ts/DefinitelyTyped
+
+_build/tscommand-*

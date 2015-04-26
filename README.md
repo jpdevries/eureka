@@ -5,9 +5,20 @@ WIP. Flexible Media Browser Component.
 > With `eureka.js` your users will be saying "I found it!" in no time.  
 &emsp;&emsp;&mdash; JP DeVries
 
-![](http://cl.ly/image/3X3p1m041M3f/Screen%20Shot%202015-03-28%20at%202.02.22%20AM.png)
+![](http://j4p.us/image/2p280e3h3C1z/Screen%20Shot%202015-04-25%20at%2011.24.36%20PM.png)
 
 ### Usage
+
+`eureka.js` needs you to load at least one `JavaScript` file and one `CSS` stylesheet before getting started.
+```html
+<!-- CSS layout and base styles -->
+<link rel="stylesheet" href="assets/css/eureka.min.css">
+<!-- if the DOM isn't already populated you'll need your muckboot(s) -->
+<script src="assets/js/muckboot.eureka.min.js"></script>
+<!-- component source (Eureka Class) -->
+<script src="assets/js/eureka.min.js"></script>
+```
+
 The Eureka Media Browser is built [HTML-first](http://markup.tips/html-ftw) using [Markup.tips](http://markup.tips). This means `eureka.js` assumes you've populated the `DOM` with `HTML` markup manually. If you haven't, no worries. `muckboot.eureka.js` can do that for you. Let's say you start off with an empty div:
 
 ```html
@@ -19,23 +30,26 @@ _Note the `.eureka` class and the use of a unique identifer. The unique identier
 ```js
 var $muckboot = new MuckBoot({ // paint the DOM
     id:'redactor-media-browser_0',
-    showDropArea:true // show html5dragndrop zone
+    upload:true // if set to false will not add uploading related elements to the DOM
 });
 ```
 
-Now that `muckboot.eureka.js` has done the prep-work `eureka.js` is ready for instantiation.
+Now that `muckboot.eureka.js` has done the prep-work Eureka is ready for instantiation.
 
 ```js
 var $eureka = new Eureka({ // init the Eureka component
-    uid:'redactor-media-browser_0', // REQUIRED: id of our div
+    // REQUIRED SETTINGS
+    uid:'redactor-media-browser_0', // id of our div
+    directoryRequestURL:'fakepi/listdirectory.php', // lists contents of a directory. along with headers Object, sends  's' and 'dir' parameters for media source and current directory
+    listSourceRequestURL:'fakepi/listsource.php', // list navigation tree of a given media sources. along with headers Object, sends 's' paramater for media source to list
+    listSourcesRequestURL:'fakepi/listsources.php', // fetches a list of all media sources
+    
+    // OPTIONAL SETTINGS
+    fileUploadURL:undefined, // endpoint to send files to, removes upload components from UI if not set
     locale:'en-US', // i18n
     mediaSource:0, // zero-based numeric index of current media source (will override localStorage)
     currentDirectory:undefined, // (will override localStorage)
-    fileUploadURL:undefined, // endpoint to send files to
-    directoryRequestURL:'fakepi/listdirectory.php',
-    listSourceRequestURL:'fakepi/listsource.php',
-    listSourcesRequestURL:'fakepi/listsources.php',
-    debug:false, // will not trace debugging info to console.log
+    debug:false, // when enabled traces debugging info to console.log
     confirmBeforeDelete:true, // when enabled confirms before deleting items
     headers: [{
         'Powered-By': 'Eureka by Markup.tips' // additional headers for XHR requests
@@ -43,9 +57,66 @@ var $eureka = new Eureka({ // init the Eureka component
 });
 ```
 
-Now that `eureka.js` has been instantiated it's up to your user to find or upload the content they seek.
+Eureka has been instantiated it's up to your user to find or upload the content they&nbsp;seek.
+
+### Events
+`eureka.js` likes to let you know when things happen.
+
+##### Available Events
+| Event                                    | Note              |
+| ------------                             |:--------------    |
+| `EurekaModel.EurekaFoundIt`              | Dispatched when a media item is chosen |
+| `EurekaModel.EurekaFileRename`           | Dispatched when a media item is renamed |
+| `EurekaModel.EurekaUnlink`               | Dispatched when a media item is deleted |
+| `EurekaModel.EurekaDirectoryCreated`     | Dispatched when a new directory is created |
+| `EurekaModel.EurekaDirectoryOpened`      | Dispatched when a directory is opened |
+
+
+
+##### Listening to Events
+The `EurekaFoundIt` is dispatched from the DOM element itself. This means that if you create a new Eureka Browser named "foo" like&nbsp;so:
+```html
+<div class="eureka" id="foo"></div>
+<script>
+var $muckboot = new MuckBoot({id:'foo'});
+var $eureka = new Eureka({uid:'foo'}); // ...
+</script>
+```
+
+You can listen to when things happen like so:
+```js
+var el = document.getElementById('foo');
+el.addEventListener(EurekaModel.EurekaFoundIt,function(e){
+  var data = e.detail.data;
+  var src = data.src; // probably what you are interesting in
+  var filename = data.filename; // also good to know
+  var filesize = data.filesize;
+  var timestamp = data.timestap;
+});
+```
+
+Isn't that neat?
+
+##### Event Data
+Events attach relevent data to the `detail.data` property of the `Event` itself. `eureka.js` is still in rapid development and events and their corresponding data are not yet fully documented, so log it to the console and see what you get for now. It'll be our own little&nbsp;surprise.
+
+### Browser Support
+Eureka targets modern HTML5 browsers and uses the latest draft of the flexible box model spec.
+ - Chrome
+ - Safari
+ - Firefox
+   - Firefox actually still has at least a few flexbox bugs. See #2.
+ - IE 11,10
+   - IE 9 support is being conceptualized and would likely need to leverage a jQuery powered legacy js driver
+ - Sparta
+ - ~~Opera~~
+  - flexbox layout is totally broken. Not sure why. We blame the Opera.
+ - iOS Latest
+ - Android Latest
 
 ### Keyboard Shortcuts
+In addition to the below shortcuts, Eureka supports standard tab-to-focus usability shortcuts.
+
 | Shortcut        | Command              |
 | --------------- |:-------------:       |
 | Toggle Sidebar      | ctrl ;           |
@@ -54,6 +125,8 @@ Now that `eureka.js` has been instantiated it's up to your user to find or uploa
 | Delete Item | backspace                |
 | Expand Item | spacebar                 |
 | Choose Item | return                   |
+| Create Directory | ctrl n              |
+| Upload Files | ctrl u                  |
 | Rename Item | ctrl r                   |
 | Filter Items | ctrl f                  |
 

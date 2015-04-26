@@ -81,7 +81,7 @@ class EurekaModel {
     private _navTreeHidden:boolean = false;
     private _useLocalStorage:boolean = true;
     private _mediaSource:string;
-    private _currentDirectory:string = '';
+    private _currentDirectory:string = './';
     private _currentView:string = 'view-a';
     private _locale:string = 'en-US';
     private _selected:string = '';
@@ -89,11 +89,17 @@ class EurekaModel {
     private _headers:Array<Object> = [];
     private _debug:Boolean = false;
     private _confirmBeforeDelete:Boolean = true;
-    private _fileUploadURL:string = '/file/upload';
+    private _fileUploadURL:string;
     
     private _directoryRequestURL:string = '';
     private _listSourceRequestURL:string = '';
     private _listSourcesRequestURL:string = '';
+    
+    public static get EurekaFoundIt():string { return "EurekaFoundIt"; }
+    public static get EurekaFileRename():string { return "EurekaFileRename"; }
+    public static get EurekaUnlink():string { return "EurekaUnlink"; }
+    public static get EurekaDirectoryCreated():string { return "EurekaDirectoryCreated"; }
+    public static get EurekaDirectoryOpened():string { return "EurekaDirectoryOpened"; }
     
     constructor(opts:any) {
         if(opts.uid !== undefined) this._uid = opts.uid;
@@ -209,7 +215,7 @@ class EurekaModel {
         return this._mediaSource;
     }
     setCurrentDirectory(currentDirectory:string, dispatch:boolean = true) {
-        
+        if(currentDirectory === undefined || currentDirectory === 'undefined') currentDirectory = '';
         this._currentDirectory = currentDirectory;
         if (this._useLocalStorage) localStorage.setItem('currentDirectory', currentDirectory);
         if (dispatch === false) return;
@@ -385,6 +391,7 @@ class EurekaView {
         var that = this;
         function assignShortcutListeners() {
             document.addEventListener('keydown', function(event) {
+                console.log(event);
                 if (event.ctrlKey && event.which === 186) { // ctrl ; to toggle sidebar
                     var e = document.createEvent('Event');
                     e.initEvent('click', true, true);
@@ -478,6 +485,23 @@ class EurekaView {
                     } catch(e) {}
                 }
                 
+                if(event.ctrlKey && event.which === 78) { // ctrl n to create directory
+                    try {
+                        var e = document.createEvent('Event');
+                        e.initEvent('click', true, true);
+                        
+                        (<HTMLElement>that.getElement()).querySelector('.create-new').dispatchEvent(e);
+                    } catch(e) {}
+                }
+                
+                if(event.ctrlKey && event.which === 85) { // ctrl n to create directory
+                    try {
+                        var e = document.createEvent('Event');
+                        e.initEvent('click', true, true);
+                        document.getElementById(that.getController().getModel().getUID() + '__upload-input').dispatchEvent(e);
+                    } catch(e) {}
+                }
+                
                 if(event.ctrlKey && event.which === 70) { // ctrl f to filter
                     try {
                         document.getElementById(that.getController().getModel().getUID() + '__filter-images').focus();
@@ -535,6 +559,8 @@ class EurekaView {
         this.assignSelectListeners();
         this.assignSortBtnListeners();
         this.assignFilterListeners();
+        this.assignCreateNewDirectoryListener();
+        this.assignUploadListeners();
         
         assignShortcutListeners();
 
@@ -557,7 +583,7 @@ class EurekaView {
                 dropContainer: dropContainer,
 
                 // HTML file input element that allows to select files (optional)
-                //inputField: document.getElementById('upload-input'),
+                inputField: document.getElementById(that.getController().getModel().getUID() + '__upload-input'),
 
                 // Key for the file data (optional, default: 'file')
                 key: 'File',
@@ -617,7 +643,7 @@ class EurekaView {
                                         var div = dropzone.querySelector('.progress');
                                         var h2 = document.createElement('h2');
                                         var icon = document.createElement('i');
-                                        icon.setAttribute('class','fa fa-check-circle-o');
+                                        icon.setAttribute('class','fa fa-check-circle-o icon icon-check-circle-o');
                                         h2.appendChild(icon);
                                         div.appendChild(h2);
                             
@@ -647,6 +673,30 @@ class EurekaView {
         } else {
             if(dropContainer) (<any>dropContainer).remove(); // remove the drop container because we can't use it
         }
+        
+        if(that.getController().getModel().getFileUploadURL() === undefined || that.getController().getModel().getFileUploadURL() == '') {
+            try {
+                (<any>that.getElement().querySelector('.pathbrowser footer')).remove();
+            } catch(e) {}
+            
+            try {
+                (<any>that.getElement().querySelector('.upload-form')).remove();
+            } catch(e) {}
+        }
+    }
+    
+    assignUploadListeners() {
+        var that = this;
+        that.getElement().querySelector('.pathbrowser .upload-files').addEventListener('click',function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            
+            (function(){
+                var e = document.createEvent('Event');
+                e.initEvent('click', true, true);
+                document.getElementById(that.getController().getModel().getUID() + '__upload-input').dispatchEvent(e);
+            })();
+        });
     }
     
     assignBrowsingSelectOptGroupListeners(){
@@ -668,6 +718,79 @@ class EurekaView {
                 }
                 return null;
             }*/
+        });
+    }
+    assignCreateNewDirectoryListener() {
+        var that = this;
+        
+        that.getElement().querySelector('.create-new').addEventListener('click',function(e){
+            var li = document.createElement('li');
+            var folder = document.createElement('a');
+            folder.classList.add('folder');
+            folder.innerHTML = '&nbsp;<i class="fa icon fa-folder icon-folder"></i>';
+            
+            var path = document.createElement('a');
+            path.classList.add('path');
+            path.setAttribute('title','Browse this directory');
+            path.setAttribute('data-cd','');
+            path.setAttribute('contenteditable','true');
+            path.innerHTML = 'new folder';
+            
+            li.appendChild(folder);
+            li.appendChild(path);
+            
+            li.appendChild(document.createElement('ul'));
+
+            setTimeout(function(){
+                path.focus();
+                try {
+                    (<any>path).select();
+                } catch(e) {}
+            },240);
+            
+            var ul:HTMLElement = <HTMLElement>(that.getElement().querySelector('.pathbrowser .tree li.active > ul') || that.getElement().querySelector('.pathbrowser .tree > ul'));
+            ul.classList.add('open');
+            (<HTMLElement>(ul.parentNode)).classList.add('open');
+            try {
+                (<HTMLElement>(<HTMLElement>(ul.previousSibling).previousSibling)).querySelector('.fa').setAttribute('class','fa icon fa-folder-open icon-folder-open');
+            } catch(e) {}
+            
+            path.addEventListener('focus', function (e) {
+                this.addEventListener('keydown', handleKeyDown, false);
+            }, false);
+            path.addEventListener('blur', function (e) {
+                this.removeEventListener('keydown', handleKeyDown, false);
+            }, false);
+            
+            function handleKeyDown(e) {
+                //var code = getCodeToFocus(this);
+                //var tr = that.getClosest(this, '.contextual').previousSibling;
+                if (e.keyCode === 13) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log(this);
+                    console.log(this.previousSibling);
+                    this.blur();
+                    this.setAttribute('contenteditable','false');
+                    (<HTMLElement>that.getElement().querySelector('button.create-new')).focus();
+                    
+                    var foldername = this.innerHTML;
+                    
+                    var e:any = <any>document.createEvent('CustomEvent');
+                    //that.getElement().dispatchEvent(e);
+                    e.initCustomEvent('EurekaDirectoryCreated', true, true, {
+                        data:{
+                          newdirectory: foldername,
+                          cd:that.getController().getModel().getCurrentDirectory(),
+                          s:that.getController().getModel().getCurrentMediaSource(),
+                          path:that.getController().getModel().getCurrentDirectory()+foldername
+                        }
+                    });
+                    that.getElement().dispatchEvent(e);
+                }
+            }
+            
+            ul.appendChild(li);
         });
     }
     assignViewButtonListeners(){
@@ -876,8 +999,9 @@ class EurekaView {
                 path.classList.add('path');
                 li.appendChild(folder);
                 li.appendChild(path);
+                var _ul = document.createElement("ul");
+                li.appendChild(_ul);
                 if (result.children !== undefined && result.children.length) {
-                    var _ul = document.createElement("ul");
                     PrintResults(result.children, _ul);
                     li.appendChild(_ul);
                 }
@@ -964,6 +1088,7 @@ class EurekaView {
                 var _icon = this.querySelector('.fa');
                 var _closing = _icon.classList.contains('fa-folder-open');
                 var li = that.getClosest(this, 'li');
+                var dataCD = this.nextSibling.getAttribute('data-cd');
                 if (_closing) {
                     _icon.classList.remove('fa-folder-open');
                     _icon.classList.remove('icon-folder-open');
@@ -977,6 +1102,16 @@ class EurekaView {
                     _icon.classList.add('fa-folder-open');
                     _icon.classList.add('icon-folder-open');
                     li.classList.add('open');
+                    
+                    var e:Event = document.createEvent('CustomEvent');
+                    (<any>(e)).initCustomEvent(EurekaModel.EurekaDirectoryOpened, true, true, {
+                        data:{
+                            cd:that.getController().getModel().getCurrentDirectory(),
+                            s:that.getController().getModel().getCurrentMediaSource(),
+                            path:dataCD
+                        }
+                    });
+                    that.getElement().dispatchEvent(e);
                 }
             });
         }
@@ -1044,10 +1179,10 @@ class EurekaView {
                 path.innerHTML = ' ' + result.path;
                 li.appendChild(folder);
                 li.appendChild(path);
+                var _ul = document.createElement("ul");
+                li.appendChild(_ul);
                 if (result.children !== undefined && result.children.length) {
-                    var _ul = document.createElement("ul");
                     printTreeNavResults(result.children, _ul);
-                    li.appendChild(_ul);
                 }
                 ul.appendChild(li);
             }

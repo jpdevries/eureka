@@ -44,47 +44,66 @@
         <script>
             (function(){
                 var $muckboot = new MuckBoot({ // paint the DOM
-                    id:'redactor-media-browser_0',
-                    showDropArea:true
+                    id:'redactor-media-browser_0', // unique identifier
+                    upload:true, // paint upload UI elements
+                    createDir:true // add create directory button
                 });
                 var $eureka = new Eureka({ // init the Eureka component
+                    // REQUIRED
                     uid:'redactor-media-browser_0',
-                    locale:'en-US',
-                    mediaSource:0, 
-                    currentDirectory:undefined,
-                    fileUploadURL:undefined,
                     directoryRequestURL:'fakepi/listdirectory.php',
                     listSourceRequestURL:'fakepi/listsource.php',
                     listSourcesRequestURL:'fakepi/listsources.php',
+                    
+                    fileUploadURL:'/file/upload', // if undefined upload and create UI elements will be removed
+                    locale:'en-US', // i18n
+                    mediaSource:0, // numeric index of current media source (overrides localStorage)
+                    currentDirectory:'./', // current directory (overrides localStorage)
                     debug:false, // will trace debugging info to console.log
-                    confirmBeforeDelete:true,
+                    confirmBeforeDelete:true, // when enabled confirms before deleting media sources
                     headers: [{
                         'modAuth': MODx.siteId,
                         'Powered-By': 'Eureka by Markup.tips'
                     }]
                 });
                 
+                console.log(EurekaModel.EurekaFoundIt);
+                
                 // NOTE: "event" system is kinda experimental and may change
                 // currently the Eureka class (MVC) dispatches events from the eureka component itself (div.eureka)
                 // listen for when a file is renamed
-                document.getElementById('redactor-media-browser_0').addEventListener('EurekaFileRename',function(e){
+                document.getElementById('redactor-media-browser_0').addEventListener(EurekaModel.EurekaFileRename,function(e){
                     console.log('EurekaFileRename');
-                    console.log(e.data);
-                    // make XHR 
+                    console.log(e.detail.data);
+                    // make XHR to API endpoint to rename file
                 });
                 
                 // listen for when a media item has been chosen
-                document.getElementById('redactor-media-browser_0').addEventListener('EurekaFoundIt',function(e){
+                document.getElementById('redactor-media-browser_0').addEventListener(EurekaModel.EurekaFoundIt,function(e){
                     console.log('EurekaFoundIt');
-                    console.log(e.data);
+                    console.log(e.detail.data); 
                     // NOTE: Eureka doesn't kill itself, it's up to to handle animating it out and destroying it
                 });
                 
                 // listen for when a media item has been deleted
-                document.getElementById('redactor-media-browser_0').addEventListener('EurekaUnlink',function(e){
+                document.getElementById('redactor-media-browser_0').addEventListener(EurekaModel.EurekaUnlink,function(e){
                     console.log('EurekaUnlink');
-                    console.log(e.data);
-                    // make XHR
+                    console.log(e.detail.data);
+                    // make XHR to API endpoint to delete media item
+                });
+                
+                // listen for when a new directory has been created
+                document.getElementById('redactor-media-browser_0').addEventListener(EurekaModel.EurekaDirectoryCreated,function(e){
+                    console.log('EurekaDirectoryCreated');
+                    console.log(e.detail.data);
+                    // make XHR (or not, might not need to if upload server script creates unexistant directories)
+                });
+                
+                // listen for when a directory has been opened
+                document.getElementById('redactor-media-browser_0').addEventListener(EurekaModel.EurekaDirectoryOpened,function(e){
+                    console.log('EurekaDirectoryOpened');
+                    console.log(e.detail.data);
+                    // make XHR to API endpoint to create new directory on server
                 });
             }());
         </script>

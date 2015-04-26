@@ -413,6 +413,9 @@ html.no-touch {
                 color:currentColor;
                 text-decoration:none;
                 cursor:pointer;
+                &[contenteditable="true"] {
+                    //cursor:inherit;
+                }
             }
             ul {
                 padding:0;
@@ -420,7 +423,18 @@ html.no-touch {
                 list-style-type:none;
             }
             li {
+                @extend %flexible-parent; // @include display(flex);
+                @extend %flex-wrap-wrap; //@include flex-wrap(wrap);
+                > .folder {
+                   @include flex-grow(0);
+                }
+                > .path {
+                    @include flex-grow(1);
+                    padding-left:0.25em;
+                }
+                
                 > ul {
+                    @include flex-basis(100%);
                     html.js & {
                         display:none;
                     }
@@ -518,7 +532,7 @@ html.no-touch {
                 
                 .progress {
                     @include flex-grow(1);
-                    
+                    @include flex-basis(100%);
                     background:darken(desaturate(#cddce6,100%),8%); 
                     
                     border-radius:0.4em;
@@ -577,6 +591,7 @@ html.no-touch {
             @include flex-grow(0);
             > nav {
                 @extend %flexible-parent; //@include display(flex); 
+                @extend %justify-content-center; //@include justify-content(center);
                 > a,>form, >.form {
                     @extend %ungrowable; //@include flex-grow(0);
                     @include flex-basis(50%);

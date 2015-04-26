@@ -3,27 +3,17 @@ var MuckBoot;
     var d = document;
     MuckBoot = function (opts) {
         var defaults = {
-            id: 'media-browser_0'
+            id: 'media-browser_0',
+            upload: true
         };
-        this.opts = extend({}, defaults, opts);
+        if (opts.id === undefined)
+            opts.id = 'media-browser_0';
+        if (opts.upload === undefined)
+            opts.upload = true;
+        if (opts.createDir === undefined)
+            opts.createDir = true;
         this.opts = opts;
         this.muck();
-        function extend(target, t, j) {
-            if (target === void 0) { target = {}; }
-            if (t === void 0) { t = null; }
-            if (j === void 0) { j = null; }
-            for (var i = 1; i < arguments.length; ++i) {
-                var from = arguments[i];
-                if (typeof from !== 'object')
-                    continue;
-                for (var j in from) {
-                    if (from.hasOwnProperty(j)) {
-                        target[j] = typeof from[j] === 'object' ? extend({}, target[j], from[j]) : from[j];
-                    }
-                }
-            }
-            return target;
-        }
     };
     MuckBoot.prototype.muck = function () {
         var that = this;
@@ -78,7 +68,7 @@ var MuckBoot;
                     nav.appendChild(createPathBrowserFooterMediaPathInput());
                     var btn = d.createElement('button');
                     btn.setAttribute('type', 'submit');
-                    btn.setAttribute('class', 'nued');
+                    btn.setAttribute('class', 'nued create-new');
                     btn.setAttribute('title', 'Create a new directory');
                     var fa = d.createElement('i');
                     fa.classList.add('fa');
@@ -107,7 +97,7 @@ var MuckBoot;
                     form.appendChild(createPathBrowserFooterMediaPathInput());
                     var btn = d.createElement('button');
                     btn.setAttribute('type', 'submit');
-                    btn.setAttribute('class', 'nued');
+                    btn.setAttribute('class', 'nued upload-files');
                     btn.setAttribute('title', 'Upload a file');
                     var fa = d.createElement('i');
                     fa.classList.add('fa');
@@ -118,8 +108,9 @@ var MuckBoot;
                     form.appendChild(btn);
                     return form;
                 }
-                createPathBrowserFooterCreateNewForm();
-                if (that.opts.showDropArea) {
+                if (that.opts.createDir)
+                    createPathBrowserFooterCreateNewForm();
+                if (that.opts.upload) {
                     (function () {
                         var da = d.createElement('div');
                         da.classList.add('droparea');
@@ -133,7 +124,8 @@ var MuckBoot;
                         footer.appendChild(da);
                     })();
                 }
-                nav.appendChild(createPathBrowserFooterUploadForm());
+                if (opts.upload)
+                    nav.appendChild(createPathBrowserFooterUploadForm());
                 footer.appendChild(nav);
                 return footer;
             }
@@ -201,7 +193,7 @@ var MuckBoot;
                         form.setAttribute('action', '#');
                         form.setAttribute('id', opts.id + '__upload-form');
                         var input = d.createElement('input');
-                        input.setAttribute('id', 'upload-input');
+                        input.setAttribute('id', opts.id + '__upload-input');
                         input.setAttribute('multiple', 'multiple');
                         input.setAttribute('name', 'uploadFiles');
                         input.setAttribute('type', 'file');
@@ -294,7 +286,8 @@ var MuckBoot;
                         div.classList.add('eureka__topbar-nav__select');
                         div.appendChild(createEurekaTopBarNavToggleBtn());
                         div.appendChild(createEurekaTopBarBrowseSelect());
-                        div.appendChild(createEurekaTopBarUploadForm());
+                        if (opts.upload)
+                            div.appendChild(createEurekaTopBarUploadForm());
                         div.appendChild(createEurekaTopBarViewBtns());
                         return div;
                     }
