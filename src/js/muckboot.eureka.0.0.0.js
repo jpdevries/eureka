@@ -417,4 +417,4 @@ var MuckBoot;
         d.getElementById(this.opts.id).outerHTML = eurekaWrapper.outerHTML;
     };
 })();
-//# sourceMappingURL=muckboot.eureka.js.map
+//# sourceMappingURL=muckboot.eureka.0.0.0.js.map

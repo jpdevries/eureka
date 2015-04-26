@@ -8,7 +8,7 @@
         <meta name="description" content="HTML-first crack at a Flexible Media Browser">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="stylesheet" href="assets/css/eureka.css?nc=<?php echo time() ?>">
+        <link rel="stylesheet" href="assets/css/eureka.0.0.0.css?nc=<?php echo time() ?>">
         <script src="assets/js/vendor/modernizr-2.8.3.min.js"></script>
         
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" async>
@@ -38,8 +38,8 @@
             <div class="view-a eureka" id="redactor-media-browser_0"></div><!-- max-height may be used in CSS just to show how it can be condensed when needed (think modal) -->
         </div>
         
-        <script src="assets/js/muckboot.eureka.js?nc=<?php echo time() ?>"></script>
-        <script src="assets/js/eureka.js?nc=<?php echo time() ?>"></script>
+        <script src="assets/js/muckboot.eureka.0.0.0.js?nc=<?php echo time() ?>"></script>
+        <script src="assets/js/eureka.0.0.0.js?nc=<?php echo time() ?>"></script>
         
         <script>
             (function(){

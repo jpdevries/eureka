@@ -1,12 +1,17 @@
 module.exports = function(grunt) {
 	// Project configuration.		
+    grunt.option.init({
+        'ver':(!grunt.option('ver')) ? grunt.file.readJSON('package.json').version : grunt.option('ver'),
+        'rel':(!grunt.option('rel')) ? grunt.file.readJSON('package.json').release : grunt.option('rel')
+    });
 	var initConfig = {
 		pkg: grunt.file.readJSON('package.json'),
 		dirs: { /* just defining some properties */
+            src: '../src/',
 			lib: './lib/',
 			scss: './scss/',
 			theme: '../',
-			assets: 'assets/',
+			assets: 'examples/assets/',
 			css: 'css/',
 			js:  'js/',
             ts:  'ts/',
@@ -31,7 +36,7 @@ module.exports = function(grunt) {
 					banner: '/*!\n*  <%= pkg.title %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n*/'
 				},
 				files: {
-					'<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.min.css': '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.css'
+					'<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.<%= pkg.version %>.min.css': '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.<%= pkg.version %>.css'
 				}
 			}
 		},
@@ -43,7 +48,7 @@ module.exports = function(grunt) {
 					compass: false
 				},
 				files: {
-					'<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.css': '<%= dirs.scss %>main.scss'
+					'<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.<%= pkg.version %>.css': '<%= dirs.scss %>main.scss'
 				}
 			},
 			dev: {
@@ -52,7 +57,7 @@ module.exports = function(grunt) {
 					compass: false
 				},
 				files: {
-					'<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.css': '<%= dirs.scss %>main.scss'
+					'<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.<%= pkg.version %>.css': '<%= dirs.scss %>main.scss'
 				}
 			}
 		},
@@ -62,7 +67,7 @@ module.exports = function(grunt) {
 				options: {
 					import: 2
 				},
-				src: ['<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>**/*.css']
+				src: ['<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>.<%= pkg.version %>**/*.css']
 			}
 		},
 		
@@ -74,15 +79,15 @@ module.exports = function(grunt) {
     			},
 				src: [
                     '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>vendor/html5Upload.js',
-					'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.js'
+					'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.<%= pkg.version %>.js'
 				],
-				dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.js', 
+				dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.<%= pkg.version %>.js', 
 			},
 			eureka: {
 				src: [
-					'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.js'
+					'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.<%= pkg.version %>.js'
 				],
-				dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.min.js', 
+				dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.<%= pkg.version %>.min.js', 
 			}
 			
 		},
@@ -91,13 +96,13 @@ module.exports = function(grunt) {
                 target:'es5',
                 failOnTypeErrors:false,
                 src: ["<%= dirs.ts %>plugins.ts","<%= dirs.ts %>eureka.typescript.ts"],
-                out:'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.js'
+                out:'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.<%= pkg.version %>.js'
             },
             muckboot : {
                 target:'es5',
                 failOnTypeErrors:false,
                 src: ["<%= dirs.ts %>muckboot.eureka.ts"],
-                out:'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>muckboot.eureka.js'
+                out:'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>muckboot.eureka.<%= pkg.version %>.js'
             }
         },
 
@@ -108,9 +113,9 @@ module.exports = function(grunt) {
                     screwIE8:true
 				},
 				files: {
-                    '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>muckboot.eureka.min.js': ['<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>muckboot.eureka.js'],
+                    '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>muckboot.eureka.<%= pkg.version %>.min.js': ['<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>muckboot.eureka.<%= pkg.version %>.js'],
                     '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>/vendor/html5Upload.min.js': ['<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>/vendor/html5Upload.js'],
-                    '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.min.js': ['<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.js']
+                    '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.<%= pkg.version %>.min.js': ['<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.<%= pkg.version %>.js']
 				}
 				
 			}
@@ -135,7 +140,7 @@ module.exports = function(grunt) {
 				force: true
 			},
 			prebuild: ['<%= dirs.scss %>bourbon', '<%= dirs.scss %>font-awesome'],
-			postbuild: ['<%= dirs.lib %>']
+			postbuild: ['<%= dirs.lib %>','<%= dirs.src %>/**/*']
 		},
 		growl: { /* optional growl notifications requires terminal-notifer: gem install terminal-notifier */
 			
@@ -187,6 +192,20 @@ module.exports = function(grunt) {
 			cwd: '<%= dirs.lib %>',
 			dest: '<%= dirs.scss %>',
 			expand: true
+		}]
+	};
+    
+	initConfig.copy["eureka-src"] = {
+		files: [{
+			src: '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>*eureka*.js',
+			dest: '<%= dirs.src %><%= dirs.js %>',
+			expand: true,
+            flatten: true
+		},{
+			src: '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>*eureka*.css*',
+			dest: '<%= dirs.src %><%= dirs.css %>',
+			expand: true,
+            flatten: true
 		}]
 	};
     
@@ -249,6 +268,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-ts");
 
 	grunt.registerTask('default', ['growl:watch', 'watch']);
-	grunt.registerTask('build', ['clean:prebuild', 'bower', 'copy', 'sass:dev','cssmin','concat','uglify', 'growl:sass', 'clean:postbuild']);
+	grunt.registerTask('build', ['clean:prebuild', 'bower', 'copy', 'sass:dev','cssmin','concat','uglify', 'growl:sass', 'clean:postbuild','copy:eureka-src']);
 	grunt.registerTask('expand', ['sass:dev', 'growl:sass', 'growl:expand']);
 };
