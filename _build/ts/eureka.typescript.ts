@@ -397,7 +397,7 @@ class EurekaView {
         var that = this;
         function assignShortcutListeners() {
             document.addEventListener('keydown', function(event) {
-                console.log(event);
+                if(that.getController().getModel().getDebug()) console.log(event);
                 if (event.ctrlKey && event.which === 186) { // ctrl ; to toggle sidebar
                     var e = document.createEvent('Event');
                     e.initEvent('click', true, true);

@@ -18,17 +18,105 @@
                 margin:0;
                 padding:0;
             }
-            html.no-touch #page-wrapper {
-              height: 96vh;
-              margin: 0;
-              padding:2vh;
-              
-            }
-            @-moz-document url-prefix() { /* disable "holy-grail" layout for firefox because it still doesn't understand flexbox  #janky #shame #hack */
-                html.no-touch #page-wrapper {
-                    height:auto;
-                    max-height:none;
+            
+            body {
+                padding:1vh;
+                @media screen and (min-width: 769px) {
+                    padding:2vh;
                 }
+            }
+            
+            /* needed for non-Webkit engines see http://codepen.io/jpdevries/pen/doYYoR */
+            @media screen and (min-width: 769px) {
+              body {
+                display: -webkit-box;
+                display: -moz-box;
+                display: box;
+                display: -webkit-flex;
+                display: -moz-flex;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -moz-box-orient: vertical;
+                box-orient: vertical;
+                -webkit-flex-direction: column;
+                -moz-flex-direction: column;
+                flex-direction: column;
+                -ms-flex-direction: column;
+                -webkit-box-lines: single;
+                -moz-box-lines: single;
+                box-lines: single;
+                -webkit-flex-wrap: nowrap;
+                -moz-flex-wrap: nowrap;
+                -ms-flex-wrap: nowrap;
+                flex-wrap: nowrap;
+                height: 96vh;
+              }
+              body > form {
+                display: -webkit-box;
+                display: -moz-box;
+                display: box;
+                display: -webkit-flex;
+                display: -moz-flex;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -moz-box-orient: vertical;
+                box-orient: vertical;
+                -webkit-flex-direction: column;
+                -moz-flex-direction: column;
+                flex-direction: column;
+                -ms-flex-direction: column;
+                -webkit-box-lines: single;
+                -moz-box-lines: single;
+                box-lines: single;
+                -webkit-flex-wrap: nowrap;
+                -moz-flex-wrap: nowrap;
+                -ms-flex-wrap: nowrap;
+                flex-wrap: nowrap;
+                -webkit-flex-grow: 1;
+                -moz-flex-grow: 1;
+                flex-grow: 1;
+                -ms-flex-positive: 1;
+                max-height: 100%;
+              }
+              body > form > #page-wrapper {
+                max-height: 100%;
+                display: -webkit-box;
+                display: -moz-box;
+                display: box;
+                display: -webkit-flex;
+                display: -moz-flex;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -moz-box-orient: vertical;
+                box-orient: vertical;
+                -webkit-flex-direction: column;
+                -moz-flex-direction: column;
+                flex-direction: column;
+                -ms-flex-direction: column;
+                -webkit-box-lines: single;
+                -moz-box-lines: single;
+                box-lines: single;
+                -webkit-flex-wrap: nowrap;
+                -moz-flex-wrap: nowrap;
+                -ms-flex-wrap: nowrap;
+                flex-wrap: nowrap;
+                -webkit-flex-grow: 1;
+                -moz-flex-grow: 1;
+                flex-grow: 1;
+                -ms-flex-positive: 1;
+              }
+            }
+            
+            html.no-touch #page-wrapper {
+              margin: 0;
+              padding:0;
+              min-height: 98vh;
+              @media screen and (min-width: 769px) {
+                  height: 96vh;
+              }
             }
         </style>
         <script>var MODx = {siteId:'foo'};</script>
@@ -36,7 +124,7 @@
     <body>
         <form>
             <div id="page-wrapper">            
-                    <div class="hack-firefox eureka-wrapper"><!-- Eureka Media Browser -->                        
+                    <div class="eureka-wrapper"><!-- Eureka Media Browser -->                        
                         <div class="view-a eureka sidebar-open" id="media-browser_0"><!-- max-height may be used in CSS just to show how it can be condensed when needed (think modal) -->
                             <!-- initially open, this side navigation adds a a/synchronous tree browser to traverse media source directories  -->
                             <nav id="media-browser_0__pathbrowser" class="pathbrowser">
@@ -652,8 +740,6 @@
                         var mediaBrowser = document.getElementById('media-browser_0'); // dangerous but more optimal to not looks these up each resize
                         var eurekaWrapper = mediaBrowser.parentNode;
                         var eurekaTable = mediaBrowser.querySelector('.eureka-table');
-                    
-                        document.querySelector('.hack-firefox.eureka-wrapper').classList.remove('hack-firefox'); // remove the CSS patch :/
                     
                         if(eurekaTable.offsetHeight > eurekaWrapper.offsetHeight) { // eurekaTable might be too tall now
                             try {

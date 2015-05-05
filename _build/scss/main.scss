@@ -123,7 +123,6 @@ $danger:darken(red,8%);
 }
 
 %visible-contextual {
-    //display:table-row;
     position:relative;
     top:auto;
     left:auto;
@@ -229,7 +228,13 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
 }
 
 @mixin firefox-hack() {
-    @-moz-document url-prefix() { /* shame on firefox? */
+    @-moz-document url-prefix() { /* shame on firefox? http://codepen.io/jpdevries/pen/doYYoR */
+        @content;
+    }
+}
+
+@mixin spartan-hack() {
+    @supports (-ms-accelerator:true) { /* shame on spartan? http://codepen.io/jpdevries/pen/doYYoR */
         @content;
     }
 }
@@ -248,18 +253,44 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
         > .eureka {
             @include flex-grow(1);
             @include flex-basis(100%);
+            @include media($gtTabletP) {
+                max-height:100%;
+            }
             .stage {
                 @include display(flex);
                 width:100%;
                 @include flex-direction(column);
                 @include flex-wrap(nowrap);
+                position:relative;
                 > .eureka-table {
                     @include flex-grow(1);
                     //height:100%;
                     @include flex-basis(100%); // ie doesn't seem to like this, it lets .eureka-table get too big and overlap the top bar (I think this is an IE flexbox bug...)
                     height:auto;
                     -ms-flex-preferred-size:auto; // #janky ^^
+                    
+                    /* hack for Firefox and Spartan see http://codepen.io/jpdevries/pen/doYYoR #janky */
+                    @mixin topbar-hack() {
+                        position:absolute;
+                        top:$topBarH;
+                        right:0;
+                        bottom:0;
+                        left:0;
+                    }
+                    @include firefox-hack() {
+                        @include media($gtTabletP) {
+                            @include topbar-hack;    
+                        }
+                    }
+                    @include spartan-hack() {
+                        @include media($gtTabletP) {
+                            @include topbar-hack;
+                        }
+                    }
+                    
                     > table {
+                        @include flex-grow(1);
+                        max-height:100%;
                         > thead {
                             @include flex-basis(2em);
                         }
@@ -298,33 +329,6 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
        }
    }
     
-}
-
-html.no-touch {
-    .eureka-wrapper.hack-firefox {
-        @include media($gtMobile) {
-            > .eureka {
-                @include firefox-hack() { // #janky
-                    @include flex-basis(86%);
-                    max-height:86%;
-                }
-                > .stage {
-                    > .eureka-table {
-                        @include firefox-hack() {
-                            height:auto;
-                            @include flex-basis(86%);
-                            max-height:86%;
-                        }
-                    }
-                }
-            }
-            > .proceed {
-                @include firefox-hack() {
-                    @include flex-grow(1);
-                }
-            }
-        }
-    }
 }
 
 .eureka {
@@ -650,7 +654,7 @@ html.no-touch {
         @include media($gtTabletP) {
             @include flex-basis($topBarH * 1.4);
         }
-        .hack-firefox & {
+        .hack-flexbox & {
             @include firefox-hack() {
                 @include flex-basis(14%);
             }

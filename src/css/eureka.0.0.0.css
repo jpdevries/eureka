@@ -589,6 +589,11 @@ html.no-touch .eureka-wrapper > .eureka {
   flex-basis: 100%;
   -ms-flex-preferred-size: 100%;
 }
+@media screen and (min-width: 769px) {
+  html.no-touch .eureka-wrapper > .eureka {
+    max-height: 100%;
+  }
+}
 html.no-touch .eureka-wrapper > .eureka .stage {
   display: -webkit-box;
   display: -moz-box;
@@ -612,6 +617,7 @@ html.no-touch .eureka-wrapper > .eureka .stage {
   -moz-flex-wrap: nowrap;
   -ms-flex-wrap: nowrap;
   flex-wrap: nowrap;
+  position: relative;
 }
 html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table {
   -webkit-flex-grow: 1;
@@ -624,6 +630,42 @@ html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table {
   -ms-flex-preferred-size: 100%;
   height: auto;
   -ms-flex-preferred-size: auto;
+  /* hack for Firefox and Spartan see http://codepen.io/jpdevries/pen/doYYoR #janky */
+}
+@-moz-document url-prefix() {
+  html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table {
+    /* shame on firefox? http://codepen.io/jpdevries/pen/doYYoR */
+  }
+  @media screen and (min-width: 769px) {
+    html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table {
+      position: absolute;
+      top: 4.8rem;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
+  }
+}
+@supports (-ms-accelerator: true) {
+  html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table {
+    /* shame on spartan? http://codepen.io/jpdevries/pen/doYYoR */
+  }
+  @media screen and (min-width: 769px) {
+    html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table {
+      position: absolute;
+      top: 4.8rem;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
+  }
+}
+html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table > table {
+  -webkit-flex-grow: 1;
+  -moz-flex-grow: 1;
+  flex-grow: 1;
+  -ms-flex-positive: 1;
+  max-height: 100%;
 }
 html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table > table > thead {
   -webkit-flex-basis: 2em;
@@ -665,39 +707,6 @@ html.no-touch .eureka-wrapper > .proceed {
 }
 .eureka-wrapper > footer > *:last-of-type {
   margin-right: 0;
-}
-
-@media screen and (min-width: 641px) {
-  @-moz-document url-prefix() {
-    html.no-touch .eureka-wrapper.hack-firefox > .eureka {
-      /* shame on firefox? */
-      -webkit-flex-basis: 86%;
-      -moz-flex-basis: 86%;
-      flex-basis: 86%;
-      -ms-flex-preferred-size: 86%;
-      max-height: 86%;
-    }
-  }
-  @-moz-document url-prefix() {
-    html.no-touch .eureka-wrapper.hack-firefox > .eureka > .stage > .eureka-table {
-      /* shame on firefox? */
-      height: auto;
-      -webkit-flex-basis: 86%;
-      -moz-flex-basis: 86%;
-      flex-basis: 86%;
-      -ms-flex-preferred-size: 86%;
-      max-height: 86%;
-    }
-  }
-  @-moz-document url-prefix() {
-    html.no-touch .eureka-wrapper.hack-firefox > .proceed {
-      /* shame on firefox? */
-      -webkit-flex-grow: 1;
-      -moz-flex-grow: 1;
-      flex-grow: 1;
-      -ms-flex-positive: 1;
-    }
-  }
 }
 
 .eureka {
@@ -1006,8 +1015,8 @@ html.touch .eureka > .pathbrowser > footer .dropzone {
   }
 }
 @-moz-document url-prefix() {
-  .hack-firefox .eureka > .stage > .eureka__topbar {
-    /* shame on firefox? */
+  .hack-flexbox .eureka > .stage > .eureka__topbar {
+    /* shame on firefox? http://codepen.io/jpdevries/pen/doYYoR */
     -webkit-flex-basis: 14%;
     -moz-flex-basis: 14%;
     flex-basis: 14%;
