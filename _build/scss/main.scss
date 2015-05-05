@@ -1,3 +1,9 @@
+$prefix-for-webkit:    true;   // prefixes make up about 16% of our CSS weight (1-(31/37))
+$prefix-for-mozilla:   true;
+$prefix-for-microsoft: true;
+$prefix-for-opera:     false;  // we don't support Opera, or rather Opera doesn't currently support us :( https://github.com/jpdevries/eureka/issues/10
+$prefix-for-spec:      true;
+
 @import "bourbon/bourbon";
 @import "grid-settings";
 
@@ -328,7 +334,12 @@ html.no-touch {
 .eureka__row-image {
     code {
         display:inline-block;
-        text-align:center;
+        .view-b &, .view-c & {
+            text-align:center;    
+        }
+        .view-d & {
+            text-align:inherit;
+        }
         @include media($gtTabletP) {
             text-align:left;
         }
@@ -455,7 +466,9 @@ html.no-touch {
             }
         }
         > footer {
-            @extend %top-seperated;
+            html.js & {
+                @extend %top-seperated;
+            }
             @include media($tabletP) {
                 border-width:0;
             }
@@ -469,6 +482,7 @@ html.no-touch {
             }
             
             .dropzone {
+                $dzColor:darken(desaturate(#cddce6,100%),42%);
                 min-height:8.6em;
                 font-size:1.4em;
                 background:desaturate(#cddce6,100%);
@@ -482,8 +496,11 @@ html.no-touch {
                 @extend %flex-direction-column; //@include flex-direction(column);
                 //@extend %align-items-center; // @include align-items(center);
                 
-                color:darken(desaturate(#cddce6,100%),42%);
+                color:$dzColor;
 
+                a {
+                    color:darken($dzColor,12%);
+                }
                 
                 html.touch & {
                     display:none;
@@ -685,7 +702,7 @@ html.no-touch {
             display:block;
         }
         @include media($gtTabletP) {
-            height:100%;    
+            height:100%;
         }
         .view-a &, .view-b &, .view-d & {
             @include media($gtTabletP) {
@@ -747,7 +764,11 @@ html.no-touch {
             	/*
             	Label the data
             	*/
-            	td:nth-of-type(1):before { content: "Name"; }
+            	td:nth-of-type(1):before {
+                    content: "Name";
+                    left:-99999em !important;
+                    top:-99999em !important;
+            	}
             	td:nth-of-type(2):before { content: "Dimensions"; }
             	td:nth-of-type(3):before { content: "File Size"; }
             	td:nth-of-type(4):before { content: "Edited On"; }
@@ -969,7 +990,7 @@ html.no-touch {
                             > input[type="radio"] {
                                 @extend %ungrowable; //@include flex-grow(0);
                                 @extend %unshrinkable; //@include flex-shrink(0);
-                                @extend %flex-basis-all; //@include flex-basis(auto);
+                                @extend %flex-basis-auto; //@include flex-basis(auto);
                             }
                             
                             > img {
@@ -996,6 +1017,11 @@ html.no-touch {
                 }
                 
                 &:focus, &.focused {
+                    .view-b &, .view-c &  {
+                        > td.eureka__row-image {
+                            text-align:center;    
+                        }   
+                    }
                     .view-a & {
                         > td.eureka__row-image {
                             img {
@@ -1005,20 +1031,17 @@ html.no-touch {
                     }
                 }
                 
-                &:focus {
-                    /*
-                    ~ tr {
-                        opacity:0.5;
-                    }
-                    opacity:1;
-                    */
-                }
-                
                 .view-c & {
                     @include flex-basis(8em);
                     &.focused, &:focus {
                         @extend %flex-basis-auto; //@include flex-basis(auto);
                     }
+                }
+                
+                .view-d & {
+                    > td.eureka__row-image {
+                        text-align:center;    
+                    }   
                 }
                 
                 .view-b & {
@@ -1091,9 +1114,16 @@ html.no-touch {
             }
             tr {
                 td {
-                    text-align:right;
-                    &:first-of-type {
-                        text-align:left;
+                    text-align:left;
+                    .view-a &, .view-b &, .view-c & {
+                        &:first-of-type {
+                            //text-align:left;
+                        }
+                    }
+                     .view-d & {
+                        &:first-of-type {
+                            text-align:center;
+                        }
                     }
                 }
             }
@@ -1459,9 +1489,11 @@ tr.contextual {
             @include flex-grow(4);
             
             .sidebar-open & {
-                position:absolute;
-                top:-99999em;
-                left:-99999em;
+                html.js & {
+                    position:absolute;
+                    top:-99999em;
+                    left:-99999em;
+                }
             }
         }
         > a {

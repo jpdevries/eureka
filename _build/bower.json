@@ -16,7 +16,8 @@
   "dependencies": {
     "html5-file-uploader": "git://github.com/jpdevries/html5-file-uploader.git#a0367a276344068f34362046233f478ca3e30fd5",
     "html5-boilerplate": "5.0.0",
-    "font-awesome": "4.3.0"
+    "font-awesome": "4.3.0",
+    "dom4": "~1.4.3"
   },
   "exportsOverride": {
     "DefinitelyTyped": {
@@ -58,6 +59,9 @@
       "css": [
         "css"
       ]
+    },
+    "dom4":{
+        "":["build/*.js"]
     }
   },
   "devDependencies": {

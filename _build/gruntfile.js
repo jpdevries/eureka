@@ -195,6 +195,15 @@ module.exports = function(grunt) {
 		}]
 	};
     
+	initConfig.copy["dom4"] = {
+		files: [{
+			src: './*.js',
+			cwd: '<%= dirs.lib %>dom4',
+			dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>vendor/',
+			expand: true
+		}]
+	};
+    
 	initConfig.copy["eureka-src"] = {
 		files: [{
 			src: '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>*eureka*.js',

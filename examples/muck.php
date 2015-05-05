@@ -12,7 +12,7 @@
         <script src="assets/js/vendor/modernizr-2.8.3.min.js"></script>
         
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" async>
-        
+                
         <style>
             html,body {
                 margin:0;
@@ -56,6 +56,7 @@
                     listSourcesRequestURL:'fakepi/listsources.php',
                     
                     fileUploadURL:'/file/upload', // if undefined upload and create UI elements will be removed
+                    editable:true, // if false will not add rename and delete features
                     locale:'en-US', // i18n
                     mediaSource:0, // numeric index of current media source (overrides localStorage)
                     currentDirectory:'./', // current directory (overrides localStorage)
@@ -66,9 +67,7 @@
                         'Powered-By': 'Eureka by Markup.tips'
                     }]
                 });
-                
-                console.log(EurekaModel.EurekaFoundIt);
-                
+                            
                 // NOTE: "event" system is kinda experimental and may change
                 // currently the Eureka class (MVC) dispatches events from the eureka component itself (div.eureka)
                 // listen for when a file is renamed
@@ -82,6 +81,7 @@
                 document.getElementById('redactor-media-browser_0').addEventListener(EurekaModel.EurekaFoundIt,function(e){
                     console.log('EurekaFoundIt');
                     console.log(e.detail.data); 
+                    alert('You found ' + e.detail.data.filename);
                     // NOTE: Eureka doesn't kill itself, it's up to to handle animating it out and destroying it
                 });
                 

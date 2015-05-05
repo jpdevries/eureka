@@ -305,7 +305,6 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
   -webkit-align-items: stretch;
   -moz-align-items: stretch;
   -ms-align-items: stretch;
-  -o-align-items: stretch;
   align-items: stretch;
   -ms-flex-align: stretch;
 }
@@ -317,7 +316,6 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
   -webkit-justify-content: flex-start;
   -moz-justify-content: flex-start;
   -ms-justify-content: flex-start;
-  -o-justify-content: flex-start;
   justify-content: flex-start;
   -ms-flex-pack: start;
 }
@@ -329,7 +327,6 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
   -webkit-justify-content: center;
   -moz-justify-content: center;
   -ms-justify-content: center;
-  -o-justify-content: center;
   justify-content: center;
   -ms-flex-pack: center;
 }
@@ -351,7 +348,6 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
   -webkit-justify-content: flex-end;
   -moz-justify-content: flex-end;
   -ms-justify-content: flex-end;
-  -o-justify-content: flex-end;
   justify-content: flex-end;
   -ms-flex-pack: end;
 }
@@ -363,7 +359,6 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
   -webkit-align-items: flex-start;
   -moz-align-items: flex-start;
   -ms-align-items: flex-start;
-  -o-align-items: flex-start;
   align-items: flex-start;
   -ms-flex-align: start;
 }
@@ -375,7 +370,6 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
   -webkit-align-items: stretch;
   -moz-align-items: stretch;
   -ms-align-items: stretch;
-  -o-align-items: stretch;
   align-items: stretch;
   -ms-flex-align: stretch;
 }
@@ -414,7 +408,6 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
   -webkit-align-items: center;
   -moz-align-items: center;
   -ms-align-items: center;
-  -o-align-items: center;
   align-items: center;
   -ms-flex-align: center;
 }
@@ -426,14 +419,14 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
   -ms-flex-item-align: start;
 }
 
-.eureka-table > table, .eureka-table > table > thead > tr > th, .eureka-table > table > tbody, .view-d .eureka-table > table > tbody > tr, .view-d .eureka-table > table > tbody > tr > td, .view-a .eureka-table > table > tbody > tr > td > .image, .view-a .eureka-table > table > tbody > tr > td > .image > img, .view-c .eureka-table > table > tbody > tr.focused, .view-c .eureka-table > table > tbody > tr:focus, .contextual__nav > form.tag > label, .contextual__nav > form.tag > input[type="text"], .eureka__topbar > form, .eureka__topbar > form > input, .view-d .eureka__row-image > .image, .view-d .eureka__row-image > code {
+.eureka-table > table, .eureka-table > table > thead > tr > th, .eureka-table > table > tbody, .view-d .eureka-table > table > tbody > tr, .view-d .eureka-table > table > tbody > tr > td, .view-a .eureka-table > table > tbody > tr > td > .image, .view-a .eureka-table > table > tbody > tr > td > .image > input[type="radio"], .view-a .eureka-table > table > tbody > tr > td > .image > img, .view-c .eureka-table > table > tbody > tr.focused, .view-c .eureka-table > table > tbody > tr:focus, .contextual__nav > form.tag > label, .contextual__nav > form.tag > input[type="text"], .eureka__topbar > form, .eureka__topbar > form > input, .view-d .eureka__row-image > .image, .view-d .eureka__row-image > code {
   -webkit-flex-basis: auto;
   -moz-flex-basis: auto;
   flex-basis: auto;
   -ms-flex-preferred-size: auto;
 }
 
-.view-a .eureka-table > table > tbody > tr.contextual.visible, html.js .view-a tr.eureka__row:focus + tr.contextual, html.js .view-a tr.eureka__row.focused + tr.contextual, .view-a .eureka-table > table > tbody > tr, .eureka-table > table > tbody > tr, .view-c .eureka-table > table > tbody > tr > td, .view-d .eureka-table > table > tbody > tr > td, .view-a .eureka-table > table > tbody > tr > td > .image > input[type="radio"], .view-b .eureka-table > table > tbody > tr.focused, .view-b .eureka-table > table > tbody > tr:focus {
+.view-a .eureka-table > table > tbody > tr.contextual.visible, html.js .view-a tr.eureka__row:focus + tr.contextual, html.js .view-a tr.eureka__row.focused + tr.contextual, .view-a .eureka-table > table > tbody > tr, .eureka-table > table > tbody > tr, .view-c .eureka-table > table > tbody > tr > td, .view-d .eureka-table > table > tbody > tr > td, .view-b .eureka-table > table > tbody > tr.focused, .view-b .eureka-table > table > tbody > tr:focus {
   -webkit-flex-basis: 100%;
   -moz-flex-basis: 100%;
   flex-basis: 100%;
@@ -467,7 +460,7 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
   border-bottom: 1px solid #dddddd;
 }
 
-.eureka > .pathbrowser > footer {
+html.js .eureka > .pathbrowser > footer {
   padding-bottom: 0.5em;
   border-top: 1px solid #dddddd;
 }
@@ -713,7 +706,12 @@ html.no-touch .eureka-wrapper > .proceed {
 
 .eureka__row-image code {
   display: inline-block;
+}
+.view-b .eureka__row-image code, .view-c .eureka__row-image code {
   text-align: center;
+}
+.view-d .eureka__row-image code {
+  text-align: inherit;
 }
 @media screen and (min-width: 769px) {
   .eureka__row-image code {
@@ -855,6 +853,9 @@ html.js .eureka > .pathbrowser > .tree li.open > ul {
   border-radius: 0.4em;
   text-align: center;
   color: #6e6e6e;
+}
+.eureka > .pathbrowser > footer .dropzone a {
+  color: #505050;
 }
 html.touch .eureka > .pathbrowser > footer .dropzone {
   display: none;
@@ -1084,6 +1085,8 @@ html.touch .eureka > .pathbrowser > footer .dropzone {
   }
   .view-a .eureka-table > table td:nth-of-type(1):before {
     content: "Name";
+    left: -99999em !important;
+    top: -99999em !important;
   }
   .view-a .eureka-table > table td:nth-of-type(2):before {
     content: "Dimensions";
@@ -1157,7 +1160,6 @@ html.touch .eureka > .pathbrowser > footer .dropzone {
   -webkit-justify-content: flex-center;
   -moz-justify-content: flex-center;
   -ms-justify-content: flex-center;
-  -o-justify-content: flex-center;
   justify-content: flex-center;
   -ms-flex-pack: flex-center;
   padding-bottom: 1.2em;
@@ -1171,7 +1173,6 @@ html.touch .eureka > .pathbrowser > footer .dropzone {
   -webkit-justify-content: flex-center;
   -moz-justify-content: flex-center;
   -ms-justify-content: flex-center;
-  -o-justify-content: flex-center;
   justify-content: flex-center;
   -ms-flex-pack: flex-center;
 }
@@ -1273,22 +1274,20 @@ html.no-flexbox .eureka-table > table > tbody > tr > td {
   width: auto;
   max-height: 140px;
 }
+.view-b .eureka-table > table > tbody > tr:focus > td.eureka__row-image, .view-c .eureka-table > table > tbody > tr:focus > td.eureka__row-image, .view-b .eureka-table > table > tbody > tr.focused > td.eureka__row-image, .view-c .eureka-table > table > tbody > tr.focused > td.eureka__row-image {
+  text-align: center;
+}
 .view-a .eureka-table > table > tbody > tr:focus > td.eureka__row-image img, .view-a .eureka-table > table > tbody > tr.focused > td.eureka__row-image img {
   max-height: none;
-}
-.eureka-table > table > tbody > tr:focus {
-  /*
-  ~ tr {
-      opacity:0.5;
-  }
-  opacity:1;
-  */
 }
 .view-c .eureka-table > table > tbody > tr {
   -webkit-flex-basis: 8em;
   -moz-flex-basis: 8em;
   flex-basis: 8em;
   -ms-flex-preferred-size: 8em;
+}
+.view-d .eureka-table > table > tbody > tr > td.eureka__row-image {
+  text-align: center;
 }
 .view-b .eureka-table > table > tbody > tr {
   -webkit-flex-basis: 200px;
@@ -1342,10 +1341,10 @@ html.no-flexbox .eureka-table > table > tbody > tr > td {
   cursor: pointer;
 }
 .eureka-table table tbody tr td {
-  text-align: right;
-}
-.eureka-table table tbody tr td:first-of-type {
   text-align: left;
+}
+.view-d .eureka-table table tbody tr td:first-of-type {
+  text-align: center;
 }
 
 .eureka-table > table > tbody > tr.contextual {
@@ -1397,7 +1396,6 @@ tbody.filtered > tr:not(.visible) {
     -webkit-justify-content: center;
     -moz-justify-content: center;
     -ms-justify-content: center;
-    -o-justify-content: center;
     justify-content: center;
     -ms-flex-pack: center;
     -webkit-box-align: center;
@@ -1406,7 +1404,6 @@ tbody.filtered > tr:not(.visible) {
     -webkit-align-items: center;
     -moz-align-items: center;
     -ms-align-items: center;
-    -o-align-items: center;
     align-items: center;
     -ms-flex-align: center;
   }
@@ -1583,7 +1580,6 @@ tr.contextual > td {
   -webkit-justify-content: center;
   -moz-justify-content: center;
   -ms-justify-content: center;
-  -o-justify-content: center;
   justify-content: center;
   -ms-flex-pack: center;
   width: 100%;
@@ -1623,7 +1619,6 @@ tr.contextual > td {
     -webkit-justify-content: flex-end;
     -moz-justify-content: flex-end;
     -ms-justify-content: flex-end;
-    -o-justify-content: flex-end;
     justify-content: flex-end;
     -ms-flex-pack: end;
   }
@@ -1657,7 +1652,6 @@ tr.contextual > td {
     -webkit-align-items: flex-start;
     -moz-align-items: flex-start;
     -ms-align-items: flex-start;
-    -o-align-items: flex-start;
     align-items: flex-start;
     -ms-flex-align: start;
     -webkit-box-pack: start;
@@ -1666,7 +1660,6 @@ tr.contextual > td {
     -webkit-justify-content: flex-start;
     -moz-justify-content: flex-start;
     -ms-justify-content: flex-start;
-    -o-justify-content: flex-start;
     justify-content: flex-start;
     -ms-flex-pack: start;
     -webkit-box-orient: horizontal;
@@ -1741,7 +1734,7 @@ tr.contextual > td {
     margin-bottom: 0;
   }
 }
-.sidebar-open .eureka__topbar .eureka__topbar-nav .upload-form {
+html.js .sidebar-open .eureka__topbar .eureka__topbar-nav .upload-form {
   position: absolute;
   top: -99999em;
   left: -99999em;

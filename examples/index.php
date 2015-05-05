@@ -1,6 +1,6 @@
 <?php include 'functions.php';?><!doctype html>
 <!-- if you like markup please stop by and say hello over at http://markup.tips -->
-<html class="no-js" lang="">
+<html class="no-js no-touch" lang="">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -24,7 +24,13 @@
               padding:2vh;
               
             }
-        </style> 
+            @-moz-document url-prefix() { /* disable "holy-grail" layout for firefox because it still doesn't understand flexbox  #janky #shame #hack */
+                html.no-touch #page-wrapper {
+                    height:auto;
+                    max-height:none;
+                }
+            }
+        </style>
         <script>var MODx = {siteId:'foo'};</script>
     </head>
     <body>
@@ -48,17 +54,17 @@
                                     <ul>
                                         <li class="open">
                                                 <a class="folder"><i class="fa fa-folder-open"></i>&nbsp;</a>
-                                                <a class="path" href="#" title="Browse assets" data-cd="assets/">assets</a>
+                                                <a contenteditable="true" class="path" href="#" title="Browse assets" data-cd="assets/">assets</a>
                                             <ul>
                                                 <li class="active">
                                                     <a class="folder"><i class="fa fa-folder-open"></i>&nbsp;</a>
-                                                    <a class="path" href="#" title="Browse assets/images" data-cd="assets/images/">assets/images</a>
+                                                    <a contenteditable="true" class="path" href="#" title="Browse assets/images" data-cd="assets/images/">assets/images</a>
                                                 </li>
                                             </ul>
                                         </li>
                                         <li>
                                             <a class="folder"><i class="fa fa-folder-open"></i>&nbsp;</a>
-                                            <a class="path" href="#" title="Browse assets/uploads" data-cd="assets/uploads/">uploads</a>
+                                            <a contenteditable="true" class="path" href="#" title="Browse assets/uploads" data-cd="assets/uploads/">uploads</a>
                                         </li>
                                     </ul>
                                 </nav>
@@ -69,12 +75,12 @@
                                         <div class="dropzone" title="Drag &amp; Drop files here to upload them">
                                             <!-- this is the uploading state. set div.dropzone.uploading class -->
                                             <div class="progress">
-                                                <div class="bar" title="image_a.jpg is 22% done uploading">
+                                                <!--div class="bar" title="image_a.jpg is 22% done uploading">
                                                     <div style="right:88%"></div>
                                                 </div>
                                                 <div class="bar" title="image_b.jpg is 67% done uploading">
                                                     <div style="right:33%"></div>
-                                                </div>
+                                                </div-->
                                             </div>
                                             <!-- this is the complete state. set div.dropzone.complete class -->
                                             <!--div class="progress">
@@ -85,8 +91,8 @@
                                                     <p><span title="file_a.jpg, file_b.jpg, file_c.jpg" style="cursor:default">Your files</span> have been successfully uploaded.<br><a href="#">Upload&nbsp;more.</a></p>
                                                 </div>
                                             </div-->
-                                            <!-- this is the error state. let's hope you don't need to set div.dropzone.error class -->
-                                            <!--div class="progress">
+                                            <!-- this is the error state. let's hope you don't need to set div.dropzone.error class ->
+                                            <!-div class="progress">
                                                 <div>
                                                     <h2>
                                                         <i class="fa fa-times-circle"></i>

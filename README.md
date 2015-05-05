@@ -22,14 +22,14 @@ WIP. Flexible Media Browser Component.
 The Eureka Media Browser is built [HTML-first](http://markup.tips/html-ftw) using [Markup.tips](http://markup.tips). This means `eureka.js` assumes you've populated the `DOM` with `HTML` markup manually. If you haven't, no worries. `muckboot.eureka.js` can do that for you. Let's say you start off with an empty div:
 
 ```html
-<div class="eureka" id="redactor-media-browser_0"></div>
+<div class="eureka" id="media-browser_0"></div>
 ```
 
 _Note the `.eureka` class and the use of a unique identifer. The unique identier is important because `eureka.js` will use it a lot when referencing the `DOM`._
 
 ```js
 var $muckboot = new MuckBoot({ // paint the DOM
-    id:'redactor-media-browser_0',
+    id:'media-browser_0',
     upload:true // if set to false will not add uploading related elements to the DOM
 });
 ```
@@ -39,7 +39,7 @@ Now that `muckboot.eureka.js` has done the prep-work Eureka is ready for instant
 ```js
 var $eureka = new Eureka({ // init the Eureka component
     // REQUIRED SETTINGS
-    uid:'redactor-media-browser_0', // id of our div
+    uid:'media-browser_0', // id of our div
     directoryRequestURL:'fakepi/listdirectory.php', // lists contents of a directory. along with headers Object, sends  's' and 'dir' parameters for media source and current directory
     listSourceRequestURL:'fakepi/listsource.php', // list navigation tree of a given media sources. along with headers Object, sends 's' paramater for media source to list
     listSourcesRequestURL:'fakepi/listsources.php', // fetches a list of all media sources

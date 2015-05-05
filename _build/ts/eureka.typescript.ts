@@ -101,6 +101,11 @@ class EurekaModel {
     public static get EurekaDirectoryCreated():string { return "EurekaDirectoryCreated"; }
     public static get EurekaDirectoryOpened():string { return "EurekaDirectoryOpened"; }
     
+    public static get EurekaDirectoryChanged():string { return "EurekaDirectoryChanged"; }
+    public static get EurekaMediaSourceChange():string { return "EurekaMediaSourceChange"; }
+    public static get EurekaMediaSourcesListChange():string { return "EurekaMediaSourcesListChange"; }
+    public static get EurekaViewChange():string { return "EurekaViewChange"; }
+    
     constructor(opts:any) {
         if(opts.uid !== undefined) this._uid = opts.uid;
         if(opts.editable !== undefined) this._editable = opts.editable;
@@ -113,6 +118,7 @@ class EurekaModel {
         if(opts.useLocalStorage !== undefined) this._useLocalStorage = opts.useLocalStorage;
         if(opts.currentView !== undefined) this._currentView = opts.currentView;
         if(opts.selected !== undefined) this._selected = opts.selected;
+        if(opts.editable !== undefined) this._editable = opts.editable;
         
         if(opts.directoryRequestURL !== undefined) this._directoryRequestURL = opts.directoryRequestURL;
         if(opts.listSourceRequestURL !== undefined) this._listSourceRequestURL = opts.listSourceRequestURL;
@@ -205,7 +211,7 @@ class EurekaModel {
         if (dispatch === false) return;
         
         var e = document.createEvent('CustomEvent');
-        e.initCustomEvent('eurekaMediaSourceChange', true, true, {
+        e.initCustomEvent(EurekaModel.EurekaMediaSourceChange, true, true, {
             currentMediaSource:currentMediaSource
         });
         
@@ -221,7 +227,7 @@ class EurekaModel {
         if (dispatch === false) return;
         if(this.getDebug()) console.log('setCurrentDirectory');
         var e = document.createEvent('CustomEvent');
-        e.initCustomEvent('eurekaCurrentDirectoryChange', true, true, {
+        e.initCustomEvent(EurekaModel.EurekaDirectoryChanged, true, true, {
             currentDirectory:currentDirectory
         });
         
@@ -235,7 +241,7 @@ class EurekaModel {
         if (this._useLocalStorage) localStorage.setItem('currentView', currentView);
         if (dispatch === false) return;
         var e = document.createEvent('CustomEvent');
-        e.initCustomEvent('eurekaViewChange', true, true, {
+        e.initCustomEvent(EurekaModel.EurekaViewChange, true, true, {
             currentView:currentView
         });
         
@@ -256,7 +262,7 @@ class EurekaModel {
         if (dispatch === false) return;
         
         var e = document.createEvent('CustomEvent');
-        e.initCustomEvent('MediaSourcesListChange', true, true, {
+        e.initCustomEvent(EurekaModel.EurekaMediaSourcesListChange, true, true, {
             data:sources
         });
         if(this.getDebug()) console.log('setSources');
@@ -664,7 +670,8 @@ class EurekaView {
                         // Called during upload progress, first parameter
                         // is decimal value from 0 to 100.
                         onProgress: function (progress, fileSize, uploadedBytes) {
-                            bar.setAttribute('title', file.fileName + 'is ' + progress + '% uploaded');
+                            progress = Math.ceil(progress);
+                            bar.setAttribute('title', file.fileName + ' is ' + progress + '% uploaded');
                             pill.setAttribute('style','right:' + (100-progress).toString() + '%');
                         }
                     });
@@ -1148,10 +1155,41 @@ class EurekaView {
             });
         }
     }
+    assignChooseClickListeners() {
+        var that = this;
+        
+        if(that.getController().getModel().getDebug()) console.log('assignChooseClickListeners');
+        
+        var rows = that.getElement().querySelectorAll('tr.eureka__row');
+        for(var i = 0; i < rows.length; i++) {
+            function addDblClickListener(tr:HTMLElement) {
+                tr.querySelector('div.image').addEventListener('dblclick',function(e){
+                    var image = this;
+                
+                    (function(){
+                        var e:any = <any>(document.createEvent('CustomEvent'));
+                        e.initCustomEvent('EurekaFoundIt', true, true, {
+                            data:{
+                              filename: tr.getAttribute('data-filename'),
+                              timestamp: tr.getAttribute('data-timestamp'),
+                              src: image.querySelector('img').getAttribute('src'),
+                              dimensions: [tr.getAttribute('data-dimensions-w'), tr.getAttribute('data-dimensions-h')],
+                              filesize: parseInt(tr.getAttribute('data-filesize-bytes'))
+                            }
+                        });
+        
+                        that.getController().getView().getElement().dispatchEvent(e);
+                    })();
+                })
+            }
+            addDblClickListener(<HTMLElement>(rows[i]));
+        }
+    }
     paint(){
         this.assignARIAKeyListeners();
         this.assignContextualClickListeners();
         this.assignDraggableListeners();
+        this.assignChooseClickListeners();
         //this.assignContextualRowListeners();
     }
     paintTree(data) {
@@ -1741,19 +1779,19 @@ class EurekaController {
         var eureka:HTMLElement = that.getView().getElement(); // we found it!
         
         // listen for when certain things happen (currently the DOM element itself dispatches the events)
-        eureka.addEventListener('eurekaViewChange', function (e:any) { // #janky
+        eureka.addEventListener(EurekaModel.EurekaViewChange, function (e:any) { // #janky
             //that.getModel().setCurrentView(e.currentView, false);
         });
-        eureka.addEventListener('eurekaCurrentDirectoryChange', function (e:any) {
-            if(that.getModel().getDebug()) console.log('eurekaCurrentDirectoryChange');
+        eureka.addEventListener(EurekaModel.EurekaDirectoryChanged, function (e:any) {
+            if(that.getModel().getDebug()) console.log(EurekaModel.EurekaDirectoryChanged);
             var ajax = new AJAX();
             ajax.get(that.getModel().getListDirectoryRequestURL(), { s: that.getModel().getCurrentMediaSource(), dir: e.currentDirectory, headers:that.getModel().getXHRHeaders() }, function (data) {
                 if(that.getModel().getDebug()) console.log(data);
                 that.getView().paintJSON(data);
             });
         });
-        eureka.addEventListener('eurekaMediaSourceChange', function (e:any) {
-            if(that.getModel().getDebug()) console.log('eurekaMediaSourceChange');
+        eureka.addEventListener(EurekaModel.EurekaMediaSourceChange, function (e:any) {
+            if(that.getModel().getDebug()) console.log(EurekaModel.EurekaMediaSourceChange);
             var ajax = new AJAX();
             ajax.get(that.getModel().getListSourceRequestURL(), { s: e.currentMediaSource, headers:that.getModel().getXHRHeaders() }, function (data) {
                 if(that.getModel().getDebug()) console.log(data);
@@ -1761,7 +1799,7 @@ class EurekaController {
                 that.getModel().setCurrentDirectory(''); // clear the current directory and trigger a repaint
             });
         });
-        eureka.addEventListener('MediaSourcesListChange', function (e:any) {
+        eureka.addEventListener(EurekaModel.EurekaMediaSourcesListChange, function (e:any) {
             if(that.getModel().getDebug()) console.log('MediaSourcesListChange: ');
             var sources = e.detail.data;
             if(that.getModel().getDebug()) console.log(e);
