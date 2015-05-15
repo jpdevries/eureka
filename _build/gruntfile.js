@@ -277,6 +277,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-ts");
 
 	grunt.registerTask('default', ['growl:watch', 'watch']);
-	grunt.registerTask('build', ['clean:prebuild', 'bower', 'copy', 'sass:dev','cssmin','concat','uglify', 'growl:sass', 'clean:postbuild','copy:eureka-src']);
+	grunt.registerTask('build', ['clean:prebuild', 'bower', 'copy', 'sass:dev','cssmin','ts','concat','uglify', 'growl:sass', 'clean:postbuild','copy:eureka-src']);
 	grunt.registerTask('expand', ['sass:dev', 'growl:sass', 'growl:expand']);
 };
