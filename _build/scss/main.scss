@@ -336,6 +336,9 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
 }
 
 .eureka__row-image {
+    .view-a .focused & {
+        @extend %justify-content-center; //@include justify-content(center);
+    }
     code {
         display:inline-block;
         .view-b &, .view-c & {
@@ -343,6 +346,10 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
         }
         .view-d & {
             text-align:inherit;
+        }
+        .view-a .focused & {
+            font-weight:bold;
+            text-align:center;
         }
         @include media($gtTabletP) {
             text-align:left;
@@ -400,7 +407,8 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
         }
         > .pathbrowser__topbar {
             @extend %bottom-seperated;
-            @include flex-grow(0);
+            @extend %ungrowable; //@include flex-grow(0);
+            @extend %unshrinkable; //@include flex-shrink(0);
             h3,h4,h5,h6 {
                 margin:0;
             }
@@ -421,7 +429,7 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
         > .tree {
             margin-top:0.5em;
             @extend %growable;
-            @extend %unshrinkable;
+            @extend %shrinkable;
             font-size:0.86em;
             overflow:auto;
             a {
@@ -470,24 +478,42 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
             }
         }
         > footer {
+            @include media($gtTabletPH) {
+                @include flex-basis(220px);
+            }
+            @extend %flexible-parent; // @include display(flex);
+            @extend %flex-direction-column; //@include flex-direction(column);
+            @extend %unshrinkable; //@include flex-shrink(0); 
             html.js & {
                 @extend %top-seperated;
+                padding-bottom:0;
             }
             @include media($tabletP) {
                 border-width:0;
             }
-            @include media($gtTabletP) {
+            > nav {
                 padding-top:0.5em;
             }
             padding-bottom:0;
-            
             .droparea {
+                html.touch & {
+                    display:none;
+                }
+                
+                @include media($tabletPH) {
+                    display:none;
+                }
+                @extend %flexible-parent; // @include display(flex);
+                @extend %flex-direction-column; //@include flex-direction(column);
+                @extend %growable;
                 @extend %bottom-seperated;
+                //@include flex-basis();
             }
             
             .dropzone {
+                @extend %growable;
                 $dzColor:darken(desaturate(#cddce6,100%),42%);
-                min-height:8.6em;
+                //min-height:8.6em;
                 font-size:1.4em;
                 background:desaturate(#cddce6,100%);
                 border:2px dashed desaturate(darken(#cddce6,8%),100%);
@@ -554,7 +580,7 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
                 .progress {
                     @include flex-grow(1);
                     @include flex-basis(100%);
-                    background:darken(desaturate(#cddce6,100%),8%); 
+                    background:darken(desaturate(#cddce6,100%),4%); 
                     
                     border-radius:0.4em;
                     
@@ -613,6 +639,7 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
             > nav {
                 @extend %flexible-parent; //@include display(flex); 
                 @extend %justify-content-center; //@include justify-content(center);
+                @extend %ungrowable; //@include flex-grow(0);
                 > a,>form, >.form {
                     @extend %ungrowable; //@include flex-grow(0);
                     @include flex-basis(50%);
@@ -988,8 +1015,8 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
                             @extend %unshrinkable; //@include flex-shrink(0);
                             @extend %flex-basis-auto; //@include flex-basis(auto);
                             
-                            @extend %flexible-parent; //@include display(flex);
-                            @extend %flex-direction-row; //@include flex-direction(row);
+                            //@extend %flexible-parent; //@include display(flex);
+                            //@extend %flex-direction-row; //@include flex-direction(row);
                             
                             > input[type="radio"] {
                                 @extend %ungrowable; //@include flex-grow(0);
@@ -998,9 +1025,9 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
                             }
                             
                             > img {
-                                @extend %ungrowable; //@include flex-grow(0);
-                                @extend %unshrinkable; //@include flex-shrink(0);
-                                @extend %flex-basis-auto; //@include flex-basis(auto);
+                                //@extend %ungrowable; //@include flex-grow(0);
+                                //@extend %unshrinkable; //@include flex-shrink(0);
+                                //@extend %flex-basis-auto; //@include flex-basis(auto);
                             }
                         } 
                         > .pathname {
@@ -1010,11 +1037,15 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
                     > td.eureka__row-image {
                         @include flex-grow(4);
                         @extend %unshrinkable; //@include flex-shrink(0);
+                        @extend %flex-wrap-wrap; // @include flex-wrap(wrap);
                         text-align:left;
                         overflow:hidden;
                         img {
                             width:auto;
                             max-height:140px;
+                        }
+                        code {
+                            @include flex-shrink(0);
                         }
                         //@include flex-basis(100%);
                     }

@@ -12,6 +12,9 @@ $gtMobile: min-width 641px 12 !default;
 $gtTabletP: min-width 769px 12 !default;
 $gtTabletL: min-width 1025px 12 !default;
 
+$tabletPH: max-height 768px 4 !default;
+$gtTabletPH: min-height 769px 4 !default;
+
 @mixin luminosity($brightness:normal) {
     @media screen and (luminosity:$brightness) {
         @content;
