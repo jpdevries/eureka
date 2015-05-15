@@ -595,7 +595,7 @@ class EurekaView {
                 key: 'File',
 
                 // Additional data submitted with file (optional)
-                data: that.getController().getModel().getHeaders(), // NOTE: could also send additional data here
+                //data: that.getController().getModel().getHeaders(), // NOTE: could also send additional data here
 
                 // Maximum number of simultaneous uploads
                 // Other uploads will be added to uploads queue (optional)
@@ -1037,18 +1037,19 @@ class EurekaView {
             }
         }
         var source = that.getController().getModel().getCurrentMediaSource();
-        
         var ajax = new AJAX();
         ajax.get(
             that.getController().getModel().getListDirectoryRequestURL(),
-            { s: source, dir: el.getAttribute('data-cd'), headers:that.getController().getModel().getXHRHeaders() },
+            { s: source, dir: el.getAttribute('data-cd') },
             function (data) {
                 that.paintJSON(data);
-            }
+            },
+            true,
+            that.getController().getModel().getXHRHeaders()
         );
         
         /*
-        ajax.get(that.getController().getModel().getListDirectoryRequestURL(), { s: source, dir: el.getAttribute('data-cd'), headers:that.getController().getModel().getXHRHeaders() }, function (data) {
+        ajax.get(that.getController().getModel().getListDirectoryRequestURL(), { s: source, dir: el.getAttribute('data-cd') }, function (data) {
             that.paintJSON(data);
         });
         */
@@ -1079,9 +1080,15 @@ class EurekaView {
             that.getController().getModel().setCurrentMediaSource(that.getClosest(selected, 'optgroup').getAttribute('data-source'));
             // fetch current media source's directories
             var ajax = new AJAX();
-            ajax.get(that.getController().getModel().getListSourceRequestURL(), { s: that.getController().getModel().getCurrentMediaSource(), headers:that.getController().getModel().getXHRHeaders() }, function (data) {
-                that.getController().getView().populateTree(data);
-            });
+            ajax.get(
+                that.getController().getModel().getListSourceRequestURL(),
+                { s: that.getController().getModel().getCurrentMediaSource() },
+                function (data) {
+                    that.getController().getView().populateTree(data);
+                },
+                true,
+                that.getController().getModel().getXHRHeaders()
+            );
         }); 
     }
     assignTreeFolderListeners(){
@@ -1130,9 +1137,15 @@ class EurekaView {
             that.getController().getModel().setCurrentMediaSource(this.value);
             that.getController().getModel().setCurrentDirectory(this.value,false);
             var ajax = new AJAX();
-            ajax.get(that.getController().getModel().getListSourceRequestURL(), { s: that.getController().getModel().getCurrentMediaSource(), headers:that.getController().getModel().getXHRHeaders() }, function (data) {
-                that.getController().getView().populateTree(data);
-            });
+            ajax.get(
+                that.getController().getModel().getListSourceRequestURL(),
+                { s: that.getController().getModel().getCurrentMediaSource() },
+                function (data) {
+                    that.getController().getView().populateTree(data);
+                },
+                true,
+                that.getController().getModel().getXHRHeaders()
+            );
         });
     }
     emptyTree(){
@@ -1785,19 +1798,31 @@ class EurekaController {
         eureka.addEventListener(EurekaModel.EurekaDirectoryChanged, function (e:any) {
             if(that.getModel().getDebug()) console.log(EurekaModel.EurekaDirectoryChanged);
             var ajax = new AJAX();
-            ajax.get(that.getModel().getListDirectoryRequestURL(), { s: that.getModel().getCurrentMediaSource(), dir: e.currentDirectory, headers:that.getModel().getXHRHeaders() }, function (data) {
-                if(that.getModel().getDebug()) console.log(data);
-                that.getView().paintJSON(data);
-            });
+            ajax.get(
+                that.getModel().getListDirectoryRequestURL(),
+                { s: that.getModel().getCurrentMediaSource(), dir: e.currentDirectory },
+                function (data) {
+                    if(that.getModel().getDebug()) console.log(data);
+                    that.getView().paintJSON(data);
+                },
+                true,
+                that.getModel().getXHRHeaders()
+            );
         });
         eureka.addEventListener(EurekaModel.EurekaMediaSourceChange, function (e:any) {
             if(that.getModel().getDebug()) console.log(EurekaModel.EurekaMediaSourceChange);
             var ajax = new AJAX();
-            ajax.get(that.getModel().getListSourceRequestURL(), { s: e.currentMediaSource, headers:that.getModel().getXHRHeaders() }, function (data) {
-                if(that.getModel().getDebug()) console.log(data);
-                that.getView().paintTree(data);
-                that.getModel().setCurrentDirectory(''); // clear the current directory and trigger a repaint
-            });
+            ajax.get(
+                that.getModel().getListSourceRequestURL(),
+                { s: e.currentMediaSource },
+                function (data) {
+                    if(that.getModel().getDebug()) console.log(data);
+                    that.getView().paintTree(data);
+                    that.getModel().setCurrentDirectory(''); // clear the current directory and trigger a repaint
+                },
+                true,
+                that.getModel().getXHRHeaders()
+            );
         });
         eureka.addEventListener(EurekaModel.EurekaMediaSourcesListChange, function (e:any) {
             if(that.getModel().getDebug()) console.log('MediaSourcesListChange: ');
@@ -1812,10 +1837,16 @@ class EurekaController {
                     if(that.getModel().getDebug()) console.log('requestMediaListings');
                     var id = source.getID();
                     var ajax = new AJAX();
-                    ajax.get(that.getModel().getListSourceRequestURL(), { s: id, headers:that.getModel().getXHRHeaders() }, function (data) {
-                        if(that.getModel().getDebug()) console.log(data);
-                        that.getView().updateMediaSourceListings(data);
-                    });
+                    ajax.get(
+                        that.getModel().getListSourceRequestURL(),
+                        { s: id },
+                        function (data) {
+                            if(that.getModel().getDebug()) console.log(data);
+                            that.getView().updateMediaSourceListings(data);
+                        },
+                        true,
+                        that.getModel().getXHRHeaders()
+                    );
                 }
                 requestMediaListings(source);
             }
@@ -1824,10 +1855,16 @@ class EurekaController {
         (function(){
             if(that.getModel().getDebug()) console.log('MediaSourcesListChange: ');
             var ajax = new AJAX();
-            ajax.get(that.getModel().getListSourcesRequestURL(), {headers:that.getModel().getXHRHeaders()}, function (data) {
-                if(that.getModel().getDebug()) console.log(data);
-                that.getModel().setMediaSourcesData(data);
-            });
+            ajax.get(
+                that.getModel().getListSourcesRequestURL(),
+                {},
+                function (data) {
+                    if(that.getModel().getDebug()) console.log(data);
+                    that.getModel().setMediaSourcesData(data);
+                },
+                true,
+                that.getModel().getXHRHeaders()
+            );
         })();
         
     }
