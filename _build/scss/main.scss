@@ -295,7 +295,11 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
                             @include flex-basis(2em);
                         }
                         > tbody {
-                            @include flex-basis(100%);
+                            //@include flex-basis(100%); // see https://github.com/philipwalton/flexbugs/issues/42#issuecomment-102124629
+                            @include flex-basis(0%); /* works in -webkit, firefox 38 */ 
+                            @supports (-ms-accelerator:true) { // MS Edge, modern IE hack
+                              flex-basis:0;
+                            }
                         }
                     }
                 }

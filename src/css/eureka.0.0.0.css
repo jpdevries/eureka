@@ -674,10 +674,16 @@ html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table > table > thead {
   -ms-flex-preferred-size: 2em;
 }
 html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table > table > tbody {
-  -webkit-flex-basis: 100%;
-  -moz-flex-basis: 100%;
-  flex-basis: 100%;
-  -ms-flex-preferred-size: 100%;
+  -webkit-flex-basis: 0%;
+  -moz-flex-basis: 0%;
+  flex-basis: 0%;
+  -ms-flex-preferred-size: 0%;
+  /* works in -webkit, firefox 38 */
+}
+@supports (-ms-accelerator: true) {
+  html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table > table > tbody {
+    flex-basis: 0;
+  }
 }
 html.no-touch .eureka-wrapper > .proceed {
   -webkit-flex-grow: 0;
