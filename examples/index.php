@@ -681,6 +681,7 @@
                     mediaSource:0,
                     currentDirectory:undefined,
                     fileUploadURL:'/file/upload',
+                    debug:false,
                     directoryRequestURL:'fakepi/listdirectory.php',
                     listSourceRequestURL:'fakepi/listsource.php',
                     listSourcesRequestURL:'fakepi/listsources.php',
