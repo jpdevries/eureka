@@ -693,6 +693,41 @@ class EurekaView {
                 (<any>that.getElement().querySelector('.upload-form')).remove();
             } catch(e) {}
         }
+        
+        if(that.getController().getModel().getCurrentMediaSource() !== undefined && that.getController().getModel().getCurrentMediaSource() !== '/' && that.getController().getModel().getCurrentMediaSource() !== '') {
+            that.recursivelyOpenTreeToCurrentDirectory();
+        }
+    }
+    
+    recursivelyOpenTreeToCurrentDirectory() {
+        var that = this;
+        
+        var pathbrowser = document.getElementById(that.getController().getModel().getUID() + '__pathbrowser');
+        var paths = pathbrowser.querySelectorAll('a.path');
+        for(var i = 0; i < paths.length; i++) {
+            var path:HTMLElement = <HTMLElement>paths[i];
+            if(path.getAttribute('data-cd').split('/').toString() == that.getController().getModel().getCurrentDirectory().split('/').toString()) {
+                (function(){
+                    (<HTMLElement>path.parentNode).classList.add('active');
+                    (<HTMLElement>path.parentNode).classList.add('open');
+                    var parents = getParents(path,'ul');
+                    function openFolder(folder:HTMLElement) {
+                        folder.classList.remove('fa-folder');
+                        folder.classList.remove('icon-folder');
+                        folder.classList.add('fa-folder-open');
+                        folder.classList.add('icon-folder-open');
+                    }
+                    if(parents.length > 1) {
+                        for(var i = 0; i < parents.length; i++) {
+                            var li:HTMLElement = (<HTMLElement>parents[i].parentNode);
+                            li.classList.add('open');
+                            openFolder(<HTMLElement>(li.querySelector('.folder > i')));
+                        }
+                    } 
+                })();
+            }
+        }
+        return false;
     }
     
     assignUploadListeners() {
@@ -1247,6 +1282,7 @@ class EurekaView {
         tree.appendChild(ul);
         printTreeNavResults(results, ul);
         this.assignTreeListeners();
+        this.recursivelyOpenTreeToCurrentDirectory();
     }
     paintJSON(data) {
         var that = this;

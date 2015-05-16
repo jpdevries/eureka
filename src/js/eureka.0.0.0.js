@@ -249,6 +249,29 @@ var html5Upload = (function(){
 
     return module;
 }());
+var matches = function (el, selector) {
+    return (el.matches || el.matchesSelector || el.msMatchesSelector || el.mozMatchesSelector || el.webkitMatchesSelector || el.oMatchesSelector).call(el, selector);
+};
+var getClosest = function (element, selector) {
+    for (; element && element !== document; element = element.parentNode) {
+        if (matches(element, selector)) {
+            return element;
+        }
+    }
+    return false;
+};
+var getParents = function (element, selector) {
+    var parents = [];
+    for (; element && element !== document; element = element.parentNode) {
+        if (!selector || (selector && matches(element, selector))) {
+            parents.push(element);
+        }
+    }
+    if (parents.length) {
+        return parents;
+    }
+    return null;
+};
 var AJAX = (function () {
     function AJAX() {
         this.x = new XMLHttpRequest();
@@ -994,6 +1017,38 @@ var EurekaView = (function () {
             catch (e) {
             }
         }
+        if (that.getController().getModel().getCurrentMediaSource() !== undefined && that.getController().getModel().getCurrentMediaSource() !== '/' && that.getController().getModel().getCurrentMediaSource() !== '') {
+            that.recursivelyOpenTreeToCurrentDirectory();
+        }
+    };
+    EurekaView.prototype.recursivelyOpenTreeToCurrentDirectory = function () {
+        var that = this;
+        var pathbrowser = document.getElementById(that.getController().getModel().getUID() + '__pathbrowser');
+        var paths = pathbrowser.querySelectorAll('a.path');
+        for (var i = 0; i < paths.length; i++) {
+            var path = paths[i];
+            if (path.getAttribute('data-cd').split('/').toString() == that.getController().getModel().getCurrentDirectory().split('/').toString()) {
+                (function () {
+                    path.parentNode.classList.add('active');
+                    path.parentNode.classList.add('open');
+                    var parents = getParents(path, 'ul');
+                    function openFolder(folder) {
+                        folder.classList.remove('fa-folder');
+                        folder.classList.remove('icon-folder');
+                        folder.classList.add('fa-folder-open');
+                        folder.classList.add('icon-folder-open');
+                    }
+                    if (parents.length > 1) {
+                        for (var i = 0; i < parents.length; i++) {
+                            var li = parents[i].parentNode;
+                            li.classList.add('open');
+                            openFolder((li.querySelector('.folder > i')));
+                        }
+                    }
+                })();
+            }
+        }
+        return false;
     };
     EurekaView.prototype.assignUploadListeners = function () {
         var that = this;
@@ -1491,6 +1546,7 @@ var EurekaView = (function () {
         tree.appendChild(ul);
         printTreeNavResults(results, ul);
         this.assignTreeListeners();
+        this.recursivelyOpenTreeToCurrentDirectory();
     };
     EurekaView.prototype.paintJSON = function (data) {
         var that = this;
