@@ -7,7 +7,9 @@ class Eureka {
     private _view:EurekaView;
     private _controller:EurekaController;
     
-    constructor(public opts:Object) {        
+    constructor(public opts:Object) {   
+        var that = this;
+             
         this._model = new EurekaModel(opts); // give the model the data
         this._view = new EurekaView(); // keep the view stupid
         this._controller = new EurekaController({ // create a controller that controls the two
@@ -24,6 +26,10 @@ class Eureka {
         this._controller.init();
             
         this.fetch();
+        
+        this._view.getElement().addEventListener('EurekaFilesUploaded',function(e){
+            that._model.setCurrentDirectory(that._model.getCurrentDirectory(),true,true,true); // trigger a repaint
+        });
     }
     fetch() {
         if(this._model.getDebug()) console.log('fetch');
@@ -107,6 +113,7 @@ class EurekaModel {
     public static get EurekaMediaSourceChange():string { return "EurekaMediaSourceChange"; }
     public static get EurekaMediaSourcesListChange():string { return "EurekaMediaSourcesListChange"; }
     public static get EurekaViewChange():string { return "EurekaViewChange"; }
+    public static get EurekaFilesUploaded():string { return "EurekaFilesUploaded"; }
     
     constructor(opts:any) {
         if(opts.uid !== undefined) this._uid = opts.uid;
@@ -260,6 +267,7 @@ class EurekaModel {
         this.getController().getView().getElement().dispatchEvent(e);
     }
     getCurrentDirectory() {
+        if(this.getDebug()) console.log('getCurrentDirectory: ' + this._currentDirectory);
         return this._currentDirectory || '/';
     }
     setCurrentView(currentView:string, dispatch:boolean = true) {
@@ -661,7 +669,7 @@ class EurekaView {
                             
                             if(dropzone.querySelectorAll('.bar').length >= 2)(<any>bar).remove();
                             if(dropzone.querySelectorAll('.bar').length < 2) { // everything is up
-                                setInterval(function(){
+                                setTimeout(function(){
                                     (<HTMLElement>dropzone.querySelector('.progress')).innerHTML = '';
                                     dropzone.classList.remove('uploading');
                                     dropzone.classList.add('complete');
@@ -680,8 +688,16 @@ class EurekaView {
                             
                                         var p = document.createElement('p');
                                         p.appendChild(span);
-                                        p.innerHTML += ' have been successfully uploaded.<br><a href="#">Upload&nbsp;more.</a>';
+                                        p.innerHTML += ' have been successfully uploaded.';
                                         div.appendChild(p);
+                                        
+                                        var e:any = <any>document.createEvent('CustomEvent');
+                                        //that.getElement().dispatchEvent(e);
+                                        e.initCustomEvent(EurekaModel.EurekaFilesUploaded, true, true, {
+                                        });
+                                        that.getElement().dispatchEvent(e);
+
+                                        (<HTMLFormElement>document.getElementById(that.getController().getModel().getUID() + '__upload-form')).reset();
                                     })();
                                 }, 640);
                             }
@@ -1103,6 +1119,8 @@ class EurekaView {
             that.getController().getModel().getListDirectoryRequestURL(),
             { s: source, dir: el.getAttribute('data-cd') || '/' },
             function (data) {
+                data = JSON.parse(data);
+                if(that.getController().getModel().getDebug()) console.log(data);
                 that.paintJSON(data);
             },
             true,
@@ -1317,7 +1335,6 @@ class EurekaView {
     paintJSON(data) {
         var that = this;
         if(that.getController().getModel().getDebug()) console.log('paintJSON');
-        data = JSON.parse(data);
         var model = this.getController().getModel();
         var results = data.results;
         var tbodyHTML = '';
@@ -1347,6 +1364,7 @@ class EurekaView {
             imgD.classList.add('image');
             var img = document.createElement('img');
             img.setAttribute('src', src);
+            img.setAttribute('alt',filename);
             imgD.appendChild(img);
             var code = document.createElement('code');
             code.setAttribute('contenteditable', 'true');
@@ -1872,8 +1890,8 @@ class EurekaController {
                 that.getModel().getListDirectoryRequestURL(),
                 { s: that.getModel().getCurrentMediaSource(), dir: e.detail.currentDirectory || '/' },
                 function (data) {
+                    data = JSON.parse(data);
                     if(that.getModel().getDebug()) console.log(data);
-                    that.getModel().setCurrentDirectory(data.cd, false, that.getModel().useLocalStorage());
                     that.getView().paintJSON(data);
                 },
                 true,

@@ -702,6 +702,9 @@ html.no-touch .eureka-wrapper > .proceed {
     max-height: 100%;
   }
 }
+html.touch .eureka-wrapper .eureka-table, html.no-js .eureka-wrapper .eureka-table {
+  display: block;
+}
 .eureka-wrapper > footer {
   margin-top: 0.5em;
   text-align: center;
@@ -922,9 +925,12 @@ html.touch .eureka > .pathbrowser > footer .dropzone {
 .eureka > .pathbrowser > footer .dropzone.error a {
   color: #7a1113;
 }
+.eureka > .pathbrowser > footer .dropzone h2 {
+  margin: 0 0 0.24em 0;
+}
 .eureka > .pathbrowser > footer .dropzone p {
-  margin: 0 1em 1em 1em;
-  padding: 0 1em;
+  margin: 0;
+  padding: 0 1em 0 1em;
   font-size: 0.678em;
 }
 .eureka > .pathbrowser > footer .dropzone a {

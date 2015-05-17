@@ -245,8 +245,6 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
     @extend %growable; //@include flex-grow(1);
 
     html.no-touch & {
-        @include media($gtMobile) {        
-        }
         @include display(flex); 
         @include flex-direction(column);
         //@include justify-content(flex-end);
@@ -314,6 +312,11 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
         }
         @include media($gtTabletP) {
             max-height:100%;
+        }
+    }
+    html.touch &, html.no-js & {
+        .eureka-table {
+            display:block;
         }
     }
     
@@ -572,9 +575,13 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
                     }
                 }
                 
+                h2 {
+                    margin:0 0 0.24em 0;
+                }
+                
                 p {
-                    margin:0 1em 1em 1em;
-                    padding:0 1em;
+                    margin:0;
+                    padding:0 1em 0 1em;
                     font-size:0.678em;
                 }
                 a {

@@ -27,7 +27,7 @@
             }
             
             @media screen and (min-width: 769px) {
-              body {
+              html.no-touch body {
                 display: -webkit-box;
                 display: -moz-box;
                 display: box;
@@ -51,7 +51,7 @@
                 flex-wrap: nowrap;
                 height: 96vh;
               }
-              body > form {
+              html.no-touch body > form {
                 display: -webkit-box;
                 display: -moz-box;
                 display: box;
@@ -79,7 +79,7 @@
                 -ms-flex-positive: 1;
                 max-height: 100%;
               }
-              body > form > #page-wrapper {
+              html.no-touch body > form > #page-wrapper {
                 max-height: 100%;
                 display: -webkit-box;
                 display: -moz-box;
