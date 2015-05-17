@@ -869,6 +869,9 @@ html.js .eureka > .pathbrowser > footer {
 .eureka > .pathbrowser > footer > nav {
   padding-top: 0.5em;
 }
+.eureka > .pathbrowser > footer .droparea {
+  padding-top: 0.5em;
+}
 html.touch .eureka > .pathbrowser > footer .droparea {
   display: none;
 }

@@ -500,6 +500,7 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
             }
             padding-bottom:0;
             .droparea {
+                padding-top:0.5em;
                 html.touch & {
                     display:none;
                 }

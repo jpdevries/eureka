@@ -681,7 +681,7 @@
                     mediaSource:0,
                     currentDirectory:undefined,
                     fileUploadURL:'/file/upload',
-                    debug:false,
+                    debug:true,
                     directoryRequestURL:'fakepi/listdirectory.php',
                     listSourceRequestURL:'fakepi/listsource.php',
                     listSourcesRequestURL:'fakepi/listsources.php',
@@ -696,20 +696,32 @@
                 // listen for when a file is renamed
                 document.getElementById('media-browser_0').addEventListener('EurekaFileRename',function(e){
                     console.log('EurekaFileRename');
-                    console.log(e.data);
+                    console.log(e.detail);
                     // make XHR 
                 });
                 
                 // listen for when a media item has been chosen
                 document.getElementById('media-browser_0').addEventListener('EurekaFoundIt',function(e){
                     console.log('EurekaFoundIt');
-                    console.log(e.data);
+                    console.log(e.detail);
                 });
                 
                 // listen for when a media item has been deleted
                 document.getElementById('media-browser_0').addEventListener('EurekaUnlink',function(e){
                     console.log('EurekaUnlink');
-                    console.log(e.data);
+                    console.log(e.detail);
+                });
+                
+                // listen for when a media item has been deleted
+                document.getElementById('media-browser_0').addEventListener('EurekaDirectoryChanged',function(e){
+                    console.log('EurekaDirectoryChanged');
+                    console.log(e.detail);
+                });
+                
+                // listen for when a media item has been deleted
+                document.getElementById('media-browser_0').addEventListener('EurekaMediaSourceChange',function(e){
+                    console.log('EurekaMediaSourceChange');
+                    console.log(e.detail);
                 });
             }());
         </script>

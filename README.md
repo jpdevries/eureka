@@ -1,6 +1,6 @@
 # Eureka
 
-WIP. Flexible Media Browser Component.
+WIP. Flexible Media Browser Component. As seen in [Redactor 2.0](https://www.modmore.com/extras/redactor) by modmore.
 
 > With `eureka.js` your users will be saying "I found it!" in no time.  
 &emsp;&emsp;&mdash; JP DeVries

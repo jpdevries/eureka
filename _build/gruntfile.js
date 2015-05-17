@@ -211,7 +211,7 @@ module.exports = function(grunt) {
 			expand: true,
             flatten: true
 		},{
-			src: '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>*eureka*.css*',
+			src: '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>*eureka*.css',
 			dest: '<%= dirs.src %><%= dirs.css %>',
 			expand: true,
             flatten: true
