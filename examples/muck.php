@@ -26,7 +26,6 @@
                 }
             }
             
-            /* needed for non-Webkit engines see http://codepen.io/jpdevries/pen/doYYoR */
             @media screen and (min-width: 769px) {
               body {
                 display: -webkit-box;

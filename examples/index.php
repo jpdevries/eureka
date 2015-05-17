@@ -26,7 +26,6 @@
                 }
             }
             
-            /* needed for non-Webkit engines see http://codepen.io/jpdevries/pen/doYYoR */
             @media screen and (min-width: 769px) {
               body {
                 display: -webkit-box;
@@ -725,57 +724,6 @@
                 });
             }());
         </script>
-            <script>
-            /*
-              hopefully we are mistaken but we believe we found a use case where firefox 38 deviates from the flexbox spec
-              find the patch we came up with below
-            */
-            Modernizr.addTest('firefox', function () {
-                return !!navigator.userAgent.match(/firefox/i); // who cut the user agent? shame on us...
-            });
-            (function(){
-                /*
-                  checking the userAgent is really gross...
-                  so let us not and say we did...
-                */
-                if(!Modernizr.touch && Modernizr.firefox) { // for firefox non-touch browsers
-                    document.addEventListener('DOMContentLoaded', function(){ // layout the flex children the way firefox should
-                        /* fix the bug somehow???... */
-                    });
-                }
-            })();
-            (function(){ 
-                /*
-                  this is probably a more reliable way than checking the userAgent...
-                */
-                if(!Modernizr.touch) {
-                    document.addEventListener('DOMContentLoaded',function(){
-                        var mediaBrowser = document.getElementById('media-browser_0'); // dangerous but more optimal to not looks these up each resize
-                        var eurekaWrapper = mediaBrowser.parentNode;
-                        var eurekaTable = mediaBrowser.querySelector('.eureka-table');
-                    
-                        if(eurekaTable.offsetHeight > eurekaWrapper.offsetHeight) { // eurekaTable might be too tall now
-                            try {
-                                console.log('uh oh, we detect a flexbox bug');
-                            } catch(e) {}
-                        
-                            function handleResize() {       
-                                // i hope i don't get in trouble for doing other browsers homework...
-                                var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-                                var dh = (eurekaWrapper.offsetHeight - eurekaWrapper.querySelector('.eureka__topbar').offsetHeight - eurekaWrapper.querySelector('footer.proceed').offsetHeight);
-                                dh -= (16*1.5); //1.5ems of margin
-                            
-                                eurekaTable.style.height = eurekaTable.style.maxHeight = eurekaTable.style.flexBasis  = (w <= 768) ? null : dh + 'px'; 
-                            }
-                        
-                            window.addEventListener('resize',handleResize, false); // we'll be here all night folks...
-                            handleResize();
-                        }
-
-                    });
-                }
-            })();
-            </script>
     </body>
     <!-- that's it for now everyone -->
 </html>
