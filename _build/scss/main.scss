@@ -482,8 +482,10 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
             }
         }
         > footer {
-            @include media($gtTabletPH) {
-                @include flex-basis(220px);
+            html.no-touch & {
+                @include media($gtTabletPH) {
+                    @include flex-basis(220px);
+                }   
             }
             @extend %flexible-parent; // @include display(flex);
             @extend %flex-direction-column; //@include flex-direction(column);
@@ -503,10 +505,6 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
             padding-bottom:0;
             .droparea {
                 padding-top:0.5em;
-                html.touch & {
-                    display:none;
-                }
-                
                 @include media($tabletPH) {
                     display:none;
                 }
@@ -709,7 +707,11 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
     }
 }
 
-
+html.touch, html.no-js {
+    .eureka > .pathbrowser > footer .droparea {
+        display:none;    
+    }
+}
 
 .eureka__topbar-nav {
     > a, .view-btns a {

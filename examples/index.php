@@ -1,6 +1,6 @@
 <?php include 'functions.php';?><!doctype html>
 <!-- if you like markup please stop by and say hello over at http://markup.tips -->
-<html class="no-js no-touch" lang="">
+<html class="no-js" lang="">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -249,7 +249,7 @@
                                             <div id="media-browser_0__upload" class="upload-form">
                                                 <label for="media-browser_0__upload-form">Upload:</label>
                                                 <form action="#" id="media-browser_0__upload-form">
-                                                    <input id="upload-input" multiple="multiple" name="uploadFiles" type="file">
+                                                    <input id="media-browser_0__upload-input" multiple="multiple" name="uploadFiles" type="file">
                                                 </form>
                                             </div>
                                             <!-- these buttons change our layouts when clicked. notice we only assign them titles for .js users -->
