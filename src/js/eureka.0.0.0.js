@@ -400,6 +400,8 @@ var EurekaModel = (function () {
         this._debug = false;
         this._confirmBeforeDelete = true;
         this._displayFullTreePaths = false;
+        this._allowRename = true;
+        this._allowDelete = true;
         this._directoryRequestURL = '';
         this._listSourceRequestURL = '';
         this._listSourcesRequestURL = '';
@@ -408,8 +410,6 @@ var EurekaModel = (function () {
         };
         if (opts.uid !== undefined)
             this._uid = opts.uid;
-        if (opts.editable !== undefined)
-            this._editable = opts.editable;
         if (opts.locale !== undefined)
             this._locale = opts.locale;
         if (opts.mediaSource !== undefined)
@@ -426,10 +426,12 @@ var EurekaModel = (function () {
             this._currentView = opts.currentView;
         if (opts.selected !== undefined)
             this._selected = opts.selected;
-        if (opts.editable !== undefined)
-            this._editable = opts.editable;
         if (opts.displayFullTreePaths !== undefined)
             this._displayFullTreePaths = opts.displayFullTreePaths;
+        if (opts.allowRename !== undefined)
+            this._allowRename = opts.allowRename;
+        if (opts.allowDelete !== undefined)
+            this._allowDelete = opts.allowDelete;
         if (opts.directoryRequestURL !== undefined)
             this._directoryRequestURL = opts.directoryRequestURL;
         if (opts.listSourceRequestURL !== undefined)
@@ -449,7 +451,7 @@ var EurekaModel = (function () {
                 this._navTreeHidden = (this.getLocalStorage('navTreeHidden') == 'true' ? true : false);
             if (this.getLocalStorage('currentDirectory') && !opts.currentDirectory)
                 this._currentDirectory = this.getLocalStorage('currentDirectory');
-            if (this.getLocalStorage('currentView'))
+            if (this.getLocalStorage('currentView') && !opts.currentView)
                 this._currentView = this.getLocalStorage('currentView');
         }
     }
@@ -556,6 +558,12 @@ var EurekaModel = (function () {
     };
     EurekaModel.prototype.getDisplayFullTreePaths = function () {
         return this._displayFullTreePaths;
+    };
+    EurekaModel.prototype.getAllowRename = function () {
+        return this._allowRename;
+    };
+    EurekaModel.prototype.getAllowDelete = function () {
+        return this._allowDelete;
     };
     EurekaModel.prototype.getMediaSourceDTOByID = function (id) {
         if (this.getDebug())
@@ -1023,7 +1031,7 @@ var EurekaView = (function () {
         }
         if (that.getController().getModel().getFileUploadURL() === undefined || that.getController().getModel().getFileUploadURL() == '') {
             try {
-                that.getElement().querySelector('.pathbrowser footer').remove();
+                that.getElement().querySelector('.pathbrowser footer form').remove();
             }
             catch (e) {
             }
@@ -1717,9 +1725,9 @@ var EurekaView = (function () {
                     }
                     nav.appendChild(createExpandBtn());
                     nav.appendChild(createChooseBtn());
-                    if (that.getController().getModel().getEditable() && document.execCommand)
+                    if (that.getController().getModel().getAllowRename() && document.execCommand)
                         nav.appendChild(createRenameBtn());
-                    if (that.getController().getModel().getEditable())
+                    if (that.getController().getModel().getAllowDelete())
                         nav.appendChild(createTrashBtn());
                     function createFlexibleNavTagForm() {
                         var form = document.createElement('form');

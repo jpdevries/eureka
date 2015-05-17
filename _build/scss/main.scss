@@ -497,6 +497,8 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
             }
             > nav {
                 padding-top:0.5em;
+                @include align-self(center);
+                width:100%;
             }
             padding-bottom:0;
             .droparea {

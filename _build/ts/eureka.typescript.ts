@@ -90,6 +90,8 @@ class EurekaModel {
     private _confirmBeforeDelete:Boolean = true;
     private _fileUploadURL:string;
     private _displayFullTreePaths:Boolean = false;
+    private _allowRename:Boolean = true;
+    private _allowDelete:Boolean = true;
     
     private _directoryRequestURL:string = '';
     private _listSourceRequestURL:string = '';
@@ -108,7 +110,6 @@ class EurekaModel {
     
     constructor(opts:any) {
         if(opts.uid !== undefined) this._uid = opts.uid;
-        if(opts.editable !== undefined) this._editable = opts.editable;
         if(opts.locale !== undefined) this._locale = opts.locale;
         if(opts.mediaSource !== undefined) this._mediaSource = opts.mediaSource;
         if(opts.currentDirectory !== undefined) this._currentDirectory = opts.currentDirectory;
@@ -118,8 +119,9 @@ class EurekaModel {
         if(opts.useLocalStorage !== undefined) this._useLocalStorage = opts.useLocalStorage;
         if(opts.currentView !== undefined) this._currentView = opts.currentView;
         if(opts.selected !== undefined) this._selected = opts.selected;
-        if(opts.editable !== undefined) this._editable = opts.editable;
         if(opts.displayFullTreePaths !== undefined) this._displayFullTreePaths = opts.displayFullTreePaths;
+        if(opts.allowRename !== undefined) this._allowRename = opts.allowRename;
+        if(opts.allowDelete !== undefined) this._allowDelete = opts.allowDelete;
         
         if(opts.directoryRequestURL !== undefined) this._directoryRequestURL = opts.directoryRequestURL;
         if(opts.listSourceRequestURL !== undefined) this._listSourceRequestURL = opts.listSourceRequestURL;
@@ -133,7 +135,7 @@ class EurekaModel {
             if(this.getLocalStorage('currentMediaSource') && !opts.mediaSource) this._mediaSource = this.getLocalStorage('currentMediaSource');
             if(this.getLocalStorage('navTreeHidden') && !opts.navTreeHidden) this._navTreeHidden = (this.getLocalStorage('navTreeHidden') == 'true' ? true : false);
             if(this.getLocalStorage('currentDirectory') && !opts.currentDirectory) this._currentDirectory = this.getLocalStorage('currentDirectory');
-            if(this.getLocalStorage('currentView')) this._currentView = this.getLocalStorage('currentView');
+            if(this.getLocalStorage('currentView') && !opts.currentView) this._currentView = this.getLocalStorage('currentView');
         }
     }
     
@@ -188,6 +190,14 @@ class EurekaModel {
     
     getDisplayFullTreePaths() {
         return this._displayFullTreePaths;
+    }
+    
+    getAllowRename() {
+        return this._allowRename;
+    }
+    
+    getAllowDelete() {
+        return this._allowDelete;
     }
     
     getMediaSourceDTOByID(id) {
@@ -694,7 +704,7 @@ class EurekaView {
         
         if(that.getController().getModel().getFileUploadURL() === undefined || that.getController().getModel().getFileUploadURL() == '') {
             try {
-                (<any>that.getElement().querySelector('.pathbrowser footer')).remove();
+                (<any>that.getElement().querySelector('.pathbrowser footer form')).remove();
             } catch(e) {}
             
             try {
@@ -1444,9 +1454,9 @@ class EurekaView {
                     }
                     nav.appendChild(createExpandBtn());
                     nav.appendChild(createChooseBtn());
-                    if (that.getController().getModel().getEditable() && document.execCommand)
+                    if (that.getController().getModel().getAllowRename() && document.execCommand)
                         nav.appendChild(createRenameBtn()); // should probably polyfill or just juse a standard text input instead #janky? #shame?
-                    if (that.getController().getModel().getEditable())
+                    if (that.getController().getModel().getAllowDelete())
                         nav.appendChild(createTrashBtn());
                     //nav.appendChild(createFlexibleNavTagForm());
                     //nav.appendChild(createFlexibleNavShareForm());

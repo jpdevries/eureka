@@ -1,6 +1,7 @@
 # Eureka
 
-WIP. Flexible Media Browser Component. As seen in [Redactor 2.0](https://www.modmore.com/extras/redactor) by modmore.
+WIP. Flexible Media Browser Component.  
+As seen in [Redactor 2.0](https://www.modmore.com/extras/redactor) by modmore.
 
 > With `eureka.js` your users will be saying "I found it!" in no time.  
 &emsp;&emsp;&mdash; JP DeVries
@@ -46,11 +47,16 @@ var $eureka = new Eureka({ // init the Eureka component
     
     // OPTIONAL SETTINGS
     fileUploadURL:undefined, // endpoint to send files to, removes upload components from UI if not set
+    navTreeHidden:false, // initially hides the sidebar
+    useLocalStorage:true, // whether or not to try and use localStorage to save state data
+    displayFullTreePaths:false, // when imaged displays full paths in the tree
+    allowRename:true, // disabling removes rename button from contextual menus
+    allowDelete:true, // disabling removes delete button from contextual menus
+    confirmBeforeDelete:true, // when enabled confirms before deleting items
     locale:'en-US', // i18n
     mediaSource:0, // zero-based numeric index of current media source (will override localStorage)
     currentDirectory:undefined, // (will override localStorage)
     debug:false, // when enabled traces debugging info to console.log
-    confirmBeforeDelete:true, // when enabled confirms before deleting items
     headers: [{
         'Powered-By': 'Eureka by Markup.tips' // additional headers for XHR requests
     }]
@@ -63,13 +69,17 @@ Eureka has been instantiated it's up to your user to find or upload the content 
 `eureka.js` likes to let you know when things happen.
 
 ##### Available Events
-| Event                                    | Note              |
-| ------------                             |:--------------    |
-| `EurekaModel.EurekaFoundIt`              | Dispatched when a media item is chosen |
-| `EurekaModel.EurekaFileRename`           | Dispatched when a media item is renamed |
-| `EurekaModel.EurekaUnlink`               | Dispatched when a media item is deleted |
-| `EurekaModel.EurekaDirectoryCreated`     | Dispatched when a new directory is created |
-| `EurekaModel.EurekaDirectoryOpened`      | Dispatched when a directory is opened |
+| Event                                      | Note              |
+| ------------                               |:--------------    |
+| `EurekaModel.EurekaFoundIt`                | Dispatched when a media item is chosen |
+| `EurekaModel.EurekaFileRename`             | Dispatched when a media item is renamed |
+| `EurekaModel.EurekaUnlink`                 | Dispatched when a media item is deleted |
+| `EurekaModel.EurekaDirectoryCreated`       | Dispatched when a new directory is created |
+| `EurekaModel.EurekaDirectoryOpened`        | Dispatched when a directory is opened |
+| `EurekaModel.EurekaDirectoryChanged`       | Dispatched when the current directory is changed |
+| `EurekaModel.EurekaMediaSourceChange`      | Dispatched when the current media source is changed |
+| `EurekaModel.EurekaMediaSourcesListChange` | Dispatched when the list of available sources is updated |
+| `EurekaModel.EurekaViewChange`             | Dispatched when the view mode is changed |
 
 
 
@@ -87,7 +97,7 @@ You can listen to when things happen like so:
 ```js
 var el = document.getElementById('foo');
 el.addEventListener(EurekaModel.EurekaFoundIt,function(e){
-  var data = e.detail.data;
+  var data = e.detail;
   var src = data.src; // probably what you are interesting in
   var filename = data.filename; // also good to know
   var filesize = data.filesize;
@@ -105,7 +115,6 @@ Eureka targets modern HTML5 browsers and uses the latest draft of the flexible b
  - Chrome
  - Safari
  - Firefox
-   - Firefox actually still has at least a few flexbox bugs. See #2.
  - IE 11,10
    - IE 9 support is being conceptualized and would likely need to leverage a jQuery powered legacy js driver
  - Sparta

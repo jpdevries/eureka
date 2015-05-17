@@ -868,6 +868,11 @@ html.js .eureka > .pathbrowser > footer {
 }
 .eureka > .pathbrowser > footer > nav {
   padding-top: 0.5em;
+  -webkit-align-self: center;
+  -moz-align-self: center;
+  align-self: center;
+  -ms-flex-item-align: center;
+  width: 100%;
 }
 .eureka > .pathbrowser > footer .droparea {
   padding-top: 0.5em;
