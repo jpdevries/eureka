@@ -50,6 +50,7 @@
                 -ms-flex-wrap: nowrap;
                 flex-wrap: nowrap;
                 height: 96vh;
+                max-height:96vh;
               }
               html.no-touch body > form {
                 display: -webkit-box;
@@ -124,7 +125,24 @@
         <div id="page-wrapper" class="">            
             <div class="view-a eureka" id="redactor-media-browser_0"></div><!-- max-height may be used in CSS just to show how it can be condensed when needed (think modal) -->
         </div>
-        
+        <script>
+            if(Modernizr !== undefined && Modernizr.flexbox == false) {
+                console.log('no flexbox');
+            
+                link = document.createElement( "link" );
+                link.href = 'assets/css/eureka.no-flexbox.0.0.0.css';
+                link.type = "text/css";
+                link.rel = "stylesheet";
+                link.media = "screen,print";
+            
+                document.getElementsByTagName( "head" )[0].appendChild(link);
+            }
+            try {
+                console.log(document.querySelectorAll('body').classList.add(''));
+            } catch(e) {
+                document.write('<script src="assets/js/vendor/dom4.js"><\/script>');
+            }
+        </script>
         <script src="assets/js/muckboot.eureka.0.0.0.js?nc=<?php echo time() ?>"></script>
         <script src="assets/js/eureka.0.0.0.js?nc=<?php echo time() ?>"></script>
         
@@ -160,36 +178,36 @@
                 // listen for when a file is renamed
                 document.getElementById('redactor-media-browser_0').addEventListener(EurekaModel.EurekaFileRename,function(e){
                     console.log('EurekaFileRename');
-                    console.log(e.detail.data);
+                    console.log(e.detail);
                     // make XHR to API endpoint to rename file
                 });
                 
                 // listen for when a media item has been chosen
                 document.getElementById('redactor-media-browser_0').addEventListener(EurekaModel.EurekaFoundIt,function(e){
                     console.log('EurekaFoundIt');
-                    console.log(e.detail.data); 
-                    alert('You found ' + e.detail.data.filename);
+                    console.log(e.detail); 
+                    alert('You found ' + e.detail.filename);
                     // NOTE: Eureka doesn't kill itself, it's up to to handle animating it out and destroying it
                 });
                 
                 // listen for when a media item has been deleted
                 document.getElementById('redactor-media-browser_0').addEventListener(EurekaModel.EurekaUnlink,function(e){
                     console.log('EurekaUnlink');
-                    console.log(e.detail.data);
+                    console.log(e.detail);
                     // make XHR to API endpoint to delete media item
                 });
                 
                 // listen for when a new directory has been created
                 document.getElementById('redactor-media-browser_0').addEventListener(EurekaModel.EurekaDirectoryCreated,function(e){
                     console.log('EurekaDirectoryCreated');
-                    console.log(e.detail.data);
+                    console.log(e.detail);
                     // make XHR (or not, might not need to if upload server script creates unexistant directories)
                 });
                 
                 // listen for when a directory has been opened
                 document.getElementById('redactor-media-browser_0').addEventListener(EurekaModel.EurekaDirectoryOpened,function(e){
                     console.log('EurekaDirectoryOpened');
-                    console.log(e.detail.data);
+                    console.log(e.detail);
                     // make XHR to API endpoint to create new directory on server
                 });
             }());

@@ -245,3 +245,21 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
 %tip {
     @include tip();
 }
+
+// Clearfix: contain floats
+
+%clearfix {
+  .lt-ie8 {
+    *zoom: 1;
+  }
+  &:before,
+  &:after {
+    content: " ";
+    /* 1 */
+    display: table;
+    /* 2 */
+  }
+  &:after {
+    clear: both;
+  }
+}

@@ -36,7 +36,8 @@ module.exports = function(grunt) {
 					banner: '/*!\n*  <%= pkg.title %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n*/'
 				},
 				files: {
-					'<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.<%= pkg.version %>.min.css': '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.<%= pkg.version %>.css'
+					'<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.<%= pkg.version %>.min.css': '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.<%= pkg.version %>.css',
+                    '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.no-flexbox.<%= pkg.version %>.min.css': '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.no-flexbox.<%= pkg.version %>.css',
 				}
 			}
 		},
@@ -48,7 +49,8 @@ module.exports = function(grunt) {
 					compass: false
 				},
 				files: {
-					'<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.<%= pkg.version %>.css': '<%= dirs.scss %>main.scss'
+					'<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.<%= pkg.version %>.css': '<%= dirs.scss %>main.scss',
+                    '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.no-flexbox.<%= pkg.version %>.css': '<%= dirs.scss %>no-flexbox.scss'
 				}
 			},
 			dev: {
@@ -57,7 +59,8 @@ module.exports = function(grunt) {
 					compass: false
 				},
 				files: {
-					'<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.<%= pkg.version %>.css': '<%= dirs.scss %>main.scss'
+					'<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.<%= pkg.version %>.css': '<%= dirs.scss %>main.scss',
+                    '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.no-flexbox.<%= pkg.version %>.css': '<%= dirs.scss %>no-flexbox.scss'
 				}
 			}
 		},

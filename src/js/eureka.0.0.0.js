@@ -1246,6 +1246,10 @@ var EurekaView = (function () {
             var rows = document.querySelectorAll(".eureka-table tbody > tr:not(.contextual)");
             for (var i = 0; i < rows.length; i++) {
                 var current = rows[i];
+                current.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    setFocused(this);
+                }, false);
                 current.addEventListener('focus', function (e) {
                     e.preventDefault();
                     setFocused(this);
@@ -1829,7 +1833,8 @@ var EurekaView = (function () {
             }
             tbodyHTML += createContextualRow().outerHTML;
         }
-        document.querySelector('#' + this.getController().getModel().getUID() + ' .eureka-table > table > tbody').innerHTML = tbodyHTML;
+        var thead = (document.querySelector('#' + this.getController().getModel().getUID() + ' .eureka-table > table > thead'));
+        document.querySelector('#' + this.getController().getModel().getUID() + ' .eureka-table').innerHTML = '<table>' + thead.outerHTML + '<tbody>' + tbodyHTML + '</tbody>' + '</table>';
         try {
             this.getElement().querySelector('nav.tree li.active').classList.remove('active');
         }

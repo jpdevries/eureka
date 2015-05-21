@@ -939,6 +939,11 @@ class EurekaView {
             var rows = document.querySelectorAll(".eureka-table tbody > tr:not(.contextual)");
             for (var i = 0; i < rows.length; i++) {
                 var current = rows[i];
+                current.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    //var _as = document.querySelectorAll(".eureka-table tbody > tr:not(.contextual)");
+                    setFocused(this);
+                }, false);
                 current.addEventListener('focus', function (e) {
                     e.preventDefault();
                     //var _as = document.querySelectorAll(".eureka-table tbody > tr:not(.contextual)");
@@ -1555,7 +1560,8 @@ class EurekaView {
         
             tbodyHTML += createContextualRow().outerHTML;
         }
-        (<HTMLElement>document.querySelector('#' + this.getController().getModel().getUID() + ' .eureka-table > table > tbody')).innerHTML = tbodyHTML;
+        var thead:HTMLElement = <HTMLElement>(document.querySelector('#' + this.getController().getModel().getUID() + ' .eureka-table > table > thead'));
+        (<HTMLElement>document.querySelector('#' + this.getController().getModel().getUID() + ' .eureka-table')).innerHTML = '<table>' + thead.outerHTML + '<tbody>' + tbodyHTML + '</tbody>' + '</table>';
         // bolden the correct tree item
         try {
             (<HTMLElement>this.getElement().querySelector('nav.tree li.active')).classList.remove('active');
