@@ -386,6 +386,7 @@ var MuckBoot;
             var btns = [
                 (function () {
                     var btn = d.createElement('button');
+                    btn.classList.add('cancel');
                     btn.classList.add('muted');
                     btn.classList.add('clickable');
                     btn.innerHTML = 'Cancel';

@@ -529,6 +529,13 @@ var EurekaModel = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(EurekaModel, "EurekaCanceled", {
+        get: function () {
+            return "EurekaCanceled";
+        },
+        enumerable: true,
+        configurable: true
+    });
     EurekaModel.prototype.getLocalStorage = function (id) {
         if (localStorage.getItem(id) !== undefined && localStorage.getItem(id) !== 'undefined')
             return localStorage.getItem(id);
@@ -795,6 +802,14 @@ var EurekaView = (function () {
     };
     EurekaView.prototype.assignFooterProceedListeners = function () {
         var that = this;
+        that.getElement().parentNode.querySelector('footer.proceed button.cancel').addEventListener('click', function (e) {
+            e.preventDefault();
+            (function () {
+                var e = document.createEvent('CustomEvent');
+                e.initCustomEvent(EurekaModel.EurekaCanceled, true, true, {});
+                that.getElement().dispatchEvent(e);
+            })();
+        });
         that.getElement().parentNode.querySelector('footer.proceed button.cta').addEventListener('click', function (e) {
             e.preventDefault();
             that.getController().getModel().setChoosenMediaItem(that.getController().getModel().getSelected());

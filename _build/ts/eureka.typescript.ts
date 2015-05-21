@@ -114,6 +114,7 @@ class EurekaModel {
     public static get EurekaMediaSourcesListChange():string { return "EurekaMediaSourcesListChange"; }
     public static get EurekaViewChange():string { return "EurekaViewChange"; }
     public static get EurekaFilesUploaded():string { return "EurekaFilesUploaded"; }
+    public static get EurekaCanceled():string { return "EurekaCanceled"; }
     
     constructor(opts:any) {
         if(opts.uid !== undefined) this._uid = opts.uid;
@@ -419,6 +420,16 @@ class EurekaView {
     }
     assignFooterProceedListeners(){
         var that = this;
+        (<HTMLElement>that.getElement().parentNode).querySelector('footer.proceed button.cancel').addEventListener('click', function (e) {
+            e.preventDefault();
+            
+            (function(){
+                var e:any = <any>document.createEvent('CustomEvent');
+                e.initCustomEvent(EurekaModel.EurekaCanceled, true, true, {});
+        
+                that.getElement().dispatchEvent(e); 
+            })();
+        });
         (<HTMLElement>that.getElement().parentNode).querySelector('footer.proceed button.cta').addEventListener('click', function (e) {
             e.preventDefault();
             that.getController().getModel().setChoosenMediaItem(that.getController().getModel().getSelected());

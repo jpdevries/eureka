@@ -543,6 +543,9 @@ button[type="submit"] {
   background: #8a8a8a;
   cursor: default;
 }
+.eureka-wrapper button.muted.cancel {
+  cursor: pointer;
+}
 .eureka-wrapper button:disabled {
   opacity: 0.678;
 }
@@ -562,22 +565,6 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
 .eureka-wrapper {
   border: 1px solid #a0a0a0;
   border-radius: 0.4em;
-}
-html.no-touch .eureka-wrapper {
-  display: -webkit-box;
-  display: -moz-box;
-  display: box;
-  display: -webkit-flex;
-  display: -moz-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -moz-box-orient: vertical;
-  box-orient: vertical;
-  -webkit-flex-direction: column;
-  -moz-flex-direction: column;
-  flex-direction: column;
-  -ms-flex-direction: column;
 }
 html.no-touch .eureka-wrapper > .eureka {
   -webkit-flex-grow: 1;
@@ -716,6 +703,26 @@ html.touch .eureka-wrapper .eureka-table, html.no-js .eureka-wrapper .eureka-tab
 }
 .eureka-wrapper > footer > *:last-of-type {
   margin-right: 0;
+}
+
+html.no-touch {
+  /* there's some weird bug with grunt-contrib-cssmin where if this is any further up and grouped with the rest of the styles it breaks the layout due to incorrect rules */
+}
+html.no-touch .eureka-wrapper {
+  display: -webkit-box;
+  display: -moz-box;
+  display: box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  box-orient: vertical;
+  -webkit-flex-direction: column;
+  -moz-flex-direction: column;
+  flex-direction: column;
+  -ms-flex-direction: column;
 }
 
 .eureka {

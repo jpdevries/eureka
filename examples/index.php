@@ -598,7 +598,7 @@
                         </div>
                         <!-- All this work just to let them choose something?! -->
                         <footer class="proceed">
-                            <button class="muted clickable">Cancel</button>
+                            <button class="muted clickable cancel">Cancel</button>
                             <button class="btn clickable cta" id="media-browser_0__choose-btn" type="submit" js-disabled>Choose</button>
                         </footer>
                     </div>
@@ -721,6 +721,10 @@
                 document.getElementById('media-browser_0').addEventListener('EurekaMediaSourceChange',function(e){
                     console.log('EurekaMediaSourceChange');
                     console.log(e.detail);
+                });
+                
+                document.getElementById('media-browser_0').addEventListener(EurekaModel.EurekaCanceled,function(e){
+                    console.log('EurekaCanceled');
                 });
             }());
         </script>
