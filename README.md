@@ -1,5 +1,7 @@
 # Eureka
 
+[![Join the chat at https://gitter.im/jpdevries/eureka](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/jpdevries/eureka?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 WIP. Flexible Media Browser Component.  
 As seen in [Redactor 2.0](https://www.modmore.com/extras/redactor) by modmore.
 
