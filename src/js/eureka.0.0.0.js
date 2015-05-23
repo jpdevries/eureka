@@ -701,11 +701,14 @@ var EurekaModel = (function () {
         this.getController().getView().getElement().dispatchEvent(e);
     };
     EurekaModel.prototype.setMediaSourcesData = function (data) {
+        var that = this;
         if (this.getDebug())
             console.log('setMediaSourcesData');
         data = JSON.parse(data);
         var results = data.results;
         var sources = [];
+        var current = that.getCurrentMediaSource();
+        var currentExists = false;
         for (var i = 0; i < results.length; i++) {
             var result = results[i];
             var mediaSourceDTO = new EurekaMediaSource({
@@ -713,8 +716,11 @@ var EurekaModel = (function () {
                 title: result.name
             });
             sources.push(mediaSourceDTO);
+            if (result.id == current)
+                currentExists = true;
         }
         this.setSources(sources);
+        that.setCurrentMediaSource((!currentExists) ? results[0].id : current, true, true, false, true);
     };
     EurekaModel.prototype.renameFile = function (fileName, newFilename) {
         var e = document.createEvent('CustomEvent');

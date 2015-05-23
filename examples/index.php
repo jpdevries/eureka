@@ -677,7 +677,6 @@
                 var $eureka = new Eureka({ // init the Eureka component
                     uid:'media-browser_0',
                     locale:'en-US',
-                    mediaSource:0,
                     currentDirectory:undefined,
                     fileUploadURL:'/file/upload',
                     debug:true,
