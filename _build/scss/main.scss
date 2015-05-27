@@ -126,9 +126,16 @@ $danger:darken(red,8%);
     position:relative;
     top:auto;
     left:auto;
+    height:auto;
+    width:auto;
+    clip:auto;
     @extend %growable; //@include flex-grow(1);
     @extend %unshrinkable; //@include flex-shrink(0);
     @extend %flex-basis-all; //@include flex-basis(100%);
+}
+
+.audible {
+    @extend %accessibly-hidden;
 }
 
 @if $border-box-sizing == false { 
@@ -264,18 +271,19 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
                 > .eureka-table {
                     @include flex-grow(1);
                     //height:100%;
-                    @include flex-basis(100%); // ie doesn't seem to like this, it lets .eureka-table get too big and overlap the top bar (I think this is an IE flexbox bug...)
+                    @include flex-basis(0);
                     height:auto;
                     -ms-flex-preferred-size:auto; // #janky ^^
                     
                     /* hack for Firefox and Spartan see http://codepen.io/jpdevries/pen/doYYoR #janky */
-                    @mixin topbar-hack() {
+                    /*@mixin topbar-hack() {
                         position:absolute;
                         top:$topBarH;
                         right:0;
                         bottom:0;
                         left:0;
                     }
+                    
                     @include firefox-hack() {
                         @include media($gtTabletP) {
                             @include topbar-hack;    
@@ -286,6 +294,7 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
                             @include topbar-hack;
                         }
                     }
+                    */
                     
                     > table {
                         @include flex-grow(1);
@@ -294,11 +303,7 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
                             @include flex-basis(2em);
                         }
                         > tbody {
-                            //@include flex-basis(100%); // see https://github.com/philipwalton/flexbugs/issues/42#issuecomment-102124629
-                            @include flex-basis(0%); /* works in -webkit, firefox 38 */ 
-                            @supports (-ms-accelerator:true) { // MS Edge, modern IE hack
-                              flex-basis:0;
-                            }
+                            @include flex-basis(0);
                         }
                     }
                 }
@@ -424,6 +429,18 @@ html.no-touch { /* there's some weird bug with grunt-contrib-cssmin where if thi
             @extend %bottom-seperated;
             @extend %ungrowable; //@include flex-grow(0);
             @extend %unshrinkable; //@include flex-shrink(0);
+            .mediasource-select-level-up {
+                select {
+                    @extend %flex-grow-1; //@niclude flex-grow(1);
+                }
+                @extend %flexible-parent; //@include display(flex);
+            }
+            .level-up {
+                color:inherit;
+                padding:0 0 0 0.5em;
+                line-height:1.5em;
+                position:relative;
+            }
             h3,h4,h5,h6 {
                 margin:0;
             }
@@ -451,6 +468,7 @@ html.no-touch { /* there's some weird bug with grunt-contrib-cssmin where if thi
                 color:currentColor;
                 text-decoration:none;
                 cursor:pointer;
+                position:relative;
                 &[contenteditable="true"] {
                     //cursor:inherit;
                 }
@@ -653,6 +671,7 @@ html.no-touch { /* there's some weird bug with grunt-contrib-cssmin where if thi
                 color:inherit;
                 font-size:1.2em;
                 @include flex-basis(auto);
+                position:relative;
             }
             
             @include flex-grow(0);
@@ -1196,9 +1215,7 @@ html.touch, html.no-js {
         display:none !important; // ok to hide even from #a11y
     }
     html.js &, .view-b &, .view-c &, .view-d & {
-        position:absolute; // not display:none for #a11y
-        top:-99999em;
-        left:-99999em;
+        @extend %accessibly-hidden;
     }
     .view-a & {
         @extend %growable; //@include flex-grow(1);
@@ -1374,6 +1391,14 @@ tr.contextual {
                     @include flex-grow(4);
                     margin:0;
                 }
+                .mediasource-title {
+                    font-weight:normal;
+                    font-style:italic;
+                    padding-left:0.678em;
+                    .sidebar-open & {
+                        display:none;
+                    }
+                }
             }
             > form {
                 @extend %growable; //@include flex-grow(1);
@@ -1452,6 +1477,8 @@ tr.contextual {
                 @extend %growable; //flex-grow(1);
                 display:inline-block;
                 cursor:pointer;
+                position:relative; 
+                color:currentColor;
                 &.view-c-btn {
                     @include media($tabletP) {
                         display:none;
@@ -1477,11 +1504,11 @@ tr.contextual {
                 @include justify-content(flex-start);
                 @include flex-direction(row);
                 padding-left:1em;
-                
+            }
+            @include media($gtTabletP) {
                 &.tablet-p-hidden {
                     display:none;
                 }
-                
             }
             
             @include media($gtMobile) {

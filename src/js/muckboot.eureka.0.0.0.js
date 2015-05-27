@@ -34,11 +34,29 @@ var MuckBoot;
                 var heading = d.createElement('h4');
                 heading.innerHTML = 'Media Source';
                 label.appendChild(heading);
+                var mediaSourceSelectLevelup = d.createElement('div');
+                mediaSourceSelectLevelup.classList.add('mediasource-select-level-up');
                 var select = d.createElement('select');
                 select.setAttribute('id', opts.id + '__mediasource-select');
                 select.setAttribute('title', 'Choose a Media Source to browse');
+                mediaSourceSelectLevelup.appendChild(select);
+                (function () {
+                    var a = d.createElement('a');
+                    a.setAttribute('href', '#');
+                    a.setAttribute('class', 'level-up');
+                    a.setAttribute('title', 'Browse Parent Directory');
+                    var i = d.createElement('i');
+                    i.classList.add('fa');
+                    i.classList.add('fa-level-up');
+                    a.appendChild(i);
+                    var p = d.createElement('p');
+                    p.classList.add('audible');
+                    p.innerHTML = 'Browse Parent Directory';
+                    a.appendChild(p);
+                    mediaSourceSelectLevelup.appendChild(a);
+                })();
                 div.appendChild(label);
-                div.appendChild(select);
+                div.appendChild(mediaSourceSelectLevelup);
                 return div;
             }
             function createPathBrowserNavTree() {
@@ -75,7 +93,11 @@ var MuckBoot;
                     fa.classList.add('fa-plus-square');
                     fa.classList.add('icon');
                     fa.classList.add('icon-plus-square');
+                    var p = d.createElement('p');
+                    p.classList.add('audible');
+                    p.innerHTML = 'Create a new directory';
                     btn.appendChild(fa);
+                    btn.appendChild(p);
                     nav.appendChild(btn);
                     return nav;
                 }
@@ -104,7 +126,11 @@ var MuckBoot;
                     fa.classList.add('fa-upload');
                     fa.classList.add('icon');
                     fa.classList.add('icon-upload');
+                    var p = d.createElement('p');
+                    p.classList.add('audible');
+                    p.innerHTML = 'Upload media';
                     btn.appendChild(fa);
+                    btn.appendChild(p);
                     form.appendChild(btn);
                     return form;
                 }
@@ -275,7 +301,12 @@ var MuckBoot;
                     function createEurekaTopbarNavHeader() {
                         var header = d.createElement('header');
                         var h4 = d.createElement('h4');
-                        h4.innerHTML = 'Media Content';
+                        h4.setAttribute('id', opts.id + '__mediacontent-current-source');
+                        var span = d.createElement('span');
+                        span.classList.add('mediasource-title');
+                        span.setAttribute('data-prepend', '');
+                        h4.innerHTML = 'Media Content ';
+                        h4.appendChild(span);
                         header.appendChild(h4);
                         header.appendChild(createEurekaTopBarForm());
                         return header;

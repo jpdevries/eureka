@@ -392,6 +392,7 @@ var EurekaMediaSource = (function () {
 var EurekaModel = (function () {
     function EurekaModel(opts) {
         this._uid = 'media-browser_0';
+        this._storagePrefix = 'eureka_';
         this._sources = [];
         this._navTreeHidden = false;
         this._useLocalStorage = true;
@@ -406,6 +407,8 @@ var EurekaModel = (function () {
         this._displayFullTreePaths = false;
         this._allowRename = true;
         this._allowDelete = true;
+        this._touch = false;
+        this._prependOptGroupsWithRootOption = true;
         this._directoryRequestURL = '';
         this._listSourceRequestURL = '';
         this._listSourcesRequestURL = '';
@@ -414,6 +417,8 @@ var EurekaModel = (function () {
         };
         if (opts.uid !== undefined)
             this._uid = opts.uid;
+        if (opts.storagePrefix !== undefined)
+            this._storagePrefix = opts.storagePrefix;
         if (opts.locale !== undefined)
             this._locale = opts.locale;
         if (opts.mediaSource !== undefined)
@@ -448,6 +453,8 @@ var EurekaModel = (function () {
             this._debug = opts.debug;
         if (opts.confirmBeforeDelete !== undefined)
             this._confirmBeforeDelete = opts.confirmBeforeDelete;
+        if (opts.touch === true)
+            this._touch = true;
         if (this._useLocalStorage) {
             if (this.getLocalStorage('currentMediaSource') && !opts.mediaSource)
                 this._mediaSource = this.getLocalStorage('currentMediaSource');
@@ -537,9 +544,14 @@ var EurekaModel = (function () {
         configurable: true
     });
     EurekaModel.prototype.getLocalStorage = function (id) {
+        id = this.getStoragePrefix() + id;
         if (localStorage.getItem(id) !== undefined && localStorage.getItem(id) !== 'undefined')
             return localStorage.getItem(id);
         return false;
+    };
+    EurekaModel.prototype.setLocalStorage = function (id, value) {
+        id = this.getStoragePrefix() + id;
+        localStorage.setItem(id, value);
     };
     EurekaModel.prototype.useLocalStorage = function () {
         return this._useLocalStorage;
@@ -568,6 +580,9 @@ var EurekaModel = (function () {
     EurekaModel.prototype.getUID = function () {
         return this._uid;
     };
+    EurekaModel.prototype.getStoragePrefix = function () {
+        return this._storagePrefix;
+    };
     EurekaModel.prototype.getSources = function () {
         return this._sources;
     };
@@ -582,6 +597,9 @@ var EurekaModel = (function () {
     };
     EurekaModel.prototype.getAllowDelete = function () {
         return this._allowDelete;
+    };
+    EurekaModel.prototype.isTouch = function () {
+        return this._touch;
     };
     EurekaModel.prototype.getMediaSourceDTOByID = function (id) {
         if (this.getDebug())
@@ -609,7 +627,7 @@ var EurekaModel = (function () {
     EurekaModel.prototype.setNavTreeHidden = function (navTreeHidden) {
         this._navTreeHidden = navTreeHidden;
         if (this._useLocalStorage)
-            localStorage.setItem('navTreeHidden', navTreeHidden);
+            this.setLocalStorage('navTreeHidden', navTreeHidden);
     };
     EurekaModel.prototype.setCurrentMediaSource = function (currentMediaSource, dispatch, setLocalStorage, clearDirectory, dispatchIdenticalValues) {
         if (dispatch === void 0) { dispatch = true; }
@@ -622,7 +640,7 @@ var EurekaModel = (function () {
             return;
         this._mediaSource = currentMediaSource;
         if (setLocalStorage)
-            localStorage.setItem('currentMediaSource', currentMediaSource);
+            this.setLocalStorage('currentMediaSource', currentMediaSource);
         if (dispatch === false)
             return;
         var e = document.createEvent('CustomEvent');
@@ -646,7 +664,7 @@ var EurekaModel = (function () {
             return;
         this._currentDirectory = currentDirectory;
         if (setLocalStorage && currentDirectory)
-            localStorage.setItem('currentDirectory', currentDirectory);
+            this.setLocalStorage('currentDirectory', currentDirectory);
         if (dispatch === false)
             return;
         var e = document.createEvent('CustomEvent');
@@ -667,7 +685,7 @@ var EurekaModel = (function () {
             return;
         this._currentView = currentView;
         if (this._useLocalStorage)
-            localStorage.setItem('currentView', currentView);
+            this.setLocalStorage('currentView', currentView);
         if (dispatch === false)
             return;
         var e = document.createEvent('CustomEvent');
@@ -684,6 +702,9 @@ var EurekaModel = (function () {
     };
     EurekaModel.prototype.getLocale = function () {
         return this._locale;
+    };
+    EurekaModel.prototype.getPrependOptGroupsWithRootOption = function () {
+        return this._prependOptGroupsWithRootOption;
     };
     EurekaModel.prototype.setSources = function (sources, dispatch) {
         if (dispatch === void 0) { dispatch = true; }
@@ -845,7 +866,7 @@ var EurekaView = (function () {
                     catch (e) {
                     }
                 }
-                if (event.altKey && !event.ctrlKey && (event.which >= 48 && event.which <= 57)) {
+                if (event.altKey && !event.ctrlKey && (event.which >= 49 && event.which <= 57)) {
                     function setSelectOptGroup(select, group) {
                         function getOptGroup() {
                             var optgroups = select.querySelectorAll('optgroup');
@@ -862,6 +883,16 @@ var EurekaView = (function () {
                         }
                     }
                     function setSelectOption(select, value) {
+                        try {
+                            var options = select.querySelectorAll('option');
+                            var option = options[value];
+                            if (option) {
+                                select.value = option.getAttribute('value');
+                            }
+                        }
+                        catch (e) {
+                        }
+                        return;
                         function hasOption(val) {
                             var options = select.querySelectorAll('option');
                             for (var i = 0; i < options.length; i++) {
@@ -870,12 +901,14 @@ var EurekaView = (function () {
                             }
                             return false;
                         }
-                        if (hasOption((event.which - 48).toString())) {
+                        if (hasOption((event.which - 49).toString())) {
                             select.value = value;
                         }
                     }
-                    setSelectOption((document.getElementById(that.getController().getModel().getUID() + '__mediasource-select')), (event.which - 48).toString());
-                    setSelectOptGroup((document.getElementById(that.getController().getModel().getUID() + '__browsing')), (event.which - 48).toString());
+                    var msSelect = (document.getElementById(that.getController().getModel().getUID() + '__mediasource-select'));
+                    setSelectOption(msSelect, (event.which - 49).toString());
+                    setSelectOptGroup((document.getElementById(that.getController().getModel().getUID() + '__browsing').querySelector('select')), (event.which - 49).toString());
+                    that.getController().getModel().setCurrentMediaSource(msSelect.value, true, true, true, false);
                 }
                 if (event.which === 8 && document.activeElement) {
                     var e = document.createEvent('Event');
@@ -981,7 +1014,6 @@ var EurekaView = (function () {
         this.assignViewButtonListeners();
         this.assignFooterProceedListeners();
         this.assignBrowsingSelectOptGroupListeners();
-        this.assignMediaBrowserOptGroupListeners();
         this.assignSelectListeners();
         this.assignSortBtnListeners();
         this.assignFilterListeners();
@@ -995,7 +1027,7 @@ var EurekaView = (function () {
             hideSidebar();
         }
         var dropContainer = document.getElementById(that.getController().getModel().getUID()).querySelector('.dropzone') || null;
-        if (html5Upload !== undefined && !Modernizr.touch && html5Upload.fileApiSupported() && dropContainer) {
+        if (html5Upload !== undefined && !(that.getController().getModel().isTouch()) && html5Upload.fileApiSupported() && dropContainer) {
             html5Upload.initialize({
                 uploadUrl: that.getController().getModel().getFileUploadURL(),
                 dropContainer: dropContainer,
@@ -1082,6 +1114,97 @@ var EurekaView = (function () {
         if (that.getController().getModel().getCurrentMediaSource() !== undefined && that.getController().getModel().getCurrentMediaSource() !== '/' && that.getController().getModel().getCurrentMediaSource() !== '') {
             that.recursivelyOpenTreeToCurrentDirectory();
         }
+        that.getElement().addEventListener(EurekaModel.EurekaDirectoryChanged, function (e) {
+            if (that.getController().getModel().getDebug())
+                console.log(EurekaModel.EurekaDirectoryChanged);
+            var currentDirectory = e.detail.currentDirectory;
+            var currentMediaSource = that.getController().getModel().getCurrentMediaSource();
+            var split = currentDirectory.split('/');
+            split = split.filter(function (n) {
+                return (n !== undefined && n != "");
+            });
+            var levelup = document.getElementById(that.getController().getModel().getUID() + '__pathbrowser').querySelector('.level-up');
+            if (split.length >= 1)
+                levelup.classList.remove('hidden');
+            else
+                levelup.classList.add('hidden');
+            (function () {
+                var el = that.getElement().querySelector('.pathbrowser .create-new');
+                el.setAttribute('title', 'Create a new directory in ' + that.sanitizeDisplayPath(currentDirectory));
+                el.querySelector('.audible').innerHTML = el.getAttribute('title');
+            })();
+            (function () {
+                var el = that.getElement().querySelector('.pathbrowser .upload-files');
+                el.setAttribute('title', 'Upload media to ' + that.sanitizeDisplayPath(currentDirectory));
+                el.querySelector('.audible').innerHTML = el.getAttribute('title');
+            })();
+            that.setBrowseSelectValue();
+            that.setMediaSourceSelectValue();
+        });
+        that.getElement().addEventListener(EurekaModel.EurekaMediaSourceChange, function (e) {
+            var mediaSourceTitle = that.getElement().querySelector('.eureka__topbar-nav .mediasource-title');
+            if (e.detail.currentMediaSource) {
+                var prepend = mediaSourceTitle.getAttribute('data-prepend') || '';
+                mediaSourceTitle.innerHTML = prepend + e.detail.currentMediaSource.getTitle();
+            }
+            that.setBrowseSelectValue();
+            that.setMediaSourceSelectValue();
+        });
+    };
+    EurekaView.prototype.setMediaSourceSelectValue = function () {
+        var that = this;
+        if (that.getController().getModel().getDebug())
+            console.log('setMediaSourceSelectValue');
+        var currentDirectory = that.getController().getModel().getCurrentDirectory();
+        var currentMediaSource = that.getController().getModel().getCurrentMediaSource();
+        var select = document.getElementById(that.getController().getModel().getUID() + '__mediasource-select');
+        if (select.value !== currentMediaSource) {
+            select.value = currentMediaSource;
+        }
+    };
+    EurekaView.prototype.setBrowseSelectValue = function () {
+        var that = this;
+        if (that.getController().getModel().getDebug())
+            console.log('setBrowseSelectValue');
+        var currentDirectory = that.getController().getModel().getCurrentDirectory();
+        var currentMediaSource = that.getController().getModel().getCurrentMediaSource();
+        var select = document.getElementById(that.getController().getModel().getUID() + '__browsing').querySelector('select');
+        var optgroups = select.querySelectorAll('optgroup');
+        var optgroup = getOptGroup(optgroups);
+        if (optgroup) {
+            var opt = searchForValue(optgroup);
+            if (opt && select.value !== opt.getAttribute('value')) {
+                select.value = opt.getAttribute('value');
+            }
+        }
+        function getOptGroup(optgroups) {
+            for (var i = 0; i < optgroups.length; i++) {
+                var optgroup = optgroups[i];
+                if (optgroup.getAttribute('data-source') == currentMediaSource) {
+                    return optgroup;
+                }
+            }
+            return null;
+        }
+        function searchForValue(optgroup) {
+            function splitFilter(path) {
+                if (!path)
+                    return '';
+                var split = path.split('/');
+                split = split.filter(function (n) {
+                    return (n !== undefined && n != "");
+                });
+                return split;
+            }
+            var opts = optgroup.querySelectorAll('option');
+            for (var i = 0; i < opts.length; i++) {
+                var opt = (opts[i]);
+                var path = opt.getAttribute('data-cd');
+                if (splitFilter(path).toString() == splitFilter(currentDirectory).toString()) {
+                    return opt;
+                }
+            }
+        }
     };
     EurekaView.prototype.recursivelyOpenTreeToCurrentDirectory = function () {
         var that = this;
@@ -1099,6 +1222,11 @@ var EurekaView = (function () {
                         folder.classList.remove('icon-folder');
                         folder.classList.add('fa-folder-open');
                         folder.classList.add('icon-folder-open');
+                        try {
+                            folder.querySelector('.audible').innerHTML = folder.getAttribute('data-close-msg');
+                        }
+                        catch (e) {
+                        }
                     }
                     if (parents.length > 1) {
                         for (var i = 0; i < parents.length; i++) {
@@ -1133,8 +1261,11 @@ var EurekaView = (function () {
             var option = that.getSelectedOption(this);
             var optgroup = that.getClosest(option, 'optgroup');
             var source = optgroup.getAttribute('data-source');
-            that.getController().getModel().setCurrentMediaSource(source, false, that.getController().getModel().useLocalStorage());
-            that.getController().getModel().setCurrentDirectory(option.getAttribute('value'), true, that.getController().getModel().useLocalStorage());
+            that.getController().getModel().setCurrentMediaSource(source);
+            that.getController().getModel().setCurrentDirectory(option.getAttribute('data-cd'), true, that.getController().getModel().useLocalStorage());
+            var ajax = new AJAX();
+            ajax.get(that.getController().getModel().getListSourceRequestURL(), { s: that.getController().getModel().getCurrentMediaSource() }, function (data) {
+            }, true, that.getController().getModel().getXHRHeaders());
         });
     };
     EurekaView.prototype.assignCreateNewDirectoryListener = function () {
@@ -1268,7 +1399,7 @@ var EurekaView = (function () {
     };
     EurekaView.prototype.assignSortBtnListeners = function () {
         var that = this;
-        var sortBtns = document.querySelectorAll('.eureka-table th .fa-sort');
+        var sortBtns = that.getElement().querySelectorAll('.eureka-table th .fa-sort');
         for (var i = 0; i < sortBtns.length; i++) {
             var sortBtn = sortBtns[i];
             function handleSortBtnClicked(e) {
@@ -1370,58 +1501,12 @@ var EurekaView = (function () {
             }
         }, false);
     };
-    EurekaView.prototype.populateTree = function (data) {
-        var that = this;
-        var s = '';
-        function PrintResults(results, ul) {
-            for (var i = 0; i < results.length; i++) {
-                var result = results[i];
-                var split = result.path.split('/');
-                split = split.filter(function (n) {
-                    return (n !== undefined && n != "");
-                });
-                var displayPath = split.join('/');
-                if (!that.getController().getModel().getDisplayFullTreePaths()) {
-                    displayPath = split[split.length - 1];
-                }
-                else {
-                    if (displayPath[displayPath.length - 1] == '/')
-                        displayPath = displayPath.substring(0, displayPath.length - 1);
-                }
-                var li = document.createElement('li');
-                var folder = document.createElement('a');
-                folder.classList.add('folder');
-                var fa = document.createElement('i');
-                fa.classList.add('fa');
-                fa.classList.add('icon');
-                fa.classList.add('fa-folder');
-                fa.classList.add('icon-folder');
-                fa.classList.add('folder');
-                folder.appendChild(fa);
-                folder.innerHTML += '&nbsp;';
-                var path = document.createElement('a');
-                path.innerHTML = ' ' + displayPath;
-                path.setAttribute('title', 'Browse ' + result.path);
-                path.setAttribute('data-cd', result.path);
-                path.classList.add('path');
-                li.appendChild(folder);
-                li.appendChild(path);
-                var _ul = document.createElement("ul");
-                li.appendChild(_ul);
-                if (result.children !== undefined && result.children.length) {
-                    PrintResults(result.children, _ul);
-                    li.appendChild(_ul);
-                }
-                ul.appendChild(li);
-            }
-        }
-        data = JSON.parse(data);
-        var results = data.results;
-        var _ul = document.querySelector('#' + this.getController().getModel().getUID() + '__pathbrowser nav.tree > ul');
-        this.emptyTree();
-        _ul.innerHTML = '';
-        PrintResults(results, _ul);
-        this.assignTreeListeners();
+    EurekaView.prototype.sanitizeDisplayPath = function (path) {
+        var split = path.split('/');
+        split = split.filter(function (n) {
+            return (n !== undefined && n != "");
+        });
+        return split.join('/');
     };
     EurekaView.prototype.getProceedFooter = function () {
         return this.getElement().parentNode.querySelector('footer.proceed');
@@ -1464,22 +1549,6 @@ var EurekaView = (function () {
         }
         this.assignTreeFolderListeners();
     };
-    EurekaView.prototype.assignMediaBrowserOptGroupListeners = function () {
-        var that = this;
-        if (that.getController().getModel().getDebug())
-            console.log('assignMediaBrowserOptGroupListeners');
-        var select = that.getElement().querySelector('#' + that.getController().getModel().getUID() + '__browsing select');
-        select.addEventListener('change', function () {
-            if (that.getController().getModel().getDebug())
-                console.log('#' + that.getController().getModel().getUID() + ' change');
-            var selected = that.getSelectedOption(select);
-            that.getController().getModel().setCurrentMediaSource(that.getClosest(selected, 'optgroup').getAttribute('data-source'), true, that.getController().getModel().useLocalStorage());
-            var ajax = new AJAX();
-            ajax.get(that.getController().getModel().getListSourceRequestURL(), { s: that.getController().getModel().getCurrentMediaSource() }, function (data) {
-                that.getController().getView().populateTree(data);
-            }, true, that.getController().getModel().getXHRHeaders());
-        });
-    };
     EurekaView.prototype.assignTreeFolderListeners = function () {
         var that = this;
         var folders = document.querySelectorAll("nav.tree a.folder");
@@ -1495,9 +1564,10 @@ var EurekaView = (function () {
                 if (_closing) {
                     _icon.classList.remove('fa-folder-open');
                     _icon.classList.remove('icon-folder-open');
-                    _icon.classList.add('fa-folder');
-                    _icon.classList.add('icon-folder');
+                    _icon.classList.add('fa-folder', 'icon-folder');
                     li.classList.remove('open');
+                    if (this.getAttribute('data-open-msg'))
+                        this.querySelector('.audible').innerHTML = this.getAttribute('data-open-msg');
                 }
                 else {
                     _icon.classList.remove('fa-folder');
@@ -1505,6 +1575,8 @@ var EurekaView = (function () {
                     _icon.classList.add('fa-folder-open');
                     _icon.classList.add('icon-folder-open');
                     li.classList.add('open');
+                    if (this.getAttribute('data-close-msg'))
+                        this.querySelector('.audible').innerHTML = this.getAttribute('data-close-msg');
                     var e = document.createEvent('CustomEvent');
                     (e).initCustomEvent(EurekaModel.EurekaDirectoryOpened, true, true, {
                         cd: that.getController().getModel().getCurrentDirectory(),
@@ -1524,8 +1596,24 @@ var EurekaView = (function () {
             that.getController().getModel().setCurrentDirectory(this.value, false, that.getController().getModel().useLocalStorage());
             var ajax = new AJAX();
             ajax.get(that.getController().getModel().getListSourceRequestURL(), { s: that.getController().getModel().getCurrentMediaSource() }, function (data) {
-                that.getController().getView().populateTree(data);
             }, true, that.getController().getModel().getXHRHeaders());
+        });
+        var levelUp = (that.getElement().querySelector('.level-up'));
+        levelUp.addEventListener('click', function (e) {
+            e.preventDefault();
+            var currentDirectory = that.getController().getModel().getCurrentDirectory();
+            var split = currentDirectory.split('/');
+            split = split.filter(function (n) {
+                return (n !== undefined && n != "");
+            });
+            if (split && split.length) {
+                var destDirectory = '/';
+                if (split.length > 1) {
+                    split.pop();
+                    destDirectory = split.join('/');
+                }
+                that.getController().getModel().setCurrentDirectory(destDirectory, true, true, false);
+            }
         });
     };
     EurekaView.prototype.emptyTree = function () {
@@ -1578,6 +1666,7 @@ var EurekaView = (function () {
         this.assignContextualClickListeners();
         this.assignDraggableListeners();
         this.assignChooseClickListeners();
+        this.assignSortBtnListeners();
     };
     EurekaView.prototype.paintTree = function (data) {
         var that = this;
@@ -1590,16 +1679,25 @@ var EurekaView = (function () {
                 var li = document.createElement('li');
                 var folder = document.createElement('a');
                 folder.innerHTML = '&nbsp;';
+                folder.setAttribute('href', 'javascript:;');
                 folder.classList.add('folder');
+                folder.setAttribute('data-open-msg', 'Expand ' + result.path + ' ');
+                folder.setAttribute('data-close-msg', 'Collapse ' + result.path + ' ');
                 var folderOpenIcon = document.createElement('i');
                 folderOpenIcon.classList.add('fa');
                 folderOpenIcon.classList.add('icon');
                 folderOpenIcon.classList.add('fa-folder');
                 folderOpenIcon.classList.add('icon-folder');
                 folder.appendChild(folderOpenIcon);
+                (function () {
+                    var audible = document.createElement('span');
+                    audible.classList.add('audible');
+                    audible.innerHTML = folder.getAttribute('data-open-msg');
+                    folder.appendChild(audible);
+                })();
                 var path = document.createElement('a');
                 path.classList.add('path');
-                path.setAttribute('href', '#');
+                path.setAttribute('href', 'javascript:;');
                 path.setAttribute('title', 'Browse ' + result.path);
                 var split = result.path.split('/');
                 split = split.filter(function (n) {
@@ -1664,7 +1762,6 @@ var EurekaView = (function () {
             imgD.classList.add('image');
             var img = document.createElement('img');
             img.setAttribute('src', src);
-            img.setAttribute('alt', filename);
             imgD.appendChild(img);
             var code = document.createElement('code');
             code.setAttribute('contenteditable', 'true');
@@ -2059,15 +2156,27 @@ var EurekaView = (function () {
                 optgroup.setAttribute('data-source', id);
             }
             var results = data.results;
+            if (that.getController().getModel().getPrependOptGroupsWithRootOption())
+                results.unshift({ "path": "/" });
             var options = [];
             printOptGroupOptions(results);
             optgroup.innerHTML = '';
             function printOptGroupOptions(results) {
+                function serialize(obj) {
+                    var str = [];
+                    for (var p in obj) {
+                        if (obj.hasOwnProperty(p)) {
+                            str.push((p) + "=" + (obj[p]));
+                        }
+                    }
+                    return str.join("&");
+                }
                 for (var i = 0; i < results.length; i++) {
                     var result = results[i];
                     var option = document.createElement('option');
-                    option.innerHTML = result.path;
-                    option.setAttribute('value', result.path);
+                    option.innerHTML = (that.sanitizeDisplayPath(result.path)) ? that.sanitizeDisplayPath(result.path) : result.path;
+                    option.setAttribute('value', JSON.stringify({ cs: data.cs, cd: that.sanitizeDisplayPath(result.path) }));
+                    option.setAttribute('data-cd', result.path);
                     options.push(option);
                     if (result.children && result.children.length)
                         printOptGroupOptions(result.children);
@@ -2082,6 +2191,8 @@ var EurekaView = (function () {
         }
         updateTreeSelect();
         updateTopBarSelect();
+        that.setBrowseSelectValue();
+        that.setMediaSourceSelectValue();
     };
     EurekaView.prototype.getSelectedOption = function (select) {
         var options = select.querySelectorAll('option');
@@ -2195,6 +2306,7 @@ var EurekaController = (function () {
             ajax.get(that.getModel().getListSourcesRequestURL(), {}, function (data) {
                 if (that.getModel().getDebug())
                     console.log(data);
+                console.log(data);
                 that.getModel().setMediaSourcesData(data);
             }, true, that.getModel().getXHRHeaders());
         })();

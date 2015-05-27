@@ -4,7 +4,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
+        <title>Eureka Media Browser</title>
         <meta name="description" content="HTML-first crack at a Flexible Media Browser">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -129,12 +129,15 @@
                             <nav id="media-browser_0__pathbrowser" class="pathbrowser">
                                 <div class="pathbrowser__topbar">
                                     <label for="media-browser_0__mediasource-select"><h4>Media Source</h4></label>
-                                    <select id="media-browser_0__mediasource-select" title="Choose a Media Source to browse">
-                                        <!-- media sources -->
-                                        <option value="0" selected>Filesystem</option>
-                                        <option value="1">Assets</option>
-                                        <option value="2">Amazon S3</option>
-                                    </select>
+                                    <div class="mediasource-select-level-up">
+                                        <select id="media-browser_0__mediasource-select" title="Choose a Media Source to browse">
+                                            <!-- media sources -->
+                                            <option value='0' selected>Filesystem</option>
+                                            <option value='1'>Assets</option>
+                                            <option value='2'>Amazon S3</option>
+                                        </select>
+                                        <a href="#" class="hidden level-up" title="Browse Parent Directory"><i class="fa fa-level-up"></i><p class="audible">Browse Parent Directory</p></a>
+                                    </div>
                                 </div>
                                 <!-- navigation tree -->
                                 <nav class="tree">
@@ -195,6 +198,7 @@
                                             <input type="hidden" name="mediapath" value="assets/images">
                                             <button type="submit" class="nued create-new" title="Create a new directory in assets/images">
                                                 <i class="fa fa-plus-square"></i>
+                                                <p class="audible">Create a new directory in assets/images</p>
                                             </button>
                                         </form>
                                         <form action="#">
@@ -202,6 +206,7 @@
                                             <input type="hidden" name="mediapath" value="assets/images">
                                             <button type="submit" class="nued upload-files" title="Upload media to assets/images">
                                                 <i class="fa fa-upload"></i>
+                                                <p class="audible">Upload media to assets/images</p>
                                             </button>
                                         </form>
                                     </nav>
@@ -212,7 +217,7 @@
                                 <div class="eureka__topbar">
                                     <nav class="eureka__topbar-nav" title="Please enable JavaScript to change layouts" asyncronously-obsolete="title"><!-- removes the title attribute for .js users -->
                                         <header>
-                                            <h4>Media Content</h4>
+                                            <h4 id="media-browser_0__mediacontent-current-source">Media Content&nbsp;<span class="mediasource-title" data-prepend=""></span></h4>
                                             <form>
                                                 <!-- this input is disabled for .no-js users and displays a subtle Please enable JavaScript message -->
                                                 <!-- .js is used to decorate this form. notice the js-enabled attribute with removes the disabled attribute. Also notice the asyncronous-placeholder with changes the placeholder for .js users -->
@@ -226,7 +231,7 @@
                                             <div id="media-browser_0__browse-select" class="tablet-p-hidden browse-select">
                                                 <label for="media-browser_0__browsing" class="browsing">Browsing:</label>
                                                 <form aciton="#" id="media-browser_0__browsing">
-                                                    <select>
+                                                    <select name="media-browser_0__browsing">
                                                         <!-- each media source is an optgroup -->
                                                         <optgroup label="Filesystem" data-source="0">
                                                             <option>assets</option>
@@ -255,14 +260,19 @@
                                             <!-- these buttons change our layouts when clicked. notice we only assign them titles for .js users -->
                                             <div class="view-btns">
                                                 <nav>
-                                                    <a class="current view-a-btn" data-view="view-a" data-view-target="media-browser_0" asyncronous-title="Tabular Layout displays image thumbnails along with Name, Description, File Size and Edited On columns">
+                                                    <a href="javascript:;" class="current view-a-btn" data-view="view-a" data-view-target="media-browser_0" asyncronous-title="Tabular Layout displays image thumbnails along with Name, Description, File Size and Edited On columns">
                                                         <i class="fa fa-th-list"></i>
+                                                        <span class="audible">Tabular Layout displays image thumbnails along with Name, Description, File Size and Edited On columns</span>
                                                     </a>
-                                                    <a class="view-b-btn" data-view="view-b" data-view-target="media-browser_0" asyncronous-title="Thumbnail layout displays a grid of medium sized thumbnails">
+                                                    <a href="javascript:;" class="view-b-btn" data-view="view-b" data-view-target="media-browser_0" asyncronous-title="Thumbnail layout displays a grid of medium sized thumbnails">
                                                         <i class="fa fa-th-large"></i>
+                                                        <span class="audible">Thumbnail layout displays a grid of medium sized thumbnails</span>
                                                     </a>
-                                                    <a class="view-d-btn" data-view="view-d" data-view-target="media-browser_0" asyncronous-title="Grid View displays images a grid of large images"><i class="fa fa-square"></i></a>
-                                                    <script>if(!Modernizr.touch) document.write('<a class="view-c-btn" data-view="view-c" data-view-target="media-browser_0" asyncronous-title="Sliver View displays a single row of small thumbnails"><i class="fa fa-ellipsis-h"></i></a>');</script>
+                                                    <a href="javascript:;" class="view-d-btn" data-view="view-d" data-view-target="media-browser_0" asyncronous-title="Grid View displays images a grid of large images">
+                                                        <i class="fa fa-square"></i>
+                                                        <span class="audible">Grid View displays images a grid of large images</span>
+                                                    </a>
+                                                    <script>if(!Modernizr.touch) document.write('<a href="javascript:;" class="view-c-btn" data-view="view-c" data-view-target="media-browser_0" asyncronous-title="Sliver View displays a single row of small thumbnails"><i class="fa fa-ellipsis-h"></i><span class="audible">Sliver View displays a single row of small thumbnails</span></a>');</script>
                                                 </nav>
                                             </div>
                                         </div>
@@ -673,13 +683,14 @@
         <script src="assets/js/eureka.0.0.0.js?nc=<?php echo time() ?>"></script>
         
         <script>
-            (function(){
+            document.addEventListener("DOMContentLoaded", function() {
                 var $eureka = new Eureka({ // init the Eureka component
                     uid:'media-browser_0',
                     locale:'en-US',
                     currentDirectory:undefined,
                     fileUploadURL:'/file/upload',
-                    debug:true,
+                    touch:Modernizr.touch,
+                    debug:false,
                     directoryRequestURL:'fakepi/listdirectory.php',
                     listSourceRequestURL:'fakepi/listsource.php',
                     listSourcesRequestURL:'fakepi/listsources.php',
@@ -694,38 +705,38 @@
                 // listen for when a file is renamed
                 document.getElementById('media-browser_0').addEventListener('EurekaFileRename',function(e){
                     console.log('EurekaFileRename');
-                    console.log(e.detail);
+                    //console.log(e.detail);
                     // make XHR 
                 });
                 
                 // listen for when a media item has been chosen
                 document.getElementById('media-browser_0').addEventListener('EurekaFoundIt',function(e){
                     console.log('EurekaFoundIt');
-                    console.log(e.detail);
+                    //console.log(e.detail);
                 });
                 
                 // listen for when a media item has been deleted
                 document.getElementById('media-browser_0').addEventListener('EurekaUnlink',function(e){
                     console.log('EurekaUnlink');
-                    console.log(e.detail);
+                    //console.log(e.detail);
                 });
                 
                 // listen for when a media item has been deleted
                 document.getElementById('media-browser_0').addEventListener('EurekaDirectoryChanged',function(e){
                     console.log('EurekaDirectoryChanged');
-                    console.log(e.detail);
+                    //console.log(e.detail);
                 });
                 
                 // listen for when a media item has been deleted
                 document.getElementById('media-browser_0').addEventListener('EurekaMediaSourceChange',function(e){
                     console.log('EurekaMediaSourceChange');
-                    console.log(e.detail);
+                    //console.log(e.detail);
                 });
                 
                 document.getElementById('media-browser_0').addEventListener(EurekaModel.EurekaCanceled,function(e){
                     console.log('EurekaCanceled');
                 });
-            }());
+            });
         </script>
     </body>
     <!-- that's it for now everyone -->

@@ -1,12 +1,40 @@
 # Eureka
 
-WIP. Flexible Media Browser Component.  
-As seen in [Redactor 2.0](https://www.modmore.com/extras/redactor) by modmore.
+WIP. Flexible Media Browser Component.
+As seen in [Redactor 2.0](https://www.modmore.com/extras/redactor) by modmore. Contributions&nbsp;welcomed.
 
 > With `eureka.js` your users will be saying "I found it!" in no time.  
-&emsp;&emsp;&mdash; JP DeVries
+&emsp;&emsp;&mdash; [@mrktps](https://twitter.com/mrktps)
 
+### Discuss
+Join the conversation in our public Gitter chat room.
+
+[![Join the chat at https://gitter.im/jpdevries/eureka](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/jpdevries/eureka?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+### Features
+ - Browse multiple media sources for images
+ - Drag and Drop Upload Support
+ - Flexible Layout
+ - Responsive Design
+ - Lightweight
+   - no external dependencies (not even jQuery)
+   - `eureka.min.js`&emsp;51kb minified
+   - `eureka.min.css` 38kb minified
+ - Accessible
+   - supports mobile and touch devices
+   - supports `.no-js`
+   - ARIA Keyboard Support
+   - please log *any* a11y issues [here](https://github.com/jpdevries/eureka/issues)
+
+### Tech Specs
+ - Built [HTML-first](http://markup.tips/htmlftw) and powered by [Markup.tips](http://markup.tips)
+ - ES5/6 JavaScript authored in [TypeScript](http://www.typescriptlang.org)
+ - Extensible theme authored in Object Oriented [Sass](http://sass-lang.com)
+ - Automation & Build powered by [Grunt](http://gruntjs.com)
+
+### Preview
 ![](http://j4p.us/image/2p280e3h3C1z/Screen%20Shot%202015-04-25%20at%2011.24.36%20PM.png)
+Eureka draws a flexible view and allows users to browse, upload, and choose media items from any number of different media&nbsp;sources.
 
 ### Usage
 
@@ -46,16 +74,18 @@ var $eureka = new Eureka({ // init the Eureka component
     listSourcesRequestURL:'fakepi/listsources.php', // fetches a list of all media sources
     
     // OPTIONAL SETTINGS
+    touch:Modernizr.touch, // or use your own feature detection
     fileUploadURL:undefined, // endpoint to send files to, removes upload components from UI if not set
     navTreeHidden:false, // initially hides the sidebar
     useLocalStorage:true, // whether or not to try and use localStorage to save state data
-    displayFullTreePaths:false, // when imaged displays full paths in the tree
+    displayFullTreePaths:false, // when enabled displays full paths in the tree
     allowRename:true, // disabling removes rename button from contextual menus
     allowDelete:true, // disabling removes delete button from contextual menus
     confirmBeforeDelete:true, // when enabled confirms before deleting items
+    storagePrefix:'eureka_', // prepended to localStorage keys
     locale:'en-US', // i18n
     mediaSource:0, // zero-based numeric index of current media source (will override localStorage)
-    currentDirectory:undefined, // (will override localStorage)
+    currentDirectory:'/', // (will override localStorage)
     debug:false, // when enabled traces debugging info to console.log
     headers: [{
         'Powered-By': 'Eureka by Markup.tips' // additional headers for XHR requests
@@ -68,18 +98,17 @@ Eureka has been instantiated it's up to your user to find or upload the content 
 ### Events
 `eureka.js` likes to let you know when things happen.
 
-##### Available Events
 | Event                                      | Note              |
 | ------------                               |:--------------    |
-| `EurekaModel.EurekaFoundIt`                | Dispatched when a media item is chosen |
-| `EurekaModel.EurekaFileRename`             | Dispatched when a media item is renamed |
-| `EurekaModel.EurekaUnlink`                 | Dispatched when a media item is deleted |
-| `EurekaModel.EurekaDirectoryCreated`       | Dispatched when a new directory is created |
-| `EurekaModel.EurekaDirectoryOpened`        | Dispatched when a directory is opened |
-| `EurekaModel.EurekaDirectoryChanged`       | Dispatched when the current directory is changed |
-| `EurekaModel.EurekaMediaSourceChange`      | Dispatched when the current media source is changed |
-| `EurekaModel.EurekaMediaSourcesListChange` | Dispatched when the list of available sources is updated |
-| `EurekaModel.EurekaViewChange`             | Dispatched when the view mode is changed |
+| `EurekaModel.EurekaFoundIt`                | Dispatched when a media item is&nbsp;chosen |
+| `EurekaModel.EurekaFileRename`             | Dispatched when a media item is&nbsp;renamed |
+| `EurekaModel.EurekaUnlink`                 | Dispatched when a media item is&nbsp;deleted |
+| `EurekaModel.EurekaDirectoryCreated`       | Dispatched when a new directory is&nbsp;created |
+| `EurekaModel.EurekaDirectoryOpened`        | Dispatched when a directory is&nbsp;opened |
+| `EurekaModel.EurekaDirectoryChanged`       | Dispatched when the current directory is&nbsp;changed |
+| `EurekaModel.EurekaMediaSourceChange`      | Dispatched when the current media source is&nbsp;changed |
+| `EurekaModel.EurekaMediaSourcesListChange` | Dispatched when the list of available sources is&nbsp;updated |
+| `EurekaModel.EurekaViewChange`             | Dispatched when the view mode is&nbsp;changed |
 
 
 
@@ -108,7 +137,7 @@ el.addEventListener(EurekaModel.EurekaFoundIt,function(e){
 Isn't that neat?
 
 ##### Event Data
-Events attach relevent data to the `detail.data` property of the `Event` itself. `eureka.js` is still in rapid development and events and their corresponding data are not yet fully documented, so log it to the console and see what you get for now. It'll be our own little&nbsp;surprise.
+Events attach relevent data to the `detail` property of the `Event` itself. `eureka.js` is still in rapid development and events and their corresponding data are not yet fully documented, so log it to the console and see what you get for now. It'll be our own little&nbsp;surprise.
 
 ### Browser Support
 Eureka targets modern HTML5 browsers and uses the latest draft of the flexible box model spec.
@@ -116,10 +145,10 @@ Eureka targets modern HTML5 browsers and uses the latest draft of the flexible b
  - Safari
  - Firefox
  - IE 11,10
-   - IE 9 support is being conceptualized and would likely need to leverage a jQuery powered legacy js driver
+   - Basic IE 9 support is available via some external shivs. See [Supporting IE9](https://github.com/jpdevries/eureka/wiki/Supporting-IE9).
  - Sparta
  - ~~Opera~~
-  - flexbox layout is totally broken. Not sure why. We blame the Opera.
+  - flexbox layout is totally broken. Not sure why. See [#10](https://github.com/jpdevries/eureka/issues/10).
  - iOS Latest
  - Android Latest
 
@@ -130,7 +159,7 @@ In addition to the below shortcuts, Eureka supports standard tab-to-focus usabil
 | --------------- |:-------------:       |
 | Toggle Sidebar      | ctrl ;           |
 | Change View      | ctrl alt (1-4)      |
-| Change Media Source | ctrl (1-9)       |
+| Change Media Source | alt (1-9)        |
 | Delete Item | backspace                |
 | Expand Item | spacebar                 |
 | Choose Item | return                   |
@@ -139,4 +168,18 @@ In addition to the below shortcuts, Eureka supports standard tab-to-focus usabil
 | Rename Item | ctrl r                   |
 | Filter Items | ctrl f                  |
 
+### Contribution Guidelines
+There's [lots to do](https://github.com/jpdevries/eureka/issues). Feel free to discuss or [open an issue](https://github.com/jpdevries/eureka/issues/) before submitting pull requests. Once you've checked out the project you'll want to get up and running with the Grunt&nbsp;workflow:
+```bash
+cd eureka/_build/
+npm install #intall node modules
+grunt build #build source files
+```
 
+To watch files for changes simply run the `grunt`&nbsp;task:
+```bash
+cd eureka/_build/
+grunt #watch for changes
+```
+
+You may test with either `examples/index.php` or `examples/muck.php`. HTML-first features are written and tested in `examples/index.php` while `muck.php` is a naked DOM populdated by&nbsp;`muckboot.eureka.js`.
