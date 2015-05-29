@@ -269,9 +269,9 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
                 @include flex-wrap(nowrap);
                 position:relative;
                 > .eureka-table {
+                    @extend %flex-basis-none; //@include flex-basis(0%)
                     @include flex-grow(1);
                     //height:100%;
-                    @include flex-basis(0);
                     height:auto;
                     -ms-flex-preferred-size:auto; // #janky ^^
                     
@@ -303,8 +303,20 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
                             @include flex-basis(2em);
                         }
                         > tbody {
-                            @include flex-basis(0);
+                            @extend %flex-basis-none; //@include flex-basis(0%)
                         }
+                    }
+                }
+            }
+            &.sidebar-open.view-c {
+                .stage { /* wong wong see https://github.com/philipwalton/flexbugs/issues/51 #janky */
+                    @include firefox-hack() {
+                        max-width:calc(100% - 12em);
+                        padding-right:0.5em;
+                    }
+                    @include spartan-hack() {
+                        max-width:calc(100% - 12em);
+                        padding-right:0.5em;
                     }
                 }
             }
@@ -407,11 +419,16 @@ html.no-touch { /* there's some weird bug with grunt-contrib-cssmin where if thi
             margin-right:0.5em;
             padding-right:0.5em;
         }
+        display:none;
+        @include media($gtTabletP) {
+            display:initial;
+            @include display(flex); 
+        }
         @extend %flexible-parent; // @include display(flex);
         @extend %flex-direction-column; //@include flex-direction(column);
         
         @include media($tabletP) {
-            .pathbrowser__topbar, .tree {
+            .pathbrowser__topbar, .tree, > footer button.create-new {
                 display:none !important;
             }
         }
@@ -522,6 +539,9 @@ html.no-touch { /* there's some weird bug with grunt-contrib-cssmin where if thi
             html.js & {
                 @extend %top-seperated;
                 padding-bottom:0;
+                @include media($tabletP) {
+                    border-width:0;
+                }
             }
             @include media($tabletP) {
                 border-width:0;
@@ -672,6 +692,15 @@ html.no-touch { /* there's some weird bug with grunt-contrib-cssmin where if thi
                 font-size:1.2em;
                 @include flex-basis(auto);
                 position:relative;
+                &.upload-files {
+                    .audible {
+                        @include media($tabletP) {
+                            display:initial;
+                            position:relative;
+                            font-size:0.8em;
+                        }
+                    }
+                }
             }
             
             @include flex-grow(0);
@@ -1576,9 +1605,11 @@ tr.contextual {
             
             .sidebar-open & {
                 html.js & {
-                    position:absolute;
-                    top:-99999em;
-                    left:-99999em;
+                    @include media($gtTabletP) {
+                        position:absolute;
+                        top:-99999em;
+                        left:-99999em;
+                    }
                 }
             }
         }

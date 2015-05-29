@@ -444,7 +444,7 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
   -ms-flex-preferred-size: 100%;
 }
 
-.view-a .eureka-table > table > tbody > tr.contextual {
+html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table, html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table > table > tbody, .view-a .eureka-table > table > tbody > tr.contextual {
   -webkit-flex-basis: 0%;
   -moz-flex-basis: 0%;
   flex-basis: 0%;
@@ -625,10 +625,6 @@ html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table {
   -moz-flex-grow: 1;
   flex-grow: 1;
   -ms-flex-positive: 1;
-  -webkit-flex-basis: 0;
-  -moz-flex-basis: 0;
-  flex-basis: 0;
-  -ms-flex-preferred-size: 0;
   height: auto;
   -ms-flex-preferred-size: auto;
   /* hack for Firefox and Spartan see http://codepen.io/jpdevries/pen/doYYoR #janky */
@@ -665,11 +661,22 @@ html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table > table > thead {
   flex-basis: 2em;
   -ms-flex-preferred-size: 2em;
 }
-html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table > table > tbody {
-  -webkit-flex-basis: 0;
-  -moz-flex-basis: 0;
-  flex-basis: 0;
-  -ms-flex-preferred-size: 0;
+html.no-touch .eureka-wrapper > .eureka .view-c .stage {
+  /* wong wong see https://github.com/philipwalton/flexbugs/issues/51 #janky */
+}
+@-moz-document url-prefix() {
+  html.no-touch .eureka-wrapper > .eureka .view-c .stage {
+    /* shame on firefox? http://codepen.io/jpdevries/pen/doYYoR */
+    max-width: calc(100% - 12em);
+    padding-right: 0.5em;
+  }
+}
+@supports (-ms-accelerator: true) {
+  html.no-touch .eureka-wrapper > .eureka .view-c .stage {
+    /* shame on spartan? http://codepen.io/jpdevries/pen/doYYoR */
+    max-width: calc(100% - 12em);
+    padding-right: 0.5em;
+  }
 }
 html.no-touch .eureka-wrapper > .proceed {
   -webkit-flex-grow: 0;
@@ -767,6 +774,7 @@ html.no-touch .eureka-wrapper {
   }
 }
 .eureka > .pathbrowser {
+  display: none;
   margin-bottom: 0.5em;
 }
 @media screen and (min-width: 641px) {
@@ -775,8 +783,20 @@ html.no-touch .eureka-wrapper {
     padding-right: 0.5em;
   }
 }
+@media screen and (min-width: 769px) {
+  .eureka > .pathbrowser {
+    display: initial;
+    display: -webkit-box;
+    display: -moz-box;
+    display: box;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
 @media screen and (max-width: 768px) {
-  .eureka > .pathbrowser .pathbrowser__topbar, .eureka > .pathbrowser .tree {
+  .eureka > .pathbrowser .pathbrowser__topbar, .eureka > .pathbrowser .tree, .eureka > .pathbrowser > footer button.create-new {
     display: none !important;
   }
 }
@@ -876,6 +896,11 @@ html.js .eureka > .pathbrowser > .tree li.open > ul {
 }
 html.js .eureka > .pathbrowser > footer {
   padding-bottom: 0;
+}
+@media screen and (max-width: 768px) {
+  html.js .eureka > .pathbrowser > footer {
+    border-width: 0;
+  }
 }
 @media screen and (max-width: 768px) {
   .eureka > .pathbrowser > footer {
@@ -1008,6 +1033,13 @@ html.touch .eureka > .pathbrowser > footer .dropzone {
   flex-basis: auto;
   -ms-flex-preferred-size: auto;
   position: relative;
+}
+@media screen and (max-width: 768px) {
+  .eureka > .pathbrowser > footer button.upload-files .audible, .eureka > .pathbrowser > footer .btn.upload-files .audible {
+    display: initial;
+    position: relative;
+    font-size: 0.8em;
+  }
 }
 .eureka > .pathbrowser > footer > nav > a, .eureka > .pathbrowser > footer > nav > form, .eureka > .pathbrowser > footer > nav > .form {
   -webkit-flex-basis: 50%;
@@ -1807,10 +1839,12 @@ tr.contextual > td {
     margin-bottom: 0;
   }
 }
-html.js .sidebar-open .eureka__topbar .eureka__topbar-nav .upload-form {
-  position: absolute;
-  top: -99999em;
-  left: -99999em;
+@media screen and (min-width: 769px) {
+  html.js .sidebar-open .eureka__topbar .eureka__topbar-nav .upload-form {
+    position: absolute;
+    top: -99999em;
+    left: -99999em;
+  }
 }
 html.no-js .eureka__topbar .eureka__topbar-nav > a {
   color: #707070;
