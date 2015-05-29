@@ -269,7 +269,7 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
                 @include flex-wrap(nowrap);
                 position:relative;
                 > .eureka-table {
-                    @extend %flex-basis-none; //@include flex-basis(0%)
+                    @include flex-basis(0);
                     @include flex-grow(1);
                     //height:100%;
                     height:auto;
@@ -303,7 +303,7 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
                             @include flex-basis(2em);
                         }
                         > tbody {
-                            @extend %flex-basis-none; //@include flex-basis(0%)
+                            @include flex-basis(0);
                         }
                     }
                 }

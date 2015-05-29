@@ -444,7 +444,7 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
   -ms-flex-preferred-size: 100%;
 }
 
-html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table, html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table > table > tbody, .view-a .eureka-table > table > tbody > tr.contextual {
+.view-a .eureka-table > table > tbody > tr.contextual {
   -webkit-flex-basis: 0%;
   -moz-flex-basis: 0%;
   flex-basis: 0%;
@@ -621,6 +621,10 @@ html.no-touch .eureka-wrapper > .eureka .stage {
   position: relative;
 }
 html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table {
+  -webkit-flex-basis: 0;
+  -moz-flex-basis: 0;
+  flex-basis: 0;
+  -ms-flex-preferred-size: 0;
   -webkit-flex-grow: 1;
   -moz-flex-grow: 1;
   flex-grow: 1;
@@ -660,6 +664,12 @@ html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table > table > thead {
   -moz-flex-basis: 2em;
   flex-basis: 2em;
   -ms-flex-preferred-size: 2em;
+}
+html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table > table > tbody {
+  -webkit-flex-basis: 0;
+  -moz-flex-basis: 0;
+  flex-basis: 0;
+  -ms-flex-preferred-size: 0;
 }
 html.no-touch .eureka-wrapper > .eureka.sidebar-open.view-c .stage {
   /* wong wong see https://github.com/philipwalton/flexbugs/issues/51 #janky */
