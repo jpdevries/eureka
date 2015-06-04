@@ -223,6 +223,13 @@ class EurekaModel {
         return this._allowDelete;
     }
     
+    getHTML5UploadData() {
+        return {
+            s:this.getCurrentMediaSource(),
+            dir:this.getCurrentDirectory()
+        };
+    }
+    
     isTouch() {
         return this._touch;
     }
@@ -434,6 +441,7 @@ class EurekaModel {
 
 class EurekaView {
     private _controller:EurekaController;
+    private _html5Upload:Object;
     
     constructor() {} 
      
@@ -660,7 +668,7 @@ class EurekaView {
         // if a droptarget exists and a modern mouse enabled browser is being used
         var dropContainer = document.getElementById(that.getController().getModel().getUID()).querySelector('.dropzone') || null;
         if (html5Upload !== undefined && !(that.getController().getModel().isTouch()) && html5Upload.fileApiSupported() && dropContainer) {
-            html5Upload.initialize({
+            that._html5Upload = html5Upload.initialize({
                 // URL that handles uploaded files
                 uploadUrl: that.getController().getModel().getFileUploadURL(),
 
@@ -673,10 +681,7 @@ class EurekaView {
                 // Key for the file data (optional, default: 'file')
                 key: 'File',
                 
-                data:{
-                    s:that.getController().getModel().getCurrentMediaSource(),
-                    dir:that.getController().getModel().getCurrentDirectory()
-                },
+                data:that.getController().getModel().getHTML5UploadData(),
 
                 // Additional data submitted with file (optional)
                 //data: that.getController().getModel().getHeaders(), // NOTE: could also send additional data here
@@ -809,6 +814,7 @@ class EurekaView {
             })();
             that.setBrowseSelectValue();
             that.setMediaSourceSelectValue();
+            (<any>(that._html5Upload)).data = that.getController().getModel().getHTML5UploadData();
         });
         that.getElement().addEventListener(EurekaModel.EurekaMediaSourceChange, function(e:any){
             var mediaSourceTitle:HTMLElement = (<HTMLElement>that.getElement().querySelector('.eureka__topbar-nav .mediasource-title'));
@@ -820,6 +826,7 @@ class EurekaView {
             
             that.setBrowseSelectValue();
             that.setMediaSourceSelectValue();
+            (<any>(that._html5Upload)).data = that.getController().getModel().getHTML5UploadData();
         });
     }
     

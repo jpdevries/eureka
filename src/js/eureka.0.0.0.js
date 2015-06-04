@@ -598,6 +598,12 @@ var EurekaModel = (function () {
     EurekaModel.prototype.getAllowDelete = function () {
         return this._allowDelete;
     };
+    EurekaModel.prototype.getHTML5UploadData = function () {
+        return {
+            s: this.getCurrentMediaSource(),
+            dir: this.getCurrentDirectory()
+        };
+    };
     EurekaModel.prototype.isTouch = function () {
         return this._touch;
     };
@@ -1031,15 +1037,12 @@ var EurekaView = (function () {
         }
         var dropContainer = document.getElementById(that.getController().getModel().getUID()).querySelector('.dropzone') || null;
         if (html5Upload !== undefined && !(that.getController().getModel().isTouch()) && html5Upload.fileApiSupported() && dropContainer) {
-            html5Upload.initialize({
+            that._html5Upload = html5Upload.initialize({
                 uploadUrl: that.getController().getModel().getFileUploadURL(),
                 dropContainer: dropContainer,
                 inputField: document.getElementById(that.getController().getModel().getUID() + '__upload-input'),
                 key: 'File',
-                data: {
-                    s: that.getController().getModel().getCurrentMediaSource(),
-                    dir: that.getController().getModel().getCurrentDirectory()
-                },
+                data: that.getController().getModel().getHTML5UploadData(),
                 maxSimultaneousUploads: 4,
                 onFileAdded: function (file) {
                     function removeMessages() {
@@ -1147,6 +1150,7 @@ var EurekaView = (function () {
             })();
             that.setBrowseSelectValue();
             that.setMediaSourceSelectValue();
+            (that._html5Upload).data = that.getController().getModel().getHTML5UploadData();
         });
         that.getElement().addEventListener(EurekaModel.EurekaMediaSourceChange, function (e) {
             var mediaSourceTitle = that.getElement().querySelector('.eureka__topbar-nav .mediasource-title');
@@ -1156,6 +1160,7 @@ var EurekaView = (function () {
             }
             that.setBrowseSelectValue();
             that.setMediaSourceSelectValue();
+            (that._html5Upload).data = that.getController().getModel().getHTML5UploadData();
         });
     };
     EurekaView.prototype.setMediaSourceSelectValue = function () {
