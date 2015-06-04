@@ -1036,6 +1036,10 @@ var EurekaView = (function () {
                 dropContainer: dropContainer,
                 inputField: document.getElementById(that.getController().getModel().getUID() + '__upload-input'),
                 key: 'File',
+                data: {
+                    s: that.getController().getModel().getCurrentMediaSource(),
+                    dir: that.getController().getModel().getCurrentDirectory()
+                },
                 maxSimultaneousUploads: 4,
                 onFileAdded: function (file) {
                     function removeMessages() {

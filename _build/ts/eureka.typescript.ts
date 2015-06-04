@@ -672,6 +672,11 @@ class EurekaView {
 
                 // Key for the file data (optional, default: 'file')
                 key: 'File',
+                
+                data:{
+                    s:that.getController().getModel().getCurrentMediaSource(),
+                    dir:that.getController().getModel().getCurrentDirectory()
+                },
 
                 // Additional data submitted with file (optional)
                 //data: that.getController().getModel().getHeaders(), // NOTE: could also send additional data here
