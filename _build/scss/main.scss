@@ -529,9 +529,11 @@ html.no-touch { /* there's some weird bug with grunt-contrib-cssmin where if thi
         }
         > footer {
             html.no-touch & {
-                @include media($gtTabletPH) {
-                    @include flex-basis(220px);
-                }   
+                &.drop {
+                    @include media($gtTabletPH) {
+                        @include flex-basis(220px);
+                    }   
+                }
             }
             @extend %flexible-parent; // @include display(flex);
             @extend %flex-direction-column; //@include flex-direction(column);

@@ -150,8 +150,8 @@
             (function(){
                 var $muckboot = new MuckBoot({ // paint the DOM
                     id:'redactor-media-browser_0', // unique identifier
-                    upload:true, // paint upload UI elements
-                    createDir:true // add create directory button
+                    upload:false, // paint upload UI elements
+                    createDir:false // add create directory button
                 });
                 var $eureka = new Eureka({ // init the Eureka component
                     // REQUIRED
@@ -160,7 +160,7 @@
                     listSourceRequestURL:'fakepi/listsource.php',
                     listSourcesRequestURL:'fakepi/listsources.php',
                     
-                    fileUploadURL:'/file/upload', // if undefined upload and create UI elements will be removed
+                    //fileUploadURL:'/file/upload', // if undefined upload and create UI elements will be removed
                     editable:true, // if false will not add rename and delete features
                     locale:'en-US', // i18n
                     mediaSource:0, // numeric index of current media source (overrides localStorage)

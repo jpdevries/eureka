@@ -92,6 +92,7 @@ var MuckBoot;
         
             function createPathBrowserFooter() {
                 var footer = d.createElement('footer');
+                if(that.opts.upload) footer.classList.add('drop');
             
                 var nav = d.createElement('nav');
             

@@ -159,7 +159,7 @@
                                     </ul>
                                 </nav>
                                 <!-- upload & create directory buttons -->
-                                <footer>
+                                <footer class="drop">
                                     <!--script>document.write('<div class="dropzone" title="Drag &amp; Drop files here to upload them"></div>')</script-->
                                     <div class="droparea">
                                         <div class="dropzone" title="Drag &amp; Drop files here to upload them">

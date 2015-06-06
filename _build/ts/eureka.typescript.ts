@@ -803,18 +803,24 @@ class EurekaView {
             else levelup.classList.add('hidden');
 
             (function(){
-                var el:HTMLElement = (<HTMLElement>that.getElement().querySelector('.pathbrowser .create-new'));
-                el.setAttribute('title','Create a new directory in ' + that.sanitizeDisplayPath(currentDirectory));
-                (<HTMLElement>el.querySelector('.audible')).innerHTML = el.getAttribute('title');
+                try {
+                    var el:HTMLElement = (<HTMLElement>that.getElement().querySelector('.pathbrowser .create-new'));
+                    el.setAttribute('title','Create a new directory in ' + that.sanitizeDisplayPath(currentDirectory));
+                    (<HTMLElement>el.querySelector('.audible')).innerHTML = el.getAttribute('title');
+                } catch(e) {}
             })();
             (function(){
-                var el:HTMLElement = (<HTMLElement>that.getElement().querySelector('.pathbrowser .upload-files'));
-                el.setAttribute('title','Upload media to ' + that.sanitizeDisplayPath(currentDirectory));
-                (<HTMLElement>el.querySelector('.audible')).innerHTML = el.getAttribute('title');
+                try {
+                    var el:HTMLElement = (<HTMLElement>that.getElement().querySelector('.pathbrowser .upload-files'));
+                    el.setAttribute('title','Upload media to ' + that.sanitizeDisplayPath(currentDirectory));
+                    (<HTMLElement>el.querySelector('.audible')).innerHTML = el.getAttribute('title');
+                } catch(e) {}
             })();
             that.setBrowseSelectValue();
             that.setMediaSourceSelectValue();
-            (<any>(that._html5Upload)).data = that.getController().getModel().getHTML5UploadData();
+            try {
+                (<any>(that._html5Upload)).data = that.getController().getModel().getHTML5UploadData();
+            } catch(e) {}
         });
         that.getElement().addEventListener(EurekaModel.EurekaMediaSourceChange, function(e:any){
             var mediaSourceTitle:HTMLElement = (<HTMLElement>that.getElement().querySelector('.eureka__topbar-nav .mediasource-title'));
@@ -826,7 +832,9 @@ class EurekaView {
             
             that.setBrowseSelectValue();
             that.setMediaSourceSelectValue();
-            (<any>(that._html5Upload)).data = that.getController().getModel().getHTML5UploadData();
+            try {
+                (<any>(that._html5Upload)).data = that.getController().getModel().getHTML5UploadData();
+            } catch(e) {}
         });
     }
     
@@ -924,16 +932,19 @@ class EurekaView {
     
     assignUploadListeners() {
         var that = this;
-        that.getElement().querySelector('.pathbrowser .upload-files').addEventListener('click',function(e){
-            e.preventDefault();
-            e.stopPropagation();
+        var upload_files = that.getElement().querySelector('.pathbrowser .upload-files');
+        if(upload_files) {
+            upload_files.addEventListener('click',function(e){
+                e.preventDefault();
+                e.stopPropagation();
             
-            (function(){
-                var e = document.createEvent('Event');
-                e.initEvent('click', true, true);
-                document.getElementById(that.getController().getModel().getUID() + '__upload-input').dispatchEvent(e);
-            })();
-        });
+                (function(){
+                    var e = document.createEvent('Event');
+                    e.initEvent('click', true, true);
+                    document.getElementById(that.getController().getModel().getUID() + '__upload-input').dispatchEvent(e);
+                })();
+            });
+        }
     }
     
     assignBrowsingSelectOptGroupListeners(){
@@ -962,71 +973,73 @@ class EurekaView {
     assignCreateNewDirectoryListener() {
         var that = this;
         
-        that.getElement().querySelector('.create-new').addEventListener('click',function(e){
-            var li = document.createElement('li');
-            var folder = document.createElement('a');
-            folder.classList.add('folder');
-            folder.innerHTML = '&nbsp;<i class="fa icon fa-folder icon-folder"></i>';
+        try {
+            that.getElement().querySelector('.create-new').addEventListener('click',function(e){
+                var li = document.createElement('li');
+                var folder = document.createElement('a');
+                folder.classList.add('folder');
+                folder.innerHTML = '&nbsp;<i class="fa icon fa-folder icon-folder"></i>';
             
-            var path = document.createElement('a');
-            path.classList.add('path');
-            path.setAttribute('title','Browse this directory');
-            path.setAttribute('data-cd','');
-            path.setAttribute('contenteditable','true');
-            path.innerHTML = 'new folder';
+                var path = document.createElement('a');
+                path.classList.add('path');
+                path.setAttribute('title','Browse this directory');
+                path.setAttribute('data-cd','');
+                path.setAttribute('contenteditable','true');
+                path.innerHTML = 'new folder';
             
-            li.appendChild(folder);
-            li.appendChild(path);
+                li.appendChild(folder);
+                li.appendChild(path);
             
-            li.appendChild(document.createElement('ul'));
+                li.appendChild(document.createElement('ul'));
 
-            setTimeout(function(){
-                path.focus();
+                setTimeout(function(){
+                    path.focus();
+                    try {
+                        (<any>path).select();
+                    } catch(e) {}
+                },240);
+            
+                var ul:HTMLElement = <HTMLElement>(that.getElement().querySelector('.pathbrowser .tree li.active > ul') || that.getElement().querySelector('.pathbrowser .tree > ul'));
+                ul.classList.add('open');
+                (<HTMLElement>(ul.parentNode)).classList.add('open');
                 try {
-                    (<any>path).select();
+                    (<HTMLElement>(<HTMLElement>(ul.previousSibling).previousSibling)).querySelector('.fa').setAttribute('class','fa icon fa-folder-open icon-folder-open');
                 } catch(e) {}
-            },240);
             
-            var ul:HTMLElement = <HTMLElement>(that.getElement().querySelector('.pathbrowser .tree li.active > ul') || that.getElement().querySelector('.pathbrowser .tree > ul'));
-            ul.classList.add('open');
-            (<HTMLElement>(ul.parentNode)).classList.add('open');
-            try {
-                (<HTMLElement>(<HTMLElement>(ul.previousSibling).previousSibling)).querySelector('.fa').setAttribute('class','fa icon fa-folder-open icon-folder-open');
-            } catch(e) {}
+                path.addEventListener('focus', function (e) {
+                    this.addEventListener('keydown', handleKeyDown, false);
+                }, false);
+                path.addEventListener('blur', function (e) {
+                    this.removeEventListener('keydown', handleKeyDown, false);
+                }, false);
             
-            path.addEventListener('focus', function (e) {
-                this.addEventListener('keydown', handleKeyDown, false);
-            }, false);
-            path.addEventListener('blur', function (e) {
-                this.removeEventListener('keydown', handleKeyDown, false);
-            }, false);
-            
-            function handleKeyDown(e) {
-                //var code = getCodeToFocus(this);
-                //var tr = that.getClosest(this, '.contextual').previousSibling;
-                if (e.keyCode === 13) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    this.blur();
-                    this.setAttribute('contenteditable','false');
-                    (<HTMLElement>that.getElement().querySelector('button.create-new')).focus();
+                function handleKeyDown(e) {
+                    //var code = getCodeToFocus(this);
+                    //var tr = that.getClosest(this, '.contextual').previousSibling;
+                    if (e.keyCode === 13) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.blur();
+                        this.setAttribute('contenteditable','false');
+                        (<HTMLElement>that.getElement().querySelector('button.create-new')).focus();
                     
-                    var foldername = this.innerHTML;
+                        var foldername = this.innerHTML;
                     
-                    var e:any = <any>document.createEvent('CustomEvent');
-                    //that.getElement().dispatchEvent(e);
-                    e.initCustomEvent('EurekaDirectoryCreated', true, true, {
-                        newdirectory: foldername,
-                        cd:that.getController().getModel().getCurrentDirectory(),
-                        s:that.getController().getModel().getCurrentMediaSource(),
-                        path:that.getController().getModel().getCurrentDirectory()+foldername
-                    });
-                    that.getElement().dispatchEvent(e);
+                        var e:any = <any>document.createEvent('CustomEvent');
+                        //that.getElement().dispatchEvent(e);
+                        e.initCustomEvent('EurekaDirectoryCreated', true, true, {
+                            newdirectory: foldername,
+                            cd:that.getController().getModel().getCurrentDirectory(),
+                            s:that.getController().getModel().getCurrentMediaSource(),
+                            path:that.getController().getModel().getCurrentDirectory()+foldername
+                        });
+                        that.getElement().dispatchEvent(e);
+                    }
                 }
-            }
             
-            ul.appendChild(li);
-        });
+                ul.appendChild(li);
+            });
+        } catch(e) {}
     }
     assignViewButtonListeners(){
         var model = this.getController().getModel();

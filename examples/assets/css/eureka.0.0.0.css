@@ -897,7 +897,7 @@ html.js .eureka > .pathbrowser > .tree li.open > ul {
   -ms-flex-positive: 0;
 }
 @media screen and (min-height: 769px) {
-  html.no-touch .eureka > .pathbrowser > footer {
+  html.no-touch .eureka > .pathbrowser > footer.drop {
     -webkit-flex-basis: 220px;
     -moz-flex-basis: 220px;
     flex-basis: 220px;
