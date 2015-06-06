@@ -718,6 +718,7 @@ class EurekaView {
                     
                     var dropzone:HTMLElement = <HTMLElement>document.getElementById(that.getController().getModel().getUID()).querySelector('.dropzone');
                     dropzone.classList.remove('complete');
+                    dropzone.classList.remove('error');
                     dropzone.classList.add('uploading');
                     
                     dropzone.querySelector('.progress').appendChild(bar);
@@ -725,6 +726,16 @@ class EurekaView {
                     file.on({
                         // Called after received response from the server
                         onCompleted: function (response) {
+                            function isJSON(data) {
+                                try {
+                                    JSON.parse(data);
+                                    return true;
+                                } catch(e) {}
+                                return false;
+                            }
+                            if(!isJSON(response)) {
+                                dropzone.classList.add('error');
+                            }
                             bar.setAttribute('title', file.fileName + ' has uploaded');
                             
                             if(dropzone.querySelectorAll('.bar').length >= 2)(<any>bar).remove();
@@ -750,6 +761,11 @@ class EurekaView {
                                         p.appendChild(span);
                                         p.innerHTML += ' have been successfully uploaded.';
                                         div.appendChild(p);
+                                        
+                                        if(dropzone.classList.contains('error')) {
+                                            icon.setAttribute('class','fa fa-times-circle icon icon-times-circle');
+                                            p.innerHTML = 'Oh no,<br>One or more files&nbsp;were not&nbsp;uploaded.';
+                                        }
                                         
                                         var e:any = <any>document.createEvent('CustomEvent');
                                         //that.getElement().dispatchEvent(e);
