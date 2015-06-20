@@ -368,6 +368,13 @@ html.no-touch { /* there's some weird bug with grunt-contrib-cssmin where if thi
 }
 
 .eureka__row-image {
+    .icon-wrapper {
+        padding:0 2em;
+        line-height:5em;
+        border:1px solid currentColor;
+        display:inline-block;
+        font-size:1.6em;
+    }
     .view-a .focused & {
         @extend %justify-content-center; //@include justify-content(center);
     }

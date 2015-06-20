@@ -286,7 +286,7 @@
                                             <tr>
                                                 <!--  the ability to sort rows requires javascript -->
                                                 <th>Name&nbsp;<script>document.write('<i class="fa fa-sort" data-sortby="name" data-sort-asc="1"></i>')</script></th>
-                                                <th>Dimensions&nbsp;<script>document.write('<i class="fa fa-sort" data-sortby="dimensions" data-sort-asc="1"></i>')</script></th>
+                                                <th class="dimensions">Dimensions&nbsp;<script>document.write('<i class="fa fa-sort" data-sortby="dimensions" data-sort-asc="1"></i>')</script></th>
                                                 <th>File Size&nbsp;<script>document.write('<i class="fa fa-sort" data-sortby="filesize" data-sort-asc="1"></i>')</script></th>
                                                 <th>Edited On&nbsp;<script>document.write('<i class="fa fa-sort" data-sortby="editedon" data-sort-asc="1"></i>')</script></th>
                                             </tr>

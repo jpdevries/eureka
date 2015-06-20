@@ -48,6 +48,8 @@ var MuckBoot;
                     var i = d.createElement('i');
                     i.classList.add('fa');
                     i.classList.add('fa-level-up');
+                    i.classList.add('icon');
+                    i.classList.add('icon-level-up');
                     a.appendChild(i);
                     var p = d.createElement('p');
                     p.classList.add('audible');
@@ -363,6 +365,7 @@ var MuckBoot;
                     })(),
                     (function () {
                         var th = d.createElement('th');
+                        th.classList.add('dimensions');
                         th.innerHTML = 'Dimensions ';
                         var fa = d.createElement('i');
                         fa.classList.add('fa');

@@ -409,6 +409,7 @@ var EurekaModel = (function () {
         this._allowDelete = true;
         this._touch = false;
         this._prependOptGroupsWithRootOption = true;
+        this._showDimensionsColumn = true;
         this._directoryRequestURL = '';
         this._listSourceRequestURL = '';
         this._listSourcesRequestURL = '';
@@ -449,6 +450,8 @@ var EurekaModel = (function () {
             this._listSourcesRequestURL = opts.listSourcesRequestURL;
         if (opts.fileUploadURL !== undefined)
             this._fileUploadURL = opts.fileUploadURL;
+        if (opts.showDimensionsColumn !== undefined)
+            this._showDimensionsColumn = opts.showDimensionsColumn;
         if (opts.debug === true)
             this._debug = opts.debug;
         if (opts.confirmBeforeDelete !== undefined)
@@ -543,6 +546,9 @@ var EurekaModel = (function () {
         enumerable: true,
         configurable: true
     });
+    EurekaModel.prototype.getShowDimensionsColumn = function () {
+        return this._showDimensionsColumn;
+    };
     EurekaModel.prototype.getLocalStorage = function (id) {
         id = this.getStoragePrefix() + id;
         if (localStorage.getItem(id) !== undefined && localStorage.getItem(id) !== 'undefined')
@@ -770,7 +776,7 @@ var EurekaModel = (function () {
         e.initCustomEvent('EurekaUnlink', true, true, {
             filename: tr.getAttribute('data-filename'),
             timestamp: tr.getAttribute('data-timestamp'),
-            src: tr.querySelector('.image img').getAttribute('src'),
+            src: tr.querySelector('.image img, .image .img').getAttribute('src'),
             dimensions: [tr.getAttribute('data-dimensions-w'), tr.getAttribute('data-dimensions-h')],
             filesize: parseInt(tr.getAttribute('data-filesize-bytes'))
         });
@@ -783,7 +789,7 @@ var EurekaModel = (function () {
         e.initCustomEvent('EurekaFoundIt', true, true, {
             filename: filename,
             timestamp: tr.getAttribute('data-timestamp'),
-            src: tr.querySelector('.image img').getAttribute('src'),
+            src: tr.querySelector('.image img, .image .img').getAttribute('src'),
             dimensions: [tr.getAttribute('data-dimensions-w'), tr.getAttribute('data-dimensions-h')],
             filesize: parseInt(tr.getAttribute('data-filesize-bytes'))
         });
@@ -1195,6 +1201,13 @@ var EurekaView = (function () {
             catch (e) {
             }
         });
+        if (!that.getController().getModel().getShowDimensionsColumn()) {
+            try {
+                that.getElement().querySelector('.eureka-table th.dimensions').remove();
+            }
+            catch (e) {
+            }
+        }
     };
     EurekaView.prototype.setMediaSourceSelectValue = function () {
         var that = this;
@@ -1813,8 +1826,107 @@ var EurekaView = (function () {
             var imgD = document.createElement('div');
             imgD.classList.add('image');
             var img = document.createElement('img');
-            img.setAttribute('src', src);
+            img.setAttribute('id', safeFileName + '__thumb');
+            function addErrorListener(img, result, safeFileName) {
+                img.addEventListener('error', function () {
+                    var a = result.filename.split('.');
+                    var icon = 'file-o';
+                    switch (a[a.length - 1].toLowerCase()) {
+                        case 'css':
+                            icon = 'css3';
+                            break;
+                        case 'csv':
+                            icon = 'file-excel-o';
+                            break;
+                        case 'xls':
+                            icon = 'file-excel-o';
+                            break;
+                        case 'numbers':
+                            icon = 'file-excel-o';
+                            break;
+                        case 'css':
+                            icon = 'file-excel-o';
+                            break;
+                        case 'mp3':
+                            icon = 'file-sound-o';
+                            break;
+                        case 'wav':
+                            icon = 'file-sound-o';
+                            break;
+                        case 'wma':
+                            icon = 'file-sound-o';
+                            break;
+                        case 'aac':
+                            icon = 'file-sound-o';
+                            break;
+                        case 'flac':
+                            icon = 'file-sound-o';
+                            break;
+                        case 'ppt':
+                            icon = 'file-powerpoint-o';
+                            break;
+                        case 'pot':
+                            icon = 'file-powerpoint-o';
+                            break;
+                        case 'pps':
+                            icon = 'file-powerpoint-o';
+                            break;
+                        case 'zip':
+                            icon = 'file-zip-o';
+                            break;
+                        case 'gzip':
+                            icon = 'file-zip-o';
+                            break;
+                        case 'tar':
+                            icon = 'file-zip-o';
+                            break;
+                        case 'mp4':
+                            icon = 'file-movie-o';
+                            break;
+                        case 'ogv':
+                            icon = 'file-movie-o';
+                            break;
+                        case 'm4v':
+                            icon = 'file-movie-o';
+                            break;
+                        case 'avi':
+                            icon = 'file-movie-o';
+                            break;
+                        case 'php':
+                        case 'html':
+                        case 'htm':
+                        case 'md':
+                            icon = 'file-code-o';
+                            break;
+                        case 'js':
+                            icon = 'file-text-o';
+                            break;
+                        default:
+                            icon = 'file-o';
+                            break;
+                    }
+                    var div = (function () {
+                        var div = document.createElement('div');
+                        div.classList.add('icon-wrapper');
+                        div.classList.add('img');
+                        var i = document.createElement('i');
+                        i.classList.add('fa');
+                        i.classList.add('icon');
+                        i.classList.add('fa-' + icon);
+                        i.classList.add('icon-' + icon);
+                        div.appendChild(i);
+                        return div;
+                    })();
+                    try {
+                        document.getElementById(safeFileName + '__thumb').outerHTML = div.outerHTML;
+                    }
+                    catch (e) {
+                    }
+                });
+            }
+            addErrorListener(img, result, safeFileName);
             imgD.appendChild(img);
+            img.setAttribute('src', src);
             var code = document.createElement('code');
             code.setAttribute('contenteditable', 'true');
             code.setAttribute('tabindex', '-1');
@@ -1841,7 +1953,8 @@ var EurekaView = (function () {
                 year: 'numeric'
             })));
             tr.appendChild(td);
-            tr.appendChild(tdDimensionCell);
+            if (that.getController().getModel().getShowDimensionsColumn())
+                tr.appendChild(tdDimensionCell);
             tr.appendChild(tdFilesizeCell);
             tr.appendChild(tdEditedOnCell);
             tbodyHTML += tr.outerHTML;

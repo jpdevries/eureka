@@ -28,8 +28,8 @@ $results = array(
         "editedon" => "1266469440",
     ),
     array(
-        "filename" => "DSC02398.jpg",
-        "src" => "http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02398.jpg",
+        "filename" => "DSC02398.css",
+        "src" => "http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02398.css",
         "filesize" => "2048",
         "dimensions" => "600x600",
         "editedon" => "1261112640",

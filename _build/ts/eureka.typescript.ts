@@ -101,6 +101,7 @@ class EurekaModel {
     private _allowDelete:Boolean = true;
     private _touch:Boolean = false;
     private _prependOptGroupsWithRootOption:Boolean = true;
+    private _showDimensionsColumn:Boolean = true;
     
     private _directoryRequestURL:string = '';
     private _listSourceRequestURL:string = '';
@@ -139,6 +140,7 @@ class EurekaModel {
         if(opts.listSourceRequestURL !== undefined) this._listSourceRequestURL = opts.listSourceRequestURL;
         if(opts.listSourcesRequestURL !== undefined) this._listSourcesRequestURL = opts.listSourcesRequestURL;
         if(opts.fileUploadURL !== undefined) this._fileUploadURL = opts.fileUploadURL;
+        if(opts.showDimensionsColumn !== undefined) this._showDimensionsColumn = opts.showDimensionsColumn;
         
         if(opts.debug === true) this._debug = opts.debug;
         if(opts.confirmBeforeDelete !== undefined) this._confirmBeforeDelete = opts.confirmBeforeDelete;
@@ -150,6 +152,10 @@ class EurekaModel {
             if(this.getLocalStorage('currentDirectory') && !opts.currentDirectory) this._currentDirectory = this.getLocalStorage('currentDirectory');
             if(this.getLocalStorage('currentView') && !opts.currentView) this._currentView = this.getLocalStorage('currentView');
         }
+    }
+    
+    getShowDimensionsColumn() {
+        return this._showDimensionsColumn;
     }
     
     getLocalStorage(id) {
@@ -378,7 +384,7 @@ class EurekaModel {
         e.initCustomEvent('EurekaUnlink', true, true, {
           filename: tr.getAttribute('data-filename'),
           timestamp: tr.getAttribute('data-timestamp'),
-          src: tr.querySelector('.image img').getAttribute('src'),
+          src: tr.querySelector('.image img, .image .img').getAttribute('src'),
           dimensions: [tr.getAttribute('data-dimensions-w'), tr.getAttribute('data-dimensions-h')],
           filesize: parseInt(tr.getAttribute('data-filesize-bytes'))
         });
@@ -393,7 +399,7 @@ class EurekaModel {
         e.initCustomEvent('EurekaFoundIt', true, true, {
           filename: filename,
           timestamp: tr.getAttribute('data-timestamp'),
-          src: tr.querySelector('.image img').getAttribute('src'),
+          src: tr.querySelector('.image img, .image .img').getAttribute('src'),
           dimensions: [tr.getAttribute('data-dimensions-w'), tr.getAttribute('data-dimensions-h')],
           filesize: parseInt(tr.getAttribute('data-filesize-bytes'))
         });
@@ -852,6 +858,12 @@ class EurekaView {
                 (<any>(that._html5Upload)).data = that.getController().getModel().getHTML5UploadData();
             } catch(e) {}
         });
+        
+        if(!that.getController().getModel().getShowDimensionsColumn()) {
+            try {
+                (<any>that.getElement().querySelector('.eureka-table th.dimensions')).remove();
+            } catch(e) {}
+        }
     }
     
     setMediaSourceSelectValue() {
@@ -1516,15 +1528,140 @@ class EurekaView {
             var imgD = document.createElement('div');
             imgD.classList.add('image');
             var img = document.createElement('img');
-            img.setAttribute('src', src);
+            img.setAttribute('id',safeFileName + '__thumb');
+            function addErrorListener(img,result,safeFileName) {
+                img.addEventListener('error',function(){
+                    var a = result.filename.split('.');
+                    var icon = 'file-o';
+                    switch(a[a.length-1].toLowerCase()) { // consider abstracting this part out into it's own plugin
+                        case 'css':
+                        icon = 'css3';
+                        break;
+                        
+                        case 'csv':
+                        icon = 'file-excel-o';
+                        break;
+                        
+                        case 'xls':
+                        icon = 'file-excel-o';
+                        break;
+                        
+                        case 'numbers':
+                        icon = 'file-excel-o';
+                        break;
+                        
+                        case 'css':
+                        icon = 'file-excel-o';
+                        break;
+                        
+                        case 'mp3':
+                        icon = 'file-sound-o';
+                        break;
+                        
+                        case 'wav':
+                        icon = 'file-sound-o';
+                        break;
+                        
+                        case 'wma':
+                        icon = 'file-sound-o';
+                        break;
+                        
+                        case 'aac':
+                        icon = 'file-sound-o';
+                        break;
+                        
+                        case 'flac':
+                        icon = 'file-sound-o';
+                        break;
+                        
+                        case 'ppt':
+                        icon = 'file-powerpoint-o';
+                        break;
+                        
+                        case 'pot':
+                        icon = 'file-powerpoint-o';
+                        break;
+                        
+                        case 'pps':
+                        icon = 'file-powerpoint-o';
+                        break;
+                        
+                        case 'zip':
+                        icon = 'file-zip-o';
+                        break;
+                        
+                        case 'gzip':
+                        icon = 'file-zip-o';
+                        break;
+                        
+                        case 'tar':
+                        icon = 'file-zip-o';
+                        break;
+                        
+                        case 'mp4':
+                        icon = 'file-movie-o';
+                        break;
+                        
+                        case 'ogv':
+                        icon = 'file-movie-o';
+                        break;
+                        
+                        case 'm4v':
+                        icon = 'file-movie-o';
+                        break;
+                        
+                        case 'avi':
+                        icon = 'file-movie-o';
+                        break;
+                        
+                        case 'php':
+                        case 'html':
+                        case 'htm':
+                        case 'md':
+                        icon = 'file-code-o';
+                        break;
+                        
+                        case 'js':
+                        icon = 'file-text-o';
+                        break;
+                        
+                        default:
+                        icon = 'file-o';
+                        break;
+                    }
+                    var div = (function(){
+                        var div = document.createElement('div');
+                        div.classList.add('icon-wrapper');
+                        div.classList.add('img');
+                        var i = document.createElement('i');
+                        i.classList.add('fa');
+                        i.classList.add('icon');
+                        i.classList.add('fa-' + icon);
+                        i.classList.add('icon-' + icon);
+                        div.appendChild(i);
+                        
+                        return div;
+                    })();
+                    
+
+                    try {
+                        document.getElementById(safeFileName + '__thumb').outerHTML = div.outerHTML;
+                    } catch(e) {}
+                });
+            }
+            addErrorListener(img,result,safeFileName);
+            
+            
             //img.setAttribute('alt',filename); // after a11y testing this was determined to be unecessary - jp
             imgD.appendChild(img);
+            img.setAttribute('src', src);
             var code = document.createElement('code');
             code.setAttribute('contenteditable', 'true');
             code.setAttribute('tabindex', '-1');
             code.setAttribute('sorta-draggable', 'true');
             code.innerHTML = filename;
             td.appendChild(imgD);
+            
             td.appendChild(code);
             function createCode(html) {
                 var tag = document.createElement('code');
@@ -1545,7 +1682,7 @@ class EurekaView {
                 year: 'numeric'
             })));
             tr.appendChild(td);
-            tr.appendChild(tdDimensionCell);
+            if(that.getController().getModel().getShowDimensionsColumn()) tr.appendChild(tdDimensionCell);
             tr.appendChild(tdFilesizeCell);
             tr.appendChild(tdEditedOnCell);
             tbodyHTML += tr.outerHTML;
