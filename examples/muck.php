@@ -156,9 +156,9 @@
                 var $eureka = new Eureka({ // init the Eureka component
                     // REQUIRED
                     uid:'redactor-media-browser_0',
-                    directoryRequestURL:'fakepi/listdirectory.php',
-                    listSourceRequestURL:'fakepi/listsource.php',
-                    listSourcesRequestURL:'fakepi/listsources.php',
+                    directoryRequestURL:'/static/eureka/examples/fakepi/listdirectory.php',
+                    listSourceRequestURL:'/static/eureka/examples/fakepi/listsource.php',
+                    listSourcesRequestURL:'/static/eureka/examples/fakepi/listsources.php',
                     
                     //fileUploadURL:'/file/upload', // if undefined upload and create UI elements will be removed
                     editable:true, // if false will not add rename and delete features

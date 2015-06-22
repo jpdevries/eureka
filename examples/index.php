@@ -691,9 +691,11 @@
                     fileUploadURL:'/file/upload',
                     touch:Modernizr.touch,
                     debug:false,
-                    directoryRequestURL:'fakepi/listdirectory.php',
-                    listSourceRequestURL:'fakepi/listsource.php',
-                    listSourcesRequestURL:'fakepi/listsources.php',
+                    useWebWorkers:true, // whether or not to use a worker thread when making XHR Requests
+                    // if useWebWorkers is true these must be absolute paths or relative to the webserver root
+                    directoryRequestURL:'/static/eureka/examples/fakepi/listdirectory.php',
+                    listSourceRequestURL:'/static/eureka/examples/fakepi/listsource.php',
+                    listSourcesRequestURL:'/static/eureka/examples/fakepi/listsources.php',
                     headers: [{
                         'modAuth': MODx.siteId,
                         'Powered-By': 'Eureka in MODX Revolution'

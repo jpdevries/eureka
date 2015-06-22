@@ -69,11 +69,13 @@ Now that `muckboot.eureka.js` has done the prep-work Eureka is ready for instant
 var $eureka = new Eureka({ // init the Eureka component
     // REQUIRED SETTINGS
     uid:'media-browser_0', // id of our div
+    // if useWebWorkers is true these must be absolute paths or relative to the webserver root
     directoryRequestURL:'fakepi/listdirectory.php', // lists contents of a directory. along with headers Object, sends  's' and 'dir' parameters for media source and current directory
     listSourceRequestURL:'fakepi/listsource.php', // list navigation tree of a given media sources. along with headers Object, sends 's' paramater for media source to list
     listSourcesRequestURL:'fakepi/listsources.php', // fetches a list of all media sources
     
     // OPTIONAL SETTINGS
+    useWebWorkers:true, // whether or not to use a worker thread when making XHR Requests
     touch:Modernizr.touch, // or use your own feature detection
     fileUploadURL:undefined, // endpoint to send files to, removes upload components from UI if not set
     navTreeHidden:false, // initially hides the sidebar

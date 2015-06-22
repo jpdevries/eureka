@@ -98,7 +98,7 @@ module.exports = function(grunt) {
             es5 : {
                 target:'es5',
                 failOnTypeErrors:false,
-                src: ["<%= dirs.ts %>plugins.ts","<%= dirs.ts %>eureka.typescript.ts"],
+                src: ["<%= dirs.ts %>plugins.ts","<%= dirs.ts %>ajax.ts","<%= dirs.ts %>eureka.typescript.ts"],
                 out:'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.<%= pkg.version %>.js'
             },
             muckboot : {
@@ -106,6 +106,30 @@ module.exports = function(grunt) {
                 failOnTypeErrors:false,
                 src: ["<%= dirs.ts %>muckboot.eureka.ts"],
                 out:'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>muckboot.eureka.<%= pkg.version %>.js'
+            },
+            includes : {
+                target:'es5',
+                failOnTypeErrors:false,
+                src: ["<%= dirs.ts %>ajax.ts"],
+                out:'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>workers/includes.js'
+            },
+            listsource : {
+                target:'es5',
+                failOnTypeErrors:false,
+                src: ["<%= dirs.ts %>workers/listsource.ts"],
+                out:'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>workers/listsource.js'
+            },
+            listsources : {
+                target:'es5',
+                failOnTypeErrors:false,
+                src: ["<%= dirs.ts %>workers/listsources.ts"],
+                out:'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>workers/listsources.js'
+            },
+            listdirectory : {
+                target:'es5',
+                failOnTypeErrors:false,
+                src: ["<%= dirs.ts %>workers/listdirectory.ts"],
+                out:'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>workers/listdirectory.js'
             }
         },
 
@@ -121,7 +145,28 @@ module.exports = function(grunt) {
                     '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.<%= pkg.version %>.min.js': ['<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.<%= pkg.version %>.js']
 				}
 				
-			}
+			},
+            includes: {
+                options: {
+                    report: 'min'
+                },
+                files: [{
+                    src:['<%= dirs.src %><%= dirs.js %>workers/includes.js'],
+                    dest:'<%= dirs.src %><%= dirs.js %>workers/includes.min.js'
+                },{
+                    src:['<%= dirs.src %><%= dirs.js %>workers/listsource.js'],
+                    dest:'<%= dirs.src %><%= dirs.js %>workers/listsource.min.js'
+                },
+                {
+                    src:['<%= dirs.src %><%= dirs.js %>workers/listsources.js'],
+                    dest:'<%= dirs.src %><%= dirs.js %>workers/listsources.min.js'
+                },
+                {
+                    src:['<%= dirs.src %><%= dirs.js %>workers/listdirectory.js'],
+                    dest:'<%= dirs.src %><%= dirs.js %>workers/listdirectory.min.js'
+                }
+                ]
+            }
 		},
 		
 		watch: { /* trigger tasks on save */
@@ -214,6 +259,11 @@ module.exports = function(grunt) {
 			expand: true,
             flatten: true
 		},{
+			src: '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>workers/**/*.js',
+			dest: '<%= dirs.src %><%= dirs.js %>workers/',
+            flatten:true,
+            expand: true
+		},{
 			src: '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>*eureka*.css',
 			dest: '<%= dirs.src %><%= dirs.css %>',
 			expand: true,
@@ -280,6 +330,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-ts");
 
 	grunt.registerTask('default', ['growl:watch', 'watch']);
-	grunt.registerTask('build', ['clean:prebuild', 'bower', 'copy', 'sass:dev','cssmin','ts','concat','uglify', 'growl:sass', 'clean:postbuild','copy:eureka-src']);
+	grunt.registerTask('build', ['clean:prebuild', 'bower', 'copy', 'sass:dev','cssmin','ts','concat','uglify:main', 'growl:sass', 'clean:postbuild','copy:eureka-src','uglify:includes']);
 	grunt.registerTask('expand', ['sass:dev', 'growl:sass', 'growl:expand']);
 };

@@ -331,6 +331,12 @@ var AJAX = (function () {
     };
     return AJAX;
 })();
+var _EUREKA = {
+    src: (function () {
+        var scripts = document.getElementsByTagName("script"), src = scripts[scripts.length - 1].src;
+        return src;
+    })()
+};
 var Eureka = (function () {
     function Eureka(opts) {
         this.opts = opts;
@@ -410,9 +416,11 @@ var EurekaModel = (function () {
         this._touch = false;
         this._prependOptGroupsWithRootOption = true;
         this._showDimensionsColumn = true;
+        this._webWorkersPath = '';
         this._directoryRequestURL = '';
         this._listSourceRequestURL = '';
         this._listSourcesRequestURL = '';
+        this._useWebWorkers = false;
         this.getXHRHeaders = function () {
             return this._headers;
         };
@@ -452,12 +460,15 @@ var EurekaModel = (function () {
             this._fileUploadURL = opts.fileUploadURL;
         if (opts.showDimensionsColumn !== undefined)
             this._showDimensionsColumn = opts.showDimensionsColumn;
+        if (opts.useWebWorkers !== undefined)
+            this._useWebWorkers = (window.Worker) ? opts.useWebWorkers : false;
         if (opts.debug === true)
             this._debug = opts.debug;
         if (opts.confirmBeforeDelete !== undefined)
             this._confirmBeforeDelete = opts.confirmBeforeDelete;
         if (opts.touch === true)
             this._touch = true;
+        this._webWorkersPath = (opts.webWorkersPath !== undefined) ? opts.webWorkersPath : _EUREKA.src.substring(0, _EUREKA.src.lastIndexOf('/')) + '/workers/';
         if (this._useLocalStorage) {
             if (this.getLocalStorage('currentMediaSource') && !opts.mediaSource)
                 this._mediaSource = this.getLocalStorage('currentMediaSource');
@@ -546,6 +557,12 @@ var EurekaModel = (function () {
         enumerable: true,
         configurable: true
     });
+    EurekaModel.prototype.getUseWebWorkers = function () {
+        return this._useWebWorkers;
+    };
+    EurekaModel.prototype.getwebWorkersPath = function () {
+        return this._webWorkersPath;
+    };
     EurekaModel.prototype.getShowDimensionsColumn = function () {
         return this._showDimensionsColumn;
     };
@@ -651,7 +668,7 @@ var EurekaModel = (function () {
         if (this._mediaSource === currentMediaSource && !dispatchIdenticalValues)
             return;
         this._mediaSource = currentMediaSource;
-        if (setLocalStorage)
+        if (setLocalStorage && currentMediaSource !== undefined)
             this.setLocalStorage('currentMediaSource', currentMediaSource);
         if (dispatch === false)
             return;
@@ -740,7 +757,6 @@ var EurekaModel = (function () {
         var that = this;
         if (this.getDebug())
             console.log('setMediaSourcesData');
-        data = JSON.parse(data);
         var results = data.results;
         var sources = [];
         var current = that.getCurrentMediaSource();
@@ -756,7 +772,7 @@ var EurekaModel = (function () {
                 currentExists = true;
         }
         this.setSources(sources);
-        that.setCurrentMediaSource((!currentExists) ? results[0].id : current, true, true, false, true);
+        that.setCurrentMediaSource((!currentExists) ? results[0].id : current, true, true, false, false);
     };
     EurekaModel.prototype.renameFile = function (fileName, newFilename) {
         var e = document.createEvent('CustomEvent');
@@ -1735,7 +1751,6 @@ var EurekaView = (function () {
     };
     EurekaView.prototype.paintTree = function (data) {
         var that = this;
-        data = JSON.parse(data);
         var tree = (that.getElement().querySelector('nav.tree'));
         var results = data.results;
         function printTreeNavResults(results, ul) {
@@ -2291,7 +2306,6 @@ var EurekaView = (function () {
             console.log('updateMediaSourceListings: ');
             console.log(data);
         }
-        data = JSON.parse(data);
         var id = data.cs;
         var source = this.getController().getModel().getMediaSourceDTOByID(id);
         function updateTreeSelect() {
@@ -2428,13 +2442,13 @@ var EurekaController = (function () {
             (function () {
                 var mediaSourcesData = that.getModel().getLocalStorage('mediaSourcesData');
                 if (mediaSourcesData) {
-                    that.getModel().setMediaSourcesData(mediaSourcesData);
+                    that.getModel().setMediaSourcesData(JSON.parse(mediaSourcesData));
                 }
             })();
             (function () {
                 var mediaSourceData = that.getModel().getLocalStorage(that.getModel().getCurrentMediaSource() + '_mediaSourceData');
                 if (mediaSourceData) {
-                    that.getView().paintTree(mediaSourceData);
+                    that.getView().paintTree(JSON.parse(mediaSourceData));
                 }
             })();
             (function () {
@@ -2449,30 +2463,65 @@ var EurekaController = (function () {
         eureka.addEventListener(EurekaModel.EurekaDirectoryChanged, function (e) {
             if (that.getModel().getDebug())
                 console.log(EurekaModel.EurekaDirectoryChanged);
-            var ajax = new AJAX();
-            ajax.get(that.getModel().getListDirectoryRequestURL(), { s: that.getModel().getCurrentMediaSource(), dir: e.detail.currentDirectory || '/' }, function (data) {
+            function handleJSONData(d) {
                 if (that.getModel().useLocalStorage())
-                    that.getModel().setLocalStorage('lastDirectoryPainted', data);
-                data = JSON.parse(data);
+                    that.getModel().setLocalStorage('lastDirectoryPainted', JSON.stringify(d));
                 if (that.getModel().getDebug())
-                    console.log(data);
-                that.getView().paintJSON(data);
-            }, true, that.getModel().getXHRHeaders());
+                    console.log(d);
+                that.getView().paintJSON(d);
+            }
+            if (that.getModel().getUseWebWorkers()) {
+                (function () {
+                    var worker = new Worker(that.getModel().getwebWorkersPath() + 'listdirectory.js');
+                    worker.addEventListener('message', function (e) {
+                        handleJSONData(e.data);
+                    }, false);
+                    worker.postMessage({
+                        listDirectoryRequestURL: that.getModel().getListDirectoryRequestURL(),
+                        currentMediaSource: that.getModel().getCurrentMediaSource(),
+                        currentDirectory: e.detail.currentDirectory || '/',
+                        headers: that.getModel().getXHRHeaders()
+                    });
+                })();
+            }
+            else {
+                var ajax = new AJAX();
+                ajax.get(that.getModel().getListDirectoryRequestURL(), { s: that.getModel().getCurrentMediaSource(), dir: e.detail.currentDirectory || '/' }, function (data) {
+                    handleJSONData(JSON.parse(data));
+                }, true, that.getModel().getXHRHeaders());
+            }
         });
         eureka.addEventListener(EurekaModel.EurekaMediaSourceChange, function (e) {
             if (that.getModel().getDebug())
                 console.log(EurekaModel.EurekaMediaSourceChange);
-            var ajax = new AJAX();
-            ajax.get(that.getModel().getListSourceRequestURL(), { s: e.detail.currentMediaSource }, function (data) {
-                var d = JSON.parse(data);
+            function handleJSONData(d) {
                 if (that.getModel().getDebug())
-                    console.log(data);
+                    console.log(d);
                 if (d.cs && that.getModel().useLocalStorage())
-                    that.getModel().setLocalStorage(d.cs + '_mediaSourceData', data);
-                that.getView().paintTree(data);
+                    that.getModel().setLocalStorage(d.cs + '_mediaSourceData', JSON.stringify(d));
+                that.getView().paintTree(d);
                 if (e.detail.clearDirectory == true)
                     that.getModel().setCurrentDirectory('', true, false);
-            }, true, that.getModel().getXHRHeaders());
+            }
+            if (that.getModel().getUseWebWorkers()) {
+                (function () {
+                    var worker = new Worker(that.getModel().getwebWorkersPath() + 'listsource.js');
+                    worker.addEventListener('message', function (e) {
+                        handleJSONData(e.data);
+                    }, false);
+                    worker.postMessage({
+                        listSourceRequestURL: that.getModel().getListSourceRequestURL(),
+                        currentMediaSource: that.getModel().getCurrentMediaSource(),
+                        headers: that.getModel().getXHRHeaders()
+                    });
+                })();
+            }
+            else {
+                var ajax = new AJAX();
+                ajax.get(that.getModel().getListSourceRequestURL(), { s: e.detail.currentMediaSource }, function (data) {
+                    handleJSONData(JSON.parse(data));
+                }, true, that.getModel().getXHRHeaders());
+            }
         });
         eureka.addEventListener(EurekaModel.EurekaMediaSourcesListChange, function (e) {
             if (that.getModel().getDebug())
@@ -2481,33 +2530,71 @@ var EurekaController = (function () {
             for (var i = 0; i < sources.length; i++) {
                 var source = new EurekaMediaSource(sources[i].opts);
                 var id = source.getID();
+                requestMediaListings(source);
                 function requestMediaListings(source) {
                     if (that.getModel().getDebug())
                         console.log('requestMediaListings');
                     var id = source.getID();
-                    var ajax = new AJAX();
-                    ajax.get(that.getModel().getListSourceRequestURL(), { s: id }, function (data) {
+                    function handleJSONData(d) {
                         if (that.getModel().getDebug())
-                            console.log(data);
-                        that.getView().updateMediaSourceListings(data);
-                    }, true, that.getModel().getXHRHeaders());
+                            console.log(d);
+                        that.getView().updateMediaSourceListings(d);
+                    }
+                    if (that.getModel().getUseWebWorkers()) {
+                        (function () {
+                            var worker = new Worker(that.getModel().getwebWorkersPath() + 'listsource.js');
+                            worker.addEventListener('message', function (e) {
+                                handleJSONData(e.data);
+                            }, false);
+                            worker.postMessage({
+                                listSourceRequestURL: that.getModel().getListSourceRequestURL(),
+                                currentMediaSource: that.getModel().getCurrentMediaSource(),
+                                headers: that.getModel().getXHRHeaders()
+                            });
+                        })();
+                    }
+                    else {
+                        var ajax = new AJAX();
+                        ajax.get(that.getModel().getListSourceRequestURL(), { s: id }, function (data) {
+                            data = JSON.parse(data);
+                            handleJSONData(data);
+                        }, true, that.getModel().getXHRHeaders());
+                    }
                 }
-                requestMediaListings(source);
             }
         });
         if (that.getModel().getDebug())
             console.log('MediaSourcesListChange listener added');
         (function () {
             if (that.getModel().getDebug())
-                console.log('MediaSourcesListChange: ');
-            var ajax = new AJAX();
-            ajax.get(that.getModel().getListSourcesRequestURL(), {}, function (data) {
+                console.log('requesting sources: ');
+            function handleJSONData(d) {
                 if (that.getModel().getDebug())
-                    console.log(data);
+                    console.log(d);
                 if (that.getModel().useLocalStorage())
-                    that.getModel().setLocalStorage('mediaSourcesData', data);
-                that.getModel().setMediaSourcesData(data);
-            }, true, that.getModel().getXHRHeaders());
+                    that.getModel().setLocalStorage('mediaSourcesData', JSON.stringify(d));
+                that.getModel().setMediaSourcesData(d);
+            }
+            if (that.getModel().getUseWebWorkers()) {
+                (function () {
+                    var worker = new Worker(that.getModel().getwebWorkersPath() + 'listsources.js');
+                    worker.addEventListener('message', function (e) {
+                        handleJSONData(e.data);
+                    }, false);
+                    worker.postMessage({
+                        listSourcesRequestURL: that.getModel().getListSourcesRequestURL(),
+                        currentMediaSource: that.getModel().getCurrentMediaSource(),
+                        headers: that.getModel().getXHRHeaders()
+                    });
+                })();
+            }
+            else {
+                var ajax = new AJAX();
+                ajax.get(that.getModel().getListSourcesRequestURL(), {}, function (data) {
+                    data = JSON.parse(data);
+                    handleJSONData(data);
+                }, true, that.getModel().getXHRHeaders());
+            }
         })();
     };
     return EurekaController;
