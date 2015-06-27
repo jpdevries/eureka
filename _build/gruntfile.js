@@ -81,6 +81,7 @@ module.exports = function(grunt) {
                     banner:'/* do not touch this file. see _build/*.js */\n'
     			},
 				src: [
+                    '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>vendor/scopedQuerySelectorShim.js',
                     '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>vendor/html5Upload.js',
 					'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.<%= pkg.version %>.js'
 				],
@@ -95,7 +96,7 @@ module.exports = function(grunt) {
 			
 		},
         ts: {
-            es5 : {
+            eureka : {
                 target:'es5',
                 failOnTypeErrors:false,
                 src: ["<%= dirs.ts %>plugins.ts","<%= dirs.ts %>ajax.ts","<%= dirs.ts %>eureka.typescript.ts"],
@@ -180,7 +181,7 @@ module.exports = function(grunt) {
 			},
 			ts: {
 				files: ['<%= dirs.ts %>*'],
-				tasks: ['ts','growl:ts','concat','uglify','growl:uglify']
+				tasks: ['ts:eureka','growl:ts','concat','uglify','growl:uglify']
 			}
 		},
 		clean: { /* take out the trash */
@@ -286,7 +287,13 @@ module.exports = function(grunt) {
 			dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>vendor/html5Upload.js'
 		}]
 	};
-	
+    
+	initConfig.copy["scopedQuerySelectorShim"] = {
+		files: [{
+			src: '<%= dirs.lib %>scopedQuerySelectorShim/scopedQuerySelectorShim.js',
+			dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>vendor/scopedQuerySelectorShim.js'
+		}]
+	};
 	
 	initConfig.copy["font-awesome"] = {
 		files: [

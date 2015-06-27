@@ -691,7 +691,8 @@
                     fileUploadURL:'/file/upload',
                     touch:Modernizr.touch,
                     debug:false,
-                    useWebWorkers:true, // whether or not to use a worker thread when making XHR Requests
+                    useLocalStorage:false,
+                    useWebWorkers:false, // whether or not to use a worker thread when making XHR Requests
                     // if useWebWorkers is true these must be absolute paths or relative to the webserver root
                     directoryRequestURL:'/static/eureka/examples/fakepi/listdirectory.php',
                     listSourceRequestURL:'/static/eureka/examples/fakepi/listsource.php',
@@ -706,37 +707,37 @@
                 // currently the Eureka class (MVC) dispatches events from the eureka component itself (div.eureka)
                 // listen for when a file is renamed
                 document.getElementById('media-browser_0').addEventListener('EurekaFileRename',function(e){
-                    console.log('EurekaFileRename');
+                    //console.log('EurekaFileRename');
                     //console.log(e.detail);
                     // make XHR 
                 });
                 
                 // listen for when a media item has been chosen
                 document.getElementById('media-browser_0').addEventListener('EurekaFoundIt',function(e){
-                    console.log('EurekaFoundIt');
+                    //console.log('EurekaFoundIt');
                     //console.log(e.detail);
                 });
                 
                 // listen for when a media item has been deleted
                 document.getElementById('media-browser_0').addEventListener('EurekaUnlink',function(e){
-                    console.log('EurekaUnlink');
+                    //console.log('EurekaUnlink');
                     //console.log(e.detail);
                 });
                 
                 // listen for when a media item has been deleted
                 document.getElementById('media-browser_0').addEventListener('EurekaDirectoryChanged',function(e){
-                    console.log('EurekaDirectoryChanged');
+                    //console.log('EurekaDirectoryChanged');
                     //console.log(e.detail);
                 });
                 
                 // listen for when a media item has been deleted
                 document.getElementById('media-browser_0').addEventListener('EurekaMediaSourceChange',function(e){
-                    console.log('EurekaMediaSourceChange');
+                    //console.log('EurekaMediaSourceChange');
                     //console.log(e.detail);
                 });
                 
                 document.getElementById('media-browser_0').addEventListener(EurekaModel.EurekaCanceled,function(e){
-                    console.log('EurekaCanceled');
+                    //console.log('EurekaCanceled');
                 });
             });
         </script>

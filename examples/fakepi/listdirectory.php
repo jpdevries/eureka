@@ -151,6 +151,10 @@ switch($dir) {
     break;
 }
 
+$results[] = array(
+    "directory" => "foolder"
+);
+
 $data = array(
 	"total" => count($results),
 	"cd" => "$dir",

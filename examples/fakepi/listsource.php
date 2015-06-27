@@ -27,6 +27,12 @@ $results = array(
         'children' => array(
             array(
                 'path' => 'assets/images/'
+            ),
+            array(
+                'path' => 'assets/maple/'
+            ),
+            array(
+                'path' => 'assets/tea/'
             )
         )
     ),

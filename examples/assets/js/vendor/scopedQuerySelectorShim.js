@@ -1,5 +1,9 @@
 (function() {
-
+    /*
+    Copyright (c) 2014, Lawrence Davis
+    All rights reserved.
+    https://github.com/lazd/scopedQuerySelectorShim
+    */
   if (!HTMLElement.prototype.querySelectorAll) {
     throw new Error('rootedQuerySelectorAll: This polyfill can only be used with browsers that support querySelectorAll');
   }
@@ -73,64 +77,3 @@
     overrideNodeMethod(HTMLElement.prototype, 'querySelectorAll');
   }
 }());
-
-
-var matches = function(el, selector) {
-  return (el.matches || el.matchesSelector || el.msMatchesSelector || el.mozMatchesSelector || el.webkitMatchesSelector || el.oMatchesSelector).call(el, selector);
-};
-
-var getClosest = function(element, selector) {
-  for (; element && element !== document; element = element.parentNode) {
-    if (matches(element, selector)) {
-      return element;
-    }
-  }
-
-  return false;
-};
-
-var getParents = function(element, selector) {
-  var parents = [];
-
-  for (; element && element !== document; element = element.parentNode) {
-    if (!selector || (selector && matches(element, selector))) {
-      parents.push(element);
-    }
-  }
-
-  if (parents.length) {
-    return parents;
-  }
-
-  return null;
-};
-
-interface Array<T> {
-   equals(o: T): Boolean;
-}
-
-// attach the .equals method to Array's prototype to call it on any array http://stackoverflow.com/a/14853974/4671250
-Array.prototype.equals = function (array) : Boolean {
-    // if the other array is a falsy value, return
-    if (!array)
-        return false;
-
-    // compare lengths - can save a lot of time 
-    if (this.length != array.length)
-        return false;
-
-    for (var i = 0, l=this.length; i < l; i++) {
-        // Check if we have nested arrays
-        if (this[i] instanceof Array && array[i] instanceof Array) {
-            // recurse into the nested arrays
-            if (!this[i].equals(array[i]))
-                return false;       
-        }           
-        else if (this[i] != array[i]) { 
-            // Warning - two different object instances will never be equal: {x:20} != {x:20}
-            return false;   
-        }           
-    }       
-    return true;
-}   
-

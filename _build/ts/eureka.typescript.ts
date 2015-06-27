@@ -309,6 +309,7 @@ class EurekaModel {
         return this._mediaSource;
     }
     setCurrentDirectory(currentDirectory:string, dispatch:boolean = true, setLocalStorage:boolean = true, dispatchIdenticalValues:boolean = false) {
+        if(this.getDebug()) console.log('setCurrentDirectory: ' + currentDirectory);
         if(setLocalStorage === undefined) setLocalStorage = this.useLocalStorage();
         //if(currentDirectory === undefined || currentDirectory === 'undefined') currentDirectory = '/';
         if(this._currentDirectory === currentDirectory && !dispatchIdenticalValues) return;
@@ -468,6 +469,8 @@ class EurekaModel {
 class EurekaView {
     private _controller:EurekaController;
     private _html5Upload:Object;
+    private _handleTreeNodeClicked:EventListener;
+    private _handleTreeFolderClicked:EventListener;
     
     constructor() {} 
      
@@ -501,6 +504,50 @@ class EurekaView {
     }
     init(){
         var that = this;
+        
+        that._handleTreeNodeClicked = function(e) {
+            if(that.getController().getModel().getDebug()) console.log('handleTreeNodeClicked');
+            e.preventDefault();
+            e.stopPropagation();
+            that.handleTreePathClicked(this);
+        };
+        
+        that._handleTreeFolderClicked = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if(that.getController().getModel().getDebug()) console.log('handleTreeFolderClicked');
+            var _icon = this.querySelector('.fa');
+            var _closing = _icon.classList.contains('fa-folder-open');
+            var li = that.getClosest(this, 'li');
+            var dataCD = this.nextSibling.getAttribute('data-cd') || '/';
+            if (_closing) {
+                _icon.classList.remove('fa-folder-open');
+                _icon.classList.remove('icon-folder-open');
+                _icon.classList.add('fa-folder','icon-folder');
+                li.classList.remove('open');
+                
+                if(this.getAttribute('data-open-msg')) this.querySelector('.audible').innerHTML = this.getAttribute('data-open-msg');
+            }
+            else {
+                _icon.classList.remove('fa-folder');
+                _icon.classList.remove('icon-folder');
+                _icon.classList.add('fa-folder-open');
+                _icon.classList.add('icon-folder-open');
+                li.classList.add('open');
+                if(this.getAttribute('data-close-msg')) this.querySelector('.audible').innerHTML = this.getAttribute('data-close-msg');
+                
+                (function(){
+                    var e:Event = document.createEvent('CustomEvent');
+                    (<any>(e)).initCustomEvent(EurekaModel.EurekaDirectoryOpened, true, true, {
+                        cd:that.getController().getModel().getCurrentDirectory(),
+                        s:that.getController().getModel().getCurrentMediaSource(),
+                        path:dataCD
+                    });
+                    that.getElement().dispatchEvent(e);
+                })();
+            }
+        };
+        
         function assignShortcutListeners() {
             document.addEventListener('keydown', function(event) {
                 if(that.getController().getModel().getDebug()) console.log(event);
@@ -1286,14 +1333,15 @@ class EurekaView {
         if(that.getController().getModel().getDebug()) console.log('handleTreePathClicked: ' + (el.getAttribute('data-cd') || '/'));
         that.getController().getModel().setCurrentDirectory((el.getAttribute('data-cd') || '/'), true,undefined);
         function deactivatePaths() {
-            var paths = document.querySelectorAll("nav.tree a.path");
+            var pathBrowser:HTMLElement = (<HTMLElement>document.getElementById(that.getController().getModel().getUID() + '__pathbrowser'));
+            var paths = pathBrowser.querySelectorAll("nav.tree a.path");
             for (var i = 0; i < paths.length; i++) {
                 var path:HTMLElement = (<HTMLElement>paths[i]);
                 var li:HTMLElement = (<HTMLElement>that.getClosest(path, 'li'));
                 li.classList.remove('active');
             }
         }
-        var source = that.getController().getModel().getCurrentMediaSource();
+        /*var source = that.getController().getModel().getCurrentMediaSource();
         var ajax = new AJAX();
         ajax.get(
             that.getController().getModel().getListDirectoryRequestURL(),
@@ -1305,7 +1353,7 @@ class EurekaView {
             },
             true,
             that.getController().getModel().getXHRHeaders()
-        );
+        );*/
         
         /*
         ajax.get(that.getController().getModel().getListDirectoryRequestURL(), { s: source, dir: el.getAttribute('data-cd') }, function (data) {
@@ -1318,54 +1366,23 @@ class EurekaView {
     }
     assignTreeListeners(){
         var that = this;
-        var paths = document.querySelectorAll("nav.tree a.path");
+        if(that.getController().getModel().getDebug()) console.log('assignTreeListeners');
+        var pathBrowser:HTMLElement = (<HTMLElement>document.getElementById(that.getController().getModel().getUID() + '__pathbrowser'));
+        var paths = pathBrowser.querySelectorAll("nav.tree a.path");
         for (var i = 0; i < paths.length; i++) {
             var path = paths[i];
-            path.addEventListener('click', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                that.handleTreePathClicked(this);
-            });
+            path.addEventListener('click', that._handleTreeNodeClicked, false);
         }
         this.assignTreeFolderListeners();
     }
     assignTreeFolderListeners(){
         var that = this;
-        var folders = document.querySelectorAll("nav.tree a.folder");
+        if(that.getController().getModel().getDebug()) console.log('assignTreeFolderListeners');
+        var pathBrowser:HTMLElement = (<HTMLElement>document.getElementById(that.getController().getModel().getUID() + '__pathbrowser'));
+        var folders = pathBrowser.querySelectorAll("nav.tree a.folder");
         for (var i = 0; i < folders.length; i++) {
             var folder = folders[i];
-            folder.addEventListener('click', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                var _icon = this.querySelector('.fa');
-                var _closing = _icon.classList.contains('fa-folder-open');
-                var li = that.getClosest(this, 'li');
-                var dataCD = this.nextSibling.getAttribute('data-cd') || '/';
-                if (_closing) {
-                    _icon.classList.remove('fa-folder-open');
-                    _icon.classList.remove('icon-folder-open');
-                    _icon.classList.add('fa-folder','icon-folder');
-                    li.classList.remove('open');
-                    
-                    if(this.getAttribute('data-open-msg')) this.querySelector('.audible').innerHTML = this.getAttribute('data-open-msg');
-                }
-                else {
-                    _icon.classList.remove('fa-folder');
-                    _icon.classList.remove('icon-folder');
-                    _icon.classList.add('fa-folder-open');
-                    _icon.classList.add('icon-folder-open');
-                    li.classList.add('open');
-                    if(this.getAttribute('data-close-msg')) this.querySelector('.audible').innerHTML = this.getAttribute('data-close-msg');
-                    
-                    var e:Event = document.createEvent('CustomEvent');
-                    (<any>(e)).initCustomEvent(EurekaModel.EurekaDirectoryOpened, true, true, {
-                        cd:that.getController().getModel().getCurrentDirectory(),
-                        s:that.getController().getModel().getCurrentMediaSource(),
-                        path:dataCD
-                    });
-                    that.getElement().dispatchEvent(e);
-                }
-            });
+            folder.addEventListener('click', that._handleTreeFolderClicked, false);
         }
     }
     assignSelectListeners(){
@@ -1373,7 +1390,7 @@ class EurekaView {
         var mediaSourceSelect = that.getElement().querySelector('#' + that.getController().getModel().getUID() + '__mediasource-select');
         mediaSourceSelect.addEventListener('change', function () {
             that.getController().getModel().setCurrentMediaSource(this.value, true, that.getController().getModel().useLocalStorage());
-            that.getController().getModel().setCurrentDirectory(this.value,false,that.getController().getModel().useLocalStorage());
+            that.getController().getModel().setCurrentDirectory('/',false,that.getController().getModel().useLocalStorage());
             var ajax = new AJAX();
             ajax.get(
                 that.getController().getModel().getListSourceRequestURL(),
@@ -1402,12 +1419,24 @@ class EurekaView {
         });
     }
     emptyTree(){
-        var paths = document.querySelectorAll("nav.tree a.path");
-        for (var i = 0; i < paths.length; i++) {
-            var path = (<any>paths[i]); // #janky typescript doesn't seem to support <HTMLElement>.remove();
-            path.removeEventListener('click');
-            path.remove();
-        }
+        var that = this;
+        var pathBrowser:HTMLElement = (<HTMLElement>document.getElementById(that.getController().getModel().getUID() + '__pathbrowser'));
+        (function(){
+            var paths = pathBrowser.querySelectorAll("nav.tree a.path");
+            for (var i = 0; i < paths.length; i++) {
+                var path = (<any>paths[i]); // #janky typescript doesn't seem to support <HTMLElement>.remove();
+                path.removeEventListener('click', that._handleTreeNodeClicked, false);
+                path.remove();
+            }
+        })();
+        (function(){
+            var folders = pathBrowser.querySelectorAll("nav.tree a.folder");
+            for (var i = 0; i < folders.length; i++) {
+                var folder = (<any>folders[i]); // #janky typescript doesn't seem to support <HTMLElement>.remove();
+                folder.removeEventListener('click', that._handleTreeFolderClicked, false);
+                folder.remove();
+            }
+        })();
     }
     assignDraggableListeners(){
         var kindaDraggables = document.querySelectorAll('*[sorta-draggable="true"]');
@@ -1457,6 +1486,50 @@ class EurekaView {
         this.assignSortBtnListeners();
         //this.assignContextualRowListeners();
     }
+    createTreeNode(path) : HTMLElement {
+        var that = this;
+        var li = document.createElement('li');
+        var folder = document.createElement('a');
+        folder.innerHTML = '&nbsp;';
+        folder.setAttribute('href', 'javascript:;');
+        folder.classList.add('folder');
+        folder.setAttribute('data-open-msg','Expand ' + path + ' ');
+        folder.setAttribute('data-close-msg','Collapse ' + path + ' ');
+        var folderOpenIcon = document.createElement('i');
+        folderOpenIcon.classList.add('fa');
+        folderOpenIcon.classList.add('icon');
+        folderOpenIcon.classList.add('fa-folder');
+        folderOpenIcon.classList.add('icon-folder');
+        folder.appendChild(folderOpenIcon);
+        (function(){
+            var audible = document.createElement('span');
+            audible.classList.add('audible');
+            audible.innerHTML = folder.getAttribute('data-open-msg');
+            folder.appendChild(audible);
+        })();
+        var a = document.createElement('a');
+        a.classList.add('path');
+        a.setAttribute('href', 'javascript:;');
+        a.setAttribute('title', 'Browse ' + path);
+        
+        var split = path.split('/');
+        split = split.filter(function (n) { return (n !== undefined && n != ""); });
+        var displayPath = split.join('/');
+        if(!that.getController().getModel().getDisplayFullTreePaths()) {
+            displayPath = split[split.length-1];
+        } else {
+            if(displayPath[displayPath.length-1] == '/') displayPath = displayPath.substring(0,displayPath.length - 1);
+        }
+        
+        a.setAttribute('data-cd', path);
+        a.innerHTML = ' ' + displayPath;
+        li.appendChild(folder);
+        li.appendChild(a);
+        var _ul = document.createElement("ul");
+        li.appendChild(_ul);
+        
+        return li;
+    }
     paintTree(data) {
         var that = this;
         var tree : HTMLElement = <HTMLElement>(that.getElement().querySelector('nav.tree'));
@@ -1464,45 +1537,8 @@ class EurekaView {
         function printTreeNavResults(results, ul) {
             for (var i = 0; i < results.length; i++) {
                 var result = results[i];
-                var li = document.createElement('li');
-                var folder = document.createElement('a');
-                folder.innerHTML = '&nbsp;';
-                folder.setAttribute('href', 'javascript:;');
-                folder.classList.add('folder');
-                folder.setAttribute('data-open-msg','Expand ' + result.path + ' ');
-                folder.setAttribute('data-close-msg','Collapse ' + result.path + ' ');
-                var folderOpenIcon = document.createElement('i');
-                folderOpenIcon.classList.add('fa');
-                folderOpenIcon.classList.add('icon');
-                folderOpenIcon.classList.add('fa-folder');
-                folderOpenIcon.classList.add('icon-folder');
-                folder.appendChild(folderOpenIcon);
-                (function(){
-                    var audible = document.createElement('span');
-                    audible.classList.add('audible');
-                    audible.innerHTML = folder.getAttribute('data-open-msg');
-                    folder.appendChild(audible);
-                })();
-                var path = document.createElement('a');
-                path.classList.add('path');
-                path.setAttribute('href', 'javascript:;');
-                path.setAttribute('title', 'Browse ' + result.path);
-                
-                var split = result.path.split('/');
-                split = split.filter(function (n) { return (n !== undefined && n != ""); });
-                var displayPath = split.join('/');
-                if(!that.getController().getModel().getDisplayFullTreePaths()) {
-                    displayPath = split[split.length-1];
-                } else {
-                    if(displayPath[displayPath.length-1] == '/') displayPath = displayPath.substring(0,displayPath.length - 1);
-                }
-                
-                path.setAttribute('data-cd', result.path);
-                path.innerHTML = ' ' + displayPath;
-                li.appendChild(folder);
-                li.appendChild(path);
-                var _ul = document.createElement("ul");
-                li.appendChild(_ul);
+                var li:HTMLElement = that.createTreeNode(result.path);
+                var _ul = li.querySelector('ul');
                 if (result.children !== undefined && result.children.length) {
                     printTreeNavResults(result.children, _ul);
                 }
@@ -1520,339 +1556,380 @@ class EurekaView {
         var that = this;
         if(that.getController().getModel().getDebug()) console.log('paintJSON');
         var model = this.getController().getModel();
+        var cd = data.cd.charAt(data.cd.length - 1) == '/' ? data.cd : data.cd + '/';
         var results = data.results;
         var tbodyHTML = '';
+        var directoriesToAdd:Array<Object> = [];
         for (var i = 0; i < results.length; i++) {
             var result = results[i];
-            var filename = result.filename;
-            var safeFileName = filename.replace(/[!\"#$%&'\(\)\*\+,\.\/:;<=>\?\@\[\\\]\^`\{\|\}~]/g, '');
-            var src = result.src;
-            var filesize = result.filesize;
-            var dimensions = result.dimensions;
-            var editedon = parseInt(result.editedon);
-            var tr = document.createElement("tr");
-            tr.classList.add('eureka__row');
-            //tr.setAttribute('contenteditable', true);
-            tr.setAttribute('tabindex', "0");
-            tr.setAttribute('data-tokens', '');
-            tr.setAttribute('data-filename', filename);
-            tr.setAttribute('data-safe-filename', safeFileName);
-            tr.setAttribute('data-dimensions-w', dimensions.split('x')[0]);
-            tr.setAttribute('data-dimensions-h', dimensions.split('x')[1]);
-            tr.setAttribute('data-filesize-bytes', filesize);
-            tr.setAttribute('data-timestamp', editedon.toString());
-            var td = document.createElement("td");
-            td.setAttribute('contenteditable', 'false');
-            td.classList.add('eureka__row-image');
-            var imgD = document.createElement('div');
-            imgD.classList.add('image');
-            var img = document.createElement('img');
-            img.setAttribute('id',safeFileName + '__thumb');
-            function addErrorListener(img,result,safeFileName) {
-                img.addEventListener('error',function(){
-                    var a = result.filename.split('.');
-                    var icon = 'file-o';
-                    switch(a[a.length-1].toLowerCase()) { // consider abstracting this part out into it's own plugin
-                        case 'css':
-                        icon = 'css3';
-                        break;
+            if(result.filename) {
+                var filename = result.filename;
+                var safeFileName = filename.replace(/[!\"#$%&'\(\)\*\+,\.\/:;<=>\?\@\[\\\]\^`\{\|\}~]/g, '');
+                var src = result.src;
+                var filesize = result.filesize;
+                var dimensions = result.dimensions;
+                var editedon = (parseInt(result.editedon)) > 0 ? parseInt(result.editedon) : null;
+                var tr = document.createElement("tr");
+                tr.classList.add('eureka__row');
+                //tr.setAttribute('contenteditable', true);
+                tr.setAttribute('tabindex', "0");
+                tr.setAttribute('data-tokens', '');
+                tr.setAttribute('data-filename', filename);
+                tr.setAttribute('data-safe-filename', safeFileName);
+                tr.setAttribute('data-dimensions-w', dimensions.split('x')[0]);
+                tr.setAttribute('data-dimensions-h', dimensions.split('x')[1]);
+                tr.setAttribute('data-filesize-bytes', filesize);
+                tr.setAttribute('data-timestamp', (editedon) ? editedon.toString() : '0');
+                var td = document.createElement("td");
+                td.setAttribute('contenteditable', 'false');
+                td.classList.add('eureka__row-image');
+                var imgD = document.createElement('div');
+                imgD.classList.add('image');
+                var img = document.createElement('img');
+                img.setAttribute('id',safeFileName + '__thumb');
+                function addErrorListener(img,result,safeFileName) {
+                    img.addEventListener('error',function(){
+                        var a = result.filename.split('.');
+                        var icon = 'file-o';
+                        switch(a[a.length-1].toLowerCase()) { // consider abstracting this part out into it's own plugin
+                            case 'css':
+                            icon = 'css3';
+                            break;
                         
-                        case 'csv':
-                        icon = 'file-excel-o';
-                        break;
+                            case 'csv':
+                            icon = 'file-excel-o';
+                            break;
                         
-                        case 'xls':
-                        icon = 'file-excel-o';
-                        break;
+                            case 'xls':
+                            icon = 'file-excel-o';
+                            break;
                         
-                        case 'numbers':
-                        icon = 'file-excel-o';
-                        break;
+                            case 'numbers':
+                            icon = 'file-excel-o';
+                            break;
                         
-                        case 'css':
-                        icon = 'file-excel-o';
-                        break;
+                            case 'css':
+                            icon = 'file-excel-o';
+                            break;
                         
-                        case 'mp3':
-                        icon = 'file-sound-o';
-                        break;
+                            case 'mp3':
+                            icon = 'file-sound-o';
+                            break;
                         
-                        case 'wav':
-                        icon = 'file-sound-o';
-                        break;
+                            case 'wav':
+                            icon = 'file-sound-o';
+                            break;
                         
-                        case 'wma':
-                        icon = 'file-sound-o';
-                        break;
+                            case 'wma':
+                            icon = 'file-sound-o';
+                            break;
                         
-                        case 'aac':
-                        icon = 'file-sound-o';
-                        break;
+                            case 'aac':
+                            icon = 'file-sound-o';
+                            break;
                         
-                        case 'flac':
-                        icon = 'file-sound-o';
-                        break;
+                            case 'flac':
+                            icon = 'file-sound-o';
+                            break;
                         
-                        case 'ppt':
-                        icon = 'file-powerpoint-o';
-                        break;
+                            case 'ppt':
+                            icon = 'file-powerpoint-o';
+                            break;
                         
-                        case 'pot':
-                        icon = 'file-powerpoint-o';
-                        break;
+                            case 'pot':
+                            icon = 'file-powerpoint-o';
+                            break;
                         
-                        case 'pps':
-                        icon = 'file-powerpoint-o';
-                        break;
+                            case 'pps':
+                            icon = 'file-powerpoint-o';
+                            break;
                         
-                        case 'zip':
-                        icon = 'file-zip-o';
-                        break;
+                            case 'zip':
+                            icon = 'file-zip-o';
+                            break;
                         
-                        case 'gzip':
-                        icon = 'file-zip-o';
-                        break;
+                            case 'gzip':
+                            icon = 'file-zip-o';
+                            break;
                         
-                        case 'tar':
-                        icon = 'file-zip-o';
-                        break;
+                            case 'tar':
+                            icon = 'file-zip-o';
+                            break;
                         
-                        case 'mp4':
-                        icon = 'file-movie-o';
-                        break;
+                            case 'mp4':
+                            icon = 'file-movie-o';
+                            break;
                         
-                        case 'ogv':
-                        icon = 'file-movie-o';
-                        break;
+                            case 'ogv':
+                            icon = 'file-movie-o';
+                            break;
                         
-                        case 'm4v':
-                        icon = 'file-movie-o';
-                        break;
+                            case 'm4v':
+                            icon = 'file-movie-o';
+                            break;
                         
-                        case 'avi':
-                        icon = 'file-movie-o';
-                        break;
+                            case 'avi':
+                            icon = 'file-movie-o';
+                            break;
+                            
+                            case 'jpg':
+                            case 'jpeg':
+                            case 'gif':
+                            case 'tiff':
+                            case 'png':
+                            case 'bpg':
+                            case 'img':
+                            case 'webp':
+                            icon = 'file-picture-o';
+                            break;
                         
-                        case 'php':
-                        case 'html':
-                        case 'htm':
-                        case 'md':
-                        icon = 'file-code-o';
-                        break;
+                            case 'php':
+                            case 'html':
+                            case 'htm':
+                            case 'md':
+                            icon = 'file-code-o';
+                            break;
                         
-                        case 'js':
-                        icon = 'file-text-o';
-                        break;
+                            case 'js':
+                            icon = 'file-text-o';
+                            break;
                         
-                        default:
-                        icon = 'file-o';
-                        break;
-                    }
-                    var div = (function(){
-                        var div = document.createElement('div');
-                        div.classList.add('icon-wrapper');
-                        div.classList.add('img');
-                        var i = document.createElement('i');
-                        i.classList.add('fa');
-                        i.classList.add('icon');
-                        i.classList.add('fa-' + icon);
-                        i.classList.add('icon-' + icon);
-                        div.appendChild(i);
+                            default:
+                            icon = 'file-o';
+                            break;
+                        }
+                        var div = (function(){
+                            var div = document.createElement('div');
+                            div.classList.add('icon-wrapper');
+                            div.classList.add('img');
+                            var i = document.createElement('i');
+                            i.classList.add('fa');
+                            i.classList.add('icon');
+                            i.classList.add('fa-' + icon);
+                            i.classList.add('icon-' + icon);
+                            div.appendChild(i);
                         
-                        return div;
-                    })();
+                            return div;
+                        })();
                     
 
-                    try {
-                        document.getElementById(safeFileName + '__thumb').outerHTML = div.outerHTML;
-                    } catch(e) {}
-                });
-            }
-            addErrorListener(img,result,safeFileName);
-            
-            
-            //img.setAttribute('alt',filename); // after a11y testing this was determined to be unecessary - jp
-            imgD.appendChild(img);
-            img.setAttribute('src', src);
-            var code = document.createElement('code');
-            code.setAttribute('contenteditable', 'true');
-            code.setAttribute('tabindex', '-1');
-            code.setAttribute('sorta-draggable', 'true');
-            code.innerHTML = filename;
-            td.appendChild(imgD);
-            
-            td.appendChild(code);
-            function createCode(html) {
-                var tag = document.createElement('code');
-                tag.innerHTML = html;
-                return tag;
-            }
-            var tdDimensionCell = document.createElement('td');
-            tdDimensionCell.classList.add('eureka__row-dimensions');
-            tdDimensionCell.appendChild(createCode(dimensions));
-            var tdFilesizeCell = document.createElement('td');
-            tdFilesizeCell.classList.add('eureka__row-filesize');
-            tdFilesizeCell.appendChild(createCode(that.formatFileSize(filesize)));
-            var tdEditedOnCell = document.createElement('td');
-            tdEditedOnCell.classList.add('eureka__row-editedon');
-            tdEditedOnCell.appendChild(createCode((<any>new Date(editedon * 1000)).toLocaleDateString(model.getLocale(), { //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleDateString
-                month: 'short',
-                day: 'numeric',
-                year: 'numeric'
-            })));
-            tr.appendChild(td);
-            if(that.getController().getModel().getShowDimensionsColumn()) tr.appendChild(tdDimensionCell);
-            tr.appendChild(tdFilesizeCell);
-            tr.appendChild(tdEditedOnCell);
-            tbodyHTML += tr.outerHTML;
-        
-            function createContextualRow() {
-                var tr = document.createElement('tr');
-                tr.classList.add('contextual');
-                tr.setAttribute('id', 'eureka_contextual__' + safeFileName);
-                //tr.setAttribute('tabindex','0');
-                var td = document.createElement('td');
-                td.setAttribute('colspan', '4');
-                function createFlexibleNav() {
-                    var nav = document.createElement('nav');
-                    nav.classList.add('flexible_row');
-                    nav.classList.add('contextual__nav');
-                    function createExpandBtn() {
-                        var a = document.createElement('a');
-                        a.classList.add('expand');
-                        a.setAttribute('href', src);
-                        a.setAttribute('title', 'Expand ' + filename);
-                        a.setAttribute('target', '_blank');
-                        a.setAttribute('tabindex', '0');
-                        var fa = document.createElement('i');
-                        fa.classList.add('fa');
-                        fa.classList.add('icon');
-                        fa.classList.add('fa-expand');
-                        fa.classList.add('icon-expand');
-                        a.appendChild(fa);
-                        a.innerHTML += ' Expand';
-                        return a;
-                    }
-                    function createChooseBtn() {
-                        var a = document.createElement('a');
-                        a.classList.add('choose');
-                        a.setAttribute('title', 'Choose ' + filename);
-                        a.setAttribute('target', '_blank');
-                        a.setAttribute('tabindex', '0');
-                        var fa = document.createElement('i');
-                        fa.classList.add('fa');
-                        fa.classList.add('icon');
-                        fa.classList.add('fa-check-circle-o');
-                        fa.classList.add('icon-check-circle-o');
-                        a.appendChild(fa);
-                        a.innerHTML += ' Choose';
-                        return a;
-                    }
-                    function createRenameBtn() {
-                        var a = document.createElement('a');
-                        a.classList.add('rename');
-                        a.setAttribute('title', 'Rename ' + filename);
-                        a.setAttribute('target', '_blank');
-                        a.setAttribute('tabindex', '0');
-                        var fa = document.createElement('i');
-                        fa.classList.add('fa');
-                        fa.classList.add('icon');
-                        fa.classList.add('fa-edit');
-                        fa.classList.add('icon-edit');
-                        a.appendChild(fa);
-                        a.innerHTML += ' Rename';
-                        return a;
-                    }
-                    function createTrashBtn() {
-                        var a = document.createElement('a');
-                        a.classList.add('dangerous');
-                        a.classList.add('trash');
-                        a.setAttribute('title', 'Delete ' + filename);
-                        a.setAttribute('target', '_blank');
-                        a.setAttribute('tabindex', '0');
-                        var fa = document.createElement('i');
-                        fa.classList.add('fa');
-                        fa.classList.add('icon');
-                        fa.classList.add('fa-trash');
-                        fa.classList.add('icon-trash');
-                        a.appendChild(fa);
-                        a.innerHTML += ' Delete';
-                        return a;
-                    }
-                    nav.appendChild(createExpandBtn());
-                    nav.appendChild(createChooseBtn());
-                    if (that.getController().getModel().getAllowRename() && document.execCommand)
-                        nav.appendChild(createRenameBtn()); // should probably polyfill or just juse a standard text input instead #janky? #shame?
-                    if (that.getController().getModel().getAllowDelete())
-                        nav.appendChild(createTrashBtn());
-                    //nav.appendChild(createFlexibleNavTagForm());
-                    //nav.appendChild(createFlexibleNavShareForm());
-                    function createFlexibleNavTagForm() {
-                        var form = document.createElement('form');
-                        form.classList.add('tag');
-                        form.setAttribute('method', 'post');
-                        form.setAttribute('action', '#');
-                        var label = document.createElement('label');
-                        label.setAttribute('title', 'Tagging this media item will make it easier to find');
-                        var fa = document.createElement('i');
-                        fa.classList.add('fa');
-                        fa.classList.add('icon');
-                        fa.classList.add('fa-tag');
-                        fa.classList.add('icon-tag');
-                        label.appendChild(fa);
-                        label.innerHTML += ' Tag:';
-                        var input = document.createElement('input');
-                        input.setAttribute('type', 'text');
-                        input.setAttribute('placeholder', 'Tag this media item');
-                        input.setAttribute('tabindex', '-1');
-                        form.appendChild(label);
-                        form.appendChild(input);
-                        return form;
-                    }
-                    function createFlexibleNavShareForm() {
-                        var form = document.createElement('form');
-                        form.classList.add('share');
-                        form.setAttribute('action', '#');
-                        form.setAttribute('title', "Share " + filename + " with other");
-                        form.appendChild(createMediaSourceInput());
-                        form.appendChild(createMediaItemInput());
-                        var button = document.createElement('button');
-                        button.classList.add('nued');
-                        button.setAttribute('type', 'submit');
-                        button.setAttribute('tabindex', '0');
-                        var fa = document.createElement('i');
-                        fa.classList.add('fa');
-                        fa.classList.add('icon');
-                        fa.classList.add('fa-share-square-o');
-                        fa.classList.add('icon-share-square-o');
-                        button.appendChild(fa);
-                        button.innerHTML += ' Share';
-                        form.appendChild(button);
-                        function createMediaSourceInput() {
-                            var input = document.createElement('input');
-                            input.setAttribute('type', 'hidden');
-                            input.setAttribute('name', 'mediasource');
-                            input.setAttribute('value', '0');
-                            return input;
-                        }
-                        function createMediaItemInput() {
-                            var input = document.createElement('input');
-                            input.setAttribute('type', 'hidden');
-                            input.setAttribute('name', 'mediaitem');
-                            input.setAttribute('value', filename);
-                            return input;
-                        }
-                        return form;
-                    }
-                    return nav;
+                        try {
+                            document.getElementById(safeFileName + '__thumb').outerHTML = div.outerHTML;
+                        } catch(e) {}
+                    });
                 }
-                td.appendChild(createFlexibleNav());
+                addErrorListener(img,result,safeFileName);
+            
+            
+                //img.setAttribute('alt',filename); // after a11y testing this was determined to be unecessary - jp
+                imgD.appendChild(img);
+                img.setAttribute('src', src);
+                var code = document.createElement('code');
+                code.setAttribute('contenteditable', 'true');
+                code.setAttribute('tabindex', '-1');
+                code.setAttribute('sorta-draggable', 'true');
+                code.innerHTML = filename;
+                td.appendChild(imgD);
+            
+                td.appendChild(code);
+                function createCode(html) {
+                    var tag = document.createElement('code');
+                    tag.innerHTML = html;
+                    return tag;
+                }
+                var tdDimensionCell = document.createElement('td');
+                tdDimensionCell.classList.add('eureka__row-dimensions');
+                tdDimensionCell.appendChild(createCode(dimensions || "n/a"));
+                var tdFilesizeCell = document.createElement('td');
+                tdFilesizeCell.classList.add('eureka__row-filesize');
+                if(parseInt(filesize)) {
+                    tdFilesizeCell.appendChild(createCode(that.formatFileSize(filesize)));
+                } else {
+                    tdFilesizeCell.appendChild(createCode('n/a'));
+                }
+                var tdEditedOnCell = document.createElement('td');
+                tdEditedOnCell.classList.add('eureka__row-editedon');
+                if(editedon) {
+                    tdEditedOnCell.appendChild(createCode((<any>new Date(editedon * 1000)).toLocaleDateString(model.getLocale(), { //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleDateString
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric'
+                    })));
+                } else {
+                    tdEditedOnCell.appendChild(createCode('n/a'));
+                }
                 tr.appendChild(td);
-                return tr;
-            }
+                if(that.getController().getModel().getShowDimensionsColumn()) tr.appendChild(tdDimensionCell);
+                tr.appendChild(tdFilesizeCell);
+                tr.appendChild(tdEditedOnCell);
+                tbodyHTML += tr.outerHTML;
         
-            tbodyHTML += createContextualRow().outerHTML;
+                function createContextualRow() {
+                    var tr = document.createElement('tr');
+                    tr.classList.add('contextual');
+                    tr.setAttribute('id', 'eureka_contextual__' + safeFileName);
+                    //tr.setAttribute('tabindex','0');
+                    var td = document.createElement('td');
+                    td.setAttribute('colspan', '4');
+                    function createFlexibleNav() {
+                        var nav = document.createElement('nav');
+                        nav.classList.add('flexible_row');
+                        nav.classList.add('contextual__nav');
+                        function createExpandBtn() {
+                            var a = document.createElement('a');
+                            a.classList.add('expand');
+                            a.setAttribute('href', src);
+                            a.setAttribute('title', 'Expand ' + filename);
+                            a.setAttribute('target', '_blank');
+                            a.setAttribute('tabindex', '0');
+                            var fa = document.createElement('i');
+                            fa.classList.add('fa');
+                            fa.classList.add('icon');
+                            fa.classList.add('fa-expand');
+                            fa.classList.add('icon-expand');
+                            a.appendChild(fa);
+                            a.innerHTML += ' Expand';
+                            return a;
+                        }
+                        function createChooseBtn() {
+                            var a = document.createElement('a');
+                            a.classList.add('choose');
+                            a.setAttribute('title', 'Choose ' + filename);
+                            a.setAttribute('target', '_blank');
+                            a.setAttribute('tabindex', '0');
+                            var fa = document.createElement('i');
+                            fa.classList.add('fa');
+                            fa.classList.add('icon');
+                            fa.classList.add('fa-check-circle-o');
+                            fa.classList.add('icon-check-circle-o');
+                            a.appendChild(fa);
+                            a.innerHTML += ' Choose';
+                            return a;
+                        }
+                        function createRenameBtn() {
+                            var a = document.createElement('a');
+                            a.classList.add('rename');
+                            a.setAttribute('title', 'Rename ' + filename);
+                            a.setAttribute('target', '_blank');
+                            a.setAttribute('tabindex', '0');
+                            var fa = document.createElement('i');
+                            fa.classList.add('fa');
+                            fa.classList.add('icon');
+                            fa.classList.add('fa-edit');
+                            fa.classList.add('icon-edit');
+                            a.appendChild(fa);
+                            a.innerHTML += ' Rename';
+                            return a;
+                        }
+                        function createTrashBtn() {
+                            var a = document.createElement('a');
+                            a.classList.add('dangerous');
+                            a.classList.add('trash');
+                            a.setAttribute('title', 'Delete ' + filename);
+                            a.setAttribute('target', '_blank');
+                            a.setAttribute('tabindex', '0');
+                            var fa = document.createElement('i');
+                            fa.classList.add('fa');
+                            fa.classList.add('icon');
+                            fa.classList.add('fa-trash');
+                            fa.classList.add('icon-trash');
+                            a.appendChild(fa);
+                            a.innerHTML += ' Delete';
+                            return a;
+                        }
+                        nav.appendChild(createExpandBtn());
+                        nav.appendChild(createChooseBtn());
+                        if (that.getController().getModel().getAllowRename() && document.execCommand)
+                            nav.appendChild(createRenameBtn()); // should probably polyfill or just juse a standard text input instead #janky? #shame?
+                        if (that.getController().getModel().getAllowDelete())
+                            nav.appendChild(createTrashBtn());
+                        //nav.appendChild(createFlexibleNavTagForm());
+                        //nav.appendChild(createFlexibleNavShareForm());
+                        function createFlexibleNavTagForm() {
+                            var form = document.createElement('form');
+                            form.classList.add('tag');
+                            form.setAttribute('method', 'post');
+                            form.setAttribute('action', '#');
+                            var label = document.createElement('label');
+                            label.setAttribute('title', 'Tagging this media item will make it easier to find');
+                            var fa = document.createElement('i');
+                            fa.classList.add('fa');
+                            fa.classList.add('icon');
+                            fa.classList.add('fa-tag');
+                            fa.classList.add('icon-tag');
+                            label.appendChild(fa);
+                            label.innerHTML += ' Tag:';
+                            var input = document.createElement('input');
+                            input.setAttribute('type', 'text');
+                            input.setAttribute('placeholder', 'Tag this media item');
+                            input.setAttribute('tabindex', '-1');
+                            form.appendChild(label);
+                            form.appendChild(input);
+                            return form;
+                        }
+                        function createFlexibleNavShareForm() {
+                            var form = document.createElement('form');
+                            form.classList.add('share');
+                            form.setAttribute('action', '#');
+                            form.setAttribute('title', "Share " + filename + " with other");
+                            form.appendChild(createMediaSourceInput());
+                            form.appendChild(createMediaItemInput());
+                            var button = document.createElement('button');
+                            button.classList.add('nued');
+                            button.setAttribute('type', 'submit');
+                            button.setAttribute('tabindex', '0');
+                            var fa = document.createElement('i');
+                            fa.classList.add('fa');
+                            fa.classList.add('icon');
+                            fa.classList.add('fa-share-square-o');
+                            fa.classList.add('icon-share-square-o');
+                            button.appendChild(fa);
+                            button.innerHTML += ' Share';
+                            form.appendChild(button);
+                            function createMediaSourceInput() {
+                                var input = document.createElement('input');
+                                input.setAttribute('type', 'hidden');
+                                input.setAttribute('name', 'mediasource');
+                                input.setAttribute('value', '0');
+                                return input;
+                            }
+                            function createMediaItemInput() {
+                                var input = document.createElement('input');
+                                input.setAttribute('type', 'hidden');
+                                input.setAttribute('name', 'mediaitem');
+                                input.setAttribute('value', filename);
+                                return input;
+                            }
+                            return form;
+                        }
+                        return nav;
+                    }
+                    td.appendChild(createFlexibleNav());
+                    tr.appendChild(td);
+                    return tr;
+                }
+
+                tbodyHTML += createContextualRow().outerHTML;
+            } else { // it's a folder
+                console.log(cd);
+                console.log(result.directory);
+                //that.asyncronouslyAddDirectory(cd,result.directory);
+                directoriesToAdd.push({cd:cd,directory:result.directory})
+            }
         }
+        
+        (function(){
+            for(var i = 0; i < directoriesToAdd.length; i++) {
+                var d:any = <any>(directoriesToAdd[i]);
+                that.asyncronouslyAddDirectory(d.cd,d.directory);
+            }
+            if(directoriesToAdd.length) {
+                console.log('directoriesToAdd.length: ' + directoriesToAdd.length);
+                that.assignTreeListeners();
+                //that.recursivelyOpenTreeToCurrentDirectory();
+            }
+        })();
+        
         var thead:HTMLElement = <HTMLElement>(document.querySelector('#' + this.getController().getModel().getUID() + ' .eureka-table > table > thead'));
         (<HTMLElement>document.querySelector('#' + this.getController().getModel().getUID() + ' .eureka-table')).innerHTML = '<table>' + thead.outerHTML + '<tbody>' + tbodyHTML + '</tbody>' + '</table>';
         // bolden the correct tree item
@@ -1881,6 +1958,100 @@ class EurekaView {
         catch (e) {
         }
         this.paint();
+    }
+    asyncronouslyAddDirectory(cd, directory) { // this was added abruptly to support updating the media source tree asyncronously
+        var that = this;
+        if(that.getController().getModel().getDebug()) console.log('asyncronouslyAddDirectory');
+
+        var pathBrowser:HTMLElement = (<HTMLElement>document.getElementById(that.getController().getModel().getUID() + '__pathbrowser'));
+        var paths = pathBrowser.querySelectorAll('.tree .path');
+
+        var cds:Array<any> = cd.split('/').filter(Boolean);
+        var p = cd + directory + '/';
+        var psa = p.split('/').filter(Boolean);
+        for(var i = 0; i < paths.length; i++) {
+            var path:HTMLElement = <HTMLElement>(paths[i]);
+            if((<any>path.getAttribute('data-cd').split('/').filter(Boolean)).equals(psa)) {
+                if(that.getController().getModel().getDebug()) console.log(p + ' alread exists');
+                return;
+            }
+        }
+        
+        for(var i = 0; i < paths.length; i++) {
+            var path:HTMLElement = <HTMLElement>(paths[i]);
+            var pcd = path.getAttribute('data-cd');
+            if(cds.equals(pcd.split('/').filter(Boolean))) { // "paths" are equal regardless of trailing slashes
+                (function(_path){
+                    var ul:HTMLElement = <HTMLElement>_path.nextSibling;
+                    var paths = ul.querySelectorAll(':scope > li > .path');
+                    var inserted = false;
+                    
+                    for(var i = 0; i < paths.length; i++) {
+                        var path:HTMLElement = (<HTMLElement>paths[i]);
+                        var _d = (function(path){
+                            var a = path.getAttribute('data-cd').split('/').filter(Boolean);
+                            return a[a.length-1];
+                        })(path);
+                        var s = [directory,_d];
+                        s.sort();
+
+                        if(s[0] == directory) { // the directory to be inserted should preceed paths[i]
+                            ul.insertBefore(that.createTreeNode(p),path.parentNode);
+                            inserted = true;
+                            break;
+                        }
+                    }
+                    
+                    if(!inserted) { // the directory to be inserted should be last
+                        ul.appendChild(that.createTreeNode(p));
+                        inserted = true;
+                    }
+                    
+                })(path);
+            }
+        }
+        
+        (function(){
+            var browsingSelect:HTMLElement = (<HTMLElement>document.getElementById(that.getController().getModel().getUID() + '__browsing'));
+            var mediaSource = that.getController().getModel().getCurrentMediaSource();
+            console.log('setting optGrp');
+            console.log('currentMediaSource: ' + that.getController().getModel().getCurrentMediaSource());
+            var optsGrp:HTMLElement = (function() : HTMLElement {
+                var os = browsingSelect.querySelectorAll('optgroup');
+                for(var i =0; i < os.length; i++) {
+                    var o:HTMLElement = <HTMLElement>os[i];
+                    if(o.getAttribute('data-source') == mediaSource) return o;
+                }
+                return null;
+            })();
+            if(!optsGrp) return;
+            var _iH:string = p.split('/').filter(Boolean).join('/');
+            var opts = optsGrp.querySelectorAll('option');
+            for(var i = 0; i < opts.length; i++) {
+                var opt:HTMLElement = <HTMLElement>opts[i];
+                if(opt.innerHTML == _iH) return; // it already exists
+            }
+            
+            var newOpt:HTMLElement = document.createElement('option');
+            newOpt.setAttribute('value',JSON.stringify({cs:that.getController().getModel().getCurrentMediaSource(),cd:_iH}));
+            newOpt.setAttribute('data-cd',_iH + '/');
+            newOpt.innerHTML = _iH;
+            
+            var inserted = false;
+            for(var i = 0; i < opts.length; i++) {
+                var opt:HTMLElement = <HTMLElement>opts[i];
+                console.log(opt.innerHTML);
+                var a = [opt.innerHTML,_iH];
+                a.sort();
+                
+                if(_iH == a[0]) {
+                    optsGrp.insertBefore(newOpt,opt);
+                    inserted = true;
+                    break;
+                }
+            }
+            if(!inserted) optsGrp.appendChild(newOpt);
+        })();
     }
     assignContextualClickListeners() {
         var that = this;
@@ -2327,7 +2498,7 @@ class EurekaController {
                             }, false);
                             worker.postMessage({
                                 listSourceRequestURL:that.getModel().getListSourceRequestURL(),
-                                currentMediaSource:that.getModel().getCurrentMediaSource(), 
+                                currentMediaSource:id, 
                                 headers:that.getModel().getXHRHeaders()
                             });
                         })();
@@ -2363,7 +2534,6 @@ class EurekaController {
                     }, false);
                     worker.postMessage({
                         listSourcesRequestURL:that.getModel().getListSourcesRequestURL(),
-                        currentMediaSource:that.getModel().getCurrentMediaSource(), 
                         headers:that.getModel().getXHRHeaders()
                     });
                 })();

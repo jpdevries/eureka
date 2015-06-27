@@ -8,7 +8,7 @@ self.addEventListener('message',function(e){
     var ajax = new AJAX();
     ajax.get(
         data.listSourcesRequestURL,
-        { s: data.currentMediaSource },
+        { },
         function (data) {
             (<any>self).postMessage(JSON.parse(data));
         },
