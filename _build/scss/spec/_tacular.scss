@@ -97,12 +97,6 @@ $too-wide:em(1200) !default;
     font-size:$fontSize;
 }
 
-@mixin optional-at-root($sel) {
-  @at-root #{if(not &, $sel, selector-append(&, $sel))} {
-    @content;
-  }
-}
-
 /*
 http://stackoverflow.com/a/17181946
 */

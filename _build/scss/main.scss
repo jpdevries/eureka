@@ -140,14 +140,14 @@ $danger:darken(red,8%);
 
 @if $border-box-sizing == false { 
   .eureka-wrapper { // http://bit.ly/1qk2tVR
-    @include box-sizing(border-box);
+    box-sizing:border-box;
   }
 
   .eureka-wrapper { 
     *,
     &:before,
     &:after {
-      @include box-sizing(inherit);
+      box-sizing:inherit;
     }
   }
 }
