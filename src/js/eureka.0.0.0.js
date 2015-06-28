@@ -556,6 +556,7 @@ var EurekaModel = (function () {
         this._showDimensionsColumn = true;
         this._webWorkersPath = '';
         this._directoryRequestURL = '';
+        this._directoryChildrenRequestURL = '';
         this._listSourceRequestURL = '';
         this._listSourcesRequestURL = '';
         this._useWebWorkers = false;
@@ -590,6 +591,7 @@ var EurekaModel = (function () {
             this._allowDelete = opts.allowDelete;
         if (opts.directoryRequestURL !== undefined)
             this._directoryRequestURL = opts.directoryRequestURL;
+        this._directoryChildrenRequestURL = (opts.directoryChildrenRequestURL !== undefined) ? opts.directoryChildrenRequestURL : this._directoryRequestURL;
         if (opts.listSourceRequestURL !== undefined)
             this._listSourceRequestURL = opts.listSourceRequestURL;
         if (opts.listSourcesRequestURL !== undefined)
@@ -649,6 +651,13 @@ var EurekaModel = (function () {
     Object.defineProperty(EurekaModel, "EurekaDirectoryOpened", {
         get: function () {
             return "EurekaDirectoryOpened";
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(EurekaModel, "EurekaDirectoryClosed", {
+        get: function () {
+            return "EurekaDirectoryClosed";
         },
         enumerable: true,
         configurable: true
@@ -828,7 +837,8 @@ var EurekaModel = (function () {
         if (dispatch === void 0) { dispatch = true; }
         if (setLocalStorage === void 0) { setLocalStorage = true; }
         if (dispatchIdenticalValues === void 0) { dispatchIdenticalValues = false; }
-        console.log('setCurrentDirectory: ' + currentDirectory);
+        if (this.getDebug())
+            console.log('setCurrentDirectory: ' + currentDirectory);
         if (setLocalStorage === undefined)
             setLocalStorage = this.useLocalStorage();
         if (this._currentDirectory === currentDirectory && !dispatchIdenticalValues)
@@ -843,8 +853,6 @@ var EurekaModel = (function () {
             currentDirectory: currentDirectory,
             currentMediaSource: this.getMediaSourceDTOByID(this._mediaSource)
         });
-        console.log('dispatching ' + EurekaModel.EurekaDirectoryChanged);
-        console.log('dispatchIdenticalValues ' + dispatchIdenticalValues);
         this.getController().getView().getElement().dispatchEvent(e);
     };
     EurekaModel.prototype.getCurrentDirectory = function () {
@@ -970,6 +978,9 @@ var EurekaModel = (function () {
     EurekaModel.prototype.getListDirectoryRequestURL = function () {
         return this._directoryRequestURL;
     };
+    EurekaModel.prototype.getListDirectoryChildrenRequestURL = function () {
+        return this._directoryChildrenRequestURL;
+    };
     EurekaModel.prototype.setListDirectoryRequestURL = function (url) {
         this._directoryRequestURL = url;
     };
@@ -1017,7 +1028,6 @@ var EurekaView = (function () {
     EurekaView.prototype.init = function () {
         var that = this;
         that._handleTreeNodeClicked = function (e) {
-            console.log('handleTreeNodeClicked');
             if (that.getController().getModel().getDebug())
                 console.log('handleTreeNodeClicked');
             e.preventDefault();
@@ -1025,10 +1035,10 @@ var EurekaView = (function () {
             that.handleTreePathClicked(this);
         };
         that._handleTreeFolderClicked = function (e) {
-            console.log('handleTreeFolderClicked');
-            console.log(e);
             e.preventDefault();
             e.stopPropagation();
+            if (that.getController().getModel().getDebug())
+                console.log('handleTreeFolderClicked');
             var _icon = this.querySelector('.fa');
             var _closing = _icon.classList.contains('fa-folder-open');
             var li = that.getClosest(this, 'li');
@@ -1049,16 +1059,16 @@ var EurekaView = (function () {
                 li.classList.add('open');
                 if (this.getAttribute('data-close-msg'))
                     this.querySelector('.audible').innerHTML = this.getAttribute('data-close-msg');
-                (function () {
-                    var e = document.createEvent('CustomEvent');
-                    (e).initCustomEvent(EurekaModel.EurekaDirectoryOpened, true, true, {
-                        cd: that.getController().getModel().getCurrentDirectory(),
-                        s: that.getController().getModel().getCurrentMediaSource(),
-                        path: dataCD
-                    });
-                    that.getElement().dispatchEvent(e);
-                })();
             }
+            (function () {
+                var e = document.createEvent('CustomEvent');
+                e.initCustomEvent((_closing) ? EurekaModel.EurekaDirectoryClosed : EurekaModel.EurekaDirectoryOpened, true, true, {
+                    cd: that.getController().getModel().getCurrentDirectory(),
+                    s: that.getController().getModel().getCurrentMediaSource(),
+                    path: dataCD
+                });
+                that.getElement().dispatchEvent(e);
+            })();
         };
         function assignShortcutListeners() {
             document.addEventListener('keydown', function (event) {
@@ -1982,7 +1992,6 @@ var EurekaView = (function () {
         if (that.getController().getModel().getDebug())
             console.log('paintJSON');
         var model = this.getController().getModel();
-        console.log(data);
         var cd = data.cd.charAt(data.cd.length - 1) == '/' ? data.cd : data.cd + '/';
         var results = data.results;
         var tbodyHTML = '';
@@ -2759,7 +2768,6 @@ var EurekaController = (function () {
         eureka.addEventListener(EurekaModel.EurekaDirectoryChanged, function (e) {
             if (that.getModel().getDebug())
                 console.log(EurekaModel.EurekaDirectoryChanged);
-            console.log(EurekaModel.EurekaDirectoryChanged);
             function handleJSONData(d) {
                 if (that.getModel().useLocalStorage())
                     that.getModel().setLocalStorage('lastDirectoryPainted', JSON.stringify(d));
@@ -2784,6 +2792,42 @@ var EurekaController = (function () {
             else {
                 var ajax = new AJAX();
                 ajax.get(that.getModel().getListDirectoryRequestURL(), { s: that.getModel().getCurrentMediaSource(), dir: e.detail.currentDirectory || '/' }, function (data) {
+                    handleJSONData(JSON.parse(data));
+                }, true, that.getModel().getXHRHeaders());
+            }
+        });
+        eureka.addEventListener(EurekaModel.EurekaDirectoryOpened, function (e) {
+            if (that.getModel().getDebug())
+                console.log(EurekaModel.EurekaDirectoryOpened);
+            var path = e.detail.path.charAt(e.detail.path.length - 1) == '/' ? e.detail.path : e.detail.path + '/';
+            function handleJSONData(d) {
+                if (that.getModel().getDebug())
+                    console.log(d);
+                var results = d.results;
+                for (var i = 0; i < results.length; i++) {
+                    var result = results[i];
+                    if (result.directory) {
+                        that.getView().asyncronouslyAddDirectory(path, result.directory);
+                    }
+                }
+            }
+            if (that.getModel().getUseWebWorkers()) {
+                (function () {
+                    var worker = new Worker(that.getModel().getwebWorkersPath() + 'listdirectory.js');
+                    worker.addEventListener('message', function (e) {
+                        handleJSONData(e.data);
+                    }, false);
+                    worker.postMessage({
+                        listDirectoryRequestURL: that.getModel().getListDirectoryChildrenRequestURL(),
+                        currentMediaSource: that.getModel().getCurrentMediaSource(),
+                        currentDirectory: e.detail.path || '/',
+                        headers: that.getModel().getXHRHeaders()
+                    });
+                })();
+            }
+            else {
+                var ajax = new AJAX();
+                ajax.get(that.getModel().getListDirectoryChildrenRequestURL(), { s: that.getModel().getCurrentMediaSource(), dir: e.detail.path || '/' }, function (data) {
                     handleJSONData(JSON.parse(data));
                 }, true, that.getModel().getXHRHeaders());
             }

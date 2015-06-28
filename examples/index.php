@@ -692,7 +692,7 @@
                     touch:Modernizr.touch,
                     debug:false,
                     useLocalStorage:false,
-                    useWebWorkers:false, // whether or not to use a worker thread when making XHR Requests
+                    useWebWorkers:true, // whether or not to use a worker thread when making XHR Requests
                     // if useWebWorkers is true these must be absolute paths or relative to the webserver root
                     directoryRequestURL:'/static/eureka/examples/fakepi/listdirectory.php',
                     listSourceRequestURL:'/static/eureka/examples/fakepi/listsource.php',

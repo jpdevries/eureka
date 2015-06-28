@@ -114,6 +114,7 @@ class EurekaModel {
     private _webWorkersPath:String = '';
     
     private _directoryRequestURL:string = '';
+    private _directoryChildrenRequestURL:string = '';
     private _listSourceRequestURL:string = '';
     private _listSourcesRequestURL:string = '';
     private _useWebWorkers:Boolean = false;
@@ -123,6 +124,7 @@ class EurekaModel {
     public static get EurekaUnlink():string { return "EurekaUnlink"; }
     public static get EurekaDirectoryCreated():string { return "EurekaDirectoryCreated"; }
     public static get EurekaDirectoryOpened():string { return "EurekaDirectoryOpened"; }
+    public static get EurekaDirectoryClosed():string { return "EurekaDirectoryClosed"; }
     
     public static get EurekaDirectoryChanged():string { return "EurekaDirectoryChanged"; }
     public static get EurekaMediaSourceChange():string { return "EurekaMediaSourceChange"; }
@@ -148,6 +150,7 @@ class EurekaModel {
         if(opts.allowDelete !== undefined) this._allowDelete = opts.allowDelete;
         
         if(opts.directoryRequestURL !== undefined) this._directoryRequestURL = opts.directoryRequestURL;
+        this._directoryChildrenRequestURL = (opts.directoryChildrenRequestURL !== undefined) ? opts.directoryChildrenRequestURL : this._directoryRequestURL;
         if(opts.listSourceRequestURL !== undefined) this._listSourceRequestURL = opts.listSourceRequestURL;
         if(opts.listSourcesRequestURL !== undefined) this._listSourcesRequestURL = opts.listSourcesRequestURL;
         if(opts.fileUploadURL !== undefined) this._fileUploadURL = opts.fileUploadURL;
@@ -448,6 +451,9 @@ class EurekaModel {
     getListDirectoryRequestURL() {
       return this._directoryRequestURL;
     }
+    getListDirectoryChildrenRequestURL() {
+      return this._directoryChildrenRequestURL;
+    }
     setListDirectoryRequestURL(url:string) {
       this._directoryRequestURL = url;
     }
@@ -535,17 +541,18 @@ class EurekaView {
                 _icon.classList.add('icon-folder-open');
                 li.classList.add('open');
                 if(this.getAttribute('data-close-msg')) this.querySelector('.audible').innerHTML = this.getAttribute('data-close-msg');
-                
-                (function(){
-                    var e:Event = document.createEvent('CustomEvent');
-                    (<any>(e)).initCustomEvent(EurekaModel.EurekaDirectoryOpened, true, true, {
-                        cd:that.getController().getModel().getCurrentDirectory(),
-                        s:that.getController().getModel().getCurrentMediaSource(),
-                        path:dataCD
-                    });
-                    that.getElement().dispatchEvent(e);
-                })();
             }
+            
+            (function(){
+                var e:any = <any>document.createEvent('CustomEvent');
+                e.initCustomEvent((_closing) ? EurekaModel.EurekaDirectoryClosed : EurekaModel.EurekaDirectoryOpened, true, true, {
+                    cd:that.getController().getModel().getCurrentDirectory(),
+                    s:that.getController().getModel().getCurrentMediaSource(),
+                    path:dataCD
+                });
+        
+                that.getElement().dispatchEvent(e); 
+            })();
         };
         
         function assignShortcutListeners() {
@@ -2433,6 +2440,48 @@ class EurekaController {
                 ajax.get(
                     that.getModel().getListDirectoryRequestURL(),
                     { s: that.getModel().getCurrentMediaSource(), dir: e.detail.currentDirectory || '/' },
+                    function (data) {
+                        handleJSONData(JSON.parse(data));
+                    },
+                    true,
+                    that.getModel().getXHRHeaders()
+                );   
+            }
+        });
+        eureka.addEventListener(EurekaModel.EurekaDirectoryOpened, function(e:any) {
+            if(that.getModel().getDebug()) console.log(EurekaModel.EurekaDirectoryOpened);
+            var path = e.detail.path.charAt(e.detail.path.length - 1) == '/' ? e.detail.path : e.detail.path + '/';
+
+            function handleJSONData(d) {
+                if(that.getModel().getDebug()) console.log(d);
+
+                var results = d.results;
+                for(var i = 0; i < results.length; i++) {
+                    var result = results[i];
+                    
+                    if(result.directory) {
+                        that.getView().asyncronouslyAddDirectory(path, result.directory);
+                    }
+                }
+            }
+            if(that.getModel().getUseWebWorkers()) {
+                (function(){
+                    var worker = new Worker(that.getModel().getwebWorkersPath() + 'listdirectory.js');
+                    worker.addEventListener('message',function(e){
+                        handleJSONData(e.data);
+                    }, false);
+                    worker.postMessage({
+                        listDirectoryRequestURL:that.getModel().getListDirectoryChildrenRequestURL(),
+                        currentMediaSource:that.getModel().getCurrentMediaSource(), 
+                        currentDirectory: e.detail.path || '/',
+                        headers:that.getModel().getXHRHeaders()
+                    });
+                })();
+            } else {
+                var ajax = new AJAX();
+                ajax.get(
+                    that.getModel().getListDirectoryChildrenRequestURL(),
+                    { s: that.getModel().getCurrentMediaSource(), dir: e.detail.path || '/' },
                     function (data) {
                         handleJSONData(JSON.parse(data));
                     },

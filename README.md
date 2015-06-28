@@ -75,6 +75,7 @@ var $eureka = new Eureka({ // init the Eureka component
     listSourcesRequestURL:'fakepi/listsources.php', // fetches a list of all media sources
     
     // OPTIONAL SETTINGS
+    directoryChildrenRequestURL:'fakepi/listdirectorychildren.php', // fetches a list of direct children directories of the given directory. If ommited diretoryRequestURL will be used and all non-directory results will be ignored
     useWebWorkers:true, // whether or not to use a worker thread when making XHR Requests
     touch:Modernizr.touch, // or use your own feature detection
     fileUploadURL:undefined, // endpoint to send files to, removes upload components from UI if not set
