@@ -1,11 +1,11 @@
 {
-  "name": "eureka-browser",
+  "name": "eureka_build",
   "version": "0.0.0",
   "author": {
     "name": "JP DeVries",
     "url": "http://devries.jp"
   },
-  "homepage": "http://markup.tips",
+  "homepage": "https://github.com/jpdevries/eureka",
   "repository": {
     "type": "git",
     "url": "https://github.com/jpdevries/eureka"
