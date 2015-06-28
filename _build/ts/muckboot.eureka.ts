@@ -17,6 +17,10 @@ var MuckBoot;
 
         this.muck();
     };
+    
+    MuckBoot.prototype.getID = function(){
+        return this.opts.id;
+    };
 
     MuckBoot.prototype.muck = function() {
         var that = this;

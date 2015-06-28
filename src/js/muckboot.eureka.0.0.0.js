@@ -15,6 +15,9 @@ var MuckBoot;
         this.opts = opts;
         this.muck();
     };
+    MuckBoot.prototype.getID = function () {
+        return this.opts.id;
+    };
     MuckBoot.prototype.muck = function () {
         var that = this;
         var eureka = d.createElement('div');

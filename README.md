@@ -18,8 +18,8 @@ Join the conversation in our public Gitter chat room.
  - Responsive Design
  - Lightweight
    - no external dependencies (not even jQuery)
-   - `eureka.min.js`&emsp;51kb minified
-   - `eureka.min.css` 38kb minified
+   - `eureka.min.js`&emsp;65kb minified
+   - `eureka.min.css` 40kb minified
  - Accessible
    - supports mobile and touch devices
    - supports `.no-js`
@@ -98,6 +98,9 @@ var $eureka = new Eureka({ // init the Eureka component
 
 Eureka has been instantiated it's up to your user to find or upload the content they&nbsp;seek.
 
+### API
+The endpoints you'll need to supply Eureka with are documented in [the Wiki](https://github.com/jpdevries/eureka/wiki/API-Docs).
+
 ### Events
 `eureka.js` likes to let you know when things happen.
 
@@ -175,7 +178,7 @@ In addition to the below shortcuts, Eureka supports standard tab-to-focus usabil
 There's [lots to do](https://github.com/jpdevries/eureka/issues). Feel free to discuss or [open an issue](https://github.com/jpdevries/eureka/issues/) before submitting pull requests. Once you've checked out the project you'll want to get up and running with the Grunt&nbsp;workflow:
 ```bash
 cd eureka/_build/
-npm install #intall node modules
+npm install #install node modules
 grunt build #build source files
 ```
 
