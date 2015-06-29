@@ -1188,7 +1188,8 @@ html.touch .eureka > .pathbrowser > footer .droparea, html.no-js .eureka > .path
       -webkit-flex-basis: 8em;
       -moz-flex-basis: 8em;
       flex-basis: 8em;
-      -ms-flex-preferred-size: 8em; }
+      -ms-flex-preferred-size: 8em;
+      overflow-x: hidden; }
     .view-d .eureka-table > table > tbody > tr > td.eureka__row-image {
       text-align: center; }
     .view-b .eureka-table > table > tbody > tr {

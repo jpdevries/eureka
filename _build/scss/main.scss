@@ -1149,6 +1149,7 @@ html.touch, html.no-js {
                 
                 .view-c & {
                     @include flex-basis(8em);
+                    overflow-x:hidden;
                     &.focused, &:focus {
                         @extend %flex-basis-auto; //@include flex-basis(auto);
                     }
