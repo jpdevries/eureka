@@ -504,6 +504,9 @@ var Eureka = (function () {
             this._model.setCurrentDirectory(this._model.getCurrentDirectory(), true, true, true);
         }
     };
+    Eureka.prototype.getElement = function () {
+        return this._view.getElement();
+    };
     return Eureka;
 })();
 var EurekaMediaSource = (function () {

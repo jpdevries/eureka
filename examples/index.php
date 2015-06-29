@@ -706,37 +706,37 @@
                 // NOTE: "event" system is kinda experimental and may change
                 // currently the Eureka class (MVC) dispatches events from the eureka component itself (div.eureka)
                 // listen for when a file is renamed
-                document.getElementById('media-browser_0').addEventListener('EurekaFileRename',function(e){
+                $eureka.getElement().addEventListener('EurekaFileRename',function(e){
                     //console.log('EurekaFileRename');
                     //console.log(e.detail);
                     // make XHR 
                 });
                 
                 // listen for when a media item has been chosen
-                document.getElementById('media-browser_0').addEventListener('EurekaFoundIt',function(e){
-                    //console.log('EurekaFoundIt');
+                $eureka.getElement().addEventListener('EurekaFoundIt',function(e){
+                    console.log('EurekaFoundIt');
                     //console.log(e.detail);
                 });
                 
                 // listen for when a media item has been deleted
-                document.getElementById('media-browser_0').addEventListener('EurekaUnlink',function(e){
+                $eureka.getElement().addEventListener('EurekaUnlink',function(e){
                     //console.log('EurekaUnlink');
                     //console.log(e.detail);
                 });
                 
                 // listen for when a media item has been deleted
-                document.getElementById('media-browser_0').addEventListener('EurekaDirectoryChanged',function(e){
+                $eureka.getElement().addEventListener('EurekaDirectoryChanged',function(e){
                     //console.log('EurekaDirectoryChanged');
                     //console.log(e.detail);
                 });
                 
                 // listen for when a media item has been deleted
-                document.getElementById('media-browser_0').addEventListener('EurekaMediaSourceChange',function(e){
+                $eureka.getElement().addEventListener('EurekaMediaSourceChange',function(e){
                     //console.log('EurekaMediaSourceChange');
                     //console.log(e.detail);
                 });
                 
-                document.getElementById('media-browser_0').addEventListener(EurekaModel.EurekaCanceled,function(e){
+                $eureka.getElement().addEventListener(EurekaModel.EurekaCanceled,function(e){
                     //console.log('EurekaCanceled');
                 });
             });

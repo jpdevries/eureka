@@ -1444,12 +1444,18 @@ tr.contextual {
                 @extend %flexible-parent; //@include display(flex);
                 @extend %align-self-flex-end; //@include align-self(flex-end);
                 width:100%;
+                > input[type="search"] {
+                    @extend %growable; //@include flex-grow(1);
+                    max-width:100%;
+                    font-size:1em;
+                    max-width:100%;
+                    padding-left:0.5em;
+                    padding-right:0.5em;
+                }
                 @include media($gtMobile) {
                     width:auto;
                 }
-                > input[type="search"] {
-                    @extend %growable; //@include flex-grow(1);
-                }
+                
             }
         }
         

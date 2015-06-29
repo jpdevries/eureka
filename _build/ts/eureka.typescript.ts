@@ -48,6 +48,9 @@ class Eureka {
             this._model.setCurrentDirectory(this._model.getCurrentDirectory(),true,true,true);
         }
     }
+    getElement() : HTMLElement {
+        return this._view.getElement();
+    }
 }
 
 interface IEurekaMediaSource {

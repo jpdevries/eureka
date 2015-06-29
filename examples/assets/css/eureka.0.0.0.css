@@ -1393,6 +1393,12 @@ tr.contextual {
         display: none; }
   .eureka__topbar .eureka__topbar-nav > header > form {
     width: 100%; }
+    .eureka__topbar .eureka__topbar-nav > header > form > input[type="search"] {
+      max-width: 100%;
+      font-size: 1em;
+      max-width: 100%;
+      padding-left: 0.5em;
+      padding-right: 0.5em; }
     @media screen and (min-width: 641px) {
       .eureka__topbar .eureka__topbar-nav > header > form {
         width: auto; } }
