@@ -953,7 +953,6 @@ var EurekaModel = (function () {
     EurekaModel.prototype.setChoosenMediaItem = function (filename) {
         var that = this;
         var tr = getEurekaRowByFileName(filename);
-        console.log(tr);
         var e = document.createEvent('CustomEvent');
         e.initCustomEvent('EurekaFoundIt', true, true, {
             filename: filename,

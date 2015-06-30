@@ -421,7 +421,6 @@ class EurekaModel {
     setChoosenMediaItem(filename) {
         var that = this;
         var tr = getEurekaRowByFileName(filename); // #more reliable than tr.eureka__row.focused
-        console.log(tr);
         
         var e = document.createEvent('CustomEvent');
         e.initCustomEvent('EurekaFoundIt', true, true, {
