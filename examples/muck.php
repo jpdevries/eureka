@@ -155,7 +155,7 @@
                 });
                 var $eureka = new Eureka({ // init the Eureka component
                     // REQUIRED
-                    uid:'redactor-media-browser_0',
+                    uid:$muckboot.getID(),
                     directoryRequestURL:'/static/eureka/examples/fakepi/listdirectory.php',
                     listSourceRequestURL:'/static/eureka/examples/fakepi/listsource.php',
                     listSourcesRequestURL:'/static/eureka/examples/fakepi/listsources.php',
@@ -187,7 +187,7 @@
                     console.log('EurekaFoundIt');
                     console.log(e.detail); 
                     alert('You found ' + e.detail.filename);
-                    // NOTE: Eureka doesn't kill itself, it's up to to handle animating it out and destroying it
+                    // NOTE: Eureka doesn't kill itself, it's up to you to handle animating it out and destroying it
                 });
                 
                 // listen for when a media item has been deleted

@@ -421,6 +421,7 @@ class EurekaModel {
     setChoosenMediaItem(filename) {
         var that = this;
         var tr = getEurekaRowByFileName(filename); // #more reliable than tr.eureka__row.focused
+        console.log(tr);
         
         var e = document.createEvent('CustomEvent');
         e.initCustomEvent('EurekaFoundIt', true, true, {
@@ -1200,7 +1201,7 @@ class EurekaView {
                 var _cta = (<HTMLElement>that.getProceedFooter().querySelector('button.cta'));
                 _cta.classList.remove('go');
                 
-                _cta.setAttribute('disabled');
+                //_cta.setAttribute('disabled','disabled');
                 _cta.classList.add('muted');
             }
             var rows = document.querySelectorAll(".eureka-table tbody > tr:not(.contextual)");
@@ -2466,6 +2467,7 @@ class EurekaController {
                         that.getView().asyncronouslyAddDirectory(path, result.directory);
                     }
                 }
+                if(results.length) that.getView().assignTreeListeners();
             }
             if(that.getModel().getUseWebWorkers()) {
                 (function(){

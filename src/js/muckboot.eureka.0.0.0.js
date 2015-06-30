@@ -419,7 +419,7 @@ var MuckBoot;
             browserStage.appendChild(createEurekaTable());
             return browserStage;
         }
-        function createChooseFooter() {
+        function createChooseFooter(opts) {
             var footer = d.createElement('footer');
             footer.classList.add('proceed');
             var btns = [
@@ -437,6 +437,7 @@ var MuckBoot;
                     btn.classList.add('clickable');
                     btn.classList.add('cta');
                     btn.setAttribute('disabled', 'disabled');
+                    btn.setAttribute('id', opts.id + '__choose-btn');
                     btn.setAttribute('type', 'submit');
                     btn.innerHTML = 'Choose';
                     return btn;
@@ -453,7 +454,7 @@ var MuckBoot;
         var eurekaWrapper = d.createElement('div');
         eurekaWrapper.classList.add('eureka-wrapper');
         eurekaWrapper.appendChild(eureka);
-        eurekaWrapper.appendChild(createChooseFooter());
+        eurekaWrapper.appendChild(createChooseFooter(this.opts));
         d.getElementById(this.opts.id).outerHTML = eurekaWrapper.outerHTML;
     };
 })();

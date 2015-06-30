@@ -465,6 +465,8 @@ button {
   font-family: Gill Sans,Gill Sans MT,Calibri,sans-serif; }
   .eureka-wrapper .image img {
     max-width: 100%; }
+  .eureka-wrapper label {
+    text-transform: none; }
   .eureka-wrapper .unaligned {
     text-align: center; }
   .eureka-wrapper button, .eureka-wrapper .btn {
@@ -1174,6 +1176,7 @@ html.touch .eureka > .pathbrowser > footer .droparea, html.no-js .eureka > .path
         overflow: hidden; }
         .view-a .eureka-table > table > tbody > tr > td.eureka__row-image img {
           width: auto;
+          margin: 0;
           max-height: 140px; }
         .view-a .eureka-table > table > tbody > tr > td.eureka__row-image code {
           -webkit-flex-shrink: 0;

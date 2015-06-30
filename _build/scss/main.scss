@@ -177,6 +177,9 @@ button {
             max-width:100%;
         }
     }
+    label {
+        text-transform:none;
+    }
     .unaligned {
         text-align:center;
     }
@@ -1123,6 +1126,7 @@ html.touch, html.no-js {
                         overflow:hidden;
                         img {
                             width:auto;
+                            margin:0;
                             max-height:140px;
                         }
                         code {
