@@ -1484,7 +1484,7 @@ var EurekaView = (function () {
         var paths = pathbrowser.querySelectorAll('a.path');
         for (var i = 0; i < paths.length; i++) {
             var path = paths[i];
-            if (path.getAttribute('data-cd').split('/').toString() == that.getController().getModel().getCurrentDirectory().split('/').toString()) {
+            if (path.getAttribute('data-cd').split('/').filter(Boolean).toString() == that.getController().getModel().getCurrentDirectory().split('/').filter(Boolean).toString()) {
                 (function () {
                     path.parentNode.classList.add('active');
                     path.parentNode.classList.add('open');
@@ -1924,6 +1924,7 @@ var EurekaView = (function () {
     };
     EurekaView.prototype.createTreeNode = function (path) {
         var that = this;
+        path = path.split('/').filter(Boolean).join('/') + '/';
         var li = document.createElement('li');
         var folder = document.createElement('a');
         folder.innerHTML = '&nbsp;';

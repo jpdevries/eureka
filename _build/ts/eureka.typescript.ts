@@ -1008,7 +1008,7 @@ class EurekaView {
         var paths = pathbrowser.querySelectorAll('a.path');
         for(var i = 0; i < paths.length; i++) {
             var path:HTMLElement = <HTMLElement>paths[i];
-            if(path.getAttribute('data-cd').split('/').toString() == that.getController().getModel().getCurrentDirectory().split('/').toString()) {
+            if(path.getAttribute('data-cd').split('/').filter(Boolean).toString() == that.getController().getModel().getCurrentDirectory().split('/').filter(Boolean).toString()) {
                 (function(){
                     (<HTMLElement>path.parentNode).classList.add('active');
                     (<HTMLElement>path.parentNode).classList.add('open');
@@ -1498,6 +1498,7 @@ class EurekaView {
     }
     createTreeNode(path) : HTMLElement {
         var that = this;
+        path = path.split('/').filter(Boolean).join('/') + '/';
         var li = document.createElement('li');
         var folder = document.createElement('a');
         folder.innerHTML = '&nbsp;';
