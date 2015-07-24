@@ -563,6 +563,7 @@ var EurekaModel = (function () {
         this._listSourceRequestURL = '';
         this._listSourcesRequestURL = '';
         this._useWebWorkers = false;
+        this._sortMediaSources = false;
         this.getXHRHeaders = function () {
             return this._headers;
         };
@@ -605,6 +606,8 @@ var EurekaModel = (function () {
             this._showDimensionsColumn = opts.showDimensionsColumn;
         if (opts.useWebWorkers !== undefined)
             this._useWebWorkers = (window.Worker) ? opts.useWebWorkers : false;
+        if (opts.sortMediaSources !== undefined)
+            this._sortMediaSources = opts.sortMediaSources;
         if (opts.debug === true)
             this._debug = opts.debug;
         if (opts.confirmBeforeDelete !== undefined)
@@ -890,6 +893,9 @@ var EurekaModel = (function () {
     EurekaModel.prototype.getPrependOptGroupsWithRootOption = function () {
         return this._prependOptGroupsWithRootOption;
     };
+    EurekaModel.prototype.getsortMediaSources = function () {
+        return this._sortMediaSources;
+    };
     EurekaModel.prototype.setSources = function (sources, dispatch) {
         if (dispatch === void 0) { dispatch = true; }
         if (this.getDebug())
@@ -905,11 +911,23 @@ var EurekaModel = (function () {
             console.log('setSources');
         this.getController().getView().getElement().dispatchEvent(e);
     };
+    EurekaModel.prototype.sortResultsById = function (results) {
+        var a = [];
+        for (var i = 0; i < results.length; i++) {
+            var result = results[i];
+            a[parseInt(result.id)] = result;
+        }
+        return a.filter(function (n) {
+            return n != undefined;
+        });
+    };
     EurekaModel.prototype.setMediaSourcesData = function (data) {
         var that = this;
-        if (this.getDebug())
+        if (that.getDebug())
             console.log('setMediaSourcesData');
         var results = data.results;
+        if (that.getsortMediaSources())
+            results = that.sortResultsById(results);
         var sources = [];
         var current = that.getCurrentMediaSource();
         var currentExists = false;
@@ -2320,8 +2338,6 @@ var EurekaView = (function () {
                 tbodyHTML += createContextualRow().outerHTML;
             }
             else {
-                console.log(cd);
-                console.log(result.directory);
                 directoriesToAdd.push({ cd: cd, directory: result.directory });
             }
         }
@@ -2331,7 +2347,6 @@ var EurekaView = (function () {
                 that.asyncronouslyAddDirectory(d.cd, d.directory);
             }
             if (directoriesToAdd.length) {
-                console.log('directoriesToAdd.length: ' + directoriesToAdd.length);
                 that.assignTreeListeners();
             }
         })();
@@ -2411,8 +2426,6 @@ var EurekaView = (function () {
         (function () {
             var browsingSelect = document.getElementById(that.getController().getModel().getUID() + '__browsing');
             var mediaSource = that.getController().getModel().getCurrentMediaSource();
-            console.log('setting optGrp');
-            console.log('currentMediaSource: ' + that.getController().getModel().getCurrentMediaSource());
             var optsGrp = (function () {
                 var os = browsingSelect.querySelectorAll('optgroup');
                 for (var i = 0; i < os.length; i++) {
@@ -2438,7 +2451,6 @@ var EurekaView = (function () {
             var inserted = false;
             for (var i = 0; i < opts.length; i++) {
                 var opt = opts[i];
-                console.log(opt.innerHTML);
                 var a = [opt.innerHTML, _iH];
                 a.sort();
                 if (_iH == a[0]) {

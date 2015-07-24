@@ -121,6 +121,7 @@ class EurekaModel {
     private _listSourceRequestURL:string = '';
     private _listSourcesRequestURL:string = '';
     private _useWebWorkers:Boolean = false;
+    private _sortMediaSources:Boolean = false;
     
     public static get EurekaFoundIt():string { return "EurekaFoundIt"; }
     public static get EurekaFileRename():string { return "EurekaFileRename"; }
@@ -159,6 +160,7 @@ class EurekaModel {
         if(opts.fileUploadURL !== undefined) this._fileUploadURL = opts.fileUploadURL;
         if(opts.showDimensionsColumn !== undefined) this._showDimensionsColumn = opts.showDimensionsColumn;
         if(opts.useWebWorkers !== undefined) this._useWebWorkers = ((<any>window).Worker) ? opts.useWebWorkers : false;
+        if(opts.sortMediaSources !== undefined) this._sortMediaSources = opts.sortMediaSources;
         
         if(opts.debug === true) this._debug = opts.debug;
         if(opts.confirmBeforeDelete !== undefined) this._confirmBeforeDelete = opts.confirmBeforeDelete;
@@ -358,6 +360,9 @@ class EurekaModel {
     getPrependOptGroupsWithRootOption() {
         return this._prependOptGroupsWithRootOption;
     }
+    getsortMediaSources() {
+        return this._sortMediaSources;
+    }
     setSources(sources, dispatch = true) {
         if(this.getDebug()) console.log('setSources' + dispatch);
         this._sources = sources;
@@ -371,10 +376,19 @@ class EurekaModel {
         
         this.getController().getView().getElement().dispatchEvent(e);
     }
+    sortResultsById(results) {
+        var a = [];
+        for(var i = 0; i < results.length; i++) {
+            var result = results[i];
+            a[parseInt(result.id)] = result;
+        }
+        return a.filter(function(n){ return n != undefined });
+    }
     setMediaSourcesData(data) {
         var that = this;
-        if(this.getDebug()) console.log('setMediaSourcesData');
+        if(that.getDebug()) console.log('setMediaSourcesData');
         var results = data.results;
+        if(that.getsortMediaSources()) results = that.sortResultsById(results);
         var sources = [];
         var current = that.getCurrentMediaSource();
         var currentExists = false;
@@ -1922,8 +1936,8 @@ class EurekaView {
 
                 tbodyHTML += createContextualRow().outerHTML;
             } else { // it's a folder
-                console.log(cd);
-                console.log(result.directory);
+                //console.log(cd);
+                //console.log(result.directory);
                 //that.asyncronouslyAddDirectory(cd,result.directory);
                 directoriesToAdd.push({cd:cd,directory:result.directory})
             }
@@ -1935,7 +1949,7 @@ class EurekaView {
                 that.asyncronouslyAddDirectory(d.cd,d.directory);
             }
             if(directoriesToAdd.length) {
-                console.log('directoriesToAdd.length: ' + directoriesToAdd.length);
+                //console.log('directoriesToAdd.length: ' + directoriesToAdd.length);
                 that.assignTreeListeners();
                 //that.recursivelyOpenTreeToCurrentDirectory();
             }
@@ -2025,8 +2039,8 @@ class EurekaView {
         (function(){
             var browsingSelect:HTMLElement = (<HTMLElement>document.getElementById(that.getController().getModel().getUID() + '__browsing'));
             var mediaSource = that.getController().getModel().getCurrentMediaSource();
-            console.log('setting optGrp');
-            console.log('currentMediaSource: ' + that.getController().getModel().getCurrentMediaSource());
+            //console.log('setting optGrp');
+            //console.log('currentMediaSource: ' + that.getController().getModel().getCurrentMediaSource());
             var optsGrp:HTMLElement = (function() : HTMLElement {
                 var os = browsingSelect.querySelectorAll('optgroup');
                 for(var i =0; i < os.length; i++) {
@@ -2051,7 +2065,7 @@ class EurekaView {
             var inserted = false;
             for(var i = 0; i < opts.length; i++) {
                 var opt:HTMLElement = <HTMLElement>opts[i];
-                console.log(opt.innerHTML);
+                //console.log(opt.innerHTML);
                 var a = [opt.innerHTML,_iH];
                 a.sort();
                 
