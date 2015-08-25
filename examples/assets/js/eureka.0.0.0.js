@@ -469,6 +469,9 @@ var AJAX = (function () {
     };
     return AJAX;
 })();
+/// <reference path="DefinitelyTyped/modernizr.d.ts" />
+/// <reference path="./plugins.ts" />
+/// <reference path="./ajax.ts" />
 var _EUREKA = {
     src: (function () {
         var scripts = document.getElementsByTagName("script"), src = scripts[scripts.length - 1].src;
@@ -627,86 +630,62 @@ var EurekaModel = (function () {
         }
     }
     Object.defineProperty(EurekaModel, "EurekaFoundIt", {
-        get: function () {
-            return "EurekaFoundIt";
-        },
+        get: function () { return "EurekaFoundIt"; },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(EurekaModel, "EurekaFileRename", {
-        get: function () {
-            return "EurekaFileRename";
-        },
+        get: function () { return "EurekaFileRename"; },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(EurekaModel, "EurekaUnlink", {
-        get: function () {
-            return "EurekaUnlink";
-        },
+        get: function () { return "EurekaUnlink"; },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(EurekaModel, "EurekaDirectoryCreated", {
-        get: function () {
-            return "EurekaDirectoryCreated";
-        },
+        get: function () { return "EurekaDirectoryCreated"; },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(EurekaModel, "EurekaDirectoryOpened", {
-        get: function () {
-            return "EurekaDirectoryOpened";
-        },
+        get: function () { return "EurekaDirectoryOpened"; },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(EurekaModel, "EurekaDirectoryClosed", {
-        get: function () {
-            return "EurekaDirectoryClosed";
-        },
+        get: function () { return "EurekaDirectoryClosed"; },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(EurekaModel, "EurekaDirectoryChanged", {
-        get: function () {
-            return "EurekaDirectoryChanged";
-        },
+        get: function () { return "EurekaDirectoryChanged"; },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(EurekaModel, "EurekaMediaSourceChange", {
-        get: function () {
-            return "EurekaMediaSourceChange";
-        },
+        get: function () { return "EurekaMediaSourceChange"; },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(EurekaModel, "EurekaMediaSourcesListChange", {
-        get: function () {
-            return "EurekaMediaSourcesListChange";
-        },
+        get: function () { return "EurekaMediaSourcesListChange"; },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(EurekaModel, "EurekaViewChange", {
-        get: function () {
-            return "EurekaViewChange";
-        },
+        get: function () { return "EurekaViewChange"; },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(EurekaModel, "EurekaFilesUploaded", {
-        get: function () {
-            return "EurekaFilesUploaded";
-        },
+        get: function () { return "EurekaFilesUploaded"; },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(EurekaModel, "EurekaCanceled", {
-        get: function () {
-            return "EurekaCanceled";
-        },
+        get: function () { return "EurekaCanceled"; },
         enumerable: true,
         configurable: true
     });
@@ -917,9 +896,7 @@ var EurekaModel = (function () {
             var result = results[i];
             a[parseInt(result.id)] = result;
         }
-        return a.filter(function (n) {
-            return n != undefined;
-        });
+        return a.filter(function (n) { return n != undefined; });
     };
     EurekaModel.prototype.setMediaSourcesData = function (data) {
         var that = this;
@@ -1110,8 +1087,7 @@ var EurekaView = (function () {
                             btn.dispatchEvent(e);
                         }
                     }
-                    catch (e) {
-                    }
+                    catch (e) { }
                 }
                 if (event.altKey && !event.ctrlKey && (event.which >= 49 && event.which <= 57)) {
                     function setSelectOptGroup(select, group) {
@@ -1137,8 +1113,7 @@ var EurekaView = (function () {
                                 select.value = option.getAttribute('value');
                             }
                         }
-                        catch (e) {
-                        }
+                        catch (e) { }
                         return;
                         function hasOption(val) {
                             var options = select.querySelectorAll('option');
@@ -1163,8 +1138,7 @@ var EurekaView = (function () {
                     try {
                         document.activeElement.nextSibling.querySelector('a.trash').dispatchEvent(e);
                     }
-                    catch (e) {
-                    }
+                    catch (e) { }
                 }
                 if (event.altKey && event.which === 32 && document.activeElement) {
                     try {
@@ -1172,8 +1146,7 @@ var EurekaView = (function () {
                         e.initEvent('click', true, true);
                         document.activeElement.nextSibling.querySelector('a.expand').dispatchEvent(e);
                     }
-                    catch (e) {
-                    }
+                    catch (e) { }
                 }
                 if (event.which === 13 && document.activeElement) {
                     try {
@@ -1181,8 +1154,7 @@ var EurekaView = (function () {
                         e.initEvent('click', true, true);
                         document.activeElement.nextSibling.querySelector('a.choose').dispatchEvent(e);
                     }
-                    catch (e) {
-                    }
+                    catch (e) { }
                 }
                 if (event.ctrlKey && event.which === 82) {
                     try {
@@ -1190,8 +1162,7 @@ var EurekaView = (function () {
                         e.initEvent('click', true, true);
                         document.activeElement.nextSibling.querySelector('a.rename').dispatchEvent(e);
                     }
-                    catch (e) {
-                    }
+                    catch (e) { }
                 }
                 if (event.ctrlKey && event.which === 78) {
                     try {
@@ -1199,8 +1170,7 @@ var EurekaView = (function () {
                         e.initEvent('click', true, true);
                         that.getElement().querySelector('.create-new').dispatchEvent(e);
                     }
-                    catch (e) {
-                    }
+                    catch (e) { }
                 }
                 if (event.ctrlKey && event.which === 85) {
                     try {
@@ -1208,15 +1178,13 @@ var EurekaView = (function () {
                         e.initEvent('click', true, true);
                         document.getElementById(that.getController().getModel().getUID() + '__upload-input').dispatchEvent(e);
                     }
-                    catch (e) {
-                    }
+                    catch (e) { }
                 }
                 if (event.ctrlKey && event.which === 70) {
                     try {
                         document.getElementById(that.getController().getModel().getUID() + '__filter-images').focus();
                     }
-                    catch (e) {
-                    }
+                    catch (e) { }
                 }
             });
         }
@@ -1310,8 +1278,7 @@ var EurekaView = (function () {
                                     JSON.parse(data);
                                     return true;
                                 }
-                                catch (e) {
-                                }
+                                catch (e) { }
                                 return false;
                             }
                             if (!isJSON(response)) {
@@ -1368,13 +1335,11 @@ var EurekaView = (function () {
             try {
                 that.getElement().querySelector('.pathbrowser footer form').remove();
             }
-            catch (e) {
-            }
+            catch (e) { }
             try {
                 that.getElement().querySelector('.upload-form').remove();
             }
-            catch (e) {
-            }
+            catch (e) { }
         }
         if (that.getController().getModel().getCurrentMediaSource() !== undefined && that.getController().getModel().getCurrentMediaSource() !== '/' && that.getController().getModel().getCurrentMediaSource() !== '') {
             that.recursivelyOpenTreeToCurrentDirectory();
@@ -1385,9 +1350,7 @@ var EurekaView = (function () {
             var currentDirectory = e.detail.currentDirectory;
             var currentMediaSource = that.getController().getModel().getCurrentMediaSource();
             var split = currentDirectory.split('/');
-            split = split.filter(function (n) {
-                return (n !== undefined && n != "");
-            });
+            split = split.filter(function (n) { return (n !== undefined && n != ""); });
             var levelup = document.getElementById(that.getController().getModel().getUID() + '__pathbrowser').querySelector('.level-up');
             if (split.length >= 1)
                 levelup.classList.remove('hidden');
@@ -1399,8 +1362,7 @@ var EurekaView = (function () {
                     el.setAttribute('title', 'Create a new directory in ' + that.sanitizeDisplayPath(currentDirectory));
                     el.querySelector('.audible').innerHTML = el.getAttribute('title');
                 }
-                catch (e) {
-                }
+                catch (e) { }
             })();
             (function () {
                 try {
@@ -1408,16 +1370,14 @@ var EurekaView = (function () {
                     el.setAttribute('title', 'Upload media to ' + that.sanitizeDisplayPath(currentDirectory));
                     el.querySelector('.audible').innerHTML = el.getAttribute('title');
                 }
-                catch (e) {
-                }
+                catch (e) { }
             })();
             that.setBrowseSelectValue();
             that.setMediaSourceSelectValue();
             try {
                 (that._html5Upload).data = that.getController().getModel().getHTML5UploadData();
             }
-            catch (e) {
-            }
+            catch (e) { }
         });
         that.getElement().addEventListener(EurekaModel.EurekaMediaSourceChange, function (e) {
             var mediaSourceTitle = that.getElement().querySelector('.eureka__topbar-nav .mediasource-title');
@@ -1430,15 +1390,13 @@ var EurekaView = (function () {
             try {
                 (that._html5Upload).data = that.getController().getModel().getHTML5UploadData();
             }
-            catch (e) {
-            }
+            catch (e) { }
         });
         if (!that.getController().getModel().getShowDimensionsColumn()) {
             try {
                 that.getElement().querySelector('.eureka-table th.dimensions').remove();
             }
-            catch (e) {
-            }
+            catch (e) { }
         }
     };
     EurekaView.prototype.setMediaSourceSelectValue = function () {
@@ -1481,9 +1439,7 @@ var EurekaView = (function () {
                 if (!path)
                     return '';
                 var split = path.split('/');
-                split = split.filter(function (n) {
-                    return (n !== undefined && n != "");
-                });
+                split = split.filter(function (n) { return (n !== undefined && n != ""); });
                 return split;
             }
             var opts = optgroup.querySelectorAll('option');
@@ -1515,8 +1471,7 @@ var EurekaView = (function () {
                         try {
                             folder.querySelector('.audible').innerHTML = folder.getAttribute('data-close-msg');
                         }
-                        catch (e) {
-                        }
+                        catch (e) { }
                     }
                     if (parents.length > 1) {
                         for (var i = 0; i < parents.length; i++) {
@@ -1583,8 +1538,7 @@ var EurekaView = (function () {
                     try {
                         path.select();
                     }
-                    catch (e) {
-                    }
+                    catch (e) { }
                 }, 240);
                 var ul = (that.getElement().querySelector('.pathbrowser .tree li.active > ul') || that.getElement().querySelector('.pathbrowser .tree > ul'));
                 ul.classList.add('open');
@@ -1592,8 +1546,7 @@ var EurekaView = (function () {
                 try {
                     (ul.previousSibling).previousSibling.querySelector('.fa').setAttribute('class', 'fa icon fa-folder-open icon-folder-open');
                 }
-                catch (e) {
-                }
+                catch (e) { }
                 path.addEventListener('focus', function (e) {
                     this.addEventListener('keydown', handleKeyDown, false);
                 }, false);
@@ -1621,8 +1574,7 @@ var EurekaView = (function () {
                 ul.appendChild(li);
             });
         }
-        catch (e) {
-        }
+        catch (e) { }
     };
     EurekaView.prototype.assignViewButtonListeners = function () {
         var model = this.getController().getModel();
@@ -1799,9 +1751,7 @@ var EurekaView = (function () {
     };
     EurekaView.prototype.sanitizeDisplayPath = function (path) {
         var split = path.split('/');
-        split = split.filter(function (n) {
-            return (n !== undefined && n != "");
-        });
+        split = split.filter(function (n) { return (n !== undefined && n != ""); });
         return split.join('/');
     };
     EurekaView.prototype.getProceedFooter = function () {
@@ -1863,9 +1813,7 @@ var EurekaView = (function () {
             e.preventDefault();
             var currentDirectory = that.getController().getModel().getCurrentDirectory();
             var split = currentDirectory.split('/');
-            split = split.filter(function (n) {
-                return (n !== undefined && n != "");
-            });
+            split = split.filter(function (n) { return (n !== undefined && n != ""); });
             if (split && split.length) {
                 var destDirectory = '/';
                 if (split.length > 1) {
@@ -1967,9 +1915,7 @@ var EurekaView = (function () {
         a.setAttribute('href', 'javascript:;');
         a.setAttribute('title', 'Browse ' + path);
         var split = path.split('/');
-        split = split.filter(function (n) {
-            return (n !== undefined && n != "");
-        });
+        split = split.filter(function (n) { return (n !== undefined && n != ""); });
         var displayPath = split.join('/');
         if (!that.getController().getModel().getDisplayFullTreePaths()) {
             displayPath = split[split.length - 1];
@@ -2146,8 +2092,7 @@ var EurekaView = (function () {
                         try {
                             document.getElementById(safeFileName + '__thumb').outerHTML = div.outerHTML;
                         }
-                        catch (e) {
-                        }
+                        catch (e) { }
                     });
                 }
                 addErrorListener(img, result, safeFileName);
@@ -2527,8 +2472,7 @@ var EurekaView = (function () {
                 try {
                     nextRow.focus();
                 }
-                catch (e) {
-                }
+                catch (e) { }
             }
             function handleTrashKeyDown(e) {
                 if (e.keyCode === 13) {
@@ -2566,8 +2510,7 @@ var EurekaView = (function () {
                 try {
                     code.select();
                 }
-                catch (e) {
-                }
+                catch (e) { }
             }
             function getCodeToFocus(anchor) {
                 var tr = that.getClosest(anchor, 'tr');
@@ -2636,8 +2579,7 @@ var EurekaView = (function () {
             try {
                 option = select.querySelector('option[value="' + id + '"]');
             }
-            catch (e) {
-            }
+            catch (e) { }
             if (!option) {
                 option = document.createElement('option');
                 option.setAttribute('value', id);
@@ -2655,8 +2597,7 @@ var EurekaView = (function () {
             try {
                 optgroup = select.querySelector('optgroup[data-source="' + id + '"]');
             }
-            catch (e) {
-            }
+            catch (e) { }
             if (!optgroup) {
                 optgroup = document.createElement('optgroup');
                 optgroup.setAttribute('label', data.title);

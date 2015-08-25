@@ -2094,7 +2094,7 @@ class EurekaView {
                 }, false);
                 anchor.addEventListener('focus', function (e) {
                     (<HTMLElement>(<HTMLElement>that.getElement().parentNode).querySelector('footer.proceed .cta')).classList.add('go');
-                    (<HTMLElement>(<HTMLElement>that.getElement().parentNode).querySelector('footer.proceed .cta')).disabled = false;
+                    (<HTMLButtonElement>(<HTMLElement>that.getElement().parentNode).querySelector('footer.proceed .cta')).disabled = false;
                     (<HTMLElement>that.getElement().parentNode).querySelector('footer.proceed .cta').removeAttribute('disabled');
                 }, false);
                 anchor.addEventListener('blur', function (e) {

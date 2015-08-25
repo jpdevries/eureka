@@ -1,3 +1,4 @@
+/// <reference path="DefinitelyTyped/modernizr.d.ts" />
 var MuckBoot;
 (function () {
     var d = document;
@@ -79,13 +80,15 @@ var MuckBoot;
                 function createPathBrowserFooterMediaSourceInput() {
                     var input = d.createElement('input');
                     input.setAttribute('type', 'hidden');
-                    input.setAttribute('name', 'mediasource'), input.setAttribute('value', '0');
+                    input.setAttribute('name', 'mediasource'),
+                        input.setAttribute('value', '0');
                     return input;
                 }
                 function createPathBrowserFooterMediaPathInput() {
                     var input = d.createElement('input');
                     input.setAttribute('type', 'hidden');
-                    input.setAttribute('name', 'mediapath'), input.setAttribute('value', '/');
+                    input.setAttribute('name', 'mediapath'),
+                        input.setAttribute('value', '/');
                     return input;
                 }
                 function createPathBrowserFooterCreateNewForm() {

@@ -1,3 +1,4 @@
+/// <reference path="../ajax.d.ts" />
 importScripts("includes.js");
 self.addEventListener('message', function (e) {
     var data = e.data;
