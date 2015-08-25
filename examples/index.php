@@ -294,7 +294,7 @@
                                         <tbody>
                                             <!-- so each media item has TWO ROWS. a persistent tr.eureka__row followed by a tr.contextual row that displays expand, tag, share, rename, and delete options -->
                                             <!-- notice the data attributes, particularly data-tokens which is a || delimited list of typeahead tokens to filter results by -->
-                                            <tr class="eureka__row" tabindex="0" data-filename="DSC02396.jpg" data-tokens="hawaii||DSC02396.jpg||w=400||h=400" data-dimensions-w="400" data-dimensions-h="400" data-filesize-bytes="408600" data-timestamp="1427428986405">
+                                            <tr class="eureka__row" tabindex="0" data-src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02396.jpg" data-thumb="" data-filename="DSC02396.jpg" data-tokens="hawaii||DSC02396.jpg||w=400||h=400" data-dimensions-w="400" data-dimensions-h="400" data-filesize-bytes="408600" data-timestamp="1427428986405">
                                                 <td class="eureka__row-image">
                                                     <div class="image">
                                                         <input only-syncronous type="radio" name="file">
@@ -313,7 +313,7 @@
                                                 </td>
                                             </tr>
                                             <?php contextual_row('DSC02396.jpg'); ?>
-                                            <tr class="eureka__row" tabindex="0" data-filename="DSC02398.jpg" data-tokens="hawaii||DSC02398.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="429600" data-timestamp="1427428986405">
+                                            <tr class="eureka__row" tabindex="0" data-src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02398.jpg" data-filename="DSC02398.jpg" data-tokens="hawaii||DSC02398.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="429600" data-timestamp="1427428986405">
                                                 <td  class="eureka__row-image">
                                                     <div class="image"><input only-syncronous type="radio" name="file"><img src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02398.jpg"></div>
                                                     <code tabfocus="-1" sorta-draggable="true">DSC02398.jpg</code>
@@ -329,7 +329,7 @@
                                                 </td>
                                             </tr>
                                             <?php contextual_row('DSC02398.jpg'); ?>
-                                            <tr class="eureka__row" tabindex="0" data-filename="DSC02532.jpg" data-tokens="hawaii||DSC02532.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="409600" data-timestamp="1327428386405">
+                                            <tr class="eureka__row" tabindex="0" data-src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02532.jpg" data-filename="DSC02532.jpg" data-tokens="hawaii||DSC02532.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="409600" data-timestamp="1327428386405">
                                                 <td class="eureka__row-image">
                                                     <div class="image"><input only-syncronous type="radio" name="file"><img src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02532.jpg"></div>
                                                     <code tabfocus="-1" sorta-draggable="true">DSC02532.jpg</code>
@@ -345,7 +345,7 @@
                                                 </td>
                                             </tr>
                                             <?php contextual_row('DSC02532.jpg'); ?>
-                                            <tr class="eureka__row" tabindex="0" data-filename="DSC02399.jpg" data-tokens="hawaii||DSC02399.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="1048576" data-timestamp="1427428986305">
+                                            <tr class="eureka__row" tabindex="0" data-src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02399.jpg" data-filename="DSC02399.jpg" data-tokens="hawaii||DSC02399.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="1048576" data-timestamp="1427428986305">
                                                 <td  class="eureka__row-image">
                                                     <div class="image"><input only-syncronous type="radio" name="file"><img src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02399.jpg"></div>
                                                     <code tabfocus="-1" sorta-draggable="true">DSC02399.jpg</code>
@@ -361,7 +361,7 @@
                                                 </td>
                                             </tr>
                                             <?php contextual_row('DSC02399.jpg'); ?>
-                                            <tr class="eureka__row" tabindex="0" data-filename="DSC02404.jpg" data-tokens="hawaii||DSC02404.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="409600" data-timestamp="1427428985405">
+                                            <tr class="eureka__row" tabindex="0" data-src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02404.jpg" data-filename="DSC02404.jpg" data-tokens="hawaii||DSC02404.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="409600" data-timestamp="1427428985405">
                                                 <td class="eureka__row-image">
                                                     <div class="image"><input only-syncronous type="radio" name="file"><img src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02404.jpg"></div>
                                                     <code tabfocus="-1" sorta-draggable="true">DSC02404.jpg</code>
@@ -377,7 +377,7 @@
                                                 </td>
                                             </tr>
                                             <?php contextual_row('DSC02404.jpg'); ?>
-                                            <tr class="eureka__row" tabindex="0" data-filename="DSC02405.jpg" data-tokens="hawaii||DSC02405.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="409600" data-timestamp="1427428976405">
+                                            <tr class="eureka__row" tabindex="0" data-src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02405.jpg" data-filename="DSC02405.jpg" data-tokens="hawaii||DSC02405.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="409600" data-timestamp="1427428976405">
                                                 <td class="eureka__row-image">
                                                     <div class="image"><input only-syncronous type="radio" name="file"><img src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02405.jpg"></div>
                                                     <code tabfocus="-1" sorta-draggable="true">DSC02405.jpg</code>
@@ -393,7 +393,7 @@
                                                 </td>
                                             </tr>
                                             <?php contextual_row('DSC02405.jpg'); ?>
-                                            <tr class="eureka__row" tabindex="0" data-filename="DSC02434.jpg" data-tokens="hawaii||DSC02434.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="409600" data-timestamp="1427428985405">
+                                            <tr class="eureka__row" tabindex="0" data-src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02434.jpg" data-filename="DSC02434.jpg" data-tokens="hawaii||DSC02434.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="409600" data-timestamp="1427428985405">
                                                 <td class="eureka__row-image">
                                                     <div class="image"><input only-syncronous type="radio" name="file"><img src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02434.jpg"></div>
                                                     <code tabfocus="-1" sorta-draggable="true">DSC02434.jpg</code>
@@ -409,7 +409,7 @@
                                                 </td>
                                             </tr>
                                             <?php contextual_row('DSC02434.jpg'); ?>
-                                            <tr class="eureka__row" tabindex="0" data-filename="DSC02436.jpg" data-tokens="hawaii||DSC02436.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="409600" data-timestamp="1427428986305">
+                                            <tr class="eureka__row" tabindex="0" data-src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02436.jpg" data-filename="DSC02436.jpg" data-tokens="hawaii||DSC02436.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="409600" data-timestamp="1427428986305">
                                                 <td class="eureka__row-image">
                                                     <div class="image"><input only-syncronous type="radio" name="file"><img src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02436.jpg"></div>
                                                     <code tabfocus="-1" sorta-draggable="true">DSC02436.jpg</code>
@@ -425,7 +425,7 @@
                                                 </td>
                                             </tr>
                                             <?php contextual_row('DSC02436.jpg'); ?>
-                                            <tr class="eureka__row" tabindex="0" data-filename="DSC02441.jpg" data-tokens="hawaii||DSC02441.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="409600" data-timestamp="1427428926405">
+                                            <tr class="eureka__row" tabindex="0" data-src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02441.jpg" data-filename="DSC02441.jpg" data-tokens="hawaii||DSC02441.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="409600" data-timestamp="1427428926405">
                                                 <td class="eureka__row-image">
                                                     <div class="image"><input only-syncronous type="radio" name="file"><img src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02441.jpg"></div>
                                                     <code tabfocus="-1" sorta-draggable="true">DSC02441.jpg</code>
@@ -441,7 +441,7 @@
                                                 </td>
                                             </tr>
                                             <?php contextual_row('DSC02441.jpg'); ?>
-                                            <tr class="eureka__row" tabindex="0" data-filename="DSC02469.jpg" data-tokens="hawaii||DSC02469.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="409600" data-timestamp="1427428946405">
+                                            <tr class="eureka__row" tabindex="0" data-src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02469.jpg" data-filename="DSC02469.jpg" data-tokens="hawaii||DSC02469.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="409600" data-timestamp="1427428946405">
                                                 <td class="eureka__row-image">
                                                     <div class="image"><input only-syncronous type="radio" name="file"><img src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02469.jpg"></div>
                                                     <code tabfocus="-1" sorta-draggable="true">DSC02469.jpg</code>
@@ -457,7 +457,7 @@
                                                 </td>
                                             </tr>
                                             <?php contextual_row('DSC02469.jpg'); ?>
-                                            <tr class="eureka__row" tabindex="0" data-filename="DSC02472.jpg" data-tokens="hawaii||DSC02472.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="409600" data-timestamp="1427425986405">
+                                            <tr class="eureka__row" tabindex="0" data-src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02472.jpg" data-filename="DSC02472.jpg" data-tokens="hawaii||DSC02472.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="409600" data-timestamp="1427425986405">
                                                 <td class="eureka__row-image">
                                                     <div class="image"><input only-syncronous type="radio" name="file"><img src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02472.jpg"></div>
                                                     <code tabfocus="-1" sorta-draggable="true">DSC02472.jpg</code>
@@ -473,7 +473,7 @@
                                                 </td>
                                             </tr>
                                             <?php contextual_row('DSC02472.jpg'); ?>
-                                            <tr class="eureka__row" tabindex="0" data-filename="DSC02487.jpg" data-tokens="hawaii||DSC02487.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="409600" data-timestamp="1417428986405">
+                                            <tr class="eureka__row" tabindex="0" data-src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02487.jpg" data-filename="DSC02487.jpg" data-tokens="hawaii||DSC02487.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="409600" data-timestamp="1417428986405">
                                                 <td class="eureka__row-image">
                                                     <div class="image"><input only-syncronous type="radio" name="file"><img src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02487.jpg"></div>
                                                     <code tabfocus="-1" sorta-draggable="true">DSC02487.jpg</code>
@@ -489,7 +489,7 @@
                                                 </td>
                                             </tr>
                                             <?php contextual_row('DSC02487.jpg'); ?>
-                                            <tr class="eureka__row" tabindex="0" data-filename="DSC02472.jpg" data-tokens="hawaii||DSC02472.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="409600" data-timestamp="1427426986405">
+                                            <tr class="eureka__row" tabindex="0" data-src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02472.jpg" data-filename="DSC02472.jpg" data-tokens="hawaii||DSC02472.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="409600" data-timestamp="1427426986405">
                                                 <td class="eureka__row-image">
                                                     <div class="image"><input only-syncronous type="radio" name="file"><img src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02472.jpg"></div>
                                                     <code tabfocus="-1" sorta-draggable="true">DSC02472.jpg</code>
@@ -505,7 +505,7 @@
                                                 </td>
                                             </tr>
                                             <?php contextual_row('DSC02472.jpg'); ?>
-                                            <tr class="eureka__row" tabindex="0" data-filename="DSC02489.jpg" data-tokens="hawaii||DSC02489.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="409600" data-timestamp="1427428986305">
+                                            <tr class="eureka__row" tabindex="0" data-src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02489.jpg" data-filename="DSC02489.jpg" data-tokens="hawaii||DSC02489.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="409600" data-timestamp="1427428986305">
                                                 <td class="eureka__row-image">
                                                     <div class="image"><input only-syncronous type="radio" name="file"><img src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02489.jpg"></div>
                                                     <code tabfocus="-1" sorta-draggable="true">DSC02489.jpg</code>
@@ -521,7 +521,7 @@
                                                 </td>
                                             </tr>
                                             <?php contextual_row('DSC02489.jpg'); ?>
-                                            <tr class="eureka__row" tabindex="0" data-filename="DSC02491.jpg" data-tokens="hawaii||DSC02491.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="409600" data-timestamp="1427425986405">
+                                            <tr class="eureka__row" tabindex="0" data-src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02491.jpg" data-filename="DSC02491.jpg" data-tokens="hawaii||DSC02491.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="409600" data-timestamp="1427425986405">
                                                 <td class="eureka__row-image">
                                                     <div class="image"><input only-syncronous type="radio" name="file"><img src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02491.jpg"></div>
                                                     <code tabfocus="-1" sorta-draggable="true">DSC02491.jpg</code>
@@ -537,7 +537,7 @@
                                                 </td>
                                             </tr>
                                             <?php contextual_row('DSC02491.jpg'); ?>
-                                            <tr class="eureka__row" tabindex="0" data-filename="DSC02493.jpg" data-tokens="hawaii||DSC02493.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="409600" data-timestamp="1427428986403">
+                                            <tr class="eureka__row" tabindex="0" data-src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02493.jpg" data-filename="DSC02493.jpg" data-tokens="hawaii||DSC02493.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="409600" data-timestamp="1427428986403">
                                                 <td class="eureka__row-image">
                                                     <div class="image"><input only-syncronous type="radio" name="file"><img src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02493.jpg"></div>
                                                     <code tabfocus="-1" sorta-draggable="true">DSC02493.jpg</code>
@@ -553,7 +553,7 @@
                                                 </td>
                                             </tr>
                                             <?php contextual_row('DSC02493.jpg'); ?>
-                                            <tr class="eureka__row" tabindex="0" data-filename="DSC02503.jpg" data-tokens="hawaii||DSC02503.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="409600" data-timestamp="1427428986205">
+                                            <tr class="eureka__row" tabindex="0" data-src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02503.jpg" data-filename="DSC02503.jpg" data-tokens="hawaii||DSC02503.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="409600" data-timestamp="1427428986205">
                                                 <td class="eureka__row-image">
                                                     <div class="image"><input only-syncronous type="radio" name="file"><img src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02503.jpg"></div>
                                                     <code tabfocus="-1" sorta-draggable="true">DSC02503.jpg</code>
@@ -569,7 +569,7 @@
                                                 </td>
                                             </tr>
                                             <?php contextual_row('DSC02503.jpg'); ?>
-                                            <tr class="eureka__row" tabindex="0" data-filename="DSC02514.jpg" data-tokens="hawaii||DSC02514.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="409600" data-timestamp="1427428786405">
+                                            <tr class="eureka__row" tabindex="0" data-src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02514.jpg" data-filename="DSC02514.jpg" data-tokens="hawaii||DSC02514.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="409600" data-timestamp="1427428786405">
                                                 <td class="eureka__row-image">
                                                     <div class="image"><input only-syncronous type="radio" name="file"><img src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02514.jpg"></div>
                                                     <code tabfocus="-1" sorta-draggable="true">DSC02514.jpg</code>
@@ -585,7 +585,7 @@
                                                 </td>
                                             </tr>
                                             <?php contextual_row('DSC02514.jpg'); ?>
-                                            <tr class="eureka__row" tabindex="0" data-filename="DSC02525.jpg" data-tokens="hawaii||DSC02525.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="409600" data-timestamp="1427428956405">
+                                            <tr class="eureka__row" tabindex="0" data-src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02525.jpg" data-filename="DSC02525.jpg" data-tokens="hawaii||DSC02525.jpg||w=600||h=600" data-dimensions-w="600" data-dimensions-h="600" data-filesize-bytes="409600" data-timestamp="1427428956405">
                                                 <td class="eureka__row-image">
                                                     <div class="image"><input only-syncronous type="radio" name="file"><img src="http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02525.jpg"></div>
                                                     <code tabfocus="-1" sorta-draggable="true">DSC02525.jpg</code>
@@ -690,7 +690,7 @@
                     currentDirectory:undefined,
                     fileUploadURL:'/file/upload',
                     touch:Modernizr.touch,
-                    debug:true,
+                    debug:false,
                     useLocalStorage:false,
                     sortMediaSources:true,
                     useWebWorkers:true, // whether or not to use a worker thread when making XHR Requests
@@ -716,7 +716,7 @@
                 // listen for when a media item has been chosen
                 $eureka.getElement().addEventListener('EurekaFoundIt',function(e){
                     console.log('EurekaFoundIt');
-                    //console.log(e.detail);
+                    console.log(e.detail);
                 });
                 
                 // listen for when a media item has been deleted

@@ -27,7 +27,7 @@
     "grunt-contrib-watch": "0.6.1",
     "grunt-growl": "0.1.5",
     "grunt-sass": "1.0.0",
-    "grunt-ts": "4.2.0"
+    "grunt-ts": "^4.2.0"
   },
   "keywords": [
     "HTML",

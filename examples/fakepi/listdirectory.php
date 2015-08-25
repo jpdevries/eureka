@@ -7,6 +7,7 @@ $results = array(
     array(
         "filename" => "DSC02396",
         "src" => "http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02396.jpg",
+        "thumb" => "http://jpdevries.s3.amazonaws.com/mediabrowser/assets/images/DSC02396.jpg",
         "picture" => array(
             array(
                 "filename" => "DSC02398.jpg",

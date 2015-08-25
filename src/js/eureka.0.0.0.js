@@ -948,11 +948,13 @@ var EurekaModel = (function () {
     EurekaModel.prototype.setChoosenMediaItem = function (filename) {
         var that = this;
         var tr = getEurekaRowByFileName(filename);
+        var img = tr.querySelector('.image img, .image .img');
         var e = document.createEvent('CustomEvent');
         e.initCustomEvent('EurekaFoundIt', true, true, {
             filename: filename,
             timestamp: tr.getAttribute('data-timestamp'),
-            src: tr.querySelector('.image img, .image .img').getAttribute('src'),
+            src: tr.getAttribute('data-src'),
+            thumb: tr.getAttribute('data-thumb'),
             dimensions: [tr.getAttribute('data-dimensions-w'), tr.getAttribute('data-dimensions-h')],
             filesize: parseInt(tr.getAttribute('data-filesize-bytes'))
         });
@@ -1870,7 +1872,8 @@ var EurekaView = (function () {
                         e.initCustomEvent('EurekaFoundIt', true, true, {
                             filename: tr.getAttribute('data-filename'),
                             timestamp: tr.getAttribute('data-timestamp'),
-                            src: image.querySelector('img').getAttribute('src'),
+                            src: tr.getAttribute('data-src'),
+                            thumb: tr.getAttribute('data-thumb'),
                             dimensions: [tr.getAttribute('data-dimensions-w'), tr.getAttribute('data-dimensions-h')],
                             filesize: parseInt(tr.getAttribute('data-filesize-bytes'))
                         });
@@ -1969,6 +1972,7 @@ var EurekaView = (function () {
                 var filename = result.filename;
                 var safeFileName = filename.replace(/[!\"#$%&'\(\)\*\+,\.\/:;<=>\?\@\[\\\]\^`\{\|\}~]/g, '');
                 var src = result.src;
+                var thumb = result.thumb;
                 var filesize = result.filesize;
                 var dimensions = result.dimensions;
                 var editedon = (parseInt(result.editedon)) > 0 ? parseInt(result.editedon) : null;
@@ -1978,6 +1982,9 @@ var EurekaView = (function () {
                 tr.setAttribute('data-tokens', '');
                 tr.setAttribute('data-filename', filename);
                 tr.setAttribute('data-safe-filename', safeFileName);
+                tr.setAttribute('data-src', src);
+                if (thumb)
+                    tr.setAttribute('data-thumb', thumb);
                 tr.setAttribute('data-dimensions-w', dimensions.split('x')[0]);
                 tr.setAttribute('data-dimensions-h', dimensions.split('x')[1]);
                 tr.setAttribute('data-filesize-bytes', filesize);
@@ -2097,7 +2104,7 @@ var EurekaView = (function () {
                 }
                 addErrorListener(img, result, safeFileName);
                 imgD.appendChild(img);
-                img.setAttribute('src', src);
+                img.setAttribute('src', (thumb) ? thumb : src);
                 var code = document.createElement('code');
                 code.setAttribute('contenteditable', 'true');
                 code.setAttribute('tabindex', '-1');
@@ -2897,4 +2904,3 @@ var EurekaController = (function () {
     };
     return EurekaController;
 })();
-//# sourceMappingURL=eureka.0.0.0.js.map

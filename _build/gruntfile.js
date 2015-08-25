@@ -100,7 +100,10 @@ module.exports = function(grunt) {
                 target:'es5',
                 failOnTypeErrors:false,
                 src: ["<%= dirs.ts %>plugins.ts","<%= dirs.ts %>ajax.ts","<%= dirs.ts %>eureka.typescript.ts"],
-                out:'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.<%= pkg.version %>.js'
+                out:'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.<%= pkg.version %>.js',
+                options:{
+                    sourceMap:false
+                }
             },
             muckboot : {
                 target:'es5',
