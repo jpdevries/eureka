@@ -7,6 +7,7 @@ _build/scss/bourbon
 _build/scss/neat
 _build/scss/font-awesome
 _build/scss/html5-boilerplate
+_build/lib
 
 assets/css/font-awesome*.css
 assets/fonts/
