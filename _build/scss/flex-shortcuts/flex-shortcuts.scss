@@ -1,17 +1,17 @@
 %flexible-parent {
-    @include display(flex); /* flexible parent */
+    display:flex; /* flexible parent */
 }
 
 %flex-direction-column {
-    @extend %flex-direction-column; //@include flex-direction(column);
+    @extend %flex-direction-column; //flex-direction:column;
 }
 
 %ungrowable {
-    @include flex-grow(0);
+    flex-grow:0;
 }
 
 %flex-grow-1 {
-    @include flex-grow(1);
+    flex-grow:1;
 }
 
 %growable {
@@ -19,7 +19,7 @@
 }
 
 %flex-shrink-0 {
-    @include flex-shrink(0);
+    flex-shrink:0;
 }
 
 %unshrinkable {
@@ -27,47 +27,47 @@
 }
 
 %flex-shrink-1 {
-    @include flex-shrink(1);
+    flex-shrink:1;
 }
 
 %shrinkable { // alias for %flex-shrink-1
-    @include flex-shrink(1);
+    flex-shrink:1;
 }
 
 %flex-direction-column {
-    @include flex-direction(column);
+    flex-direction:column;
 }
 
 %align-items-stretch {
-    @include align-items(stretch);
+    align-items:stretch;
 }
 
 %justify-content-flex-start {
-    @include justify-content(flex-start);
+    justify-content:flex-start;
 }
 
 %justify-content-center {
-    @include justify-content(center);
+    justify-content:center;
 }
 
 %flex-direction-row {
-    @include flex-direction(row);
+    flex-direction:row;
 }
 
 %justify-content-flex-end {
-    @include justify-content(flex-end);
+    justify-content:flex-end;
 }
 
 %align-items-flex-start {
-    @include align-items(flex-start);
+    align-items:flex-start;
 }
 
 %align-items-stretch {
-    @include align-items(stretch);
+    align-items:stretch;
 }
 
 %flex-wrap-nowrap {
-    @include flex-wrap(nowrap);
+    flex-wrap:nowrap;
 }
 
 %flex-unwrappable {
@@ -75,7 +75,7 @@
 }
 
 %flex-wrap-wrap {
-    @include flex-wrap(wrap);
+    flex-wrap:wrap;
 }
 
 %flex-wrappable {
@@ -83,7 +83,7 @@
 }
 
 %align-self-flex-end {
-    @include align-self(flex-end);
+    align-self:flex-end;
 }
 
 %align-items-center {

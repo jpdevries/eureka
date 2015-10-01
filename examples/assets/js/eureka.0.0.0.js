@@ -1,10 +1,10 @@
 /* do not touch this file. see _build/*.js */
+/*
+Copyright (c) 2014, Lawrence Davis
+All rights reserved.
+https://github.com/lazd/scopedQuerySelectorShim
+*/
 (function() {
-    /*
-    Copyright (c) 2014, Lawrence Davis
-    All rights reserved.
-    https://github.com/lazd/scopedQuerySelectorShim
-    */
   if (!HTMLElement.prototype.querySelectorAll) {
     throw new Error('rootedQuerySelectorAll: This polyfill can only be used with browsers that support querySelectorAll');
   }
@@ -43,7 +43,7 @@
             gaveContainer = true;
           }
 
-          var parentNode = this.parentNode;
+          parentNode = this.parentNode;
 
           if (!this.id) {
             // Give temporary ID
@@ -77,8 +77,7 @@
     overrideNodeMethod(HTMLElement.prototype, 'querySelector');
     overrideNodeMethod(HTMLElement.prototype, 'querySelectorAll');
   }
-}());
-/*jslint unparam: true, browser: true, devel: true */
+}());/*jslint unparam: true, browser: true, devel: true */
 var html5Upload = (function(){
     'use strict';
 
@@ -144,7 +143,7 @@ var html5Upload = (function(){
     UploadManager.prototype = {
 
         initialize: function () {
-            //console.log('Initializing upload manager');
+            console.log('Initializing upload manager');
             var manager = this,
                 dropContainer = manager.dropContainer,
                 inputField = manager.inputField,
@@ -332,41 +331,57 @@ var html5Upload = (function(){
     if (!HTMLElement.prototype.querySelectorAll) {
         throw new Error('rootedQuerySelectorAll: This polyfill can only be used with browsers that support querySelectorAll');
     }
+    // A temporary element to query against for elements not currently in the DOM
+    // We'll also use this element to test for :scope support
     var container = document.createElement('div');
+    // Check if the browser supports :scope
     try {
+        // Browser supports :scope, do nothing
         container.querySelectorAll(':scope *');
     }
     catch (e) {
+        // Match usage of scope
         var scopeRE = /^\s*:scope/gi;
+        // Overrides
         function overrideNodeMethod(prototype, methodName) {
+            // Store the old method for use later
             var oldMethod = prototype[methodName];
+            // Override the method
             prototype[methodName] = function (query) {
                 var nodeList, gaveId = false, gaveContainer = false;
                 if (query.match(scopeRE)) {
+                    // Remove :scope
                     query = query.replace(scopeRE, '');
                     if (!this.parentNode) {
+                        // Add to temporary container
                         container.appendChild(this);
                         gaveContainer = true;
                     }
                     var parentNode = this.parentNode;
                     if (!this.id) {
+                        // Give temporary ID
                         this.id = 'rootedQuerySelector_id_' + (new Date()).getTime();
                         gaveId = true;
                     }
+                    // Find elements against parent node
                     nodeList = oldMethod.call(parentNode, '#' + this.id + ' ' + query);
+                    // Reset the ID
                     if (gaveId) {
                         this.id = '';
                     }
+                    // Remove from temporary container
                     if (gaveContainer) {
                         container.removeChild(this);
                     }
                     return nodeList;
                 }
                 else {
+                    // No immediate child selector used
                     return oldMethod.call(this, query);
                 }
             };
         }
+        // Browser doesn't support :scope, add polyfill
         overrideNodeMethod(HTMLElement.prototype, 'querySelector');
         overrideNodeMethod(HTMLElement.prototype, 'querySelectorAll');
     }
@@ -394,26 +409,34 @@ var getParents = function (element, selector) {
     }
     return null;
 };
+// attach the .equals method to Array's prototype to call it on any array http://stackoverflow.com/a/14853974/4671250
 Array.prototype.equals = function (array) {
+    // if the other array is a falsy value, return
     if (!array)
         return false;
+    // compare lengths - can save a lot of time 
     if (this.length != array.length)
         return false;
     for (var i = 0, l = this.length; i < l; i++) {
+        // Check if we have nested arrays
         if (this[i] instanceof Array && array[i] instanceof Array) {
+            // recurse into the nested arrays
             if (!this[i].equals(array[i]))
                 return false;
         }
         else if (this[i] != array[i]) {
+            // Warning - two different object instances will never be equal: {x:20} != {x:20}
             return false;
         }
     }
     return true;
 };
+/* http://stackoverflow.com/a/18078705/4671250 */
 var AJAX = (function () {
     function AJAX() {
         this.x = new XMLHttpRequest();
     }
+    //send(method:any, url:string, data:any, callback:any, sync:boolean = true, headers = []) {
     AJAX.prototype.send = function (method, url, data, callback, sync, headers) {
         if (sync === void 0) { sync = true; }
         if (headers === void 0) { headers = []; }
@@ -439,6 +462,7 @@ var AJAX = (function () {
         }
         this.x.send(data);
     };
+    //get(url:string, data:any, callback:any, sync:boolean = true, headers = []) {
     AJAX.prototype.get = function (url, data, callback, sync, headers) {
         if (sync === void 0) { sync = true; }
         if (headers === void 0) { headers = []; }
@@ -454,6 +478,7 @@ var AJAX = (function () {
         for (var key in data) {
             query.push(encodeURIComponent(key) + '=' + encodeURIComponent(data[key]));
         }
+        //    send(method:any, url:string, data:any, callback:any, sync:boolean = true, headers = []) {
         this.send('POST', url, query.join('&'), callback, sync, (data.headers !== undefined ? data.headers : null));
     };
     AJAX.prototype.setHeaders = function (headers) {
@@ -482,12 +507,13 @@ var Eureka = (function () {
     function Eureka(opts) {
         this.opts = opts;
         var that = this;
-        this._model = new EurekaModel(opts);
-        this._view = new EurekaView();
+        this._model = new EurekaModel(opts); // give the model the data
+        this._view = new EurekaView(); // keep the view stupid
         this._controller = new EurekaController({
             model: this._model,
             view: this._view
         });
+        // set references to the controller respectively
         this._model.setController(this._controller);
         this._view.setController(this._controller);
         this._view.init();
@@ -495,7 +521,7 @@ var Eureka = (function () {
         this._controller.init();
         this.fetch();
         this._view.getElement().addEventListener('EurekaFilesUploaded', function (e) {
-            that._model.setCurrentDirectory(that._model.getCurrentDirectory(), true, true, true);
+            that._model.setCurrentDirectory(that._model.getCurrentDirectory(), true, true, true); // trigger a repaint
         });
     }
     Eureka.prototype.fetch = function () {
@@ -826,6 +852,7 @@ var EurekaModel = (function () {
             console.log('setCurrentDirectory: ' + currentDirectory);
         if (setLocalStorage === undefined)
             setLocalStorage = this.useLocalStorage();
+        //if(currentDirectory === undefined || currentDirectory === 'undefined') currentDirectory = '/';
         if (this._currentDirectory === currentDirectory && !dispatchIdenticalValues)
             return;
         this._currentDirectory = currentDirectory;
@@ -922,6 +949,7 @@ var EurekaModel = (function () {
         that.setCurrentMediaSource((!currentExists) ? results[0].id : current, true, true, false, false);
     };
     EurekaModel.prototype.renameFile = function (fileName, newFilename) {
+        // Create the event
         var e = document.createEvent('CustomEvent');
         e.initCustomEvent('EurekaFileRename', true, true, {
             fileName: fileName,
@@ -947,7 +975,7 @@ var EurekaModel = (function () {
     };
     EurekaModel.prototype.setChoosenMediaItem = function (filename) {
         var that = this;
-        var tr = getEurekaRowByFileName(filename);
+        var tr = getEurekaRowByFileName(filename); // #more reliable than tr.eureka__row.focused
         var img = tr.querySelector('.image img, .image .img');
         var e = document.createEvent('CustomEvent');
         e.initCustomEvent('EurekaFoundIt', true, true, {
@@ -997,7 +1025,7 @@ var EurekaModel = (function () {
         this._listSourcesRequestURL = url;
     };
     return EurekaModel;
-})();
+})(); // end class EurekaModel
 var EurekaView = (function () {
     function EurekaView() {
     }
@@ -1195,6 +1223,7 @@ var EurekaView = (function () {
             var el = document.getElementById(tog.getAttribute('data-toggle-target'));
             el.classList.remove('hidden');
             document.getElementById(that.getController().getModel().getUID()).classList.add('sidebar-open');
+            //document.querySelectorAll('#media-browser_0 .browse-select')[0].classList.add('tablet-p-hidden');
             that.getElement().querySelector('.browse-select').classList.add('tablet-p-hidden');
             that.getController().getModel().setNavTreeHidden(false);
             var toggle = document.getElementById(that.getController().getModel().getUID() + '__pathbrowser_toggle').getElementsByTagName("i")[0];
@@ -1209,6 +1238,7 @@ var EurekaView = (function () {
             var el = document.getElementById(tog.getAttribute('data-toggle-target'));
             el.classList.add('hidden');
             document.getElementById(that.getController().getModel().getUID()).classList.remove('sidebar-open');
+            //document.querySelectorAll('#media-browser_0 .browse-select')[0].classList.remove('tablet-p-hidden');
             that.getElement().querySelector('.browse-select').classList.remove('tablet-p-hidden');
             that.getController().getModel().setNavTreeHidden(true);
             var toggle = document.getElementById(that.getController().getModel().getUID() + '__pathbrowser_toggle').getElementsByTagName("i")[0];
@@ -1243,15 +1273,27 @@ var EurekaView = (function () {
         if (this.getController().getModel().getNavTreeHidden() === true) {
             hideSidebar();
         }
+        // if a droptarget exists and a modern mouse enabled browser is being used
         var dropContainer = document.getElementById(that.getController().getModel().getUID()).querySelector('.dropzone') || null;
         if (html5Upload !== undefined && !(that.getController().getModel().isTouch()) && html5Upload.fileApiSupported() && dropContainer) {
             that._html5Upload = html5Upload.initialize({
+                // URL that handles uploaded files
                 uploadUrl: that.getController().getModel().getFileUploadURL(),
+                // HTML element on which files should be dropped (optional)
                 dropContainer: dropContainer,
+                // HTML file input element that allows to select files (optional)
                 inputField: document.getElementById(that.getController().getModel().getUID() + '__upload-input'),
+                // Key for the file data (optional, default: 'file')
                 key: 'File',
                 data: that.getController().getModel().getHTML5UploadData(),
+                // Additional data submitted with file (optional)
+                //data: that.getController().getModel().getHeaders(), // NOTE: could also send additional data here
+                // Maximum number of simultaneous uploads
+                // Other uploads will be added to uploads queue (optional)
                 maxSimultaneousUploads: 4,
+                // Callback for each dropped or selected file
+                // It receives one argument, add callbacks 
+                // by passing events map object: file.on({ ... })
                 onFileAdded: function (file) {
                     function removeMessages() {
                         var rs = dropContainer.querySelector('.progress').querySelectorAll('h2,p');
@@ -1260,6 +1302,7 @@ var EurekaView = (function () {
                         }
                     }
                     removeMessages();
+                    // make a really unique identifer
                     var id = file.fileName.replace(/[!\"#$%&'\(\)\*\+,\.\/:;<=>\?\@\[\\\]\^`\{\|\}~]/g, '') + file.fileSize.toString().replace(/[!\"#$%&'\(\)\*\+,\.\/:;<=>\?\@\[\\\]\^`\{\|\}~]/g, '');
                     var bar = document.createElement('div');
                     bar.classList.add('bar');
@@ -1274,6 +1317,7 @@ var EurekaView = (function () {
                     dropzone.classList.add('uploading');
                     dropzone.querySelector('.progress').appendChild(bar);
                     file.on({
+                        // Called after received response from the server
                         onCompleted: function (response) {
                             function isJSON(data) {
                                 try {
@@ -1313,6 +1357,7 @@ var EurekaView = (function () {
                                             p.innerHTML = 'Oh no,<br>One or more files&nbsp;were not&nbsp;uploaded.';
                                         }
                                         var e = document.createEvent('CustomEvent');
+                                        //that.getElement().dispatchEvent(e);
                                         e.initCustomEvent(EurekaModel.EurekaFilesUploaded, true, true, {});
                                         that.getElement().dispatchEvent(e);
                                         document.getElementById(that.getController().getModel().getUID() + '__upload-form').reset();
@@ -1320,6 +1365,8 @@ var EurekaView = (function () {
                                 }, 640);
                             }
                         },
+                        // Called during upload progress, first parameter
+                        // is decimal value from 0 to 100.
                         onProgress: function (progress, fileSize, uploadedBytes) {
                             progress = Math.ceil(progress);
                             bar.setAttribute('title', file.fileName + ' is ' + progress + '% uploaded');
@@ -1331,7 +1378,7 @@ var EurekaView = (function () {
         }
         else {
             if (dropContainer)
-                dropContainer.remove();
+                dropContainer.remove(); // remove the drop container because we can't use it
         }
         if (that.getController().getModel().getFileUploadURL() === undefined || that.getController().getModel().getFileUploadURL() == '') {
             try {
@@ -1513,6 +1560,7 @@ var EurekaView = (function () {
             var source = optgroup.getAttribute('data-source');
             that.getController().getModel().setCurrentMediaSource(source);
             that.getController().getModel().setCurrentDirectory(option.getAttribute('data-cd'), true, that.getController().getModel().useLocalStorage());
+            // fetch current media source's directories
             var ajax = new AJAX();
             ajax.get(that.getController().getModel().getListSourceRequestURL(), { s: that.getController().getModel().getCurrentMediaSource() }, function (data) {
             }, true, that.getController().getModel().getXHRHeaders());
@@ -1556,6 +1604,8 @@ var EurekaView = (function () {
                     this.removeEventListener('keydown', handleKeyDown, false);
                 }, false);
                 function handleKeyDown(e) {
+                    //var code = getCodeToFocus(this);
+                    //var tr = that.getClosest(this, '.contextual').previousSibling;
                     if (e.keyCode === 13) {
                         e.preventDefault();
                         e.stopPropagation();
@@ -1564,6 +1614,7 @@ var EurekaView = (function () {
                         that.getElement().querySelector('button.create-new').focus();
                         var foldername = this.innerHTML;
                         var e = document.createEvent('CustomEvent');
+                        //that.getElement().dispatchEvent(e);
                         e.initCustomEvent('EurekaDirectoryCreated', true, true, {
                             newdirectory: foldername,
                             cd: that.getController().getModel().getCurrentDirectory(),
@@ -1608,6 +1659,7 @@ var EurekaView = (function () {
     };
     EurekaView.prototype.assignARIAKeyListeners = function () {
         var that = this;
+        // ARIA focus support for non-contextual rows
         (function () {
             function setFocused(el) {
                 var rows = document.querySelectorAll(".eureka-table tbody > tr:not(.contextual)");
@@ -1626,8 +1678,10 @@ var EurekaView = (function () {
             function handleBlur(el) {
                 var contextual = document.getElementById('eureka_contextual__' + el.getAttribute('data-safe-filename'));
                 contextual.focus();
+                //that.getProceedFooter().querySelector('button.cta').classList.add('muted');
                 var _cta = that.getProceedFooter().querySelector('button.cta');
                 _cta.classList.remove('go');
+                //_cta.setAttribute('disabled','disabled');
                 _cta.classList.add('muted');
             }
             var rows = document.querySelectorAll(".eureka-table tbody > tr:not(.contextual)");
@@ -1635,10 +1689,12 @@ var EurekaView = (function () {
                 var current = rows[i];
                 current.addEventListener('click', function (e) {
                     e.preventDefault();
+                    //var _as = document.querySelectorAll(".eureka-table tbody > tr:not(.contextual)");
                     setFocused(this);
                 }, false);
                 current.addEventListener('focus', function (e) {
                     e.preventDefault();
+                    //var _as = document.querySelectorAll(".eureka-table tbody > tr:not(.contextual)");
                     setFocused(this);
                 }, false);
                 current.addEventListener('blur', function (e) {
@@ -1655,6 +1711,7 @@ var EurekaView = (function () {
             function handleSortBtnClicked(e) {
                 e.preventDefault();
                 e.stopPropagation();
+                // toggle between 0 and 1
                 this.setAttribute('data-sort-asc', Math.abs(parseInt(this.getAttribute('data-sort-asc')) - 1).toString());
                 var sortby = this.getAttribute('data-sortby');
                 var sortASC = (this.getAttribute('data-sort-asc') == "1") ? true : false;
@@ -1699,7 +1756,7 @@ var EurekaView = (function () {
                 }
                 that.getElement().querySelector('.eureka-table tbody').innerHTML = s;
             }
-            sortBtn.removeEventListener('click', handleSortBtnClicked, true);
+            sortBtn.removeEventListener('click', handleSortBtnClicked, true); // assignSortBtnListeners should only be called once but this is another layer of protection
             sortBtn.addEventListener('click', handleSortBtnClicked, true);
         }
     };
@@ -1773,6 +1830,24 @@ var EurekaView = (function () {
                 li.classList.remove('active');
             }
         }
+        /*var source = that.getController().getModel().getCurrentMediaSource();
+        var ajax = new AJAX();
+        ajax.get(
+            that.getController().getModel().getListDirectoryRequestURL(),
+            { s: source, dir: el.getAttribute('data-cd') || '/' },
+            function (data) {
+                data = JSON.parse(data);
+                if(that.getController().getModel().getDebug()) console.log(data);
+                that.paintJSON(data);
+            },
+            true,
+            that.getController().getModel().getXHRHeaders()
+        );*/
+        /*
+        ajax.get(that.getController().getModel().getListDirectoryRequestURL(), { s: source, dir: el.getAttribute('data-cd') }, function (data) {
+            that.paintJSON(data);
+        });
+        */
         var li = that.getClosest(el, 'li');
         deactivatePaths();
         li.classList.add('active');
@@ -1832,7 +1907,7 @@ var EurekaView = (function () {
         (function () {
             var paths = pathBrowser.querySelectorAll("nav.tree a.path");
             for (var i = 0; i < paths.length; i++) {
-                var path = paths[i];
+                var path = paths[i]; // #janky typescript doesn't seem to support <HTMLElement>.remove();
                 path.removeEventListener('click', that._handleTreeNodeClicked, false);
                 path.remove();
             }
@@ -1840,7 +1915,7 @@ var EurekaView = (function () {
         (function () {
             var folders = pathBrowser.querySelectorAll("nav.tree a.folder");
             for (var i = 0; i < folders.length; i++) {
-                var folder = folders[i];
+                var folder = folders[i]; // #janky typescript doesn't seem to support <HTMLElement>.remove();
                 folder.removeEventListener('click', that._handleTreeFolderClicked, false);
                 folder.remove();
             }
@@ -1890,6 +1965,7 @@ var EurekaView = (function () {
         this.assignDraggableListeners();
         this.assignChooseClickListeners();
         this.assignSortBtnListeners();
+        //this.assignContextualRowListeners();
     };
     EurekaView.prototype.createTreeNode = function (path) {
         var that = this;
@@ -1978,6 +2054,7 @@ var EurekaView = (function () {
                 var editedon = (parseInt(result.editedon)) > 0 ? parseInt(result.editedon) : null;
                 var tr = document.createElement("tr");
                 tr.classList.add('eureka__row');
+                //tr.setAttribute('contenteditable', true);
                 tr.setAttribute('tabindex', "0");
                 tr.setAttribute('data-tokens', '');
                 tr.setAttribute('data-filename', filename);
@@ -2103,6 +2180,7 @@ var EurekaView = (function () {
                     });
                 }
                 addErrorListener(img, result, safeFileName);
+                //img.setAttribute('alt',filename); // after a11y testing this was determined to be unecessary - jp
                 imgD.appendChild(img);
                 img.setAttribute('src', (thumb) ? thumb : src);
                 var code = document.createElement('code');
@@ -2150,6 +2228,7 @@ var EurekaView = (function () {
                     var tr = document.createElement('tr');
                     tr.classList.add('contextual');
                     tr.setAttribute('id', 'eureka_contextual__' + safeFileName);
+                    //tr.setAttribute('tabindex','0');
                     var td = document.createElement('td');
                     td.setAttribute('colspan', '4');
                     function createFlexibleNav() {
@@ -2221,9 +2300,11 @@ var EurekaView = (function () {
                         nav.appendChild(createExpandBtn());
                         nav.appendChild(createChooseBtn());
                         if (that.getController().getModel().getAllowRename() && document.execCommand)
-                            nav.appendChild(createRenameBtn());
+                            nav.appendChild(createRenameBtn()); // should probably polyfill or just juse a standard text input instead #janky? #shame?
                         if (that.getController().getModel().getAllowDelete())
                             nav.appendChild(createTrashBtn());
+                        //nav.appendChild(createFlexibleNavTagForm());
+                        //nav.appendChild(createFlexibleNavShareForm());
                         function createFlexibleNavTagForm() {
                             var form = document.createElement('form');
                             form.classList.add('tag');
@@ -2290,6 +2371,9 @@ var EurekaView = (function () {
                 tbodyHTML += createContextualRow().outerHTML;
             }
             else {
+                //console.log(cd);
+                //console.log(result.directory);
+                //that.asyncronouslyAddDirectory(cd,result.directory);
                 directoriesToAdd.push({ cd: cd, directory: result.directory });
             }
         }
@@ -2299,11 +2383,13 @@ var EurekaView = (function () {
                 that.asyncronouslyAddDirectory(d.cd, d.directory);
             }
             if (directoriesToAdd.length) {
+                //console.log('directoriesToAdd.length: ' + directoriesToAdd.length);
                 that.assignTreeListeners();
             }
         })();
         var thead = (document.querySelector('#' + this.getController().getModel().getUID() + ' .eureka-table > table > thead'));
         document.querySelector('#' + this.getController().getModel().getUID() + ' .eureka-table').innerHTML = '<table>' + thead.outerHTML + '<tbody>' + tbodyHTML + '</tbody>' + '</table>';
+        // bolden the correct tree item
         try {
             this.getElement().querySelector('nav.tree li.active').classList.remove('active');
         }
@@ -2378,6 +2464,8 @@ var EurekaView = (function () {
         (function () {
             var browsingSelect = document.getElementById(that.getController().getModel().getUID() + '__browsing');
             var mediaSource = that.getController().getModel().getCurrentMediaSource();
+            //console.log('setting optGrp');
+            //console.log('currentMediaSource: ' + that.getController().getModel().getCurrentMediaSource());
             var optsGrp = (function () {
                 var os = browsingSelect.querySelectorAll('optgroup');
                 for (var i = 0; i < os.length; i++) {
@@ -2394,7 +2482,7 @@ var EurekaView = (function () {
             for (var i = 0; i < opts.length; i++) {
                 var opt = opts[i];
                 if (opt.innerHTML == _iH)
-                    return;
+                    return; // it already exists
             }
             var newOpt = document.createElement('option');
             newOpt.setAttribute('value', JSON.stringify({ cs: that.getController().getModel().getCurrentMediaSource(), cd: _iH }));
@@ -2403,6 +2491,7 @@ var EurekaView = (function () {
             var inserted = false;
             for (var i = 0; i < opts.length; i++) {
                 var opt = opts[i];
+                //console.log(opt.innerHTML);
                 var a = [opt.innerHTML, _iH];
                 a.sort();
                 if (_iH == a[0]) {
@@ -2436,6 +2525,8 @@ var EurekaView = (function () {
                 }, false);
                 anchor.addEventListener('blur', function (e) {
                     that.getElement().parentNode.querySelector('footer.proceed .cta').classList.remove('go');
+                    //that.getElement().parentNode.querySelector('footer.proceed .cta').disabled = true;
+                    //that.getElement().parentNode.querySelector('footer.proceed .cta').setAttribute('disabled','disabled');
                 }, false);
             }
             function handleChooseClicked(anchor) {
@@ -2462,16 +2553,18 @@ var EurekaView = (function () {
                 var contextual = that.getClosest(anchor, 'tr');
                 var mediaRow = contextual.previousSibling;
                 var nextRow = contextual.nextSibling;
+                // give them a way out
                 if (that.getController().getModel().getAlertBeforeDelete() && !window.confirm('Are you sure you want to delete ' + mediaRow.getAttribute('data-filename') + '?')) {
                     return false;
                 }
+                // proceed
                 that.getController().getModel().deleteFile(mediaRow.getAttribute('data-filename'), mediaRow);
                 function remove(el) {
                     try {
                         el.remove();
                     }
                     catch (e) {
-                        el.parentNode.removeChild(el);
+                        el.parentNode.removeChild(el); // IE 10 doesn't support HTMLElement.remove()
                     }
                 }
                 remove(mediaRow);
@@ -2515,9 +2608,10 @@ var EurekaView = (function () {
             function selectCode(code) {
                 code.focus();
                 try {
-                    code.select();
+                    code.select(); // if you think about it contenteditable nodes should probably be selectable...
                 }
                 catch (e) { }
+                // consider selecting also
             }
             function getCodeToFocus(anchor) {
                 var tr = that.getClosest(anchor, 'tr');
@@ -2538,7 +2632,7 @@ var EurekaView = (function () {
             function handleCodeKeyPress(e) {
                 if (e.keyCode === 13) {
                     e.preventDefault();
-                    var tr = this.parentNode.parentNode;
+                    var tr = this.parentNode.parentNode; // #janky? :/
                     var contextual = tr.nextSibling;
                     var filename = tr.getAttribute('data-filename');
                     code.contentEditable = 'false';
@@ -2553,6 +2647,7 @@ var EurekaView = (function () {
             }
         }
     };
+    // ensure the optgroups are always sorted in order of their respective media source ids
     EurekaView.prototype.sortBrowseSelectOptGroupsByMediaSourceId = function (select) {
         if (select === undefined)
             select = document.getElementById(this.getController().getModel().getUID() + '__browsing').querySelector('select');
@@ -2667,22 +2762,27 @@ var EurekaView = (function () {
     };
     EurekaView.prototype.getClosest = function (elem, selector) {
         var firstChar = selector.charAt(0);
+        // Get closest match
         for (; elem && elem !== document; elem = elem.parentNode) {
+            // If selector is a class
             if (firstChar === '.') {
                 if (elem.classList.contains(selector.substr(1))) {
                     return elem;
                 }
             }
+            // If selector is an ID
             if (firstChar === '#') {
                 if (elem.id === selector.substr(1)) {
                     return elem;
                 }
             }
+            // If selector is a data attribute
             if (firstChar === '[') {
                 if (elem.hasAttribute(selector.substr(1, selector.length - 2))) {
                     return elem;
                 }
             }
+            // If selector is a tag
             if (elem.tagName.toLowerCase() === selector) {
                 return elem;
             }
@@ -2690,7 +2790,7 @@ var EurekaView = (function () {
         return null;
     };
     return EurekaView;
-})();
+})(); // end class EurekaView
 var EurekaController = (function () {
     function EurekaController(opts) {
         this.opts = opts;
@@ -2705,7 +2805,7 @@ var EurekaController = (function () {
     };
     EurekaController.prototype.init = function () {
         var that = this;
-        var eureka = that.getView().getElement();
+        var eureka = that.getView().getElement(); // we found it!
         if (that.getModel().useLocalStorage()) {
             (function () {
                 var mediaSourcesData = that.getModel().getLocalStorage('mediaSourcesData');
@@ -2726,7 +2826,9 @@ var EurekaController = (function () {
                 }
             })();
         }
+        // listen for when certain things happen (currently the DOM element itself dispatches the events)
         eureka.addEventListener(EurekaModel.EurekaViewChange, function (e) {
+            //that.getModel().setCurrentView(e.currentView, false);
         });
         eureka.addEventListener(EurekaModel.EurekaDirectoryChanged, function (e) {
             if (that.getModel().getDebug())
@@ -2807,7 +2909,7 @@ var EurekaController = (function () {
                     that.getModel().setLocalStorage(d.cs + '_mediaSourceData', JSON.stringify(d));
                 that.getView().paintTree(d);
                 if (e.detail.clearDirectory == true)
-                    that.getModel().setCurrentDirectory('', true, false);
+                    that.getModel().setCurrentDirectory('', true, false); // clear the current directory and trigger a repaint
             }
             if (that.getModel().getUseWebWorkers()) {
                 (function () {
@@ -2836,6 +2938,7 @@ var EurekaController = (function () {
             for (var i = 0; i < sources.length; i++) {
                 var source = new EurekaMediaSource(sources[i].opts);
                 var id = source.getID();
+                //var title = source.getTitle();
                 requestMediaListings(source);
                 function requestMediaListings(source) {
                     if (that.getModel().getDebug())
@@ -2903,4 +3006,4 @@ var EurekaController = (function () {
         })();
     };
     return EurekaController;
-})();
+})(); // end class EurekaController

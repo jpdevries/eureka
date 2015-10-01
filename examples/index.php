@@ -9,6 +9,30 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="stylesheet" href="assets/css/eureka.0.0.0.css?nc=<?php echo time() ?>">
+        <style>
+        body {
+          /* move them */
+          height: 100vh;
+          display: -webkit-flex;
+          display: -ms-flexbox;
+          display: flex;
+          -webkit-flex-direction: column;
+              -ms-flex-direction: column;
+                  flex-direction: column; }
+
+
+          #page-wrapper {
+            /* move them */
+            -webkit-flex-direction: column;
+                -ms-flex-direction: column;
+                    flex-direction: column;
+            -webkit-flex-grow: 1;
+                -ms-flex-positive: 1;
+                    flex-grow: 1;
+            -webkit-flex-wrap: nowrap;
+                -ms-flex-wrap: nowrap;
+                    flex-wrap: nowrap; }
+        </style>
         <script src="assets/js/vendor/modernizr-2.8.3.min.js"></script>
         
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" async>

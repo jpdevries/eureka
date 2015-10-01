@@ -1,9 +1,9 @@
+/*
+Copyright (c) 2014, Lawrence Davis
+All rights reserved.
+https://github.com/lazd/scopedQuerySelectorShim
+*/
 (function() {
-    /*
-    Copyright (c) 2014, Lawrence Davis
-    All rights reserved.
-    https://github.com/lazd/scopedQuerySelectorShim
-    */
   if (!HTMLElement.prototype.querySelectorAll) {
     throw new Error('rootedQuerySelectorAll: This polyfill can only be used with browsers that support querySelectorAll');
   }
@@ -42,7 +42,7 @@
             gaveContainer = true;
           }
 
-          var parentNode = this.parentNode;
+          parentNode = this.parentNode;
 
           if (!this.id) {
             // Give temporary ID

@@ -28,6 +28,10 @@ THE SOFTWARE.
     return document.createDocumentFragment();
   }
 
+  function createElement(nodeName) {
+    return document.createElement(nodeName);
+  }
+
   function mutationMacro(nodes) {
     if (nodes.length === 1) {
       return textNodeIfString(nodes[0]);
@@ -113,7 +117,13 @@ THE SOFTWARE.
       return !!force;
     },
     DocumentFragment = window.DocumentFragment,
+    CharacterData = window.CharacterData || window.Node,
+    CharacterDataPrototype = CharacterData && CharacterData.prototype,
+    DocumentType = window.DocumentType,
+    DocumentTypePrototype = DocumentType && DocumentType.prototype,
     ElementPrototype = (window.Element || window.Node || window.HTMLElement).prototype,
+    HTMLSelectElement = window.HTMLSelectElement || createElement('select').constructor,
+    selectRemove = HTMLSelectElement.prototype.remove,
     ShadowRoot = window.ShadowRoot,
     SVGElement = window.SVGElement,
     // normalizes multiple ids as CSS query
@@ -246,6 +256,23 @@ THE SOFTWARE.
     if (!(property in ElementPrototype)) {
       ElementPrototype[property] = properties[i - 1];
     }
+    if (property === 'remove') {
+      // see https://github.com/WebReflection/dom4/issues/19
+      HTMLSelectElement.prototype[property] = function () {
+        return 0 < arguments.length ?
+          selectRemove.apply(this, arguments) :
+          ElementPrototype.remove.call(this);
+      };
+    }
+    // see https://github.com/WebReflection/dom4/issues/18
+    if (/before|after|replace|remove/.test(property)) {
+      if (CharacterData && !(property in CharacterDataPrototype)) {
+        CharacterDataPrototype[property] = properties[i - 1];
+      }
+      if (DocumentType && !(property in DocumentTypePrototype)) {
+        DocumentTypePrototype[property] = properties[i - 1];
+      }
+    }
   }
 
   // bring query and queryAll to the document too
@@ -267,7 +294,7 @@ THE SOFTWARE.
 
   // most likely an IE9 only issue
   // see https://github.com/WebReflection/dom4/issues/6
-  if (!document.createElement('a').matches('a')) {
+  if (!createElement('a').matches('a')) {
     ElementPrototype[property] = function(matches){
       return function (selector) {
         return matches.call(
@@ -341,7 +368,7 @@ THE SOFTWARE.
   } else {
     // iOS 5.1 and Nokia ASHA do not support multiple add or remove
     // trying to detect and fix that in here
-    TemporaryTokenList = document.createElement('div')[CLASS_LIST];
+    TemporaryTokenList = createElement('div')[CLASS_LIST];
     TemporaryTokenList.add('a', 'b', 'a');
     if ('a\x20b' != TemporaryTokenList) {
       // no other way to reach original methods in iOS 5.1
@@ -374,6 +401,49 @@ THE SOFTWARE.
       }
     });
   }
+
+  // requestAnimationFrame partial polyfill
+  (function () {
+    for (var
+      raf,
+      rAF = window.requestAnimationFrame,
+      cAF = window.cancelAnimationFrame,
+      prefixes = ['o', 'ms', 'moz', 'webkit'],
+      i = prefixes.length;
+      !cAF && i--;
+    ) {
+      rAF = rAF || window[prefixes[i] + 'RequestAnimationFrame'];
+      cAF = window[prefixes[i] + 'CancelAnimationFrame'] ||
+            window[prefixes[i] + 'CancelRequestAnimationFrame'];
+    }
+    if (!cAF) {
+      // some FF apparently implemented rAF but no cAF 
+      if (rAF) {
+        raf = rAF;
+        rAF = function (callback) {
+          var goOn = true;
+          raf(function () {
+            if (goOn) callback.apply(this, arguments);
+          });
+          return function () {
+            goOn = false;
+          };
+        };
+        cAF = function (id) {
+          id();
+        };
+      } else {
+        rAF = function (callback) {
+          return setTimeout(callback, 15, 15);
+        };
+        cAF = function (id) {
+          clearTimeout(id);
+        };
+      }
+    }
+    window.requestAnimationFrame = rAF;
+    window.cancelAnimationFrame = cAF;
+  }());
 
   // http://www.w3.org/TR/dom/#customevent
   try{new window.CustomEvent('?');}catch(o_O){

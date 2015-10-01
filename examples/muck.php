@@ -21,8 +21,10 @@
             
             body {
                 padding:1vh;
+                 min-height: 98vh;
                 @media screen and (min-width: 769px) {
                     padding:2vh;
+                     min-height: 96vh;
                 }
             }
             
@@ -52,63 +54,6 @@
                 height: 96vh;
                 max-height:96vh;
               }
-              html.no-touch body > form {
-                display: -webkit-box;
-                display: -moz-box;
-                display: box;
-                display: -webkit-flex;
-                display: -moz-flex;
-                display: -ms-flexbox;
-                display: flex;
-                -webkit-box-orient: vertical;
-                -moz-box-orient: vertical;
-                box-orient: vertical;
-                -webkit-flex-direction: column;
-                -moz-flex-direction: column;
-                flex-direction: column;
-                -ms-flex-direction: column;
-                -webkit-box-lines: single;
-                -moz-box-lines: single;
-                box-lines: single;
-                -webkit-flex-wrap: nowrap;
-                -moz-flex-wrap: nowrap;
-                -ms-flex-wrap: nowrap;
-                flex-wrap: nowrap;
-                -webkit-flex-grow: 1;
-                -moz-flex-grow: 1;
-                flex-grow: 1;
-                -ms-flex-positive: 1;
-                max-height: 100%;
-              }
-              html.no-touch body > form > #page-wrapper {
-                max-height: 100%;
-                display: -webkit-box;
-                display: -moz-box;
-                display: box;
-                display: -webkit-flex;
-                display: -moz-flex;
-                display: -ms-flexbox;
-                display: flex;
-                -webkit-box-orient: vertical;
-                -moz-box-orient: vertical;
-                box-orient: vertical;
-                -webkit-flex-direction: column;
-                -moz-flex-direction: column;
-                flex-direction: column;
-                -ms-flex-direction: column;
-                -webkit-box-lines: single;
-                -moz-box-lines: single;
-                box-lines: single;
-                -webkit-flex-wrap: nowrap;
-                -moz-flex-wrap: nowrap;
-                -ms-flex-wrap: nowrap;
-                flex-wrap: nowrap;
-                -webkit-flex-grow: 1;
-                -moz-flex-grow: 1;
-                flex-grow: 1;
-                -ms-flex-positive: 1;
-              }
-            }
             
             html.no-touch #page-wrapper {
               margin: 0;
@@ -118,6 +63,38 @@
                   height: 96vh;
               }
             }
+            
+            @media screen and (min-width: 769px) {
+                body {
+                  /* move them */
+                  /*height: 100vh;*/
+                  display: -webkit-flex;
+                  display: -ms-flexbox;
+                  display: flex;
+                  -webkit-flex-direction: column;
+                      -ms-flex-direction: column;
+                          flex-direction: column;
+                      }
+                #page-wrapper {
+                    display: -webkit-box;
+                    display: -moz-box;
+                    display: box;
+                    display: -webkit-flex;
+                    display: -moz-flex;
+                    display: -ms-flexbox;
+                    display: flex;
+                    -webkit-flex-direction: column;
+                        -ms-flex-direction: column;
+                            flex-direction: column;
+                    -webkit-flex-grow: 1;
+                        -ms-flex-positive: 1;
+                            flex-grow: 1;
+                    -webkit-flex-wrap: nowrap;
+                        -ms-flex-wrap: nowrap;
+                            flex-wrap: nowrap;
+                }
+            }
+
         </style>
         <script>var MODx = {siteId:'foo'};</script>
     </head>

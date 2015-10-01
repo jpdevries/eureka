@@ -64,7 +64,17 @@ module.exports = function(grunt) {
 				}
 			}
 		},
-		
+		autoprefixer: {
+		    options: {
+		        browsers: ['last 2 versions', 'ie 8', 'ie 9']
+		    },
+            main: {
+				files: {
+					'<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.<%= pkg.version %>.css': '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.<%= pkg.version %>.css',
+                    '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.no-flexbox.<%= pkg.version %>.css': '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.no-flexbox.<%= pkg.version %>.css',
+				}
+            }
+		},
 		csslint: {
 			strict: {
 				options: {
@@ -102,7 +112,8 @@ module.exports = function(grunt) {
                 src: ["<%= dirs.ts %>plugins.ts","<%= dirs.ts %>ajax.ts","<%= dirs.ts %>eureka.typescript.ts"],
                 out:'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.<%= pkg.version %>.js',
                 options:{
-                    sourceMap:false
+                    sourceMap:false,
+                    removeComments:false
                 }
             },
             muckboot : {
@@ -180,7 +191,7 @@ module.exports = function(grunt) {
 			
 			scss: {
 				files: '<%= dirs.scss %>**/*.scss',
-				tasks: ['sass:dev', 'growl:sass','cssmin']
+				tasks: ['sass:dev','autoprefixer','cssmin','growl:sass','cssmin']
 			},
 			ts: {
 				files: ['<%= dirs.ts %>*'],
@@ -327,6 +338,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-copy');
 	
 	grunt.loadNpmTasks('grunt-sass');
+    grunt.loadNpmTasks('grunt-autoprefixer');
 	
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-contrib-clean');
@@ -340,6 +352,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-ts");
 
 	grunt.registerTask('default', ['growl:watch', 'watch']);
-	grunt.registerTask('build', ['clean:prebuild', 'bower', 'copy', 'sass:dev','cssmin','ts','concat','uglify:main', 'growl:sass', 'clean:postbuild','copy:eureka-src','uglify:includes']);
-	grunt.registerTask('expand', ['sass:dev', 'growl:sass', 'growl:expand']);
+	grunt.registerTask('build', ['clean:prebuild', 'bower', 'copy', 'sass:dev','autoprefixer','cssmin','ts','concat','uglify:main', 'growl:sass', 'clean:postbuild','copy:eureka-src','uglify:includes']);
+	grunt.registerTask('expand', ['sass:dev','autoprefixer', 'growl:sass', 'growl:expand']);
 };

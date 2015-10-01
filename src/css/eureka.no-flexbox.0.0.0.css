@@ -7,8 +7,7 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
 html.no-flexbox .eureka .pathbrowser footer nav .lt-ie8 {
   *zoom: 1; }
 
-html.no-flexbox .eureka .pathbrowser footer nav:before,
-html.no-flexbox .eureka .pathbrowser footer nav:after {
+html.no-flexbox .eureka .pathbrowser footer nav:before, html.no-flexbox .eureka .pathbrowser footer nav:after {
   content: " ";
   /* 1 */
   display: table;
