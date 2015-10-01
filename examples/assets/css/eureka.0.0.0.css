@@ -864,10 +864,8 @@ html.touch .eureka > .pathbrowser > footer .droparea, html.no-js .eureka > .path
   .eureka__topbar-nav > a.current, .eureka__topbar-nav .view-btns a.current {
     background: gainsboro; }
 
-@-moz-document url-prefix() {
-  .eureka__topbar-nav .view-c-btn {
-    /* #janky #shame #hack https://twitter.com/mrktps/status/581889013574868992 */
-    display: none; } }
+.eureka__topbar-nav .view-c-btn {
+  display: none !important; }
 
 .eureka-table {
   -webkit-flex-grow: 1;

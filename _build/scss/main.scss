@@ -815,9 +815,10 @@ html.touch, html.no-js {
     }
     
     .view-c-btn {
-        @-moz-document url-prefix() { /* #janky #shame #hack https://twitter.com/mrktps/status/581889013574868992 */
-            display:none;
-        }
+        display:none !important;
+        //@-moz-document url-prefix() { /* #janky #shame #hack https://twitter.com/mrktps/status/581889013574868992 */
+            //display:none;
+        //}
     }
 }
 
