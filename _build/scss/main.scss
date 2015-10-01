@@ -260,12 +260,13 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
         display:flex;
         flex-direction:column;
         flex-grow:1;
-        
+        flex-basis:0;
         > .eureka {
             flex-grow:1;
             //flex-basis:100%;
             @include media($gtTabletP) {
-                flex-basis:100%;
+                //flex-basis:100%;
+                flex-basis:0;
                 max-height:100%;
             }
             .stage {
@@ -276,6 +277,9 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
                 position:relative;
                 > .eureka-table {
                     flex-basis:auto;
+                    @include media($gtTabletP) {
+                        flex-basis:0;
+                    }
                     //-webkit-flex-basis:0%;
                     flex-grow:1;
                     //height:100%;
@@ -306,11 +310,19 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
                     > table {
                         flex-grow:1;
                         max-height:100%;
+                        flex-basis:auto;
+                        @include media($gtTabletP) {
+                            flex-basis:0;
+                        }
                         > thead {
                             flex-basis:2em;
                         }
                         > tbody {
+                            //flex-basis:auto;
                             flex-basis:auto;
+                            @include media($gtTabletP) {
+                                flex-basis:0;
+                            }
                             //-webkit-flex-basis:0%;
                         }
                     }

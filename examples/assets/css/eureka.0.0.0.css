@@ -444,16 +444,19 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
             flex-direction: column;
     -webkit-flex-grow: 1;
         -ms-flex-positive: 1;
-            flex-grow: 1; }
+            flex-grow: 1;
+    -webkit-flex-basis: 0;
+        -ms-flex-preferred-size: 0;
+            flex-basis: 0; }
     html.no-touch .eureka-wrapper > .eureka {
       -webkit-flex-grow: 1;
           -ms-flex-positive: 1;
               flex-grow: 1; }
       @media screen and (min-width: 769px) {
         html.no-touch .eureka-wrapper > .eureka {
-          -webkit-flex-basis: 100%;
-              -ms-flex-preferred-size: 100%;
-                  flex-basis: 100%;
+          -webkit-flex-basis: 0;
+              -ms-flex-preferred-size: 0;
+                  flex-basis: 0;
           max-height: 100%; } }
       html.no-touch .eureka-wrapper > .eureka .stage {
         display: -webkit-flex;
@@ -496,11 +499,24 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
                         }
                     }
                     */ }
+          @media screen and (min-width: 769px) {
+            html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table {
+              -webkit-flex-basis: 0;
+                  -ms-flex-preferred-size: 0;
+                      flex-basis: 0; } }
           html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table > table {
             -webkit-flex-grow: 1;
                 -ms-flex-positive: 1;
                     flex-grow: 1;
-            max-height: 100%; }
+            max-height: 100%;
+            -webkit-flex-basis: auto;
+                -ms-flex-preferred-size: auto;
+                    flex-basis: auto; }
+            @media screen and (min-width: 769px) {
+              html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table > table {
+                -webkit-flex-basis: 0;
+                    -ms-flex-preferred-size: 0;
+                        flex-basis: 0; } }
             html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table > table > thead {
               -webkit-flex-basis: 2em;
                   -ms-flex-preferred-size: 2em;
@@ -509,6 +525,11 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
               -webkit-flex-basis: auto;
                   -ms-flex-preferred-size: auto;
                       flex-basis: auto; }
+              @media screen and (min-width: 769px) {
+                html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table > table > tbody {
+                  -webkit-flex-basis: 0;
+                      -ms-flex-preferred-size: 0;
+                          flex-basis: 0; } }
       html.no-touch .eureka-wrapper > .eureka.sidebar-open.view-c .stage {
         /* wong wong see https://github.com/philipwalton/flexbugs/issues/51 #janky */ }
 
