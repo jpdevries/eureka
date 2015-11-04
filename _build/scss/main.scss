@@ -254,107 +254,106 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
 .eureka-wrapper {
     border:1px solid $borderColor;
     border-radius:0.4em;
-    @extend %growable; //flex-grow:1;
 
-    html.no-touch & {
-        display:flex;
-        flex-direction:column;
-        flex-grow:1;
-        flex-basis:0;
-        > .eureka {
-            flex-grow:1;
+    display:flex;
+    flex-direction:column;
+    flex-grow:1;
+    flex-basis:0;
+    
+    > .eureka {
+        flex-grow:10;
+        //flex-basis:100%;
+        @include media($gtTabletP) {
             //flex-basis:100%;
-            @include media($gtTabletP) {
-                //flex-basis:100%;
-                flex-basis:0;
-                max-height:100%;
-            }
-            .stage {
-                display:flex;
-                width:100%;
-                flex-direction:column;
-                flex-wrap:nowrap;
-                position:relative;
-                > .eureka-table {
+            flex-basis:0;
+            max-height:100%;
+        }
+        .stage {
+            display:flex;
+            width:100%;
+            flex-direction:column;
+            flex-wrap:nowrap;
+            position:relative;
+            > .eureka-table {
+                flex-basis:auto;
+                @include media($gtTabletP) {
+                    flex-basis:0;
+                }
+                //-webkit-flex-basis:0%;
+                flex-grow:1;
+                //height:100%;
+                height:auto;
+                -ms-flex-preferred-size:auto; // #janky ^^
+                
+                /* hack for Firefox and Spartan see http://codepen.io/jpdevries/pen/doYYoR #janky */
+                /*@mixin topbar-hack() {
+                    position:absolute;
+                    top:$topBarH;
+                    right:0;
+                    bottom:0;
+                    left:0;
+                }
+                
+                @include firefox-hack() {
+                    @include media($gtTabletP) {
+                        @include topbar-hack;    
+                    }
+                }
+                @include spartan-hack() {
+                    @include media($gtTabletP) {
+                        @include topbar-hack;
+                    }
+                }
+                */
+                
+                > table {
+                    flex-grow:1;
+                    max-height:100%;
                     flex-basis:auto;
                     @include media($gtTabletP) {
                         flex-basis:0;
                     }
-                    //-webkit-flex-basis:0%;
-                    flex-grow:1;
-                    //height:100%;
-                    height:auto;
-                    -ms-flex-preferred-size:auto; // #janky ^^
-                    
-                    /* hack for Firefox and Spartan see http://codepen.io/jpdevries/pen/doYYoR #janky */
-                    /*@mixin topbar-hack() {
-                        position:absolute;
-                        top:$topBarH;
-                        right:0;
-                        bottom:0;
-                        left:0;
+                    > thead {
+                        flex-basis:2em;
                     }
-                    
-                    @include firefox-hack() {
-                        @include media($gtTabletP) {
-                            @include topbar-hack;    
-                        }
-                    }
-                    @include spartan-hack() {
-                        @include media($gtTabletP) {
-                            @include topbar-hack;
-                        }
-                    }
-                    */
-                    
-                    > table {
-                        flex-grow:1;
-                        max-height:100%;
+                    > tbody {
+                        //flex-basis:auto;
                         flex-basis:auto;
                         @include media($gtTabletP) {
                             flex-basis:0;
                         }
-                        > thead {
-                            flex-basis:2em;
-                        }
-                        > tbody {
-                            //flex-basis:auto;
-                            flex-basis:auto;
-                            @include media($gtTabletP) {
-                                flex-basis:0;
-                            }
-                            //-webkit-flex-basis:0%;
-                        }
-                    }
-                }
-            }
-            &.sidebar-open.view-c {
-                .stage { /* wong wong see https://github.com/philipwalton/flexbugs/issues/51 #janky */
-                    @include firefox-hack() {
-                        max-width:calc(100% - 12em);
-                        padding-right:0.5em;
-                    }
-                    @include spartan-hack() {
-                        max-width:calc(100% - 12em);
-                        padding-right:0.5em;
+                        //-webkit-flex-basis:0%;
                     }
                 }
             }
         }
-        
-        > .proceed {
-            flex-grow:0;
-            flex-basis:4em;
-            min-height:4em;
-            width:100%;
-        }
-        @include media($gtTabletP) {
-            max-height:100%;
+        &.sidebar-open.view-c {
+            .stage { /* wong wong see https://github.com/philipwalton/flexbugs/issues/51 #janky */
+                @include firefox-hack() {
+                    max-width:calc(100% - 12em);
+                    padding-right:0.5em;
+                }
+                @include spartan-hack() {
+                    max-width:calc(100% - 12em);
+                    padding-right:0.5em;
+                }
+            }
         }
     }
+    
+    > .proceed {
+        flex-grow:0;
+        flex-basis:4em;
+        min-height:4em;
+        width:100%;
+    }
+    @include media($gtTabletP) {
+        max-height:100%;
+    }
+    
     html.touch &, html.no-js & {
         .eureka-table {
-            display:block;
+            //display:block;
         }
     }
     

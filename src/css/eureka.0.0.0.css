@@ -148,12 +148,12 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
     /* 2 */ }
   .eureka-wrapper .clearfix:after {
     clear: both; }
-  @media only screen and (min-width: 35em) {
-    .eureka-wrapper {
-      /* Style adjustments for viewports that meet the condition */ } }
-  @media print, (-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dpi) {
-    .eureka-wrapper {
-      /* Style adjustments for high resolution devices */ } }
+
+.eureka-wrapper {
+  /* Style adjustments for viewports that meet the condition */ }
+
+.eureka-wrapper {
+  /* Style adjustments for high resolution devices */ }
   @media print {
     .eureka-wrapper {
       /*
@@ -230,7 +230,7 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
       -ms-flex-positive: 0;
           flex-grow: 0; }
 
-.view-a .eureka-table > table > tbody > tr.contextual.visible, html.js .view-a tr.eureka__row:focus + tr.contextual, html.js .view-a tr.eureka__row.focused + tr.contextual, .eureka-wrapper, .eureka-wrapper > footer > *, .eureka > .pathbrowser > .tree, .eureka > .pathbrowser > footer .droparea, .eureka > .pathbrowser > footer .dropzone, .eureka-table > table, .eureka-table > table > thead > tr, .eureka-table > table > tbody, .view-a .eureka-table > table > tbody > tr, .view-c .eureka-table > table > tbody > tr > td, .view-d .eureka-table > table > tbody > tr > td, .view-a .eureka-table > table > tbody > tr.contextual, .eureka__topbar .eureka__topbar-nav, .eureka__topbar .eureka__topbar-nav > header > h4, .eureka__topbar .eureka__topbar-nav > header > form, .eureka__topbar .eureka__topbar-nav > header > form > input[type="search"], .eureka__topbar .eureka__topbar-nav .view-btns, .eureka__topbar .eureka__topbar-nav .view-btns a, .eureka__topbar > form, .eureka__topbar > form > input, .view-d .eureka__row-image > .image, .view-d .eureka__row-image > code, .eureka > .pathbrowser > .pathbrowser__topbar .mediasource-select-level-up select, .eureka > .stage > .eureka-table {
+.view-a .eureka-table > table > tbody > tr.contextual.visible, html.js .view-a tr.eureka__row:focus + tr.contextual, html.js .view-a tr.eureka__row.focused + tr.contextual, .eureka-wrapper > footer > *, .eureka > .pathbrowser > .tree, .eureka > .pathbrowser > footer .droparea, .eureka > .pathbrowser > footer .dropzone, .eureka-table > table, .eureka-table > table > thead > tr, .eureka-table > table > tbody, .view-a .eureka-table > table > tbody > tr, .view-c .eureka-table > table > tbody > tr > td, .view-d .eureka-table > table > tbody > tr > td, .view-a .eureka-table > table > tbody > tr.contextual, .eureka__topbar .eureka__topbar-nav, .eureka__topbar .eureka__topbar-nav > header > h4, .eureka__topbar .eureka__topbar-nav > header > form, .eureka__topbar .eureka__topbar-nav > header > form > input[type="search"], .eureka__topbar .eureka__topbar-nav .view-btns, .eureka__topbar .eureka__topbar-nav .view-btns a, .eureka__topbar > form, .eureka__topbar > form > input, .view-d .eureka__row-image > .image, .view-d .eureka__row-image > code, .eureka > .pathbrowser > .pathbrowser__topbar .mediasource-select-level-up select, .eureka > .stage > .eureka-table {
   -webkit-flex-grow: 1;
       -ms-flex-positive: 1;
           flex-grow: 1; }
@@ -383,7 +383,9 @@ html.js .eureka > .pathbrowser > footer {
 .eureka-wrapper {
   box-sizing: border-box; }
 
-.eureka-wrapper *, .eureka-wrapper:before, .eureka-wrapper:after {
+.eureka-wrapper *,
+.eureka-wrapper:before,
+.eureka-wrapper:after {
   box-sizing: inherit; }
 
 button {
@@ -434,129 +436,126 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
 
 .eureka-wrapper {
   border: 1px solid #a0a0a0;
-  border-radius: 0.4em; }
-  html.no-touch .eureka-wrapper {
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-flex-direction: column;
-        -ms-flex-direction: column;
-            flex-direction: column;
-    -webkit-flex-grow: 1;
-        -ms-flex-positive: 1;
-            flex-grow: 1;
-    -webkit-flex-basis: 0;
-        -ms-flex-preferred-size: 0;
-            flex-basis: 0; }
-    html.no-touch .eureka-wrapper > .eureka {
-      -webkit-flex-grow: 1;
-          -ms-flex-positive: 1;
-              flex-grow: 1; }
-      @media screen and (min-width: 769px) {
-        html.no-touch .eureka-wrapper > .eureka {
-          -webkit-flex-basis: 0;
-              -ms-flex-preferred-size: 0;
-                  flex-basis: 0;
-          max-height: 100%; } }
-      html.no-touch .eureka-wrapper > .eureka .stage {
-        display: -webkit-flex;
-        display: -ms-flexbox;
-        display: flex;
-        width: 100%;
-        -webkit-flex-direction: column;
-            -ms-flex-direction: column;
-                flex-direction: column;
-        -webkit-flex-wrap: nowrap;
-            -ms-flex-wrap: nowrap;
-                flex-wrap: nowrap;
-        position: relative; }
-        html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table {
-          -webkit-flex-basis: auto;
-              -ms-flex-preferred-size: auto;
-                  flex-basis: auto;
+  border-radius: 0.4em;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-flex-grow: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  -webkit-flex-basis: 0;
+      -ms-flex-preferred-size: 0;
+          flex-basis: 0; }
+  .eureka-wrapper > .eureka {
+    -webkit-flex-grow: 10;
+        -ms-flex-positive: 10;
+            flex-grow: 10; }
+    @media screen and (min-width: 769px) {
+      .eureka-wrapper > .eureka {
+        -webkit-flex-basis: 0;
+            -ms-flex-preferred-size: 0;
+                flex-basis: 0;
+        max-height: 100%; } }
+    .eureka-wrapper > .eureka .stage {
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      width: 100%;
+      -webkit-flex-direction: column;
+          -ms-flex-direction: column;
+              flex-direction: column;
+      -webkit-flex-wrap: nowrap;
+          -ms-flex-wrap: nowrap;
+              flex-wrap: nowrap;
+      position: relative; }
+      .eureka-wrapper > .eureka .stage > .eureka-table {
+        -webkit-flex-basis: auto;
+            -ms-flex-preferred-size: auto;
+                flex-basis: auto;
+        -webkit-flex-grow: 1;
+            -ms-flex-positive: 1;
+                flex-grow: 1;
+        height: auto;
+        -ms-flex-preferred-size: auto;
+        /* hack for Firefox and Spartan see http://codepen.io/jpdevries/pen/doYYoR #janky */
+        /*@mixin topbar-hack() {
+                    position:absolute;
+                    top:$topBarH;
+                    right:0;
+                    bottom:0;
+                    left:0;
+                }
+                
+                @include firefox-hack() {
+                    @include media($gtTabletP) {
+                        @include topbar-hack;    
+                    }
+                }
+                @include spartan-hack() {
+                    @include media($gtTabletP) {
+                        @include topbar-hack;
+                    }
+                }
+                */ }
+        @media screen and (min-width: 769px) {
+          .eureka-wrapper > .eureka .stage > .eureka-table {
+            -webkit-flex-basis: 0;
+                -ms-flex-preferred-size: 0;
+                    flex-basis: 0; } }
+        .eureka-wrapper > .eureka .stage > .eureka-table > table {
           -webkit-flex-grow: 1;
               -ms-flex-positive: 1;
                   flex-grow: 1;
-          height: auto;
-          -ms-flex-preferred-size: auto;
-          /* hack for Firefox and Spartan see http://codepen.io/jpdevries/pen/doYYoR #janky */
-          /*@mixin topbar-hack() {
-                        position:absolute;
-                        top:$topBarH;
-                        right:0;
-                        bottom:0;
-                        left:0;
-                    }
-                    
-                    @include firefox-hack() {
-                        @include media($gtTabletP) {
-                            @include topbar-hack;    
-                        }
-                    }
-                    @include spartan-hack() {
-                        @include media($gtTabletP) {
-                            @include topbar-hack;
-                        }
-                    }
-                    */ }
+          max-height: 100%;
+          -webkit-flex-basis: auto;
+              -ms-flex-preferred-size: auto;
+                  flex-basis: auto; }
           @media screen and (min-width: 769px) {
-            html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table {
+            .eureka-wrapper > .eureka .stage > .eureka-table > table {
               -webkit-flex-basis: 0;
                   -ms-flex-preferred-size: 0;
                       flex-basis: 0; } }
-          html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table > table {
-            -webkit-flex-grow: 1;
-                -ms-flex-positive: 1;
-                    flex-grow: 1;
-            max-height: 100%;
+          .eureka-wrapper > .eureka .stage > .eureka-table > table > thead {
+            -webkit-flex-basis: 2em;
+                -ms-flex-preferred-size: 2em;
+                    flex-basis: 2em; }
+          .eureka-wrapper > .eureka .stage > .eureka-table > table > tbody {
             -webkit-flex-basis: auto;
                 -ms-flex-preferred-size: auto;
                     flex-basis: auto; }
             @media screen and (min-width: 769px) {
-              html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table > table {
+              .eureka-wrapper > .eureka .stage > .eureka-table > table > tbody {
                 -webkit-flex-basis: 0;
                     -ms-flex-preferred-size: 0;
                         flex-basis: 0; } }
-            html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table > table > thead {
-              -webkit-flex-basis: 2em;
-                  -ms-flex-preferred-size: 2em;
-                      flex-basis: 2em; }
-            html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table > table > tbody {
-              -webkit-flex-basis: auto;
-                  -ms-flex-preferred-size: auto;
-                      flex-basis: auto; }
-              @media screen and (min-width: 769px) {
-                html.no-touch .eureka-wrapper > .eureka .stage > .eureka-table > table > tbody {
-                  -webkit-flex-basis: 0;
-                      -ms-flex-preferred-size: 0;
-                          flex-basis: 0; } }
-      html.no-touch .eureka-wrapper > .eureka.sidebar-open.view-c .stage {
-        /* wong wong see https://github.com/philipwalton/flexbugs/issues/51 #janky */ }
+    .eureka-wrapper > .eureka.sidebar-open.view-c .stage {
+      /* wong wong see https://github.com/philipwalton/flexbugs/issues/51 #janky */ }
 
 @-moz-document url-prefix() {
-  html.no-touch .eureka-wrapper > .eureka.sidebar-open.view-c .stage {
+  .eureka-wrapper > .eureka.sidebar-open.view-c .stage {
     /* shame on firefox? http://codepen.io/jpdevries/pen/doYYoR */
     max-width: calc(100% - 12em);
     padding-right: 0.5em; } }
-        @supports (-ms-accelerator: true) {
-          html.no-touch .eureka-wrapper > .eureka.sidebar-open.view-c .stage {
-            /* shame on spartan? http://codepen.io/jpdevries/pen/doYYoR */
-            max-width: calc(100% - 12em);
-            padding-right: 0.5em; } }
-    html.no-touch .eureka-wrapper > .proceed {
-      -webkit-flex-grow: 0;
-          -ms-flex-positive: 0;
-              flex-grow: 0;
-      -webkit-flex-basis: 4em;
-          -ms-flex-preferred-size: 4em;
-              flex-basis: 4em;
-      min-height: 4em;
-      width: 100%; }
-    @media screen and (min-width: 769px) {
-      html.no-touch .eureka-wrapper {
-        max-height: 100%; } }
-  html.touch .eureka-wrapper .eureka-table, html.no-js .eureka-wrapper .eureka-table {
-    display: block; }
+      @supports (-ms-accelerator: true) {
+        .eureka-wrapper > .eureka.sidebar-open.view-c .stage {
+          /* shame on spartan? http://codepen.io/jpdevries/pen/doYYoR */
+          max-width: calc(100% - 12em);
+          padding-right: 0.5em; } }
+  .eureka-wrapper > .proceed {
+    -webkit-flex-grow: 0;
+        -ms-flex-positive: 0;
+            flex-grow: 0;
+    -webkit-flex-basis: 4em;
+        -ms-flex-preferred-size: 4em;
+            flex-basis: 4em;
+    min-height: 4em;
+    width: 100%; }
+  @media screen and (min-width: 769px) {
+    .eureka-wrapper {
+      max-height: 100%; } }
   .eureka-wrapper > footer {
     margin-top: 0.5em;
     text-align: center;
