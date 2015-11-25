@@ -127,12 +127,13 @@
             (function(){
                 var $muckboot = new MuckBoot({ // paint the DOM
                     id:'redactor-media-browser_0', // unique identifier
-                    upload:false, // paint upload UI elements
-                    createDir:false // add create directory button
+                    upload:true, // paint upload UI elements
+                    createDir:'./' // add create directory button
                 });
                 var $eureka = new Eureka({ // init the Eureka component
                     // REQUIRED
                     uid:$muckboot.getID(),
+                    fileUploadURL:'./',
                     directoryRequestURL:'/static/eureka/examples/fakepi/listdirectory.php',
                     listSourceRequestURL:'/static/eureka/examples/fakepi/listsource.php',
                     listSourcesRequestURL:'/static/eureka/examples/fakepi/listsources.php',
