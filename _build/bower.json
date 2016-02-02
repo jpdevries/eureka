@@ -1,11 +1,12 @@
 {
-  "name": "eureka_build",
+  "name": "eureka",
   "version": "1.0.0",
   "author": {
     "name": "JP DeVries",
     "url": "http://devries.jp"
   },
   "homepage": "https://github.com/jpdevries/eureka",
+  "description": "A modern web component for browsing and uploading files to multiple remote media sources",
   "repository": {
     "type": "git",
     "url": "https://github.com/jpdevries/eureka"
@@ -70,9 +71,21 @@
       ]
     }
   },
+  "keywords": [
+    "media",
+    "browser"
+  ],
   "devDependencies": {
     "DefinitelyTyped": "*",
     "bourbon": "^4.2.3",
     "neat": "^1.7.2"
-  }
+  },
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
 }
