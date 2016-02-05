@@ -345,6 +345,10 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
 .eureka-table table thead .fa-sort {
   font-size: 0.86em; }
 
+.eureka__topbar .eureka__topbar-nav > header, .eureka__topbar .eureka__topbar-nav > .eureka__topbar-nav__select {
+  min-width: 0;
+  min-height: 0; }
+
 .eureka > .pathbrowser > .pathbrowser__topbar, .eureka > .pathbrowser > footer .droparea, .eureka__topbar {
   padding-bottom: 0.5em;
   border-bottom: 1px solid #dddddd; }
@@ -488,10 +492,10 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
                     bottom:0;
                     left:0;
                 }
-                
+
                 @include firefox-hack() {
                     @include media($gtTabletP) {
-                        @include topbar-hack;    
+                        @include topbar-hack;
                     }
                 }
                 @include spartan-hack() {
@@ -1388,12 +1392,12 @@ tr.contextual {
     margin-bottom: 1em;
     /*html.no-touch & {
                 @include media($mobile) {
-                    display:none; // #janky?    
+                    display:none; // #janky?
                 }
             }
             html.no-touch .sidebar-open & {
                 @include media($mobile) {
-                    display:none; // #janky?    
+                    display:none; // #janky?
                 }
             }*/
     -webkit-flex-grow: 4;

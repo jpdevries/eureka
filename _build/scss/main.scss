@@ -32,7 +32,7 @@ $topBarH:4.8rem;
     color:inherit;
     color:currentColor;
     &:hover {
-        
+
     }
 }
 
@@ -47,6 +47,11 @@ $topBarH:4.8rem;
 %inverted {
     background:$black;
     color:$white;
+}
+
+%chrome-flexbox-hack {
+  min-width:0;
+  min-height:0;
 }
 
 @mixin bottom-seperated() {
@@ -138,12 +143,12 @@ $danger:darken(red,8%);
     @extend %accessibly-hidden;
 }
 
-@if $border-box-sizing == false { 
+@if $border-box-sizing == false {
   .eureka-wrapper { // http://bit.ly/1qk2tVR
     box-sizing:border-box;
   }
 
-  .eureka-wrapper { 
+  .eureka-wrapper {
     *,
     &:before,
     &:after {
@@ -168,7 +173,7 @@ button {
 }
 
 .eureka-wrapper {
-    font-family: Gill Sans,Gill Sans MT,Calibri,sans-serif; 
+    font-family: Gill Sans,Gill Sans MT,Calibri,sans-serif;
     pre,code {
         @extend %monospaced;
     }
@@ -192,8 +197,8 @@ button {
             font-size:0.86em;
             background:transparent;
             color:inherit;
-        }  
-    
+        }
+
         background:$black;
         color:$white;
         padding:0.24em 0.42em;
@@ -201,7 +206,7 @@ button {
         .contextual & {
             color:lighten($black,82%);
             background:lighten($black,36%);
-        }   
+        }
         &.go {
             @extend %green-bg;
         }
@@ -212,7 +217,7 @@ button {
         background:lighten($black,50%);
         cursor:default;
     }
-    
+
     button.muted.cancel {
         cursor:pointer;
     }
@@ -259,7 +264,7 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
     flex-direction:column;
     flex-grow:1;
     flex-basis:0;
-    
+
     > .eureka {
         flex-grow:10;
         //flex-basis:100%;
@@ -284,7 +289,7 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
                 //height:100%;
                 height:auto;
                 -ms-flex-preferred-size:auto; // #janky ^^
-                
+
                 /* hack for Firefox and Spartan see http://codepen.io/jpdevries/pen/doYYoR #janky */
                 /*@mixin topbar-hack() {
                     position:absolute;
@@ -293,10 +298,10 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
                     bottom:0;
                     left:0;
                 }
-                
+
                 @include firefox-hack() {
                     @include media($gtTabletP) {
-                        @include topbar-hack;    
+                        @include topbar-hack;
                     }
                 }
                 @include spartan-hack() {
@@ -305,7 +310,7 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
                     }
                 }
                 */
-                
+
                 > table {
                     flex-grow:1;
                     max-height:100%;
@@ -340,7 +345,7 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
             }
         }
     }
-    
+
     > .proceed {
         flex-grow:0;
         flex-basis:4em;
@@ -350,13 +355,13 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
     @include media($gtTabletP) {
         max-height:100%;
     }
-    
+
     html.touch &, html.no-js & {
         .eureka-table {
             //display:block;
         }
     }
-    
+
     > footer {
        margin-top:0.5em;
        text-align:center;
@@ -372,12 +377,12 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
            }
        }
    }
-    
+
 }
 
 html.no-touch { /* there's some weird bug with grunt-contrib-cssmin where if this is any further up and grouped with the rest of the styles it breaks the layout due to incorrect rules */
     .eureka-wrapper {
-        //display:flex; 
+        //display:flex;
         //flex-direction:column;
     }
 }
@@ -400,7 +405,7 @@ html.no-touch { /* there's some weird bug with grunt-contrib-cssmin where if thi
     code {
         display:inline-block;
         .view-b &, .view-c & {
-            text-align:center;    
+            text-align:center;
         }
         .view-d & {
             text-align:inherit;
@@ -428,7 +433,7 @@ html.no-touch { /* there's some weird bug with grunt-contrib-cssmin where if thi
 }
 
 .eureka {
-    @extend %flexible-parent; //display:flex; 
+    @extend %flexible-parent; //display:flex;
     @extend %align-items-stretch; //@include align-items(stretch);
     @extend %justify-content-flex-start; //@include justify-content(flex-start);
     @extend %flex-wrap-nowrap; //flex-wrap:nowrap;
@@ -440,7 +445,7 @@ html.no-touch { /* there's some weird bug with grunt-contrib-cssmin where if thi
     > .pathbrowser {
         @extend %ungrowable; // flex-grow:0;
         @extend %unshrinkable; //@include flex-shrink(0);
-        
+
         @include media($gtMobile) {
             margin-right:0.5em;
             padding-right:0.5em;
@@ -448,21 +453,21 @@ html.no-touch { /* there's some weird bug with grunt-contrib-cssmin where if thi
         display:none;
         @include media($gtTabletP) {
             display:initial;
-            display:flex; 
+            display:flex;
         }
         @extend %flexible-parent; // display:flex;
         @extend %flex-direction-column; //flex-direction:column;
-        
+
         @include media($tabletP) {
             .pathbrowser__topbar, .tree, > footer button.create-new {
                 display:none !important;
             }
         }
-        
+
         @include media($gtTabletP) {
             @include flex-basis(12em);
         }
-        
+
         margin-bottom:0.5em;
         @include media($gtTabletP) {
             margin-bottom:0;
@@ -489,13 +494,13 @@ html.no-touch { /* there's some weird bug with grunt-contrib-cssmin where if thi
             }
             //@include flex-basis(2rem);
             @extend %flex-direction-column; //flex-direction:column;
-            @extend %flexible-parent; //display:flex; 
+            @extend %flexible-parent; //display:flex;
             //height:2rem;
             padding-right:0.5em;
             @include media($gtTabletP) {
                 flex-basis:$topBarH;
             }
-            
+
             > select {
                 //flex-grow:1;
                 //flex-basis:100%;
@@ -532,7 +537,7 @@ html.no-touch { /* there's some weird bug with grunt-contrib-cssmin where if thi
                     flex-grow:1;
                     padding-left:0.25em;
                 }
-                
+
                 > ul {
                     flex-basis:100%;
                     html.js & {
@@ -549,7 +554,7 @@ html.no-touch { /* there's some weird bug with grunt-contrib-cssmin where if thi
                     html.js & {
                         > ul {
                             display:block;
-                        }    
+                        }
                     }
                 }
             }
@@ -559,12 +564,12 @@ html.no-touch { /* there's some weird bug with grunt-contrib-cssmin where if thi
                 &.drop {
                     @include media($gtTabletPH) {
                         @include flex-basis(220px);
-                    }   
+                    }
                 }
             }
             @extend %flexible-parent; // display:flex;
             @extend %flex-direction-column; //flex-direction:column;
-            @extend %unshrinkable; //@include flex-shrink(0); 
+            @extend %unshrinkable; //@include flex-shrink(0);
             html.js & {
                 @extend %top-seperated;
                 padding-bottom:0;
@@ -592,7 +597,7 @@ html.no-touch { /* there's some weird bug with grunt-contrib-cssmin where if thi
                 @extend %bottom-seperated;
                 //@include flex-basis();
             }
-            
+
             .dropzone {
                 @extend %growable;
                 $dzColor:darken(desaturate(#cddce6,100%),42%);
@@ -603,27 +608,27 @@ html.no-touch { /* there's some weird bug with grunt-contrib-cssmin where if thi
                 border-radius:0.4em;
                 //margin-bottom:0.25em;
                 text-align:center;
-                
-                @extend %flexible-parent; //display:flex; 
+
+                @extend %flexible-parent; //display:flex;
                 @extend %justify-content-center; //@include justify-content(flex-center);
                 @extend %flex-direction-column; //flex-direction:column;
                 //@extend %align-items-center; // @include align-items(center);
-                
+
                 color:$dzColor;
 
                 a {
                     color:darken($dzColor,12%);
                 }
-                
+
                 html.touch & {
                     display:none;
                 }
-                
+
                 &.uploading {
                     background:lighten(#b2b9c5,4%);
                     border-color:darken(#b2b9c5,26%);
                 }
-                
+
                 &.complete {
                     background:lighten(#aecd98,6%);
                     border-color:darken(#aecd98,6%);
@@ -636,7 +641,7 @@ html.no-touch { /* there's some weird bug with grunt-contrib-cssmin where if thi
                         color:darken(darken(#aecd98,26%),8%);
                     }
                 }
-                
+
                 &.error {
                     background:lighten(#e75154,16%);
                     border-color:darken(#e75154,6%);
@@ -649,11 +654,11 @@ html.no-touch { /* there's some weird bug with grunt-contrib-cssmin where if thi
                         color:darken(darken(#e75154,26%),8%);
                     }
                 }
-                
+
                 h2 {
                     margin:0 0 0.24em 0;
                 }
-                
+
                 p {
                     margin:0;
                     padding:0 1em 0 1em;
@@ -663,19 +668,19 @@ html.no-touch { /* there's some weird bug with grunt-contrib-cssmin where if thi
                     text-decoration:none;
                     cursor:pointer;
                 }
-                
+
                 .progress {
                     flex-grow:1;
                     flex-basis:100%;
-                    background:darken(desaturate(#cddce6,100%),4%); 
-                    
+                    background:darken(desaturate(#cddce6,100%),4%);
+
                     border-radius:0.4em;
-                    
-                    @extend %flexible-parent; //display:flex; 
+
+                    @extend %flexible-parent; //display:flex;
                     @extend %justify-content-flex-start; //@include justify-content(flex-center);
                     @extend %flex-direction-column; //flex-direction:column;
                     //@extend %align-items-center; // @include align-items(center);
-            
+
                     > .bar {
                         flex-grow:1;
                         min-height:1em;
@@ -699,7 +704,7 @@ html.no-touch { /* there's some weird bug with grunt-contrib-cssmin where if thi
                         }
                         &:nth-of-type(even) {
                             > div {
-                                background:darken(#b2b9c5,12%); 
+                                background:darken(#b2b9c5,12%);
                                 border:1px solid darken(#b2b9c5,16%);
                             }
                         }
@@ -708,13 +713,13 @@ html.no-touch { /* there's some weird bug with grunt-contrib-cssmin where if thi
                             top:0;
                             left:0;
                             bottom:0;
-                            background:darken(#b2b9c5,8%); 
+                            background:darken(#b2b9c5,8%);
                             border:1px solid darken(#b2b9c5,12%);
                         }
                     }
                 }
             }
-            
+
             button,.btn {
                 background:transparent;
                 color:inherit;
@@ -731,20 +736,20 @@ html.no-touch { /* there's some weird bug with grunt-contrib-cssmin where if thi
                     }
                 }
             }
-            
+
             flex-grow:0;
             > nav {
-                @extend %flexible-parent; //display:flex; 
+                @extend %flexible-parent; //display:flex;
                 @extend %justify-content-center; //@include justify-content(center);
                 @extend %ungrowable; //flex-grow:0;
                 > a,>form, >.form {
                     @extend %ungrowable; //flex-grow:0;
                     @include flex-basis(50%);
                     text-align:center;
-                    
+
                 }
             }
-            
+
         }
     }
     > .stage {
@@ -756,7 +761,7 @@ html.no-touch { /* there's some weird bug with grunt-contrib-cssmin where if thi
         }
         //flex-direction:column;
     }
-    
+
     &.view-c {
         //@-moz-document url-prefix() { /* #janky #shame #hack */
             //overflow-x:auto;
@@ -771,7 +776,7 @@ html.no-touch { /* there's some weird bug with grunt-contrib-cssmin where if thi
             }
         }
     }
-    
+
     > .stage > .eureka__topbar {
         @extend %ungrowable; //flex-grow:0;
         @extend %flex-shrink-1; //@include flex-shrink(1);
@@ -787,7 +792,7 @@ html.no-touch { /* there's some weird bug with grunt-contrib-cssmin where if thi
             flex-basis:$topBarH;
         }
         //height:2rem;
-        
+
     }
     > .stage > .eureka-table {
         @extend %flex-grow-1; //flex-grow:1;
@@ -801,7 +806,7 @@ html.no-touch { /* there's some weird bug with grunt-contrib-cssmin where if thi
 
 html.touch, html.no-js {
     .eureka > .pathbrowser > footer .droparea {
-        display:none;    
+        display:none;
     }
 }
 
@@ -812,7 +817,7 @@ html.touch, html.no-js {
             background:rgb(220,220,220);
         }
     }
-    
+
     .view-c-btn {
         display:none !important;
         //@-moz-document url-prefix() { /* #janky #shame #hack https://twitter.com/mrktps/status/581889013574868992 */
@@ -823,10 +828,10 @@ html.touch, html.no-js {
 
 .eureka-table {
     @extend %align-items-stretch; //@include align-items(stretch);
-    @extend %flexible-parent; //display:flex; 
+    @extend %flexible-parent; //display:flex;
     @extend %flex-direction-column; //flex-direction:column;
     @extend %justify-content-center; //@include justify-content(flex-center);
-    
+
     flex-grow:1;
     display:flex;
     > footer {
@@ -851,47 +856,47 @@ html.touch, html.no-js {
         @extend %flex-basis-auto; //@include flex-basis(auto);
         //max-height:38em;
         @extend %align-items-stretch; //@include align-items(stretch);
-        @extend %flexible-parent; //display:flex; 
+        @extend %flexible-parent; //display:flex;
         @extend %flex-direction-column; //flex-direction:column;
         @extend %justify-content-center; //@include justify-content(flex-center);
-        
+
         .view-a & {
             @include media($tabletP) {
-                //display: block; 
+                //display: block;
             	/* Force table to not be like tables anymore */
-            	thead, tbody, th, td, tr { 
-            		//display: block; 
+            	thead, tbody, th, td, tr {
+            		//display: block;
             	}
-	
+
             	/* Hide table headers (but not display: none;, for accessibility) */
-            	thead tr { 
+            	thead tr {
             		position: absolute;
             		top: -9999px;
             		left: -9999px;
             	}
-	
+
                 tr:not(.contextual) {
-                	td { 
+                	td {
                 		/* Behave  like a "row" */
                 		border: none;
-                		border-bottom: 1px solid #eee; 
+                		border-bottom: 1px solid #eee;
                 		position: relative;
-                		padding-left: 35%; 
+                		padding-left: 35%;
                 	}
-                    
-                    td.eureka__row-image { 
-                        padding-left:0; 
+
+                    td.eureka__row-image {
+                        padding-left:0;
                     }
-	
-                	td:before { 
+
+                	td:before {
                 		/* Now like a table header */
                 		position: absolute;
                 		/* Top/left values mimic padding */
                 		top: 0.1em;
                 		left: 0.1em;
-                		width: 25%; 
+                		width: 25%;
                         padding-left:0.5em;
-                		padding-right: 0.5em; 
+                		padding-right: 0.5em;
                 		white-space: nowrap;
                 	}
                 }
@@ -916,7 +921,7 @@ html.touch, html.no-js {
                 }
             }
         }
-        
+
         > thead {
             .view-a & {
                 display:block;
@@ -927,15 +932,15 @@ html.touch, html.no-js {
             @extend %ungrowable; //flex-grow:0;
             @extend %unshrinkable; //@include flex-shrink(0);
             flex-basis:2em;
-            
-            @extend %flexible-parent; //display:flex; 
+
+            @extend %flexible-parent; //display:flex;
             > tr {
                 @extend %growable; //flex-grow:1;
                 @extend %unshrinkable; //@include flex-shrink(0);
                 @extend %justify-content-flex-end; //@include justify-content(flex-end);
                 flex-basis:100%;
-                
-                @extend %flexible-parent; //display:flex; 
+
+                @extend %flexible-parent; //display:flex;
                 > th {
                     //@extend %growable; //flex-grow:1;
                     flex-grow:0;
@@ -952,15 +957,15 @@ html.touch, html.no-js {
                         padding-right:1em;
                         &:first-of-type {
                             //@include flex-grow(12); /* #janky #shame */
-                        }   
+                        }
                     }
                 }
             }
-            
+
             .view-a & {
                 @extend %justify-content-flex-end; //@include justify-content(flex-end);
             }
-            
+
         }
         > tbody {
             @extend %growable; //flex-grow:1;
@@ -970,11 +975,11 @@ html.touch, html.no-js {
             text-align:center;
             display:block;
             @extend %align-items-stretch; //@include align-items(stretch);
-            @extend %flexible-parent; //display:flex; 
+            @extend %flexible-parent; //display:flex;
             @extend %flex-direction-row; //@include flex-direction(row);
             @extend %justify-content-center; //@include justify-content(flex-center);
             @extend %flex-wrap-wrap; //@include flex-wrap(wrap);
-            
+
             flex-wrap:nowrap;
             -webkit-flex-basis:0%;
             flex-basis:0;
@@ -984,26 +989,26 @@ html.touch, html.no-js {
                     html.no-flexbox {
                         display:block;
                     }
-                    
+
                     @extend %growable; //flex-grow:1;
                     @extend %shrinkable; //@include flex-shrink(0);
                     @extend %flex-basis-all; //flex-basis:100%;
-                    
+
                     .pathname {
                         padding-right:1em;
                     }
                 }
             }
-            
+
             .view-b & {
                 @extend %align-items-flex-start; //@include align-items(flex-start);
                 //@include box-pack(center);
                 @extend %justify-content-flex-start; //@include justify-content(flex-start);
                 @extend %flex-wrap-wrap; //@include flex-wrap(wrap);
-                
+
                 //overflow-y:auto;
                 //overflow-x:hidden;
-                
+
                 img {
                     max-width:100%;
                     height:auto;
@@ -1011,13 +1016,13 @@ html.touch, html.no-js {
             }
             .view-c & {
                 @extend %align-items-stretch; //@include align-items(stretch);
-                @extend %flexible-parent; //display:flex; 
+                @extend %flexible-parent; //display:flex;
                 @extend %flex-direction-row; //@include flex-direction(row);
                 @include justify-content(flex-center);
                 @extend %flex-wrap-nowrap; //flex-wrap:nowrap;
-                
+
                 padding-bottom:1.2em;
-                
+
                 overflow-y:hidden;
                 overflow-x:auto;
 
@@ -1031,10 +1036,10 @@ html.touch, html.no-js {
                 @extend %align-items-center; //@include align-items(center);
                 > tr {
                     max-width:100%;
-                    margin:0 0.25em 0.5em 0.25em; 
+                    margin:0 0.25em 0.5em 0.25em;
                 }
             }
-            
+
             > tr {
                 cursor:default;
                 display:inline-block;
@@ -1060,7 +1065,7 @@ html.touch, html.no-js {
                     .view-a & {
                         @extend %flexible-parent; //display:flex;
                         @extend %justify-content-flex-end; //@include justify-content(flex-end);
-                        
+
                         &.eureka__row-image {
                             @extend %flex-direction-column; //flex-direction:column;
                             @include media($gtTabletP) {
@@ -1075,10 +1080,10 @@ html.touch, html.no-js {
                             display:none;
                         }
                         &.eureka__row-image {
-                            display:inline-block;    
+                            display:inline-block;
                         }
                     }
-                    
+
                     .view-c &, .view-d & {
                         @extend %growable; //flex-grow:1;
                         @extend %flex-basis-all; //flex-basis:100%;
@@ -1090,18 +1095,18 @@ html.touch, html.no-js {
                             display:none;
                         }
                     }
-                    
+
                     .view-d & {
                         @extend %flex-basis-auto; //@include flex-basis(auto);
                     }
                 }
-                
+
                 .view-a & {
                     @extend %align-items-stretch; //@include align-items(stretch);
                     /* what is happening here */
-                    //display:flex; 
+                    //display:flex;
                     /* what is happening here?? */
-                    @extend %flexible-parent; //display:flex; 
+                    @extend %flexible-parent; //display:flex;
                     @extend %flex-direction-column; //flex-direction:column;
                     @include media($gtTabletP) {
                         @include flex-direction(row);
@@ -1122,22 +1127,22 @@ html.touch, html.no-js {
                             @include flex-grow(4);
                             @extend %unshrinkable; //@include flex-shrink(0);
                             @extend %flex-basis-auto; //@include flex-basis(auto);
-                            
+
                             //@extend %flexible-parent; //display:flex;
                             //@extend %flex-direction-row; //@include flex-direction(row);
-                            
+
                             > input[type="radio"] {
                                 @extend %ungrowable; //flex-grow:0;
                                 @extend %unshrinkable; //@include flex-shrink(0);
                                 @extend %flex-basis-auto; //@include flex-basis(auto);
                             }
-                            
+
                             > img {
                                 //@extend %ungrowable; //flex-grow:0;
                                 //@extend %unshrinkable; //@include flex-shrink(0);
                                 //@extend %flex-basis-auto; //@include flex-basis(auto);
                             }
-                        } 
+                        }
                         > .pathname {
                             @extend %ungrowable; //flex-grow:0;
                         }
@@ -1159,12 +1164,12 @@ html.touch, html.no-js {
                         //flex-basis:100%;
                     }
                 }
-                
+
                 &:focus, &.focused {
                     .view-b &, .view-c &  {
                         > td.eureka__row-image {
-                            text-align:center;    
-                        }   
+                            text-align:center;
+                        }
                     }
                     .view-a & {
                         > td.eureka__row-image {
@@ -1174,7 +1179,7 @@ html.touch, html.no-js {
                         }
                     }
                 }
-                
+
                 .view-c & {
                     @include flex-basis(8em);
                     overflow-x:hidden;
@@ -1182,13 +1187,13 @@ html.touch, html.no-js {
                         @extend %flex-basis-auto; //@include flex-basis(auto);
                     }
                 }
-                
+
                 .view-d & {
                     > td.eureka__row-image {
-                        text-align:center;    
-                    }   
+                        text-align:center;
+                    }
                 }
-                
+
                 .view-b & {
                     flex-basis:200px;
                     @include flex-shrink(1);
@@ -1201,7 +1206,7 @@ html.touch, html.no-js {
                         }
                     }
                 }
-                
+
                 .view-b & {
                     flex-basis:200px;
                     margin:2px;
@@ -1213,7 +1218,7 @@ html.touch, html.no-js {
                         }
                     }
                 }
-                
+
             }
         }
     }
@@ -1290,10 +1295,10 @@ html.touch, html.no-js {
         @extend %flex-basis-none; //flex-basis:0;
         &.visible {
             @extend %visible-contextual;
-        }    
+        }
     }
     text-align:left;
-    
+
     @extend %align-items-flex-start; //@include justify-content(flex-start);
 
     background:$contextualBG;
@@ -1335,7 +1340,7 @@ tbody.filtered {
         @include justify-content(center);
         @include align-items(center);
     }
-    
+
     text-align:center;
     > * {
       display:inline-block;
@@ -1347,20 +1352,20 @@ tbody.filtered {
     }
     > form.tag {
         text-align:left;
-        
+
     }
 }
 
 footer.proceed {
     button,.btn {
         font-size:1.24em;
-        
+
     }
 }
 
 .contextual__nav {
     > a {
-        margin-right:0.5em;  
+        margin-right:0.5em;
         text-align:center;
         cursor:pointer;
         display:block;
@@ -1422,12 +1427,12 @@ tr.contextual {
     @extend %bottom-seperated;
     //margin-bottom:1em;
     font-size:1.2em;
-    
+
     @extend %align-items-stretch; //@include align-items(stretch);
     @extend %flexible-parent; //display:flex;
     @extend %flex-direction-column; //flex-direction:column;
     @extend %justify-content-flex-start; //@include justify-content(flex-start);
-    @include media($gtTabletP) { 
+    @include media($gtTabletP) {
         @include flex-direction(row);
     }
     .eureka__topbar-nav {
@@ -1435,15 +1440,16 @@ tr.contextual {
         @extend %unshrinkable; //@include flex-shrink(0);
         @extend %flex-wrappable; //@include flex-wrap(wrap);
         @extend %flex-direction-column; //flex-direction:column;
-        
+
         a {
             cursor:pointer;
         }
-        
+
         > header {
             @extend %flexible-parent; //display:flex;
             @extend %flex-unwrappable; //flex-wrap:nowrap;
             @extend %flex-direction-column; //flex-direction:column;
+            @extend %chrome-flexbox-hack;
             @include media($gtMobile) {
                 @include flex-direction(row);
             }
@@ -1483,26 +1489,27 @@ tr.contextual {
                 @include media($gtMobile) {
                     width:auto;
                 }
-                
+
             }
         }
-        
+
         > .eureka__topbar-nav__select {
             @extend %flexible-parent; //display:flex;
             @extend %align-items-center; //@include align-items(center);
             @extend %justify-content-flex-start; //@include justify-content(flex-start);
             @extend %flex-direction-column; //sflex-direction:column;
+            @extend %chrome-flexbox-hack;
             @include media($gtMobile) {
                 @include flex-direction(row);
             }
             padding-top:0.5em;
         }
-        
+
         @include media($gtMobile) {
             //@include flex-basis(14em);
             flex-wrap:nowrap;
         }
-        
+
         @extend %flexible-parent; //display:flex;
         > a, .view-btns a, .browse-select {
             @include media($gtTabletP) {
@@ -1550,7 +1557,7 @@ tr.contextual {
                 @extend %growable; //flex-grow(1);
                 display:inline-block;
                 cursor:pointer;
-                position:relative; 
+                position:relative;
                 color:currentColor;
                 &.view-c-btn {
                     @include media($tabletP) {
@@ -1583,21 +1590,21 @@ tr.contextual {
                     display:none;
                 }
             }
-            
+
             @include media($gtMobile) {
                 padding-right:0.5em;
                 margin-right:0;
                 //margin-right:0.7em;
                 //border-right:1px solid $borderColor;
             }
-            
+
             > label {
                 text-align:center;
                 @include media($gtMobile) {
                     text-align:inherit;
                 }
             }
-            
+
             form {
                 //@include flex(4);
                 //margin-top:0.2em;
@@ -1632,12 +1639,12 @@ tr.contextual {
             margin-bottom:1em;
             /*html.no-touch & {
                 @include media($mobile) {
-                    display:none; // #janky?    
+                    display:none; // #janky?
                 }
             }
             html.no-touch .sidebar-open & {
                 @include media($mobile) {
-                    display:none; // #janky?    
+                    display:none; // #janky?
                 }
             }*/
             @include media($gtMobile) {
@@ -1646,7 +1653,7 @@ tr.contextual {
             }
             //@extend %justify-content-center; //@include justify-content(center);
             @include flex-grow(4);
-            
+
             .sidebar-open & {
                 html.js & {
                     @include media($gtTabletP) {
@@ -1670,7 +1677,7 @@ tr.contextual {
        @extend %growable; //flex-grow:1;
        @extend %unshrinkable; //@include flex-shrink(0);
        @extend %flex-basis-auto; //@include flex-basis(auto);
-       
+
        @extend %align-items-stretch; //@include align-items(stretch);
        @extend %flexible-parent; //display:flex;
        @extend %flex-direction-row; //@include flex-direction(row);
@@ -1685,7 +1692,7 @@ tr.contextual {
            @extend %growable; //flex-grow:1;
            @extend %unshrinkable; //@include flex-shrink(0);
            @extend %flex-basis-auto; //@include flex-basis(auto);
-           
+
            max-width:32em;
        }
     }
@@ -1716,7 +1723,7 @@ tr.contextual {
         white-space:nowrap;
         .view-b &, .view-c & {
             display:block;
-            text-align:right;    
+            text-align:right;
         }
     }
     input[type="radio"] {
