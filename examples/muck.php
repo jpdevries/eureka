@@ -129,7 +129,8 @@
                     id:'redactor-media-browser_0', // unique identifier
                     upload:false, // paint upload UI elements
                     createDir:false, // add create directory button
-                    enlargeFocusRows:true
+                    enlargeFocusRows:true,
+                    hideImagesOnListView:undefined
                 });
                 var $eureka = new Eureka({ // init the Eureka component
                     // REQUIRED
