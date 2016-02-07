@@ -27,6 +27,8 @@ $goGreen:rgb(33,163,0) !default;
 $goGreen:#297aa7;
 $topBarH:4.8rem;
 
+$bg:$white;
+
 %subtle-link {
     text-decoration:none;
     color:inherit;
@@ -52,6 +54,43 @@ $topBarH:4.8rem;
 %chrome-flexbox-hack {
   min-width:0;
   min-height:0;
+}
+
+%table {
+    display: table;
+    //border-collapse: separate;
+    //border-spacing: 2px;
+    //border-color: gray;
+}
+
+%thead {
+    display: table-header-group;
+    //vertical-align: middle;
+    //border-color: inherit;
+}
+
+%th {
+    display: table-cell;
+    //vertical-align: inherit;
+    //font-weight: bold;
+    //text-align: center;
+}
+
+%tbody {
+    display: table-row-group;
+    vertical-align: middle;
+    border-color: inherit;
+}
+
+%tr {
+    display: table-row;
+    //vertical-align: inherit;
+    //border-color: inherit;
+}
+
+%td {
+    display: table-cell;
+    //vertical-align: inherit;
 }
 
 @mixin bottom-seperated() {
@@ -173,6 +212,7 @@ button {
 }
 
 .eureka-wrapper {
+  background:$bg;
     font-family: Gill Sans,Gill Sans MT,Calibri,sans-serif;
     pre,code {
         @extend %monospaced;
@@ -290,6 +330,8 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
                 height:auto;
                 -ms-flex-preferred-size:auto; // #janky ^^
 
+
+
                 /* hack for Firefox and Spartan see http://codepen.io/jpdevries/pen/doYYoR #janky */
                 /*@mixin topbar-hack() {
                     position:absolute;
@@ -398,6 +440,12 @@ html.no-touch { /* there's some weird bug with grunt-contrib-cssmin where if thi
         border:1px solid currentColor;
         display:inline-block;
         font-size:1.6em;
+        .view-e & {
+          line-height:1.4em;
+          border:none;
+          font-size:1.4em;
+          padding:0;
+        }
     }
     .view-a .focused & {
         @extend %justify-content-center; //@include justify-content(center);
@@ -818,12 +866,12 @@ html.touch, html.no-js {
         }
     }
 
-    .view-c-btn {
-        display:none !important;
+    //.view-c-btn {
+        //display:none !important;
         //@-moz-document url-prefix() { /* #janky #shame #hack https://twitter.com/mrktps/status/581889013574868992 */
             //display:none;
         //}
-    }
+    //}
 }
 
 .eureka-table {
@@ -834,6 +882,15 @@ html.touch, html.no-js {
 
     flex-grow:1;
     display:flex;
+
+    .view-e & {
+      overflow: auto;
+      display:block;
+      > table {
+        padding-top:0;
+      }
+    }
+
     > footer {
         margin-top:1em;
     }
@@ -843,12 +900,6 @@ html.touch, html.no-js {
         }
         @include media($gtTabletP) {
             height:100%;
-        }
-        .view-a &, .view-b &, .view-d & {
-            @include media($gtTabletP) {
-                //max-height:32em;
-                //overflow-y:auto;
-            }
         }
 
         @extend %growable; //flex-grow:1;
@@ -922,12 +973,24 @@ html.touch, html.no-js {
             }
         }
 
+        .view-e & {
+          @extend %table;
+          @extend %very-greedy;
+        }
+
         > thead {
             .view-a & {
                 display:block;
             }
             .view-b &, .view-c &, .view-d & {
                 display:none;
+            }
+            .view-e & {
+                @extend %thead;
+                position:sticky;
+                top:-2px;
+                z-index:$topMost;
+                background:$bg;
             }
             @extend %ungrowable; //flex-grow:0;
             @extend %unshrinkable; //@include flex-shrink(0);
@@ -941,6 +1004,9 @@ html.touch, html.no-js {
                 flex-basis:100%;
 
                 @extend %flexible-parent; //display:flex;
+                .view-e & {
+                  @extend %tr;
+                }
                 > th {
                     //@extend %growable; //flex-grow:1;
                     flex-grow:0;
@@ -958,6 +1024,17 @@ html.touch, html.no-js {
                         &:first-of-type {
                             //@include flex-grow(12); /* #janky #shame */
                         }
+                    }
+                    .view-e & {
+                      @extend %th;
+                      text-align:right;
+                      padding-right::1em;
+                      &:first-of-type {
+                        text-align:left;
+                        .fa-sort {
+                          position:static;
+                        }
+                      }
                     }
                 }
             }
@@ -1040,6 +1117,10 @@ html.touch, html.no-js {
                 }
             }
 
+            .view-e & {
+              @extend %tbody;
+            }
+
             > tr {
                 cursor:default;
                 display:inline-block;
@@ -1051,6 +1132,9 @@ html.touch, html.no-js {
                 @extend %align-items-flex-start; //@include align-self(flex-start);
                 .view-d & {
                     @extend %flex-basis-auto; //@include flex-basis(auto);
+                }
+                .view-e & {
+                  @extend %tr;
                 }
                 > td {
                     html.no-flexbox & {
@@ -1098,6 +1182,14 @@ html.touch, html.no-js {
 
                     .view-d & {
                         @extend %flex-basis-auto; //@include flex-basis(auto);
+                    }
+
+                    .view-e & {
+                      @extend %td;
+                      text-align:right;
+                      &.eureka__row-image {
+                        text-align:left;
+                      }
                     }
                 }
 
@@ -1179,6 +1271,17 @@ html.touch, html.no-js {
                         }
                     }
                 }
+                &:focus, &.focused { /* , &:hover */
+                  .view-e & {
+                      > td.eureka__row-image {
+                          .image {
+                            img,.img {
+                              max-height:3em;
+                            }
+                          }
+                      }
+                  }
+                }
 
                 .view-c & {
                     @include flex-basis(8em);
@@ -1191,6 +1294,27 @@ html.touch, html.no-js {
                 .view-d & {
                     > td.eureka__row-image {
                         text-align:center;
+                    }
+                }
+
+                .view-e & {
+                    > td.eureka__row-image {
+                        .image {
+                          img,.img {
+                            max-height:2em;
+                            margin-right:4px;
+                          }
+                        }
+                    }
+                }
+
+                .view-e.no-images-on-list & {
+                    > td.eureka__row-image {
+                        .image {
+                          img,.img {
+                            display:none;
+                          }
+                        }
                     }
                 }
 
@@ -1559,11 +1683,6 @@ tr.contextual {
                 cursor:pointer;
                 position:relative;
                 color:currentColor;
-                &.view-c-btn {
-                    @include media($tabletP) {
-                        display:none;
-                    }
-                }
             }
         }
         .browse-select {

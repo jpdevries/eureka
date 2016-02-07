@@ -284,24 +284,22 @@ var MuckBoot;
                                 fa.classList.add('icon-square');
                                 a.appendChild(fa);
                                 return a;
-                            })()
-                        ];
-                        if (Modernizr !== undefined && !Modernizr.touch) {
-                            btns.push((function () {
+                            })(),
+                            (function () {
                                 var a = d.createElement('a');
-                                a.classList.add('view-c-btn');
-                                a.setAttribute('data-view', 'view-c');
+                                a.classList.add('view-d-btn');
+                                a.setAttribute('data-view', 'view-e');
                                 a.setAttribute('data-view-target', opts.id);
-                                a.setAttribute('asyncronous-title', 'Sliver View displays a single row of small thumbnails');
+                                a.setAttribute('asyncronous-title', 'List Layout displays Name, Description, File Size and Edited On columns');
                                 var fa = d.createElement('i');
                                 fa.classList.add('fa');
-                                fa.classList.add('fa-ellipsis-h');
+                                fa.classList.add('fa-list');
                                 fa.classList.add('icon');
-                                fa.classList.add('icon-ellipsis-h');
+                                fa.classList.add('icon-list');
                                 a.appendChild(fa);
                                 return a;
-                            })());
-                        }
+                            })()
+                        ];
                         var nav = d.createElement('nav');
                         for (var i = 0; i < btns.length; i++)
                             nav.appendChild(btns[i]);
@@ -461,4 +459,4 @@ var MuckBoot;
         d.getElementById(this.opts.id).outerHTML = eurekaWrapper.outerHTML;
     };
 })();
-//# sourceMappingURL=muckboot.eureka.1.0.0.js.map
+//# sourceMappingURL=muckboot.eureka.1.1.0.js.map

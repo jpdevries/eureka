@@ -1,3 +1,6 @@
+.view-e .eureka-table > table {
+  width: 100%; }
+
 .clickable, html.js .eureka__topbar .eureka__topbar-nav > a {
   cursor: pointer; }
 
@@ -349,6 +352,26 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
   min-width: 0;
   min-height: 0; }
 
+.view-e .eureka-table > table {
+  display: table; }
+
+.view-e .eureka-table > table > thead {
+  display: table-header-group; }
+
+.view-e .eureka-table > table > thead > tr > th {
+  display: table-cell; }
+
+.view-e .eureka-table > table > tbody {
+  display: table-row-group;
+  vertical-align: middle;
+  border-color: inherit; }
+
+.view-e .eureka-table > table > thead > tr, .view-e .eureka-table > table > tbody > tr {
+  display: table-row; }
+
+.view-e .eureka-table > table > tbody > tr > td {
+  display: table-cell; }
+
 .eureka > .pathbrowser > .pathbrowser__topbar, .eureka > .pathbrowser > footer .droparea, .eureka__topbar {
   padding-bottom: 0.5em;
   border-bottom: 1px solid #dddddd; }
@@ -398,6 +421,7 @@ button {
     cursor: pointer; }
 
 .eureka-wrapper {
+  background: #fafafa;
   font-family: Gill Sans,Gill Sans MT,Calibri,sans-serif; }
   .eureka-wrapper .image img {
     max-width: 100%; }
@@ -582,6 +606,11 @@ html.no-touch {
   border: 1px solid currentColor;
   display: inline-block;
   font-size: 1.6em; }
+  .view-e .eureka__row-image .icon-wrapper {
+    line-height: 1.4em;
+    border: none;
+    font-size: 1.4em;
+    padding: 0; }
 
 .eureka__row-image code {
   display: inline-block; }
@@ -867,9 +896,6 @@ html.touch .eureka > .pathbrowser > footer .droparea, html.no-js .eureka > .path
   .eureka__topbar-nav > a.current, .eureka__topbar-nav .view-btns a.current {
     background: gainsboro; }
 
-.eureka__topbar-nav .view-c-btn {
-  display: none !important; }
-
 .eureka-table {
   -webkit-flex-grow: 1;
       -ms-flex-positive: 1;
@@ -877,6 +903,11 @@ html.touch .eureka > .pathbrowser > footer .droparea, html.no-js .eureka > .path
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex; }
+  .view-e .eureka-table {
+    overflow: auto;
+    display: block; }
+    .view-e .eureka-table > table {
+      padding-top: 0; }
   .eureka-table > footer {
     margin-top: 1em; }
   .eureka-table > table html.no-flexbox {
@@ -935,6 +966,12 @@ html.touch .eureka > .pathbrowser > footer .droparea, html.no-js .eureka > .path
       display: block; }
     .view-b .eureka-table > table > thead, .view-c .eureka-table > table > thead, .view-d .eureka-table > table > thead {
       display: none; }
+    .view-e .eureka-table > table > thead {
+      position: -webkit-sticky;
+      position: sticky;
+      top: -2px;
+      z-index: 99999;
+      background: #fafafa; }
     .eureka-table > table > thead > tr {
       -webkit-flex-basis: 100%;
           -ms-flex-preferred-size: 100%;
@@ -951,6 +988,13 @@ html.touch .eureka > .pathbrowser > footer .droparea, html.no-js .eureka > .path
         .view-a .eureka-table > table > thead > tr > th {
           text-align: right;
           padding-right: 1em; }
+        .view-e .eureka-table > table > thead > tr > th {
+          text-align: right;
+          padding-right: 1em; }
+          .view-e .eureka-table > table > thead > tr > th:first-of-type {
+            text-align: left; }
+            .view-e .eureka-table > table > thead > tr > th:first-of-type .fa-sort {
+              position: static; }
   .eureka-table > table > tbody {
     text-align: center;
     display: block;
@@ -1019,6 +1063,10 @@ html.touch .eureka > .pathbrowser > footer .droparea, html.no-js .eureka > .path
           display: none; }
         .view-c .eureka-table > table > tbody > tr > td .pathname, .view-d .eureka-table > table > tbody > tr > td .pathname {
           display: none; }
+        .view-e .eureka-table > table > tbody > tr > td {
+          text-align: right; }
+          .view-e .eureka-table > table > tbody > tr > td.eureka__row-image {
+            text-align: left; }
       .view-a .eureka-table > table > tbody > tr {
         /* what is happening here */
         /* what is happening here?? */ }
@@ -1067,6 +1115,10 @@ html.touch .eureka > .pathbrowser > footer .droparea, html.no-js .eureka > .path
         text-align: center; }
       .view-a .eureka-table > table > tbody > tr:focus > td.eureka__row-image img, .view-a .eureka-table > table > tbody > tr.focused > td.eureka__row-image img {
         max-height: none; }
+      .eureka-table > table > tbody > tr:focus, .eureka-table > table > tbody > tr.focused {
+        /* , &:hover */ }
+        .view-e .eureka-table > table > tbody > tr:focus > td.eureka__row-image .image img, .view-e .eureka-table > table > tbody > tr:focus > td.eureka__row-image .image .img, .view-e .eureka-table > table > tbody > tr.focused > td.eureka__row-image .image img, .view-e .eureka-table > table > tbody > tr.focused > td.eureka__row-image .image .img {
+          max-height: 3em; }
       .view-c .eureka-table > table > tbody > tr {
         -webkit-flex-basis: 8em;
                 flex-basis: 8em;
@@ -1074,6 +1126,11 @@ html.touch .eureka > .pathbrowser > footer .droparea, html.no-js .eureka > .path
         overflow-x: hidden; }
       .view-d .eureka-table > table > tbody > tr > td.eureka__row-image {
         text-align: center; }
+      .view-e .eureka-table > table > tbody > tr > td.eureka__row-image .image img, .view-e .eureka-table > table > tbody > tr > td.eureka__row-image .image .img {
+        max-height: 2em;
+        margin-right: 4px; }
+      .view-e.no-images-on-list .eureka-table > table > tbody > tr > td.eureka__row-image .image img, .view-e.no-images-on-list .eureka-table > table > tbody > tr > td.eureka__row-image .image .img {
+        display: none; }
       .view-b .eureka-table > table > tbody > tr {
         -webkit-flex-basis: 200px;
             -ms-flex-preferred-size: 200px;
@@ -1329,9 +1386,6 @@ tr.contextual {
       cursor: pointer;
       position: relative;
       color: currentColor; }
-      @media screen and (max-width: 768px) {
-        .eureka__topbar .eureka__topbar-nav .view-btns a.view-c-btn {
-          display: none; } }
   .eureka__topbar .eureka__topbar-nav .browse-select {
     width: 88%;
     margin-bottom: 1em; }

@@ -15,27 +15,27 @@ class Eureka {
     private _model:EurekaModel;
     private _view:EurekaView;
     private _controller:EurekaController;
-    
-    constructor(public opts:Object) {   
+
+    constructor(public opts:Object) {
         var that = this;
-             
+
         this._model = new EurekaModel(opts); // give the model the data
         this._view = new EurekaView(); // keep the view stupid
         this._controller = new EurekaController({ // create a controller that controls the two
             model: this._model,
             view: this._view
         });
-        
+
         // set references to the controller respectively
         this._model.setController(this._controller);
         this._view.setController(this._controller);
-        
+
         this._view.init();
         this._view.paint();
         this._controller.init();
-            
+
         this.fetch();
-        
+
         this._view.getElement().addEventListener('EurekaFilesUploaded',function(e){
             that._model.setCurrentDirectory(that._model.getCurrentDirectory(),true,true,true); // trigger a repaint
         });
@@ -56,28 +56,28 @@ class Eureka {
 interface IEurekaMediaSource {
     getID() : string;
     setID(id:string);
-    
+
     getTitle() : string;
     setTitle(title:string);
-    
+
     toString() : string;
 }
 
 class EurekaMediaSource implements IEurekaMediaSource {
     private _id:string = '';
     private _title:string = '';
-    
+
     getID():string {
         return this._id;
     }
-    setID(id:string) { 
+    setID(id:string) {
         this._id = id;
     }
-    
+
     getTitle():string {
         return this._title;
     }
-    setTitle(title:string) { 
+    setTitle(title:string) {
         this._title = title;
     }
 
@@ -85,14 +85,14 @@ class EurekaMediaSource implements IEurekaMediaSource {
         if(opts.id !== undefined) this._id = opts.id;
         if(opts.title !== undefined) this._title = opts.title;
     }
-    
+
     toString() {
-        return this.getID();  
+        return this.getID();
     }
 }
 
 class EurekaModel {
-    private _controller:EurekaController; 
+    private _controller:EurekaController;
     private _uid:string = 'media-browser_0';
     private _storagePrefix:string = 'eureka_';
     private _sources:Array<EurekaMediaSource> = [];
@@ -115,28 +115,28 @@ class EurekaModel {
     private _prependOptGroupsWithRootOption:Boolean = true;
     private _showDimensionsColumn:Boolean = true;
     private _webWorkersPath:String = '';
-    
+
     private _directoryRequestURL:string = '';
     private _directoryChildrenRequestURL:string = '';
     private _listSourceRequestURL:string = '';
     private _listSourcesRequestURL:string = '';
     private _useWebWorkers:Boolean = false;
     private _sortMediaSources:Boolean = false;
-    
+
     public static get EurekaFoundIt():string { return "EurekaFoundIt"; }
     public static get EurekaFileRename():string { return "EurekaFileRename"; }
     public static get EurekaUnlink():string { return "EurekaUnlink"; }
     public static get EurekaDirectoryCreated():string { return "EurekaDirectoryCreated"; }
     public static get EurekaDirectoryOpened():string { return "EurekaDirectoryOpened"; }
     public static get EurekaDirectoryClosed():string { return "EurekaDirectoryClosed"; }
-    
+
     public static get EurekaDirectoryChanged():string { return "EurekaDirectoryChanged"; }
     public static get EurekaMediaSourceChange():string { return "EurekaMediaSourceChange"; }
     public static get EurekaMediaSourcesListChange():string { return "EurekaMediaSourcesListChange"; }
     public static get EurekaViewChange():string { return "EurekaViewChange"; }
     public static get EurekaFilesUploaded():string { return "EurekaFilesUploaded"; }
     public static get EurekaCanceled():string { return "EurekaCanceled"; }
-    
+
     constructor(opts:any) {
         if(opts.uid !== undefined) this._uid = opts.uid;
         if(opts.storagePrefix !== undefined) this._storagePrefix = opts.storagePrefix;
@@ -144,7 +144,7 @@ class EurekaModel {
         if(opts.mediaSource !== undefined) this._mediaSource = opts.mediaSource;
         if(opts.currentDirectory !== undefined) this._currentDirectory = opts.currentDirectory;
         if(opts.headers !== undefined) this._headers = opts.headers;
-        
+
         if(opts.navTreeHidden !== undefined) this._navTreeHidden = opts.navTreeHidden;
         if(opts.useLocalStorage !== undefined) this._useLocalStorage = opts.useLocalStorage;
         if(opts.currentView !== undefined) this._currentView = opts.currentView;
@@ -152,7 +152,7 @@ class EurekaModel {
         if(opts.displayFullTreePaths !== undefined) this._displayFullTreePaths = opts.displayFullTreePaths;
         if(opts.allowRename !== undefined) this._allowRename = opts.allowRename;
         if(opts.allowDelete !== undefined) this._allowDelete = opts.allowDelete;
-        
+
         if(opts.directoryRequestURL !== undefined) this._directoryRequestURL = opts.directoryRequestURL;
         this._directoryChildrenRequestURL = (opts.directoryChildrenRequestURL !== undefined) ? opts.directoryChildrenRequestURL : this._directoryRequestURL;
         if(opts.listSourceRequestURL !== undefined) this._listSourceRequestURL = opts.listSourceRequestURL;
@@ -161,13 +161,13 @@ class EurekaModel {
         if(opts.showDimensionsColumn !== undefined) this._showDimensionsColumn = opts.showDimensionsColumn;
         if(opts.useWebWorkers !== undefined) this._useWebWorkers = ((<any>window).Worker) ? opts.useWebWorkers : false;
         if(opts.sortMediaSources !== undefined) this._sortMediaSources = opts.sortMediaSources;
-        
+
         if(opts.debug === true) this._debug = opts.debug;
         if(opts.confirmBeforeDelete !== undefined) this._confirmBeforeDelete = opts.confirmBeforeDelete;
         if(opts.touch === true) this._touch = true;
-        
+
         this._webWorkersPath = (opts.webWorkersPath !== undefined) ? opts.webWorkersPath : _EUREKA.src.substring(0,_EUREKA.src.lastIndexOf('/')) + '/workers/';
-        
+
         if(this._useLocalStorage) {
             if(this.getLocalStorage('currentMediaSource') && !opts.mediaSource) this._mediaSource = this.getLocalStorage('currentMediaSource');
             if(this.getLocalStorage('navTreeHidden') && !opts.navTreeHidden) this._navTreeHidden = (this.getLocalStorage('navTreeHidden') == 'true' ? true : false);
@@ -175,101 +175,101 @@ class EurekaModel {
             if(this.getLocalStorage('currentView') && !opts.currentView) this._currentView = this.getLocalStorage('currentView');
         }
     }
-    
+
     getUseWebWorkers() {
         return this._useWebWorkers;
     }
-    
+
     getwebWorkersPath() {
         return this._webWorkersPath;
     }
-    
+
     getShowDimensionsColumn() {
         return this._showDimensionsColumn;
     }
-    
+
     getLocalStorage(id) {
         id = this.getStoragePrefix() + id;
         if(localStorage.getItem(id) !== undefined && localStorage.getItem(id) !== 'undefined') return localStorage.getItem(id);
         return false;
     }
-    
+
     setLocalStorage(id,value) {
         id = this.getStoragePrefix() + id;
         localStorage.setItem(id,value);
     }
-    
+
     useLocalStorage() {
         return this._useLocalStorage;
     }
-    
+
     getAlertBeforeDelete() {
         return this._confirmBeforeDelete;
     }
-    
+
     getFileUploadURL() {
         return this._fileUploadURL;
     }
-    
+
     setFileUploadURL(val) {
         this._fileUploadURL = val;
     }
-    
+
     setAlertBeforeDelete(val) {
         this._confirmBeforeDelete = val;
     }
-    
+
     getDebug() {
         return this._debug;
     }
-    
+
     setDebug(debug) {
         this._debug = debug;
     }
-    
+
     getHeaders() {
         return this._headers;
     }
-    
+
     getUID(){
         return this._uid;
     }
-    
+
     getStoragePrefix() {
         return this._storagePrefix;
     }
-    
+
     getSources() {
         return this._sources;
     }
-    
+
     getEditable() {
         return this._editable;
     }
-    
+
     getDisplayFullTreePaths() {
         return this._displayFullTreePaths;
     }
-    
+
     getAllowRename() {
         return this._allowRename;
     }
-    
+
     getAllowDelete() {
         return this._allowDelete;
     }
-    
+
     getHTML5UploadData() {
         return {
             s:this.getCurrentMediaSource(),
             dir:this.getCurrentDirectory()
         };
     }
-    
+
     isTouch() {
         return this._touch;
     }
-    
+
     getMediaSourceDTOByID(id) {
         if(this.getDebug()) console.log('getMediaSourceDTOByID: ' + id);
         var sources = this.getSources();
@@ -309,7 +309,7 @@ class EurekaModel {
                 currentMediaSource:currentMediaSourceDTO,
                 clearDirectory:clearDirectory,
             });
-        
+
             this.getController().getView().getElement().dispatchEvent(e);
         }
     }
@@ -329,7 +329,7 @@ class EurekaModel {
             currentDirectory:currentDirectory,
             currentMediaSource:this.getMediaSourceDTOByID(this._mediaSource)
         });
-        
+
         this.getController().getView().getElement().dispatchEvent(e);
     }
     getCurrentDirectory() {
@@ -345,7 +345,7 @@ class EurekaModel {
         e.initCustomEvent(EurekaModel.EurekaViewChange, true, true, {
             currentView:currentView
         });
-        
+
         this.getController().getView().getElement().dispatchEvent(e);
     }
     getCurrentView() {
@@ -367,13 +367,13 @@ class EurekaModel {
         if(this.getDebug()) console.log('setSources' + dispatch);
         this._sources = sources;
         if (dispatch === false) return;
-        
+
         var e = document.createEvent('CustomEvent');
         e.initCustomEvent(EurekaModel.EurekaMediaSourcesListChange, true, true, {
             sources:sources
         });
         if(this.getDebug()) console.log('setSources');
-        
+
         this.getController().getView().getElement().dispatchEvent(e);
     }
     sortResultsById(results) {
@@ -415,12 +415,12 @@ class EurekaModel {
           path: this.getController().getModel().getCurrentDirectory() + fileName,
           newPath: this.getController().getModel().getCurrentDirectory() + newFilename
         });
-        
+
         this.getController().getView().getElement().dispatchEvent(e);
     }
     deleteFile(filename, tr) {
         var that = this;
-        
+
         var e = document.createEvent('CustomEvent');
         e.initCustomEvent('EurekaUnlink', true, true, {
           filename: tr.getAttribute('data-filename'),
@@ -429,14 +429,14 @@ class EurekaModel {
           dimensions: [tr.getAttribute('data-dimensions-w'), tr.getAttribute('data-dimensions-h')],
           filesize: parseInt(tr.getAttribute('data-filesize-bytes'))
         });
-        
+
         that.getController().getView().getElement().dispatchEvent(e);
     }
     setChoosenMediaItem(filename) {
         var that = this;
         var tr = getEurekaRowByFileName(filename); // #more reliable than tr.eureka__row.focused
         var img = tr.querySelector('.image img, .image .img');
-        
+
         var e = document.createEvent('CustomEvent');
         e.initCustomEvent('EurekaFoundIt', true, true, {
           filename: filename,
@@ -446,7 +446,7 @@ class EurekaModel {
           dimensions: [tr.getAttribute('data-dimensions-w'), tr.getAttribute('data-dimensions-h')],
           filesize: parseInt(tr.getAttribute('data-filesize-bytes'))
         });
-        
+
         that.getController().getView().getElement().dispatchEvent(e);
         function getEurekaRowByFileName(filename:string) : HTMLElement {
             var trs = that.getController().getView().getElement().querySelectorAll('tr.eureka__row');
@@ -488,7 +488,7 @@ class EurekaModel {
     setListSourcesRequestURL(url:string) {
       this._listSourcesRequestURL = url;
     }
-    
+
 } // end class EurekaModel
 
 class EurekaView {
@@ -496,17 +496,17 @@ class EurekaView {
     private _html5Upload:Object;
     private _handleTreeNodeClicked:EventListener;
     private _handleTreeFolderClicked:EventListener;
-    
-    constructor() {} 
-     
+
+    constructor() {}
+
     getController() {
-        return this._controller; 
+        return this._controller;
     }
-    
+
     setController(controller:EurekaController) {
         this._controller = controller;
     }
-    
+
     getElement() {
         return (<HTMLElement>document.getElementById(this.getController().getModel().getUID()));
     }
@@ -514,12 +514,12 @@ class EurekaView {
         var that = this;
         (<HTMLElement>that.getElement().parentNode).querySelector('footer.proceed button.cancel').addEventListener('click', function (e) {
             e.preventDefault();
-            
+
             (function(){
                 var e:any = <any>document.createEvent('CustomEvent');
                 e.initCustomEvent(EurekaModel.EurekaCanceled, true, true, {});
-        
-                that.getElement().dispatchEvent(e); 
+
+                that.getElement().dispatchEvent(e);
             })();
         });
         (<HTMLElement>that.getElement().parentNode).querySelector('footer.proceed button.cta').addEventListener('click', function (e) {
@@ -529,14 +529,14 @@ class EurekaView {
     }
     init(){
         var that = this;
-        
+
         that._handleTreeNodeClicked = function(e) {
             if(that.getController().getModel().getDebug()) console.log('handleTreeNodeClicked');
             e.preventDefault();
             e.stopPropagation();
             that.handleTreePathClicked(this);
         };
-        
+
         that._handleTreeFolderClicked = function(e) {
             e.preventDefault();
             e.stopPropagation();
@@ -550,7 +550,7 @@ class EurekaView {
                 _icon.classList.remove('icon-folder-open');
                 _icon.classList.add('fa-folder','icon-folder');
                 li.classList.remove('open');
-                
+
                 if(this.getAttribute('data-open-msg')) this.querySelector('.audible').innerHTML = this.getAttribute('data-open-msg');
             }
             else {
@@ -561,7 +561,7 @@ class EurekaView {
                 li.classList.add('open');
                 if(this.getAttribute('data-close-msg')) this.querySelector('.audible').innerHTML = this.getAttribute('data-close-msg');
             }
-            
+
             (function(){
                 var e:any = <any>document.createEvent('CustomEvent');
                 e.initCustomEvent((_closing) ? EurekaModel.EurekaDirectoryClosed : EurekaModel.EurekaDirectoryOpened, true, true, {
@@ -569,18 +569,18 @@ class EurekaView {
                     s:that.getController().getModel().getCurrentMediaSource(),
                     path:dataCD
                 });
-        
-                that.getElement().dispatchEvent(e); 
+
+                that.getElement().dispatchEvent(e);
             })();
         };
-        
+
         function assignShortcutListeners() {
             document.addEventListener('keydown', function(event) {
                 if(that.getController().getModel().getDebug()) console.log(event);
                 if (event.ctrlKey && event.which === 186) { // ctrl ; to toggle sidebar
                     var e = document.createEvent('Event');
                     e.initEvent('click', true, true);
-                    
+
                     document.getElementById(that.getController().getModel().getUID() + '__pathbrowser_toggle').dispatchEvent(e);
                 }
                 if (event.altKey && event.ctrlKey && (event.which >= 48 && event.which <= 57)) {
@@ -590,7 +590,7 @@ class EurekaView {
                         if(btn) {
                             var e = document.createEvent('Event');
                             e.initEvent('click', true, true);
-                            
+
                             btn.dispatchEvent(e);
                         }
                     } catch(e) {}
@@ -622,7 +622,7 @@ class EurekaView {
                         function hasOption(val) {
                             var options = select.querySelectorAll('option');
                             for(var i = 0; i < options.length; i++) {
-                                if(((<HTMLOptionElement>(options[i])).value) == val) return true; 
+                                if(((<HTMLOptionElement>(options[i])).value) == val) return true;
                             }
                             return false;
                         }
@@ -641,52 +641,52 @@ class EurekaView {
                     );
                     that.getController().getModel().setCurrentMediaSource(msSelect.value, true,  true, true, false);
                 }
-                
+
                 if(event.which === 8 && document.activeElement) { // delete to delete
                     var e = document.createEvent('Event');
                     e.initEvent('click', true, true);
-                    
+
                     try {
                         (<HTMLElement>document.activeElement.nextSibling).querySelector('a.trash').dispatchEvent(e);
                     } catch(e) {}
-                } 
-                
+                }
+
                 if(event.altKey && event.which === 32 && document.activeElement) { // space to expand
                     try {
                         var e = document.createEvent('Event');
                         e.initEvent('click', true, true);
-                        
+
                         (<HTMLElement>document.activeElement.nextSibling).querySelector('a.expand').dispatchEvent(e);
                     } catch(e) {}
                 }
-                
+
                 if(event.which === 13 && document.activeElement) { // enter to choose
                     try {
                         var e = document.createEvent('Event');
                         e.initEvent('click', true, true);
-                        
+
                         (<HTMLElement>document.activeElement.nextSibling).querySelector('a.choose').dispatchEvent(e);
                     } catch(e) {}
                 }
-                
+
                 if(event.ctrlKey && event.which === 82) { // ctrl r to rename
                     try {
                         var e = document.createEvent('Event');
                         e.initEvent('click', true, true);
-                        
+
                         (<HTMLElement>document.activeElement.nextSibling).querySelector('a.rename').dispatchEvent(e);
                     } catch(e) {}
                 }
-                
+
                 if(event.ctrlKey && event.which === 78) { // ctrl n to create directory
                     try {
                         var e = document.createEvent('Event');
                         e.initEvent('click', true, true);
-                        
+
                         (<HTMLElement>that.getElement()).querySelector('.create-new').dispatchEvent(e);
                     } catch(e) {}
                 }
-                
+
                 if(event.ctrlKey && event.which === 85) { // ctrl n to create directory
                     try {
                         var e = document.createEvent('Event');
@@ -694,7 +694,7 @@ class EurekaView {
                         document.getElementById(that.getController().getModel().getUID() + '__upload-input').dispatchEvent(e);
                     } catch(e) {}
                 }
-                
+
                 if(event.ctrlKey && event.which === 70) { // ctrl f to filter
                     try {
                         document.getElementById(that.getController().getModel().getUID() + '__filter-images').focus();
@@ -720,7 +720,7 @@ class EurekaView {
         function hideSidebar() {
             var tog = document.getElementById(that.getController().getModel().getUID() + '__pathbrowser_toggle');
             var el = document.getElementById(tog.getAttribute('data-toggle-target'));
-            
+
             el.classList.add('hidden');
             document.getElementById(that.getController().getModel().getUID()).classList.remove('sidebar-open');
             //document.querySelectorAll('#media-browser_0 .browse-select')[0].classList.remove('tablet-p-hidden');
@@ -733,7 +733,7 @@ class EurekaView {
             toggle.classList.remove('icon-toggle-left');
             tog.title = tog.getAttribute('data-title-open');
         }
-        
+
         document.getElementById(that.getController().getModel().getUID() + '__pathbrowser_toggle').addEventListener('click', function (e) {
             var el = document.getElementById(this.getAttribute('data-toggle-target'));
             e.preventDefault();
@@ -747,23 +747,23 @@ class EurekaView {
         this.assignViewButtonListeners();
         this.assignFooterProceedListeners();
         this.assignBrowsingSelectOptGroupListeners();
-        
+
         this.assignSelectListeners();
         this.assignSortBtnListeners();
         this.assignFilterListeners();
         this.assignCreateNewDirectoryListener();
         this.assignUploadListeners();
-        
+
         assignShortcutListeners();
 
         var e = document.createEvent('Event');
         e.initEvent('click', true, true);
         that.getElement().querySelector('.eureka__topbar-nav .view-btns a[data-view="' + that.getController().getModel().getCurrentView() + '"]').dispatchEvent(e);
-        
+
         if (this.getController().getModel().getNavTreeHidden() === true) {
             hideSidebar();
         }
-        
+
         // if a droptarget exists and a modern mouse enabled browser is being used
         var dropContainer = document.getElementById(that.getController().getModel().getUID()).querySelector('.dropzone') || null;
         if (html5Upload !== undefined && !(that.getController().getModel().isTouch()) && html5Upload.fileApiSupported() && dropContainer) {
@@ -779,7 +779,7 @@ class EurekaView {
 
                 // Key for the file data (optional, default: 'file')
                 key: 'File',
-                
+
                 data:that.getController().getModel().getHTML5UploadData(),
 
                 // Additional data submitted with file (optional)
@@ -790,7 +790,7 @@ class EurekaView {
                 maxSimultaneousUploads: 4,
 
                 // Callback for each dropped or selected file
-                // It receives one argument, add callbacks 
+                // It receives one argument, add callbacks
                 // by passing events map object: file.on({ ... })
 
                 onFileAdded: function (file) {
@@ -803,23 +803,23 @@ class EurekaView {
                     removeMessages();
                     // make a really unique identifer
                     var id = file.fileName.replace(/[!\"#$%&'\(\)\*\+,\.\/:;<=>\?\@\[\\\]\^`\{\|\}~]/g, '') + file.fileSize.toString().replace(/[!\"#$%&'\(\)\*\+,\.\/:;<=>\?\@\[\\\]\^`\{\|\}~]/g, '');
-                    
+
                     var bar = document.createElement('div');
                     bar.classList.add('bar');
-                    
+
                     bar.setAttribute('id',id);
                     bar.title = file.fileName + ' is preparing for upload.';
-                    
+
                     var pill = document.createElement('div');
                     pill.setAttribute('style','right:100%');
-                    
+
                     bar.appendChild(pill);
-                    
+
                     var dropzone:HTMLElement = <HTMLElement>document.getElementById(that.getController().getModel().getUID()).querySelector('.dropzone');
                     dropzone.classList.remove('complete');
                     dropzone.classList.remove('error');
                     dropzone.classList.add('uploading');
-                    
+
                     dropzone.querySelector('.progress').appendChild(bar);
 
                     file.on({
@@ -836,14 +836,14 @@ class EurekaView {
                                 dropzone.classList.add('error');
                             }
                             bar.setAttribute('title', file.fileName + ' has uploaded');
-                            
+
                             if(dropzone.querySelectorAll('.bar').length >= 2)(<any>bar).remove();
                             if(dropzone.querySelectorAll('.bar').length < 2) { // everything is up
                                 setTimeout(function(){
                                     (<HTMLElement>dropzone.querySelector('.progress')).innerHTML = '';
                                     dropzone.classList.remove('uploading');
                                     dropzone.classList.add('complete');
-                            
+
                                     (function(){ // wait a bit, then show the complete message
                                         var div = dropzone.querySelector('.progress');
                                         var h2 = document.createElement('h2');
@@ -851,21 +851,21 @@ class EurekaView {
                                         icon.setAttribute('class','fa fa-check-circle-o icon icon-check-circle-o');
                                         h2.appendChild(icon);
                                         div.appendChild(h2);
-                            
+
                                         var span = document.createElement('span');
                                         span.setAttribute('title','files here...');
                                         span.innerHTML = 'Your files';
-                            
+
                                         var p = document.createElement('p');
                                         p.appendChild(span);
                                         p.innerHTML += ' have been successfully uploaded.';
                                         div.appendChild(p);
-                                        
+
                                         if(dropzone.classList.contains('error')) {
                                             icon.setAttribute('class','fa fa-times-circle icon icon-times-circle');
                                             p.innerHTML = 'Oh no,<br>One or more files&nbsp;were not&nbsp;uploaded.';
                                         }
-                                        
+
                                         var e:any = <any>document.createEvent('CustomEvent');
                                         //that.getElement().dispatchEvent(e);
                                         e.initCustomEvent(EurekaModel.EurekaFilesUploaded, true, true, {
@@ -876,7 +876,7 @@ class EurekaView {
                                     })();
                                 }, 640);
                             }
-                            
+
                         },
 
                         // Called during upload progress, first parameter
@@ -892,21 +892,21 @@ class EurekaView {
         } else {
             if(dropContainer) (<any>dropContainer).remove(); // remove the drop container because we can't use it
         }
-        
+
         if(that.getController().getModel().getFileUploadURL() === undefined || that.getController().getModel().getFileUploadURL() == '') {
             try {
                 (<any>that.getElement().querySelector('.pathbrowser footer form')).remove();
             } catch(e) {}
-            
+
             try {
                 (<any>that.getElement().querySelector('.upload-form')).remove();
             } catch(e) {}
         }
-        
+
         if(that.getController().getModel().getCurrentMediaSource() !== undefined && that.getController().getModel().getCurrentMediaSource() !== '/' && that.getController().getModel().getCurrentMediaSource() !== '') {
             that.recursivelyOpenTreeToCurrentDirectory();
         }
-        
+
         that.getElement().addEventListener(EurekaModel.EurekaDirectoryChanged, function (e:any) {
             if(that.getController().getModel().getDebug()) console.log(EurekaModel.EurekaDirectoryChanged);
             var currentDirectory = e.detail.currentDirectory;
@@ -939,47 +939,47 @@ class EurekaView {
         });
         that.getElement().addEventListener(EurekaModel.EurekaMediaSourceChange, function(e:any){
             var mediaSourceTitle:HTMLElement = (<HTMLElement>that.getElement().querySelector('.eureka__topbar-nav .mediasource-title'));
-            
+
             if(e.detail.currentMediaSource) {
                 var prepend =  mediaSourceTitle.getAttribute('data-prepend') || '';
                 mediaSourceTitle.innerHTML = prepend + e.detail.currentMediaSource.getTitle();
-            } 
-            
+            }
+
             that.setBrowseSelectValue();
             that.setMediaSourceSelectValue();
             try {
                 (<any>(that._html5Upload)).data = that.getController().getModel().getHTML5UploadData();
             } catch(e) {}
         });
-        
+
         if(!that.getController().getModel().getShowDimensionsColumn()) {
             try {
                 (<any>that.getElement().querySelector('.eureka-table th.dimensions')).remove();
             } catch(e) {}
         }
     }
-    
+
     setMediaSourceSelectValue() {
         var that = this;
         if(that.getController().getModel().getDebug()) console.log('setMediaSourceSelectValue');
-        
+
         var currentDirectory = that.getController().getModel().getCurrentDirectory();
         var currentMediaSource = that.getController().getModel().getCurrentMediaSource();
-        
+
         var select:HTMLSelectElement = (<HTMLSelectElement>document.getElementById(that.getController().getModel().getUID() + '__mediasource-select'));
-        
+
         if(select.value !== currentMediaSource) {
             select.value = currentMediaSource;
         }
     }
-    
+
     setBrowseSelectValue() {
         var that = this;
-        if(that.getController().getModel().getDebug()) console.log('setBrowseSelectValue'); 
-        
+        if(that.getController().getModel().getDebug()) console.log('setBrowseSelectValue');
+
         var currentDirectory = that.getController().getModel().getCurrentDirectory();
         var currentMediaSource = that.getController().getModel().getCurrentMediaSource();
-        
+
         var select:HTMLSelectElement = <HTMLSelectElement>(<HTMLElement>document.getElementById(that.getController().getModel().getUID() + '__browsing')).querySelector('select');
         var optgroups = select.querySelectorAll('optgroup');
         var optgroup = getOptGroup(optgroups);
@@ -988,8 +988,8 @@ class EurekaView {
             if(opt && select.value !== opt.getAttribute('value')) {
                 select.value = opt.getAttribute('value');
             }
-        } 
-        
+        }
+
         function getOptGroup(optgroups) : HTMLElement {
             for(var i = 0; i < optgroups.length; i++) {
                 var optgroup = optgroups[i];
@@ -1016,10 +1016,10 @@ class EurekaView {
             }
         }
     }
-    
+
     recursivelyOpenTreeToCurrentDirectory() {
         var that = this;
-        
+
         var pathbrowser = document.getElementById(that.getController().getModel().getUID() + '__pathbrowser');
         var paths = pathbrowser.querySelectorAll('a.path');
         for(var i = 0; i < paths.length; i++) {
@@ -1044,13 +1044,13 @@ class EurekaView {
                             li.classList.add('open');
                             openFolder(<HTMLElement>(li.querySelector('.folder > i')));
                         }
-                    } 
+                    }
                 })();
             }
         }
         return false;
     }
-    
+
     assignUploadListeners() {
         var that = this;
         var upload_files = that.getElement().querySelector('.pathbrowser .upload-files');
@@ -1058,7 +1058,7 @@ class EurekaView {
             upload_files.addEventListener('click',function(e){
                 e.preventDefault();
                 e.stopPropagation();
-            
+
                 (function(){
                     var e = document.createEvent('Event');
                     e.initEvent('click', true, true);
@@ -1067,10 +1067,10 @@ class EurekaView {
             });
         }
     }
-    
+
     assignBrowsingSelectOptGroupListeners(){
         var that = this;
-        
+
         if(that.getController().getModel().getDebug())console.log('assignBrowsingSelectOptGroupListeners');
         var select = document.getElementById(that.getController().getModel().getUID() + '__browsing').querySelector('select');
         select.addEventListener('change', function (e) {
@@ -1093,24 +1093,24 @@ class EurekaView {
     }
     assignCreateNewDirectoryListener() {
         var that = this;
-        
+
         try {
             that.getElement().querySelector('.create-new').addEventListener('click',function(e){
                 var li = document.createElement('li');
                 var folder = document.createElement('a');
                 folder.classList.add('folder');
                 folder.innerHTML = '&nbsp;<i class="fa icon fa-folder icon-folder"></i>';
-            
+
                 var path = document.createElement('a');
                 path.classList.add('path');
                 path.setAttribute('title','Browse this directory');
                 path.setAttribute('data-cd','');
                 path.setAttribute('contenteditable','true');
                 path.innerHTML = 'new folder';
-            
+
                 li.appendChild(folder);
                 li.appendChild(path);
-            
+
                 li.appendChild(document.createElement('ul'));
 
                 setTimeout(function(){
@@ -1119,21 +1119,21 @@ class EurekaView {
                         (<any>path).select();
                     } catch(e) {}
                 },240);
-            
+
                 var ul:HTMLElement = <HTMLElement>(that.getElement().querySelector('.pathbrowser .tree li.active > ul') || that.getElement().querySelector('.pathbrowser .tree > ul'));
                 ul.classList.add('open');
                 (<HTMLElement>(ul.parentNode)).classList.add('open');
                 try {
                     (<HTMLElement>(<HTMLElement>(ul.previousSibling).previousSibling)).querySelector('.fa').setAttribute('class','fa icon fa-folder-open icon-folder-open');
                 } catch(e) {}
-            
+
                 path.addEventListener('focus', function (e) {
                     this.addEventListener('keydown', handleKeyDown, false);
                 }, false);
                 path.addEventListener('blur', function (e) {
                     this.removeEventListener('keydown', handleKeyDown, false);
                 }, false);
-            
+
                 function handleKeyDown(e) {
                     //var code = getCodeToFocus(this);
                     //var tr = that.getClosest(this, '.contextual').previousSibling;
@@ -1143,9 +1143,9 @@ class EurekaView {
                         this.blur();
                         this.setAttribute('contenteditable','false');
                         (<HTMLElement>that.getElement().querySelector('button.create-new')).focus();
-                    
+
                         var foldername = this.innerHTML;
-                    
+
                         var e:any = <any>document.createEvent('CustomEvent');
                         //that.getElement().dispatchEvent(e);
                         e.initCustomEvent('EurekaDirectoryCreated', true, true, {
@@ -1157,7 +1157,7 @@ class EurekaView {
                         that.getElement().dispatchEvent(e);
                     }
                 }
-            
+
                 ul.appendChild(li);
             });
         } catch(e) {}
@@ -1179,7 +1179,7 @@ class EurekaView {
                 e.preventDefault();
                 var that = this;
                 var _v = this.getAttribute('data-view');
-                var classes = ['view-a', 'view-b', 'view-c', 'view-d'];
+                var classes = ['view-a', 'view-b', 'view-c', 'view-d','view-e'];
                 for (var _i = 0; _i < classes.length; _i++) {
                     var c = classes[_i];
                     document.getElementById(that.getAttribute('data-view-target')).classList.remove(c);
@@ -1205,7 +1205,7 @@ class EurekaView {
                 var _cta = (<HTMLElement>that.getProceedFooter().querySelector('button.cta'));
                 _cta.removeAttribute('disabled');
                 _cta.classList.remove('muted');
-                
+
                 _cta.classList.add('go');
                 that.getController().getModel().setSelected(el.getAttribute('data-filename'));
             }
@@ -1215,7 +1215,7 @@ class EurekaView {
                 //that.getProceedFooter().querySelector('button.cta').classList.add('muted');
                 var _cta = (<HTMLElement>that.getProceedFooter().querySelector('button.cta'));
                 _cta.classList.remove('go');
-                
+
                 //_cta.setAttribute('disabled','disabled');
                 _cta.classList.add('muted');
             }
@@ -1240,7 +1240,7 @@ class EurekaView {
     }
     assignSortBtnListeners(){
         var that = this;
-        
+
         var sortBtns = that.getElement().querySelectorAll('.eureka-table th .fa-sort');
         for (var i = 0; i < sortBtns.length; i++) {
             var sortBtn = sortBtns[i];
@@ -1292,9 +1292,9 @@ class EurekaView {
                 }
                 (<HTMLElement>that.getElement().querySelector('.eureka-table tbody')).innerHTML = s;
             }
-            
+
             sortBtn.removeEventListener('click', handleSortBtnClicked, true); // assignSortBtnListeners should only be called once but this is another layer of protection
-            sortBtn.addEventListener('click', handleSortBtnClicked, true); 
+            sortBtn.addEventListener('click', handleSortBtnClicked, true);
         }
     }
     assignFilterListeners(){
@@ -1380,7 +1380,7 @@ class EurekaView {
             true,
             that.getController().getModel().getXHRHeaders()
         );*/
-        
+
         /*
         ajax.get(that.getController().getModel().getListDirectoryRequestURL(), { s: source, dir: el.getAttribute('data-cd') }, function (data) {
             that.paintJSON(data);
@@ -1427,7 +1427,7 @@ class EurekaView {
                 that.getController().getModel().getXHRHeaders()
             );
         });
-        
+
         var levelUp:HTMLAnchorElement = <HTMLAnchorElement>(that.getElement().querySelector('.level-up'));
         levelUp.addEventListener('click', function(e){
             e.preventDefault();
@@ -1478,15 +1478,15 @@ class EurekaView {
     }
     assignChooseClickListeners() {
         var that = this;
-        
+
         if(that.getController().getModel().getDebug()) console.log('assignChooseClickListeners');
-        
+
         var rows = that.getElement().querySelectorAll('tr.eureka__row');
         for(var i = 0; i < rows.length; i++) {
             function addDblClickListener(tr:HTMLElement) {
                 tr.querySelector('div.image').addEventListener('dblclick',function(e){
                     var image = this;
-                
+
                     (function(){
                         var e:any = <any>(document.createEvent('CustomEvent'));
                         e.initCustomEvent('EurekaFoundIt', true, true, {
@@ -1497,7 +1497,7 @@ class EurekaView {
                             dimensions: [tr.getAttribute('data-dimensions-w'), tr.getAttribute('data-dimensions-h')],
                             filesize: parseInt(tr.getAttribute('data-filesize-bytes'))
                         });
-        
+
                         that.getController().getView().getElement().dispatchEvent(e);
                     })();
                 })
@@ -1539,7 +1539,7 @@ class EurekaView {
         a.classList.add('path');
         a.setAttribute('href', 'javascript:;');
         a.setAttribute('title', 'Browse ' + path);
-        
+
         var split = path.split('/');
         split = split.filter(function (n) { return (n !== undefined && n != ""); });
         var displayPath = split.join('/');
@@ -1548,14 +1548,14 @@ class EurekaView {
         } else {
             if(displayPath[displayPath.length-1] == '/') displayPath = displayPath.substring(0,displayPath.length - 1);
         }
-        
+
         a.setAttribute('data-cd', path);
         a.innerHTML = ' ' + displayPath;
         li.appendChild(folder);
         li.appendChild(a);
         var _ul = document.createElement("ul");
         li.appendChild(_ul);
-        
+
         return li;
     }
     paintTree(data) {
@@ -1626,83 +1626,83 @@ class EurekaView {
                             case 'css':
                             icon = 'css3';
                             break;
-                        
+
                             case 'csv':
                             icon = 'file-excel-o';
                             break;
-                        
+
                             case 'xls':
                             icon = 'file-excel-o';
                             break;
-                        
+
                             case 'numbers':
                             icon = 'file-excel-o';
                             break;
-                        
+
                             case 'css':
                             icon = 'file-excel-o';
                             break;
-                        
+
                             case 'mp3':
                             icon = 'file-sound-o';
                             break;
-                        
+
                             case 'wav':
                             icon = 'file-sound-o';
                             break;
-                        
+
                             case 'wma':
                             icon = 'file-sound-o';
                             break;
-                        
+
                             case 'aac':
                             icon = 'file-sound-o';
                             break;
-                        
+
                             case 'flac':
                             icon = 'file-sound-o';
                             break;
-                        
+
                             case 'ppt':
                             icon = 'file-powerpoint-o';
                             break;
-                        
+
                             case 'pot':
                             icon = 'file-powerpoint-o';
                             break;
-                        
+
                             case 'pps':
                             icon = 'file-powerpoint-o';
                             break;
-                        
+
                             case 'zip':
                             icon = 'file-zip-o';
                             break;
-                        
+
                             case 'gzip':
                             icon = 'file-zip-o';
                             break;
-                        
+
                             case 'tar':
                             icon = 'file-zip-o';
                             break;
-                        
+
                             case 'mp4':
                             icon = 'file-movie-o';
                             break;
-                        
+
                             case 'ogv':
                             icon = 'file-movie-o';
                             break;
-                        
+
                             case 'm4v':
                             icon = 'file-movie-o';
                             break;
-                        
+
                             case 'avi':
                             icon = 'file-movie-o';
                             break;
-                            
+
                             case 'jpg':
                             case 'jpeg':
                             case 'gif':
@@ -1713,18 +1713,18 @@ class EurekaView {
                             case 'webp':
                             icon = 'file-picture-o';
                             break;
-                        
+
                             case 'php':
                             case 'html':
                             case 'htm':
                             case 'md':
                             icon = 'file-code-o';
                             break;
-                        
+
                             case 'js':
                             icon = 'file-text-o';
                             break;
-                        
+
                             default:
                             icon = 'file-o';
                             break;
@@ -1739,10 +1739,10 @@ class EurekaView {
                             i.classList.add('fa-' + icon);
                             i.classList.add('icon-' + icon);
                             div.appendChild(i);
-                        
+
                             return div;
                         })();
-                    
+
 
                         try {
                             document.getElementById(safeFileName + '__thumb').outerHTML = div.outerHTML;
@@ -1750,8 +1750,8 @@ class EurekaView {
                     });
                 }
                 addErrorListener(img,result,safeFileName);
-            
-            
+
+
                 //img.setAttribute('alt',filename); // after a11y testing this was determined to be unecessary - jp
                 imgD.appendChild(img);
                 img.setAttribute('src', (thumb) ? thumb : src);
@@ -1761,7 +1761,7 @@ class EurekaView {
                 code.setAttribute('sorta-draggable', 'true');
                 code.innerHTML = filename;
                 td.appendChild(imgD);
-            
+
                 td.appendChild(code);
                 function createCode(html) {
                     var tag = document.createElement('code');
@@ -1794,7 +1794,7 @@ class EurekaView {
                 tr.appendChild(tdFilesizeCell);
                 tr.appendChild(tdEditedOnCell);
                 tbodyHTML += tr.outerHTML;
-        
+
                 function createContextualRow() {
                     var tr = document.createElement('tr');
                     tr.classList.add('contextual');
@@ -1948,7 +1948,7 @@ class EurekaView {
                 directoriesToAdd.push({cd:cd,directory:result.directory})
             }
         }
-        
+
         (function(){
             for(var i = 0; i < directoriesToAdd.length; i++) {
                 var d:any = <any>(directoriesToAdd[i]);
@@ -1960,7 +1960,7 @@ class EurekaView {
                 //that.recursivelyOpenTreeToCurrentDirectory();
             }
         })();
-        
+
         var thead:HTMLElement = <HTMLElement>(document.querySelector('#' + this.getController().getModel().getUID() + ' .eureka-table > table > thead'));
         (<HTMLElement>document.querySelector('#' + this.getController().getModel().getUID() + ' .eureka-table')).innerHTML = '<table>' + thead.outerHTML + '<tbody>' + tbodyHTML + '</tbody>' + '</table>';
         // bolden the correct tree item
@@ -1974,7 +1974,7 @@ class EurekaView {
                 var el:HTMLElement = (<HTMLElement>that.getElement().querySelector('nav.tree li > a[data-cd="' + data.cd + '"]').parentNode);
                 el.classList.add('active');
                 el.classList.add('open');
-                
+
                 var folder:HTMLElement = (<HTMLElement>el.querySelector('.folder .fa-folder'));
                 folder.classList.add('fa-folder-open');
                 folder.classList.add('icon-folder-open');
@@ -2007,7 +2007,7 @@ class EurekaView {
                 return;
             }
         }
-        
+
         for(var i = 0; i < paths.length; i++) {
             var path:HTMLElement = <HTMLElement>(paths[i]);
             var pcd = path.getAttribute('data-cd');
@@ -2016,7 +2016,7 @@ class EurekaView {
                     var ul:HTMLElement = <HTMLElement>_path.nextSibling;
                     var paths = ul.querySelectorAll(':scope > li > .path');
                     var inserted = false;
-                    
+
                     for(var i = 0; i < paths.length; i++) {
                         var path:HTMLElement = (<HTMLElement>paths[i]);
                         var _d = (function(path){
@@ -2032,16 +2032,16 @@ class EurekaView {
                             break;
                         }
                     }
-                    
+
                     if(!inserted) { // the directory to be inserted should be last
                         ul.appendChild(that.createTreeNode(p));
                         inserted = true;
                     }
-                    
+
                 })(path);
             }
         }
-        
+
         (function(){
             var browsingSelect:HTMLElement = (<HTMLElement>document.getElementById(that.getController().getModel().getUID() + '__browsing'));
             var mediaSource = that.getController().getModel().getCurrentMediaSource();
@@ -2062,19 +2062,19 @@ class EurekaView {
                 var opt:HTMLElement = <HTMLElement>opts[i];
                 if(opt.innerHTML == _iH) return; // it already exists
             }
-            
+
             var newOpt:HTMLElement = document.createElement('option');
             newOpt.setAttribute('value',JSON.stringify({cs:that.getController().getModel().getCurrentMediaSource(),cd:_iH}));
             newOpt.setAttribute('data-cd',_iH + '/');
             newOpt.innerHTML = _iH;
-            
+
             var inserted = false;
             for(var i = 0; i < opts.length; i++) {
                 var opt:HTMLElement = <HTMLElement>opts[i];
                 //console.log(opt.innerHTML);
                 var a = [opt.innerHTML,_iH];
                 a.sort();
-                
+
                 if(_iH == a[0]) {
                     optsGrp.insertBefore(newOpt,opt);
                     inserted = true;
@@ -2139,15 +2139,15 @@ class EurekaView {
                 var contextual:any = that.getClosest(anchor, 'tr');
                 var mediaRow:any = (<HTMLElement>contextual.previousSibling);
                 var nextRow:HTMLElement = (<HTMLElement>contextual.nextSibling);
-                
+
                 // give them a way out
                 if(that.getController().getModel().getAlertBeforeDelete() && !window.confirm('Are you sure you want to delete ' + mediaRow.getAttribute('data-filename') + '?')) {
                     return false;
                 }
-                
+
                 // proceed
                 that.getController().getModel().deleteFile(mediaRow.getAttribute('data-filename'), mediaRow);
-                
+
                 function remove(el) {
                     try {
                         el.remove();
@@ -2155,10 +2155,10 @@ class EurekaView {
                         el.parentNode.removeChild(el); // IE 10 doesn't support HTMLElement.remove()
                     }
                 }
-                
+
                 remove(mediaRow);
                 remove(contextual);
-                
+
                 try {
                     nextRow.focus();
                 }
@@ -2257,7 +2257,7 @@ class EurekaView {
     }
     updateMediaSourceListings(data) {
         var that = this;
-        
+
         if(that.getController().getModel().getDebug()) {
             console.log('updateMediaSourceListings: ');
             console.log(data);
@@ -2364,7 +2364,7 @@ class EurekaView {
                 if ( elem.id === selector.substr(1) ) {
                     return elem;
                 }
-            } 
+            }
 
             // If selector is a data attribute
             if ( firstChar === '[' ) {
@@ -2382,7 +2382,7 @@ class EurekaView {
 
         return null;
     }
-    
+
 } // end class EurekaView
 
 
@@ -2394,39 +2394,39 @@ interface ModelViewObj {
 class EurekaController {
     private _model:EurekaModel;
     private _view:EurekaView;
-    
+
     getModel() {
         return this._model;
     }
     getView() {
         return this._view;
     }
-    
+
     constructor(public opts:ModelViewObj) {
         this._model = opts.model;
         this._view = opts.view;
     }
-    
+
     init() {
         var that = this;
-        
+
         var eureka:HTMLElement = that.getView().getElement(); // we found it!
-        
+
         if(that.getModel().useLocalStorage()) {
             (function(){
                 var mediaSourcesData = that.getModel().getLocalStorage('mediaSourcesData');
                 if(mediaSourcesData) {
-                    that.getModel().setMediaSourcesData(JSON.parse(mediaSourcesData));    
+                    that.getModel().setMediaSourcesData(JSON.parse(mediaSourcesData));
                 }
             })();
-        
+
             (function(){
                 var mediaSourceData = that.getModel().getLocalStorage(that.getModel().getCurrentMediaSource() + '_mediaSourceData');
                 if(mediaSourceData) {
                     that.getView().paintTree(JSON.parse(mediaSourceData));
                 }
             })();
-        
+
             (function(){
                 var directoryData = that.getModel().getLocalStorage('lastDirectoryPainted');
                 if(directoryData) {
@@ -2454,7 +2454,7 @@ class EurekaController {
                     }, false);
                     worker.postMessage({
                         listDirectoryRequestURL:that.getModel().getListDirectoryRequestURL(),
-                        currentMediaSource:that.getModel().getCurrentMediaSource(), 
+                        currentMediaSource:that.getModel().getCurrentMediaSource(),
                         currentDirectory: e.detail.currentDirectory || '/',
                         headers:that.getModel().getXHRHeaders()
                     });
@@ -2469,7 +2469,7 @@ class EurekaController {
                     },
                     true,
                     that.getModel().getXHRHeaders()
-                );   
+                );
             }
         });
         eureka.addEventListener(EurekaModel.EurekaDirectoryOpened, function(e:any) {
@@ -2482,7 +2482,7 @@ class EurekaController {
                 var results = d.results;
                 for(var i = 0; i < results.length; i++) {
                     var result = results[i];
-                    
+
                     if(result.directory) {
                         that.getView().asyncronouslyAddDirectory(path, result.directory);
                     }
@@ -2497,7 +2497,7 @@ class EurekaController {
                     }, false);
                     worker.postMessage({
                         listDirectoryRequestURL:that.getModel().getListDirectoryChildrenRequestURL(),
-                        currentMediaSource:that.getModel().getCurrentMediaSource(), 
+                        currentMediaSource:that.getModel().getCurrentMediaSource(),
                         currentDirectory: e.detail.path || '/',
                         headers:that.getModel().getXHRHeaders()
                     });
@@ -2512,7 +2512,7 @@ class EurekaController {
                     },
                     true,
                     that.getModel().getXHRHeaders()
-                );   
+                );
             }
         });
         eureka.addEventListener(EurekaModel.EurekaMediaSourceChange, function (e:any) {
@@ -2531,7 +2531,7 @@ class EurekaController {
                     }, false);
                     worker.postMessage({
                         listSourceRequestURL:that.getModel().getListSourceRequestURL(),
-                        currentMediaSource:that.getModel().getCurrentMediaSource(), 
+                        currentMediaSource:that.getModel().getCurrentMediaSource(),
                         headers:that.getModel().getXHRHeaders()
                     });
                 })();
@@ -2555,7 +2555,7 @@ class EurekaController {
                 var source = new EurekaMediaSource(sources[i].opts);
                 var id = source.getID();
                 //var title = source.getTitle();
-            
+
                 requestMediaListings(source);
                 function requestMediaListings(source:EurekaMediaSource) {
                     if(that.getModel().getDebug()) console.log('requestMediaListings');
@@ -2572,7 +2572,7 @@ class EurekaController {
                             }, false);
                             worker.postMessage({
                                 listSourceRequestURL:that.getModel().getListSourceRequestURL(),
-                                currentMediaSource:id, 
+                                currentMediaSource:id,
                                 headers:that.getModel().getXHRHeaders()
                             });
                         })();

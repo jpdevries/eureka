@@ -1,9 +1,4 @@
 /* do not touch this file. see _build/*.js */
-/*
-Copyright (c) 2014, Lawrence Davis
-All rights reserved.
-https://github.com/lazd/scopedQuerySelectorShim
-*/
 (function() {
   if (!HTMLElement.prototype.querySelectorAll) {
     throw new Error('rootedQuerySelectorAll: This polyfill can only be used with browsers that support querySelectorAll');
@@ -43,7 +38,7 @@ https://github.com/lazd/scopedQuerySelectorShim
             gaveContainer = true;
           }
 
-          parentNode = this.parentNode;
+          var parentNode = this.parentNode;
 
           if (!this.id) {
             // Give temporary ID
@@ -77,7 +72,8 @@ https://github.com/lazd/scopedQuerySelectorShim
     overrideNodeMethod(HTMLElement.prototype, 'querySelector');
     overrideNodeMethod(HTMLElement.prototype, 'querySelectorAll');
   }
-}());/*jslint unparam: true, browser: true, devel: true */
+}());
+/*jslint unparam: true, browser: true, devel: true */
 var html5Upload = (function(){
     'use strict';
 
@@ -1292,7 +1288,7 @@ var EurekaView = (function () {
                 // Other uploads will be added to uploads queue (optional)
                 maxSimultaneousUploads: 4,
                 // Callback for each dropped or selected file
-                // It receives one argument, add callbacks 
+                // It receives one argument, add callbacks
                 // by passing events map object: file.on({ ... })
                 onFileAdded: function (file) {
                     function removeMessages() {
@@ -1646,7 +1642,7 @@ var EurekaView = (function () {
                 e.preventDefault();
                 var that = this;
                 var _v = this.getAttribute('data-view');
-                var classes = ['view-a', 'view-b', 'view-c', 'view-d'];
+                var classes = ['view-a', 'view-b', 'view-c', 'view-d', 'view-e'];
                 for (var _i = 0; _i < classes.length; _i++) {
                     var c = classes[_i];
                     document.getElementById(that.getAttribute('data-view-target')).classList.remove(c);
