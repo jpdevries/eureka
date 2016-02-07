@@ -6,12 +6,14 @@ var MuckBoot;
     MuckBoot = function(opts) {
         var defaults = {
             id: 'media-browser_0',
-            upload: true
+            upload: true,
+            enlargeFocusRows:true
         };
 
         if(opts.id === undefined) opts.id = 'media-browser_0';
         if(opts.upload === undefined) opts.upload = true;
         if(opts.createDir === undefined) opts.createDir = true;
+        if(opts.enlargeFocusRows === undefined) opts.enlargeFocusRows = true;
 
         this.opts = opts;
 
@@ -27,6 +29,7 @@ var MuckBoot;
 
         var eureka = d.createElement('div');
         eureka.classList.add('view-a');
+        if(this.opts.enlargeFocusRows) eureka.classList.add('enlarge-focused-rows');
         eureka.classList.add('eureka');
         eureka.classList.add('sidebar-open');
         eureka.setAttribute('id',this.opts.id);
