@@ -8,7 +8,7 @@
         <meta name="description" content="HTML-first crack at a Flexible Media Browser">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="stylesheet" href="assets/css/eureka.0.0.0.css?nc=<?php echo time() ?>">
+        <link rel="stylesheet" href="assets/css/eureka.1.1.0.css?nc=<?php echo time() ?>">
         <style>
         body {
           /* move them */
@@ -34,22 +34,22 @@
                     flex-wrap: nowrap; }
         </style>
         <script src="assets/js/vendor/modernizr-2.8.3.min.js"></script>
-        
+
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" async>
-        
+
         <style>
             html,body {
                 margin:0;
                 padding:0;
             }
-            
+
             body {
                 padding:1vh;
                 @media screen and (min-width: 769px) {
                     padding:2vh;
                 }
             }
-            
+
             @media screen and (min-width: 769px) {
               html.no-touch body {
                 display: -webkit-box;
@@ -132,7 +132,7 @@
                 -ms-flex-positive: 1;
               }
             }
-            
+
             html.no-touch #page-wrapper {
               margin: 0;
               padding:0;
@@ -146,9 +146,9 @@
     </head>
     <body>
         <form>
-            <div id="page-wrapper">            
-                    <div class="eureka-wrapper"><!-- Eureka Media Browser -->                        
-                        <div class="view-a eureka sidebar-open" id="media-browser_0"><!-- max-height may be used in CSS just to show how it can be condensed when needed (think modal) -->
+            <div id="page-wrapper">
+                    <div class="eureka-wrapper"><!-- Eureka Media Browser -->
+                        <div class="view-a eureka sidebar-open" id="media-browser_0"><!-- max-height may be used in CSS just to show how it can be condensed when needed (think modal) add a .no-images-on-list class to hide images in list view -->
                             <!-- initially open, this side navigation adds a a/synchronous tree browser to traverse media source directories  -->
                             <nav id="media-browser_0__pathbrowser" class="pathbrowser">
                                 <div class="pathbrowser__topbar">
@@ -296,12 +296,15 @@
                                                         <i class="fa fa-square"></i>
                                                         <span class="audible">Grid View displays images a grid of large images</span>
                                                     </a>
-                                                    <script>if(!Modernizr.touch) document.write('<a href="javascript:;" class="view-c-btn" data-view="view-c" data-view-target="media-browser_0" asyncronous-title="Sliver View displays a single row of small thumbnails"><i class="fa fa-ellipsis-h"></i><span class="audible">Sliver View displays a single row of small thumbnails</span></a>');</script>
+                                                    <a href="javascript:;" class="current view-e-btn" data-view="view-e" data-view-target="media-browser_0" asyncronous-title="List Layout displays Name, Description, File Size and Edited On columns">
+                                                        <i class="fa fa-list"></i>
+                                                        <span class="audible">List Layout displays Name, Description, File Size and Edited On columns</span>
+                                                    </a>
                                                 </nav>
                                             </div>
                                         </div>
                                     </nav>
-                                    
+
                                 </div>
                                 <!-- tabular data is marked up using nothing other than <table>. Party like it's 1999. -->
                                 <div class="eureka-table">
@@ -646,7 +649,7 @@
                 matches[i].remove();
             }
         }());
-        
+
         // enable stuff that is disabled for .no-js
         (function() {
             var matches = document.querySelectorAll('*[js-enabled]');
@@ -655,7 +658,7 @@
                 matches[i].removeAttribute('disabled');
             }
         }());
-        
+
         // update placeholders with asyncronous-placeholders, etc
         (function() {
             var attrs = ['placeholder'];
@@ -663,11 +666,11 @@
                 var matches = document.querySelectorAll('*[asyncronous-' + attr + ']');
                 for(var i = 0; i < matches.length; i++) {
                     matches[i].setAttribute('placeholder',matches[i].getAttribute('asyncronous-' + attr));
-                }   
+                }
             }
         }());
         </script>
-        
+
         <script>
         // remove obsolete elements
         (function(){
@@ -680,7 +683,7 @@
             el.removeAttribute('asyncronously-obsolete');
         }());
         </script>
-        
+
         <script>
         // set asyncronous titles
         (function(){
@@ -702,10 +705,10 @@
                 current.removeAttribute('js-disabled');
             }
         }());
-        </script>   
-             
-        <script src="assets/js/eureka.0.0.0.js?nc=<?php echo time() ?>"></script>
-        
+        </script>
+
+        <script src="assets/js/eureka.1.1.0.js?nc=<?php echo time() ?>"></script>
+
         <script>
             document.addEventListener("DOMContentLoaded", function() {
                 var $eureka = new Eureka({ // init the Eureka component
@@ -727,40 +730,40 @@
                         'Powered-By': 'Eureka in MODX Revolution'
                     }]
                 });
-                
+
                 // NOTE: "event" system is kinda experimental and may change
                 // currently the Eureka class (MVC) dispatches events from the eureka component itself (div.eureka)
                 // listen for when a file is renamed
                 $eureka.getElement().addEventListener('EurekaFileRename',function(e){
                     //console.log('EurekaFileRename');
                     //console.log(e.detail);
-                    // make XHR 
+                    // make XHR
                 });
-                
+
                 // listen for when a media item has been chosen
                 $eureka.getElement().addEventListener('EurekaFoundIt',function(e){
                     console.log('EurekaFoundIt');
                     console.log(e.detail);
                 });
-                
+
                 // listen for when a media item has been deleted
                 $eureka.getElement().addEventListener('EurekaUnlink',function(e){
                     //console.log('EurekaUnlink');
                     //console.log(e.detail);
                 });
-                
+
                 // listen for when a media item has been deleted
                 $eureka.getElement().addEventListener('EurekaDirectoryChanged',function(e){
                     //console.log('EurekaDirectoryChanged');
                     //console.log(e.detail);
                 });
-                
+
                 // listen for when a media item has been deleted
                 $eureka.getElement().addEventListener('EurekaMediaSourceChange',function(e){
                     //console.log('EurekaMediaSourceChange');
                     //console.log(e.detail);
                 });
-                
+
                 $eureka.getElement().addEventListener(EurekaModel.EurekaCanceled,function(e){
                     //console.log('EurekaCanceled');
                 });

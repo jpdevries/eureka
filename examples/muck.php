@@ -8,17 +8,17 @@
         <meta name="description" content="HTML-first crack at a Flexible Media Browser">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="stylesheet" href="assets/css/eureka.0.0.0.css?nc=<?php echo time() ?>">
+        <link rel="stylesheet" href="assets/css/eureka.1.1.0.css?nc=<?php echo time() ?>">
         <script src="assets/js/vendor/modernizr-2.8.3.min.js"></script>
-        
+
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" async>
-                
+
         <style>
             html,body {
                 margin:0;
                 padding:0;
             }
-            
+
             body {
                 padding:1vh;
                  min-height: 98vh;
@@ -27,7 +27,7 @@
                      min-height: 96vh;
                 }
             }
-            
+
             @media screen and (min-width: 769px) {
               html.no-touch body {
                 display: -webkit-box;
@@ -54,7 +54,7 @@
                 height: 96vh;
                 max-height:96vh;
               }
-            
+
             html.no-touch #page-wrapper {
               margin: 0;
               padding:0;
@@ -63,7 +63,7 @@
                   height: 96vh;
               }
             }
-            
+
             @media screen and (min-width: 769px) {
                 body {
                   /* move them */
@@ -99,19 +99,19 @@
         <script>var MODx = {siteId:'foo'};</script>
     </head>
     <body>
-        <div id="page-wrapper" class="">            
+        <div id="page-wrapper" class="">
             <div class="view-a eureka" id="redactor-media-browser_0"></div><!-- max-height may be used in CSS just to show how it can be condensed when needed (think modal) -->
         </div>
         <script>
             if(Modernizr !== undefined && Modernizr.flexbox == false) {
                 console.log('no flexbox');
-            
+
                 link = document.createElement( "link" );
-                link.href = 'assets/css/eureka.no-flexbox.0.0.0.css';
+                link.href = 'assets/css/eureka.no-flexbox.1.1.0.css';
                 link.type = "text/css";
                 link.rel = "stylesheet";
                 link.media = "screen,print";
-            
+
                 document.getElementsByTagName( "head" )[0].appendChild(link);
             }
             try {
@@ -120,9 +120,9 @@
                 document.write('<script src="assets/js/vendor/dom4.js"><\/script>');
             }
         </script>
-        <script src="assets/js/muckboot.eureka.0.0.0.js?nc=<?php echo time() ?>"></script>
-        <script src="assets/js/eureka.0.0.0.js?nc=<?php echo time() ?>"></script>
-        
+        <script src="assets/js/muckboot.eureka.1.1.0.js?nc=<?php echo time() ?>"></script>
+        <script src="assets/js/eureka.1.1.0.js?nc=<?php echo time() ?>"></script>
+
         <script>
             (function(){
                 var $muckboot = new MuckBoot({ // paint the DOM
@@ -137,7 +137,7 @@
                     directoryRequestURL:'/static/eureka/examples/fakepi/listdirectory.php',
                     listSourceRequestURL:'/static/eureka/examples/fakepi/listsource.php',
                     listSourcesRequestURL:'/static/eureka/examples/fakepi/listsources.php',
-                    
+
                     //fileUploadURL:'/file/upload', // if undefined upload and create UI elements will be removed
                     editable:true, // if false will not add rename and delete features
                     locale:'en-US', // i18n
@@ -150,7 +150,7 @@
                         'Powered-By': 'Eureka by Markup.tips'
                     }]
                 });
-                            
+
                 // NOTE: "event" system is kinda experimental and may change
                 // currently the Eureka class (MVC) dispatches events from the eureka component itself (div.eureka)
                 // listen for when a file is renamed
@@ -159,29 +159,29 @@
                     console.log(e.detail);
                     // make XHR to API endpoint to rename file
                 });
-                
+
                 // listen for when a media item has been chosen
                 document.getElementById('redactor-media-browser_0').addEventListener(EurekaModel.EurekaFoundIt,function(e){
                     console.log('EurekaFoundIt');
-                    console.log(e.detail); 
+                    console.log(e.detail);
                     alert('You found ' + e.detail.filename);
                     // NOTE: Eureka doesn't kill itself, it's up to you to handle animating it out and destroying it
                 });
-                
+
                 // listen for when a media item has been deleted
                 document.getElementById('redactor-media-browser_0').addEventListener(EurekaModel.EurekaUnlink,function(e){
                     console.log('EurekaUnlink');
                     console.log(e.detail);
                     // make XHR to API endpoint to delete media item
                 });
-                
+
                 // listen for when a new directory has been created
                 document.getElementById('redactor-media-browser_0').addEventListener(EurekaModel.EurekaDirectoryCreated,function(e){
                     console.log('EurekaDirectoryCreated');
                     console.log(e.detail);
                     // make XHR (or not, might not need to if upload server script creates unexistant directories)
                 });
-                
+
                 // listen for when a directory has been opened
                 document.getElementById('redactor-media-browser_0').addEventListener(EurekaModel.EurekaDirectoryOpened,function(e){
                     console.log('EurekaDirectoryOpened');

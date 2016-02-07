@@ -1,5 +1,5 @@
 module.exports = function(grunt) {
-	// Project configuration.		
+	// Project configuration.
     grunt.option.init({
         'ver':(!grunt.option('ver')) ? grunt.file.readJSON('package.json').version : grunt.option('ver'),
         'rel':(!grunt.option('rel')) ? grunt.file.readJSON('package.json').release : grunt.option('rel')
@@ -7,14 +7,14 @@ module.exports = function(grunt) {
 	var initConfig = {
 		pkg: grunt.file.readJSON('package.json'),
 		dirs: { /* just defining some properties */
-            src: '../src/',
+      src: '../src/',
 			lib: './lib/',
 			scss: './scss/',
 			theme: '../',
 			assets: 'examples/assets/',
 			css: 'css/',
 			js:  'js/',
-            ts:  'ts/',
+      ts:  'ts/',
 			img: 'img/',
 			font: 'font/'
 		},
@@ -26,7 +26,7 @@ module.exports = function(grunt) {
 				}
 			}
 		},
-		copy: { 
+		copy: {
 		},
 		cssmin: {
 			compress: {
@@ -41,7 +41,7 @@ module.exports = function(grunt) {
 				}
 			}
 		},
-		
+
 		sass: {
 			dist: {
 				options: {
@@ -83,7 +83,7 @@ module.exports = function(grunt) {
 				src: ['<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>.<%= pkg.version %>**/*.css']
 			}
 		},
-		
+
 		concat: {
 			plugins: {
     			options: {
@@ -95,15 +95,15 @@ module.exports = function(grunt) {
                     '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>vendor/html5Upload.js',
 					'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.<%= pkg.version %>.js'
 				],
-				dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.<%= pkg.version %>.js', 
+				dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.<%= pkg.version %>.js',
 			},
 			eureka: {
 				src: [
 					'<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.<%= pkg.version %>.js'
 				],
-				dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.<%= pkg.version %>.min.js', 
+				dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.<%= pkg.version %>.min.js',
 			}
-			
+
 		},
         ts: {
             eureka : {
@@ -159,7 +159,7 @@ module.exports = function(grunt) {
                     '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>/vendor/html5Upload.min.js': ['<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>/vendor/html5Upload.js'],
                     '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.<%= pkg.version %>.min.js': ['<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka.<%= pkg.version %>.js']
 				}
-				
+
 			},
             includes: {
                 options: {
@@ -183,12 +183,12 @@ module.exports = function(grunt) {
                 ]
             }
 		},
-		
+
 		watch: { /* trigger tasks on save */
 			options: {
-				livereload: true 
+				livereload: true
 			},
-			
+
 			scss: {
 				files: '<%= dirs.scss %>**/*.scss',
 				tasks: ['sass:dev','autoprefixer','cssmin','growl:sass','cssmin']
@@ -206,12 +206,12 @@ module.exports = function(grunt) {
 			postbuild: ['<%= dirs.lib %>','<%= dirs.src %>/**/*']
 		},
 		growl: { /* optional growl notifications requires terminal-notifer: gem install terminal-notifier */
-			
+
 			sass: {
 				message: "Sass files created.",
 				title: "grunt"
 			},
-			
+
 			build: {
 				title: "grunt",
 				message: "Build complete."
@@ -239,7 +239,7 @@ module.exports = function(grunt) {
 		}
 	};
 
-	
+
 	initConfig.copy["bourbon"] = {
 		files: [{
 			src: 'bourbon/**/*',
@@ -257,7 +257,7 @@ module.exports = function(grunt) {
 			expand: true
 		}]
 	};
-    
+
 	initConfig.copy["dom4"] = {
 		files: [{
 			src: './*.js',
@@ -266,7 +266,7 @@ module.exports = function(grunt) {
 			expand: true
 		}]
 	};
-    
+
 	initConfig.copy["eureka-src"] = {
 		files: [{
 			src: '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>*eureka*.js',
@@ -285,7 +285,7 @@ module.exports = function(grunt) {
             flatten: true
 		}]
 	};
-    
+
 	initConfig.copy["DefinitelyTyped"] = {
 		files: [{
 			src: 'DefinitelyTyped/modernizr.d.ts',
@@ -294,27 +294,27 @@ module.exports = function(grunt) {
 			expand: true
 		}]
 	};
-    
+
 	initConfig.copy["html5-file-uploader"] = {
 		files: [{
 			src: '<%= dirs.lib %>html5-file-uploader/Html5UploadDemo/Scripts/src/html5Upload.js',
 			dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>vendor/html5Upload.js'
 		}]
 	};
-    
+
 	initConfig.copy["scopedQuerySelectorShim"] = {
 		files: [{
 			src: '<%= dirs.lib %>scopedQuerySelectorShim/scopedQuerySelectorShim.js',
 			dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>vendor/scopedQuerySelectorShim.js'
 		}]
 	};
-	
+
 	initConfig.copy["font-awesome"] = {
 		files: [
 			{
 				src: '<%= dirs.lib %>font-awesome/scss/**/*.scss',
 				dest: '<%= dirs.scss %>font-awesome/',
-				
+
 				expand: true,
 				flatten: true
 			},{
@@ -331,24 +331,24 @@ module.exports = function(grunt) {
 			}
 		]
 	};
-	
+
 	grunt.initConfig(initConfig);
-	
+
 	grunt.loadNpmTasks('grunt-bower-task');
 	grunt.loadNpmTasks('grunt-contrib-copy');
-	
+
 	grunt.loadNpmTasks('grunt-sass');
     grunt.loadNpmTasks('grunt-autoprefixer');
-	
+
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-growl');
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
 	grunt.loadNpmTasks('grunt-contrib-csslint');
-	
+
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
-    
+
     grunt.loadNpmTasks("grunt-ts");
 
 	grunt.registerTask('default', ['growl:watch', 'watch']);

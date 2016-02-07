@@ -73,7 +73,7 @@ var $eureka = new Eureka({ // init the Eureka component
     directoryRequestURL:'fakepi/listdirectory.php', // lists contents of a directory. along with headers Object, sends  's' and 'dir' parameters for media source and current directory
     listSourceRequestURL:'fakepi/listsource.php', // list navigation tree of a given media sources. along with headers Object, sends 's' paramater for media source to list
     listSourcesRequestURL:'fakepi/listsources.php', // fetches a list of all media sources
-    
+
     // OPTIONAL SETTINGS
     directoryChildrenRequestURL:'fakepi/listdirectorychildren.php', // fetches a list of direct children directories of the given directory. If ommited diretoryRequestURL will be used and all non-directory results will be ignored
     useWebWorkers:true, // whether or not to use a worker thread when making XHR Requests
@@ -146,13 +146,13 @@ Isn't that neat?
 Events attach relevent data to the `detail` property of the `Event` itself. `eureka.js` is still in rapid development and events and their corresponding data are not yet fully documented, so log it to the console and see what you get for now. It'll be our own little&nbsp;surprise.
 
 ### Browser Support
-Eureka targets modern HTML5 browsers and uses the latest draft of the flexible box model spec.
+Eureka targets modern HTML5 browsers and uses the latest draft of the flexible box model spec. Of course utilizing the HTML layer should get you universal support in theory, but regarding CSS3 and JavaScript support for layout and progressive enhancements we support the following&nbsp;environments:
  - Chrome
  - Safari
  - Firefox
  - IE 11,10
    - Basic IE 9 support is available via some external shivs. See [Supporting IE9](https://github.com/jpdevries/eureka/wiki/Supporting-IE9).
- - Sparta
+ - Edge
  - ~~Opera~~
   - flexbox layout is totally broken. Not sure why. See [#10](https://github.com/jpdevries/eureka/issues/10).
  - iOS Latest
