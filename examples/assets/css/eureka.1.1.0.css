@@ -387,16 +387,16 @@ html.js .eureka > .pathbrowser > footer {
     background: #d60000;
     border-top: 1px solid #c20000;
     border-bottom: 1px solid #c20000;
-    color: #fafafa; }
+    color: white; }
   html.no-touch .dangerous:hover {
     background: #d60000;
     border-top: 1px solid #c20000;
     border-bottom: 1px solid #c20000;
-    color: #fafafa; }
+    color: white; }
 
 .go:focus, .contextual__nav > a.choose:focus, .focused.go, .contextual__nav > a.focused.choose, html.no-touch .go:hover, html.no-touch .contextual__nav > a.choose:hover, .eureka-wrapper button.go, .eureka-wrapper .btn.go {
   background: #297aa7;
-  color: #fafafa;
+  color: white;
   border-color: #216286; }
 
 .view-a .eureka-table > table > tbody > tr.contextual.visible, html.js .view-a tr.eureka__row:focus + tr.contextual, html.js .view-a tr.eureka__row.focused + tr.contextual {
@@ -421,7 +421,7 @@ button {
     cursor: pointer; }
 
 .eureka-wrapper {
-  background: #fafafa;
+  background: white;
   font-family: Gill Sans,Gill Sans MT,Calibri,sans-serif; }
   .eureka-wrapper .image img {
     max-width: 100%; }
@@ -433,7 +433,7 @@ button {
     margin: 0 auto;
     border: none;
     background: #0a0a0a;
-    color: #fafafa;
+    color: white;
     padding: 0.24em 0.42em; }
     .contextual .eureka-wrapper button, .contextual .eureka-wrapper .btn {
       padding: 0 0.42em;
@@ -971,7 +971,7 @@ html.touch .eureka > .pathbrowser > footer .droparea, html.no-js .eureka > .path
       position: sticky;
       top: -2px;
       z-index: 99999;
-      background: #fafafa; }
+      background: white; }
     .eureka-table > table > thead > tr {
       -webkit-flex-basis: 100%;
           -ms-flex-preferred-size: 100%;
@@ -1429,7 +1429,7 @@ tr.contextual {
           text-align: inherit; } }
     .eureka__topbar .eureka__topbar-nav .browse-select form button.nued {
       background: #0a0a0a;
-      color: #fafafa; }
+      color: white; }
       .eureka__topbar .eureka__topbar-nav .browse-select form button.nued .fa-chevron-right {
         color: currentColor; }
     .eureka__topbar .eureka__topbar-nav .browse-select .browsing {
