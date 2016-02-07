@@ -1421,6 +1421,11 @@ html.touch, html.no-js {
             @extend %visible-contextual;
         }
     }
+    .view-e & {
+      &.visible {
+          @extend %visible-contextual;
+      }
+    }
     text-align:left;
 
     @extend %align-items-flex-start; //@include justify-content(flex-start);
@@ -1435,7 +1440,7 @@ html.touch, html.no-js {
     }
 }
 
-.view-a tr.eureka__row {
+.view-a tr.eureka__row, .view-e tr.eureka__row {
     &:focus,&.focused {
         + tr.contextual {
             html.js & {

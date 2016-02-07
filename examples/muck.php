@@ -130,7 +130,7 @@
                     upload:false, // paint upload UI elements
                     createDir:false, // add create directory button
                     enlargeFocusRows:true,
-                    hideImagesOnListView:undefined
+                    hideImagesOnListView:true
                 });
                 var $eureka = new Eureka({ // init the Eureka component
                     // REQUIRED
