@@ -9,6 +9,8 @@ _build/scss/font-awesome
 _build/scss/html5-boilerplate
 _build/lib
 
+*.css.map
+
 assets/css/font-awesome*.css
 assets/fonts/
 

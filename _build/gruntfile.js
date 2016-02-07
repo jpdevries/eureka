@@ -56,7 +56,8 @@ module.exports = function(grunt) {
 			dev: {
 				options: {
 					style: 'expanded',
-					compass: false
+					compass: false,
+          sourceMap:true
 				},
 				files: {
 					'<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.<%= pkg.version %>.css': '<%= dirs.scss %>main.scss',

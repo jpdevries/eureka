@@ -5,7 +5,9 @@ var MuckBoot;
     MuckBoot = function (opts) {
         var defaults = {
             id: 'media-browser_0',
-            upload: true
+            upload: true,
+            enlargeFocusRows: true,
+            hideImagesOnListView: true
         };
         if (opts.id === undefined)
             opts.id = 'media-browser_0';
@@ -13,6 +15,10 @@ var MuckBoot;
             opts.upload = true;
         if (opts.createDir === undefined)
             opts.createDir = true;
+        if (opts.enlargeFocusRows === undefined)
+            opts.enlargeFocusRows = true;
+        if (opts.hideImagesOnListView === undefined)
+            opts.hideImagesOnListView = false;
         this.opts = opts;
         this.muck();
     };
@@ -23,6 +29,10 @@ var MuckBoot;
         var that = this;
         var eureka = d.createElement('div');
         eureka.classList.add('view-a');
+        if (this.opts.enlargeFocusRows)
+            eureka.classList.add('enlarge-focused-rows');
+        if (this.opts.hideImagesOnListView)
+            eureka.classList.add('no-images-on-list');
         eureka.classList.add('eureka');
         eureka.classList.add('sidebar-open');
         eureka.setAttribute('id', this.opts.id);

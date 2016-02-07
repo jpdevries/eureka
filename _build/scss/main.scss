@@ -18,7 +18,7 @@ $border-box-sizing:false;
 
 $borderColor:rgb(160,160,160);
 $black:rgb(10,10,10);
-$white:rgb(250,250,250);
+$white:rgb(255,255,255);
 
 $contextualBG:lighten($black,82%);
 $contextualBorder:lighten($black,54%);
@@ -1263,7 +1263,7 @@ html.touch, html.no-js {
                             text-align:center;
                         }
                     }
-                    .view-a & {
+                    .view-a.enlarge-focused-rows & {
                         > td.eureka__row-image {
                             img {
                                 max-height:none;
@@ -1421,6 +1421,11 @@ html.touch, html.no-js {
             @extend %visible-contextual;
         }
     }
+    .view-e & {
+      &.visible {
+          @extend %visible-contextual;
+      }
+    }
     text-align:left;
 
     @extend %align-items-flex-start; //@include justify-content(flex-start);
@@ -1435,7 +1440,7 @@ html.touch, html.no-js {
     }
 }
 
-.view-a tr.eureka__row {
+.view-a tr.eureka__row, .view-e tr.eureka__row {
     &:focus,&.focused {
         + tr.contextual {
             html.js & {

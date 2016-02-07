@@ -128,7 +128,9 @@
                 var $muckboot = new MuckBoot({ // paint the DOM
                     id:'redactor-media-browser_0', // unique identifier
                     upload:true, // paint upload UI elements
-                    createDir:'./' // add create directory button
+                    createDir:'./', // add create directory button
+                    enlargeFocusRows:true,
+                    hideImagesOnListView:true
                 });
                 var $eureka = new Eureka({ // init the Eureka component
                     // REQUIRED

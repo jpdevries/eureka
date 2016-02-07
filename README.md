@@ -60,6 +60,9 @@ _Note the `.eureka` class and the use of a unique identifer. The unique identier
 var $muckboot = new MuckBoot({ // paint the DOM
     id:'media-browser_0',
     upload:true // if set to false will not add uploading related elements to the DOM
+    createDir:false, // add create directory button
+    enlargeFocusRows:true, // whether or not to make images in focused rows bigger
+    hideImagesOnListView:undefined // if true hides image thumbs in list view
 });
 ```
 
@@ -153,8 +156,7 @@ Eureka targets modern HTML5 browsers and uses the latest draft of the flexible b
  - IE 11,10
    - Basic IE 9 support is available via some external shivs. See [Supporting IE9](https://github.com/jpdevries/eureka/wiki/Supporting-IE9).
  - Edge
- - ~~Opera~~
-  - flexbox layout is totally broken. Not sure why. See [#10](https://github.com/jpdevries/eureka/issues/10).
+ - Opera 35+
  - iOS Latest
  - Android Latest
 
