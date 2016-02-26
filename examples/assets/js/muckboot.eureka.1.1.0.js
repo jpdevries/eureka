@@ -18,7 +18,7 @@ var MuckBoot;
         if (opts.enlargeFocusRows === undefined)
             opts.enlargeFocusRows = true;
         if (opts.hideImagesOnListView === undefined)
-            opts.hideImagesOnListView = false;
+            opts.hideImagesOnListView = true;
         this.opts = opts;
         this.muck();
     };
