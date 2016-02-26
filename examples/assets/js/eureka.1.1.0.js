@@ -1538,8 +1538,13 @@ var EurekaView = (function () {
                 e.preventDefault();
                 e.stopPropagation();
                 (function () {
-                    var e = document.createEvent('Event');
-                    e.initEvent('click', true, true);
+                    //var e = document.createEvent('Event');
+                    //e.initEvent('click', true, true);
+                    var e = new MouseEvent('click', {
+                        'view': window,
+                        'bubbles': true,
+                        'cancelable': true
+                    });
                     document.getElementById(that.getController().getModel().getUID() + '__upload-input').dispatchEvent(e);
                 })();
             });

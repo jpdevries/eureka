@@ -15,7 +15,7 @@ var MuckBoot;
         if(opts.upload === undefined) opts.upload = true;
         if(opts.createDir === undefined) opts.createDir = true;
         if(opts.enlargeFocusRows === undefined) opts.enlargeFocusRows = true;
-        if(opts.hideImagesOnListView === undefined) opts.hideImagesOnListView = false;
+        if(opts.hideImagesOnListView === undefined) opts.hideImagesOnListView = true;
 
         this.opts = opts;
 
