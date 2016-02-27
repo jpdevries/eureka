@@ -1,4 +1,9 @@
 /* do not touch this file. see _build/*.js */
+/*
+Copyright (c) 2014, Lawrence Davis
+All rights reserved.
+https://github.com/lazd/scopedQuerySelectorShim
+*/
 (function() {
   if (!HTMLElement.prototype.querySelectorAll) {
     throw new Error('rootedQuerySelectorAll: This polyfill can only be used with browsers that support querySelectorAll');
@@ -38,7 +43,7 @@
             gaveContainer = true;
           }
 
-          var parentNode = this.parentNode;
+          parentNode = this.parentNode;
 
           if (!this.id) {
             // Give temporary ID
@@ -72,8 +77,7 @@
     overrideNodeMethod(HTMLElement.prototype, 'querySelector');
     overrideNodeMethod(HTMLElement.prototype, 'querySelectorAll');
   }
-}());
-/*jslint unparam: true, browser: true, devel: true */
+}());/*jslint unparam: true, browser: true, devel: true */
 var html5Upload = (function(){
     'use strict';
 
