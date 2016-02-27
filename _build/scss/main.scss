@@ -200,20 +200,19 @@ $danger:darken(red,8%);
     @extend %dangerous;
 }
 
-button {
-    border-radius:0.4em;
-    &[type="submit"] {
-        cursor:pointer;
-    }
-}
-
 .go {
     @extend %go;
 }
 
 .eureka-wrapper {
   background:$bg;
-    font-family: Gill Sans,Gill Sans MT,Calibri,sans-serif;
+  font-family: Gill Sans,Gill Sans MT,Calibri,sans-serif;
+  button {
+      border-radius:0.4em;
+      &[type="submit"] {
+          cursor:pointer;
+      }
+  }
     pre,code {
         @extend %monospaced;
     }

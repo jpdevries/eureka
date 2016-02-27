@@ -415,14 +415,13 @@ html.js .eureka > .pathbrowser > footer {
 .eureka-wrapper:after {
   box-sizing: inherit; }
 
-button {
-  border-radius: 0.4em; }
-  button[type="submit"] {
-    cursor: pointer; }
-
 .eureka-wrapper {
   background: white;
   font-family: Gill Sans,Gill Sans MT,Calibri,sans-serif; }
+  .eureka-wrapper button {
+    border-radius: 0.4em; }
+    .eureka-wrapper button[type="submit"] {
+      cursor: pointer; }
   .eureka-wrapper .image img {
     max-width: 100%; }
   .eureka-wrapper label {
