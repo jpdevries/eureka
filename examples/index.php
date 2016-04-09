@@ -8,7 +8,7 @@
         <meta name="description" content="HTML-first crack at a Flexible Media Browser">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="stylesheet" href="assets/css/eureka.1.1.0.css?nc=<?php echo time() ?>">
+        <link rel="stylesheet" href="assets/css/eureka.1.2.0.css?nc=<?php echo time() ?>">
         <style>
         body {
           /* move them */
@@ -299,6 +299,10 @@
                                                     <a href="javascript:;" class="current view-e-btn" data-view="view-e" data-view-target="media-browser_0" asyncronous-title="List Layout displays Name, Description, File Size and Edited On columns">
                                                         <i class="fa fa-list"></i>
                                                         <span class="audible">List Layout displays Name, Description, File Size and Edited On columns</span>
+                                                    </a>
+                                                    <a href="javascript:;" class="view-f-btn" data-view="view-f" data-view-target="media-browser_0" title="Toggle fullscreen mode">
+                                                        <i class="fa fa-expand"></i>
+                                                        <span class="audible">Toggle Fullscreen Mode</span>
                                                     </a>
                                                 </nav>
                                             </div>
@@ -707,7 +711,7 @@
         }());
         </script>
 
-        <script src="assets/js/eureka.1.1.0.js?nc=<?php echo time() ?>"></script>
+        <script src="assets/js/eureka.1.2.0.js?nc=<?php echo time() ?>"></script>
 
         <script>
             document.addEventListener("DOMContentLoaded", function() {
@@ -718,7 +722,7 @@
                     fileUploadURL:'/file/upload',
                     touch:Modernizr.touch,
                     debug:false,
-                    useLocalStorage:false,
+                    useLocalStorage:true,
                     sortMediaSources:true,
                     useWebWorkers:true, // whether or not to use a worker thread when making XHR Requests
                     // if useWebWorkers is true these must be absolute paths or relative to the webserver root

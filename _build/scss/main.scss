@@ -204,6 +204,19 @@ $danger:darken(red,8%);
     @extend %go;
 }
 
+.eureka-wrapper:fullscreen {
+  position:fixed;
+  top:0;
+  right:0;
+  bottom:0;
+  left:0;
+  margin:0;
+  box-sizing:border-box;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+
 .eureka-wrapper {
   background:$bg;
   font-family: Gill Sans,Gill Sans MT,Calibri,sans-serif;

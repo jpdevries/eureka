@@ -8,7 +8,7 @@
         <meta name="description" content="HTML-first crack at a Flexible Media Browser">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="stylesheet" href="assets/css/eureka.1.1.0.css?nc=<?php echo time() ?>">
+        <link rel="stylesheet" href="assets/css/eureka.1.2.0.css?nc=<?php echo time() ?>">
         <script src="assets/js/vendor/modernizr-2.8.3.min.js"></script>
 
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" async>
@@ -107,7 +107,7 @@
                 console.log('no flexbox');
 
                 link = document.createElement( "link" );
-                link.href = 'assets/css/eureka.no-flexbox.1.1.0.css';
+                link.href = 'assets/css/eureka.no-flexbox.1.2.0.css';
                 link.type = "text/css";
                 link.rel = "stylesheet";
                 link.media = "screen,print";
@@ -120,8 +120,8 @@
                 document.write('<script src="assets/js/vendor/dom4.js"><\/script>');
             }
         </script>
-        <script src="assets/js/muckboot.eureka.1.1.0.js?nc=<?php echo time() ?>"></script>
-        <script src="assets/js/eureka.1.1.0.js?nc=<?php echo time() ?>"></script>
+        <script src="assets/js/muckboot.eureka.1.2.0.js?nc=<?php echo time() ?>"></script>
+        <script src="assets/js/eureka.1.2.0.js?nc=<?php echo time() ?>"></script>
 
         <script>
             (function(){

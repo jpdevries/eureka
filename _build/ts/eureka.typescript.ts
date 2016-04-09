@@ -55,10 +55,10 @@ class Eureka {
 
 interface IEurekaMediaSource {
     getID() : string;
-    setID(id:string);
+    setID(id:string) : void;
 
     getTitle() : string;
-    setTitle(title:string);
+    setTitle(title:string) : void;
 
     toString() : string;
 }
@@ -122,6 +122,7 @@ class EurekaModel {
     private _listSourcesRequestURL:string = '';
     private _useWebWorkers:Boolean = false;
     private _sortMediaSources:Boolean = false;
+    private _fullscreenTarget:string = '.eureka-wrapper';
 
     public static get EurekaFoundIt():string { return "EurekaFoundIt"; }
     public static get EurekaFileRename():string { return "EurekaFileRename"; }
@@ -188,7 +189,7 @@ class EurekaModel {
         return this._showDimensionsColumn;
     }
 
-    getLocalStorage(id) {
+    getLocalStorage(id:string) {
         id = this.getStoragePrefix() + id;
         if(localStorage.getItem(id) !== undefined && localStorage.getItem(id) !== 'undefined') return localStorage.getItem(id);
         return false;
@@ -350,6 +351,9 @@ class EurekaModel {
     }
     getCurrentView() {
         return this._currentView;
+    }
+    getFullScreenTarget() : string {
+      return this._fullscreenTarget;
     }
     setLocale(locale) {
         this._locale = locale;
@@ -618,8 +622,8 @@ class EurekaView {
                                 select.value = option.getAttribute('value');
                             }
                         } catch(e) {}
-                        return;
-                        function hasOption(val) {
+
+                        /*function hasOption(val) {
                             var options = select.querySelectorAll('option');
                             for(var i = 0; i < options.length; i++) {
                                 if(((<HTMLOptionElement>(options[i])).value) == val) return true;
@@ -628,7 +632,7 @@ class EurekaView {
                         }
                         if(hasOption((event.which - 49).toString())) {
                             select.value = value;
-                        }
+                        }*/
                     }
                     var msSelect = <HTMLSelectElement>(document.getElementById(that.getController().getModel().getUID() + '__mediasource-select'));
                     setSelectOption(
@@ -1170,14 +1174,14 @@ class EurekaView {
     assignViewButtonListeners(){
         var model = this.getController().getModel();
         function setCurrent(el) {
-            var anchors = document.querySelectorAll(".eureka__topbar-nav .view-btns a[data-view]");
+            var anchors = document.querySelectorAll(".eureka__topbar-nav .view-btns a[data-view]:not(.view-f-btn)");
             for (var i = 0; i < anchors.length; i++) {
                 var anchor = anchors[i];
                 (<HTMLElement>anchor).classList.remove('current');
             }
             el.classList.add('current');
         }
-        var anchors = document.querySelectorAll(".eureka__topbar-nav .view-btns a[data-view]");
+        var anchors = document.querySelectorAll(".eureka__topbar-nav .view-btns a[data-view]:not(.view-f-btn)");
         for (var i = 0; i < anchors.length; i++) {
             var current = anchors[i];
             current.addEventListener('click', function (e) {
@@ -1193,6 +1197,48 @@ class EurekaView {
                 setCurrent(that);
                 model.setCurrentView(_v);
             }, true);
+        }
+        var fullscreenBtn = document.querySelector(".eureka__topbar-nav .view-btns .view-f-btn");
+        var that = this;
+        fullscreenBtn.addEventListener('click', function(e){
+          e.preventDefault();
+
+          if (that.isFullScreen()) {
+            that.runPrefixMethod(document, "CancelFullScreen");
+            fullscreenBtn.querySelector('i').classList.remove('fa-compress');
+            fullscreenBtn.querySelector('i').classList.remove('icon-compress');
+            console.log(fullscreenBtn.querySelector('i'));
+          }
+          else {
+            //setCurrent(this);
+            that.requestFullScreen();
+            fullscreenBtn.querySelector('i').classList.add('fa-compress');
+            fullscreenBtn.querySelector('i').classList.add('icon-compress');
+            console.log(fullscreenBtn.querySelector('i'));
+          }
+        });
+    }
+    isFullScreen() {
+      return this.runPrefixMethod(document, "FullScreen") || this.runPrefixMethod(document, "IsFullScreen");
+    }
+    requestFullScreen() {
+      this.runPrefixMethod(document.querySelector(this.getController().getModel().getFullScreenTarget()), "RequestFullScreen");
+    }
+    runPrefixMethod(obj, method) {
+        var pfx = ["webkit", "moz", "ms", "o", ""];
+        var p = 0, m, t;
+        while (p < pfx.length && !obj[m]) {
+            m = method;
+            if (pfx[p] == "") {
+                m = m.substr(0,1).toLowerCase() + m.substr(1);
+            }
+            m = pfx[p] + m;
+            t = typeof obj[m];
+            if (t != "undefined") {
+                pfx = [pfx[p]];
+                return (t == "function" ? obj[m]() : obj[m]);
+            }
+            p++;
         }
     }
     assignARIAKeyListeners(){

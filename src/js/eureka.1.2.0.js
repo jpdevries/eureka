@@ -1,9 +1,4 @@
 /* do not touch this file. see _build/*.js */
-/*
-Copyright (c) 2014, Lawrence Davis
-All rights reserved.
-https://github.com/lazd/scopedQuerySelectorShim
-*/
 (function() {
   if (!HTMLElement.prototype.querySelectorAll) {
     throw new Error('rootedQuerySelectorAll: This polyfill can only be used with browsers that support querySelectorAll');
@@ -43,7 +38,7 @@ https://github.com/lazd/scopedQuerySelectorShim
             gaveContainer = true;
           }
 
-          parentNode = this.parentNode;
+          var parentNode = this.parentNode;
 
           if (!this.id) {
             // Give temporary ID
@@ -77,7 +72,8 @@ https://github.com/lazd/scopedQuerySelectorShim
     overrideNodeMethod(HTMLElement.prototype, 'querySelector');
     overrideNodeMethod(HTMLElement.prototype, 'querySelectorAll');
   }
-}());/*jslint unparam: true, browser: true, devel: true */
+}());
+/*jslint unparam: true, browser: true, devel: true */
 var html5Upload = (function(){
     'use strict';
 
@@ -593,6 +589,7 @@ var EurekaModel = (function () {
         this._listSourcesRequestURL = '';
         this._useWebWorkers = false;
         this._sortMediaSources = false;
+        this._fullscreenTarget = '.eureka-wrapper';
         this.getXHRHeaders = function () {
             return this._headers;
         };
@@ -890,6 +887,9 @@ var EurekaModel = (function () {
     EurekaModel.prototype.getCurrentView = function () {
         return this._currentView;
     };
+    EurekaModel.prototype.getFullScreenTarget = function () {
+        return this._fullscreenTarget;
+    };
     EurekaModel.prototype.setLocale = function (locale) {
         this._locale = locale;
     };
@@ -1144,18 +1144,16 @@ var EurekaView = (function () {
                             }
                         }
                         catch (e) { }
-                        return;
-                        function hasOption(val) {
+                        /*function hasOption(val) {
                             var options = select.querySelectorAll('option');
-                            for (var i = 0; i < options.length; i++) {
-                                if (((options[i]).value) == val)
-                                    return true;
+                            for(var i = 0; i < options.length; i++) {
+                                if(((<HTMLOptionElement>(options[i])).value) == val) return true;
                             }
                             return false;
                         }
-                        if (hasOption((event.which - 49).toString())) {
+                        if(hasOption((event.which - 49).toString())) {
                             select.value = value;
-                        }
+                        }*/
                     }
                     var msSelect = (document.getElementById(that.getController().getModel().getUID() + '__mediasource-select'));
                     setSelectOption(msSelect, (event.which - 49).toString());
@@ -1637,14 +1635,14 @@ var EurekaView = (function () {
     EurekaView.prototype.assignViewButtonListeners = function () {
         var model = this.getController().getModel();
         function setCurrent(el) {
-            var anchors = document.querySelectorAll(".eureka__topbar-nav .view-btns a[data-view]");
+            var anchors = document.querySelectorAll(".eureka__topbar-nav .view-btns a[data-view]:not(.view-f-btn)");
             for (var i = 0; i < anchors.length; i++) {
                 var anchor = anchors[i];
                 anchor.classList.remove('current');
             }
             el.classList.add('current');
         }
-        var anchors = document.querySelectorAll(".eureka__topbar-nav .view-btns a[data-view]");
+        var anchors = document.querySelectorAll(".eureka__topbar-nav .view-btns a[data-view]:not(.view-f-btn)");
         for (var i = 0; i < anchors.length; i++) {
             var current = anchors[i];
             current.addEventListener('click', function (e) {
@@ -1660,6 +1658,47 @@ var EurekaView = (function () {
                 setCurrent(that);
                 model.setCurrentView(_v);
             }, true);
+        }
+        var fullscreenBtn = document.querySelector(".eureka__topbar-nav .view-btns .view-f-btn");
+        var that = this;
+        fullscreenBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            if (that.isFullScreen()) {
+                that.runPrefixMethod(document, "CancelFullScreen");
+                fullscreenBtn.querySelector('i').classList.remove('fa-compress');
+                fullscreenBtn.querySelector('i').classList.remove('icon-compress');
+                console.log(fullscreenBtn.querySelector('i'));
+            }
+            else {
+                //setCurrent(this);
+                that.requestFullScreen();
+                fullscreenBtn.querySelector('i').classList.add('fa-compress');
+                fullscreenBtn.querySelector('i').classList.add('icon-compress');
+                console.log(fullscreenBtn.querySelector('i'));
+            }
+        });
+    };
+    EurekaView.prototype.isFullScreen = function () {
+        return this.runPrefixMethod(document, "FullScreen") || this.runPrefixMethod(document, "IsFullScreen");
+    };
+    EurekaView.prototype.requestFullScreen = function () {
+        this.runPrefixMethod(document.querySelector(this.getController().getModel().getFullScreenTarget()), "RequestFullScreen");
+    };
+    EurekaView.prototype.runPrefixMethod = function (obj, method) {
+        var pfx = ["webkit", "moz", "ms", "o", ""];
+        var p = 0, m, t;
+        while (p < pfx.length && !obj[m]) {
+            m = method;
+            if (pfx[p] == "") {
+                m = m.substr(0, 1).toLowerCase() + m.substr(1);
+            }
+            m = pfx[p] + m;
+            t = typeof obj[m];
+            if (t != "undefined") {
+                pfx = [pfx[p]];
+                return (t == "function" ? obj[m]() : obj[m]);
+            }
+            p++;
         }
     };
     EurekaView.prototype.assignARIAKeyListeners = function () {
