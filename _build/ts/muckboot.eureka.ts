@@ -16,6 +16,7 @@ var MuckBoot;
         if(opts.createDir === undefined) opts.createDir = true;
         if(opts.enlargeFocusRows === undefined) opts.enlargeFocusRows = true;
         if(opts.hideImagesOnListView === undefined) opts.hideImagesOnListView = true;
+        if(opts.allowFullScreen === undefined) opts.allowFullScreen = true;
 
         this.opts = opts;
 
@@ -395,24 +396,25 @@ var MuckBoot;
                                 a.appendChild(fa);
 
                                 return a;
-                            })(),
-                            (function(){
-                                var a = d.createElement('a');
-                                a.classList.add('view-f-btn');
-                                a.setAttribute('data-view','view-f');
-                                a.setAttribute('title','Toggle Fullscreen Mode');
-
-                                var fa = d.createElement('i');
-                                fa.classList.add('fa');
-                                fa.classList.add('fa-expand');
-                                fa.classList.add('icon');
-                                fa.classList.add('icon-expand');
-
-                                a.appendChild(fa);
-
-                                return a;
                             })()
                         ];
+
+                        if(opts.allowFullScreen) btns.push((function(){
+                            var a = d.createElement('a');
+                            a.classList.add('view-f-btn');
+                            a.setAttribute('data-view','view-f');
+                            a.setAttribute('title','Toggle Fullscreen Mode');
+
+                            var fa = d.createElement('i');
+                            fa.classList.add('fa');
+                            fa.classList.add('fa-expand');
+                            fa.classList.add('icon');
+                            fa.classList.add('icon-expand');
+
+                            a.appendChild(fa);
+
+                            return a;
+                        })());
 
                         var nav = d.createElement('nav');
 

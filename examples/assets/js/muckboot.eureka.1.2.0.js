@@ -19,6 +19,8 @@ var MuckBoot;
             opts.enlargeFocusRows = true;
         if (opts.hideImagesOnListView === undefined)
             opts.hideImagesOnListView = true;
+        if (opts.allowFullScreen === undefined)
+            opts.allowFullScreen = true;
         this.opts = opts;
         this.muck();
     };
@@ -308,8 +310,10 @@ var MuckBoot;
                                 fa.classList.add('icon-list');
                                 a.appendChild(fa);
                                 return a;
-                            })(),
-                            (function () {
+                            })()
+                        ];
+                        if (opts.allowFullScreen)
+                            btns.push((function () {
                                 var a = d.createElement('a');
                                 a.classList.add('view-f-btn');
                                 a.setAttribute('data-view', 'view-f');
@@ -321,8 +325,7 @@ var MuckBoot;
                                 fa.classList.add('icon-expand');
                                 a.appendChild(fa);
                                 return a;
-                            })()
-                        ];
+                            })());
                         var nav = d.createElement('nav');
                         for (var i = 0; i < btns.length; i++)
                             nav.appendChild(btns[i]);

@@ -1241,6 +1241,7 @@ var EurekaView = (function () {
         catch (e) { }
     };
     EurekaView.prototype.assignViewButtonListeners = function () {
+        var that = this;
         var model = this.getController().getModel();
         function setCurrent(el) {
             var anchors = document.querySelectorAll(".eureka__topbar-nav .view-btns a[data-view]:not(.view-f-btn)");
@@ -1268,22 +1269,22 @@ var EurekaView = (function () {
             }, true);
         }
         var fullscreenBtn = document.querySelector(".eureka__topbar-nav .view-btns .view-f-btn");
-        var that = this;
-        fullscreenBtn.addEventListener('click', function (e) {
-            e.preventDefault();
-            if (that.isFullScreen()) {
-                that.runPrefixMethod(document, "CancelFullScreen");
-                fullscreenBtn.querySelector('i').classList.remove('fa-compress');
-                fullscreenBtn.querySelector('i').classList.remove('icon-compress');
-                console.log(fullscreenBtn.querySelector('i'));
-            }
-            else {
-                that.requestFullScreen();
-                fullscreenBtn.querySelector('i').classList.add('fa-compress');
-                fullscreenBtn.querySelector('i').classList.add('icon-compress');
-                console.log(fullscreenBtn.querySelector('i'));
-            }
-        });
+        if (fullscreenBtn)
+            fullscreenBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                if (that.isFullScreen()) {
+                    that.runPrefixMethod(document, "CancelFullScreen");
+                    fullscreenBtn.querySelector('i').classList.remove('fa-compress');
+                    fullscreenBtn.querySelector('i').classList.remove('icon-compress');
+                    console.log(fullscreenBtn.querySelector('i'));
+                }
+                else {
+                    that.requestFullScreen();
+                    fullscreenBtn.querySelector('i').classList.add('fa-compress');
+                    fullscreenBtn.querySelector('i').classList.add('icon-compress');
+                    console.log(fullscreenBtn.querySelector('i'));
+                }
+            });
     };
     EurekaView.prototype.isFullScreen = function () {
         return this.runPrefixMethod(document, "FullScreen") || this.runPrefixMethod(document, "IsFullScreen");
@@ -2626,6 +2627,8 @@ var MuckBoot;
             opts.enlargeFocusRows = true;
         if (opts.hideImagesOnListView === undefined)
             opts.hideImagesOnListView = true;
+        if (opts.allowFullScreen === undefined)
+            opts.allowFullScreen = true;
         this.opts = opts;
         this.muck();
     };
@@ -2915,8 +2918,10 @@ var MuckBoot;
                                 fa.classList.add('icon-list');
                                 a.appendChild(fa);
                                 return a;
-                            })(),
-                            (function () {
+                            })()
+                        ];
+                        if (opts.allowFullScreen)
+                            btns.push((function () {
                                 var a = d.createElement('a');
                                 a.classList.add('view-f-btn');
                                 a.setAttribute('data-view', 'view-f');
@@ -2928,8 +2933,7 @@ var MuckBoot;
                                 fa.classList.add('icon-expand');
                                 a.appendChild(fa);
                                 return a;
-                            })()
-                        ];
+                            })());
                         var nav = d.createElement('nav');
                         for (var i = 0; i < btns.length; i++)
                             nav.appendChild(btns[i]);

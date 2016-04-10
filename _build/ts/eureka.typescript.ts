@@ -1172,6 +1172,7 @@ class EurekaView {
         } catch(e) {}
     }
     assignViewButtonListeners(){
+        var that = this;
         var model = this.getController().getModel();
         function setCurrent(el) {
             var anchors = document.querySelectorAll(".eureka__topbar-nav .view-btns a[data-view]:not(.view-f-btn)");
@@ -1199,8 +1200,8 @@ class EurekaView {
             }, true);
         }
         var fullscreenBtn = document.querySelector(".eureka__topbar-nav .view-btns .view-f-btn");
-        var that = this;
-        fullscreenBtn.addEventListener('click', function(e){
+
+        if(fullscreenBtn) fullscreenBtn.addEventListener('click', function(e){
           e.preventDefault();
 
           if (that.isFullScreen()) {

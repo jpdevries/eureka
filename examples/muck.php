@@ -130,7 +130,8 @@
                     upload:false, // paint upload UI elements
                     createDir:false, // add create directory button
                     enlargeFocusRows:true,
-                    hideImagesOnListView:true
+                    hideImagesOnListView:true,
+                    allowFullScreen:true
                 });
                 var $eureka = new Eureka({ // init the Eureka component
                     // REQUIRED
