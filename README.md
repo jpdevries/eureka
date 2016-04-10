@@ -62,7 +62,8 @@ var $muckboot = new MuckBoot({ // paint the DOM
     upload:true // if set to false will not add uploading related elements to the DOM
     createDir:false, // add create directory button
     enlargeFocusRows:true, // whether or not to make images in focused rows bigger
-    hideImagesOnListView:undefined // if true hides image thumbs in list view
+    hideImagesOnListView:undefined, // if true hides image thumbs in list view
+    allowFullScreen:true
 });
 ```
 
@@ -166,7 +167,7 @@ In addition to the below shortcuts, Eureka supports standard tab-to-focus usabil
 | Shortcut        | Command              |
 | --------------- |:-------------:       |
 | Toggle Sidebar      | ctrl ;           |
-| Change View      | ctrl alt (1-4)      |
+| Change View      | ctrl alt (1-5)      |
 | Change Media Source | alt (1-9)        |
 | Delete Item | backspace                |
 | Expand Item | spacebar                 |
