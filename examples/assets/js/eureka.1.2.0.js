@@ -1387,6 +1387,10 @@ var EurekaView = (function () {
                 that.getElement().querySelector('.upload-form').remove();
             }
             catch (e) { }
+            try {
+                that.getElement().querySelector('.upload-perhaps').remove();
+            }
+            catch (e) { }
         }
         if (that.getController().getModel().getCurrentMediaSource() !== undefined && that.getController().getModel().getCurrentMediaSource() !== '/' && that.getController().getModel().getCurrentMediaSource() !== '') {
             that.recursivelyOpenTreeToCurrentDirectory();
@@ -1423,6 +1427,10 @@ var EurekaView = (function () {
             that.setMediaSourceSelectValue();
             try {
                 (that._html5Upload).data = that.getController().getModel().getHTML5UploadData();
+            }
+            catch (e) { }
+            try {
+                that.getElement().querySelector('.oh-no code').innerHTML = currentDirectory;
             }
             catch (e) { }
         });
@@ -1549,6 +1557,18 @@ var EurekaView = (function () {
                     });
                     document.getElementById(that.getController().getModel().getUID() + '__upload-input').dispatchEvent(e);
                 })();
+            });
+        }
+        var upload_perhaps = that.getElement().querySelector('.upload-perhaps a');
+        if (upload_perhaps) {
+            upload_perhaps.addEventListener('click', function (e) {
+                e.preventDefault();
+                var e = document.createEvent('Event');
+                e.initEvent('click', true, true);
+                try {
+                    upload_files.dispatchEvent(e);
+                }
+                catch (e) { }
             });
         }
     };
@@ -2087,6 +2107,8 @@ var EurekaView = (function () {
         var results = data.results;
         var tbodyHTML = '';
         var directoriesToAdd = [];
+        var fileAdded = false;
+        that.getElement().classList.remove('nothing-found');
         for (var i = 0; i < results.length; i++) {
             var result = results[i];
             if (result.filename) {
@@ -2414,6 +2436,7 @@ var EurekaView = (function () {
                     return tr;
                 }
                 tbodyHTML += createContextualRow().outerHTML;
+                fileAdded = true;
             }
             else {
                 //console.log(cd);
@@ -2421,6 +2444,8 @@ var EurekaView = (function () {
                 //that.asyncronouslyAddDirectory(cd,result.directory);
                 directoriesToAdd.push({ cd: cd, directory: result.directory });
             }
+            if (!fileAdded)
+                that.getElement().classList.add('nothing-found');
         }
         (function () {
             for (var i = 0; i < directoriesToAdd.length; i++) {

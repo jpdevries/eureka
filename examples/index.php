@@ -635,6 +635,17 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                <div class="eureka-table oh-no">
+                                  <h3>
+                                    <i class="fa fa-folder-open-o icon icon-folder-open-o" style="font-size:2em"></i>
+                                    <code>
+                                      assets/uploads
+                                    </code>
+                                    <p>
+                                      No files were found in <span class="this-directory">this&nbsp;directory</span>.<span class="upload-perhaps"><br>Perhaps you'd like to <a href="javascript:;">upload some&nbsp;files</a>?</span>
+                                    </p>
+                                  </h3>
+                                </div>
                             </div>
                         </div>
                         <!-- All this work just to let them choose something?! -->

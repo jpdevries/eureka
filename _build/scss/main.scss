@@ -325,6 +325,14 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
             flex-basis:0;
             max-height:100%;
         }
+        .oh-no:not(.nothing-found .oh-no) {
+          display:none;
+        }
+        &.nothing-found {
+           .stage > .eureka-table:not(.oh-no) {
+             display:none;
+           }
+        }
         .stage {
             display:flex;
             width:100%;
@@ -364,6 +372,24 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
                     }
                 }
                 */
+
+                &.oh-no {
+                  text-align:center;
+                  a {
+                    text-decoration:underline;
+                  }
+                  code {
+                    display:block;
+                    text-align:center;
+                    padding:.5em 0;
+                  }
+                  p {
+                    margin-top:0;
+                  }
+                  .fa-exclamation-triangle, .icon-exclamation-triangle {
+                    font-size:2em;
+                  }
+                }
 
                 > table {
                     flex-grow:1;
@@ -1680,8 +1706,8 @@ tr.contextual {
             width:100%;
             text-align:center;
             > nav {
+                display:flex;
                 @include media($mobile) {
-                    display:flex;
                     flex-basis:100%;
                     > a {
                         flex-grow:1;

@@ -905,6 +905,10 @@ class EurekaView {
             try {
                 (<any>that.getElement().querySelector('.upload-form')).remove();
             } catch(e) {}
+
+            try {
+                (<any>that.getElement().querySelector('.upload-perhaps')).remove();
+            } catch(e) {}
         }
 
         if(that.getController().getModel().getCurrentMediaSource() !== undefined && that.getController().getModel().getCurrentMediaSource() !== '/' && that.getController().getModel().getCurrentMediaSource() !== '') {
@@ -939,6 +943,9 @@ class EurekaView {
             that.setMediaSourceSelectValue();
             try {
                 (<any>(that._html5Upload)).data = that.getController().getModel().getHTML5UploadData();
+            } catch(e) {}
+            try {
+              (<HTMLElement>that.getElement().querySelector('.oh-no code')).innerHTML = currentDirectory;
             } catch(e) {}
         });
         that.getElement().addEventListener(EurekaModel.EurekaMediaSourceChange, function(e:any){
@@ -1074,6 +1081,19 @@ class EurekaView {
                     document.getElementById(that.getController().getModel().getUID() + '__upload-input').dispatchEvent(e);
                 })();
             });
+        }
+        var upload_perhaps = that.getElement().querySelector('.upload-perhaps a');
+        if(upload_perhaps) {
+          upload_perhaps.addEventListener('click',function(e){
+            e.preventDefault();
+
+            var e = document.createEvent('Event');
+            e.initEvent('click', true, true);
+
+            try {
+                (<HTMLElement>upload_files).dispatchEvent(e);
+            } catch(e) {}
+          });
         }
     }
 
@@ -1632,7 +1652,7 @@ class EurekaView {
         this.assignTreeListeners();
         this.recursivelyOpenTreeToCurrentDirectory();
     }
-    paintJSON(data) {
+    paintJSON(data:any) : void {
         var that = this;
         if(that.getController().getModel().getDebug()) console.log('paintJSON');
         var model = this.getController().getModel();
@@ -1640,6 +1660,9 @@ class EurekaView {
         var results = data.results;
         var tbodyHTML = '';
         var directoriesToAdd:Array<Object> = [];
+        var fileAdded:Boolean = false;
+
+        that.getElement().classList.remove('nothing-found');
         for (var i = 0; i < results.length; i++) {
             var result = results[i];
             if(result.filename) {
@@ -1993,14 +2016,15 @@ class EurekaView {
                 }
 
                 tbodyHTML += createContextualRow().outerHTML;
+                fileAdded = true;
             } else { // it's a folder
                 //console.log(cd);
                 //console.log(result.directory);
                 //that.asyncronouslyAddDirectory(cd,result.directory);
                 directoriesToAdd.push({cd:cd,directory:result.directory})
             }
+            if(!fileAdded) that.getElement().classList.add('nothing-found');
         }
-
         (function(){
             for(var i = 0; i < directoriesToAdd.length; i++) {
                 var d:any = <any>(directoriesToAdd[i]);

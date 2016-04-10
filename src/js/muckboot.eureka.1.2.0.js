@@ -444,7 +444,27 @@ var MuckBoot;
             }
             browserStage.appendChild(createEurekaTopBar());
             browserStage.appendChild(createEurekaTable());
+            browserStage.appendChild(createEurekaTableUhOh());
             return browserStage;
+        }
+        function createEurekaTableUhOh() {
+            var div = document.createElement('div');
+            div.classList.add('eureka-table');
+            div.classList.add('oh-no');
+            var h3 = document.createElement('h3');
+            var i = document.createElement('i');
+            i.classList.add('fa');
+            i.classList.add('fa-folder-open-o');
+            i.classList.add('icon');
+            i.classList.add('icon-folder-open-o');
+            var code = document.createElement('code');
+            var p = document.createElement('p');
+            p.innerHTML = 'No files were found in <span class="this-directory">this&nbsp;directory</span>.<span class="upload-perhaps"><br>Perhaps you\'d like to <a href="javascript:;">upload some&nbsp;files</a>?</span>';
+            h3.appendChild(i);
+            h3.appendChild(code);
+            h3.appendChild(p);
+            div.appendChild(h3);
+            return div;
         }
         function createChooseFooter(opts) {
             var footer = d.createElement('footer');

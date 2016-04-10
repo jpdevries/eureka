@@ -534,6 +534,10 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
             -ms-flex-preferred-size: 0;
                 flex-basis: 0;
         max-height: 100%; } }
+    .eureka-wrapper > .eureka .oh-no:not(.nothing-found .oh-no) {
+      display: none; }
+    .eureka-wrapper > .eureka.nothing-found .stage > .eureka-table:not(.oh-no) {
+      display: none; }
     .eureka-wrapper > .eureka .stage {
       display: -webkit-flex;
       display: -ms-flexbox;
@@ -580,6 +584,18 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
             -webkit-flex-basis: 0;
                 -ms-flex-preferred-size: 0;
                     flex-basis: 0; } }
+        .eureka-wrapper > .eureka .stage > .eureka-table.oh-no {
+          text-align: center; }
+          .eureka-wrapper > .eureka .stage > .eureka-table.oh-no a {
+            text-decoration: underline; }
+          .eureka-wrapper > .eureka .stage > .eureka-table.oh-no code {
+            display: block;
+            text-align: center;
+            padding: .5em 0; }
+          .eureka-wrapper > .eureka .stage > .eureka-table.oh-no p {
+            margin-top: 0; }
+          .eureka-wrapper > .eureka .stage > .eureka-table.oh-no .fa-exclamation-triangle, .eureka-wrapper > .eureka .stage > .eureka-table.oh-no .icon-exclamation-triangle {
+            font-size: 2em; }
         .eureka-wrapper > .eureka .stage > .eureka-table > table {
           -webkit-flex-grow: 1;
               -ms-flex-positive: 1;
@@ -1402,18 +1418,19 @@ tr.contextual {
     -ms-flex-pack: center;
     width: 100%;
     text-align: center; }
-    @media screen and (max-width: 640px) {
-      .eureka__topbar .eureka__topbar-nav .view-btns > nav {
-        display: -webkit-flex;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-flex-basis: 100%;
-            -ms-flex-preferred-size: 100%;
-                flex-basis: 100%; }
-        .eureka__topbar .eureka__topbar-nav .view-btns > nav > a {
-          -webkit-flex-grow: 1;
-              -ms-flex-positive: 1;
-                  flex-grow: 1; } }
+    .eureka__topbar .eureka__topbar-nav .view-btns > nav {
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex; }
+      @media screen and (max-width: 640px) {
+        .eureka__topbar .eureka__topbar-nav .view-btns > nav {
+          -webkit-flex-basis: 100%;
+              -ms-flex-preferred-size: 100%;
+                  flex-basis: 100%; }
+          .eureka__topbar .eureka__topbar-nav .view-btns > nav > a {
+            -webkit-flex-grow: 1;
+                -ms-flex-positive: 1;
+                    flex-grow: 1; } }
     @media screen and (min-width: 641px) {
       .eureka__topbar .eureka__topbar-nav .view-btns {
         width: auto;

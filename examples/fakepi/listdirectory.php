@@ -134,20 +134,19 @@ $results = array(
         "editedon" => "1353215040",
     )
 );
-
 switch($dir) {
     case "assets/":
     $results = array_slice($results,0,4);
     break;
-    
+
     case "assets/images/":
     $results = array_slice($results,6,5);
     break;
-    
+
     case "assets/images/uploads/":
     $results = array_slice($results,10);
     break;
-    
+
     default:
     break;
 }

@@ -1001,6 +1001,10 @@ var EurekaView = (function () {
                 that.getElement().querySelector('.upload-form').remove();
             }
             catch (e) { }
+            try {
+                that.getElement().querySelector('.upload-perhaps').remove();
+            }
+            catch (e) { }
         }
         if (that.getController().getModel().getCurrentMediaSource() !== undefined && that.getController().getModel().getCurrentMediaSource() !== '/' && that.getController().getModel().getCurrentMediaSource() !== '') {
             that.recursivelyOpenTreeToCurrentDirectory();
@@ -1037,6 +1041,10 @@ var EurekaView = (function () {
             that.setMediaSourceSelectValue();
             try {
                 (that._html5Upload).data = that.getController().getModel().getHTML5UploadData();
+            }
+            catch (e) { }
+            try {
+                that.getElement().querySelector('.oh-no code').innerHTML = currentDirectory;
             }
             catch (e) { }
         });
@@ -1161,6 +1169,18 @@ var EurekaView = (function () {
                     });
                     document.getElementById(that.getController().getModel().getUID() + '__upload-input').dispatchEvent(e);
                 })();
+            });
+        }
+        var upload_perhaps = that.getElement().querySelector('.upload-perhaps a');
+        if (upload_perhaps) {
+            upload_perhaps.addEventListener('click', function (e) {
+                e.preventDefault();
+                var e = document.createEvent('Event');
+                e.initEvent('click', true, true);
+                try {
+                    upload_files.dispatchEvent(e);
+                }
+                catch (e) { }
             });
         }
     };
@@ -1661,350 +1681,359 @@ var EurekaView = (function () {
         this.recursivelyOpenTreeToCurrentDirectory();
     };
     EurekaView.prototype.paintJSON = function (data) {
+        console.log('paintJSON');
         var that = this;
         if (that.getController().getModel().getDebug())
             console.log('paintJSON');
         var model = this.getController().getModel();
         var cd = data.cd.charAt(data.cd.length - 1) == '/' ? data.cd : data.cd + '/';
         var results = data.results;
+        results = [];
         var tbodyHTML = '';
         var directoriesToAdd = [];
-        for (var i = 0; i < results.length; i++) {
-            var result = results[i];
-            if (result.filename) {
-                var filename = result.filename;
-                var safeFileName = filename.replace(/[!\"#$%&'\(\)\*\+,\.\/:;<=>\?\@\[\\\]\^`\{\|\}~]/g, '');
-                var src = result.src;
-                var thumb = result.thumb;
-                var filesize = result.filesize;
-                var dimensions = result.dimensions;
-                var editedon = (parseInt(result.editedon)) > 0 ? parseInt(result.editedon) : null;
-                var tr = document.createElement("tr");
-                tr.classList.add('eureka__row');
-                tr.setAttribute('tabindex', "0");
-                tr.setAttribute('data-tokens', '');
-                tr.setAttribute('data-filename', filename);
-                tr.setAttribute('data-safe-filename', safeFileName);
-                tr.setAttribute('data-src', src);
-                if (thumb)
-                    tr.setAttribute('data-thumb', thumb);
-                tr.setAttribute('data-dimensions-w', dimensions.split('x')[0]);
-                tr.setAttribute('data-dimensions-h', dimensions.split('x')[1]);
-                tr.setAttribute('data-filesize-bytes', filesize);
-                tr.setAttribute('data-timestamp', (editedon) ? editedon.toString() : '0');
-                var td = document.createElement("td");
-                td.setAttribute('contenteditable', 'false');
-                td.classList.add('eureka__row-image');
-                var imgD = document.createElement('div');
-                imgD.classList.add('image');
-                var img = document.createElement('img');
-                img.setAttribute('id', safeFileName + '__thumb');
-                function addErrorListener(img, result, safeFileName) {
-                    img.addEventListener('error', function () {
-                        var a = result.filename.split('.');
-                        var icon = 'file-o';
-                        switch (a[a.length - 1].toLowerCase()) {
-                            case 'css':
-                                icon = 'css3';
-                                break;
-                            case 'csv':
-                                icon = 'file-excel-o';
-                                break;
-                            case 'xls':
-                                icon = 'file-excel-o';
-                                break;
-                            case 'numbers':
-                                icon = 'file-excel-o';
-                                break;
-                            case 'css':
-                                icon = 'file-excel-o';
-                                break;
-                            case 'mp3':
-                                icon = 'file-sound-o';
-                                break;
-                            case 'wav':
-                                icon = 'file-sound-o';
-                                break;
-                            case 'wma':
-                                icon = 'file-sound-o';
-                                break;
-                            case 'aac':
-                                icon = 'file-sound-o';
-                                break;
-                            case 'flac':
-                                icon = 'file-sound-o';
-                                break;
-                            case 'ppt':
-                                icon = 'file-powerpoint-o';
-                                break;
-                            case 'pot':
-                                icon = 'file-powerpoint-o';
-                                break;
-                            case 'pps':
-                                icon = 'file-powerpoint-o';
-                                break;
-                            case 'zip':
-                                icon = 'file-zip-o';
-                                break;
-                            case 'gzip':
-                                icon = 'file-zip-o';
-                                break;
-                            case 'tar':
-                                icon = 'file-zip-o';
-                                break;
-                            case 'mp4':
-                                icon = 'file-movie-o';
-                                break;
-                            case 'ogv':
-                                icon = 'file-movie-o';
-                                break;
-                            case 'm4v':
-                                icon = 'file-movie-o';
-                                break;
-                            case 'avi':
-                                icon = 'file-movie-o';
-                                break;
-                            case 'jpg':
-                            case 'jpeg':
-                            case 'gif':
-                            case 'tiff':
-                            case 'png':
-                            case 'bpg':
-                            case 'img':
-                            case 'webp':
-                                icon = 'file-picture-o';
-                                break;
-                            case 'php':
-                            case 'html':
-                            case 'htm':
-                            case 'md':
-                                icon = 'file-code-o';
-                                break;
-                            case 'js':
-                                icon = 'file-text-o';
-                                break;
-                            default:
-                                icon = 'file-o';
-                                break;
-                        }
-                        var div = (function () {
-                            var div = document.createElement('div');
-                            div.classList.add('icon-wrapper');
-                            div.classList.add('img');
-                            var i = document.createElement('i');
-                            i.classList.add('fa');
-                            i.classList.add('icon');
-                            i.classList.add('fa-' + icon);
-                            i.classList.add('icon-' + icon);
-                            div.appendChild(i);
-                            return div;
-                        })();
-                        try {
-                            document.getElementById(safeFileName + '__thumb').outerHTML = div.outerHTML;
-                        }
-                        catch (e) { }
-                    });
-                }
-                addErrorListener(img, result, safeFileName);
-                imgD.appendChild(img);
-                img.setAttribute('src', (thumb) ? thumb : src);
-                var code = document.createElement('code');
-                code.setAttribute('contenteditable', 'true');
-                code.setAttribute('tabindex', '-1');
-                code.setAttribute('sorta-draggable', 'true');
-                code.innerHTML = filename;
-                td.appendChild(imgD);
-                td.appendChild(code);
-                function createCode(html) {
-                    var tag = document.createElement('code');
-                    tag.innerHTML = html;
-                    return tag;
-                }
-                var tdDimensionCell = document.createElement('td');
-                tdDimensionCell.classList.add('eureka__row-dimensions');
-                tdDimensionCell.appendChild(createCode(dimensions || "n/a"));
-                var tdFilesizeCell = document.createElement('td');
-                tdFilesizeCell.classList.add('eureka__row-filesize');
-                if (parseInt(filesize)) {
-                    tdFilesizeCell.appendChild(createCode(that.formatFileSize(filesize)));
-                }
-                else {
-                    tdFilesizeCell.appendChild(createCode('n/a'));
-                }
-                var tdEditedOnCell = document.createElement('td');
-                tdEditedOnCell.classList.add('eureka__row-editedon');
-                if (editedon) {
-                    tdEditedOnCell.appendChild(createCode((new Date(editedon * 1000)).toLocaleDateString(model.getLocale(), {
-                        month: 'short',
-                        day: 'numeric',
-                        year: 'numeric'
-                    })));
-                }
-                else {
-                    tdEditedOnCell.appendChild(createCode('n/a'));
-                }
-                tr.appendChild(td);
-                if (that.getController().getModel().getShowDimensionsColumn())
-                    tr.appendChild(tdDimensionCell);
-                tr.appendChild(tdFilesizeCell);
-                tr.appendChild(tdEditedOnCell);
-                tbodyHTML += tr.outerHTML;
-                function createContextualRow() {
-                    var tr = document.createElement('tr');
-                    tr.classList.add('contextual');
-                    tr.setAttribute('id', 'eureka_contextual__' + safeFileName);
-                    var td = document.createElement('td');
-                    td.setAttribute('colspan', '4');
-                    function createFlexibleNav() {
-                        var nav = document.createElement('nav');
-                        nav.classList.add('flexible_row');
-                        nav.classList.add('contextual__nav');
-                        function createExpandBtn() {
-                            var a = document.createElement('a');
-                            a.classList.add('expand');
-                            a.setAttribute('href', src);
-                            a.setAttribute('title', 'Expand ' + filename);
-                            a.setAttribute('target', '_blank');
-                            a.setAttribute('tabindex', '0');
-                            var fa = document.createElement('i');
-                            fa.classList.add('fa');
-                            fa.classList.add('icon');
-                            fa.classList.add('fa-expand');
-                            fa.classList.add('icon-expand');
-                            a.appendChild(fa);
-                            a.innerHTML += ' Expand';
-                            return a;
-                        }
-                        function createChooseBtn() {
-                            var a = document.createElement('a');
-                            a.classList.add('choose');
-                            a.setAttribute('title', 'Choose ' + filename);
-                            a.setAttribute('target', '_blank');
-                            a.setAttribute('tabindex', '0');
-                            var fa = document.createElement('i');
-                            fa.classList.add('fa');
-                            fa.classList.add('icon');
-                            fa.classList.add('fa-check-circle-o');
-                            fa.classList.add('icon-check-circle-o');
-                            a.appendChild(fa);
-                            a.innerHTML += ' Choose';
-                            return a;
-                        }
-                        function createRenameBtn() {
-                            var a = document.createElement('a');
-                            a.classList.add('rename');
-                            a.setAttribute('title', 'Rename ' + filename);
-                            a.setAttribute('target', '_blank');
-                            a.setAttribute('tabindex', '0');
-                            var fa = document.createElement('i');
-                            fa.classList.add('fa');
-                            fa.classList.add('icon');
-                            fa.classList.add('fa-edit');
-                            fa.classList.add('icon-edit');
-                            a.appendChild(fa);
-                            a.innerHTML += ' Rename';
-                            return a;
-                        }
-                        function createTrashBtn() {
-                            var a = document.createElement('a');
-                            a.classList.add('dangerous');
-                            a.classList.add('trash');
-                            a.setAttribute('title', 'Delete ' + filename);
-                            a.setAttribute('target', '_blank');
-                            a.setAttribute('tabindex', '0');
-                            var fa = document.createElement('i');
-                            fa.classList.add('fa');
-                            fa.classList.add('icon');
-                            fa.classList.add('fa-trash');
-                            fa.classList.add('icon-trash');
-                            a.appendChild(fa);
-                            a.innerHTML += ' Delete';
-                            return a;
-                        }
-                        nav.appendChild(createExpandBtn());
-                        nav.appendChild(createChooseBtn());
-                        if (that.getController().getModel().getAllowRename() && document.execCommand)
-                            nav.appendChild(createRenameBtn());
-                        if (that.getController().getModel().getAllowDelete())
-                            nav.appendChild(createTrashBtn());
-                        function createFlexibleNavTagForm() {
-                            var form = document.createElement('form');
-                            form.classList.add('tag');
-                            form.setAttribute('method', 'post');
-                            form.setAttribute('action', '#');
-                            var label = document.createElement('label');
-                            label.setAttribute('title', 'Tagging this media item will make it easier to find');
-                            var fa = document.createElement('i');
-                            fa.classList.add('fa');
-                            fa.classList.add('icon');
-                            fa.classList.add('fa-tag');
-                            fa.classList.add('icon-tag');
-                            label.appendChild(fa);
-                            label.innerHTML += ' Tag:';
-                            var input = document.createElement('input');
-                            input.setAttribute('type', 'text');
-                            input.setAttribute('placeholder', 'Tag this media item');
-                            input.setAttribute('tabindex', '-1');
-                            form.appendChild(label);
-                            form.appendChild(input);
-                            return form;
-                        }
-                        function createFlexibleNavShareForm() {
-                            var form = document.createElement('form');
-                            form.classList.add('share');
-                            form.setAttribute('action', '#');
-                            form.setAttribute('title', "Share " + filename + " with other");
-                            form.appendChild(createMediaSourceInput());
-                            form.appendChild(createMediaItemInput());
-                            var button = document.createElement('button');
-                            button.classList.add('nued');
-                            button.setAttribute('type', 'submit');
-                            button.setAttribute('tabindex', '0');
-                            var fa = document.createElement('i');
-                            fa.classList.add('fa');
-                            fa.classList.add('icon');
-                            fa.classList.add('fa-share-square-o');
-                            fa.classList.add('icon-share-square-o');
-                            button.appendChild(fa);
-                            button.innerHTML += ' Share';
-                            form.appendChild(button);
-                            function createMediaSourceInput() {
-                                var input = document.createElement('input');
-                                input.setAttribute('type', 'hidden');
-                                input.setAttribute('name', 'mediasource');
-                                input.setAttribute('value', '0');
-                                return input;
+        console.log(results.length);
+        if (results.length) {
+            that.getElement().classList.remove('nothing-found');
+            for (var i = 0; i < results.length; i++) {
+                var result = results[i];
+                if (result.filename) {
+                    var filename = result.filename;
+                    var safeFileName = filename.replace(/[!\"#$%&'\(\)\*\+,\.\/:;<=>\?\@\[\\\]\^`\{\|\}~]/g, '');
+                    var src = result.src;
+                    var thumb = result.thumb;
+                    var filesize = result.filesize;
+                    var dimensions = result.dimensions;
+                    var editedon = (parseInt(result.editedon)) > 0 ? parseInt(result.editedon) : null;
+                    var tr = document.createElement("tr");
+                    tr.classList.add('eureka__row');
+                    tr.setAttribute('tabindex', "0");
+                    tr.setAttribute('data-tokens', '');
+                    tr.setAttribute('data-filename', filename);
+                    tr.setAttribute('data-safe-filename', safeFileName);
+                    tr.setAttribute('data-src', src);
+                    if (thumb)
+                        tr.setAttribute('data-thumb', thumb);
+                    tr.setAttribute('data-dimensions-w', dimensions.split('x')[0]);
+                    tr.setAttribute('data-dimensions-h', dimensions.split('x')[1]);
+                    tr.setAttribute('data-filesize-bytes', filesize);
+                    tr.setAttribute('data-timestamp', (editedon) ? editedon.toString() : '0');
+                    var td = document.createElement("td");
+                    td.setAttribute('contenteditable', 'false');
+                    td.classList.add('eureka__row-image');
+                    var imgD = document.createElement('div');
+                    imgD.classList.add('image');
+                    var img = document.createElement('img');
+                    img.setAttribute('id', safeFileName + '__thumb');
+                    function addErrorListener(img, result, safeFileName) {
+                        img.addEventListener('error', function () {
+                            var a = result.filename.split('.');
+                            var icon = 'file-o';
+                            switch (a[a.length - 1].toLowerCase()) {
+                                case 'css':
+                                    icon = 'css3';
+                                    break;
+                                case 'csv':
+                                    icon = 'file-excel-o';
+                                    break;
+                                case 'xls':
+                                    icon = 'file-excel-o';
+                                    break;
+                                case 'numbers':
+                                    icon = 'file-excel-o';
+                                    break;
+                                case 'css':
+                                    icon = 'file-excel-o';
+                                    break;
+                                case 'mp3':
+                                    icon = 'file-sound-o';
+                                    break;
+                                case 'wav':
+                                    icon = 'file-sound-o';
+                                    break;
+                                case 'wma':
+                                    icon = 'file-sound-o';
+                                    break;
+                                case 'aac':
+                                    icon = 'file-sound-o';
+                                    break;
+                                case 'flac':
+                                    icon = 'file-sound-o';
+                                    break;
+                                case 'ppt':
+                                    icon = 'file-powerpoint-o';
+                                    break;
+                                case 'pot':
+                                    icon = 'file-powerpoint-o';
+                                    break;
+                                case 'pps':
+                                    icon = 'file-powerpoint-o';
+                                    break;
+                                case 'zip':
+                                    icon = 'file-zip-o';
+                                    break;
+                                case 'gzip':
+                                    icon = 'file-zip-o';
+                                    break;
+                                case 'tar':
+                                    icon = 'file-zip-o';
+                                    break;
+                                case 'mp4':
+                                    icon = 'file-movie-o';
+                                    break;
+                                case 'ogv':
+                                    icon = 'file-movie-o';
+                                    break;
+                                case 'm4v':
+                                    icon = 'file-movie-o';
+                                    break;
+                                case 'avi':
+                                    icon = 'file-movie-o';
+                                    break;
+                                case 'jpg':
+                                case 'jpeg':
+                                case 'gif':
+                                case 'tiff':
+                                case 'png':
+                                case 'bpg':
+                                case 'img':
+                                case 'webp':
+                                    icon = 'file-picture-o';
+                                    break;
+                                case 'php':
+                                case 'html':
+                                case 'htm':
+                                case 'md':
+                                    icon = 'file-code-o';
+                                    break;
+                                case 'js':
+                                    icon = 'file-text-o';
+                                    break;
+                                default:
+                                    icon = 'file-o';
+                                    break;
                             }
-                            function createMediaItemInput() {
-                                var input = document.createElement('input');
-                                input.setAttribute('type', 'hidden');
-                                input.setAttribute('name', 'mediaitem');
-                                input.setAttribute('value', filename);
-                                return input;
+                            var div = (function () {
+                                var div = document.createElement('div');
+                                div.classList.add('icon-wrapper');
+                                div.classList.add('img');
+                                var i = document.createElement('i');
+                                i.classList.add('fa');
+                                i.classList.add('icon');
+                                i.classList.add('fa-' + icon);
+                                i.classList.add('icon-' + icon);
+                                div.appendChild(i);
+                                return div;
+                            })();
+                            try {
+                                document.getElementById(safeFileName + '__thumb').outerHTML = div.outerHTML;
                             }
-                            return form;
-                        }
-                        return nav;
+                            catch (e) { }
+                        });
                     }
-                    td.appendChild(createFlexibleNav());
+                    addErrorListener(img, result, safeFileName);
+                    imgD.appendChild(img);
+                    img.setAttribute('src', (thumb) ? thumb : src);
+                    var code = document.createElement('code');
+                    code.setAttribute('contenteditable', 'true');
+                    code.setAttribute('tabindex', '-1');
+                    code.setAttribute('sorta-draggable', 'true');
+                    code.innerHTML = filename;
+                    td.appendChild(imgD);
+                    td.appendChild(code);
+                    function createCode(html) {
+                        var tag = document.createElement('code');
+                        tag.innerHTML = html;
+                        return tag;
+                    }
+                    var tdDimensionCell = document.createElement('td');
+                    tdDimensionCell.classList.add('eureka__row-dimensions');
+                    tdDimensionCell.appendChild(createCode(dimensions || "n/a"));
+                    var tdFilesizeCell = document.createElement('td');
+                    tdFilesizeCell.classList.add('eureka__row-filesize');
+                    if (parseInt(filesize)) {
+                        tdFilesizeCell.appendChild(createCode(that.formatFileSize(filesize)));
+                    }
+                    else {
+                        tdFilesizeCell.appendChild(createCode('n/a'));
+                    }
+                    var tdEditedOnCell = document.createElement('td');
+                    tdEditedOnCell.classList.add('eureka__row-editedon');
+                    if (editedon) {
+                        tdEditedOnCell.appendChild(createCode((new Date(editedon * 1000)).toLocaleDateString(model.getLocale(), {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric'
+                        })));
+                    }
+                    else {
+                        tdEditedOnCell.appendChild(createCode('n/a'));
+                    }
                     tr.appendChild(td);
-                    return tr;
+                    if (that.getController().getModel().getShowDimensionsColumn())
+                        tr.appendChild(tdDimensionCell);
+                    tr.appendChild(tdFilesizeCell);
+                    tr.appendChild(tdEditedOnCell);
+                    tbodyHTML += tr.outerHTML;
+                    function createContextualRow() {
+                        var tr = document.createElement('tr');
+                        tr.classList.add('contextual');
+                        tr.setAttribute('id', 'eureka_contextual__' + safeFileName);
+                        var td = document.createElement('td');
+                        td.setAttribute('colspan', '4');
+                        function createFlexibleNav() {
+                            var nav = document.createElement('nav');
+                            nav.classList.add('flexible_row');
+                            nav.classList.add('contextual__nav');
+                            function createExpandBtn() {
+                                var a = document.createElement('a');
+                                a.classList.add('expand');
+                                a.setAttribute('href', src);
+                                a.setAttribute('title', 'Expand ' + filename);
+                                a.setAttribute('target', '_blank');
+                                a.setAttribute('tabindex', '0');
+                                var fa = document.createElement('i');
+                                fa.classList.add('fa');
+                                fa.classList.add('icon');
+                                fa.classList.add('fa-expand');
+                                fa.classList.add('icon-expand');
+                                a.appendChild(fa);
+                                a.innerHTML += ' Expand';
+                                return a;
+                            }
+                            function createChooseBtn() {
+                                var a = document.createElement('a');
+                                a.classList.add('choose');
+                                a.setAttribute('title', 'Choose ' + filename);
+                                a.setAttribute('target', '_blank');
+                                a.setAttribute('tabindex', '0');
+                                var fa = document.createElement('i');
+                                fa.classList.add('fa');
+                                fa.classList.add('icon');
+                                fa.classList.add('fa-check-circle-o');
+                                fa.classList.add('icon-check-circle-o');
+                                a.appendChild(fa);
+                                a.innerHTML += ' Choose';
+                                return a;
+                            }
+                            function createRenameBtn() {
+                                var a = document.createElement('a');
+                                a.classList.add('rename');
+                                a.setAttribute('title', 'Rename ' + filename);
+                                a.setAttribute('target', '_blank');
+                                a.setAttribute('tabindex', '0');
+                                var fa = document.createElement('i');
+                                fa.classList.add('fa');
+                                fa.classList.add('icon');
+                                fa.classList.add('fa-edit');
+                                fa.classList.add('icon-edit');
+                                a.appendChild(fa);
+                                a.innerHTML += ' Rename';
+                                return a;
+                            }
+                            function createTrashBtn() {
+                                var a = document.createElement('a');
+                                a.classList.add('dangerous');
+                                a.classList.add('trash');
+                                a.setAttribute('title', 'Delete ' + filename);
+                                a.setAttribute('target', '_blank');
+                                a.setAttribute('tabindex', '0');
+                                var fa = document.createElement('i');
+                                fa.classList.add('fa');
+                                fa.classList.add('icon');
+                                fa.classList.add('fa-trash');
+                                fa.classList.add('icon-trash');
+                                a.appendChild(fa);
+                                a.innerHTML += ' Delete';
+                                return a;
+                            }
+                            nav.appendChild(createExpandBtn());
+                            nav.appendChild(createChooseBtn());
+                            if (that.getController().getModel().getAllowRename() && document.execCommand)
+                                nav.appendChild(createRenameBtn());
+                            if (that.getController().getModel().getAllowDelete())
+                                nav.appendChild(createTrashBtn());
+                            function createFlexibleNavTagForm() {
+                                var form = document.createElement('form');
+                                form.classList.add('tag');
+                                form.setAttribute('method', 'post');
+                                form.setAttribute('action', '#');
+                                var label = document.createElement('label');
+                                label.setAttribute('title', 'Tagging this media item will make it easier to find');
+                                var fa = document.createElement('i');
+                                fa.classList.add('fa');
+                                fa.classList.add('icon');
+                                fa.classList.add('fa-tag');
+                                fa.classList.add('icon-tag');
+                                label.appendChild(fa);
+                                label.innerHTML += ' Tag:';
+                                var input = document.createElement('input');
+                                input.setAttribute('type', 'text');
+                                input.setAttribute('placeholder', 'Tag this media item');
+                                input.setAttribute('tabindex', '-1');
+                                form.appendChild(label);
+                                form.appendChild(input);
+                                return form;
+                            }
+                            function createFlexibleNavShareForm() {
+                                var form = document.createElement('form');
+                                form.classList.add('share');
+                                form.setAttribute('action', '#');
+                                form.setAttribute('title', "Share " + filename + " with other");
+                                form.appendChild(createMediaSourceInput());
+                                form.appendChild(createMediaItemInput());
+                                var button = document.createElement('button');
+                                button.classList.add('nued');
+                                button.setAttribute('type', 'submit');
+                                button.setAttribute('tabindex', '0');
+                                var fa = document.createElement('i');
+                                fa.classList.add('fa');
+                                fa.classList.add('icon');
+                                fa.classList.add('fa-share-square-o');
+                                fa.classList.add('icon-share-square-o');
+                                button.appendChild(fa);
+                                button.innerHTML += ' Share';
+                                form.appendChild(button);
+                                function createMediaSourceInput() {
+                                    var input = document.createElement('input');
+                                    input.setAttribute('type', 'hidden');
+                                    input.setAttribute('name', 'mediasource');
+                                    input.setAttribute('value', '0');
+                                    return input;
+                                }
+                                function createMediaItemInput() {
+                                    var input = document.createElement('input');
+                                    input.setAttribute('type', 'hidden');
+                                    input.setAttribute('name', 'mediaitem');
+                                    input.setAttribute('value', filename);
+                                    return input;
+                                }
+                                return form;
+                            }
+                            return nav;
+                        }
+                        td.appendChild(createFlexibleNav());
+                        tr.appendChild(td);
+                        return tr;
+                    }
+                    tbodyHTML += createContextualRow().outerHTML;
                 }
-                tbodyHTML += createContextualRow().outerHTML;
+                else {
+                    directoriesToAdd.push({ cd: cd, directory: result.directory });
+                }
             }
-            else {
-                directoriesToAdd.push({ cd: cd, directory: result.directory });
-            }
+            (function () {
+                for (var i = 0; i < directoriesToAdd.length; i++) {
+                    var d = (directoriesToAdd[i]);
+                    that.asyncronouslyAddDirectory(d.cd, d.directory);
+                }
+                if (directoriesToAdd.length) {
+                    that.assignTreeListeners();
+                }
+            })();
         }
-        (function () {
-            for (var i = 0; i < directoriesToAdd.length; i++) {
-                var d = (directoriesToAdd[i]);
-                that.asyncronouslyAddDirectory(d.cd, d.directory);
-            }
-            if (directoriesToAdd.length) {
-                that.assignTreeListeners();
-            }
-        })();
+        else {
+            that.getElement().classList.add('nothing-found');
+        }
         var thead = (document.querySelector('#' + this.getController().getModel().getUID() + ' .eureka-table > table > thead'));
         document.querySelector('#' + this.getController().getModel().getUID() + ' .eureka-table').innerHTML = '<table>' + thead.outerHTML + '<tbody>' + tbodyHTML + '</tbody>' + '</table>';
         try {
@@ -3052,7 +3081,27 @@ var MuckBoot;
             }
             browserStage.appendChild(createEurekaTopBar());
             browserStage.appendChild(createEurekaTable());
+            browserStage.appendChild(createEurekaTableUhOh());
             return browserStage;
+        }
+        function createEurekaTableUhOh() {
+            var div = document.createElement('div');
+            div.classList.add('eureka-table');
+            div.classList.add('oh-no');
+            var h3 = document.createElement('h3');
+            var i = document.createElement('i');
+            i.classList.add('fa');
+            i.classList.add('fa-exclamation-triangle');
+            i.classList.add('icon');
+            i.classList.add('icon-exclamation-triangle');
+            var code = document.createElement('code');
+            var p = document.createElement('p');
+            p.innerHTML = 'Oh no! Nothing was found in <span class="this-directory">this&nbsp;directory</span>.<span class="upload-perhaps"><br>Perhaps you\'d like to <a href="javascript:;">upload some&nbsp;files</a>?</span>';
+            h3.appendChild(i);
+            h3.appendChild(code);
+            h3.appendChild(p);
+            div.appendChild(h3);
+            return div;
         }
         function createChooseFooter(opts) {
             var footer = d.createElement('footer');
