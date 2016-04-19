@@ -1,4 +1,9 @@
 /* do not touch this file. see _build/*.js */
+/*
+Copyright (c) 2014, Lawrence Davis
+All rights reserved.
+https://github.com/lazd/scopedQuerySelectorShim
+*/
 (function() {
   if (!HTMLElement.prototype.querySelectorAll) {
     throw new Error('rootedQuerySelectorAll: This polyfill can only be used with browsers that support querySelectorAll');
@@ -38,7 +43,7 @@
             gaveContainer = true;
           }
 
-          var parentNode = this.parentNode;
+          parentNode = this.parentNode;
 
           if (!this.id) {
             // Give temporary ID
@@ -72,8 +77,7 @@
     overrideNodeMethod(HTMLElement.prototype, 'querySelector');
     overrideNodeMethod(HTMLElement.prototype, 'querySelectorAll');
   }
-}());
-/*jslint unparam: true, browser: true, devel: true */
+}());/*jslint unparam: true, browser: true, devel: true */
 var html5Upload = (function(){
     'use strict';
 
@@ -646,7 +650,6 @@ var EurekaModel = (function () {
         if (opts.touch === true)
             this._touch = true;
         this._webWorkersPath = (opts.webWorkersPath !== undefined) ? opts.webWorkersPath : _EUREKA.src.substring(0, _EUREKA.src.lastIndexOf('/')) + '/workers/';
-        console.log('mediaSource', this._mediaSource);
         if (this._useLocalStorage) {
             if (this.getLocalStorage('currentMediaSource') && !opts.mediaSource)
                 this._mediaSource = this.getLocalStorage('currentMediaSource');
@@ -657,7 +660,6 @@ var EurekaModel = (function () {
             if (this.getLocalStorage('currentView') && !opts.currentView)
                 this._currentView = this.getLocalStorage('currentView');
         }
-        console.log('mediaSource', this._mediaSource);
     }
     Object.defineProperty(EurekaModel, "EurekaFoundIt", {
         get: function () { return "EurekaFoundIt"; },
@@ -898,7 +900,6 @@ var EurekaModel = (function () {
             currentDirectory: currentDirectory,
             currentMediaSource: this.getMediaSourceDTOByID(this._mediaSource)
         });
-        console.log('dispatching EurekaDirectoryChanged event', e);
         this.getController().getView().getElement().dispatchEvent(e);
     };
     EurekaModel.prototype.getCurrentDirectory = function () {
@@ -1745,14 +1746,12 @@ var EurekaView = (function () {
                     that.runPrefixMethod(document, "CancelFullScreen");
                     fullscreenBtn.querySelector('i').classList.remove('fa-compress');
                     fullscreenBtn.querySelector('i').classList.remove('icon-compress');
-                    console.log(fullscreenBtn.querySelector('i'));
                 }
                 else {
                     //setCurrent(this);
                     that.requestFullScreen();
                     fullscreenBtn.querySelector('i').classList.add('fa-compress');
                     fullscreenBtn.querySelector('i').classList.add('icon-compress');
-                    console.log(fullscreenBtn.querySelector('i'));
                 }
             });
     };
@@ -2137,7 +2136,6 @@ var EurekaView = (function () {
         var that = this;
         if (that.getController().getModel().getDebug())
             console.log('paintTree', data);
-        console.log('paintTree', data);
         var tree = (that.getElement().querySelector('nav.tree'));
         var results = data.results;
         function printTreeNavResults(results, ul) {
@@ -2669,7 +2667,6 @@ var EurekaView = (function () {
             recursivelyAddChildrenToDir(dir, top.querySelectorAll(':scope > ul > li'));
             data.results.push(dir);
         }
-        console.log(JSON.stringify(data));
         return data;
         function recursivelyAddChildrenToDir(dir, lis) {
             for (var i = 0; i < lis.length; i++) {
@@ -2846,10 +2843,8 @@ var EurekaView = (function () {
     };
     EurekaView.prototype.updateMediaSourceListings = function (data) {
         var that = this;
-        if (that.getController().getModel().getDebug()) {
-            console.log('updateMediaSourceListings: ');
-            console.log(data);
-        }
+        if (that.getController().getModel().getDebug())
+            console.log('updateMediaSourceListings: ', data);
         var id = data.cs;
         var source = this.getController().getModel().getMediaSourceDTOByID(id);
         function updateTreeSelect() {
@@ -2987,9 +2982,15 @@ var EurekaController = (function () {
         var eureka = that.getView().getElement(); // we found it!
         if (that.getModel().getDebug())
             console.log('init');
+        that.getView().getElement().addEventListener(EurekaModel.EurekaTreePainted, function (e) {
+            if (that.getModel().getDebug())
+                console.log('EurekaTreePainted!!!', e);
+            var d = e.detail.data;
+            if (that.getModel().useLocalStorage())
+                that.getModel().setLocalStorage(d.cs.toString() + '_mediaSourceData', JSON.stringify(d));
+        });
         if (that.getModel().useLocalStorage()) {
             (function () {
-                //return;
                 var mediaSourcesData = that.getModel().getLocalStorage('mediaSourcesData');
                 if (that.getModel().getDebug())
                     console.log('using local storage setMediaSourcesData', 'mediaSourcesData: ', mediaSourcesData);
@@ -2998,17 +2999,14 @@ var EurekaController = (function () {
                 }
             })();
             (function () {
-                //return;
                 var mediaSourceData = that.getModel().getLocalStorage(that.getModel().getCurrentMediaSource() + '_mediaSourceData');
                 if (that.getModel().getDebug())
                     console.log('using local storage paintTree', 'mediaSourceData: ', mediaSourceData);
                 if (mediaSourceData) {
-                    console.log('using local storage to paintTree');
                     that.getView().paintTree(JSON.parse(mediaSourceData));
                 }
             })();
             (function () {
-                //return;
                 var directoryData = that.getModel().getLocalStorage('lastDirectoryPainted');
                 if (that.getModel().getDebug())
                     console.log('using local storage paintJSON', 'directoryData: ', directoryData);
@@ -3020,19 +3018,14 @@ var EurekaController = (function () {
                 }
             })();
         }
-        else {
-            console.log('force nothing found');
-        }
         // listen for when certain things happen (currently the DOM element itself dispatches the events)
         eureka.addEventListener(EurekaModel.EurekaViewChange, function (e) {
             //that.getModel().setCurrentView(e.currentView, false);
         });
-        console.log('adding eureka directory changed listener that calls paintJSON');
         eureka.addEventListener(EurekaModel.EurekaDirectoryChanged, function (e) {
             if (that.getModel().getDebug())
                 console.log(EurekaModel.EurekaDirectoryChanged);
             function handleJSONData(d) {
-                console.log('handling json data');
                 if (that.getModel().useLocalStorage())
                     that.getModel().setLocalStorage('lastDirectoryPainted', JSON.stringify(d));
                 if (that.getModel().getDebug())
@@ -3098,19 +3091,9 @@ var EurekaController = (function () {
                 }, true, that.getModel().getXHRHeaders());
             }
         });
-        that.getView().getElement().addEventListener(EurekaModel.EurekaTreePainted, function (e) {
-            console.log('EurekaTreePainted!!!', e);
-            var d = e.detail.data;
-            console.log(JSON.stringify(d));
-            //{"cs":1,"title":"Filesystem","results":[{"path":"assets"},{"path":"connect"},{"path":"manage"}]}
-            //{"cs":"1","title":"Filesystem","results":[{"path":"assets/","children":[{"path":"assets/components/","children":[]},{"path":"assets/uploads/","children":[{"path":"assets/uploads/farm_animals/","children":[]},{"path":"assets/uploads/livestock/","children":[]},{"path":"assets/uploads/mckinleyville/","children":[]},{"path":"assets/uploads/standoo/","children":[]},{"path":"assets/uploads/trinidad/","children":[]}]}]},{"path":"connect/","children":[]},{"path":"manage/","children":[]}]}
-            if (that.getModel().useLocalStorage())
-                that.getModel().setLocalStorage(d.cs.toString() + '_mediaSourceData', JSON.stringify(d));
-        });
         eureka.addEventListener(EurekaModel.EurekaMediaSourceChange, function (e) {
             if (that.getModel().getDebug())
                 console.log(EurekaModel.EurekaMediaSourceChange);
-            console.log(e);
             function handleJSONData(d) {
                 if (that.getModel().getDebug())
                     console.log('handleJSONData: ', d, e);
@@ -3153,7 +3136,6 @@ var EurekaController = (function () {
         eureka.addEventListener(EurekaModel.EurekaMediaSourcesListChange, function (e) {
             if (that.getModel().getDebug())
                 console.log('MediaSourcesListChange: ');
-            console.log(e);
             var sources = e.detail.sources;
             for (var i = 0; i < sources.length; i++) {
                 var source = new EurekaMediaSource(sources[i].opts);

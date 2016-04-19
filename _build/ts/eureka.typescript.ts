@@ -176,14 +176,12 @@ class EurekaModel {
 
         this._webWorkersPath = (opts.webWorkersPath !== undefined) ? opts.webWorkersPath : _EUREKA.src.substring(0,_EUREKA.src.lastIndexOf('/')) + '/workers/';
 
-        console.log('mediaSource', this._mediaSource);
         if(this._useLocalStorage) {
             if(this.getLocalStorage('currentMediaSource') && !opts.mediaSource) this._mediaSource = this.getLocalStorage('currentMediaSource');
             if(this.getLocalStorage('navTreeHidden') && !opts.navTreeHidden) this._navTreeHidden = (this.getLocalStorage('navTreeHidden') == 'true' ? true : false);
             if(this.getLocalStorage('currentDirectory') && !opts.currentDirectory) this._currentDirectory = this.getLocalStorage('currentDirectory');
             if(this.getLocalStorage('currentView') && !opts.currentView) this._currentView = this.getLocalStorage('currentView');
         }
-        console.log('mediaSource', this._mediaSource);
     }
 
     getUseWebWorkers() {
@@ -357,7 +355,6 @@ class EurekaModel {
             currentDirectory:currentDirectory,
             currentMediaSource:this.getMediaSourceDTOByID(this._mediaSource)
         });
-        console.log('dispatching EurekaDirectoryChanged event',e);
         this.getController().getView().getElement().dispatchEvent(e);
     }
     getCurrentDirectory() {
@@ -1272,14 +1269,12 @@ class EurekaView {
             that.runPrefixMethod(document, "CancelFullScreen");
             fullscreenBtn.querySelector('i').classList.remove('fa-compress');
             fullscreenBtn.querySelector('i').classList.remove('icon-compress');
-            console.log(fullscreenBtn.querySelector('i'));
           }
           else {
             //setCurrent(this);
             that.requestFullScreen();
             fullscreenBtn.querySelector('i').classList.add('fa-compress');
             fullscreenBtn.querySelector('i').classList.add('icon-compress');
-            console.log(fullscreenBtn.querySelector('i'));
           }
         });
     }
@@ -1677,7 +1672,6 @@ class EurekaView {
     paintTree(data) {
         var that = this;
         if(that.getController().getModel().getDebug()) console.log('paintTree',data);
-        console.log('paintTree',data);
         var tree : HTMLElement = <HTMLElement>(that.getElement().querySelector('nav.tree'));
         var results = data.results;
         function printTreeNavResults(results, ul) {
@@ -2247,7 +2241,6 @@ class EurekaView {
 
       }
 
-      console.log(JSON.stringify(data));
       return data;
 
       function recursivelyAddChildrenToDir(dir:any,lis:NodeList) {
@@ -2436,10 +2429,7 @@ class EurekaView {
     updateMediaSourceListings(data) {
         var that = this;
 
-        if(that.getController().getModel().getDebug()) {
-            console.log('updateMediaSourceListings: ');
-            console.log(data);
-        }
+        if(that.getController().getModel().getDebug()) console.log('updateMediaSourceListings: ', data);
 
         var id = data.cs;
         var source = this.getController().getModel().getMediaSourceDTOByID(id);
@@ -2591,9 +2581,14 @@ class EurekaController {
 
         if(that.getModel().getDebug()) console.log('init');
 
+        that.getView().getElement().addEventListener(EurekaModel.EurekaTreePainted, function(e:any){
+          if(that.getModel().getDebug()) console.log('EurekaTreePainted!!!',e);
+          var d = e.detail.data;
+          if(that.getModel().useLocalStorage()) that.getModel().setLocalStorage(d.cs.toString() + '_mediaSourceData',JSON.stringify(d));
+        });
+
         if(that.getModel().useLocalStorage()) {
             (function(){
-                //return;
                 var mediaSourcesData = that.getModel().getLocalStorage('mediaSourcesData');
                 if(that.getModel().getDebug()) console.log('using local storage setMediaSourcesData', 'mediaSourcesData: ', mediaSourcesData);
                 if(mediaSourcesData) {
@@ -2602,17 +2597,14 @@ class EurekaController {
             })();
 
             (function(){
-                //return;
                 var mediaSourceData = that.getModel().getLocalStorage(that.getModel().getCurrentMediaSource() + '_mediaSourceData');
                 if(that.getModel().getDebug()) console.log('using local storage paintTree', 'mediaSourceData: ', mediaSourceData);
                 if(mediaSourceData) {
-                    console.log('using local storage to paintTree');
                     that.getView().paintTree(JSON.parse(mediaSourceData));
                 }
             })();
 
             (function(){
-                //return;
                 var directoryData:string = that.getModel().getLocalStorage('lastDirectoryPainted');
                 if(that.getModel().getDebug()) console.log('using local storage paintJSON', 'directoryData: ', directoryData);
                 if(directoryData) {
@@ -2622,21 +2614,15 @@ class EurekaController {
                     that.getView().recursivelyOpenTreeToCurrentDirectory();
                 }
             })();
-        } else {
-          console.log('force nothing found');
-          //that.getView().getElement().classList.add('nothing-found');
-          //that.getModel().setCurrentDirectory(that.getModel().getCurrentDirectory(),true,false,true);
         }
 
         // listen for when certain things happen (currently the DOM element itself dispatches the events)
         eureka.addEventListener(EurekaModel.EurekaViewChange, function (e:any) { // #janky
             //that.getModel().setCurrentView(e.currentView, false);
         });
-        console.log('adding eureka directory changed listener that calls paintJSON');
         eureka.addEventListener(EurekaModel.EurekaDirectoryChanged, function (e:any) {
             if(that.getModel().getDebug()) console.log(EurekaModel.EurekaDirectoryChanged);
             function handleJSONData(d) {
-                console.log('handling json data');
                 if(that.getModel().useLocalStorage()) that.getModel().setLocalStorage('lastDirectoryPainted',JSON.stringify(d));
                 if(that.getModel().getDebug()) console.log(d);
                 that.getView().paintJSON(d);
@@ -2710,17 +2696,8 @@ class EurekaController {
                 );
             }
         });
-        that.getView().getElement().addEventListener(EurekaModel.EurekaTreePainted, function(e:any){
-          console.log('EurekaTreePainted!!!',e);
-          var d = e.detail.data;
-          console.log(JSON.stringify(d));
-          //{"cs":1,"title":"Filesystem","results":[{"path":"assets"},{"path":"connect"},{"path":"manage"}]}
-          //{"cs":"1","title":"Filesystem","results":[{"path":"assets/","children":[{"path":"assets/components/","children":[]},{"path":"assets/uploads/","children":[{"path":"assets/uploads/farm_animals/","children":[]},{"path":"assets/uploads/livestock/","children":[]},{"path":"assets/uploads/mckinleyville/","children":[]},{"path":"assets/uploads/standoo/","children":[]},{"path":"assets/uploads/trinidad/","children":[]}]}]},{"path":"connect/","children":[]},{"path":"manage/","children":[]}]}
-          if(that.getModel().useLocalStorage()) that.getModel().setLocalStorage(d.cs.toString() + '_mediaSourceData',JSON.stringify(d));
-        });
         eureka.addEventListener(EurekaModel.EurekaMediaSourceChange, function (e:any) {
             if(that.getModel().getDebug()) console.log(EurekaModel.EurekaMediaSourceChange);
-            console.log(e);
             function handleJSONData(d) {
                 if(that.getModel().getDebug()) console.log('handleJSONData: ',d, e);
                 if(d.cs && that.getModel().useLocalStorage()) that.getModel().setLocalStorage(d.cs + '_mediaSourceData',JSON.stringify(d));
@@ -2763,7 +2740,6 @@ class EurekaController {
         });
         eureka.addEventListener(EurekaModel.EurekaMediaSourcesListChange, function (e:any) {
             if(that.getModel().getDebug()) console.log('MediaSourcesListChange: ');
-            console.log(e);
             var sources = e.detail.sources;
             for (var i = 0; i < sources.length; i++) {
                 var source = new EurekaMediaSource(sources[i].opts);
