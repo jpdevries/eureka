@@ -280,6 +280,11 @@ module.exports = function(grunt) {
             flatten:true,
             expand: true
 		},{
+			src: '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>vendor/**/*.js',
+			dest: '<%= dirs.src %><%= dirs.js %>vendor/',
+            flatten:true,
+            expand: true
+		},{
 			src: '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>*eureka*.css',
 			dest: '<%= dirs.src %><%= dirs.css %>',
 			expand: true,
