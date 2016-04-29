@@ -325,10 +325,13 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
             flex-basis:0;
             max-height:100%;
         }
-        .oh-no:not(.nothing-found .oh-no) {
+        .oh-no {
           display:none;
         }
         &.nothing-found {
+            .stage > .eureka-table.oh-no {
+              display:flex;
+            }
            .stage > .eureka-table:not(.oh-no) {
              display:none;
            }

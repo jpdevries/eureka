@@ -732,7 +732,7 @@
                     currentDirectory:undefined,
                     fileUploadURL:'/file/upload',
                     touch:Modernizr.touch,
-                    debug:false,
+                    debug:true,
                     useLocalStorage:true,
                     sortMediaSources:true,
                     useWebWorkers:true, // whether or not to use a worker thread when making XHR Requests

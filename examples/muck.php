@@ -145,7 +145,8 @@
                     locale:'en-US', // i18n
                     mediaSource:0, // numeric index of current media source (overrides localStorage)
                     currentDirectory:'./', // current directory (overrides localStorage)
-                    debug:false, // will trace debugging info to console.log
+                    debug:true, // will trace debugging info to console.log
+                    useLocalStorage:true,
                     confirmBeforeDelete:true, // when enabled confirms before deleting media sources
                     headers: [{
                         'modAuth': MODx.siteId,

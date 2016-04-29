@@ -534,8 +534,12 @@ html.no-touch, html.no-touch body, html.no-touch body > form {
             -ms-flex-preferred-size: 0;
                 flex-basis: 0;
         max-height: 100%; } }
-    .eureka-wrapper > .eureka .oh-no:not(.nothing-found .oh-no) {
+    .eureka-wrapper > .eureka .oh-no {
       display: none; }
+    .eureka-wrapper > .eureka.nothing-found .stage > .eureka-table.oh-no {
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex; }
     .eureka-wrapper > .eureka.nothing-found .stage > .eureka-table:not(.oh-no) {
       display: none; }
     .eureka-wrapper > .eureka .stage {
