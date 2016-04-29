@@ -3007,6 +3007,7 @@ var EurekaController = (function () {
                     if (that.getModel().getDebug())
                         console.log('using local storage paintTree', 'mediaSourceData: ', mediaSourceData);
                     that.getView().paintTree(JSON.parse(mediaSourceData));
+                    that.getView().recursivelyOpenTreeToCurrentDirectory();
                 }
             })();
             (function () {
