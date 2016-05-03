@@ -355,7 +355,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 
-    grunt.loadNpmTasks("grunt-ts");
+  grunt.loadNpmTasks("grunt-ts");
 
 	grunt.registerTask('default', ['growl:watch', 'watch']);
 	grunt.registerTask('build', ['clean:prebuild', 'bower', 'copy', 'sass:dev','autoprefixer','cssmin','ts','concat','uglify:main', 'growl:sass', 'clean:postbuild','copy:eureka-src','uglify:includes']);

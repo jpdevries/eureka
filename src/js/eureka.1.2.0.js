@@ -3027,8 +3027,10 @@ var EurekaController = (function () {
             //that.getModel().setCurrentView(e.currentView, false);
         });
         eureka.addEventListener(EurekaModel.EurekaDirectoryChanged, function (e) {
+            if (!that.getModel().getCurrentMediaSource())
+                return;
             if (that.getModel().getDebug())
-                console.log(EurekaModel.EurekaDirectoryChanged);
+                console.log(EurekaModel.EurekaDirectoryChanged, ' requesting data from ', that.getModel().getListDirectoryRequestURL());
             function handleJSONData(d) {
                 if (that.getModel().useLocalStorage())
                     that.getModel().setLocalStorage('lastDirectoryPainted', JSON.stringify(d));
