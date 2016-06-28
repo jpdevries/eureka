@@ -1,6 +1,6 @@
 # Eureka
 
-Flexible Media Browser Component. [Try the demo](http://markup.tips/eureka).  
+Flexible Media Browser Component. [Try the demo](http://jpdevries.github.io/eureka/examples/).  
 As seen in [Redactor 2.0](https://www.modmore.com/extras/redactor) by modmore. Contributions&nbsp;welcomed.
 
 > With `eureka.js` your users will be saying "I found it!" in no time.  
