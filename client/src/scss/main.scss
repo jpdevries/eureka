@@ -1,0 +1,334 @@
+@import "bourbon/bourbon";
+@import "neat/neat";
+
+@import "spec/tacular";
+
+$gray:rgb(236,236,236); // MODX gray
+$active:#3697cd; // MODX blue
+$color:#081922; // MODX font color
+$faded:#556C88; // MODX lighter color
+$dangerous:red;
+
+
+
+
+$palettes: ( // http://erskinedesign.com/blog/friendlier-colour-names-sass-maps/
+    faded: (
+        base:   $faded,
+        light:  rgb(51,46,140),
+        dark:   #447996
+    ),
+    gray: (
+        base:  $gray,
+        light: lighten($gray, 10%),
+        dark: darken($gray, 10%)
+    ),
+    heading: (
+        base:  #535d6c,
+        light: #90b1b9,
+        dark: darken(#535d6c, 10%)
+    )
+);
+
+@function palette($palette, $tone: 'base') { // http://erskinedesign.com/blog/friendlier-colour-names-sass-maps/
+    @return map-get(map-get($palettes, $palette), $tone);
+}
+
+%visually-hidden { /*https://developer.yahoo.com/blogs/ydn/clip-hidden-content-better-accessibility-53456.html*/
+    position: absolute !important;
+    clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+    clip: rect(1px, 1px, 1px, 1px);
+    padding:0 !important;
+    border:0 !important;
+    height: 1px !important;
+    width: 1px !important;
+    overflow: hidden;
+    body:hover & {
+      a,input,button {
+        display: none !important;
+      }
+    }
+} 
+
+%flex-bar {
+  display:flex;
+  
+  > * {
+    margin-right:.5em;
+    &:last-of-type {
+      margin-right:0;
+    }
+  }
+}
+
+%balanced {
+  text-align:center;
+}
+
+/* start leave out */
+body {
+  background:$gray;
+  font: normal .8125em/1.375em "Helvetica Neue", Helvetica, Arial, Tahoma, sans-serif;
+  //font-family: "Helvetica Neue", Helvetica, Arial, Tahoma, sans-serif;
+  color:$color;
+}
+/* end leave out */
+
+.visually-hidden {
+  @extend %visually-hidden;
+}
+
+.eureka {
+  padding:0.5rem;
+  background:var(--light-bg, white);
+  a {
+    color:var(--link-color, $active);
+  }
+  
+  h1,h2,h3,h4,h5,h6, thead {
+    color:palette(heading, base);
+  }
+  
+  @mixin button() {
+    background: white;
+    box-shadow: 0 0 0 1px #E4E4E4;
+    color: #555555;
+    border: 0;
+    border-radius: 3px;
+    padding:.5em .5em;
+    &:hover, &:active, &:focus, &:target {
+      background: $active;
+      color: white;
+      svg {
+        fill: white;
+      }
+    }
+  }
+  
+  @mixin primary-button() {
+    background-color: #32AB9A;
+    background-image: linear-gradient(#32AB9A, #00948E);
+    box-shadow: none;
+    color: white;
+    &:hover, &:active, &:focus, &:target {
+      background-color: #2b9385;
+      background-image: linear-gradient(#2b9385, #007571);
+      color: white;
+    }
+  }
+  
+  button {
+    @extend %clickable;
+    @include button();
+    &.eureka__primary {
+      @include primary-button();
+    }
+    &.dangerous {
+      &:hover, &:active, &:focus, &:target {
+        background-color: $dangerous;
+        background-image: linear-gradient($dangerous, darken($dangerous,10%));
+      }
+    }
+  }
+  
+  /* styling of blink/webkit marker */
+  summary::-webkit-details-marker {
+    //color:var(--color, $color);
+  }
+  /* styling of fierfox marker */
+  details > summary:first-of-type  {
+     //color:var(--color, $color);
+  }
+  
+  input[type="text"] {
+    padding-left:0.5rem;
+    padding-right:0.5rem;
+  }
+  
+  input[type="text"], fieldset {
+    border-width:var(--border-width, 1px);
+    border-style:var(--border-style, solid);
+    border-color:var(--border-color, #E4E4E4);
+  }
+  
+  .active {
+    font-weight: bold;
+  }
+
+  details details {
+    padding-left:.5em;
+  }
+
+  menu {
+    display:none;
+  }
+
+  img {
+    max-width:100%;
+  }
+  
+  &.eureka__view-mode__table {
+    
+  }
+  
+  &.eureka__view-mode__thumb {
+    
+  }
+  
+  &.eureka__view-mode__grid {
+    
+  }
+  
+  &.eureka__view-mode__list {
+    
+  }
+  
+
+  
+  .eureka__button-bar {
+    @extend %balanced;
+    @extend %flex-bar;
+    @include media($gtMobile) {
+      
+    }
+  }
+  
+  .eureka__context-buttons {
+    padding:.5rem 0;
+    @include media($gtMobile) {
+      justify-content:space-around;
+    }
+  }
+  
+  .eureka__table {
+    min-width:100%;
+  }
+  
+  .eureka__stage__filter-view {
+    .eureka__search-bar {
+      line-height:2;
+      label {
+        color:$faded;
+        
+      }
+      font-size:1rem;
+      display:flex;
+      margin-bottom:1rem;
+      input {
+        flex:1 0 auto;
+        font-size:inherit;
+      }
+    }
+  }
+  
+  .eureka__media-directory-selector {
+    margin-bottom:1rem;
+  }
+  
+  .eureka__tree-bar {
+    @extend %flex-bar;
+    margin:1rem 0;
+    button {
+      font-size:1rem;
+    }
+  }
+  
+  .eureka__media-source-selector {
+    margin-bottom:1rem;
+    h2,h3 {
+      &:first-child {
+        margin-top:0;
+      }
+    }
+  }
+  
+  .eureka__notice {
+    @extend %balanced;
+  }
+  
+  .eureka__choose-bar {
+    button {
+      font-size:1rem;
+    }
+    @include media($gtMobile) {
+      justify-content:flex-end;
+    }
+  }
+  
+  .eureka__pathbrowser {
+    nav {
+      color:$faded;
+    }
+    details {
+      > summary {
+        svg {
+          transform:translateY(0.2em);
+          margin-right:0.25em;
+        }
+        > .icon-folder-open {
+          display:none;
+        }
+      }
+      &[open] {
+        > summary {
+          > .icon-folder-open {
+            display:inline-block;
+          }
+          > .icon-folder {
+            display:none;
+          }
+        }
+      }
+    }
+  }
+  
+  .eureka__layout-chooser {
+    fieldset {
+      margin:0;
+      padding:.5em 0;
+    }
+    legend {
+      @extend %visually-hidden;
+    }
+    .eureka__icon-radio-btns {
+      display:flex;
+      justify-content: space-around;
+      
+      > div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      input[type="radio"] {
+        @extend %visually-hidden;
+        &:checked {
+          + {
+            label {
+              svg[class^="icon"] {
+                fill:$active;
+              }
+            }
+          }
+        }
+      }
+      label {
+        @extend %clickable;
+        font-size:1.4rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+  }
+  
+  svg {
+    &[class^="icon"] {
+      position:relative;
+      width:1em;
+      height:1em;
+      fill:$faded;
+    }
+  }
+  
+} // end .eureka

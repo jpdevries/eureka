@@ -1,27 +1,27 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# dependencies
 node_modules
 bower_components
 
+# testing
+/coverage
+
+# production
+#/build
+
+# misc
+.DS_Store
+.env
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 .sass-cache
+client/lib
 
-_build/scss/bourbon
-_build/scss/neat
-_build/scss/font-awesome
-_build/scss/html5-boilerplate
-_build/lib
+client/src/scss/bourbon
+client/src/scss/neat
+client/src/scss/spec
 
-*.css.map
+/sources
 
-assets/css/font-awesome*.css
-assets/fonts/
-
-.baseDir.ts
-.baseDir.js
-.baseDir.js.map
-
-.tscache
-
-npm-debug.log
-
-_build/ts/DefinitelyTyped
-
-_build/tscommand-*
