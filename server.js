@@ -1,9 +1,16 @@
 const express = require('express');
 const fs = require('fs');
 const app = express(),
-formidable = require("formidable");
+formidable = require('formidable'),
+path = require('path');
+
+const util = require('util');
 
 app.set('port', (process.env.PORT || 3001));
+
+/*app.use(formidable({
+   multiples: true
+}));*/
 
 app.use('/sources',express.static('sources'));
 
@@ -63,7 +70,7 @@ function getSourceDirectories(path) {
     const files = filterFiles(fs.readdirSync(path)),
     results = [];
     
-    console.log(path, files.length);
+    //console.log(path, files.length);
     
     files.forEach((file) => {
       console.log(file);
@@ -110,7 +117,7 @@ function getDirectoryListing(baseURL = '', path = '', includeFiles = true, inclu
           absolutePath:`${path}${file}`,
           absoluteURL:`http://localhost:${app.get('port')}${path}${file}`.replace(__dirname, ''),
           editedOn:mtime,
-          dimensions:[420,150],
+          dimensions:[Math.round(Math.random()*420),Math.round(Math.random()*180)],
           fileSize:size
         });
       }
@@ -171,16 +178,10 @@ Upload a file
 
 app.post('/core/components/eureka/media/sources/:source', (req, res) => {
   
-  var form = new formidable.IncomingForm();
+  const dir = req.query.dir,
+  uploadDir = path.join(__dirname, path.join('/sources/filesystem/', dir)),
+  form = new formidable.IncomingForm();
   
-  form.parse(req, function (err, fields, files) {
-    console.log(fields);
-    console.log(files);
-  });
-  
-  
-  const dir = req.query.dir;
-
   if (!dir) {
     res.json({
       error: 'Missing required parameter `dir`',
@@ -188,8 +189,27 @@ app.post('/core/components/eureka/media/sources/:source', (req, res) => {
     return;
   }
   
-  // todo: upload the file
-  res.json(true);
+  // specify that we want to allow the user to upload multiple files in a single request
+  form.multiples = true;
+  
+  form.on('file', (field, file) => (
+    fs.renameSync(file.path, path.join(uploadDir, file.name))
+  ));
+  
+  // log any errors that occur
+  form.on('error', function(err) {
+    console.log('An error has occured: \n' + err);
+  });
+  
+  form.on('end', function() { // now that the files have uploaded return JSON of the destination directory's ENTIRE contents (not just what was uploaded)
+    getDirectoryListing(`${__dirname}/sources/filesystem/`,dir, true, true, `${__dirname}/sources/filesystem/`).then((results) => (
+      res.json(results)
+    )).catch((err) => (
+      res.json([])
+    ));  
+  });
+  
+  form.parse(req);
   
 });
 
@@ -199,14 +219,22 @@ Delete a directory
 */
 
 app.delete('/core/components/eureka/media/sources/:source', (req, res) => {
-  const dir = req.query.dir;
-
-  if (!dir) {
+  const absolutePath = req.query.absolutePath;
+  const source = req.params.source;
+  console.log(`delete ${absolutePath} source ${source}`);
+  
+  try {
+    fs.unlinkSync(absolutePath);
+  } catch (e) {
+    res.json(false);
+  } 
+  
+  /*if (!dir) {
     res.json({
       error: 'Missing required parameter `dir`',
     });
     return;
-  }
+  }*/
   
   // todo: delete the directory
   res.json(true);
@@ -236,10 +264,14 @@ app.put('/core/components/eureka/media/sources/:source', (req, res) => {
     // rename directory
   } else {
     // create new directory
+    fs.mkdirSync(path.join(__dirname, path.join('/sources/filesystem/', dir)));
+    res.json(true);
+    return;
+    
   }
   
   // todo: delete the directory
-  res.json(true);
+  res.json(false);
   
 });
 

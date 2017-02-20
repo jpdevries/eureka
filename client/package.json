@@ -5,8 +5,10 @@
   "proxy": "http://localhost:3001/",
   "devDependencies": {
     "autoprefixer": "^6.7.3",
+    "classnames": "^2.2.5",
     "concurrently": "^3.3.0",
     "cssnano": "^3.10.0",
+    "filesize": "^3.5.4",
     "grunt-bower-task": "^0.4.0",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-cssmin": "^2.0.0",
@@ -25,6 +27,7 @@
   "dependencies": {
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
+    "react-dropzone": "^3.10.0",
     "react-redux": "^5.0.2",
     "redux": "^3.6.0"
   },

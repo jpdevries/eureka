@@ -1,0 +1,424 @@
+body {
+  @include media($gtMobile) {
+    display: flex;
+    height: 100vh;
+    max-height: 100vh;
+    overflow-y:hidden;
+    flex-direction: column;
+    > #root {
+      /*display:grid;
+      grid-gap:0;
+      grid-template-columns:20vw auto;
+      grid-template-areas:"header header" "sidebar content" "footer footer";*/
+      display:flex;
+      flex: 1;
+      flex-direction: column;
+      > .eureka {
+        display:flex;
+        flex-direction: column;
+        flex: 1;
+        > .eureka__browse-content {
+          display:flex;
+          flex:1 1 100%;
+          margin-bottom:0.5rem;
+          > .eureka__pathbrowser {
+            flex:0 0 14rem;
+            display:flex;
+            flex-direction:column;
+            flex-shrink:0;
+            flex-grow:0;
+            margin-right:.5rem;
+          }
+          > .eureka__stage {
+            //flex:0 1 auto;
+            flex:1 1 100%;
+            
+            display:flex;
+            flex-direction:column;
+            > .eureka__stage__filter-view {
+              flex-basis:auto;
+              flex-shrink:1;
+              flex-grow:0;
+              flex-direction:row;
+              > header {
+                flex-direction: row;
+                min-width:0;
+                min-height:0;
+                flex-wrap:nowrap;
+                display:flex;
+                margin-bottom:.5rem;
+                > h2 {
+                  margin-bottom:0;
+                  form {
+                    float:right;
+                  }
+                }
+              }
+              
+            }
+            > .eureka__table-wrapper {
+              flex-basis:0;
+              flex-grow:1;
+              height:auto;
+              flex-shrink:0;
+              display:flex;
+              align-items:stretch;
+              justify-content:center;
+              flex-direction:column;
+              padding:0 .5rem .5rem .5rem;
+              > div {
+                flex-basis:0;
+                flex-grow:1;
+                max-height:100%;
+                //padding-top:1rem;
+                height:100%;
+                align-items:stretch;
+                justify-content:center;
+                flex-direction:column;
+                flex-shrink:1;
+                display:flex;
+                max-width:100%;
+                > table {
+                  flex-basis:0;
+                  flex-grow:1;
+                  max-height:100%;
+                  //padding-top:1rem;
+                  height:100%;
+                  align-items:stretch;
+                  justify-content:center;
+                  flex-direction:column;
+                  flex-shrink:1;
+                  display:flex;
+                  max-width:100%;
+                  > thead {
+                    flex-basis:auto;
+                    display:block;
+                    justify-content:flex-end;
+                    flex-shrink:0;
+                    flex-grow:0;
+                    &[hidden] {
+                      display:none;
+                    }
+                    > tr {
+                      display:grid;
+                      
+                      
+                      grid-gap:0;
+                      grid-template-columns:auto auto auto auto auto;
+                      grid-template-areas:"media name dimensions file-size edited-on";
+                      > th {
+                        &:nth-of-type(1) {
+                          grid-area:media;
+                        }
+                        &:nth-of-type(2) {
+                          grid-area:name;
+                        }
+                        &:nth-of-type(3) {
+                          grid-area:dimensions;
+                        }
+                        &:nth-of-type(4) {
+                          grid-area:file-size;
+                        }
+                        &:nth-of-type(5) {
+                          grid-area:edited-on;
+                        }
+                      }
+                    }
+                  }
+                  > tbody {
+                    flex-basis:0;
+                    text-align:center;
+                    display:block;
+                    flex-wrap:no-wrap;
+                    overflow-y:auto;
+                    align-items:stretch;
+                    flex-direction:row;
+                    justify-content:center;
+                    flex-shrink:1;
+                    flex-grow:1;
+                    max-width:100%;
+                    &.empty {
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                      > tr {
+                        text-align:center;
+                        display:block;
+                        td {
+                          margin:0 auto;
+                          display:inline-block;
+                        }
+                      }
+                    }
+                    
+                    > tr:not(.eureka__context-row):not(.empty) {
+                      display:grid;
+                      
+                      grid-gap:0;
+                      grid-template-columns:auto auto auto auto auto;
+                      grid-template-areas:"media name dimensions file-size edited-on";
+                      > td {
+                        &:nth-of-type(1) {
+                          grid-area:media;
+                        }
+                        &:nth-of-type(2) {
+                          grid-area:name;
+                        }
+                        &:nth-of-type(3) {
+                          grid-area:dimensions;
+                        }
+                        &:nth-of-type(4) {
+                          grid-area:file-size;
+                        }
+                        &:nth-of-type(5) {
+                          grid-area:edited-on;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        > .eureka__choose-bar {
+          flex:0 0 auto;
+        }
+      }
+    } // end > #root
+  } // end @include media($gtMobile)
+} // end body
+
+.eureka__media-directory-selector {
+  @include media($gtMobile) {
+    form {
+      display:inline-block;
+    }
+  }
+}
+
+.eureka__tree-toggle {
+  @include media($gtMobile) {
+    display:flex;
+    justify-content: flex-end;
+    > * {
+      &:first-child {
+        margin-right:auto;
+      }
+    }
+    .eureka__upload-form {
+      margin-right:auto;
+    }
+    button {
+      
+    }
+  }
+}
+
+
+
+.eureka__media-source-selector {
+  @include media($gtMobile) {
+    
+  }
+}
+
+.eureka {
+  &.eureka__view-mode__table {
+    .eureka__table {
+      img {
+        max-height:20vh;
+      }
+      thead {
+        th {
+          &:first-child {
+            padding-left:.5rem;
+          }
+          &:last-child {
+            padding-right:.5rem;
+          }
+        }
+      }
+      tr[contextmenu] {
+        td {
+          &:first-child {
+            padding-left:.5rem;
+          }
+          &:last-child {
+            padding-right:.5rem;
+          }
+        }
+      }
+      tr {
+        td,th {
+          text-align:right;
+          &:nth-of-type(1) {
+            text-align:left;
+          }
+        }
+      }
+    }
+    @include media($gtMobile) {
+      
+    }
+    &.eureka__enlarge-focused-rows {
+      .eureka__table {
+        img {
+          max-height:20vh;
+        }
+        tr:focus {
+          img {
+            max-height:30vh;
+          }
+        }
+      }
+    }
+  }
+  
+  &.eureka__view-mode__thumb, &.eureka__view-mode__grid {
+    .eureka__table {
+      thead {
+        //@extend %visually-hidden;
+        display:none !important;
+      }
+      td {
+        &:not(.eureka__td-media) {
+          //@extend %visually-hidden;
+          display:none;
+        }
+        &[colspan] {
+          display:block;
+        }
+      }
+      tbody {
+        display: flex !important;
+        flex-wrap: wrap;
+        justify-content: center;
+        tr[tabindex] {
+          display:inline-block;
+          margin:0 .5rem .5rem 0;
+          flex-basis:42vw;
+          @include media($gtMobile) {
+            flex-basis:16vw;
+          }
+        }
+        tr.eureka__context-row {
+          display:none;
+        }
+      }
+    }
+  }
+  
+  &.eureka__view-mode__grid {
+    .eureka__table {
+      tbody {
+        tr[tabindex] {
+          flex-basis:60vw;
+          @include media($gtMobile) {
+            flex-basis:25vw;
+          }
+        }
+      }  
+    }
+  }
+  
+  .eureka__tree {
+    @include media($gtMobile) {
+      flex-basis:0;
+      flex-grow:1;
+    }
+  }
+  
+  .eureka__context-row {
+    @include media($gtMobile) {
+      width: 100%;
+      display: block;  
+      &[hidden] {
+        display:none !important;
+      }
+      
+      > td[colspan] {
+        display: flex;
+        width: 100%;
+        //grid-area:"media name dimensions file-size edited-on"
+        .eureka__context-buttons {
+          width:100%;
+        }
+      }
+    }
+  }
+  
+  .eureka__tree-bar {
+    @include media($gtMobile) {
+      display:flex;
+      > * {
+        flex:1 0 auto;
+      }
+    }
+  }
+  
+  &.eureka__view-mode__list {
+    .eureka__table {
+      
+      thead {
+        th {
+          &:first-child {
+            @include media($mobile) {
+              display:none;
+            }
+          }
+          &:nth-of-type(2) {
+            @include media($mobile) {
+              text-align:left;
+              padding-left:.5rem;
+            }
+          }
+          &:last-child {
+            padding-right:.5rem;
+          }
+          
+        }
+      }
+      thead,tr[contextmenu] {
+        td,th {
+          text-align:right;
+          &:nth-of-type(1) {
+            text-align:left;
+            @include media($mobile) {
+              display:none;
+            }
+          }
+          &:nth-of-type(2) {
+            @include media($mobile) {
+              text-align:left;
+            }
+          }
+        }
+      }
+      
+      tbody {
+        @include media($mobile) {
+          line-height:2;
+        }
+        .eureka__td-media {
+          img {
+            max-height:10vh;
+          }
+        }
+        tr[contextmenu] {
+          padding-top:0;
+          padding-bottom:0;
+          
+          > td {
+            &:nth-of-type(2) {
+              padding-left:.5rem;
+            }
+            &:last-child {
+              padding-right:.5rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}

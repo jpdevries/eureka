@@ -1,15 +1,37 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-const UploadForm = (props) => {
+import store from '../model/store';
+import actions from '../model/actions';
+
+class UploadForm extends Component {
   
-  return (
-    <div class="eureka__upload-form">
-      <form>
-          <label htmlFor="eureka__upload-form">Upload Files<span class="visually-hidden"> to {props.content.cd}</span>:&ensp;</label>
-          <input id="eureka__upload-form" multiple="multiple" name="uploadFiles" type="file" />
-      </form>
-    </div>
-  );
+  
+  handleSubmit(event) {
+    const props = this.props;
+    
+     event.preventDefault();
+     console.log('handleSubmit!!!', props);
+     const formData = new FormData(event.target);
+     for(var pair of formData.entries()) {
+       console.log(pair[0], pair[1]); 
+    }
+    store.dispatch(actions.uploadFiles(props.source.currentSource, props.content.cd, formData));
+  }
+  
+  render() {
+    const props = this.props;
+    
+    return (
+      <div className="eureka__upload-form">
+        <form onSubmit={this.handleSubmit.bind(this)} encType="multipart/form-data" ref={(form) => { this.form = form; }}>
+            <label htmlFor="eureka__upload-form">Upload Files<span className="visually-hidden"> to {props.content.cd}</span>:&ensp;</label>
+            <input id="eureka__upload-form" multiple="multiple" name="eureka__uploadFiles" type="file" onChange={(e) => {
+                this.form.dispatchEvent(new Event("submit")); // so there is no click button they need to click
+            }} />
+        </form>
+      </div>
+    );
+  }
 }
 
 export default UploadForm;

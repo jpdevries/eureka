@@ -3,6 +3,8 @@
 
 @import "spec/tacular";
 
+@import "layout/layout";
+
 $gray:rgb(236,236,236); // MODX gray
 $active:#3697cd; // MODX blue
 $color:#081922; // MODX font color
@@ -20,13 +22,13 @@ $palettes: ( // http://erskinedesign.com/blog/friendlier-colour-names-sass-maps/
     ),
     gray: (
         base:  $gray,
-        light: lighten($gray, 10%),
-        dark: darken($gray, 10%)
+        light: rgb(221,221,221),
+        dark: rgb(85,85,85)
     ),
     heading: (
         base:  #535d6c,
         light: #90b1b9,
-        dark: darken(#535d6c, 10%)
+        dark: rgb(85,85,85)
     )
 );
 
@@ -54,7 +56,7 @@ $palettes: ( // http://erskinedesign.com/blog/friendlier-colour-names-sass-maps/
   display:flex;
   
   > * {
-    margin-right:.5em;
+    margin-right:.5rem;
     &:last-of-type {
       margin-right:0;
     }
@@ -65,12 +67,27 @@ $palettes: ( // http://erskinedesign.com/blog/friendlier-colour-names-sass-maps/
   text-align:center;
 }
 
+@mixin button-reset() {
+  background: none;
+    border: 0;
+    color: inherit;
+    /* cursor: default; */
+    font: inherit;
+    line-height: normal;
+    overflow: visible;
+    padding: 0;
+    -webkit-appearance: none; /* for input */
+        -ms-user-select: none;
+}
+
 /* start leave out */
 body {
   background:$gray;
   font: normal .8125em/1.375em "Helvetica Neue", Helvetica, Arial, Tahoma, sans-serif;
   //font-family: "Helvetica Neue", Helvetica, Arial, Tahoma, sans-serif;
   color:$color;
+  margin:0;
+  padding:0.5rem;
 }
 /* end leave out */
 
@@ -78,15 +95,46 @@ body {
   @extend %visually-hidden;
 }
 
-.eureka {
-  padding:0.5rem;
+%bordered {
+  border:1px solid var(--panel-border-color, palette(gray, light));
+}
+
+%padded {
+  padding:1rem;
+  @include media($gtMobile) {
+    padding:.5rem;
+  }
+}
+
+%panel {
+  @extend %bordered;
+  @extend %padded;
+  border-radius:0.25rem;
+  
   background:var(--light-bg, white);
+}
+
+%horizontally-padded {
+  @extend %padded;
+  padding-top:0;
+  padding-bottom:0;
+}
+
+.eureka {
+  
+  
+  
+  
   a {
     color:var(--link-color, $active);
   }
   
+  h1,h2,h3,h4,h5,h6 {
+    font-weight: normal;
+  }
+  
   h1,h2,h3,h4,h5,h6, thead {
-    color:palette(heading, base);
+    color:palette(heading, dark);
   }
   
   @mixin button() {
@@ -96,7 +144,7 @@ body {
     border: 0;
     border-radius: 3px;
     padding:.5em .5em;
-    &:hover, &:active, &:focus, &:target {
+    &:hover, &:active, &:target {
       background: $active;
       color: white;
       svg {
@@ -105,19 +153,31 @@ body {
     }
   }
   
+  button[id^="eureka__tree-toggle__button"] { // keep this loose so we can append a React id
+    margin-bottom:1rem;
+    @include media($gtMobile) {
+      margin-bottom:0;
+    }
+  }
+  
   @mixin primary-button() {
     background-color: #32AB9A;
     background-image: linear-gradient(#32AB9A, #00948E);
     box-shadow: none;
     color: white;
-    &:hover, &:active, &:focus, &:target {
+    &:hover, &:active, &:target {
       background-color: #2b9385;
       background-image: linear-gradient(#2b9385, #007571);
       color: white;
     }
   }
   
-  button {
+  a.button {
+    text-decoration:none;
+    font: 11px system-ui;
+  }
+  
+  button, a.button {
     @extend %clickable;
     @include button();
     &.eureka__primary {
@@ -126,6 +186,7 @@ body {
     &.dangerous {
       &:hover, &:active, &:focus, &:target {
         background-color: $dangerous;
+        color:white;
         background-image: linear-gradient($dangerous, darken($dangerous,10%));
       }
     }
@@ -145,10 +206,19 @@ body {
     padding-right:0.5rem;
   }
   
-  input[type="text"], fieldset {
+  input[type="text"] {
     border-width:var(--border-width, 1px);
     border-style:var(--border-style, solid);
     border-color:var(--border-color, #E4E4E4);
+  }
+  
+  fieldset {
+    border:none;
+    @include media($mobile) {
+      border-width:var(--border-width, 1px);
+      border-style:var(--border-style, solid);
+      border-color:var(--border-color, #E4E4E4);
+    }
   }
   
   .active {
@@ -167,9 +237,13 @@ body {
     max-width:100%;
   }
   
-  &.eureka__view-mode__table {
-    
-  }
+  /*&.eureka__view-mode__table, &.eureka__view-mode__list {
+    .eureka__pathbar {
+      .eureka__context-buttons {
+        display:none;
+      }
+    }
+  }*/
   
   &.eureka__view-mode__thumb {
     
@@ -183,7 +257,17 @@ body {
     
   }
   
-
+  .alert-info { // blue MODX message style
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+    color: #31708f;
+  }
+  
+  .alert-success { // green success message
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+    color: #3c763d;
+  }
   
   .eureka__button-bar {
     @extend %balanced;
@@ -193,20 +277,69 @@ body {
     }
   }
   
-  .eureka__context-buttons {
-    padding:.5rem 0;
+  .eureka__tree {
+    margin-bottom:1rem;
+  }
+  
+  .eureka__tree-toggle {
+    margin-bottom:1rem;
     @include media($gtMobile) {
-      justify-content:space-around;
+      margin-bottom:0;
+      button {
+        //@include button-reset;
+      }
     }
   }
   
+  .eureka__context-buttons {
+    @extend %bordered;
+    justify-content:space-around;
+    background:rgb(247,247,247);
+    border-left:0;
+    border-right:0;
+    padding:.5rem 0;
+  }
+
   .eureka__table {
     min-width:100%;
+    tr[contextmenu] {
+      padding-top:.5rem;
+      padding-bottom:.5rem;
+    }
+    td.comfortable {
+      @extend %padded;
+      p[class^="alert"] {
+        margin:0;
+      }
+    }
+  }
+  
+  .eureka__stage {
+    @extend %panel;
+    padding:0;
+    margin-bottom:.5rem;
+    @include media($gtMobile) {
+      margin-bottom:0;
+    }
+    h1,h2,h3 {
+      &:first-child {
+        margin-top:0;
+      }
+    }
   }
   
   .eureka__stage__filter-view {
+    //@extend %padded;
+    padding:.5rem;
     .eureka__search-bar {
       line-height:2;
+      @include media($gtMobile) {
+        margin-left:auto;
+        font-size:0.8rem;
+        flex:1 0 auto;
+        max-width:28em;
+        //margin-left:2rem;
+      }
       label {
         color:$faded;
         
@@ -214,6 +347,9 @@ body {
       font-size:1rem;
       display:flex;
       margin-bottom:1rem;
+      @include media($gtMobile) {
+        margin-bottom:0;
+      }
       input {
         flex:1 0 auto;
         font-size:inherit;
@@ -223,11 +359,14 @@ body {
   
   .eureka__media-directory-selector {
     margin-bottom:1rem;
+    @include media($gtMobile) {
+      margin-right:auto;
+    }
   }
   
   .eureka__tree-bar {
     @extend %flex-bar;
-    margin:1rem 0;
+    margin:1rem 0 0 0;
     button {
       font-size:1rem;
     }
@@ -242,20 +381,37 @@ body {
     }
   }
   
+  .eureka__upload-form {
+    margin-bottom:1rem;
+  }
+  
+  *[class^="alert"] {
+    @extend %panel;
+  }
+  
   .eureka__notice {
     @extend %balanced;
   }
   
   .eureka__choose-bar {
+    justify-content:flex-end;
+    /*@include media($gtMobile) {
+      justify-content:flex-end;
+    }*/
     button {
       font-size:1rem;
-    }
-    @include media($gtMobile) {
-      justify-content:flex-end;
+      @include media($gtMobile) { // todo: and if not that tall
+        font-size:.8rem;
+      }
     }
   }
   
   .eureka__pathbrowser {
+    @extend %panel;
+    margin-bottom:.5rem;
+    @include media($gtMobile) {
+      margin-bottom:0;
+    }
     nav {
       color:$faded;
     }
@@ -282,10 +438,31 @@ body {
     }
   }
   
+  .eureka__pathbar {
+    @extend %panel;
+    margin-bottom:1rem;
+    @include media($gtMobile) {
+      margin-bottom:.5rem;
+    }
+    details {
+      > div {
+        padding-top:1rem;
+      }
+    }
+    .eureka__context-buttons {
+      background:none;
+      border:none;
+    }
+  }
+  
   .eureka__layout-chooser {
+    color:$faded;
     fieldset {
       margin:0;
       padding:.5em 0;
+      @include media($gtMobile) {
+        padding:0;
+      }
     }
     legend {
       @extend %visually-hidden;
@@ -327,8 +504,68 @@ body {
       position:relative;
       width:1em;
       height:1em;
-      fill:$faded;
+      fill:currentColor;
     }
   }
+  
+  .eureka__hide-for-mobile-up {
+    @include media($gtMobile) {
+      display:none;
+    }
+  }
+  
+  .eureka__show-for-mobile-up {
+    @include media($mobile) {
+      display:none;
+    }
+  }
+  
+  .eureka__drop-area {
+    flex:2 0 auto;
+    display:flex;
+    cursor:pointer;
+  }
+  
+  .eureka__drop-area-zone {
+    width:100%;
+    min-height: 200px;
+    border-width: 2px;
+    border-color: palette(gray, light);
+    border-style: dashed;
+    border-radius: 5px;
+    background-color:transparent;
+    transition:border-color 240ms ease, background-color 320ms ease 120ms;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    svg {
+      font-size:4em;
+      fill:palette(gray, light);
+      transition:fill 240ms ease 160ms, opacity 240ms ease;
+      opacity:0.42;
+    }
+    
+    &.eureka__drop-area-zone-active {
+      background-color:lighten($active, 40%);
+      border-color: var(--active, $active);
+      transition:border-color 240ms ease 120ms, background-color 320ms ease 0;
+      svg {
+        fill:var(--active, $active);
+        opacity:1;
+      }
+    }
+  }
+  
+  
+  /*#eureka__tree-toggle__button {
+    position:relative;
+    svg {
+      position:absolute;
+      top:0;
+      bottom:0;
+    }
+  }*/
   
 } // end .eureka

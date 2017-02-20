@@ -1,20 +1,22 @@
 import React from 'react';
 
+import Icon from './Icon';
+
 const TreeBar = (props) => {
   
   return (
     <div className="eureka__tree-bar">
       <button title={`Create a new Directory in ${props.content.cd}`}>
         <span className="visually-hidden">Create a new Directory in {props.content.cd}</span>
-        <svg aria-hidden="true" className="icon icon-plus-square">
-            <use xlinkHref={`assets/img/icons.svg#icon-plus-square`}></use>
-        </svg>
+        <Icon icon="plus-square" />
       </button>
-      <button title={`Upload File to ${props.content.cd}`}>
+      <button title={`Upload File to ${props.content.cd}`} onClick={(event) => {
+          try {
+            event.target.parentNode.parentNode.querySelector('.eureka__drop-area-zone').click();
+          } catch(e) {}
+        }}>
         <span className="visually-hidden">Upload File to {props.content.cd}</span>
-        <svg aria-hidden="true" className="icon icon-upload">
-            <use xlinkHref={`assets/img/icons.svg#icon-upload`}></use>
-        </svg>
+        <Icon icon="upload" />
       </button>
     </div>
   );
