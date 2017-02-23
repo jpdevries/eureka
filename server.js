@@ -117,7 +117,7 @@ function getDirectoryListing(baseURL = '', path = '', includeFiles = true, inclu
           foldername:!isFile ? file : undefined,
           directory:isFile ? path.replace(baseURL, '') : `${path}${file}`.replace(baseURL, ''),
           absolutePath:`${path}${file}`,
-          absoluteURL:`http://localhost:${app.get('port')}${path}${file}`.replace(__dirname, ''),
+          absoluteURL:`${path}${file}`.replace(__dirname, ''),
           editedOn:mtime,
           dimensions:[Math.round(Math.random()*420),Math.round(Math.random()*180)],
           fileSize:size
@@ -183,6 +183,8 @@ app.post('/core/components/eureka/media/sources/:source', (req, res) => {
   const dir = req.query.dir,
   uploadDir = path.join(__dirname, path.join('/sources/filesystem/', dir)),
   form = new formidable.IncomingForm();
+  
+  console.log(dir, uploadDir);
   
   if (!dir) {
     res.json({

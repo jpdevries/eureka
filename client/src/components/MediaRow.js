@@ -9,7 +9,7 @@ const MediaRow = (props) => {
       <td title={ariaLabel} className="eureka__td-media" onDoubleClick={(event) => {
           console.log(event, props.item);
       }}>
-        <img src={props.item.absoluteURL} alt="" /> 
+        <img src={props.item.absoluteURL}  alt="" /> 
       </td>
       <td contentEditable="true" onBlur={(event) => {
           console.log('blur', event);
