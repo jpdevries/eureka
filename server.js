@@ -14,6 +14,8 @@ app.set('port', (process.env.PORT || 3001));
 
 app.use('/sources',express.static('sources'));
 
+app.use('/',express.static('client/build'));
+
 /*
 Retrieve a list of media sources
 `GET /sources/`

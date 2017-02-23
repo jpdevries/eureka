@@ -164,8 +164,8 @@ var initialViewState = {
   enlargeFocusedRows: false,
   locale:undefined,
   intervals: {
-    searchBarPlaceholder: false,
-    fetchDirectoryContents: false,
+    searchBarPlaceholder: 3000,
+    fetchDirectoryContents: 3000,
     updateSourceTree: false
   },
   

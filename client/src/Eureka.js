@@ -73,7 +73,6 @@ class Eureka extends Component {
     
     return (
       <div className={`eureka eureka__view-mode__${props.view.mode}${enlargeFocusedRows}`}>
-        
         <div className="eureka__browse-content">
           {pathbrowser}
           <div className="eureka__stage">
@@ -88,13 +87,8 @@ class Eureka extends Component {
                 <TreeToggle {...props} />
                   {mediaDirectorySelector}
                   {uploadForm}
-                <ViewChooser {...props} />
-                  
+                <ViewChooser {...props} />  
               </div>
-              
-              
-              
-              
             </div>
             <div className="eureka__table-wrapper">
               <EurekaTable {...props} />
