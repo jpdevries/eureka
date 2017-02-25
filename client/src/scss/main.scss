@@ -144,7 +144,7 @@ body {
     border: 0;
     border-radius: 3px;
     padding:.5em .5em;
-    &:hover, &:active, &:target {
+    &:hover {
       background: $active;
       color: white;
       svg {
@@ -165,7 +165,7 @@ body {
     background-image: linear-gradient(#32AB9A, #00948E);
     box-shadow: none;
     color: white;
-    &:hover, &:active, &:target {
+    &:hover {
       background-color: #2b9385;
       background-image: linear-gradient(#2b9385, #007571);
       color: white;
