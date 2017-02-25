@@ -74,7 +74,9 @@ const FileTree = (props) => {
               <menuitem label="Upload Files"></menuitem>
               <menuitem label="Create Files"></menuitem>
               <menuitem label="Quick Create Files"></menuitem>
-              <menuitem label="Delete Directory"></menuitem>
+              <menuitem label="Delete Directory" onClick={(event) => {
+                  store.dispatch(actions.deleteMediaItem(props.source.currentSource, item.cd))
+                }}></menuitem>
           </menu>
         
         </summary>

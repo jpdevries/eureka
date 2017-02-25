@@ -150,6 +150,13 @@ var treeReducer = function(state, action) {
     ));
     
     break;
+    
+    case actions.DELETE_MEDIA_ITEM_SUCCESS:
+    //console.log(actions.DELETE_MEDIA_ITEM_SUCCESS, action.source, action.absolutePath, state);
+    return state.filter((directory) => (
+      !(directory.cd === action.absolutePath)
+    ));
+    
   }
 
   return state;

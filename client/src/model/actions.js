@@ -221,7 +221,10 @@ const deleteMediaItem = (source, absolutePath) => (
       return response;
     }).then((response) => (
       response.json()
-    )).then((contents) => (
+    )).then((contents) => {
+      if(contents === false) throw new Error(`Unable to delete directory ${absolutePath}`)
+      return contents;
+    }).then((contents) => (
       dispatch(
         deleteMediaItemSuccess(source, absolutePath)
       )

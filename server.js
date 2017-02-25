@@ -1,10 +1,9 @@
-const express = require('express');
-const fs = require('fs');
-const app = express(),
+const express = require('express'),
+fs = require('fs'),
+app = express(),
 formidable = require('formidable'),
-path = require('path');
-
-const util = require('util');
+path = require('path'),
+util = require('util');
 
 app.set('port', (process.env.PORT || 3001));
 
@@ -223,14 +222,19 @@ Delete a directory
 */
 
 app.delete('/core/components/eureka/media/sources/:source', (req, res) => {
-  const absolutePath = req.query.absolutePath;
-  const source = req.params.source;
-  console.log(`delete ${absolutePath} source ${source}`);
+  const absolutePath = req.query.absolutePath,
+  source = req.params.source;
+  
+  let deletePath = path.join(path.join(__dirname, 'sources/filesystem'), absolutePath);
+  
+  console.log(`delete ${deletePath} source ${source}`);
   
   try {
-    fs.unlinkSync(absolutePath);
+    fs.unlinkSync(deletePath);
   } catch (e) {
+    console.log(e);
     res.json(false);
+    return;
   } 
   
   /*if (!dir) {
