@@ -30,8 +30,13 @@ class Modal extends Component {
                 })
               }} />
             <div className="flex-bar">
-              <button onClick={props.onCancel}>Cancel <span className="visually-hidden"> creating directory {state.createDirectory}</span></button>
-              <button disabled={!state.createDirectory} onClick={props.onSubmit}>Create <span className="visually-hidden"> directory {state.createDirectory}</span></button>
+              <button onBlur={(event) => {
+                  if(state.createDirectory) return;
+                  this.refs.input.focus();
+                }} onClick={props.onCancel}>Cancel <span className="visually-hidden"> creating directory {state.createDirectory}</span></button>
+              <button onBlur={(event) => {
+                  this.refs.input.focus();
+                }} disabled={!state.createDirectory} onClick={props.onSubmit}>Create <span className="visually-hidden"> directory {state.createDirectory}</span></button>
             </div>
           </form>
         </div>

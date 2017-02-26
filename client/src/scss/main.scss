@@ -177,6 +177,9 @@ body {
       background-image: linear-gradient(#2b9385, #007571);
       color: white;
     }
+    &:disabled {
+      filter: grayscale(100%);
+    }
   }
   
   %primary-button {
