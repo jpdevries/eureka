@@ -1,6 +1,7 @@
 const actions = require('./actions'),
 combineReducers = require('redux').combineReducers,
-update = require('react-addons-update');
+update = require('react-addons-update'),
+path = require('path');
 
 import utility from '../utility/utility';
 
@@ -53,7 +54,10 @@ var contentReducer = function(state, action) {
     
     case actions.DELETE_MEDIA_ITEM_SUCCESS:
     console.log(actions.DELETE_MEDIA_ITEM_SUCCESS, action.source, action.absolutePath, state);
+    
+
     return Object.assign({},state,{
+      cd: (state.cd === action.absolutePath) ? path.join(state.cd, '..') : state.cd,
       contents:state.contents.filter((file) => (
         file.absolutePath !== action.absolutePath
       ))
@@ -143,19 +147,33 @@ var treeReducer = function(state, action) {
       ))
     }
     
-    return state.map((file) => (
+    return addChildrenToCurrentFolder(state);
+    
+    /*return state.map((file) => (
       Object.assign({}, file, {
-        children:(file.children.length) ? addChildrenToCurrentFolder(file.children) : foldersToAdd
+        children:(file.children && file.cd !== cd) ? addChildrenToCurrentFolder(file.children) : foldersToAdd
       })
-    ));
+    ));*/
     
     break;
     
     case actions.DELETE_MEDIA_ITEM_SUCCESS:
-    //console.log(actions.DELETE_MEDIA_ITEM_SUCCESS, action.source, action.absolutePath, state);
-    return state.filter((directory) => (
-      !(directory.cd === action.absolutePath)
-    ));
+    let stillSearching = true;
+    function recursivelyRemoveDirectory(children) {
+      return children.map((child) => {
+        if(child.cd === action.absolutePath) {
+          stillSearching = false;
+          return undefined;
+        }
+        return Object.assign({}, child, {
+          children:(child.children && stillSearching) ? recursivelyRemoveDirectory(child.children) : child.children
+        });
+      }).filter(Boolean);
+    }
+    
+    return recursivelyRemoveDirectory(state);
+    
+    break;
     
   }
 
@@ -170,6 +188,7 @@ var initialViewState = {
   sourceTreeOpen: true,
   enlargeFocusedRows: false,
   locale:undefined,
+  sort:'name',
   intervals: {
     searchBarPlaceholder: false,
     fetchDirectoryContents: 18000,

@@ -184,6 +184,7 @@ const fetchMediaSourcesError = function(error) {
 
 const DELETE_MEDIA_ITEM_SUCCESS = 'delete_media_item_success';
 const deleteMediaItemSuccess = function(source, absolutePath) {
+  console.log('DELETE_MEDIA_ITEM_SUCCESS', source, absolutePath);
   return {
     type:DELETE_MEDIA_ITEM_SUCCESS,
     source: source,
@@ -196,6 +197,7 @@ exports.deleteMediaItemSuccess = deleteMediaItemSuccess;
 
 const DELETE_MEDIA_ITEM_ERROR = 'delete_media_item_error';
 const deleteMediaItemError = function(error) {
+  console.log('deleteMediaItemError', error);
   return {
     type:DELETE_MEDIA_ITEM_ERROR,
     error:error

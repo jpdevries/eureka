@@ -15,11 +15,10 @@
     "node": "6.5.0"
   },
   "scripts": {
-    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "start": "npm run fetchsources && npm run server",
     "prestart": "cd ./client && npm install && npm build && cd ../ && npm install",
     "fetchsources": "rm -rf sources.zip && wget http://j4p.us/1L0Y0Q1A0p1n/sources.zip && unzip sources.zip && rm -rf sources.zip && ls && ls sources",
     "server": "babel-node server.js",
-    "start": "npm run fetchsources && npm run server",
     "client": "babel-node start-client.js",
     "dev": "echo \"This command has been deprecated. Use 'npm start'\" && exit 1",
     "lint": "eslint ."
@@ -31,6 +30,7 @@
     "eslint-plugin-import": "2.2.0",
     "eslint-plugin-jsx-a11y": "4.0.0",
     "eslint-plugin-react": "6.9.0",
-    "formidable": "^1.1.1"
+    "formidable": "^1.1.1",
+    "rmdir": "^1.2.0"
   }
 }

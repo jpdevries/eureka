@@ -3,6 +3,9 @@
 
 @import "spec/tacular";
 
+$gtMobileLH: min-height 360px 4 !default;
+$gtMobilePH: min-height 480px 4 !default;
+
 @import "layout/layout";
 
 $gray:rgb(236,236,236); // MODX gray
@@ -61,6 +64,10 @@ $palettes: ( // http://erskinedesign.com/blog/friendlier-colour-names-sass-maps/
       margin-right:0;
     }
   }
+}
+
+.flex-bar {
+  @extend %flex-bar;
 }
 
 %balanced {
@@ -170,6 +177,10 @@ body {
       background-image: linear-gradient(#2b9385, #007571);
       color: white;
     }
+  }
+  
+  %primary-button {
+    @include primary-button;
   }
   
   a.button {
@@ -522,14 +533,16 @@ body {
   }
   
   .eureka__drop-area {
-    flex:2 0 auto;
+    flex:2 8 auto;
     display:flex;
     cursor:pointer;
   }
   
   .eureka__drop-area-zone {
     width:100%;
-    //min-height: 200px;
+    
+    padding:.5rem;
+    
     border-width: 2px;
     border-color: palette(gray, light);
     border-style: dashed;
@@ -537,15 +550,23 @@ body {
     background-color:transparent;
     transition:border-color 240ms ease, background-color 320ms ease 120ms;
     
-    display: flex;
+    
     justify-content: center;
     align-items: center;
+    
+    display:none;
+    
+    
+    @include media($gtMobileLH) {
+      display: flex;
+    }
     
     svg {
       font-size:4em;
       fill:palette(gray, light);
       transition:fill 240ms ease 160ms, opacity 240ms ease;
       opacity:0.42;
+      max-height:100%;
     }
     
     &.eureka__drop-area-zone-active {
@@ -559,6 +580,52 @@ body {
     }
   }
   
+  .eureka__modal {
+    @extend %absolute-corners;
+    
+    display:flex;
+    justify-content:center;
+    align-items: center;
+    
+    .eureka__modal-scrim {
+      @extend %absolute-corners;
+      background:rgba(8,8,8,0.25);
+      z-index:0;
+    }
+    
+    .eureka__modal-panel {
+      @extend %panel;
+      @extend %bordered;
+      min-width:30vw;
+      //min-height:30vh;
+      max-width:70vw;
+      max-height:70vh;
+      position:relative;
+      z-index:$topMost;
+      h1,h2,h3 {
+        &:first-child {
+          margin-top:0;
+        }
+      }
+      label {
+        display:block;
+        margin-bottom:.5rem;
+      }
+      input[type="text"] {
+        width:100%;
+        font-size:1.4em;
+      }
+      .flex-bar {
+        margin-top:.5rem;
+        > * {
+          flex:1 0 auto;
+          &:last-child {
+            @extend %primary-button;
+          }
+        }
+      }
+    }
+  }
   
   /*#eureka__tree-toggle__button {
     position:relative;

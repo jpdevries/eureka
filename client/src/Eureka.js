@@ -11,6 +11,7 @@ import FileTree from './components/FileTree';
 import UploadForm from './components/UploadForm';
 import PathBar from './components/PathBar';
 import DropArea from './components/DropArea';
+import Modal from './components/Modal';
 
 
 import store from './model/store';
@@ -18,6 +19,15 @@ import actions from './model/actions';
 
 
 class Eureka extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      modalOpen:false
+    };
+  }
+  onKeyUp(event) {
+    console.log(event);
+  }
   componentDidMount() {
     store.dispatch(actions.fetchMediaSources()).then(() => { // hit the server and get the media sources
       store.dispatch(actions.updateSourceTree(this.props.source.sources[0].id)).then((content) => { // then hit server for the directory tree of the first (default) media source
@@ -44,16 +54,51 @@ class Eureka extends Component {
         }
       }); 
     });
+    
+    document.body.addEventListener('keyup', (event) => {
+      const key = event.keyCode || event.charCode || 0;
+      switch(key) {
+        case 27: // Escape
+        this.setState({
+          modalOpen:false
+        });
+        break;
+      }
+    });
   }
+  
+  onCreateDirectory() {
+    console.log('onCreateDirectory');
+    this.setState({
+      modalOpen:true
+    })
+  }
+  
+  onModalCancel(event) {
+    event.preventDefault();
+    console.log('onModalCancel');
+    this.setState({
+      modalOpen:false
+    });
+  }
+  
+  onModalSubmit(event) {
+    event.preventDefault();
+    console.log('onModalSubmit');
+  }
+  
   render() {
     const props = this.props;
+    const state = this.state;
+    const modalOpen = false;
+    const modal = (state.modalOpen) ? <Modal onCancel={this.onModalCancel.bind(this)} onSubmit={this.onModalSubmit.bind(this)} title="Create Directory" {...props} /> : undefined;
     
     const pathbrowser = (props.view.sourceTreeOpen) ? (
       <div id="eureka__pathbrowser" className="eureka__pathbrowser">
         <MediaSourceSelector {...props} />
         <FileTree {...props} />
         <DropArea {...props} />
-        <TreeBar {...props} />
+        <TreeBar onCreateDirectory={this.onCreateDirectory.bind(this)} {...props} />
       </div>
     ) : undefined;
     
@@ -73,7 +118,7 @@ class Eureka extends Component {
     
     return (
       <div className={`eureka eureka__view-mode__${props.view.mode}${enlargeFocusedRows}`}>
-        <div className="eureka__browse-content">
+        <div aria-hidden={state.modalOpen} className="eureka__browse-content">
           {pathbrowser}
           <div className="eureka__stage">
             <div className="eureka__stage__filter-view">
@@ -96,7 +141,8 @@ class Eureka extends Component {
           </div>
         </div>
         {pathBar}
-        <ChooseBar {...props} />
+        <ChooseBar ariaHidden={state.modalOpen} {...props} />
+        {modal}
       </div>
     );
   }

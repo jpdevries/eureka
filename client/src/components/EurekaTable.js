@@ -9,10 +9,21 @@ import classNames from 'classnames';
 
 import Dropzone from 'react-dropzone';
 
+import Icon from './Icon';
+
+import utility from '../utility/utility';
+
 class EurekaTable extends Component {
   
   constructor(props) {
     super(props);
+    this.state = {
+      sort: {
+        by: 'filename',
+        dir: utility.ASCENDING,
+        renamingItem: undefined
+      }
+    };
   }  
   
   onDrop(files) {
@@ -49,13 +60,37 @@ class EurekaTable extends Component {
           <thead hidden={!props.content.contents.length}>
             <tr>
               <th>Media</th>
-              <th>Name</th>
-              <th>Dimensions</th>
-              <th>File Size</th>
-              <th>Edited On</th>
+              <th onClick={(event) => {
+                this.setState({
+                  sort:{
+                    by:'name'
+                  }
+                });
+                }}>Name&ensp;<Icon icon="sort" /></th>
+              <th onClick={(event) => {
+                this.setState({
+                  sort:{
+                    by:'dimensions'
+                  }
+                });
+                }}>Dimensions&ensp;<Icon icon="sort" /></th>
+              <th onClick={(event) => {
+                this.setState({
+                  sort:{
+                    by:'filesize'
+                  }
+                });
+                }}>File Size&ensp;<Icon icon="sort" /></th>
+              <th onClick={(event) => {
+                  this.setState({
+                    sort:{
+                      by:'editedon'
+                    }
+                  });
+                }}>Edited On&ensp;<Icon icon="sort" /></th>
             </tr>
           </thead>
-          <EurekaTableTbody {...props} />
+          <EurekaTableTbody {...props} sort={state.sort} />
         </table>
         {html5ContextMenus}
       </Dropzone>

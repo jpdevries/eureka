@@ -1,3 +1,6 @@
+const ASCENDING = 'ascending';
+const DESCENDING = 'descending';
+
 function makeURL(str,params) {
   try {
     var url = new URL(str);
@@ -18,3 +21,7 @@ function removeDuplicates(myArr, prop) {
 
 exports.makeURL = makeURL;
 exports.removeDuplicates = removeDuplicates;
+
+exports.ASCENDING = ASCENDING;
+exports.DESCENDING = DESCENDING;
+

@@ -6,7 +6,7 @@ const TreeBar = (props) => {
   
   return (
     <div className="eureka__tree-bar">
-      <button title={`Create a new Directory in ${props.content.cd}`}>
+      <button title={`Create a new Directory in ${props.content.cd}`} onClick={props.onCreateDirectory}>
         <span className="visually-hidden">Create a new Directory in {props.content.cd}</span>
         <Icon icon="plus-square" />
       </button>

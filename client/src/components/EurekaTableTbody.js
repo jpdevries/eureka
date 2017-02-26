@@ -10,19 +10,11 @@ import filesize from 'filesize';
 
 import classNames from 'classnames';
 
-const ASCENDING = 'ascending';
-const DESCENDING = 'descending';
+import utility from '../utility/utility';
 
 class EurekaTableTbody extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      sort: {
-        by: 'filename',
-        dir: ASCENDING,
-        renamingItem: undefined
-      }
-    };
   }
   
   handleRenameStart(item) {
@@ -30,8 +22,7 @@ class EurekaTableTbody extends Component {
   }
   
   render () {
-    const props = this.props,
-    state = this.state;
+    const props = this.props;
     
     function shouldHide(item) {
       
@@ -54,11 +45,11 @@ class EurekaTableTbody extends Component {
     }
     
     contents = contents.sort((a, b) => {
-      if(a[state.sort.by] === b[state.sort.by]) return 0;
+      if(a[props.sort.by] === b[props.sort.by]) return 0;
       
       let n;
       
-      switch(state.sort.by) {
+      switch(props.sort.by) {
         case 'dimensions':
         n = a.dimensions[0] * a.dimensions[1] > b.dimensions[0] * b.dimensions[1] ? 1 : -1;
         break;
@@ -68,11 +59,11 @@ class EurekaTableTbody extends Component {
         break;
         
         default:
-        n = (a[state.sort.by] > b[state.sort.by]) ? 1 : -1;
+        n = (a[props.sort.by] > b[props.sort.by]) ? 1 : -1;
         break;
       }
 
-      return (state.sort.dir === ASCENDING) ? n : 0-n;
+      return (props.sort.dir === utility.ASCENDING) ? n : 0-n;
     });
 
     const contentList = (contents.length) ? contents.map((item, index) => (
@@ -131,7 +122,7 @@ function NoResults(props) {
             } catch (e) {
               document.querySelector('.eureka__drop-area-zone').click();
             } 
-          }}>upload some files</a>?
+          }}>upload some files<span className="visually-hidden"> to {props.content.cd}</span></a>?
         </p>
       </td>
     </tr>

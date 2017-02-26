@@ -3,7 +3,8 @@ fs = require('fs'),
 app = express(),
 formidable = require('formidable'),
 path = require('path'),
-util = require('util');
+util = require('util'),
+rmdir = require('rmdir');
 
 app.set('port', (process.env.PORT || 3001));
 
@@ -225,17 +226,28 @@ app.delete('/core/components/eureka/media/sources/:source', (req, res) => {
   const absolutePath = req.query.absolutePath,
   source = req.params.source;
   
-  let deletePath = path.join(path.join(__dirname, 'sources/filesystem'), absolutePath);
+  // this is kinda janky but whatever
+  let deletePath = absolutePath.includes(__dirname) ? absolutePath :  path.join(path.join(__dirname, 'sources/filesystem'), absolutePath);
   
-  console.log(`delete ${deletePath} source ${source}`);
+  console.log(`delete ${absolutePath} source ${source}`);
+
+  rmdir(deletePath, function (err, dirs, files) {
+    if(err) {
+      console.log(err);
+      res.json(false);
+    }
+    else res.json(true);
+  });
   
-  try {
+  
+  
+  /*try {
     fs.unlinkSync(deletePath);
   } catch (e) {
     console.log(e);
     res.json(false);
     return;
-  } 
+  } */
   
   /*if (!dir) {
     res.json({
@@ -245,7 +257,7 @@ app.delete('/core/components/eureka/media/sources/:source', (req, res) => {
   }*/
   
   // todo: delete the directory
-  res.json(true);
+  //res.json(true);
   
 });
 
