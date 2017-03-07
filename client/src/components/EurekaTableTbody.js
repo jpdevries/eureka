@@ -94,7 +94,7 @@ class EurekaTableTbody extends Component {
 function NoResults(props) {
   return (props.view.filter) ? (
     <tr>
-      <td colSpan="5" className="comfortable">
+      <td role="presentation" colSpan="5" className="comfortable">
         <p className="alert-info eureka__notice" aria-live="assertive">
           Uh oh. No results found for "{props.view.filter}". <a href="#eureka__filter" onClick={(event) => {
             event.preventDefault();
