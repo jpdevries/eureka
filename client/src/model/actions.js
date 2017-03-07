@@ -297,6 +297,70 @@ const uploadFiles = (source, directory, formData) => (
 );
 
 
+const createDirectory = (source, dir) => (
+  (dispatch) => (
+    fetch(utility.makeURL(`/core/components/eureka/media/sources/${source}`,{
+      path:dir
+    }), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    }).then((response) => {
+      if(response.state < 200 || response.state >= 300) {
+        var error = new Error(response.statusText)
+        error.response = response
+        throw error;
+      }
+      return response;
+    }).then((response) => (
+      response.json()
+    )).then((success) => {
+      if(!success) {
+        var error = new Error(`unable to create ${dir} for media source ${source}`);
+        error.response = false;
+        throw error;
+      }
+    }).then((success) => (
+      dispatch(
+        createDirectorySuccess(success)
+      )
+    )).catch((error) => (
+      dispatch(
+        createDirectoryError(error)
+      )
+    ))
+  )
+);
+
+const  CREATE_DIRECTORY_SUCCESS = 'create_directory_success';
+const createDirectorySuccess = function(success) {
+  return {
+    type:CREATE_DIRECTORY_SUCCESS,
+    success: success
+  }
+}
+
+exports.CREATE_DIRECTORY_SUCCESS = CREATE_DIRECTORY_SUCCESS;
+exports.createDirectorySuccess = createDirectorySuccess;
+
+const  CREATE_DIRECTORY_ERROR = 'create_directory_error';
+const createDirectoryError = function(error) {
+  return {
+    type:CREATE_DIRECTORY_ERROR,
+    error:error
+  }
+}
+
+exports.CREATE_DIRECTORY_ERROR = CREATE_DIRECTORY_ERROR;
+exports.createDirectoryError = createDirectoryError;
+
+exports.createDirectory = createDirectory;
+
+
+
+
 exports.uploadFiles = uploadFiles;
 
 exports.ADD_ITEM_SUCCESS = ADD_ITEM_SUCCESS;
@@ -338,3 +402,157 @@ exports.DELETE_MEDIA_ITEM_ERROR = DELETE_MEDIA_ITEM_ERROR;
 exports.deleteMediaItemError = deleteMediaItemError;
 
 exports.deleteMediaItem = deleteMediaItem;
+
+
+
+
+
+
+
+
+
+
+const renameDirectory = (source, dirPath, name) => (
+  (dispatch) => (
+    fetch(utility.makeURL(`/core/components/eureka/media/sources/${source}`,{
+      path:dirPath,
+      name:name
+    }), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    }).then((response) => {
+      if(response.state < 200 || response.state >= 300) {
+        var error = new Error(response.statusText)
+        error.response = response
+        throw error;
+      }
+      return response;
+    }).then((response) => (
+      response.json()
+    )).then((success) => {
+      if(!success) {
+        var error = new Error(`unable to create ${dirPath} for media source ${source}`);
+        error.response = false;
+        throw error;
+      }
+    }).then((success) => (
+      dispatch(
+        renameDirectorySuccess(success)
+      )
+    )).catch((error) => (
+      dispatch(
+        renameDirectoryError(error)
+      )
+    ))
+  )
+);
+
+const  RENAME_DIRECTORY_SUCCESS = 'rename_directory_success';
+const renameDirectorySuccess = function(success) {
+  return {
+    type:RENAME_DIRECTORY_SUCCESS,
+    success: success
+  }
+}
+
+
+
+const  RENAME_DIRECTORY_ERROR = 'rename_directory_error';
+const renameDirectoryError = function(error) {
+  return {
+    type:RENAME_DIRECTORY_ERROR,
+    error:error
+  }
+}
+
+exports.RENAME_DIRECTORY_SUCCESS = RENAME_DIRECTORY_SUCCESS;
+exports.renameDirectorySuccess = renameDirectorySuccess;
+
+exports.RENAME_DIRECTORY_ERROR = RENAME_DIRECTORY_ERROR;
+exports.renameDirectoryError = renameDirectoryError;
+
+exports.renameDirectory = renameDirectory;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const renameItem = (source, filePath, name) => (
+  (dispatch) => (
+    fetch(utility.makeURL(`/core/components/eureka/media/sources/${source}`,{
+      path:filePath,
+      name:name
+    }), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    }).then((response) => {
+      if(response.state < 200 || response.state >= 300) {
+        var error = new Error(response.statusText)
+        error.response = response
+        throw error;
+      }
+      return response;
+    }).then((response) => (
+      response.json()
+    )).then((response) => {
+      if(!response) {
+        var error = new Error(`unable to create ${filePath} for media source ${source}`);
+        error.response = false;
+        throw error;
+      }
+      console.log('response',response);
+      return response;
+    }).then((response) => (
+      dispatch(
+        renameItemSuccess(response)
+      )
+    )).catch((error) => (
+      dispatch(
+        renameItemError(error)
+      )
+    ))
+  )
+);
+
+const  RENAME_ITEM_SUCCESS = 'rename_item_success';
+const renameItemSuccess = function(contents) {
+  console.log('renameItemSuccess', contents);
+  return {
+    type:RENAME_ITEM_SUCCESS,
+    contents: contents
+  }
+}
+
+
+
+const  RENAME_ITEM_ERROR = 'rename_item_error';
+const renameItemError = function(error) {
+  return {
+    type:RENAME_ITEM_ERROR,
+    error:error
+  }
+}
+
+exports.RENAME_ITEM_SUCCESS = RENAME_ITEM_SUCCESS;
+exports.renameItemSuccess = renameItemSuccess;
+
+exports.RENAME_ITEM_ERROR = RENAME_ITEM_ERROR;
+exports.renameItemError = renameItemError;
+
+exports.renameItem = renameItem;

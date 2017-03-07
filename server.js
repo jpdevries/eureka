@@ -95,29 +95,37 @@ function getSourceDirectories(path) {
   });
 }
 
-function getDirectoryListing(baseURL = '', path = '', includeFiles = true, includeDirectories = true) {
-  if(path.slice(-1) !== '/') path = `${path}/`;
-  path = `${baseURL}${path}`;
+function getDirectoryListing(baseURL = '', dirPath = '', includeFiles = true, includeDirectories = true) {
+  //if(dirPath.slice(-1) !== '/') dirPath = `${dirPath}/`;
+  //dirPath = `${baseURL}${dirPath}`;
+  
+  dirPath = path.join(baseURL, dirPath);
+  console.log('getDirectoryListing', baseURL, dirPath, includeFiles, includeDirectories);
   
   return new Promise((resolve, reject) => {
     if(!includeFiles && !includeDirectories) resolve([]); // nothing to do!
-    const files = filterFiles(fs.readdirSync(path)),
+    const files = filterFiles(fs.readdirSync(dirPath)),
     results = [];
     
+    //console.log(fs.readdirSync(dirPath));
+    //console.log(files);
+    
     files.forEach((file) => {
-      const stat = fs.statSync(`${path}${file}`),
+      const stat = fs.statSync(path.join(dirPath, file)),
       {size, atime, mtime, ctime} = stat,
       isFile = stat.isFile();
       
       //console.log(file, isFile, size, atime, mtime, ctime);
       
+      //console.log(includeFiles && isFile || includeDirectories && !isFile);
+      
       if(includeFiles && isFile || includeDirectories && !isFile) {
         results.push({
           filename:isFile ? file : undefined,
           foldername:!isFile ? file : undefined,
-          directory:isFile ? path.replace(baseURL, '') : `${path}${file}`.replace(baseURL, ''),
-          absolutePath:`${path}${file}`,
-          absoluteURL:`${path}${file}`.replace(__dirname, ''),
+          directory:isFile ? dirPath.replace(baseURL, '') : path.join(dirPath,file).replace(baseURL, ''),
+          absolutePath:path.join(dirPath,file),
+          absoluteURL:path.join(dirPath,file).replace(__dirname, ''),
           editedOn:mtime,
           dimensions:[Math.round(Math.random()*420),Math.round(Math.random()*180)],
           fileSize:size
@@ -125,6 +133,7 @@ function getDirectoryListing(baseURL = '', path = '', includeFiles = true, inclu
       }
       
     });
+    //console.log('results',results);
     resolve(results);
   });
 }
@@ -270,21 +279,53 @@ Rename a directory
 */
 
 app.put('/core/components/eureka/media/sources/:source', (req, res) => {
-  const dir = req.query.dir,
+  const filePath = req.query.path,
   name = req.query.name;
   
-  if (!dir) {
+  console.log(filePath,name);
+  
+  if (!filePath && !name) {
     res.json({
-      error: 'Missing required parameter `dir`',
+      error: 'Missing required parameter `path` or `name`',
     });
     return;
   }
 
   if (name) {
-    // rename directory
+    // rename directory or file
+    
+    
+    const stat = fs.statSync(`${filePath}`),
+    {size, atime, mtime, ctime} = stat,
+    isFile = stat.isFile(),
+    dir = path.parse(filePath).dir;
+    console.log(filePath, isFile, path.join(dir, name));
+    
+    try {
+      fs.renameSync(filePath, path.join(dir, name));
+      //function getDirectoryListing(baseURL = '', dirPath = '', includeFiles = true, includeDirectories = true)
+      getDirectoryListing(``,dir, true, true).then((results) => (
+        res.json(results)
+      )).catch((err) => {
+        console.log(err);
+        res.json([]);
+      });  
+      
+      return;
+      
+    } catch(e) {
+      console.log(e);
+      res.json(false);
+      return;
+    }
+    
   } else {
     // create new directory
-    fs.mkdirSync(path.join(__dirname, path.join('/sources/filesystem/', dir)));
+    try {
+      fs.mkdirSync(path.join(__dirname, path.join('/sources/filesystem/', filePath))); // #janky maybe change this to be absolute
+    } catch (e) {
+      console.log(e); // who cares if it failed that just means it already exists. right?
+    } 
     res.json(true);
     return;
     

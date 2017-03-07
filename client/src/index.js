@@ -12,18 +12,17 @@ const actions = require('./model/actions'),
 store = require('./model/store');
 
 const EurekaController = connect(function(state, props) { // todo list
-  console.log(state);
     return {
       content: state.content,
       view: state.view,
       tree: state.tree,
       source: state.source,
-      directory: state.directory
+      directory: state.directory,
+      fetched: state.fetched
     }
 })(Eureka);
 
 store.subscribe(() => {
-  console.log('store');
   console.log(store.getState());
 });
 

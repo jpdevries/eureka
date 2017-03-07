@@ -2,7 +2,12 @@ import React from 'react';
 
 import filesize from 'filesize';
 
+const Entities = require('html-entities').AllHtmlEntities;
+
 const MediaRow = (props) => {
+
+  const entities = new Entities();
+  
   const ariaLabel = `${props.item.filename} displays at ${props.item.dimensions.join('x')}, weighs ${filesize(props.item.fileSize, {round: 0})}, and was edited on ${new Date(props.item.editedOn).toLocaleString(props.view.locale,{ weekday:'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' })}`;
   return (
     <tr aria-label={ariaLabel} tabIndex="0" onFocus={props.onFocus.bind(this)} contextMenu={`context_menu__tbody-${props.index}`}>
@@ -12,7 +17,20 @@ const MediaRow = (props) => {
         <img src={props.item.absoluteURL}  alt="" /> 
       </td>
       <td contentEditable="true" onBlur={(event) => {
-          console.log('blur', event);
+          try {
+            if(!entities.decode(event.target.innerHTML).trim()) {
+              event.target.innerHTML = props.item.filename;
+              //alert('file name cannot be empty'); // i mostly hate alerts
+              throw new Error('file name cannot be empty');
+            }
+            
+            console.log(event.target.innerHTML, event.target.innerHTML.trim());
+            console.log('test', entities.decode('&lt;&nbsp;&gt;&quot;&apos;&amp;&copy;&reg;&#8710;'));
+            console.log('props.item!', props.item);
+            props.onRenameItemModalSubmit(entities.decode(event.target.innerHTML.trim()), props.item);
+          } catch (e) {
+            console.log(e);
+          } 
         }}
         onKeyUp={(event) => {
            console.log('onKeyUp', event);

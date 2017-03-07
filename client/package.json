@@ -18,6 +18,7 @@
     "grunt-postcss": "^0.8.0",
     "grunt-sass": "^2.0.0",
     "grunt-webpack": "^2.0.1",
+    "html-entities": "^1.2.0",
     "isomorphic-fetch": "^2.2.1",
     "pixrem": "^3.0.2",
     "react-addons-update": "^15.4.2",
@@ -25,6 +26,7 @@
     "redux-thunk": "^2.2.0"
   },
   "dependencies": {
+    "path-parse": "^1.0.5",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-dropzone": "^3.10.0",

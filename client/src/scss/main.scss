@@ -35,6 +35,10 @@ $palettes: ( // http://erskinedesign.com/blog/friendlier-colour-names-sass-maps/
     )
 );
 
+.dangerous {
+  color:var(--dangerous, $dangerous);
+}
+
 @function palette($palette, $tone: 'base') { // http://erskinedesign.com/blog/friendlier-colour-names-sass-maps/
     @return map-get(map-get($palettes, $palette), $tone);
 }
@@ -180,6 +184,10 @@ body {
     &:disabled {
       filter: grayscale(100%);
     }
+  }
+  
+  *:disabled {
+    cursor:not-allowed;
   }
   
   %primary-button {

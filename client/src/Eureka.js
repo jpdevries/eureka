@@ -12,21 +12,27 @@ import UploadForm from './components/UploadForm';
 import PathBar from './components/PathBar';
 import DropArea from './components/DropArea';
 import Modal from './components/Modal';
+import ModalCreateDirectoryForm from './components/ModalCreateDirectoryForm';
+import ModalRenameItemForm from './components/ModalRenameItemForm';
 
+const path = require('path');
+
+const pathParse = require('path-parse');
 
 import store from './model/store';
 import actions from './model/actions';
 
+const CREATE_DIRECTORY = 'create_directory';
+const RENAME_ITEM = 'rename_item';
 
 class Eureka extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      modalOpen:false
+      modalOpen:false,
+      currentModal:undefined,
+      renamingItem:undefined
     };
-  }
-  onKeyUp(event) {
-    console.log(event);
   }
   componentDidMount() {
     store.dispatch(actions.fetchMediaSources()).then(() => { // hit the server and get the media sources
@@ -57,10 +63,12 @@ class Eureka extends Component {
     
     document.body.addEventListener('keyup', (event) => {
       const key = event.keyCode || event.charCode || 0;
+      console.log(key);
       switch(key) {
         case 27: // Escape
         this.setState({
-          modalOpen:false
+          modalOpen:false,
+          currentModal:undefined
         });
         break;
       }
@@ -70,7 +78,8 @@ class Eureka extends Component {
   onCreateDirectory() {
     console.log('onCreateDirectory');
     this.setState({
-      modalOpen:true
+      modalOpen:true,
+      currentModal:CREATE_DIRECTORY
     })
   }
   
@@ -78,20 +87,103 @@ class Eureka extends Component {
     event.preventDefault();
     console.log('onModalCancel');
     this.setState({
-      modalOpen:false
+      modalOpen:false,
+      currentModal:undefined
     });
   }
   
-  onModalSubmit(event) {
+  onModalSubmit(createDirectory) {
+    const props = this.props;
     event.preventDefault();
-    console.log('onModalSubmit');
+    console.log('onModalSubmit',createDirectory);
+    
+    switch(this.state.currentModal) {
+      case CREATE_DIRECTORY:
+      console.log(store.getState().content.cd, path.join(store.getState().content.cd, 'foo'));
+      store.dispatch(actions.createDirectory(store.getState().source.currentSource, path.join(store.getState().content.cd, createDirectory))).then(() => {
+        this.setState({
+          modalOpen:false,
+          currentModal:undefined
+        });
+      }).then(() => {
+        store.dispatch(actions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
+          dir:store.getState().content.cd
+        }));
+      });
+      break;
+      
+      case RENAME_ITEM:
+      console.log()
+      break;
+    }
+  }
+  
+  onRenameItemModalSubmit(newName, item) {
+    console.log('onRenameItemModalSubmit!!!', newName, item);
+    console.log(item.absolutePath);
+    const dir = (() => {
+      try { // this is bullshit webpack isn't including the parse method with the Node path module
+        return path.parse(item.absolutePath).dir;
+      } catch(e) {
+        console.log('oh crap', item.absolutePath);
+        console.log(e);
+        return pathParse(item.absolutePath).dir;
+      }
+    })();
+    
+    store.dispatch(actions.renameItem(this.props.source.currentSource, item.absolutePath, newName)).then((results) => {
+      console.log('results!!!', results);
+      store.dispatch(actions.updateContent({contents:results.contents.filter((file) => (
+        file.filename
+      ))}));
+      this.setState({
+        renamingItem:undefined,
+        modalOpen:false,
+        currentModal:undefined
+      });
+    });
+  }
+  
+  onRenameItem(item) {
+    console.log('onRenameItem', item);
+    this.setState({
+      renamingItem:item,
+      modalOpen:true,
+      currentModal:RENAME_ITEM
+    });
   }
   
   render() {
     const props = this.props;
     const state = this.state;
     const modalOpen = false;
-    const modal = (state.modalOpen) ? <Modal onCancel={this.onModalCancel.bind(this)} onSubmit={this.onModalSubmit.bind(this)} title="Create Directory" {...props} /> : undefined;
+    
+    const modal = (() => {
+      if(state.modalOpen) {
+        switch(state.currentModal) {
+          case CREATE_DIRECTORY:
+          return (
+            <Modal onCancel={this.onModalCancel.bind(this)} onSubmit={this.onModalSubmit.bind(this)} title="Create Directory" {...props}>
+              <ModalCreateDirectoryForm {...props} />
+            </Modal>
+          );
+          break;
+          
+          case RENAME_ITEM:
+          return (
+            <Modal onCancel={this.onModalCancel.bind(this)} onSubmit={this.onRenameItemModalSubmit.bind(this)} title={`Rename Item ${state.renamingItem.filename}`} {...props}>
+              <ModalRenameItemForm {...props} item={state.renamingItem} />
+            </Modal>
+          );
+          break;
+          
+          default:
+          return undefined;
+          break;
+        }
+      }
+      //(state.modalOpen) ? <Modal onCancel={this.onModalCancel.bind(this)} onSubmit={this.onModalSubmit.bind(this)} title="Create Directory" {...props}><ModalCreateDirectoryForm {...props} /></Modal> : undefined
+    })();
     
     const pathbrowser = (props.view.sourceTreeOpen) ? (
       <div id="eureka__pathbrowser" className="eureka__pathbrowser">
@@ -136,7 +228,7 @@ class Eureka extends Component {
               </div>
             </div>
             <div className="eureka__table-wrapper">
-              <EurekaTable {...props} />
+              <EurekaTable {...props} onRenameItem={this.onRenameItem.bind(this)} onSubmit={this.onRenameItemModalSubmit.bind(this)} />
             </div>
           </div>
         </div>

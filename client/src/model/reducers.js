@@ -34,6 +34,7 @@ var contentReducer = function(state, action) {
 
   switch(action.type) {
     case actions.UPDATE_CONTENT:
+    console.log('UPDATE_CONTENT', state, action.content);
     return Object.assign({},state,action.content);
     break;
     
@@ -313,10 +314,37 @@ var directoryReducer = function(state, action) {
     break;
     
     case actions.UPDATE_SOURCE:
-
+    
     break;
+    
+    
   }
 
+  return state;
+}
+
+var initialFetchedState = {
+  lastDirectoriesFetched:[]
+}
+
+var fetchedReducer = function(state, action) {
+  state = state || initialFetchedState;
+  
+  switch(action.type) {
+    case actions.FETCH_DIRECTORY_CONTENTS_SUCCESS:    
+    // loop over just the folders and create data objects for them
+    const namesOfFoldersToAdd = action.contents.filter((file) => (file.foldername)).map((file) => (file.foldername));
+    
+    console.log('namesOfFoldersToAdd',namesOfFoldersToAdd);
+    
+    return Object.assign({}, state, {
+      lastDirectoriesFetched: namesOfFoldersToAdd
+    });
+    
+    break;
+    
+  }
+  
   return state;
 }
 
@@ -325,7 +353,8 @@ var EurekaReducer = combineReducers({
   view: viewReducer,
   tree: treeReducer,
   source: sourceReducer,
-  directory: directoryReducer
+  directory: directoryReducer,
+  fetched: fetchedReducer
 });
 
 exports.EurekaReducer = EurekaReducer;
