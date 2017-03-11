@@ -67,6 +67,7 @@ class EurekaTable extends Component {
                   }
                 });
                 }}>Name&ensp;<Icon icon="sort" /></th>
+              <th className="visually-hidden">Actions</th>
               <th onClick={(event) => {
                 this.setState({
                   sort:{

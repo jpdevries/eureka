@@ -8,11 +8,9 @@ import ContextButtons from './ContextButtons';
 const ContextMenu = (props) => {  
   const item = props.item;
   return (
-    <tr className="eureka__context-row" hidden={props.hidden === undefined ? true : props.hidden}>
-      <td colSpan="5">
+      <td className={props.className} hidden={props.hidden === undefined ? true : props.hidden}>
         <ContextButtons {...props} />
       </td>
-    </tr>
   );
 }
 

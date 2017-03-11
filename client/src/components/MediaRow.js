@@ -2,13 +2,31 @@ import React from 'react';
 
 import filesize from 'filesize';
 
+import ContextMenu from './ContextMenu';
+
 const Entities = require('html-entities').AllHtmlEntities;
 
 const MediaRow = (props) => {
 
   const entities = new Entities();
+  const item = props.item;
+  const index = props.index;
   
   const ariaLabel = `${props.item.filename} displays at ${props.item.dimensions.join('x')}, weighs ${filesize(props.item.fileSize, {round: 0})}, and was edited on ${new Date(props.item.editedOn).toLocaleString(props.view.locale,{ weekday:'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' })}`;
+  
+  function shouldHide(item) {
+    
+    try {
+      //console.log('shouldHide',props.view.focusedMediaItem.absolutePath,item.absolutePath,props.view.focusedMediaItem.absolutePath !== item.absolutePath);
+      return props.view.focusedMediaItem.absolutePath !== item.absolutePath
+    } catch(e) {
+      //console.log('shouldHide',true);
+      return true;
+    }
+  }
+  
+  const contentEditable = false;
+  
   return (
     <tr aria-label={ariaLabel} tabIndex="0" onFocus={props.onFocus.bind(this)} contextMenu={`context_menu__tbody-${props.index}`}>
       <td title={ariaLabel} className="eureka__td-media" onDoubleClick={(event) => {
@@ -16,7 +34,7 @@ const MediaRow = (props) => {
       }}>
         <img src={props.item.absoluteURL}  alt="" /> 
       </td>
-      <td contentEditable="true" onBlur={(event) => {
+      <td contentEditable={contentEditable} onBlur={(event) => {
           try {
             if(!entities.decode(event.target.innerHTML).trim()) {
               event.target.innerHTML = props.item.filename;
@@ -54,6 +72,7 @@ const MediaRow = (props) => {
          >
         {props.item.filename}
       </td>
+      <ContextMenu className="eureka__context-row" {...props} item={item}  hidden={shouldHide(item)} key={`cm__${index}`} />
       <td>
         {`${props.item.dimensions[0]}x${props.item.dimensions[1]}`}
       </td>

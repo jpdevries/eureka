@@ -100,12 +100,19 @@ body {
                       display:none;
                     }
                     > tr {
-                      display:grid;
+                      display:block;
+                      width:100%;
                       
+                      @supports (display: grid) {
+                        display:grid;
+                        
+                        
+                        
+                        grid-gap:0;
+                        grid-template-columns:auto auto auto auto auto;
+                        grid-template-areas:"media name actions dimensions file-size edited-on";  
+                      }
                       
-                      grid-gap:0;
-                      grid-template-columns:auto auto auto auto auto;
-                      grid-template-areas:"media name dimensions file-size edited-on";
                       > th {
                         &:nth-of-type(1) {
                           grid-area:media;
@@ -114,12 +121,15 @@ body {
                           grid-area:name;
                         }
                         &:nth-of-type(3) {
-                          grid-area:dimensions;
+                          grid-area:actions;
                         }
                         &:nth-of-type(4) {
-                          grid-area:file-size;
+                          grid-area:dimensions;
                         }
                         &:nth-of-type(5) {
+                          grid-area:file-size;
+                        }
+                        &:nth-of-type(6) {
                           grid-area:edited-on;
                         }
                       }
@@ -151,27 +161,32 @@ body {
                       }
                     }
                     
-                    > tr:not(.eureka__context-row):not(.empty) {
-                      display:grid;
-                      
-                      grid-gap:0;
-                      grid-template-columns:auto auto auto auto auto;
-                      grid-template-areas:"media name dimensions file-size edited-on";
-                      > td {
-                        &:nth-of-type(1) {
-                          grid-area:media;
-                        }
-                        &:nth-of-type(2) {
-                          grid-area:name;
-                        }
-                        &:nth-of-type(3) {
-                          grid-area:dimensions;
-                        }
-                        &:nth-of-type(4) {
-                          grid-area:file-size;
-                        }
-                        &:nth-of-type(5) {
-                          grid-area:edited-on;
+                    > tr:not(.empty) {
+                      @supports (display:grid) {
+                        display:grid;
+                        
+                        grid-gap:0;
+                        grid-template-columns:auto auto auto auto auto;
+                        grid-template-areas:"media name dimensions file-size edited-on" "actions actions actions actions actions";  
+                        > td {
+                          &:nth-of-type(1) {
+                            grid-area:media;
+                          }
+                          &:nth-of-type(2) {
+                            grid-area:name;
+                          }
+                          &:nth-of-type(3) {
+                            grid-area:actions;
+                          }
+                          &:nth-of-type(4) {
+                            grid-area:dimensions;
+                          }
+                          &:nth-of-type(5) {
+                            grid-area:file-size;
+                          }
+                          &:nth-of-type(6) {
+                            grid-area:edited-on;
+                          }
                         }
                       }
                     }
@@ -298,11 +313,12 @@ body {
           display:inline-block;
           margin:0 .5rem .5rem 0;
           flex-basis:42vw;
+          width:100%;
           @include media($gtMobile) {
             flex-basis:16vw;
           }
         }
-        tr.eureka__context-row {
+        .eureka__context-row {
           display:none;
         }
       }
@@ -337,13 +353,16 @@ body {
         display:none !important;
       }
       
+      display: flex;
+      order:10;
+      width: 100%;
+      //grid-area:"media name dimensions file-size edited-on"
+      .eureka__context-buttons {
+        width:100%;
+      }
+      
       > td[colspan] {
-        display: flex;
-        width: 100%;
-        //grid-area:"media name dimensions file-size edited-on"
-        .eureka__context-buttons {
-          width:100%;
-        }
+        
       }
     }
   }

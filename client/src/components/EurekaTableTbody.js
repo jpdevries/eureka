@@ -68,7 +68,7 @@ class EurekaTableTbody extends Component {
 
     const contentList = (contents.length) ? contents.map((item, index) => (
       [
-        <MediaRow {...props} item={item} index={index} key={index} onFocus={(event) => {     
+        <MediaRow {...props} renameStart={this.handleRenameStart} item={item} index={index} key={index} onFocus={(event) => {     
             store.dispatch(actions.updateView({
               focusedMediaItem:item
             }));
@@ -76,8 +76,7 @@ class EurekaTableTbody extends Component {
           onBlur={(event) => {
               
           }}
-           />,
-         <ContextMenu {...props} item={item} renameStart={this.handleRenameStart} hidden={shouldHide(item)} key={`cm__${index}`} />
+           />
       ]
     )) : (
       <NoResults {...props} />
