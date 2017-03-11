@@ -23,6 +23,12 @@ client/src/scss/bourbon
 client/src/scss/neat
 client/src/scss/spec
 
+_build/scss/bourbon
+_build/scss/neat
+_build/scss/font-awesome
+_build/scss/html5-boilerplate
+
 /sources
 /sources.zip
 
+.tscache
