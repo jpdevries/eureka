@@ -23,9 +23,20 @@ function removeDuplicates(myArr, prop) {
     });
 }
 
+function cssSafe (value) {
+  value = typeof value === 'string' ? value : '';
+  return value.replace(/[^a-z0-9]/g, function(s) {
+    var c = s.charCodeAt(0);
+    if (c == 32) return '-';
+    if (c >= 65 && c <= 90) return s.toLowerCase();
+    return '__' + ('000' + c.toString(16)).slice(-4);
+  });
+};
+
 exports.makeURL = makeURL;
 exports.removeDuplicates = removeDuplicates;
 
 exports.ASCENDING = ASCENDING;
 exports.DESCENDING = DESCENDING;
 
+exports.cssSafe = cssSafe;
