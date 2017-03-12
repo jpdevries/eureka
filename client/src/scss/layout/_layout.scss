@@ -32,7 +32,7 @@ body {
           > .eureka__stage {
             //flex:0 1 auto;
             flex:1 1 100%;
-            
+
             display:flex;
             flex-direction:column;
             > .eureka__stage__filter-view {
@@ -54,7 +54,7 @@ body {
                   }
                 }
               }
-              
+
             }
             > .eureka__table-wrapper {
               flex-basis:0;
@@ -102,18 +102,26 @@ body {
                     > tr {
                       display:block;
                       width:100%;
-                      
+
+                      @supports (display: flex) and ( not (display: grid) ) {
+                        display:flex;
+                        flex-wrap:wrap;
+                      }
+
                       @supports (display: grid) {
                         display:grid;
-                        
-                        
-                        
+
+
+
                         grid-gap:0;
                         grid-template-columns:auto auto auto auto auto;
-                        grid-template-areas:"media name actions dimensions file-size edited-on";  
+                        grid-template-areas:"media name actions dimensions file-size edited-on";
                       }
-                      
+
                       > th {
+                        @supports (display: flex) and ( not (display: grid) ) {
+                          flex:1 0 auto;
+                        }
                         &:nth-of-type(1) {
                           grid-area:media;
                         }
@@ -160,14 +168,21 @@ body {
                         }
                       }
                     }
-                    
+
                     > tr:not(.empty) {
+                      @supports (display: flex) and ( not (display:grid) ) {
+                        display:flex;
+                        flex-wrap:wrap;
+                        > * {
+                          flex:1 0 auto;
+                        }
+                      }
                       @supports (display:grid) {
                         display:grid;
-                        
+
                         grid-gap:0;
                         grid-template-columns:auto auto auto auto auto;
-                        grid-template-areas:"media name dimensions file-size edited-on" "actions actions actions actions actions";  
+                        grid-template-areas:"media name dimensions file-size edited-on" "actions actions actions actions actions";
                         > td {
                           &:nth-of-type(1) {
                             grid-area:media;
@@ -225,7 +240,7 @@ body {
       margin-right:auto;
     }
     button {
-      
+
     }
   }
 }
@@ -234,7 +249,7 @@ body {
 
 .eureka__media-source-selector {
   @include media($gtMobile) {
-    
+
   }
 }
 
@@ -274,7 +289,7 @@ body {
       }
     }
     @include media($gtMobile) {
-      
+
     }
     &.eureka__enlarge-focused-rows {
       .eureka__table {
@@ -289,7 +304,7 @@ body {
       }
     }
   }
-  
+
   &.eureka__view-mode__thumb, &.eureka__view-mode__grid {
     .eureka__table {
       thead {
@@ -324,7 +339,7 @@ body {
       }
     }
   }
-  
+
   &.eureka__view-mode__grid {
     .eureka__table {
       tbody {
@@ -334,25 +349,25 @@ body {
             flex-basis:25vw;
           }
         }
-      }  
+      }
     }
   }
-  
+
   .eureka__tree {
     @include media($gtMobile) {
       flex-basis:0;
       flex-grow:1;
     }
   }
-  
+
   .eureka__context-row {
     @include media($gtMobile) {
       width: 100%;
-      display: block;  
+      display: block;
       &[hidden] {
         display:none !important;
       }
-      
+
       display: flex;
       order:10;
       width: 100%;
@@ -360,13 +375,13 @@ body {
       .eureka__context-buttons {
         width:100%;
       }
-      
+
       > td[colspan] {
-        
+
       }
     }
   }
-  
+
   .eureka__tree-bar {
     @include media($gtMobile) {
       display:flex;
@@ -375,10 +390,10 @@ body {
       }
     }
   }
-  
+
   &.eureka__view-mode__list {
     .eureka__table {
-      
+
       thead {
         th {
           &:first-child {
@@ -395,7 +410,7 @@ body {
           &:last-child {
             padding-right:.5rem;
           }
-          
+
         }
       }
       thead,tr[contextmenu] {
@@ -414,7 +429,7 @@ body {
           }
         }
       }
-      
+
       tbody {
         @include media($mobile) {
           line-height:2;
@@ -427,7 +442,7 @@ body {
         tr[contextmenu] {
           padding-top:0;
           padding-bottom:0;
-          
+
           > td {
             &:nth-of-type(2) {
               padding-left:.5rem;
