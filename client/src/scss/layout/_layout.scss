@@ -142,7 +142,7 @@ body {
 
                       > th {
                         flex:1 0 auto;
-                        //outline:1px solid red;
+                        //outline:1px solid red; 
                         @supports (display: flex) and ( not (display: grid) ) {
 
                         }
