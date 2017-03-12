@@ -17,24 +17,33 @@ body {
         display:flex;
         flex-direction: column;
         flex: 1;
-        &.eureka__view-mode__table, &.eureka__view-mode__list {
+        > .eureka__browse-content {
+          display: flex;
+          flex: 1 1 100%;
+          margin-bottom: .5rem;
+        }
+        &.eureka__view-mode__table {
           @supports (display: grid) {
-            .eureka__browse-content>.eureka__stage>.eureka__table-wrapper>div>table {
-              > thead > tr, > tbody > tr:not(.empty) {
-                display:block;
-                display:grid;
 
-                grid-gap:0;
-                grid-template-columns:40% 15% 15% 15% 15%;
-              }
-              > thead > tr {
-                grid-template-areas:"media name dimensions file-size edited-on";
-              }
-              > tbody > tr:not(.empty) {
-                 grid-template-areas:"media name dimensions file-size edited-on" "actions actions actions actions actions";
-               }
-            }
           }
+
+          .eureka__browse-content>.eureka__stage>.eureka__table-wrapper>div>table {
+            > thead > tr, > tbody > tr {
+              display:grid;
+
+              grid-gap:0;
+              grid-template-columns:40% 15% 15% 15% 15%;
+
+            }
+            > thead > tr {
+              grid-template-areas:"media name dimensions file-size edited-on";
+            }
+            > tbody > tr {
+              grid-template-areas:"media name dimensions file-size edited-on" "actions actions actions actions actions";
+            }
+
+          }
+
         }
         > .eureka__browse-content {
           display:flex;
@@ -193,20 +202,16 @@ body {
                       @supports (display: flex) and ( not (display:grid) ) {
 
                       }
-                      /*> td {
-                        outline:1px solid green;
-                      }*/
                       @supports (display:grid) {
-                        //display:grid;
+                        display:grid;
 
                         //grid-gap:0;
                         //grid-template-columns:40% 15% 15% 15% 15%;
-                        grid-template-areas:"media name dimensions file-size edited-on" "actions actions actions actions actions";
+                        //grid-template-areas:"media name dimensions file-size edited-on" "actions actions actions actions actions";
                         > td {
 
                           &:nth-of-type(1) {
                             grid-area:media;
-                            max-width:100%;
                           }
                           &:nth-of-type(2) {
                             grid-area:name;
