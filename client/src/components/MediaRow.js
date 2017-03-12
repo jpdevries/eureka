@@ -11,11 +11,11 @@ const MediaRow = (props) => {
   const entities = new Entities();
   const item = props.item;
   const index = props.index;
-  
+
   const ariaLabel = `${props.item.filename} displays at ${props.item.dimensions.join('x')}, weighs ${filesize(props.item.fileSize, {round: 0})}, and was edited on ${new Date(props.item.editedOn).toLocaleString(props.view.locale,{ weekday:'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' })}`;
-  
+
   function shouldHide(item) {
-    
+
     try {
       //console.log('shouldHide',props.view.focusedMediaItem.absolutePath,item.absolutePath,props.view.focusedMediaItem.absolutePath !== item.absolutePath);
       return props.view.focusedMediaItem.absolutePath !== item.absolutePath
@@ -24,15 +24,15 @@ const MediaRow = (props) => {
       return true;
     }
   }
-  
+
   const contentEditable = false;
-  
+
   return (
-    <tr aria-label={ariaLabel} tabIndex="0" onFocus={props.onFocus.bind(this)} contextMenu={`context_menu__tbody-${props.index}`}>
+    <tr aria-label={ariaLabel} role="row" tabIndex="0" onFocus={props.onFocus.bind(this)} contextMenu={`context_menu__tbody-${props.index}`}>
       <td title={ariaLabel} className="eureka__td-media" onDoubleClick={(event) => {
           console.log(event, props.item);
       }}>
-        <img src={props.item.absoluteURL}  alt="" /> 
+        <img src={props.item.absoluteURL}  alt="" />
       </td>
       <td contentEditable={contentEditable} onBlur={(event) => {
           try {
@@ -41,14 +41,14 @@ const MediaRow = (props) => {
               //alert('file name cannot be empty'); // i mostly hate alerts
               throw new Error('file name cannot be empty');
             }
-            
+
             console.log(event.target.innerHTML, event.target.innerHTML.trim());
             console.log('test', entities.decode('&lt;&nbsp;&gt;&quot;&apos;&amp;&copy;&reg;&#8710;'));
             console.log('props.item!', props.item);
             props.onRenameItemModalSubmit(entities.decode(event.target.innerHTML.trim()), props.item);
           } catch (e) {
             console.log(e);
-          } 
+          }
         }}
         onKeyUp={(event) => {
            console.log('onKeyUp', event);
@@ -87,4 +87,3 @@ const MediaRow = (props) => {
 }
 
 export default MediaRow;
-

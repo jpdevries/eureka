@@ -17,6 +17,25 @@ body {
         display:flex;
         flex-direction: column;
         flex: 1;
+        &.eureka__view-mode__table, &.eureka__view-mode__list {
+          @supports (display: grid) {
+            .eureka__browse-content>.eureka__stage>.eureka__table-wrapper>div>table {
+              > thead > tr, > tbody > tr:not(.empty) {
+                display:block;
+                display:grid;
+
+                grid-gap:0;
+                grid-template-columns:40% 15% 15% 15% 15%;
+              }
+              > thead > tr {
+                grid-template-areas:"media name dimensions file-size edited-on";
+              }
+              > tbody > tr:not(.empty) {
+                 grid-template-areas:"media name dimensions file-size edited-on" "actions actions actions actions actions";
+               }
+            }
+          }
+        }
         > .eureka__browse-content {
           display:flex;
           flex:1 1 100%;
@@ -96,6 +115,7 @@ body {
                     justify-content:flex-end;
                     flex-shrink:0;
                     flex-grow:0;
+                    padding-right:16px; // #janky consider scrollbar of tbody
                     &[hidden] {
                       display:none;
                     }
@@ -103,24 +123,19 @@ body {
                       display:block;
                       width:100%;
 
+                      display:flex;
+                      flex-wrap:wrap;
                       @supports (display: flex) and ( not (display: grid) ) {
-                        display:flex;
-                        flex-wrap:wrap;
+
                       }
 
-                      @supports (display: grid) {
-                        display:grid;
 
-
-
-                        grid-gap:0;
-                        grid-template-columns:auto auto auto auto auto;
-                        grid-template-areas:"media name actions dimensions file-size edited-on";
-                      }
 
                       > th {
+                        flex:1 0 auto;
+                        //outline:1px solid red;
                         @supports (display: flex) and ( not (display: grid) ) {
-                          flex:1 0 auto;
+
                         }
                         &:nth-of-type(1) {
                           grid-area:media;
@@ -129,7 +144,7 @@ body {
                           grid-area:name;
                         }
                         &:nth-of-type(3) {
-                          grid-area:actions;
+                          grid-area:none;
                         }
                         &:nth-of-type(4) {
                           grid-area:dimensions;
@@ -170,22 +185,28 @@ body {
                     }
 
                     > tr:not(.empty) {
-                      @supports (display: flex) and ( not (display:grid) ) {
-                        display:flex;
-                        flex-wrap:wrap;
-                        > * {
-                          flex:1 0 auto;
-                        }
+                      display:flex;
+                      flex-wrap:wrap;
+                      > * {
+                        flex:1 0 auto;
                       }
-                      @supports (display:grid) {
-                        display:grid;
+                      @supports (display: flex) and ( not (display:grid) ) {
 
-                        grid-gap:0;
-                        grid-template-columns:auto auto auto auto auto;
+                      }
+                      /*> td {
+                        outline:1px solid green;
+                      }*/
+                      @supports (display:grid) {
+                        //display:grid;
+
+                        //grid-gap:0;
+                        //grid-template-columns:40% 15% 15% 15% 15%;
                         grid-template-areas:"media name dimensions file-size edited-on" "actions actions actions actions actions";
                         > td {
+
                           &:nth-of-type(1) {
                             grid-area:media;
+                            max-width:100%;
                           }
                           &:nth-of-type(2) {
                             grid-area:name;
