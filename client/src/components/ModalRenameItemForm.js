@@ -13,41 +13,41 @@ class ModalRenameItemForm extends Component {
       newName:undefined
     };
   }
-  
+
   componentDidMount() {
     this.refs.input.focus(); // simulate HTML5 autofocus
   }
-  
+
   render() {
     const state = this.state;
     const props = this.props;
-    
+
     const Entities = require('html-entities').AllHtmlEntities;
     const entities = new Entities();
-    
+
     let disable = false;
     let sameName = false;
-    
+
     let label = `Rename item`;
     let labelIcon = undefined;
-    
+
     if(state.newName === props.item.filename) {
       disable = true;
       sameName = true;
       label = `${entities.decode('&ensp;')}Cannot rename ${props.item.filename} to the same name`;
       labelIcon = (<Icon icon="exclamation-triangle" />);
     }
-    
+
     /*if(!disable) {
       disable = (() => {
         for(let i = 0; i < props.fetched.lastDirectoriesFetched.length; i++) {
-          const folderName = props.fetched.lastDirectoriesFetched[i]; 
+          const folderName = props.fetched.lastDirectoriesFetched[i];
           console.log(folderName, state.createDirectory, folderName === state.createDirectory);
           if(folderName === state.createDirectory) {
             const Entities = require('html-entities').AllHtmlEntities;
- 
+
             const entities = new Entities();
-            
+
             label = `${entities.decode('&ensp;')}Directory ${path.join('/', props.content.cd, folderName)} already exists`;
             labelIcon = (<Icon icon="exclamation-triangle" />);
             directoryExists = true;
@@ -57,9 +57,9 @@ class ModalRenameItemForm extends Component {
         return disable;
       })();
     }*/
-    
-    
-    
+
+
+
     return (
       <form onSubmit={(event) => {
         event.preventDefault();
@@ -68,14 +68,14 @@ class ModalRenameItemForm extends Component {
         <label htmlFor="eureka__modal-panel__directory" aria-live="polite" className={classNames({
             dangerous: sameName
           })}>{labelIcon}{label}</label>
-        <input ref="input" type="text" id="eureka__modal-panel__directory" name="eureka__modal-panel__directory" placeholder={`renamed_${props.item.filename}`} autoComplete="off" value={state.newName} onChange={(event) => {
+        <input ref="input" type="text" id="eureka__modal-panel__directory" name="eureka__modal-panel__directory" placeholder={`foo${path.extname(props.item.filename)}`} autoComplete="off" value={state.newName} onChange={(event) => {
             this.setState({
               newName:event.target.value
             })
           }} />
         <div className="flex-bar">
           <button type="reset" onBlur={(event) => {
-              if(state.createDirectory) return;
+              if(state.newName) return;
               this.refs.input.focus();
             }} onClick={props.onCancel}>Cancel <span className="visually-hidden"> remaning item {props.item.filename}</span></button>
           <button type="submit" onBlur={(event) => {
@@ -85,8 +85,8 @@ class ModalRenameItemForm extends Component {
       </form>
     );
   }
-  
-  
+
+
 }
 
 

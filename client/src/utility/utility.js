@@ -1,3 +1,5 @@
+import React from 'react';
+
 const ASCENDING = 'ascending';
 const DESCENDING = 'descending';
 
@@ -33,6 +35,21 @@ function cssSafe (value) {
   });
 };
 
+function wordBreaksEvery(str,n = 8) {
+  var ret = [];
+  var i;
+  var len;
+
+  for(i = 0, len = str.length; i < len; i += n) {
+     ret.push(str.substr(i, n))
+  }
+
+  return ret.map((value) => (
+    [value, (<wbr />)]
+  ));
+
+}
+
 exports.makeURL = makeURL;
 exports.removeDuplicates = removeDuplicates;
 
@@ -40,3 +57,5 @@ exports.ASCENDING = ASCENDING;
 exports.DESCENDING = DESCENDING;
 
 exports.cssSafe = cssSafe;
+
+exports.wordBreaksEvery = wordBreaksEvery;

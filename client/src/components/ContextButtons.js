@@ -8,7 +8,7 @@ import {cssSafe} from '../utility/utility';
 const ContextButtons = (props) => {
   const item = props.item;
   return (
-    <div className="eureka__button-bar eureka__context-buttons" role="listbox" aria-label={`Perform Actions such as Expand or Choose on ${item.filename}`} tabindex="0" aria-activedescendant={`expand__${cssSafe(item.filename)}`}>
+    <div className="eureka__button-bar eureka__context-buttons" role="listbox" aria-label={`Perform Actions such as Expand or Choose on ${item.filename}`} tabIndex="0" aria-activedescendant={`expand__${cssSafe(item.filename)}`}>
       <a role="option" id={`expand__${cssSafe(item.filename)}`} href={item.absoluteURL} target={`_${item.filename}`} className="button" title={`Expand ${item.filename}`}>Expand<span className="visually-hidden"> {item.filename}</span></a>
       <button role="option" id={`choose__${cssSafe(item.filename)}`} title={`Choose ${item.filename}`} onClick={(event) => {
         document.dispatchEvent(new CustomEvent('EurekaFoundIt', {

@@ -15,17 +15,69 @@ import utility from '../utility/utility';
 class EurekaTableTbody extends Component {
   constructor(props) {
     super(props);
+
+    this.handleResize = this.handleResizeEvent.bind(this);
   }
-  
+
+  componentWillMount() {
+    window.addEventListener("resize", this.handleResize, false);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.handleResize, false);
+  }
+
+  componentDidMount() {
+    store.dispatch(actions.updateView({
+      isTableScrolling:this.isScrollable(this.tbody)
+    }));
+  }
+
+  isScrollable(el) {
+    const y1 = el.scrollTop;
+    el.scrollTop+=1;
+    const y2 = el.scrollTop;
+    el.scrollTop-=1;
+    const y3 = el.scrollTop;
+    el.scrollTop = y1;
+    const x1 = el.scrollLeft;
+    el.scrollTop+=1;
+    const x2 = el.scrollLeft;
+    el.scrollTop-=1;
+    const x3 = el.scrollLeft;
+    el.scrollLeft = x1;
+    return !(y1 === y2 && y2 === y3 && x1 === x2 && x2 === x3);
+
+}
+
+  handleResizeEvent(event) {
+    //console.log('handleResize',this,event);
+    //console.log(this.isScrollable(this.tbody));
+    const isScrollable = this.isScrollable(this.tbody);
+    if(isScrollable === store.getState().view.isTableScrolling) return;
+    store.dispatch(actions.updateView({
+      isTableScrolling:isScrollable
+    }));
+  }
+
   handleRenameStart(item) {
     console.log('handleRenameStart', item);
   }
-  
+
+  handleScroll(event) {
+    //console.log('handleScroll', event);
+    const isScrollable = this.isScrollable(this.tbody);
+    if(isScrollable === store.getState().view.isTableScrolling) return;
+    store.dispatch(actions.updateView({
+      isTableScrolling:isScrollable
+    }));
+  }
+
   render () {
     const props = this.props;
-    
+
     function shouldHide(item) {
-      
+
       try {
         //console.log('shouldHide',props.view.focusedMediaItem.absolutePath,item.absolutePath,props.view.focusedMediaItem.absolutePath !== item.absolutePath);
         return props.view.focusedMediaItem.absolutePath !== item.absolutePath
@@ -34,30 +86,32 @@ class EurekaTableTbody extends Component {
         return true;
       }
     }
-    
+
     let contents = props.content.contents;
-    
+
     if(props.view.filter) { // filter based on filename, dimensions, date
       const filter = props.view.filter.toLowerCase();
       contents = contents.filter((value) => (
         value.filename.toLowerCase().includes(filter) || value.dimensions.join('x').toLowerCase().includes(filter) || new Date(value.editedOn).toLocaleString().toLowerCase().includes(filter) || new Date(value.editedOn).toLocaleString(undefined,{ weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }).toLowerCase().includes(filter) || filesize(value.fileSize, {round: 0}).toLowerCase().includes(filter) || filesize(value.fileSize, {round: 0}).toLowerCase().replace(/ +?/g, '').includes(filter)
       ));
     }
-    
+
     contents = contents.sort((a, b) => {
       if(a[props.sort.by] === b[props.sort.by]) return 0;
-      
+
       let n;
-      
+
+      //console.log('props.sort.by',props.sort.by,a,b);
+
       switch(props.sort.by) {
         case 'dimensions':
         n = a.dimensions[0] * a.dimensions[1] > b.dimensions[0] * b.dimensions[1] ? 1 : -1;
         break;
-        
+
         case 'editedOn':
         n = new Date(a.editedOn).getTime() > new Date(b.editedOn).getTime() ? 1 : -1;
         break;
-        
+
         default:
         n = (a[props.sort.by] > b[props.sort.by]) ? 1 : -1;
         break;
@@ -68,22 +122,22 @@ class EurekaTableTbody extends Component {
 
     const contentList = (contents.length) ? contents.map((item, index) => (
       [
-        <MediaRow {...props} renameStart={this.handleRenameStart} item={item} index={index} key={index} onFocus={(event) => {     
+        <MediaRow {...props} renameStart={this.handleRenameStart} item={item} index={index} key={index} onFocus={(event) => {
             store.dispatch(actions.updateView({
               focusedMediaItem:item
             }));
           }}
           onBlur={(event) => {
-              
+
           }}
            />
       ]
     )) : (
       <NoResults {...props} />
     );
-    
+
     return (
-      <tbody aria-live="polite" className={classNames({empty:!contents.length})}>
+      <tbody aria-live="polite" className={classNames({empty:!contents.length})} onScroll={this.handleScroll.bind(this)} ref={(tbody) => { this.tbody = tbody }} >
         {contentList}
       </tbody>
     );
@@ -115,12 +169,12 @@ function NoResults(props) {
           Directory "{props.content.cd}" appears to be empty.<br />Perhaps you'd like to <a href="#eureka__upload-form" onClick={(event) => {
             event.preventDefault();
             //document.getElementById('eureka__upload-form').focus();
-            
+
             try { // wont work if the sidebar is closed
-              document.getElementById('eureka__upload-form').click();  
+              document.getElementById('eureka__upload-form').click();
             } catch (e) {
               document.querySelector('.eureka__drop-area-zone').click();
-            } 
+            }
           }}>upload some files<span className="visually-hidden"> to {props.content.cd}</span></a>?
         </p>
       </td>
@@ -129,4 +183,3 @@ function NoResults(props) {
 }
 
 export default EurekaTableTbody;
-

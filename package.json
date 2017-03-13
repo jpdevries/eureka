@@ -16,7 +16,7 @@
   },
   "scripts": {
     "start": "npm run fetchsources && npm run server",
-    "prestart": "cd ./client && yarn && npm build && cd ../ && yarn",
+    "prestart": "cd ./client && yarn && yarn build && cd ../ && yarn",
     "fetchsources": "rm -rf sources.zip && rm -rf sources && wget http://j4p.us/1L0Y0Q1A0p1n/sources.zip && unzip sources.zip && rm -rf sources.zip && ls && ls sources",
     "server": "babel-node server.js",
     "client": "babel-node start-client.js",

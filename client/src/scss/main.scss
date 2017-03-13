@@ -57,11 +57,11 @@ $palettes: ( // http://erskinedesign.com/blog/friendlier-colour-names-sass-maps/
         display: none !important;
       }
     }
-} 
+}
 
 %flex-bar {
   display:flex;
-  
+
   > * {
     margin-right:.5rem;
     &:last-of-type {
@@ -121,7 +121,7 @@ body {
   @extend %bordered;
   @extend %padded;
   border-radius:0.25rem;
-  
+
   background:var(--light-bg, white);
 }
 
@@ -132,22 +132,22 @@ body {
 }
 
 .eureka {
-  
-  
-  
-  
+
+
+
+
   a {
     color:var(--link-color, $active);
   }
-  
+
   h1,h2,h3,h4,h5,h6 {
     font-weight: normal;
   }
-  
+
   h1,h2,h3,h4,h5,h6, thead {
     color:palette(heading, dark);
   }
-  
+
   @mixin button() {
     background: white;
     box-shadow: 0 0 0 1px #E4E4E4;
@@ -163,14 +163,14 @@ body {
       }
     }
   }
-  
+
   button[id^="eureka__tree-toggle__button"] { // keep this loose so we can append a React id
     margin-bottom:1rem;
     @include media($gtMobile) {
       margin-bottom:0;
     }
   }
-  
+
   @mixin primary-button() {
     background-color: #32AB9A;
     background-image: linear-gradient(#32AB9A, #00948E);
@@ -185,20 +185,20 @@ body {
       filter: grayscale(100%);
     }
   }
-  
+
   *:disabled {
     cursor:not-allowed;
   }
-  
+
   %primary-button {
     @include primary-button;
   }
-  
+
   a.button {
     text-decoration:none;
-    font: 11px system-ui;
+    font: .6875rem system-ui;
   }
-  
+
   button, a.button {
     @extend %clickable;
     @include button();
@@ -213,7 +213,7 @@ body {
       }
     }
   }
-  
+
   /* styling of blink/webkit marker */
   summary::-webkit-details-marker {
     //color:var(--color, $color);
@@ -222,18 +222,18 @@ body {
   details > summary:first-of-type  {
      //color:var(--color, $color);
   }
-  
+
   input[type="text"] {
     padding-left:0.5rem;
     padding-right:0.5rem;
   }
-  
+
   input[type="text"] {
     border-width:var(--border-width, 1px);
     border-style:var(--border-style, solid);
     border-color:var(--border-color, #E4E4E4);
   }
-  
+
   fieldset {
     border:none;
     @include media($mobile) {
@@ -242,7 +242,7 @@ body {
       border-color:var(--border-color, #E4E4E4);
     }
   }
-  
+
   .active {
     font-weight: bold;
   }
@@ -258,7 +258,7 @@ body {
   img {
     max-width:100%;
   }
-  
+
   /*&.eureka__view-mode__table, &.eureka__view-mode__list {
     .eureka__pathbar {
       .eureka__context-buttons {
@@ -266,43 +266,43 @@ body {
       }
     }
   }*/
-  
+
   &.eureka__view-mode__thumb {
-    
+
   }
-  
+
   &.eureka__view-mode__grid {
-    
+
   }
-  
+
   &.eureka__view-mode__list {
-    
+
   }
-  
+
   .alert-info { // blue MODX message style
     background-color: #d9edf7;
     border-color: #bce8f1;
     color: #31708f;
   }
-  
+
   .alert-success { // green success message
     background-color: #dff0d8;
     border-color: #d6e9c6;
     color: #3c763d;
   }
-  
+
   .eureka__button-bar {
     @extend %balanced;
     @extend %flex-bar;
     @include media($gtMobile) {
-      
+
     }
   }
-  
+
   .eureka__tree {
     margin-bottom:1rem;
   }
-  
+
   .eureka__tree-toggle {
     margin-bottom:1rem;
     @include media($gtMobile) {
@@ -312,7 +312,7 @@ body {
       }
     }
   }
-  
+
   .eureka__context-buttons {
     @extend %bordered;
     justify-content:space-around;
@@ -320,6 +320,19 @@ body {
     border-left:0;
     border-right:0;
     padding:.5rem 0;
+    > a.button, button {
+      font-size:.6875rem;
+    }
+  }
+
+  &.eureka__view-mode__list {
+    .eureka__context-buttons {
+      padding-top:.35rem;
+      padding-bottom:.35rem;
+      > a.button, button {
+        font-size:.6rem;
+      }
+    }
   }
 
   .eureka__table {
@@ -335,7 +348,7 @@ body {
       }
     }
   }
-  
+
   .eureka__stage {
     @extend %panel;
     padding:0;
@@ -349,7 +362,7 @@ body {
       }
     }
   }
-  
+
   .eureka__stage__filter-view {
     //@extend %padded;
     padding:.5rem;
@@ -364,7 +377,7 @@ body {
       }
       label {
         color:$faded;
-        
+
       }
       font-size:1rem;
       display:flex;
@@ -378,23 +391,23 @@ body {
       }
     }
   }
-  
+
   .eureka__media-directory-selector {
     margin-bottom:1rem;
     @include media($gtMobile) {
       margin-right:auto;
     }
   }
-  
+
   .eureka__tree-bar {
     @extend %flex-bar;
     margin:1rem 0 0 0;
     button {
       font-size:1rem;
-      flex:1 0 auto; 
+      flex:1 0 auto;
     }
   }
-  
+
   .eureka__media-source-selector {
     margin-bottom:1rem;
     h2,h3 {
@@ -403,19 +416,19 @@ body {
       }
     }
   }
-  
+
   .eureka__upload-form {
     margin-bottom:1rem;
   }
-  
+
   *[class^="alert"] {
     @extend %panel;
   }
-  
+
   .eureka__notice {
     @extend %balanced;
   }
-  
+
   .eureka__choose-bar {
     justify-content:flex-end;
     /*@include media($gtMobile) {
@@ -428,7 +441,7 @@ body {
       }
     }
   }
-  
+
   .eureka__pathbrowser {
     @extend %panel;
     margin-bottom:.5rem;
@@ -460,7 +473,7 @@ body {
       }
     }
   }
-  
+
   .eureka__pathbar {
     @extend %panel;
     margin-bottom:1rem;
@@ -477,7 +490,7 @@ body {
       border:none;
     }
   }
-  
+
   .eureka__layout-chooser {
     color:$faded;
     fieldset {
@@ -493,13 +506,13 @@ body {
     .eureka__icon-radio-btns {
       display:flex;
       justify-content: space-around;
-      
+
       > div {
         display: flex;
         align-items: center;
         justify-content: center;
       }
-      
+
       input[type="radio"] {
         @extend %visually-hidden;
         &:checked {
@@ -521,7 +534,7 @@ body {
       }
     }
   }
-  
+
   svg {
     &[class^="icon"] {
       position:relative;
@@ -530,48 +543,48 @@ body {
       fill:currentColor;
     }
   }
-  
+
   .eureka__hide-for-mobile-up {
     @include media($gtMobile) {
       display:none;
     }
   }
-  
+
   .eureka__show-for-mobile-up {
     @include media($mobile) {
       display:none;
     }
   }
-  
+
   .eureka__drop-area {
     flex:2 8 auto;
     display:flex;
     cursor:pointer;
   }
-  
+
   .eureka__drop-area-zone {
     width:100%;
-    
+
     padding:.5rem;
-    
+
     border-width: 2px;
     border-color: palette(gray, light);
     border-style: dashed;
     border-radius: 5px;
     background-color:transparent;
     transition:border-color 240ms ease, background-color 320ms ease 120ms;
-    
-    
+
+
     justify-content: center;
     align-items: center;
-    
+
     display:none;
-    
-    
+
+
     @include media($gtMobileLH) {
       display: flex;
     }
-    
+
     svg {
       font-size:4em;
       fill:palette(gray, light);
@@ -579,7 +592,7 @@ body {
       opacity:0.42;
       max-height:100%;
     }
-    
+
     &.eureka__drop-area-zone-active {
       background-color:lighten($active, 40%);
       border-color: var(--active, $active);
@@ -590,20 +603,20 @@ body {
       }
     }
   }
-  
+
   .eureka__modal {
     @extend %absolute-corners;
-    
+
     display:flex;
     justify-content:center;
     align-items: center;
-    
+
     .eureka__modal-scrim {
       @extend %absolute-corners;
       background:rgba(8,8,8,0.25);
       z-index:0;
     }
-    
+
     .eureka__modal-panel {
       @extend %panel;
       @extend %bordered;
@@ -637,7 +650,7 @@ body {
       }
     }
   }
-  
+
   /*#eureka__tree-toggle__button {
     position:relative;
     svg {
@@ -646,5 +659,5 @@ body {
       bottom:0;
     }
   }*/
-  
+
 } // end .eureka

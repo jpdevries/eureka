@@ -1,4 +1,27 @@
 body {
+
+  > #root {
+    .eureka {
+      &.eureka__view-mode__table, &.eureka__view-mode__list {
+        .eureka__browse-content>.eureka__stage>.eureka__table-wrapper>div>table {
+          > thead > tr, > tbody > tr {
+            display:grid;
+
+            grid-gap:0;
+            grid-template-columns:40% 24% 12% 12% 12%;
+
+          }
+          > thead > tr {
+            grid-template-areas:"media name dimensions file-size edited-on";
+          }
+          > tbody > tr {
+            grid-template-areas:"media name dimensions file-size edited-on" "actions actions actions actions actions";
+          }
+        }
+      }
+    }
+  }
+
   @include media($gtMobile) {
     display: flex;
     height: 100vh;
@@ -27,22 +50,7 @@ body {
 
           }
 
-          .eureka__browse-content>.eureka__stage>.eureka__table-wrapper>div>table {
-            > thead > tr, > tbody > tr {
-              display:grid;
 
-              grid-gap:0;
-              grid-template-columns:40% 15% 15% 15% 15%;
-
-            }
-            > thead > tr {
-              grid-template-areas:"media name dimensions file-size edited-on";
-            }
-            > tbody > tr {
-              grid-template-areas:"media name dimensions file-size edited-on" "actions actions actions actions actions";
-            }
-
-          }
 
         }
         > .eureka__browse-content {
@@ -124,7 +132,9 @@ body {
                     justify-content:flex-end;
                     flex-shrink:0;
                     flex-grow:0;
-                    padding-right:16px; // #janky consider scrollbar of tbody
+                    &.eureka__tbody-scrolling {
+                      padding-right:16px; // #janky consider scrollbar of tbody
+                    }
                     &[hidden] {
                       display:none;
                     }
@@ -142,7 +152,7 @@ body {
 
                       > th {
                         flex:1 0 auto;
-                        //outline:1px solid red; 
+                        //outline:1px solid red;
                         @supports (display: flex) and ( not (display: grid) ) {
 
                         }
@@ -168,17 +178,6 @@ body {
                     }
                   }
                   > tbody {
-                    flex-basis:0;
-                    text-align:center;
-                    display:block;
-                    flex-wrap:no-wrap;
-                    overflow-y:auto;
-                    align-items:stretch;
-                    flex-direction:row;
-                    justify-content:center;
-                    flex-shrink:1;
-                    flex-grow:1;
-                    max-width:100%;
                     &.empty {
                       display: flex;
                       justify-content: center;
@@ -192,45 +191,61 @@ body {
                         }
                       }
                     }
+                  }
+                  > tbody {
+                    flex-basis:0;
+                    text-align:center;
+                    display:block;
+                    flex-wrap:no-wrap;
+                    overflow-y:auto;
+                    align-items:stretch;
+                    flex-direction:row;
+                    justify-content:center;
+                    flex-shrink:1;
+                    flex-grow:1;
+                    max-width:100%;
 
-                    > tr:not(.empty) {
-                      display:flex;
-                      flex-wrap:wrap;
-                      > * {
-                        flex:1 0 auto;
-                      }
-                      @supports (display: flex) and ( not (display:grid) ) {
+                    &:not(.empty) {
+                      > tr:not(.empty) {
+                        display:flex;
+                        flex-wrap:wrap;
+                        > * {
+                          flex:1 0 auto;
+                        }
+                        @supports (display: flex) and ( not (display:grid) ) {
 
-                      }
-                      @supports (display:grid) {
-                        display:grid;
+                        }
+                        @supports (display:grid) {
+                          display:grid;
 
-                        //grid-gap:0;
-                        //grid-template-columns:40% 15% 15% 15% 15%;
-                        //grid-template-areas:"media name dimensions file-size edited-on" "actions actions actions actions actions";
-                        > td {
+                          //grid-gap:0;
+                          //grid-template-columns:40% 15% 15% 15% 15%;
+                          //grid-template-areas:"media name dimensions file-size edited-on" "actions actions actions actions actions";
+                          > td {
 
-                          &:nth-of-type(1) {
-                            grid-area:media;
-                          }
-                          &:nth-of-type(2) {
-                            grid-area:name;
-                          }
-                          &:nth-of-type(3) {
-                            grid-area:actions;
-                          }
-                          &:nth-of-type(4) {
-                            grid-area:dimensions;
-                          }
-                          &:nth-of-type(5) {
-                            grid-area:file-size;
-                          }
-                          &:nth-of-type(6) {
-                            grid-area:edited-on;
+                            &:nth-of-type(1) {
+                              grid-area:media;
+                            }
+                            &:nth-of-type(2) {
+                              grid-area:name;
+                            }
+                            &:nth-of-type(3) {
+                              grid-area:actions;
+                            }
+                            &:nth-of-type(4) {
+                              grid-area:dimensions;
+                            }
+                            &:nth-of-type(5) {
+                              grid-area:file-size;
+                            }
+                            &:nth-of-type(6) {
+                              grid-area:edited-on;
+                            }
                           }
                         }
                       }
                     }
+
                   }
                 }
               }

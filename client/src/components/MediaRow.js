@@ -6,6 +6,8 @@ import ContextMenu from './ContextMenu';
 
 const Entities = require('html-entities').AllHtmlEntities;
 
+import utility from './../utility/utility';
+
 const MediaRow = (props) => {
 
   const entities = new Entities();
@@ -13,6 +15,8 @@ const MediaRow = (props) => {
   const index = props.index;
 
   const ariaLabel = `${props.item.filename} displays at ${props.item.dimensions.join('x')}, weighs ${filesize(props.item.fileSize, {round: 0})}, and was edited on ${new Date(props.item.editedOn).toLocaleString(props.view.locale,{ weekday:'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' })}`;
+
+
 
   function shouldHide(item) {
 
@@ -28,6 +32,7 @@ const MediaRow = (props) => {
   const contentEditable = false;
 
   return (
+
     <tr aria-label={ariaLabel} role="row" tabIndex="0" onFocus={props.onFocus.bind(this)} contextMenu={`context_menu__tbody-${props.index}`}>
       <td title={ariaLabel} className="eureka__td-media" onDoubleClick={(event) => {
           console.log(event, props.item);
@@ -70,7 +75,7 @@ const MediaRow = (props) => {
             console.log('onCut', event);
          }}
          >
-        {props.item.filename}
+        {utility.wordBreaksEvery(props.item.filename)}
       </td>
       <ContextMenu className="eureka__context-row" {...props} item={item}  hidden={shouldHide(item)} key={`cm__${index}`} />
       <td>

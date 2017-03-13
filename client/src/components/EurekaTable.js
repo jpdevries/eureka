@@ -14,7 +14,7 @@ import Icon from './Icon';
 import utility from '../utility/utility';
 
 class EurekaTable extends Component {
-  
+
   constructor(props) {
     super(props);
     this.state = {
@@ -24,25 +24,25 @@ class EurekaTable extends Component {
         renamingItem: undefined
       }
     };
-  }  
-  
+  }
+
   onDrop(files) {
     const props = this.props;
-    console.log('Received files: ', files);
-    
+    //console.log('Received files: ', files);
+
     const formData = new FormData();
-    
+
     files.forEach((file) => {
       formData.append('eureka__uploadFiles', file, file.name);
     });
-    
+
     store.dispatch(actions.uploadFiles(props.source.currentSource, props.content.cd, formData));
   }
-  
+
   render () {
     const props = this.props,
     state = this.state;
-    
+
     const html5ContextMenus = (props.content.contents.length) ? props.content.contents.map((item, index) => (
       <menu key={index} hidden="true" type="context" id={`context_menu__tbody-${index}`}>
           <menuitem label={`Expand ${item.filename}`}></menuitem>
@@ -53,45 +53,65 @@ class EurekaTable extends Component {
             }}></menuitem>
       </menu>
     )) : undefined;
-    
+
     return (
       <Dropzone onDrop={this.onDrop.bind(this)} disableClick={true} style={{}}>
         <table className="eureka__table" cellSpacing="0" cellPadding="0">
-          <thead hidden={!props.content.contents.length}>
+          <thead hidden={!props.content.contents.length} className={classNames((store.getState().view.isTableScrolling) ? 'eureka__tbody-scrolling' : undefined)}>
             <tr>
               <th>Media</th>
               <th onClick={(event) => {
+                let dir = this.state.sort.dir;
+                if(this.state.sort.by === 'filename') {
+                  dir = (dir === utility.ASCENDING) ? utility.DESCENDING : utility.ASCENDING
+                }
                 this.setState({
                   sort:{
-                    by:'name'
+                    by:'filename',
+                    dir:dir
                   }
                 });
                 }}>Name&ensp;<Icon icon="sort" /></th>
               <th className="visually-hidden">Actions</th>
               <th onClick={(event) => {
+                let dir = this.state.sort.dir;
+                if(this.state.sort.by === 'dimensions') {
+                  dir = (dir === utility.ASCENDING) ? utility.DESCENDING : utility.ASCENDING
+                }
                 this.setState({
                   sort:{
-                    by:'dimensions'
+                    by:'dimensions',
+                    dir:dir
                   }
                 });
                 }}>Dimensions&ensp;<Icon icon="sort" /></th>
               <th onClick={(event) => {
+                let dir = this.state.sort.dir;
+                if(this.state.sort.by === 'fileSize') {
+                  dir = (dir === utility.ASCENDING) ? utility.DESCENDING : utility.ASCENDING
+                }
                 this.setState({
                   sort:{
-                    by:'filesize'
+                    by:'fileSize',
+                    dir:dir
                   }
                 });
                 }}>File Size&ensp;<Icon icon="sort" /></th>
               <th onClick={(event) => {
+                  let dir = this.state.sort.dir;
+                  if(this.state.sort.by === 'editedOn') {
+                    dir = (dir === utility.ASCENDING) ? utility.DESCENDING : utility.ASCENDING
+                  }
                   this.setState({
                     sort:{
-                      by:'editedon'
+                      by:'editedOn',
+                      dir:dir
                     }
                   });
                 }}>Edited On&ensp;<Icon icon="sort" /></th>
             </tr>
           </thead>
-          <EurekaTableTbody {...props} sort={state.sort} />
+          <EurekaTableTbody {...props} sort={this.state.sort} />
         </table>
         {html5ContextMenus}
       </Dropzone>
@@ -100,4 +120,3 @@ class EurekaTable extends Component {
 }
 
 export default EurekaTable;
-

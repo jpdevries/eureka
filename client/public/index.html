@@ -4,11 +4,19 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
-    
+
     <base href="%PUBLIC_URL%/" />
-    
+
+    <style type="text/css">
+      svg.icon {
+        max-width: 1em;
+        display: inline;
+        max-height: 1em;
+      }
+    </style>
+
     <link rel="stylesheet" type="text/css" href="assets/css/main.css">
-    
+
     <!--
       Notice the use of %PUBLIC_URL% in the tag above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -22,14 +30,14 @@
   </head>
   <body>
     <div id="root"></div>
-    
+
     <script>
       if(true) document.write('<script src="assets/js/vendor/url-search-params/url-search-params.js"><\/script>');
       document.addEventListener('EurekaFoundIt', function(event) {
-        console.log(event); 
+        console.log(event);
       })
     </script>
-    
+
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
