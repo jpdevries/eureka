@@ -78,6 +78,29 @@ $palettes: ( // http://erskinedesign.com/blog/friendlier-colour-names-sass-maps/
   text-align:center;
 }
 
+a[role="presentation"] {
+  color:currentColor !important;
+  text-decoration:none !important;
+}
+
+.eureka__table tr[tabindex] {
+  &.eureka__focused-media-item {
+    .eureka__td-filename {
+      font-weight:bold;
+    }
+  }
+  &:target {
+    .eureka__td-media {
+      > * {
+        outline:3px solid #32AB9A;
+      }
+    }
+    .eureka__td-filename {
+      font-weight:bold;
+    }
+  }
+}
+
 @mixin button-reset() {
   background: none;
     border: 0;
@@ -107,7 +130,7 @@ body {
 }
 
 %bordered {
-  border:1px solid var(--panel-border-color, palette(gray, light));
+  border:var(--border-width, 1px) var(--border-style, solid) var(--panel-border-color, palette(gray, light));
 }
 
 %padded {
@@ -145,13 +168,13 @@ body {
   }
 
   h1,h2,h3,h4,h5,h6, thead {
-    color:palette(heading, dark);
+    color:var(--subtle, palette(heading, dark));
   }
 
   @mixin button() {
-    background: white;
-    box-shadow: 0 0 0 1px #E4E4E4;
-    color: #555555;
+    background:var(--button-bg, white);
+    box-shadow: 0 0 0 1px var(--border-color, #E4E4E4);
+    color:var(--button-color, #555555);
     border: 0;
     border-radius: 3px;
     padding:.5em .5em;
@@ -280,9 +303,9 @@ body {
   }
 
   .alert-info { // blue MODX message style
-    background-color: #d9edf7;
-    border-color: #bce8f1;
-    color: #31708f;
+    background-color: var(--light-bg, #d9edf7);
+    border-color: var(--border-color, #bce8f1);
+    color: var(--subtle, #31708f);
   }
 
   .alert-success { // green success message
@@ -316,7 +339,7 @@ body {
   .eureka__context-buttons {
     @extend %bordered;
     justify-content:space-around;
-    background:rgb(247,247,247);
+    background:var(--button-bg, rgb(247,247,247));
     border-left:0;
     border-right:0;
     padding:.5rem 0;
@@ -376,7 +399,7 @@ body {
         //margin-left:2rem;
       }
       label {
-        color:$faded;
+        color:var(--subtle, $faded);
 
       }
       font-size:1rem;
@@ -449,7 +472,7 @@ body {
       margin-bottom:0;
     }
     nav {
-      color:$faded;
+      color:var(--subtle, $faded);
     }
     details {
       > summary {
@@ -492,7 +515,7 @@ body {
   }
 
   .eureka__layout-chooser {
-    color:$faded;
+    color:var(--subtle, $faded);
     fieldset {
       margin:0;
       padding:.5em 0;
@@ -519,7 +542,7 @@ body {
           + {
             label {
               svg[class^="icon"] {
-                fill:$active;
+                fill:var(--active, $active);
               }
             }
           }
@@ -568,7 +591,7 @@ body {
     padding:.5rem;
 
     border-width: 2px;
-    border-color: palette(gray, light);
+    border-color: var(--very-subtle, palette(gray, light));
     border-style: dashed;
     border-radius: 5px;
     background-color:transparent;
@@ -587,9 +610,9 @@ body {
 
     svg {
       font-size:4em;
-      fill:palette(gray, light);
+      fill:var(--very-subtle, palette(gray, light));
       transition:fill 240ms ease 160ms, opacity 240ms ease;
-      opacity:0.42;
+      opacity:var(--very-subtle-icon-opacity, 0.42);
       max-height:100%;
     }
 

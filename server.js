@@ -65,6 +65,46 @@ function getMediaSources(path = `${__dirname}/sources/`) {
   });
 }
 
+function recursivelyGetSourceDirectories(path) {
+  if(path.slice(-1) !== '/') path = `${path}/`;
+
+  return new Promise((resolve, reject) => {
+    const files = filterFiles(fs.readdirSync(path)),
+    results = [];
+
+    const stat = fs.statSync(`${path}`),
+    {size, atime, mtime, ctime} = stat,
+    isFile = stat.isFile();
+
+    files.forEach((file) => {
+      //console.log(file);
+      const stat = fs.statSync(`${path}${file}`),
+      {size, atime, mtime, ctime} = stat,
+      isFile = stat.isFile();
+
+      if(!isFile) {
+        results.push(new Promise((resolve, reject) => {
+          recursivelyGetSourceDirectories(`${path}${file}`).then((children) => {
+            resolve({
+              name:file,
+              cd:`${path}${file}`.replace(__dirname, '').replace('/sources/filesystem/', ''),
+              children:children.length ? children : [],
+              //fcd:`${path}${file}`.replace(__dirname, '')
+            })
+          })
+
+        }));
+      }
+    });
+
+    Promise.all(results).then((rs) => {
+      //console.log(results);
+      resolve(rs);
+    });
+    //resolve(results);
+  });
+}
+
 function getSourceDirectories(path) {
   if(path.slice(-1) !== '/') path = `${path}/`;
 
@@ -171,7 +211,7 @@ app.get('/core/components/eureka/media/sources/:source', (req, res) => {
     ));
   } else {
     const path = `${__dirname}/sources/filesystem/`;
-    getSourceDirectories(path).then((results) => (
+    recursivelyGetSourceDirectories(path).then((results) => (
       res.json(results)
     )).catch((err) => (
       res.json([])

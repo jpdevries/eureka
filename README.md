@@ -1,9 +1,9 @@
 # Eureka 🌲
 
-Flexible Media Browser Component. [Try the demo](http://jpdevries.github.io/eureka/examples/).  
+Flexible Media Browser Component. [Try the demo](http://jpdevries.github.io/eureka/examples/).
 As seen in [Redactor 2.0](https://www.modmore.com/extras/redactor) by modmore. Contributions&nbsp;welcomed.
 
-> With `eureka.js` your users will be saying "I found it!" in no time.  
+> With `eureka.js` your users will be saying "I found it!" in no time.
 &emsp;&emsp;&mdash; [@mrktps](https://twitter.com/mrktps)
 
 ## 💬 Discuss
@@ -50,10 +50,10 @@ cd eureka
 yarn prestart # install and build
 yarn fetchsources # do once, fetches media source data
 yarn server # start the server
-open http://localhost:3001 # Node server
+# open http://localhost:3001 # Node server
 ```
 
-The testing server serves the `sources` and `client/build` directories along with a REST API to `GET`, `POST`, `PUT`, `DELETE` media items.
+The testing server hosts the `sources` and `client/build` directories along with a REST API to `GET`, `POST`, `PUT`, `DELETE` media items.
 
 ![](http://j4p.us/22241J1A3N06/Screen%20Shot%202017-03-13%20at%2012.56.51%20AM.png)
 
@@ -73,178 +73,13 @@ cd client
 yarn build
 yarn test
 yarn start
-open http://localhost:3000 # development server
+# open http://localhost:3000 # development server
 ```
 
 The development server, like any other React app created with `create-react-app`, will automatically inject changes as you save changes to your source files.
 
-## 🗄 Rest API
-
-To do:
- - Configurable base URL, ie: `core/components/eureka`
- - sync forms (form data endpoints rather than URL params)
-
-Retrieve a list of media sources  
-`GET` `/media/sources`
-
-```json
-[
-  {"name":"filesystem", "id":0},
-  {"name":"s3", "id":1}
-]
-```
-
-Retrieve a list of top&ndash;level directories of a given media source  
-`GET` `/media/sources/:source`
-
-```json
-[
-  {"name":"assets","cd":"assets"},
-  {"name":"foo","cd":"foo"}
-]
-```
-
-
-
-
-Retrieve a list of media items and subdirectories of a given directory of a given media source  
-`GET` `/media/sources/:source?dir=assets%2Fimg`
-
-```json
-[  
-   {  
-      "filename":"DSC02469.jpg",
-      "directory":"assets/img/",
-      "absolutePath":"/sources/filesystem/assets/img/DSC02469.jpg",
-      "absoluteURL":"/sources/filesystem/assets/img/DSC02469.jpg",
-      "editedOn":"2017-02-16T04:44:07.000Z",
-      "dimensions":[  
-         163,
-         42
-      ],
-      "fileSize":36335
-   },
-   {  
-      "foldername":"hawaii",
-      "directory":"assets/img/hawaii",
-      "absolutePath":"/sources/filesystem/assets/img/hawaii",
-      "absoluteURL":"/sources/filesystem/assets/img/hawaii",
-      "editedOn":"2017-03-12T23:22:59.000Z"
-   },
-   {  
-      "foldername":"redwoods",
-      "directory":"assets/img/redwoods",
-      "absolutePath":"/sources/filesystem/assets/img/redwoods",
-      "absoluteURL":"/sources/filesystem/assets/img/redwoods",
-      "editedOn":"2017-02-20T08:46:06.000Z"
-   }
-]
-```
-
-#### Delete a given media item of a given media source  
-`DELETE` `/media/sources/:source?absolutePath=assets%2Fimg%2Fturtle.jpg`
-```json
-true
-```
-
-#### Upload files to a given directory of a given media source  
-`POST` `/media/sources/:source?dir=assets%2Fimg`
-
-Send files as FormData of body of request. The response will contain a fresh list of subdirectories and media items of `dir` once othe items have been uploaded
-
-```json
-[  
-   {  
-      "filename":"Love_What_You_Do_print_04_web.jpg",
-      "directory":"assets/img",
-      "absolutePath":"/sources/filesystem/assets/img/Love_What_You_Do_print_04_web.jpg",
-      "absoluteURL":"/sources/filesystem/assets/img/Love_What_You_Do_print_04_web.jpg",
-      "editedOn":"2017-03-13T15:02:55.000Z",
-      "dimensions":[  
-         252,
-         120
-      ],
-      "fileSize":870377
-   },
-   {  
-      "filename":"digital_thumb.png",
-      "directory":"assets/img",
-      "absolutePath":"/sources/filesystem/assets/img/digital_thumb.png",
-      "absoluteURL":"/sources/filesystem/assets/img/digital_thumb.png",
-      "editedOn":"2017-03-13T15:02:55.000Z",
-      "dimensions":[  
-         84,
-         94
-      ],
-      "fileSize":26122
-   },
-   {  
-      "filename":"digital_thumb_landscape.png",
-      "directory":"assets/img",
-      "absolutePath":"/sources/filesystem/assets/img/digital_thumb_landscape.png",
-      "absoluteURL":"/sources/filesystem/assets/img/digital_thumb_landscape.png",
-      "editedOn":"2017-03-13T15:02:55.000Z",
-      "dimensions":[  
-         232,
-         54
-      ],
-      "fileSize":32052
-   },
-   {  
-      "foldername":"hawaii",
-      "directory":"assets/img/hawaii",
-      "absolutePath":"/sources/filesystem/assets/img/hawaii",
-      "absoluteURL":"/sources/filesystem/assets/img/hawaii"
-   },
-   {  
-      "foldername":"redwoods",
-      "directory":"assets/img/redwoods",
-      "absolutePath":"/sources/filesystem/assets/img/redwoods",
-      "absoluteURL":"/sources/filesystem/assets/img/redwoods"
-   }
-]
-
-```
-
-
-#### Rename a given media item of a given media source  
-`PUT` `/media/sources/:source?path=assets%2Fimg%2turtle.jpg&name=sea.jpg`
-
-Return a fresh listing of the entire directory.
-
-```json
-[  
-   {  
-      "filename":"DSC02525.jpg",
-      "directory":"/sources/filesystem/assets/img/hawaii",
-      "absolutePath":"/sources/filesystem/assets/img/hawaii/DSC02525.jpg",
-      "absoluteURL":"/sources/filesystem/assets/img/hawaii/DSC02525.jpg",
-      "editedOn":"2017-02-16T04:44:09.000Z",
-      "dimensions":[  
-         282,
-         162
-      ],
-      "fileSize":41545
-   },
-   {  
-      "filename":"sea.jpg",
-      "directory":"/sources/filesystem/assets/img/hawaii",
-      "absolutePath":"/sources/filesystem/assets/img/hawaii/sea.jpg",
-      "absoluteURL":"/sources/filesystem/assets/img/hawaii/sea.jpg",
-      "editedOn":"2017-02-16T04:44:09.000Z",
-      "dimensions":[  
-         192,
-         107
-      ],
-      "fileSize":34178
-   }
-]
-```
-
-Rename a given directory of a given media source  
-`PUT` `/media/sources/:source?path=assets%2Fimg&name=images`
-
-
+## 🗄 REST API
+See the [REST API wiki page](https://github.com/jpdevries/eureka/wiki/REST-API).
 
 ## 🛠 Usage
 
@@ -282,8 +117,13 @@ Configure the `EurekaMediaBrowser` via the optional attributes found in the defa
     locale="en-US"
     mediaSource="0"
     currentDirectory="/"
-    headers: {{
+    headers={{
         'Powered-By': 'Eureka by Markup.tips'
+    }}
+    intervals={{
+      searchBarPlaceholder: false,
+      fetchDirectoryContents: 18000,
+      updateSourceTree: false
     }}
   />
 ```
@@ -300,9 +140,17 @@ Configure the `EurekaMediaBrowser` via the optional attributes found in the defa
 | `allowDelete` | `true`      |    Whether or not to offer users the ability to delete directories and media items |
 | `confirmBeforeDelete` | `false`      |    Whether or not to confirm intent before users delete directories and media items |
 | `locale` | `"en-US"`      |    The localization to use. See Lexicons. |
-| `mediaSource` | `"0"`      |    The default initial media source id to use |
+| `mediaSource` | `undefined`      |    The default initial media source id to use |
 | `currentDirectory` | `"/"`      |    The default initial directory to use |
 | `headers` | `{'Powered-By': 'Eureka by Markup.tips'}`      |    Additional request headers sent with XHR requests |
+| `intervals` | `{searchBarPlaceholder: false,fetchDirectoryContents: 18000,updateSourceTree: false}`      |    Intervals for whether or not and how often to update the  |
+| `enlargeFocusedRows` | `false`      |    Whether or not to enlarge thumbnails of focused rows |
+| `mode` | `"table"`      |    Initial view mode (table, thumb, grid, list) |
+| `sort` | `"name"`      |    Initial column to sort media items on |
+| `allowFullscreen` | `true`      |    Whether or not the interface should offer a fullscreen button |
+| `emphasisFocusedMediaItem` | `true`      |    Whether or not to emphasis selected media items (defaults to boldening the filename, only applies to table and list view modes) |
+
+
 
 For server side rendering via Node:
 
@@ -312,7 +160,33 @@ WIP
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import EurekaMediaBrowser from './EurekaMediaBrowser';
+import EurekaMediaBrowser from 'EurekaMediaBrowser';
 
 
 ```
+
+## 🎨 Theming
+| Variable        | Description  |
+| ------------- | -----|
+| `--active` | Color used to highlight activated components such as the drop area |
+| `--border-width` | Generic border width for panels, components, inputs |
+| `--border-style` | Generic border style for panels, components, inputs |
+| `--border-color` | Generic border color for panels, components, inputs |
+| `--button-bg` | Background color of button elements |
+| `--button-color` | Color of button text |
+| `--color` | Default text color |
+| `--dangerous` | Color to use for warnings and errors |
+| `--light-bg` | Generic light background color, used for panels |
+| `--link-color` | Default anchor text color |
+| `--panel-border-color` | Border color of panel components |
+| `--subtle` | Subtle color, used for media source tree |
+| `--very-subtle` | Very subtle color, used for drop zone area |
+| `--very-subtle-icon-opacity` | Opacity for very subtle icons |
+
+
+## Themes
+### Black on White
+![](http://j4p.us/091n1d1z3y1F/Screen%20Shot%202017-03-16%20at%203.33.14%20AM.png)
+
+### White on Black
+![](http://j4p.us/3O163v400P30/Screen%20Shot%202017-03-16%20at%203.33.45%20AM.png)

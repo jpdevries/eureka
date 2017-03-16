@@ -101,7 +101,7 @@ body {
               align-items:stretch;
               justify-content:center;
               flex-direction:column;
-              padding:0 .5rem .5rem .5rem;
+              padding:0 .5rem .5rem 0; // removed padding-left .5rem
               > div {
                 flex-basis:0;
                 flex-grow:1;
@@ -476,7 +476,8 @@ body {
           line-height:2;
         }
         .eureka__td-media {
-          img {
+          img,video,embed {
+            max-width:10vh;
             max-height:10vh;
           }
         }

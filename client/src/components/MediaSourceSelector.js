@@ -7,7 +7,7 @@ const MediaSourceSelector = (props) => {
   const options = props.source.sources.map((source, index) => (
     <option key={index} value={source.id === undefined ? index : source.id}>{source.name}</option>
   ));
-  
+
   return (
     <div className="eureka__media-source-selector">
       <h2>
@@ -23,12 +23,11 @@ const MediaSourceSelector = (props) => {
         }}>
         {options}
       </select>
-      
-      
-      
+
+
+
     </div>
   );
 }
 
 export default MediaSourceSelector;
-

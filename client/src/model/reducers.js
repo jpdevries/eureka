@@ -5,7 +5,39 @@ path = require('path');
 
 import utility from '../utility/utility';
 
-var initialContentState = {
+const initialConfigState = {
+  basePath:'/',
+  allowUploads:true,
+  treeHidden:true,
+  useLocalStorage:true,
+  storagePrefix:"eureka__",
+  allowRename:true,
+  allowDelete:true,
+  confirmBeforeDelete:false,
+  localse:"en-US",
+  mediaSource:undefined,
+  currentDirectory:"/",
+  emphasisFocusedMediaItem:true,
+  headers:{'Powered-By': 'Eureka by Markup.tips'},
+  intervals:{searchBarPlaceholder: false,fetchDirectoryContents: 18000,updateSourceTree: false}
+};
+
+var configReducer = function(state, action) {
+  state = state || initialConfigState;
+
+  switch(action.type) {
+    case actions.UPDATE_CONFIG:
+    console.log('UPDATE_CONFIG', state, action.config);
+    return Object.assign({},state,action.config);
+    break;
+  }
+
+
+  return state;
+}
+
+
+const initialContentState = {
   cd: '/',
   contents:[
     /*{
@@ -33,6 +65,14 @@ var contentReducer = function(state, action) {
   state = state || initialContentState;
 
   switch(action.type) {
+    case actions.UPDATE_CONFIG:
+    console.log('UPDATE_CONFIG!!!', state, action.config);
+    if(action.config.currentDirectory) return Object.assign({},state,{
+      cd:action.config.currentDirectory
+    })
+
+    break;
+
     case actions.UPDATE_CONTENT:
     console.log('UPDATE_CONTENT', state, action.content);
     return Object.assign({},state,action.content);
@@ -186,14 +226,14 @@ var initialViewState = {
   filter: undefined,
   //cd: '/',
   mode:'table',
-  sourceTreeOpen: true,
+  sourceTreeOpen: false,
   enlargeFocusedRows: false,
-  locale:undefined,
+  locale:"en-US",
   sort:'name',
   isTableScrolling:false,
   intervals: {
     searchBarPlaceholder: false,
-    fetchDirectoryContents: 18000,
+    fetchDirectoryContents: false,
     updateSourceTree: false
   },
 
@@ -203,8 +243,24 @@ var viewReducer = function(state, action) {
   state = state || initialViewState;
 
   switch(action.type) {
+
+
     case actions.UPDATE_VIEW:
     return Object.assign({},state,action.view);
+
+    case actions.UPDATE_CONFIG:
+    let o = {};
+    o = Object.assign({},o,{
+      sourceTreeOpen:action.config.treeHidden !== undefined ? !action.config.treeHidden : o.sourceTreeOpen || undefined
+    });
+    if(action.config.intervals) o = Object.assign({},o,{intervals:action.config.intervals});
+    if(action.config.mode) o = Object.assign({},o,{mode:action.config.mode});
+    if(action.config.sort) o = Object.assign({},o,{sort:action.config.sort});
+    if(action.config.locale) o = Object.assign({},o,{locale:action.config.locale});
+    if(action.config.enlargeFocusedRows !== undefined) o = Object.assign({},o,{enlargeFocusedRows:action.config.enlargeFocusedRows});
+
+    return Object.assign({},state,o);
+
 
     case actions.UPDATE_SOURCE_TREE_SUCCESS:
     return Object.assign({},state,{
@@ -274,6 +330,8 @@ var directoryReducer = function(state, action) {
     cs = action.source;
     break;
 
+
+
     case actions.FETCH_MEDIA_SOURCES_SUCCESS:
     if(cs === undefined) cs = action.sources[0].id;
     return action.sources.map((source) => (
@@ -290,12 +348,28 @@ var directoryReducer = function(state, action) {
       })
     ));
 
+    function recursivelyCrawlChildren(file) {
+      file.children.map((child) => {
+        foldersToAdd.push({
+          name:child.name,
+          cd:child.cd,
+          children:child.children || []
+        });
+        if(child.children.length) recursivelyCrawlChildren(child);
+      })
+    }
+
+    action.contents.map((file) => {
+      recursivelyCrawlChildren(file);
+    });
+
+    foldersToAdd = utility.removeDuplicates([...foldersToAdd], 'cd');
+
     return state.map((source) => (
       Object.assign({}, source, {
-        directories:(source.id == cs) ? utility.removeDuplicates([...source.directories, ...foldersToAdd], 'name') : source.directories
+        directories:(source.id == cs) ? utility.removeDuplicates([...source.directories, ...foldersToAdd], 'cd') : source.directories
       })
     ));
-
 
     break;
 
@@ -355,7 +429,8 @@ var EurekaReducer = combineReducers({
   tree: treeReducer,
   source: sourceReducer,
   directory: directoryReducer,
-  fetched: fetchedReducer
+  fetched: fetchedReducer,
+  config: configReducer
 });
 
 exports.EurekaReducer = EurekaReducer;

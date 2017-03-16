@@ -42,6 +42,14 @@ const updateContent = function(content) {
   }
 }
 
+const UPDATE_CONFIG = 'update_config';
+const updateConfig = function(config) {
+  return {
+    type:UPDATE_CONFIG,
+    config:config,
+  }
+}
+
 const updateSourceTree = (source) => (
   (dispatch) => (
     fetch(`/core/components/eureka/media/sources/${source}`, {
@@ -194,6 +202,9 @@ const deleteMediaItemSuccess = function(source, absolutePath) {
 
 exports.DELETE_MEDIA_ITEM_SUCCESS = DELETE_MEDIA_ITEM_SUCCESS;
 exports.deleteMediaItemSuccess = deleteMediaItemSuccess;
+
+exports.UPDATE_CONFIG = UPDATE_CONFIG;
+exports.updateConfig = updateConfig;
 
 const DELETE_MEDIA_ITEM_ERROR = 'delete_media_item_error';
 const deleteMediaItemError = function(error) {

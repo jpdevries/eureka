@@ -8,6 +8,13 @@ const Entities = require('html-entities').AllHtmlEntities;
 
 import utility from './../utility/utility';
 
+import path from 'path';
+
+var pathParse = require('path-parse');
+
+import classNames from 'classnames';
+import Icon from './Icon';
+
 const MediaRow = (props) => {
 
   const entities = new Entities();
@@ -31,15 +38,112 @@ const MediaRow = (props) => {
 
   const contentEditable = false;
 
+  const media = (function(ext){ // consider abstracting this to its own module
+    //console.log(pathParse(props.item.filename).ext,'props.item',props.item);
+
+    switch(ext.toLowerCase()) {
+      case '.jpg':
+      case '.jpeg':
+      case '.gif':
+      case '.png':
+      case '.png8':
+      case '.png24':
+      case '.svg':
+      case '.bmp':
+      case '.tiff':
+      return (<img src={props.item.absoluteURL}  alt="" />);
+      break;
+
+      case '.mp4':
+      case '.mov':
+      return (
+        <video width="320" height="240" controls={props.view.mode !== 'list'}>
+          <source src={props.item.absoluteURL} type="video/mp4" />
+        Your browser does not support the video tag.
+        </video>
+      );
+      break;
+
+      case '.ogv':
+      return (
+        <video width="320" height="240"  controls={props.view.mode !== 'list'}>
+          <source src={props.item.absoluteURL} type="video/ogg" />
+        Your browser does not support the video tag.
+        </video>
+      );
+      break;
+
+      case '.webm':
+      case '.wbm':
+      return (
+        <video width="320" height="240"  controls={props.view.mode !== 'list'}>
+          <source src={props.item.absoluteURL} type="video/webm" />
+        Your browser does not support the video tag.
+        </video>
+      );
+      break;
+
+      case '.pdf':
+      return (
+        <embed src={props.item.absoluteURL} width="320" height="240" />
+      );
+      break;
+
+      case '.ogg':
+      return (
+        <audio controls>
+          <source src={props.item.absoluteURL} type="audio/ogg" />
+          Your browser does not support the audio tag.
+        </audio>
+      );
+      break;
+
+      case '.mp3':
+      return (
+        <audio controls>
+          <source src={props.item.absoluteURL} type="audio/mpeg" />
+          Your browser does not support the audio tag.
+        </audio>
+      );
+      break;
+
+      case '.wav':
+      return (
+        <audio controls>
+          <source src={props.item.absoluteURL} type="audio/wav" />
+          Your browser does not support the audio tag.
+        </audio>
+      );
+      break;
+
+      case '.flac':
+      return (
+        <audio controls>
+          <source src={props.item.absoluteURL} type="audio/flac" />
+          Your browser does not support the audio tag.
+        </audio>
+      );
+      break;
+
+      default:
+      const icon = utility.getIconByExtension(pathParse(props.item.filename).ext);
+      return (<p><Icon icon={icon} />&ensp;{props.item.absoluteURL}</p>);
+    }
+  })(pathParse(props.item.filename).ext);
+
+  classNames();
+
+  const className = (props.config.emphasisFocusedMediaItem && props.item == props.view.focusedMediaItem) ? {'eureka__focused-media-item':true} : {};
+
   return (
 
-    <tr aria-label={ariaLabel} role="row" tabIndex="0" onFocus={props.onFocus.bind(this)} contextMenu={`context_menu__tbody-${props.index}`}>
+    <tr className={classNames(className)} id={utility.cssSafe(props.item.filename)} aria-label={ariaLabel} role="row" tabIndex="0" onFocus={props.onFocus.bind(this)} contextMenu={`context_menu__tbody-${props.index}`}>
       <td title={ariaLabel} className="eureka__td-media" onDoubleClick={(event) => {
           console.log(event, props.item);
       }}>
-        <img src={props.item.absoluteURL}  alt="" />
+        {media}
       </td>
-      <td contentEditable={contentEditable} onBlur={(event) => {
+      <td className="eureka__td-filename" contentEditable={contentEditable} onBlur={(event) => {
           try {
             if(!entities.decode(event.target.innerHTML).trim()) {
               event.target.innerHTML = props.item.filename;

@@ -24,9 +24,9 @@ const MediaDirectorySelector = (props) => {
     <div className="eureka__media-directory-selector">
       <label htmlFor="eureka__media-browser_0__browsing">Browse Directory:</label>&ensp;
       <form action="#">
-        <select value={`${props.source.currentSource}__${props.content.cd}`} name="eureka__media-browser_0__browsing" id="eureka__media-browser_0__browsing" onChange={(event) => {            
+        <select aria-live="polite" value={`${props.source.currentSource}__${props.content.cd}`} name="eureka__media-browser_0__browsing" id="eureka__media-browser_0__browsing" onChange={(event) => {            
             const [cs,cd] = event.target.value.split('__');
-            
+
             store.dispatch(actions.updateContent({ // updates the "current directory" of the view right away
               cd: cd
             }));
@@ -42,4 +42,3 @@ const MediaDirectorySelector = (props) => {
 }
 
 export default MediaDirectorySelector;
-

@@ -25,7 +25,7 @@ function removeDuplicates(myArr, prop) {
     });
 }
 
-function cssSafe (value) {
+function cssSafe(value) {
   value = typeof value === 'string' ? value : '';
   return value.replace(/[^a-z0-9]/g, function(s) {
     var c = s.charCodeAt(0);
@@ -49,6 +49,97 @@ function wordBreaksEvery(str,n = 8) {
   ));
 
 }
+
+function getIconByExtension(ext) {
+  switch(ext) {
+    case '.jpg':
+    case '.jpeg':
+    case '.gif':
+    case '.png':
+    case '.png8':
+    case '.png24':
+    case '.svg':
+    case '.bmp':
+    case '.tiff':
+    return "file-image-o";
+    break;
+
+    case ".pdf":
+    return "file-pdf-o";
+    break;
+
+    case ".zip":
+    case ".tar":
+    return "file-archive-o";
+    break;
+
+    case ".ppt":
+    case ".pot":
+    case ".pps":
+    return "file-powerpoint-o";
+    break;
+
+    case ".doc":
+    case ".dot":
+    case ".wbk":
+    case ".docx":
+    case ".docm":
+    case ".dotx":
+    case ".dotm":
+    case ".docb":
+    return "file-word-o";
+    break;
+
+    case ".xls":
+    case ".xlt":
+    case ".xlm":
+    case ".xlsx":
+    case ".xlsm":
+    case ".xltx":
+    case ".xltm":
+    case ".xlsb":
+    case ".xla":
+    case ".xlam":
+    case ".xll":
+    case ".xlw":
+    return "file-excel-o";
+    break;
+
+    case ".txt":
+    case ".rtf":
+    return "file-text-o";
+    break;
+
+    case ".js":
+    case ".json":
+    case ".html":
+    case ".htm":
+    case ".css":
+    case ".scss":
+    return "file-code-o";
+    break;
+
+    case '.mp3':
+    case '.wav':
+    case '.ogg':
+    case '.flac':
+    return "file-audio-o";
+    break;
+
+    case '.webm':
+    case '.wbm':
+    case '.mp4':
+    case '.mov':
+    return "file-video-o";
+    break;
+
+    default:
+    return "file-image-o";
+    break;
+  }
+}
+
+exports.getIconByExtension = getIconByExtension;
 
 exports.makeURL = makeURL;
 exports.removeDuplicates = removeDuplicates;

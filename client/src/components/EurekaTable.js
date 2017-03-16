@@ -54,67 +54,76 @@ class EurekaTable extends Component {
       </menu>
     )) : undefined;
 
-    return (
+    const table = (
+      <table className="eureka__table" cellSpacing="0" cellPadding="0">
+        <thead hidden={!props.content.contents.length} className={classNames((store.getState().view.isTableScrolling) ? 'eureka__tbody-scrolling' : undefined)}>
+          <tr>
+            <th>Media</th>
+            <th onClick={(event) => {
+              let dir = this.state.sort.dir;
+              if(this.state.sort.by === 'filename') {
+                dir = (dir === utility.ASCENDING) ? utility.DESCENDING : utility.ASCENDING
+              }
+              this.setState({
+                sort:{
+                  by:'filename',
+                  dir:dir
+                }
+              });
+              }}>Name&ensp;<Icon icon="sort" /></th>
+            <th className="visually-hidden">Actions</th>
+            <th onClick={(event) => {
+              let dir = this.state.sort.dir;
+              if(this.state.sort.by === 'dimensions') {
+                dir = (dir === utility.ASCENDING) ? utility.DESCENDING : utility.ASCENDING
+              }
+              this.setState({
+                sort:{
+                  by:'dimensions',
+                  dir:dir
+                }
+              });
+              }}>Dimensions&ensp;<Icon icon="sort" /></th>
+            <th onClick={(event) => {
+              let dir = this.state.sort.dir;
+              if(this.state.sort.by === 'fileSize') {
+                dir = (dir === utility.ASCENDING) ? utility.DESCENDING : utility.ASCENDING
+              }
+              this.setState({
+                sort:{
+                  by:'fileSize',
+                  dir:dir
+                }
+              });
+              }}>File Size&ensp;<Icon icon="sort" /></th>
+            <th onClick={(event) => {
+                let dir = this.state.sort.dir;
+                if(this.state.sort.by === 'editedOn') {
+                  dir = (dir === utility.ASCENDING) ? utility.DESCENDING : utility.ASCENDING
+                }
+                this.setState({
+                  sort:{
+                    by:'editedOn',
+                    dir:dir
+                  }
+                });
+              }}>Edited On&ensp;<Icon icon="sort" /></th>
+          </tr>
+        </thead>
+        <EurekaTableTbody {...props} sort={this.state.sort} />
+      </table>
+    );
+
+    return props.config.allowUploads ? (
       <Dropzone onDrop={this.onDrop.bind(this)} disableClick={true} style={{}}>
-        <table className="eureka__table" cellSpacing="0" cellPadding="0">
-          <thead hidden={!props.content.contents.length} className={classNames((store.getState().view.isTableScrolling) ? 'eureka__tbody-scrolling' : undefined)}>
-            <tr>
-              <th>Media</th>
-              <th onClick={(event) => {
-                let dir = this.state.sort.dir;
-                if(this.state.sort.by === 'filename') {
-                  dir = (dir === utility.ASCENDING) ? utility.DESCENDING : utility.ASCENDING
-                }
-                this.setState({
-                  sort:{
-                    by:'filename',
-                    dir:dir
-                  }
-                });
-                }}>Name&ensp;<Icon icon="sort" /></th>
-              <th className="visually-hidden">Actions</th>
-              <th onClick={(event) => {
-                let dir = this.state.sort.dir;
-                if(this.state.sort.by === 'dimensions') {
-                  dir = (dir === utility.ASCENDING) ? utility.DESCENDING : utility.ASCENDING
-                }
-                this.setState({
-                  sort:{
-                    by:'dimensions',
-                    dir:dir
-                  }
-                });
-                }}>Dimensions&ensp;<Icon icon="sort" /></th>
-              <th onClick={(event) => {
-                let dir = this.state.sort.dir;
-                if(this.state.sort.by === 'fileSize') {
-                  dir = (dir === utility.ASCENDING) ? utility.DESCENDING : utility.ASCENDING
-                }
-                this.setState({
-                  sort:{
-                    by:'fileSize',
-                    dir:dir
-                  }
-                });
-                }}>File Size&ensp;<Icon icon="sort" /></th>
-              <th onClick={(event) => {
-                  let dir = this.state.sort.dir;
-                  if(this.state.sort.by === 'editedOn') {
-                    dir = (dir === utility.ASCENDING) ? utility.DESCENDING : utility.ASCENDING
-                  }
-                  this.setState({
-                    sort:{
-                      by:'editedOn',
-                      dir:dir
-                    }
-                  });
-                }}>Edited On&ensp;<Icon icon="sort" /></th>
-            </tr>
-          </thead>
-          <EurekaTableTbody {...props} sort={this.state.sort} />
-        </table>
+        {table}
         {html5ContextMenus}
       </Dropzone>
+    ) : (
+      <div>
+        {table}
+        {html5ContextMenus}
+      </div>
     );
   }
 }

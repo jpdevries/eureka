@@ -37,30 +37,30 @@ class Eureka extends Component {
   componentDidMount() {
     store.dispatch(actions.fetchMediaSources()).then(() => { // hit the server and get the media sources
       store.dispatch(actions.updateSourceTree(this.props.source.sources[0].id)).then((content) => { // then hit server for the directory tree of the first (default) media source
-        const props = this.props; 
+        const props = this.props;
         if(props.view.intervals.fetchDirectoryContents !== undefined && props.view.intervals.fetchDirectoryContents > 0) {
           setInterval(() => { // every so often hit the server and update the displayed contents of the current directory
-            const state = store.getState(); 
-            const props = this.props; 
-            
+            const state = store.getState();
+            const props = this.props;
+
             store.dispatch(actions.updateContent({ // updates the "current directory" of the view right away
               cd: props.content.cd
             }));
             store.dispatch(actions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
               dir: props.content.cd
             }));
-            
+
           }, props.view.intervals.fetchDirectoryContents);
         }
-        
+
         if(props.view.intervals.updateSourceTree !== undefined && props.view.intervals.updateSourceTree > 0) { // hit the server and get the (top-level-ish) directory tree of the current source
           setInterval(() => {
             store.dispatch(actions.updateSourceTree(props.source.currentSource));
           }, props.view.intervals.updateSourceTree);
         }
-      }); 
+      });
     });
-    
+
     document.body.addEventListener('keyup', (event) => {
       const key = event.keyCode || event.charCode || 0;
       console.log(key);
@@ -74,7 +74,7 @@ class Eureka extends Component {
       }
     });
   }
-  
+
   onCreateDirectory() {
     console.log('onCreateDirectory');
     this.setState({
@@ -82,7 +82,7 @@ class Eureka extends Component {
       currentModal:CREATE_DIRECTORY
     })
   }
-  
+
   onModalCancel(event) {
     event.preventDefault();
     console.log('onModalCancel');
@@ -91,12 +91,12 @@ class Eureka extends Component {
       currentModal:undefined
     });
   }
-  
+
   onModalSubmit(createDirectory) {
     const props = this.props;
     event.preventDefault();
     console.log('onModalSubmit',createDirectory);
-    
+
     switch(this.state.currentModal) {
       case CREATE_DIRECTORY:
       console.log(store.getState().content.cd, path.join(store.getState().content.cd, 'foo'));
@@ -111,13 +111,13 @@ class Eureka extends Component {
         }));
       });
       break;
-      
+
       case RENAME_ITEM:
       console.log()
       break;
     }
   }
-  
+
   onRenameItemModalSubmit(newName, item) {
     console.log('onRenameItemModalSubmit!!!', newName, item);
     console.log(item.absolutePath);
@@ -130,7 +130,7 @@ class Eureka extends Component {
         return pathParse(item.absolutePath).dir;
       }
     })();
-    
+
     store.dispatch(actions.renameItem(this.props.source.currentSource, item.absolutePath, newName)).then((results) => {
       console.log('results!!!', results);
       store.dispatch(actions.updateContent({contents:results.contents.filter((file) => (
@@ -143,7 +143,7 @@ class Eureka extends Component {
       });
     });
   }
-  
+
   onRenameItem(item) {
     console.log('onRenameItem', item);
     this.setState({
@@ -152,12 +152,12 @@ class Eureka extends Component {
       currentModal:RENAME_ITEM
     });
   }
-  
+
   render() {
     const props = this.props;
     const state = this.state;
     const modalOpen = false;
-    
+
     const modal = (() => {
       if(state.modalOpen) {
         switch(state.currentModal) {
@@ -168,7 +168,7 @@ class Eureka extends Component {
             </Modal>
           );
           break;
-          
+
           case RENAME_ITEM:
           return (
             <Modal onCancel={this.onModalCancel.bind(this)} onSubmit={this.onRenameItemModalSubmit.bind(this)} title={`Rename Item ${state.renamingItem.filename}`} {...props}>
@@ -176,7 +176,7 @@ class Eureka extends Component {
             </Modal>
           );
           break;
-          
+
           default:
           return undefined;
           break;
@@ -184,30 +184,32 @@ class Eureka extends Component {
       }
       //(state.modalOpen) ? <Modal onCancel={this.onModalCancel.bind(this)} onSubmit={this.onModalSubmit.bind(this)} title="Create Directory" {...props}><ModalCreateDirectoryForm {...props} /></Modal> : undefined
     })();
-    
+
+    const dropArea = (props.config.allowUploads) ? <DropArea {...props} /> : undefined;
+
     const pathbrowser = (props.view.sourceTreeOpen) ? (
       <div id="eureka__pathbrowser" className="eureka__pathbrowser">
         <MediaSourceSelector {...props} />
         <FileTree {...props} />
-        <DropArea {...props} />
+        {dropArea}
         <TreeBar onCreateDirectory={this.onCreateDirectory.bind(this)} {...props} />
       </div>
     ) : undefined;
-    
+
     const mediaDirectorySelector = (!props.view.sourceTreeOpen) ? (
       <MediaDirectorySelector {...props} />
     ) : undefined;
-    
-    const uploadForm = (!props.view.sourceTreeOpen) ? (
+
+    const uploadForm = (!props.view.sourceTreeOpen && props.config.allowUploads) ? (
       <UploadForm {...props} />
     ) : undefined;
-    
+
     const pathBar = (props.view.focusedMediaItem) ? (
       <PathBar {...props} />
     ) : undefined;
-    
+
     const enlargeFocusedRows = (props.view.enlargeFocusedRows) ? ' eureka__enlarge-focused-rows' : '';
-    
+
     return (
       <div className={`eureka eureka__view-mode__${props.view.mode}${enlargeFocusedRows}`}>
         <div aria-hidden={state.modalOpen} className="eureka__browse-content">
@@ -224,7 +226,7 @@ class Eureka extends Component {
                 <TreeToggle {...props} />
                   {mediaDirectorySelector}
                   {uploadForm}
-                <ViewChooser {...props} />  
+                <ViewChooser {...props} />
               </div>
             </div>
             <div className="eureka__table-wrapper">
