@@ -49,8 +49,8 @@ The semantic HTML layer remains usable even absent of style as pure&nbsp;HTML.
   <thead>
     <tr>
       <th>Feature</th>
-      <th>`.no-js` support</th>
-      <th>`< IE 9` support</th>
+      <th><code>.no-js</code> support</th>
+      <th><code>< IE 9</code> support</th>
       <th>Chrome latest</th>
       <th>Safari</th>
       <th>Firefox</th>
