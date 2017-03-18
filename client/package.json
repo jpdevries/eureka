@@ -1,14 +1,41 @@
 {
   "name": "eureka",
-  "version": "0.1.0",
+  "description": "Eureka is a progressive enhanced Media Browser Component.",
+  "version": "2.0.0",
   "private": true,
+  "license": "BSD-3-Clause",
+  "author": { "name" : "JP de Vries", "email" : "mail@devries.jp", "url" : "https://devries.jp/"},
   "proxy": "http://localhost:3001/",
+  "main": "src/EurekaMediaBrowser.js",
+  "config" : { "port" : "3000" },
+  "keywords": [
+    "react",
+    "redux",
+    "media",
+    "browse",
+    "eureka",
+    "MODX",
+    "a11y",
+    "data",
+    "table",
+    "server"
+  ],
+  "homepage": "https://eureka.markup.tips",
+  "bugs":{ "url" : "https://github.com/jpdevries/eureka/issues", "email" : "eureka@devries.jp"},
+  "repository" : { "type" : "git", "url" : "https://github.com/jpdevries/eureka.git"},
+  "files": [
+    "bower.json",
+    "yarn.lock",
+    "build/assets/css/",
+    "build/assets/img/",
+    "build/assets/js/",
+    "build/static/",
+    "src/"
+  ],
   "devDependencies": {
     "autoprefixer": "^6.7.3",
-    "classnames": "^2.2.5",
     "concurrently": "^3.3.0",
     "cssnano": "^3.10.0",
-    "filesize": "^3.5.4",
     "grunt-bower-task": "^0.4.0",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-cssmin": "^2.0.0",
@@ -32,7 +59,9 @@
     "react-dom": "^15.4.2",
     "react-dropzone": "^3.10.0",
     "react-redux": "^5.0.2",
-    "redux": "^3.6.0"
+    "redux": "^3.6.0",
+    "filesize": "^3.5.4",
+    "classnames": "^2.2.5"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -20,12 +20,12 @@ class EurekaMediaBrowser extends Component {
     store.subscribe(() => {
       const state = store.getState();
       console.log(state);
-      try {
+      /*try {
         const siteName = title.dataset.siteName,
         title = document.querySelector('head > title'),
         ct = (`${state.content.cd} of ${state.source.sources[state.source.currentSource].name} media source`);
         title.innerHTML = `${ct} | ${siteName}`;
-      } catch (e) {}
+      } catch (e) {}*/
 
       if(state.config.useLocalStorage) {
         try {
