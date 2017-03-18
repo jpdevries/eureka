@@ -20,7 +20,7 @@
   "scripts": {
     "start": "npm run fetchsources && npm run server",
     "prestart": "cd ./client && yarn && yarn build && cd ../ && yarn",
-    "fetchsources": "rm -rf sources.zip && rm -rf sources && wget http://j4p.us/1L0Y0Q1A0p1n/sources.zip && unzip sources.zip && rm -rf sources.zip && ls && ls sources",
+    "fetchsources": "rm -rf sources.zip && rm -rf sources && wget http://j4p.us/2G3A0a0K3O31/sources.zip && unzip sources.zip && rm -rf sources.zip && ls && ls sources",
     "server": "babel-node server.js",
     "client": "babel-node start-client.js",
     "dev": "echo \"This command has been deprecated. Use 'npm start'\" && exit 1",
