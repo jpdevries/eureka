@@ -117,7 +117,7 @@ class EurekaTable extends Component {
       </table>
     );
 
-    return props.config.allowUploads ? (
+    return props.config.allowUploads && !utility.serverSideRendering ? (
       <Dropzone onDrop={this.onDrop.bind(this)} disableClick={true} style={{}}>
         {table}
         {html5ContextMenus}
