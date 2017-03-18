@@ -17,6 +17,7 @@ const initialConfigState = {
   localse:"en-US",
   mediaSource:undefined,
   currentDirectory:"/",
+  uid:new Date().getTime(),
   emphasisFocusedMediaItem:true,
   headers:{'Powered-By': 'Eureka by Markup.tips'},
   intervals:{searchBarPlaceholder: false,fetchDirectoryContents: 18000,updateSourceTree: false}
@@ -349,14 +350,16 @@ var directoryReducer = function(state, action) {
     ));
 
     function recursivelyCrawlChildren(file) {
-      file.children.map((child) => {
-        foldersToAdd.push({
-          name:child.name,
-          cd:child.cd,
-          children:child.children || []
-        });
-        if(child.children.length) recursivelyCrawlChildren(child);
-      })
+      try {
+        file.children.map((child) => {
+          foldersToAdd.push({
+            name:child.name,
+            cd:child.cd,
+            children:child.children || []
+          });
+          if(child.children.length) recursivelyCrawlChildren(child);
+        })
+      } catch (e) { }
     }
 
     action.contents.map((file) => {

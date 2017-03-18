@@ -136,6 +136,9 @@ const fetchDirectoryContentsSuccess = function(contents) {
   }
 }
 
+exports.fetchDirectoryContentsSuccess = fetchDirectoryContentsSuccess;
+exports.fetchDirectoryContentsError = fetchDirectoryContentsError;
+
 const fetchDirectoryContentsError = function(error) {
   return {
     type:FETCH_DIRECTORY_CONTENTS_ERROR,
@@ -176,7 +179,7 @@ const FETCH_MEDIA_SOURCES_SUCCESS = 'fetch_media_sources_success';
 const FETCH_MEDIA_SOURCES_ERROR = 'fetch_media_sources_error';
 
 const fetchMediaSourcesSuccess = function(sources) {
-  console.log('fetchMediaSourcesSuccess', sources);
+  //console.log('fetchMediaSourcesSuccess', sources);
   return {
     type:FETCH_MEDIA_SOURCES_SUCCESS,
     sources:sources

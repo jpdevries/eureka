@@ -28,6 +28,7 @@ Join the conversation in our public Gitter chat room.
    - supports mobile and touch devices
    - supports `.no-js` via server side rendering
    - ARIA & Keyboard Support
+   - high contrast themes
 
 ## 🌐 Browser Support
 The server side rendering and HTML&ndash;first design patterns begin progressively enhancing a universally supported HTML layer. So basic features are supported in any browser. JavaScript support begins at IE9. Desired CSS layout requires Flexbox and is further enhanced with Grid Layout.
@@ -86,6 +87,8 @@ See the [REST API wiki page](https://github.com/jpdevries/eureka/wiki/REST-API).
 **HTML**
 ```html
 <div id="eureka-root">
+  <!-- for performance, optimization, and accessibility it best to support server-side rendering by initially delivering a base HTML layer
+  see server-side rendering below -->
 </div>
 <script src="assets/js/vendor/eureka/eureka.2.0.0.min.js"></script>
 ```
@@ -166,6 +169,8 @@ import EurekaMediaBrowser from 'EurekaMediaBrowser';
 ```
 
 ## 🎨 Theming
+Request additional theming options and share your themes by [opening an issue](https://github.com/jpdevries/eureka/issues/new) or [joining the discussion on&nbsp;Gitter](https://gitter.im/jpdevries/eureka?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge).
+
 | Variable        | Description  |
 | ------------- | -----|
 | `--active` | Color used to highlight activated components such as the drop area |

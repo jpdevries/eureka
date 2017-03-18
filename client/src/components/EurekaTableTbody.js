@@ -20,11 +20,15 @@ class EurekaTableTbody extends Component {
   }
 
   componentWillMount() {
-    window.addEventListener("resize", this.handleResize, false);
+    try {
+      window.addEventListener("resize", this.handleResize, false);
+    } catch (e) { }
   }
 
   componentWillUnmount() {
-    window.removeEventListener("resize", this.handleResize, false);
+    try {
+      window.removeEventListener("resize", this.handleResize, false);
+    } catch (e) { }
   }
 
   componentDidMount() {
@@ -147,7 +151,7 @@ class EurekaTableTbody extends Component {
 
 function NoResults(props) {
   return (props.view.filter) ? (
-    <tr>
+    <tr role="row">
       <td role="presentation" colSpan="5" className="comfortable">
         <p className="alert-info eureka__notice" aria-live="assertive">
           Uh oh. No results found for "{props.view.filter}". <a href="#eureka__filter" onClick={(event) => {
@@ -165,7 +169,7 @@ function NoResults(props) {
     </tr>
   ) : (
     <tr>
-      <td colSpan="5" className="comfortable">
+      <td role="presentation" colSpan="5" className="comfortable">
         <p className="alert-info eureka__notice" aria-live="assertive">
           Directory "{props.content.cd}" appears to be empty.<br />Perhaps you'd like to <a href="#eureka__upload-form" onClick={(event) => {
             event.preventDefault();

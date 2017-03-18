@@ -6,6 +6,14 @@ path = require('path'),
 util = require('util'),
 rmdir = require('rmdir');
 
+import React from 'react';
+import ReactDOM from 'react-dom/server';
+
+import actions from './client/src/model/actions';
+import store from './client/src/model/store';
+import EurekaMediaBrowser from './client/src/EurekaMediaBrowser';
+import utility from './client/src/utility/utility';
+
 app.set('port', (process.env.PORT || 3001));
 
 /*app.use(formidable({
@@ -15,6 +23,133 @@ app.set('port', (process.env.PORT || 3001));
 app.use('/sources',express.static('sources'));
 
 app.use('/',express.static('client/build'));
+
+app.post('/server', (req, res) => {
+  console.log('params',req.params);
+  console.log('query',req.query);
+
+  const form = new formidable.IncomingForm();
+  form.multiples = true;
+
+  form.parse(req, function(err, fields, files) {
+    console.log('fields', fields);
+    console.log('PARSE');
+
+    const uploadFiles = files.eureka__uploadFiles;
+    console.log(uploadFiles);
+
+
+    const [cs, cd] = utility.parseMediaSourceOutOfCombinedPath(fields[`eureka__media-browser_${fields.eureka__mediaSourceId}__browsing`], '||');
+    const uploadDir = path.join(__dirname, path.join('/sources/filesystem/', fields['eureka__upload-dir']));
+
+    function moveFile(file) {
+      fs.renameSync(file.path, path.join(uploadDir, file.name))
+    }
+
+    try {
+      uploadFiles.map(moveFile)
+    } catch (e) { // its a single file not an Array
+      if(uploadFiles.name) moveFile(uploadFiles)
+    }
+
+    /*files.map((file) => (
+      fs.renameSync(file.path, path.join(uploadDir, file.name))
+    ));*/
+
+    if(fields.eureka__chosen_item) {
+      getMediaSources().then((mediaSources) => {
+        //console.log(mediaSources);
+        const name = mediaSources.filter((mediaSource) => (
+          mediaSource.id == cs
+        ))[0].name || undefined;
+        //console.log(name);
+
+        res.end(`<!DOCTYPE html>
+        <html lang="en">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width,initial-scale=1">
+            <title data-site-name="Eureka Media Browser">Eureka!</title>
+          </head>
+          <body>
+            <h1>Eureka!</h1>
+            <p>You chose ${path.join(fields['eureka__upload-dir'], fields.eureka__chosen_item)} of the ${name} (${cs}) media&nbsp;source.</p>
+            <img src="/sources/filesystem/${path.join(fields['eureka__upload-dir'], fields.eureka__chosen_item)}" alt="/sources/filesystem/${path.join(fields['eureka__upload-dir'], fields.eureka__chosen_item)}" />
+          </body>
+        </html>`);
+      });
+    } else {
+      serveIt(req, res, cd);
+    }
+
+
+
+  });
+});
+
+function serveIt(req, res, dir = "/") {
+  console.log('serveIt', dir);
+  store.dispatch(actions.updateConfig({
+    uid:"0"
+  }));
+
+  getMediaSources().then((mediaSources) => ( // get the media sources
+    store.dispatch(actions.fetchMediaSourcesSuccess((
+      mediaSources
+    )))
+  )).then(() => {
+    return new Promise((resolve, reject) => { // get the media source tree listing
+      const path = `${__dirname}/sources/filesystem/`;
+      //const data = [{"name":"assets","cd":"assets","children":[{"name":"img","cd":"assets/img","children":[{"name":"hawaii","cd":"assets/img/hawaii","children":[]},{"name":"redwoods","cd":"assets/img/redwoods","children":[]}]},{"name":"screenshots","cd":"assets/screenshots","children":[]},{"name":"uploads","cd":"assets/uploads","children":[]}]},{"name":"camera","cd":"camera","children":[]},{"name":"foo","cd":"foo","children":[]}];
+      recursivelyGetSourceDirectories(path).then((results) => (
+        resolve(results)
+      )).catch((err) => (
+        res.json([])
+      ));
+    })
+  }).then((results) => (
+    store.dispatch(actions.updateSourceTreeSuccess(
+      results
+    ))
+  )).then(() => { // get the current directory listing
+    return new Promise((resolve, reject) => {
+      getDirectoryListing(`${__dirname}/sources/filesystem/`, dir || 'assets/img/hawaii', true, true, `${__dirname}/sources/filesystem/`).then((results) => (
+        resolve(results)
+      )).catch((err) => (
+        res.json([])
+      ));
+
+    })
+  }).then((results) => (
+    store.dispatch(actions.fetchDirectoryContentsSuccess(
+      results
+    ))
+  )).then(() => (
+    store.dispatch(actions.updateContent({ // updates the "current directory" of the view right away
+      cd: dir
+    }))
+  )).then(() => {
+    const eurekaMarkup = ReactDOM.renderToStaticMarkup(
+      <EurekaMediaBrowser currentDirectory={dir} />
+    );
+    res.end(`<!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title data-site-name="Eureka Media Browser">Eureka Media Browser</title>
+        <link rel="stylesheet" href="assets/css/main.css">
+      </head>
+      <body>
+        <div id="root">${eurekaMarkup}</div>
+      </body>
+    </html>`);
+  });
+}
+
+app.get('/server', (req, res) => {
+  serveIt(req, res, req.params.dir);
+});
 
 /*
 Retrieve a list of media sources
@@ -115,7 +250,7 @@ function getSourceDirectories(path) {
     //console.log(path, files.length);
 
     files.forEach((file) => {
-      console.log(file);
+      //console.log(file);
       const stat = fs.statSync(`${path}${file}`),
       {size, atime, mtime, ctime} = stat,
       isFile = stat.isFile();
@@ -140,7 +275,7 @@ function getDirectoryListing(baseURL = '', dirPath = '', includeFiles = true, in
   //dirPath = `${baseURL}${dirPath}`;
 
   dirPath = path.join(baseURL, dirPath);
-  console.log('getDirectoryListing', baseURL, dirPath, includeFiles, includeDirectories);
+  //console.log('getDirectoryListing', baseURL, dirPath, includeFiles, includeDirectories);
 
   return new Promise((resolve, reject) => {
     if(!includeFiles && !includeDirectories) resolve([]); // nothing to do!
@@ -233,7 +368,7 @@ app.post('/core/components/eureka/media/sources/:source', (req, res) => {
   uploadDir = path.join(__dirname, path.join('/sources/filesystem/', dir)),
   form = new formidable.IncomingForm();
 
-  console.log(dir, uploadDir);
+  //console.log(dir, uploadDir);
 
   if (!dir) {
     res.json({
@@ -322,7 +457,7 @@ app.put('/core/components/eureka/media/sources/:source', (req, res) => {
   const filePath = req.query.path,
   name = req.query.name;
 
-  console.log(filePath,name);
+  //console.log(filePath,name);
 
   if (!filePath && !name) {
     res.json({

@@ -420,6 +420,9 @@ body {
     @include media($gtMobile) {
       margin-right:auto;
     }
+    button[type="submit"] {
+      margin-left:1rem;
+    }
   }
 
   .eureka__tree-bar {

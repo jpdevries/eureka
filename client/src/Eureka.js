@@ -21,6 +21,7 @@ const pathParse = require('path-parse');
 
 import store from './model/store';
 import actions from './model/actions';
+import utility from './utility/utility';
 
 const CREATE_DIRECTORY = 'create_directory';
 const RENAME_ITEM = 'rename_item';
@@ -187,7 +188,7 @@ class Eureka extends Component {
 
     const dropArea = (props.config.allowUploads) ? <DropArea {...props} /> : undefined;
 
-    const pathbrowser = (props.view.sourceTreeOpen) ? (
+    const pathbrowser = (props.view.sourceTreeOpen && !utility.serverSideRendering) ? (
       <div id="eureka__pathbrowser" className="eureka__pathbrowser">
         <MediaSourceSelector {...props} />
         <FileTree {...props} />
@@ -208,34 +209,49 @@ class Eureka extends Component {
       <PathBar {...props} />
     ) : undefined;
 
+    const treeToggle = (!utility.serverSideRendering) ? <TreeToggle {...props} /> : undefined;
+    const viewChooser = (!utility.serverSideRendering) ? <ViewChooser {...props} /> : undefined;
+    const chooseBar = <ChooseBar ariaHidden={state.modalOpen} {...props} />;
     const enlargeFocusedRows = (props.view.enlargeFocusedRows) ? ' eureka__enlarge-focused-rows' : '';
-
-    return (
-      <div className={`eureka eureka__view-mode__${props.view.mode}${enlargeFocusedRows}`}>
-        <div aria-hidden={state.modalOpen} className="eureka__browse-content">
-          {pathbrowser}
-          <div className="eureka__stage">
-            <div className="eureka__stage__filter-view">
-              <header>
-                <h2>
-                  <span className="visually-hidden">Browse </span>Media Content
-                </h2>
-                <SearchBar {...props} />
-              </header>
-              <div className="eureka__tree-toggle">
-                <TreeToggle {...props} />
-                  {mediaDirectorySelector}
-                  {uploadForm}
-                <ViewChooser {...props} />
-              </div>
-            </div>
-            <div className="eureka__table-wrapper">
-              <EurekaTable {...props} onRenameItem={this.onRenameItem.bind(this)} onSubmit={this.onRenameItemModalSubmit.bind(this)} />
+    const searchBar = (!utility.serverSideRendering) ? <SearchBar {...props} /> : undefined;
+    const serverSideClass = (utility.serverSideRendering) ? ' eureka__server-side' : '';
+    const formDiv = (
+      <div aria-hidden={state.modalOpen} className="eureka__browse-content">
+        {pathbrowser}
+        <div className="eureka__stage">
+          <div className="eureka__stage__filter-view">
+            <header>
+              <h2>
+                <span className="visually-hidden">Browse </span>Media Content
+              </h2>
+              {searchBar}
+            </header>
+            <div className="eureka__tree-toggle">
+              {treeToggle}
+                {mediaDirectorySelector}
+                {uploadForm}
+              {viewChooser}
             </div>
           </div>
+          <div className="eureka__table-wrapper">
+            <EurekaTable {...props} onRenameItem={this.onRenameItem.bind(this)} onSubmit={this.onRenameItemModalSubmit.bind(this)} />
+          </div>
         </div>
+      </div>
+    );
+
+    return (utility.serverSideRendering) ? (
+      <form method="POST" action="/server" encType="multipart/form-data" className={`eureka eureka__view-mode__${props.view.mode}${enlargeFocusedRows}${serverSideClass}`}>
+        {formDiv}
         {pathBar}
-        <ChooseBar ariaHidden={state.modalOpen} {...props} />
+        {chooseBar}
+        {modal}
+      </form>
+    ) : (
+      <div className={`eureka eureka__view-mode__${props.view.mode}${enlargeFocusedRows}${serverSideClass}`}>
+        {formDiv}
+        {pathBar}
+        {chooseBar}
         {modal}
       </div>
     );

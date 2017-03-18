@@ -9,8 +9,7 @@ import { Provider } from 'react-redux';
 import Eureka from './Eureka';
 
 const actions = require('./model/actions'),
-store = require('./model/store'),
-title = document.querySelector('head > title');
+store = require('./model/store');
 
 class EurekaMediaBrowser extends Component {
   constructor(props) {
@@ -23,6 +22,7 @@ class EurekaMediaBrowser extends Component {
       console.log(state);
       try {
         const siteName = title.dataset.siteName,
+        title = document.querySelector('head > title'),
         ct = (`${state.content.cd} of ${state.source.sources[state.source.currentSource].name} media source`);
         title.innerHTML = `${ct} | ${siteName}`;
       } catch (e) {}

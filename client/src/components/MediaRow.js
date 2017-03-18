@@ -38,7 +38,7 @@ const MediaRow = (props) => {
 
   const contentEditable = false;
 
-  const media = (function(ext){ // consider abstracting this to its own module
+  let media = (function(ext){ // consider abstracting this to its own module
     //console.log(pathParse(props.item.filename).ext,'props.item',props.item);
 
     switch(ext.toLowerCase()) {
@@ -131,19 +131,32 @@ const MediaRow = (props) => {
     }
   })(pathParse(props.item.filename).ext);
 
-  classNames();
 
-  const className = (props.config.emphasisFocusedMediaItem && props.item == props.view.focusedMediaItem) ? {'eureka__focused-media-item':true} : {};
 
+  //classNames();
+
+  const mediaId = `${props.config.storagePrefix}__media__${utility.cssSafe(props.item.filename)}`,
+  mediaSelectId = `${props.config.storagePrefix}__radio_${utility.cssSafe(props.item.filename)}`,
+  mediaSelect = (utility.serverSideRendering) ? <td><input id={mediaSelectId} value={props.item.filename} name="eureka__chosen_item" type="radio" aria-labelledby={`${props.config.storagePrefix}choose-button`} aria-describedby={`${mediaId} ${utility.cssSafe(props.item.filename)}`} /><span className="visually-hidden">&ensp;Select ${props.item.filename}</span></td> : undefined,
+  className = (props.config.emphasisFocusedMediaItem && props.item == props.view.focusedMediaItem) ? {'eureka__focused-media-item':true} : {},
+  tabIndex = (utility.serverSideRendering) ? undefined : "0";
+
+  if(utility.serverSideRendering) media = <label style={{display:'block'}} htmlFor={mediaSelectId} aria-labelledby={`${props.config.storagePrefix}filename__${utility.cssSafe(props.item.filename)}`}><span className="visually-hidden">Media Contents</span>{media}</label>;
+
+  let fileName = utility.wordBreaksEvery(props.item.filename);
+  if(utility.serverSideRendering) {
+    fileName = <a href={`#${mediaSelectId}`} role="presentation" tabIndex="-1" id={`${props.config.storagePrefix}filename__${utility.cssSafe(props.item.filename)}`}>{fileName}</a>
+  }
   return (
 
-    <tr className={classNames(className)} id={utility.cssSafe(props.item.filename)} aria-label={ariaLabel} role="row" tabIndex="0" onFocus={props.onFocus.bind(this)} contextMenu={`context_menu__tbody-${props.index}`}>
-      <td title={ariaLabel} className="eureka__td-media" onDoubleClick={(event) => {
+    <tr role="row" className={classNames(className)} id={utility.cssSafe(props.item.filename)} aria-label={ariaLabel} role="row" tabIndex={tabIndex} onFocus={props.onFocus.bind(this)} contextMenu={`context_menu__tbody-${props.index}`}>
+      {mediaSelect}
+      <td role="gridcell" id={mediaId} title={ariaLabel} className="eureka__td-media" onDoubleClick={(event) => {
           console.log(event, props.item);
       }}>
         {media}
       </td>
-      <td className="eureka__td-filename" contentEditable={contentEditable} onBlur={(event) => {
+      <td role="gridcell" className="eureka__td-filename" contentEditable={contentEditable} onBlur={(event) => {
           try {
             if(!entities.decode(event.target.innerHTML).trim()) {
               event.target.innerHTML = props.item.filename;
@@ -179,17 +192,17 @@ const MediaRow = (props) => {
             console.log('onCut', event);
          }}
          >
-        {utility.wordBreaksEvery(props.item.filename)}
+        {fileName}
       </td>
       <ContextMenu className="eureka__context-row" {...props} item={item}  hidden={shouldHide(item)} key={`cm__${index}`} />
-      <td>
+      <td role="gridcell">
         {`${props.item.dimensions[0]}x${props.item.dimensions[1]}`}
       </td>
-      <td>
+      <td role="gridcell">
         {filesize(props.item.fileSize)}
       </td>
-      <td title={new Date(props.item.editedOn).toLocaleString(props.view.locale,{ weekday:'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' })}>
-      {new Date(props.item.editedOn).toLocaleString(props.view.locale,{ year: '2-digit', month: '2-digit', day: '2-digit' })}
+      <td role="gridcell" title={new Date(props.item.editedOn).toLocaleString(props.view.locale, { weekday:'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' })}>
+        {new Date(props.item.editedOn).toLocaleString(props.view.locale, { year: '2-digit', month: '2-digit', day: '2-digit' })}
       </td>
     </tr>
   );

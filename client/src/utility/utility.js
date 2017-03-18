@@ -139,6 +139,23 @@ function getIconByExtension(ext) {
   }
 }
 
+function parseMediaSourceOutOfCombinedPath(path, delimeter = '||') {
+  const [cs, ...cd_] = path.split(delimeter),
+  cd = cd_.join('||');
+
+  return [cs, cd];
+}
+
+exports.serverSideRendering = (function(){
+  try {
+    return !(document !== undefined)
+  } catch(e) {
+    return true;
+  }
+})();
+
+exports.parseMediaSourceOutOfCombinedPath = parseMediaSourceOutOfCombinedPath;
+
 exports.getIconByExtension = getIconByExtension;
 
 exports.makeURL = makeURL;

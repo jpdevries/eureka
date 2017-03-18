@@ -54,12 +54,15 @@ class EurekaTable extends Component {
       </menu>
     )) : undefined;
 
+    const selectHead = utility.serverSideRendering ? <th scope="col" role="columnheader">Select</th> : undefined;
+
     const table = (
       <table className="eureka__table" cellSpacing="0" cellPadding="0">
         <thead hidden={!props.content.contents.length} className={classNames((store.getState().view.isTableScrolling) ? 'eureka__tbody-scrolling' : undefined)}>
           <tr>
-            <th>Media</th>
-            <th onClick={(event) => {
+            {selectHead}
+            <th scope="col" role="columnheader">Media</th>
+            <th scope="col" role="columnheader" onClick={(event) => {
               let dir = this.state.sort.dir;
               if(this.state.sort.by === 'filename') {
                 dir = (dir === utility.ASCENDING) ? utility.DESCENDING : utility.ASCENDING
@@ -70,9 +73,9 @@ class EurekaTable extends Component {
                   dir:dir
                 }
               });
-              }}>Name&ensp;<Icon icon="sort" /></th>
-            <th className="visually-hidden">Actions</th>
-            <th onClick={(event) => {
+            }}>Name&ensp;{(!utility.serverSideRendering) ? <Icon icon="sort" /> : undefined}</th>
+            <th scope="col" role="columnheader" className="visually-hidden">Actions</th>
+            <th scope="col" role="columnheader" onClick={(event) => {
               let dir = this.state.sort.dir;
               if(this.state.sort.by === 'dimensions') {
                 dir = (dir === utility.ASCENDING) ? utility.DESCENDING : utility.ASCENDING
@@ -83,8 +86,8 @@ class EurekaTable extends Component {
                   dir:dir
                 }
               });
-              }}>Dimensions&ensp;<Icon icon="sort" /></th>
-            <th onClick={(event) => {
+              }}>Dimensions&ensp;{(!utility.serverSideRendering) ? <Icon icon="sort" /> : undefined}</th>
+            <th scope="col" role="columnheader" onClick={(event) => {
               let dir = this.state.sort.dir;
               if(this.state.sort.by === 'fileSize') {
                 dir = (dir === utility.ASCENDING) ? utility.DESCENDING : utility.ASCENDING
@@ -95,8 +98,8 @@ class EurekaTable extends Component {
                   dir:dir
                 }
               });
-              }}>File Size&ensp;<Icon icon="sort" /></th>
-            <th onClick={(event) => {
+              }}>File Size&ensp;{(!utility.serverSideRendering) ? <Icon icon="sort" /> : undefined}</th>
+            <th scope="col" role="columnheader" onClick={(event) => {
                 let dir = this.state.sort.dir;
                 if(this.state.sort.by === 'editedOn') {
                   dir = (dir === utility.ASCENDING) ? utility.DESCENDING : utility.ASCENDING
@@ -107,7 +110,7 @@ class EurekaTable extends Component {
                     dir:dir
                   }
                 });
-              }}>Edited On&ensp;<Icon icon="sort" /></th>
+              }}>Edited On&ensp;{(!utility.serverSideRendering) ? <Icon icon="sort" /> : undefined}</th>
           </tr>
         </thead>
         <EurekaTableTbody {...props} sort={this.state.sort} />

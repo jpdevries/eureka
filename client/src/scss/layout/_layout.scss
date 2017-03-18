@@ -18,6 +18,49 @@ body {
             grid-template-areas:"media name dimensions file-size edited-on" "actions actions actions actions actions";
           }
         }
+        &.eureka__server-side {
+          .eureka__browse-content>.eureka__stage>.eureka__table-wrapper>div>table {
+
+
+            > thead > tr, > tbody:not(.empty) > tr:not(.empty) {
+              @include media($gtMobile) {
+                grid-template-areas:"radio media name dimensions file-size edited-on";
+                grid-template-columns:2rem 40% 24% auto auto auto;
+                > td, > th {
+                  &:nth-of-type(1) {
+                    grid-area:radio;
+                  }
+                  &:nth-of-type(2) {
+                    grid-area:media;
+                    text-align:left;
+                  }
+                  &:nth-of-type(3) {
+                    grid-area:name;
+                  }
+                  &:nth-of-type(5) {
+                    grid-area:dimensions;
+                  }
+                  &:nth-of-type(6) {
+                    grid-area:file-size;
+                  }
+                  &:nth-of-type(7) {
+                    grid-area:edited-on;
+                  }
+                }
+              }
+            }
+
+            > thead > tr {
+              > th {
+                &:nth-of-type(1) {
+                  grid-area:none;
+                  @extend %visually-hidden;
+                }
+              }
+            }
+
+          }
+        }
       }
     }
   }
@@ -265,6 +308,10 @@ body {
     form {
       display:inline-block;
     }
+    > div {
+      display:inline-block;
+      margin-left:.5em;
+    }
   }
 }
 
@@ -279,6 +326,9 @@ body {
     }
     .eureka__upload-form {
       margin-right:auto;
+      .eureka__server-side & {
+        margin-right:0;
+      }
     }
     button {
 
