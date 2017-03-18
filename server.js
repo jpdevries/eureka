@@ -14,6 +14,8 @@ import store from './client/src/model/store';
 import EurekaMediaBrowser from './client/src/EurekaMediaBrowser';
 import utility from './client/src/utility/utility';
 
+
+
 app.set('port', (process.env.PORT || 3001));
 
 /*app.use(formidable({
@@ -21,6 +23,19 @@ app.set('port', (process.env.PORT || 3001));
 }));*/
 
 app.use('/sources',express.static('sources'));
+
+
+
+app.get('/', (req, res) => {
+
+  serveIt('/').then((eurekaMarkup) => {
+    console.log(path.join(__dirname, 'client/build/index.html'));
+    const build = fs.readFileSync(path.join(__dirname, 'client/build/index.html'), 'utf8');
+    //const build = '<h1>YOLO</h1>';
+    res.end(build);
+  });
+
+});
 
 app.use('/',express.static('client/build'));
 
@@ -79,7 +94,20 @@ app.post('/server', (req, res) => {
         </html>`);
       });
     } else {
-      serveIt(req, res, cd);
+      serveIt(cd).then((eurekaMarkup) => {
+        res.end(`<!DOCTYPE html>
+        <html lang="en">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width,initial-scale=1">
+            <title data-site-name="Eureka Media Browser">Eureka Media Browser</title>
+            <link rel="stylesheet" href="assets/css/main.css">
+          </head>
+          <body>
+            <div id="root">${eurekaMarkup}</div>
+          </body>
+        </html>`);
+      });
     }
 
 
@@ -87,51 +115,59 @@ app.post('/server', (req, res) => {
   });
 });
 
-function serveIt(req, res, dir = "/") {
+function serveIt(dir = "/") {
   console.log('serveIt', dir);
-  store.dispatch(actions.updateConfig({
-    uid:"0"
-  }));
+  return new Promise((resolve, reject) => {
+    store.dispatch(actions.updateConfig({
+      uid:"0"
+    }));
 
-  getMediaSources().then((mediaSources) => ( // get the media sources
-    store.dispatch(actions.fetchMediaSourcesSuccess((
-      mediaSources
-    )))
-  )).then(() => {
-    return new Promise((resolve, reject) => { // get the media source tree listing
-      const path = `${__dirname}/sources/filesystem/`;
-      //const data = [{"name":"assets","cd":"assets","children":[{"name":"img","cd":"assets/img","children":[{"name":"hawaii","cd":"assets/img/hawaii","children":[]},{"name":"redwoods","cd":"assets/img/redwoods","children":[]}]},{"name":"screenshots","cd":"assets/screenshots","children":[]},{"name":"uploads","cd":"assets/uploads","children":[]}]},{"name":"camera","cd":"camera","children":[]},{"name":"foo","cd":"foo","children":[]}];
-      recursivelyGetSourceDirectories(path).then((results) => (
-        resolve(results)
-      )).catch((err) => (
-        res.json([])
-      ));
-    })
-  }).then((results) => (
-    store.dispatch(actions.updateSourceTreeSuccess(
-      results
-    ))
-  )).then(() => { // get the current directory listing
-    return new Promise((resolve, reject) => {
-      getDirectoryListing(`${__dirname}/sources/filesystem/`, dir || 'assets/img/hawaii', true, true, `${__dirname}/sources/filesystem/`).then((results) => (
-        resolve(results)
-      )).catch((err) => (
-        res.json([])
-      ));
+    getMediaSources().then((mediaSources) => ( // get the media sources
+      store.dispatch(actions.fetchMediaSourcesSuccess((
+        mediaSources
+      )))
+    )).then(() => {
+      return new Promise((resolve, reject) => { // get the media source tree listing
+        const path = `${__dirname}/sources/filesystem/`;
+        //const data = [{"name":"assets","cd":"assets","children":[{"name":"img","cd":"assets/img","children":[{"name":"hawaii","cd":"assets/img/hawaii","children":[]},{"name":"redwoods","cd":"assets/img/redwoods","children":[]}]},{"name":"screenshots","cd":"assets/screenshots","children":[]},{"name":"uploads","cd":"assets/uploads","children":[]}]},{"name":"camera","cd":"camera","children":[]},{"name":"foo","cd":"foo","children":[]}];
+        recursivelyGetSourceDirectories(path).then((results) => (
+          resolve(results)
+        )).catch((err) => (
+          res.json([])
+        ));
+      })
+    }).then((results) => (
+      store.dispatch(actions.updateSourceTreeSuccess(
+        results
+      ))
+    )).then(() => { // get the current directory listing
+      return new Promise((resolve, reject) => {
+        getDirectoryListing(`${__dirname}/sources/filesystem/`, dir || 'assets/img/hawaii', true, true, `${__dirname}/sources/filesystem/`).then((results) => (
+          resolve(results)
+        )).catch((err) => (
+          res.json([])
+        ));
 
-    })
-  }).then((results) => (
-    store.dispatch(actions.fetchDirectoryContentsSuccess(
-      results
-    ))
-  )).then(() => (
-    store.dispatch(actions.updateContent({ // updates the "current directory" of the view right away
-      cd: dir
-    }))
-  )).then(() => {
-    const eurekaMarkup = ReactDOM.renderToStaticMarkup(
-      <EurekaMediaBrowser currentDirectory={dir} />
-    );
+      })
+    }).then((results) => (
+      store.dispatch(actions.fetchDirectoryContentsSuccess(
+        results
+      ))
+    )).then(() => (
+      store.dispatch(actions.updateContent({ // updates the "current directory" of the view right away
+        cd: dir
+      }))
+    )).then(() => {
+      const eurekaMarkup = ReactDOM.renderToStaticMarkup(
+        <EurekaMediaBrowser currentDirectory={dir} />
+      );
+      resolve(eurekaMarkup);
+    });
+  })
+}
+
+app.get('/server', (req, res) => {
+  serveIt(req.params.dir).then((eurekaMarkup) => {
     res.end(`<!DOCTYPE html>
     <html lang="en">
       <head>
@@ -145,10 +181,6 @@ function serveIt(req, res, dir = "/") {
       </body>
     </html>`);
   });
-}
-
-app.get('/server', (req, res) => {
-  serveIt(req, res, req.params.dir);
 });
 
 /*

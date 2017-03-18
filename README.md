@@ -3,13 +3,20 @@
 Flexible Media Browser Component. [Try the demo](http://jpdevries.github.io/eureka/examples/).
 As seen in [Redactor 2.0](https://www.modmore.com/extras/redactor) by modmore. Contributions&nbsp;welcomed.
 
-> With `eureka.js` your users will be saying "I found it!" in no time.
+> With `eureka.js` users will be saying "I found it!" in no time.
 &emsp;&emsp;&mdash; [@mrktps](https://twitter.com/mrktps)
 
 ## 💬 Discuss
 Join the conversation in our public Gitter chat room.
 
 [![Join the chat at https://gitter.im/jpdevries/eureka](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/jpdevries/eureka?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+## 📚 Wiki
+Don't forget to [browse the Wiki](https://github.com/jpdevries/eureka/wiki) for [more information on the REST API](https://github.com/jpdevries/eureka/wiki/REST-API), [patterns](https://github.com/jpdevries/eureka/wiki/Patterns), [screenshots](https://github.com/jpdevries/eureka/wiki/Screenshots) and&nbsp;more.
+
+## 🍻 Support
+The Eureka Media Browser is provided free as in beer.  
+[Gratuities are accepted through Square&nbsp;Cash](https://cash.me/$MarkupTips).
 
 ## Powered By 🚀
  - Progressively Enhanced from HTML components
@@ -80,7 +87,8 @@ yarn start
 The development server, like any other React app created with `create-react-app`, will automatically inject changes as you save changes to your source files.
 
 ## 🗄 REST API
-See the [REST API wiki page](https://github.com/jpdevries/eureka/wiki/REST-API).
+Eureka is hungry. It needs a REST API to feed it JSON data.  
+Find docs at the [REST API wiki page](https://github.com/jpdevries/eureka/wiki/REST-API).
 
 ## 🛠 Usage
 
@@ -130,7 +138,7 @@ Configure the `EurekaMediaBrowser` via the optional attributes found in the defa
     }}
   />
 ```
-
+## ⚙️ Options
 
 | Option        | Default           | Description  |
 | ------------- |:-------------:| -----|
@@ -151,22 +159,12 @@ Configure the `EurekaMediaBrowser` via the optional attributes found in the defa
 | `mode` | `"table"`      |    Initial view mode (table, thumb, grid, list) |
 | `sort` | `"name"`      |    Initial column to sort media items on |
 | `allowFullscreen` | `true`      |    Whether or not the interface should offer a fullscreen button |
-| `emphasisFocusedMediaItem` | `true`      |    Whether or not to emphasis selected media items (defaults to boldening the filename, only applies to table and list view modes) |
+| `emphasisFocusedMediaItem` | `true`      |    Whether or not to emphasis selected media items (defaults to emphasizing the filename, only applies to table and list view modes) |
 
+## 📠 Server Side Rendering
+Eureka is progressively enhanced with React to be asynchronous and a richer experience in capable browsers successfully that successfully execute scripts. But Eureka's support doesn't end at modern browsers because its design process doesn't start there. Eureka is a semantic and synchronous HTML form before it is an enhanced Virtual&nbsp;DOM.  
+Reference the [Server Side Rendering Wiki page](https://github.com/jpdevries/eureka/wiki/Server-Side-Rendering) for documentations and examples on achieving world wide&nbsp;support.
 
-
-For server side rendering via Node:
-
-WIP
-
-```js
-import React from 'react';
-import ReactDOM from 'react-dom';
-
-import EurekaMediaBrowser from 'EurekaMediaBrowser';
-
-
-```
 
 ## 🎨 Theming
 Request additional theming options and share your themes by [opening an issue](https://github.com/jpdevries/eureka/issues/new) or [joining the discussion on&nbsp;Gitter](https://gitter.im/jpdevries/eureka?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge).
@@ -189,7 +187,9 @@ Request additional theming options and share your themes by [opening an issue](h
 | `--very-subtle-icon-opacity` | Opacity for very subtle icons |
 
 
-## Themes
+## 👀 Accessible Themes
+Eureka is empowered by themes which make it more accessible to users with particular physical or contextual disabilities or preferences.
+
 ### Black on White
 ![](http://j4p.us/091n1d1z3y1F/Screen%20Shot%202017-03-16%20at%203.33.14%20AM.png)
 

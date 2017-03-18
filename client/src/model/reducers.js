@@ -17,7 +17,7 @@ const initialConfigState = {
   localse:"en-US",
   mediaSource:undefined,
   currentDirectory:"/",
-  uid:new Date().getTime(),
+  uid:"0",
   emphasisFocusedMediaItem:true,
   headers:{'Powered-By': 'Eureka by Markup.tips'},
   intervals:{searchBarPlaceholder: false,fetchDirectoryContents: 18000,updateSourceTree: false}
