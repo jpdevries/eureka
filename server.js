@@ -22,9 +22,7 @@ app.set('port', (process.env.PORT || 3001));
    multiples: true
 }));*/
 
-app.use('/sources',express.static('sources'));
-
-
+app.use('/sources', express.static(path.join(__dirname, '/sources')));
 
 app.get('/', (req, res) => {
 
