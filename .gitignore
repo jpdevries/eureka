@@ -9,7 +9,7 @@ bower_components
 
 # production
 #/build
-prod
+
 
 # misc
 .DS_Store
