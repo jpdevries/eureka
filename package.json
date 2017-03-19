@@ -12,7 +12,8 @@
     "express-formidable": "^1.0.0",
     "fs": "0.0.2",
     "react": "^15.4.2",
-    "react-dom": "^15.4.2"
+    "react-dom": "^15.4.2",
+    "redux": "^3.6.0"
   },
   "engines": {
     "node": "6.5.0"
