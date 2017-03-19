@@ -26,7 +26,7 @@ app.set('port', (process.env.PORT || 3001));
 app.use('/sources', express.static(path.join(__dirname, '/sources')));
 
 store.dispatch(actions.updateConfig({
-  allowUploads:!isProd
+  allowUploads:true
 }));
 
 app.get('/', (req, res) => {
@@ -78,13 +78,17 @@ app.post('/', (req, res) => {
     const uploadDir = path.join(__dirname, path.join('/sources/filesystem/', fields['eureka__upload-dir']));
 
     function moveFile(file) {
-      fs.renameSync(file.path, path.join(uploadDir, file.name))
+      try {
+        fs.renameSync(file.path, path.join(uploadDir, file.name))
+      } catch (e) { } 
     }
 
     try {
       uploadFiles.map(moveFile)
     } catch (e) { // its a single file not an Array
-      if(uploadFiles.name) moveFile(uploadFiles)
+      try {
+        if(uploadFiles.name) moveFile(uploadFiles)
+      } catch (e) { }
     }
 
     /*files.map((file) => (
