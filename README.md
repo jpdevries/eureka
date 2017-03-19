@@ -48,7 +48,7 @@ The semantic HTML layer remains usable even absent of style as pure&nbsp;HTML.
   <caption style="text-align:center">Support of features against browser environments</caption>
   <thead>
     <tr>
-      <th>Features</th>
+      <th>Feature</th>
       <th><code>.no-js</code></th>
       <th><code>< IE 9</code></th>
       <th>Chrome</th>
@@ -293,7 +293,7 @@ The semantic HTML layer remains usable even absent of style as pure&nbsp;HTML.
       <td>HTML5 Datalist</td>
       <td align="center"><span aria-label="supported via polyfills">✳️</span></td>
       <td align="center"><span aria-label="not supported">❌</span></td>
-      <td align="center"><span aria-label="supported via polyfills">✳️</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
       <td align="center"><span aria-label="not supported">❌</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
       <td align="center"><span aria-label="partial supported">✳️</span></td>

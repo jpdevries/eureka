@@ -241,7 +241,7 @@ class Eureka extends Component {
     );
 
     return (utility.serverSideRendering) ? (
-      <form method="POST" action="/server" encType="multipart/form-data" className={`eureka eureka__view-mode__${props.view.mode}${enlargeFocusedRows}${serverSideClass}`}>
+      <form method="POST" action={props.config.basePath} encType="multipart/form-data" className={`eureka eureka__view-mode__${props.view.mode}${enlargeFocusedRows}${serverSideClass}`}>
         {formDiv}
         {pathBar}
         {chooseBar}

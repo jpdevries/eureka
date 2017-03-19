@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
 
   serveIt('/').then((eurekaMarkup) => {
     console.log(path.join(__dirname, 'client/build/index.html'));
-    const build = fs.readFileSync(path.join(__dirname, 'client/build/index.html'), 'utf8');
+    const build = fs.readFileSync(path.join(__dirname, 'client/build/index.html'), 'utf8').replace('<div id="root"></div>',`<div id="root">${eurekaMarkup}</div>`);
     //const build = '<h1>YOLO</h1>';
     res.end(build);
   });
@@ -37,7 +37,7 @@ app.get('/', (req, res) => {
 
 app.use('/',express.static('client/build'));
 
-app.post('/server', (req, res) => {
+app.post('/', (req, res) => {
   console.log('params',req.params);
   console.log('query',req.query);
 
