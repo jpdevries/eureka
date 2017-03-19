@@ -1,7 +1,7 @@
 # Eureka 🌲
 
-Flexible Media Browser Component. [Try the demo](http://jpdevries.github.io/eureka/examples/).
-As seen in [Redactor 2.0](https://www.modmore.com/extras/redactor) by modmore. Contributions&nbsp;welcomed.
+Flexible Media Browser Component. [Try the demo](https://reacteureka.herokuapp.com/) by waking the heroku dino.
+As to be found in [Redactor 3.0](https://www.modmore.com/extras/redactor) by modmore. Contributions&nbsp;welcomed.
 
 > With `eureka.js` users will be saying "I found it!" in no time.
 &emsp;&emsp;&mdash; [@mrktps](https://twitter.com/mrktps)
