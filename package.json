@@ -21,8 +21,9 @@
     "start": "yarn fetchsources && yarn prestart && babel-node server.js",
     "prestart": "cd ./client && yarn && yarn build && cd ../ && yarn",
     "fetchsources": "rm -rf sources.zip && rm -rf sources && wget http://j4p.us/2G3A0a0K3O31/sources.zip && unzip sources.zip && rm -rf sources.zip && ls && ls sources",
-    "build": "babel ./ -d dist",
+    "build": "babel ./server.js -d prod && babel ./client/src -d prod/client/src",
     "serve": "babel-node server.js",
+    "prod": "node prod/server.js",
     "client": "babel-node start-client.js",
     "dev": "echo \"This command has been deprecated. Use 'npm start'\" && exit 1",
     "lint": "eslint ."
