@@ -68,25 +68,33 @@ class SearchBar extends Component {
       }
     })();
 
-
+    const list = (
+      <datalist id={`${props.config.storagePrefix}__datalist`}>
+        {props.content.contents.map((item) => (
+          <option value={item.filename}></option>
+        ))}
+      </datalist>
+    );
 
     return (!utility.serverSideRendering) ? (
       <form className="eureka__search-bar">
       <label htmlFor="eureka__filter" title={`Filter contents of ${props.content.cd} by filename, filesize, dimensions or even modification date`}>Filter<span className="visually-hidden"> contents of {props.content.cd} by filename, filesize, dimensions or even modification date</span>:&ensp;</label>
-      <input type="text" name="eureka__filter" id="eureka__filter" placeholder={placeholder} value={props.view.filter} onChange={(event) => {
+      <input list={`${props.config.storagePrefix}__datalist`} type="text" name="eureka__filter" id="eureka__filter" placeholder={placeholder} value={props.view.filter} onChange={(event) => {
           store.dispatch(actions.updateView({
             filter:event.target.value || undefined
           }))
         }} />
+        {list}
       </form>
     ) : (
       <div className="eureka__search-bar">
       <label htmlFor="eureka__filter" title={`Filter contents of ${props.content.cd} by filename, filesize, dimensions or even modification date`}>Filter<span className="visually-hidden"> contents of {props.content.cd} by filename, filesize, dimensions or even modification date</span>:&ensp;</label>
-      <input type="text" name="eureka__filter" id="eureka__filter" placeholder={placeholder} value={props.view.filter} onChange={(event) => {
+      <input list={`${props.config.storagePrefix}__datalist`} type="text" name="eureka__filter" id="eureka__filter" placeholder={placeholder} value={props.view.filter} onChange={(event) => {
           store.dispatch(actions.updateView({
             filter:event.target.value || undefined
           }))
         }} />
+        {list}
       </div>
     );
 

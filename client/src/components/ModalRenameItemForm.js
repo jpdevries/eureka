@@ -19,17 +19,15 @@ class ModalRenameItemForm extends Component {
   }
 
   render() {
-    const state = this.state;
-    const props = this.props;
+    const state = this.state,
+    props = this.props,
+    Entities = require('html-entities').AllHtmlEntities,
+    entities = new Entities();
 
-    const Entities = require('html-entities').AllHtmlEntities;
-    const entities = new Entities();
-
-    let disable = false;
-    let sameName = false;
-
-    let label = `Rename item`;
-    let labelIcon = undefined;
+    let disable = false,
+    sameName = false,
+    label = `Rename item`,
+    labelIcon = undefined;
 
     if(state.newName === props.item.filename) {
       disable = true;
