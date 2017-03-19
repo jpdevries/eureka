@@ -4,7 +4,8 @@ app = express(),
 formidable = require('formidable'),
 path = require('path'),
 util = require('util'),
-rmdir = require('rmdir');
+rmdir = require('rmdir'),
+isProd = (process.env.NODE_ENV == 'production') ? true : false;
 
 import React from 'react';
 import ReactDOM from 'react-dom/server';
@@ -24,6 +25,10 @@ app.set('port', (process.env.PORT || 3001));
 
 app.use('/sources', express.static(path.join(__dirname, '/sources')));
 
+store.dispatch(actions.updateConfig({
+  allowUploads:!isProd
+}));
+
 app.get('/', (req, res) => {
 
   serveIt('/').then((eurekaMarkup) => {
@@ -34,6 +39,23 @@ app.get('/', (req, res) => {
   });
 
 });
+
+/*app.get('/server', (req, res) => {
+  serveIt(req.params.dir).then((eurekaMarkup) => {
+    res.end(`<!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title data-site-name="Eureka Media Browser">Eureka Media Browser</title>
+        <link rel="stylesheet" href="assets/css/main.css">
+      </head>
+      <body>
+        <div id="root">${eurekaMarkup}</div>
+      </body>
+    </html>`);
+  });
+});*/
 
 app.use('/',express.static('client/build'));
 
@@ -164,22 +186,7 @@ function serveIt(dir = "/") {
   })
 }
 
-app.get('/server', (req, res) => {
-  serveIt(req.params.dir).then((eurekaMarkup) => {
-    res.end(`<!DOCTYPE html>
-    <html lang="en">
-      <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1">
-        <title data-site-name="Eureka Media Browser">Eureka Media Browser</title>
-        <link rel="stylesheet" href="assets/css/main.css">
-      </head>
-      <body>
-        <div id="root">${eurekaMarkup}</div>
-      </body>
-    </html>`);
-  });
-});
+
 
 /*
 Retrieve a list of media sources
