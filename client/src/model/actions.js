@@ -137,7 +137,7 @@ const fetchDirectoryContentsSuccess = function(contents) {
 }
 
 exports.fetchDirectoryContentsSuccess = fetchDirectoryContentsSuccess;
-exports.fetchDirectoryContentsError = fetchDirectoryContentsError;
+
 
 const fetchDirectoryContentsError = function(error) {
   return {
@@ -145,6 +145,8 @@ const fetchDirectoryContentsError = function(error) {
     error:error
   }
 }
+
+exports.fetchDirectoryContentsError = fetchDirectoryContentsError;
 
 const fetchMediaSources = () => (
   (dispatch) => (

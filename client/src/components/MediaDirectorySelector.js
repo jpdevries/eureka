@@ -38,7 +38,6 @@ const MediaDirectorySelector = (props) => {
       {optgroups}
     </select>
   );
-  console.log('YOLO!!!!',props.content.cd);
   const hiddenUploadDirectoryInput = <input type="hidden" name={`${props.config.storagePrefix}upload-dir`} value={props.content.cd} />
   const form = (utility.serverSideRendering) ? (
     <div>

@@ -14,6 +14,7 @@ ReactDOM.render(
     useLocalStorage={true}
     allowRename={true}
     allowDelete={true}
+    mode="list"
     confirmBeforeDelete={true}
     enlargeFocusedRows={false}
     currentDirectory="assets/img/hawaii"

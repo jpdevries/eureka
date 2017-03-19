@@ -45,7 +45,7 @@ No features rely solely on sight or the use of a mouse. Keyboard use is supporte
 The semantic HTML layer remains usable even absent of style as pure&nbsp;HTML.
 
 <table>
-  <caption>Support of features against browser environments</caption>
+  <caption style="text-align:center">Support of features against browser environments</caption>
   <thead>
     <tr>
       <th>Feature</th>
@@ -212,21 +212,22 @@ The semantic HTML layer remains usable even absent of style as pure&nbsp;HTML.
     <tr>
       <td>Variable Styles</td>
       <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="not supported">❌</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="not supported">❌</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
     </tr>
     <tr>
       <td>Accessible Themes</td>
       <td align="center"><span aria-label="supported">✅</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="not supported">❌</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="not supported">❌</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
     </tr>
     <tr>

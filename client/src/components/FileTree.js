@@ -12,12 +12,12 @@ class FileTreeSpan extends Component {
       editable:false
     };
   }
-  
+
   render() {
     const state = this.state;
     const props = this.props;
     const item = props.item;
-    
+
     return (
       <span ref={(span) => (this.span = span)} contentEditable={state.editable} onClick={(event) => {
           event.preventDefault();
@@ -36,7 +36,7 @@ class FileTreeSpan extends Component {
           if(!state.editable) this.span.focus();
           else this.span.blur();
           //if(!state.editable)
-        }} 
+        }}
         onKeyDown={(event) => {
            console.log('onKeyDown', event, event.keyCode,event.keyCode === 13);
            if(event.keyCode === 13) {
@@ -53,7 +53,7 @@ class FileTreeSpan extends Component {
 }
 
 const FileTree = (props) => {
-  
+
   function listTree(tree) {
     return tree.map((item, index) => (
       (item.children || true) ? // still deciding if we need this disabled for now
@@ -62,10 +62,10 @@ const FileTree = (props) => {
           <Icon icon="folder" />
           <Icon icon="folder-open" />
           <FileTreeSpan {...props} item={item} index={index} key={index} />
-        
+
           <menu hidden="true" type="context" id={`context_menu__${item.cd.replace(/^[^a-z]+|[^\w:.-]+/gi, "")}`}>
               <menuitem label="Create Directory Here" onClick={(event) => {
-                  alert('YOLO!')
+                  
                 }}></menuitem>
               <menuitem label="Chmod Directory"></menuitem>
               <menuitem label="Rename"></menuitem>
@@ -78,7 +78,7 @@ const FileTree = (props) => {
                   store.dispatch(actions.deleteMediaItem(props.source.currentSource, item.cd))
                 }}></menuitem>
           </menu>
-        
+
         </summary>
         <div>
           {item.children ? listTree(item.children) : undefined}
@@ -88,15 +88,14 @@ const FileTree = (props) => {
       <span key={index}>{item.name}</span>
     ));
   }
-  
+
   const contentList = listTree(props.tree);
-  
+
   return (
     <nav className="eureka__tree">
       {contentList}
-    </nav>  
+    </nav>
   );
 }
 
 export default FileTree;
-

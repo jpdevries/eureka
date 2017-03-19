@@ -28,7 +28,7 @@ var configReducer = function(state, action) {
 
   switch(action.type) {
     case actions.UPDATE_CONFIG:
-    console.log('UPDATE_CONFIG', state, action.config);
+    //console.log('UPDATE_CONFIG', state, action.config);
     return Object.assign({},state,action.config);
     break;
   }
@@ -67,7 +67,7 @@ var contentReducer = function(state, action) {
 
   switch(action.type) {
     case actions.UPDATE_CONFIG:
-    console.log('UPDATE_CONFIG!!!', state, action.config);
+    //console.log('UPDATE_CONFIG!!!', state, action.config);
     if(action.config.currentDirectory) return Object.assign({},state,{
       cd:action.config.currentDirectory
     })
@@ -75,7 +75,7 @@ var contentReducer = function(state, action) {
     break;
 
     case actions.UPDATE_CONTENT:
-    console.log('UPDATE_CONTENT', state, action.content);
+    //console.log('UPDATE_CONTENT', state, action.content);
     return Object.assign({},state,action.content);
     break;
 
@@ -95,7 +95,7 @@ var contentReducer = function(state, action) {
     });
 
     case actions.DELETE_MEDIA_ITEM_SUCCESS:
-    console.log(actions.DELETE_MEDIA_ITEM_SUCCESS, action.source, action.absolutePath, state);
+    //console.log(actions.DELETE_MEDIA_ITEM_SUCCESS, action.source, action.absolutePath, state);
 
 
     return Object.assign({},state,{
@@ -413,7 +413,7 @@ var fetchedReducer = function(state, action) {
     // loop over just the folders and create data objects for them
     const namesOfFoldersToAdd = action.contents.filter((file) => (file.foldername)).map((file) => (file.foldername));
 
-    console.log('namesOfFoldersToAdd',namesOfFoldersToAdd);
+    //console.log('namesOfFoldersToAdd',namesOfFoldersToAdd);
 
     return Object.assign({}, state, {
       lastDirectoriesFetched: namesOfFoldersToAdd
