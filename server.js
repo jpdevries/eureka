@@ -142,7 +142,7 @@ function serveIt(dir = "/") {
       ))
     )).then(() => { // get the current directory listing
       return new Promise((resolve, reject) => {
-        getDirectoryListing(`${__dirname}/sources/filesystem/`, dir || 'assets/img/hawaii', true, true, `${__dirname}/sources/filesystem/`).then((results) => (
+        getDirectoryListing(`${__dirname}/sources/filesystem/`, dir || '/', true, true, `${__dirname}/sources/filesystem/`).then((results) => (
           resolve(results)
         )).catch((err) => (
           res.json([])
