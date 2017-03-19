@@ -33,7 +33,7 @@
     "node": "6.5.0"
   },
   "scripts": {
-    "start": "yarn build && yarn prodforever",
+    "start": "yarn build && yarn prod",
     "prestart": "yarn && yarn fetchsourcesprod && yarn fetchsources",
     "fetchsources": "rm -rf sources.zip && rm -rf sources && wget http://j4p.us/0f2O0S1Q362K/sources.zip && unzip sources.zip && rm -rf sources.zip && ls && ls sources",
     "fetchsourcesprod": "cd ./prod && rm -rf sources.zip && rm -rf sources && wget http://j4p.us/0f2O0S1Q362K/sources.zip && unzip sources.zip && rm -rf sources.zip && ls && ls sources && cd ../",
