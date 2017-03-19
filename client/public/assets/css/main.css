@@ -52,6 +52,31 @@ body > #root .eureka.eureka__view-mode__table .eureka__browse-content > .eureka_
 body > #root .eureka.eureka__view-mode__table.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(1), body > #root .eureka.eureka__view-mode__list.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(1) {
   grid-area: none; }
 
+body > #root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap; }
+  body > #root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > * {
+    -ms-flex: 1 0 auto;
+        flex: 1 0 auto; }
+  @supports ((display: -ms-grid) or (display: grid)) {
+    body > #root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) {
+      display: -ms-grid;
+      display: grid; }
+      body > #root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(1) {
+        grid-area: media; }
+      body > #root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(2) {
+        grid-area: name; }
+      body > #root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(3) {
+        grid-area: actions; }
+      body > #root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(4) {
+        grid-area: dimensions; }
+      body > #root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(5) {
+        grid-area: file-size; }
+      body > #root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(6) {
+        grid-area: edited-on; } }
+
 @media screen and (min-width: 641px) {
   body {
     display: -ms-flexbox;
@@ -254,30 +279,6 @@ body > #root .eureka.eureka__view-mode__table.eureka__server-side .eureka__brows
                     -ms-flex-positive: 1;
                         flex-grow: 1;
                     max-width: 100%; }
-                    body > #root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) {
-                      display: -ms-flexbox;
-                      display: flex;
-                      -ms-flex-wrap: wrap;
-                          flex-wrap: wrap; }
-                      body > #root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > * {
-                        -ms-flex: 1 0 auto;
-                            flex: 1 0 auto; }
-                      @supports ((display: -ms-grid) or (display: grid)) {
-                        body > #root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) {
-                          display: -ms-grid;
-                          display: grid; }
-                          body > #root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(1) {
-                            grid-area: media; }
-                          body > #root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(2) {
-                            grid-area: name; }
-                          body > #root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(3) {
-                            grid-area: actions; }
-                          body > #root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(4) {
-                            grid-area: dimensions; }
-                          body > #root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(5) {
-                            grid-area: file-size; }
-                          body > #root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(6) {
-                            grid-area: edited-on; } }
         body > #root .eureka > .eureka__choose-bar {
           -ms-flex: 0 0 auto;
               flex: 0 0 auto; } }
