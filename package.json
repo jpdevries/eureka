@@ -15,6 +15,7 @@
     "express-formidable": "^1.0.0",
     "express-minify-html": "^0.10.0",
     "filesize": "^3.5.6",
+    "forever": "^0.15.3",
     "formidable": "^1.1.1",
     "fs": "0.0.2",
     "html-entities": "^1.2.0",
@@ -32,7 +33,7 @@
     "node": "6.5.0"
   },
   "scripts": {
-    "start": "yarn build && yarn prod",
+    "start": "yarn build && yarn prodforever",
     "prestart": "yarn && yarn fetchsourcesprod && yarn fetchsources",
     "fetchsources": "rm -rf sources.zip && rm -rf sources && wget http://j4p.us/0f2O0S1Q362K/sources.zip && unzip sources.zip && rm -rf sources.zip && ls && ls sources",
     "fetchsourcesprod": "cd ./prod && rm -rf sources.zip && rm -rf sources && wget http://j4p.us/0f2O0S1Q362K/sources.zip && unzip sources.zip && rm -rf sources.zip && ls && ls sources && cd ../",
@@ -41,6 +42,7 @@
     "serve": "babel-node server.js",
     "server": "yarn serve",
     "prod": "NODE_ENV=production node prod/server.js",
+    "prodforever": "NODE_ENV=production forever start prod/server.js",
     "client": "babel-node start-client.js",
     "herokuforce": "git push heroku release-2.0:master --force",
     "dev": "echo \"This command has been deprecated. Use 'npm start'\" && exit 1",
