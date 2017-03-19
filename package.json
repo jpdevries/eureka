@@ -18,10 +18,10 @@
     "node": "6.5.0"
   },
   "scripts": {
-    "start": "npm install yarn -g && yarn build && yarn fetchsourcesprod && yarn prod",
+    "start": "yarn build && yarn fetchsourcesprod && yarn prod",
     "prestart": "cd ./client && yarn && yarn build && cd ../ && yarn",
     "fetchsources": "rm -rf sources.zip && rm -rf sources && wget http://j4p.us/2G3A0a0K3O31/sources.zip && unzip sources.zip && rm -rf sources.zip && ls && ls sources",
-    "fetchsourcesprod": "cd ./prod && rm -rf sources.zip && rm -rf sources && wget http://j4p.us/2G3A0a0K3O31/sources.zip && unzip sources.zip && rm -rf sources.zip && ls && ls sources",
+    "fetchsourcesprod": "cd ./prod && rm -rf sources.zip && rm -rf sources && wget http://j4p.us/2G3A0a0K3O31/sources.zip && unzip sources.zip && rm -rf sources.zip && ls && ls sources && cd ../",
     "buildserver": "babel ./server.js -d prod",
     "build": "yarn buildserver && cp -R client/build prod/client && babel ./client/src -d prod/client/src",
     "serve": "babel-node server.js",
