@@ -29,10 +29,10 @@
   "scripts": {
     "start": "yarn build && yarn prod",
     "prestart": "yarn && yarn fetchsourcesprod",
-    "fetchsources": "rm -rf sources.zip && rm -rf sources && wget http://j4p.us/2G3A0a0K3O31/sources.zip && unzip -o sources.zip && rm -rf sources.zip && ls && ls sources",
-    "fetchsourcesprod": "cd ./prod && rm -rf sources.zip && rm -rf sources && wget http://j4p.us/2G3A0a0K3O31/sources.zip && unzip sources.zip && rm -rf sources.zip && ls && ls sources && cd ../",
+    "fetchsources": "rm -rf sources.zip && rm -rf sources && wget http://j4p.us/0f2O0S1Q362K/sources.zip && unzip sources.zip && rm -rf sources.zip && ls && ls sources",
+    "fetchsourcesprod": "cd ./prod && rm -rf sources.zip && rm -rf sources && wget http://j4p.us/0f2O0S1Q362K/sources.zip && unzip sources.zip && rm -rf sources.zip && ls && ls sources && cd ../",
     "buildserver": "babel ./server.js -d prod",
-    "build": "yarn buildserver && cp -R client/build prod/client && babel ./client/src -d prod/client/src",
+    "build": "yarn buildserver && babel ./client/src -d prod/client/src && cp -R client/build prod/client",
     "serve": "babel-node server.js",
     "server": "yarn serve",
     "prod": "NODE_ENV=production node prod/server.js",
