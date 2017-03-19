@@ -5,6 +5,8 @@ formidable = require('formidable'),
 path = require('path'),
 util = require('util'),
 rmdir = require('rmdir'),
+compression = require('compression'),
+minifyHTML = require('express-minify-html'),
 isProd = (process.env.NODE_ENV == 'production') ? true : false;
 
 import React from 'react';
@@ -15,7 +17,21 @@ import store from './client/src/model/store';
 import EurekaMediaBrowser from './client/src/EurekaMediaBrowser';
 import utility from './client/src/utility/utility';
 
+if(isProd) {
+  app.use(minifyHTML({
+    override: true,
+    htmlMinifier: {
+      removeComments: true,
+      collapseWhitespace: true,
+      collapseBooleanAttributes: true,
+      removeAttributeQuotes: false,
+      removeEmptyAttributes: true,
+      minifyJS: true
+    }
+  }));
 
+  app.use(compression({ level: 9, threshold: 0 }));
+}
 
 app.set('port', (process.env.PORT || 3001));
 
@@ -80,7 +96,7 @@ app.post('/', (req, res) => {
     function moveFile(file) {
       try {
         fs.renameSync(file.path, path.join(uploadDir, file.name))
-      } catch (e) { } 
+      } catch (e) { }
     }
 
     try {
@@ -551,6 +567,22 @@ app.put('/core/components/eureka/media/sources/:source', (req, res) => {
   res.json(false);
 
 });
+
+/* __       __   __ __
+/\ \\ \    /'__`\/\ \\ \
+\ \ \\ \  /\ \/\ \ \ \\ \
+\ \ \\ \_\ \ \ \ \ \ \\ \_
+ \ \__ ,__\ \ \_\ \ \__ ,__\
+  \/_/\_\_/\ \____/\/_/\_\_/
+     \/_/   \/___/    \/*/
+
+
+app.use(function (req, res) {
+ res.redirect('/');
+ res.end();
+});
+
+
 
 
 app.listen(app.get('port'), () => {

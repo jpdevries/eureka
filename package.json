@@ -10,6 +10,7 @@
     "babel-preset-es2015": "^6.24.0",
     "babel-preset-react": "^6.23.0",
     "classnames": "^2.2.5",
+    "compression": "^1.6.2",
     "express": "4.13.3",
     "express-formidable": "^1.0.0",
     "filesize": "^3.5.6",
