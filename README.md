@@ -361,10 +361,6 @@ yarn start
 
 The development server, like any other React app created with `create-react-app`, will automatically inject changes as you save changes to your source files.
 
-## 🗄 REST API
-Eureka is hungry. It needs a REST API to feed it JSON data.  
-Find docs at the [REST API wiki page](https://github.com/jpdevries/eureka/wiki/REST-API).
-
 ## 🛠 Usage
 
 **HTML**
@@ -436,6 +432,10 @@ Configure the `EurekaMediaBrowser` via the optional attributes found in the defa
 | `sort` | `"name"`      |    Initial column to sort media items on |
 | `allowFullscreen` | `true`      |    Whether or not the interface should offer a fullscreen button |
 | `emphasisFocusedMediaItem` | `true`      |    Whether or not to emphasis selected media items (defaults to emphasizing the filename, only applies to table and list view modes) |
+
+## 🗄 REST API
+Eureka is hungry. It needs a REST API to feed it JSON data.  
+Find docs at the [REST API wiki page](https://github.com/jpdevries/eureka/wiki/REST-API).
 
 ## 📠 Server Side Rendering
 Eureka is progressively enhanced with React to be asynchronous and a richer experience in capable browsers successfully that successfully execute scripts. But Eureka's support doesn't end at modern browsers because its design process doesn't start there. Eureka is a semantic and synchronous HTML form before it is an enhanced Virtual&nbsp;DOM.  

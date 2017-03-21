@@ -78,7 +78,7 @@
     "build": "yarn buildserver && babel ./client/src -d ./client/dist && cp -R ./client/dist ./prod/client/src && cp -R client/build prod/client",
     "testbuild": "yarn buildserver  && cp -R client/build prod/client",
     "buildclient": "cd client && yarn && yarn build && cd ../",
-    "testclient": "cd client && yarn && yarn test && cd ../",
+    "test": "cd client && yarn && yarn test && cd ../",
     "oldbuild": "yarn buildserver && babel ./client/src -d prod/client/src && cp -R client/build prod/client",
     "serve": "babel-node server.js",
     "server": "yarn serve",

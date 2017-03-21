@@ -190,7 +190,7 @@ var fetchMediaSourcesError = function fetchMediaSourcesError(error) {
 
 var DELETE_MEDIA_ITEM_SUCCESS = 'delete_media_item_success';
 var deleteMediaItemSuccess = function deleteMediaItemSuccess(source, absolutePath) {
-  console.log('DELETE_MEDIA_ITEM_SUCCESS', source, absolutePath);
+  //console.log('DELETE_MEDIA_ITEM_SUCCESS', source, absolutePath);
   return {
     type: DELETE_MEDIA_ITEM_SUCCESS,
     source: source,
@@ -206,7 +206,7 @@ exports.updateConfig = updateConfig;
 
 var DELETE_MEDIA_ITEM_ERROR = 'delete_media_item_error';
 var deleteMediaItemError = function deleteMediaItemError(error) {
-  console.log('deleteMediaItemError', error);
+  //console.log('deleteMediaItemError', error);
   return {
     type: DELETE_MEDIA_ITEM_ERROR,
     error: error
@@ -476,7 +476,7 @@ var renameItem = function renameItem(source, filePath, name) {
         error.response = false;
         throw error;
       }
-      console.log('response', response);
+      //console.log('response',response);
       return response;
     }).then(function (response) {
       return dispatch(renameItemSuccess(response));
@@ -488,7 +488,7 @@ var renameItem = function renameItem(source, filePath, name) {
 
 var RENAME_ITEM_SUCCESS = 'rename_item_success';
 var renameItemSuccess = function renameItemSuccess(contents) {
-  console.log('renameItemSuccess', contents);
+  //console.log('renameItemSuccess', contents);
   return {
     type: RENAME_ITEM_SUCCESS,
     contents: contents
