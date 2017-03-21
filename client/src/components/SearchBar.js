@@ -71,7 +71,7 @@ class SearchBar extends Component {
     const list = (
       <datalist id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }__datalist`}>
         {props.content.contents.map((item) => (
-          <option value={item.filename}></option>
+          <option key={item.filename} value={item.filename}></option>
         ))}
       </datalist>
     );

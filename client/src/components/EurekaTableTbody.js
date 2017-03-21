@@ -32,6 +32,7 @@ class EurekaTableTbody extends Component {
   }
 
   componentDidMount() {
+    console.log('EurekaTableTbody componentDidMount');
     store.dispatch(actions.updateView({
       isTableScrolling:this.isScrollable(this.tbody)
     }));

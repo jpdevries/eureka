@@ -35,8 +35,6 @@ var MediaDirectorySelector = function MediaDirectorySelector(props) {
       if (a.cd === b.cd) return 0;
       return a.cd > b.cd ? 1 : -1;
     }).map(function (directory, index) {
-      console.log(props.source.currentSource.id == source.id, props.source.currentSource.id, source.id);
-      console.log(props.content.cd == directory.cd, props.content.cd, directory.cd);
       return _react2.default.createElement(
         'option',
         { key: index, value: source.id + '||' + directory.cd, 'data-checked': props.source.currentSource.id == source.id && props.content.cd == directory.cd },
@@ -70,7 +68,6 @@ var MediaDirectorySelector = function MediaDirectorySelector(props) {
             cd = _utility$parseMediaSo2[1]; // option values are like 0||assets/img/redwoods where 0 is the media source id and assets/img/redwoods is the directory
 
 
-        console.log('update source to', cs);
         _store2.default.dispatch(_actions2.default.updateSource({
           currentSource: cs
         }));

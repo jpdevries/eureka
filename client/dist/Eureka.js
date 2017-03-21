@@ -125,6 +125,14 @@ var Eureka = function (_Component) {
         _store2.default.dispatch(_actions2.default.updateSourceTree(_this2.props.source.sources[0].id)).then(function (content) {
           // then hit server for the directory tree of the first (default) media source
           var props = _this2.props;
+
+          _store2.default.dispatch(_actions2.default.updateContent({ // updates the "current directory" of the view right away
+            cd: props.content.cd
+          }));
+          _store2.default.dispatch(_actions2.default.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
+            dir: props.content.cd
+          }));
+
           if (props.view.intervals.fetchDirectoryContents !== undefined && props.view.intervals.fetchDirectoryContents > 0) {
             setInterval(function () {
               // every so often hit the server and update the displayed contents of the current directory

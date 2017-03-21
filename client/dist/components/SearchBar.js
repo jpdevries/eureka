@@ -114,7 +114,7 @@ var SearchBar = function (_Component) {
         'datalist',
         { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + '__datalist' },
         props.content.contents.map(function (item) {
-          return _react2.default.createElement('option', { value: item.filename });
+          return _react2.default.createElement('option', { key: item.filename, value: item.filename });
         })
       );
 

@@ -77,6 +77,7 @@ var EurekaTableTbody = function (_Component) {
   }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
+      console.log('EurekaTableTbody componentDidMount');
       _store2.default.dispatch(_actions2.default.updateView({
         isTableScrolling: this.isScrollable(this.tbody)
       }));

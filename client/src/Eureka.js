@@ -39,6 +39,14 @@ class Eureka extends Component {
     store.dispatch(actions.fetchMediaSources()).then(() => { // hit the server and get the media sources
       store.dispatch(actions.updateSourceTree(this.props.source.sources[0].id)).then((content) => { // then hit server for the directory tree of the first (default) media source
         const props = this.props;
+        
+        store.dispatch(actions.updateContent({ // updates the "current directory" of the view right away
+          cd: props.content.cd
+        }));
+        store.dispatch(actions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
+          dir: props.content.cd
+        }));
+
         if(props.view.intervals.fetchDirectoryContents !== undefined && props.view.intervals.fetchDirectoryContents > 0) {
           setInterval(() => { // every so often hit the server and update the displayed contents of the current directory
             const state = store.getState();
