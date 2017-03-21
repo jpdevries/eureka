@@ -22,12 +22,14 @@ const MediaDirectorySelector = (props) => {
     );
   });
 
-  const hiddenInput = <input type="hidden" name={`${props.config.storagePrefix}mediaSourceId`} name={`${props.config.storagePrefix}mediaSourceId`} value={props.config.uid} />
+  const hiddenInput = <input type="hidden" name={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }mediaSourceId`} name={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }mediaSourceId`} value={props.config.uid} />
   const submit = (utility.serverSideRendering) ? <button type="submit">Set Directory</button> : undefined;
   const select = (
     <select aria-live="polite" value={`${props.source.currentSource}||${props.content.cd}`} name="eureka__media-browser_0__browsing" id="eureka__media-browser_0__browsing" onChange={(event) => {
         const [cs, cd] = utility.parseMediaSourceOutOfCombinedPath(event.target.value, '||'); // option values are like 0||assets/img/redwoods where 0 is the media source id and assets/img/redwoods is the directory
-
+        store.dispatch(actions.updateSource({
+          currentSource: cs
+        }))
         store.dispatch(actions.updateContent({ // updates the "current directory" of the view right away
           cd: cd
         }));
@@ -38,7 +40,7 @@ const MediaDirectorySelector = (props) => {
       {optgroups}
     </select>
   );
-  const hiddenUploadDirectoryInput = <input type="hidden" name={`${props.config.storagePrefix}upload-dir`} value={props.content.cd} />
+  const hiddenUploadDirectoryInput = <input type="hidden" name={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }upload-dir`} value={props.content.cd} />
   const form = (utility.serverSideRendering) ? (
     <div>
       {hiddenInput}

@@ -7,8 +7,11 @@ import { createStore } from 'redux';
 import { connect } from 'react-redux';
 import { Provider } from 'react-redux';
 
+import renderer from 'react-test-renderer';
+
 const actions = require('./model/actions'),
-store = require('./model/store');
+store = require('./model/store'),
+initialConfig = store.getState();
 
 function getEurekaProvider() {
   const props = {},
@@ -37,17 +40,19 @@ it('renders without crashing', () => {
   ReactDOM.render(Provider, div);
 });
 
-it('supports storagePrefix configuration through props', () => {
+it('should support storagePrefix configuration through props', () => {
   const div = document.createElement('div');
   const props = {
     storagePrefix:'yolo__'
   };
 
+  const config = store.getState().config;
   store.dispatch(actions.updateConfig(props));
-
   const Provider = getEurekaProvider();
 
   ReactDOM.render(Provider, div);
+
+
 
   if(!div.innerHTML.includes(props.storagePrefix)) {
     const err = `Rendered markup should contain storage prefix: ${props.storagePrefix}`;
@@ -58,6 +63,9 @@ it('supports storagePrefix configuration through props', () => {
 });
 
 it('supports view mode configuration through props', () => {
+  // set the store back to how it was apparently this persists through tests?
+  store.dispatch(actions.updateConfig(Object.assign({}, initialConfig, {})));
+
   const div = document.createElement('div');
   const props = {
     mode:'list'
@@ -183,7 +191,8 @@ it('should not remove upload features from media source tree if allowUploads is 
   const div = document.createElement('div');
   const props = {
     allowUploads:true,
-    treeHidden:false
+    treeHidden:false,
+    storagePrefix:'eureka__'
   };
 
   store.dispatch(actions.updateConfig(props));
@@ -191,9 +200,12 @@ it('should not remove upload features from media source tree if allowUploads is 
   const Provider = getEurekaProvider();
   ReactDOM.render(Provider, div);
 
+  //console.log(div.outerHTML);
+
+  //console.log('YOLO!!!!', store.getState().config.storagePrefix)
+
   if(!div.querySelector('.eureka__drop-area')) {
     const err = `.eureka__drop-area should be null if allowUploads is set to false`;
-    console.log(err);
     throw new Error(err);
   }
 
@@ -213,7 +225,6 @@ it('should not remove upload features from media source tree if allowUploads is 
 
   if(!div.querySelector('.eureka__drop-area')) {
     const err = `.eureka__drop-area should be null if allowUploads is set to false`;
-    console.log(err);
     throw new Error(err);
   }
 

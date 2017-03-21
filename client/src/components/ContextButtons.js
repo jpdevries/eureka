@@ -8,9 +8,9 @@ import {cssSafe} from '../utility/utility';
 const ContextButtons = (props) => {
   const item = props.item;
 
-  const renameBtn = (props.config.allowRename) ? (<button id={`rename__${cssSafe(item.filename)}`} role="option" title={`Rename ${item.filename}`} onClick={props.onRenameItem ? props.onRenameItem.bind(null, item) : undefined}>Rename<span className="visually-hidden"> {item.filename}</span></button>) : undefined,
+  const renameBtn = (props.config.allowRename) ? (<button id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }rename__${cssSafe(item.filename)}`} role="option" title={`Rename ${item.filename}`} onClick={props.onRenameItem ? props.onRenameItem.bind(null, item) : undefined}>Rename<span className="visually-hidden"> {item.filename}</span></button>) : undefined,
   deleteBtn = (props.config.allowDelete) ? (
-    <button id={`delete__${cssSafe(item.filename)}`} role="option" onClick={(event) => {
+    <button id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }delete__${cssSafe(item.filename)}`} role="option" onClick={(event) => {
         store.dispatch(actions.deleteMediaItem(props.source.currentSource, item.absolutePath));
       }} title={`Delete ${item.filename}`} className="dangerous">Delete<span className="visually-hidden"> {item.filename}</span></button>
   ) : undefined;

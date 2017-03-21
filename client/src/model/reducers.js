@@ -28,7 +28,7 @@ var configReducer = function(state, action) {
 
   switch(action.type) {
     case actions.UPDATE_CONFIG:
-    //console.log('UPDATE_CONFIG', state, action.config);
+    //console.log('UPDATE_CONFIG!!', action.config);
     return Object.assign({},state,action.config);
     break;
   }

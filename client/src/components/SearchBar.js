@@ -69,7 +69,7 @@ class SearchBar extends Component {
     })();
 
     const list = (
-      <datalist id={`${props.config.storagePrefix}__datalist`}>
+      <datalist id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }__datalist`}>
         {props.content.contents.map((item) => (
           <option value={item.filename}></option>
         ))}
@@ -79,7 +79,7 @@ class SearchBar extends Component {
     return (!utility.serverSideRendering) ? (
       <form className="eureka__search-bar">
       <label htmlFor="eureka__filter" title={`Filter contents of ${props.content.cd} by filename, filesize, dimensions or even modification date`}>Filter<span className="visually-hidden"> contents of {props.content.cd} by filename, filesize, dimensions or even modification date</span>:&ensp;</label>
-      <input list={`${props.config.storagePrefix}__datalist`} type="text" name="eureka__filter" id="eureka__filter" placeholder={placeholder} value={props.view.filter} onChange={(event) => {
+      <input list={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }__datalist`} type="text" name="eureka__filter" id="eureka__filter" placeholder={placeholder} value={props.view.filter} onChange={(event) => {
           store.dispatch(actions.updateView({
             filter:event.target.value || undefined
           }))
@@ -89,7 +89,7 @@ class SearchBar extends Component {
     ) : (
       <div className="eureka__search-bar">
       <label htmlFor="eureka__filter" title={`Filter contents of ${props.content.cd} by filename, filesize, dimensions or even modification date`}>Filter<span className="visually-hidden"> contents of {props.content.cd} by filename, filesize, dimensions or even modification date</span>:&ensp;</label>
-      <input list={`${props.config.storagePrefix}__datalist`} type="text" name="eureka__filter" id="eureka__filter" placeholder={placeholder} value={props.view.filter} onChange={(event) => {
+      <input list={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }__datalist`} type="text" name="eureka__filter" id="eureka__filter" placeholder={placeholder} value={props.view.filter} onChange={(event) => {
           store.dispatch(actions.updateView({
             filter:event.target.value || undefined
           }))

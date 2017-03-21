@@ -135,9 +135,9 @@ const MediaRow = (props) => {
 
   //classNames();
 
-  const mediaId = `${props.config.storagePrefix}__media__${utility.cssSafe(props.item.filename)}`,
-  mediaSelectId = `${props.config.storagePrefix}__radio_${utility.cssSafe(props.item.filename)}`,
-  mediaSelect = (utility.serverSideRendering) ? <td><input id={mediaSelectId} value={props.item.filename} name="eureka__chosen_item" type="radio" aria-labelledby={`${props.config.storagePrefix}choose-button`} aria-describedby={`${mediaId} ${utility.cssSafe(props.item.filename)}`} /><span className="visually-hidden">&ensp;Select ${props.item.filename}</span></td> : undefined,
+  const mediaId = `${props.config.storagePrefix || 'eureka__'}__media__${utility.cssSafe(props.item.filename)}`,
+  mediaSelectId = `${props.config.storagePrefix || 'eureka__'}__radio_${utility.cssSafe(props.item.filename)}`,
+  mediaSelect = (utility.serverSideRendering) ? <td><input id={mediaSelectId} value={props.item.filename} name="eureka__chosen_item" type="radio" aria-labelledby={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }choose-button`} aria-describedby={`${mediaId} ${utility.cssSafe(props.item.filename)}`} /><span className="visually-hidden">&ensp;Select ${props.item.filename}</span></td> : undefined,
   className = (props.config.emphasisFocusedMediaItem && props.item == props.view.focusedMediaItem) ? {'eureka__focused-media-item':true} : {},
   tabIndex = (utility.serverSideRendering) ? undefined : "0",
   ext = pathParse(props.item.absoluteURL).ext,
@@ -163,13 +163,13 @@ const MediaRow = (props) => {
 
 
   if(utility.serverSideRendering && isLinkableFileType) {
-    //media = <label style={{display:'block'}} htmlFor={mediaSelectId} aria-labelledby={`${props.config.storagePrefix}filename__${utility.cssSafe(props.item.filename)}`}>{media}</label>;
+    //media = <label style={{display:'block'}} htmlFor={mediaSelectId} aria-labelledby={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }filename__${utility.cssSafe(props.item.filename)}`}>{media}</label>;
     media = <a href={props.item.absoluteURL} target={`_${mediaSelectId}`} aria-label={`Open ${props.item.fileName} in a new tab`} role="presentation">{media}</a>;
   }
 
   let fileName = utility.wordBreaksEvery(props.item.filename);
   if(utility.serverSideRendering) {
-    //fileName = <a href={`#${mediaSelectId}`} role="presentation" tabIndex="-1" id={`${props.config.storagePrefix}filename__${utility.cssSafe(props.item.filename)}`}>{fileName}</a>
+    //fileName = <a href={`#${mediaSelectId}`} role="presentation" tabIndex="-1" id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }filename__${utility.cssSafe(props.item.filename)}`}>{fileName}</a>
     fileName = (<label htmlFor={mediaSelectId}>{fileName}</label>);
   }
   return (
@@ -182,7 +182,7 @@ const MediaRow = (props) => {
         <span className="visually-hidden">Media Contents</span>
         {media}
       </td>
-      <td id={`${props.config.storagePrefix}filename__${utility.cssSafe(props.item.filename)}`} role="gridcell" className="eureka__td-filename" contentEditable={contentEditable} onBlur={(event) => {
+      <td id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }filename__${utility.cssSafe(props.item.filename)}`} role="gridcell" className="eureka__td-filename" contentEditable={contentEditable} onBlur={(event) => {
           try {
             if(!entities.decode(event.target.innerHTML).trim()) {
               event.target.innerHTML = props.item.filename;

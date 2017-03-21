@@ -14,9 +14,9 @@ class FileTreeSpan extends Component {
   }
 
   render() {
-    const state = this.state;
-    const props = this.props;
-    const item = props.item;
+    const state = this.state,
+    props = this.props,
+    item = props.item;
 
     return (
       <span ref={(span) => (this.span = span)} contentEditable={state.editable} onClick={(event) => {
@@ -65,7 +65,7 @@ const FileTree = (props) => {
 
           <menu hidden="true" type="context" id={`context_menu__${item.cd.replace(/^[^a-z]+|[^\w:.-]+/gi, "")}`}>
               <menuitem label="Create Directory Here" onClick={(event) => {
-                  
+
                 }}></menuitem>
               <menuitem label="Chmod Directory"></menuitem>
               <menuitem label="Rename"></menuitem>

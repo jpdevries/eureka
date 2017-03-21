@@ -4,6 +4,8 @@ import PathBar from './PathBar';
 
 import utility from '../utility/utility';
 
+import renderer from 'react-test-renderer';
+
 const pathParse = require('path-parse');
 
 it('renders without crashing', () => {
@@ -79,4 +81,24 @@ it('summary should contain correct absolutePath', () => {
     console.log(err);
     throw new Error(err);
   }
+});
+
+it('renders a snapshot', () => {
+  const props = {
+    config: {
+      allowRename: false,
+      allowDelete: false
+    },
+    view: {
+      focusedMediaItem: {
+        directory:'/',
+        absoluteURL:'cheese.jpg',
+        filename:'cheese.jpg',
+        absolutePath:'/cheese.jpg'
+      }
+    }
+  };
+
+  const pathbar = renderer.create(<PathBar {...props} />).toJSON();
+  expect(pathbar).toMatchSnapshot();
 });

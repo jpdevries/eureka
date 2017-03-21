@@ -9,7 +9,6 @@ ReactDOM.render(
   <EurekaMediaBrowser
     basePath="/core/components/eureka/"
     allowUploads={true}
-    storagePrefix="eureka-debug__"
     treeHidden={true}
     useLocalStorage={true}
     allowRename={true}

@@ -33,3 +33,5 @@ _build/scss/html5-boilerplate
 /sources.zip
 
 .tscache
+
+__snapshots__

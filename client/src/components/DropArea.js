@@ -25,8 +25,8 @@ class DropArea extends Component {
   render() {
     const props = this.props;
     return ( //
-      <div className="eureka__drop-area" title={`Drag files here to be uploaded to ${props.content.cd}`}>
-        <Dropzone onDrop={this.onDrop.bind(this)} className="eureka__drop-area-zone" activeClassName="eureka__drop-area-zone-active" style={{}} >
+      <div className={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }drop-area`} title={`Drag files here to be uploaded to ${props.content.cd}`}>
+        <Dropzone onDrop={this.onDrop.bind(this)} className={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }drop-area-zone`} activeClassName={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }drop-area-zone-active`} style={{}} >
           <Icon icon="upload" />
         </Dropzone>
       </div>

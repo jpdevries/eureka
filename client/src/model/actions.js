@@ -82,7 +82,7 @@ const updateSourceTree = (source) => (
 const UPDATE_SOURCE_TREE_SUCCESS = 'update_source_tree_success';
 const UPDATE_SOURCE_TREE_ERROR = 'update_source_tree_error';
 const updateSourceTreeSuccess = function(contents) {
-  console.log('contents',contents);
+  //console.log('contents',contents);
   return {
     type:UPDATE_SOURCE_TREE_SUCCESS,
     contents:contents,
@@ -90,7 +90,7 @@ const updateSourceTreeSuccess = function(contents) {
 }
 
 const updateSourceTreeError = function(error) {
-  console.log('updateSourceTreeError',error);
+  //console.log('updateSourceTreeError',error);
   return {
     type:UPDATE_SOURCE_TREE_ERROR,
     error:error

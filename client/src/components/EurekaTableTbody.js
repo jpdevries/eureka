@@ -51,7 +51,6 @@ class EurekaTableTbody extends Component {
     const x3 = el.scrollLeft;
     el.scrollLeft = x1;
     return !(y1 === y2 && y2 === y3 && x1 === x2 && x2 === x3);
-
 }
 
   handleResizeEvent(event) {
@@ -100,29 +99,7 @@ class EurekaTableTbody extends Component {
       ));
     }
 
-    contents = contents.sort((a, b) => {
-      if(a[props.sort.by] === b[props.sort.by]) return 0;
-
-      let n;
-
-      //console.log('props.sort.by',props.sort.by,a,b);
-
-      switch(props.sort.by) {
-        case 'dimensions':
-        n = a.dimensions[0] * a.dimensions[1] > b.dimensions[0] * b.dimensions[1] ? 1 : -1;
-        break;
-
-        case 'editedOn':
-        n = new Date(a.editedOn).getTime() > new Date(b.editedOn).getTime() ? 1 : -1;
-        break;
-
-        default:
-        n = (a[props.sort.by] > b[props.sort.by]) ? 1 : -1;
-        break;
-      }
-
-      return (props.sort.dir === utility.ASCENDING) ? n : 0-n;
-    });
+    contents = contents.sort(props, utility.contentSort);
 
     const contentList = (contents.length) ? contents.map((item, index) => (
       [
