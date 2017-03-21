@@ -99,7 +99,29 @@ class EurekaTableTbody extends Component {
       ));
     }
 
-    contents = contents.sort(props, utility.contentSort);
+    contents = contents.sort((a,b) => {
+      if(a[props.sort.by] === b[props.sort.by]) return 0;
+
+      let n;
+
+      //console.log('props.sort.by',props.sort.by,a,b);
+
+      switch(props.sort.by) {
+        case 'dimensions':
+        n = a.dimensions[0] * a.dimensions[1] > b.dimensions[0] * b.dimensions[1] ? 1 : -1;
+        break;
+
+        case 'editedOn':
+        n = new Date(a.editedOn).getTime() > new Date(b.editedOn).getTime() ? 1 : -1;
+        break;
+
+        default:
+        n = (a[props.sort.by] > b[props.sort.by]) ? 1 : -1;
+        break;
+      }
+
+      return (props.sort.dir === utility.ASCENDING) ? n : 0-n;
+    });
 
     const contentList = (contents.length) ? contents.map((item, index) => (
       [

@@ -1,9 +1,45 @@
 {
   "name": "eureka-server",
-  "version": "0.0.1",
+  "description": "Eureka is a progressively enhanced Media Browser Component.",
+  "version": "0.0.0",
   "private": true,
+  "license": "BSD-3-Clause",
+  "author": {
+    "name": "JP de Vries",
+    "email": "mail@devries.jp",
+    "url": "https://devries.jp/"
+  },
   "proxy": "http://localhost:3001/",
+  "keywords": [
+    "react",
+    "redux",
+    "media",
+    "browse",
+    "eureka",
+    "MODX",
+    "a11y",
+    "data",
+    "table",
+    "markuptips"
+  ],
   "main": "server.js",
+  "files": [
+    "client/bower.json",
+    "client/build/assets/css/",
+    "client/build/assets/img/",
+    "client/build/assets/js/",
+    "client/build/static/",
+    "client/src/"
+  ],
+  "homepage": "https://eureka.markup.tips",
+  "bugs": {
+    "url": "https://github.com/jpdevries/eureka/issues",
+    "email": "eureka@devries.jp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jpdevries/eureka.git"
+  },
   "dependencies": {
     "babel-cli": "^6.24.0",
     "babel-core": "6.14.0",
@@ -11,6 +47,7 @@
     "babel-preset-react": "^6.23.0",
     "classnames": "^2.2.5",
     "compression": "^1.6.2",
+    "eureka-browser": "*",
     "express": "4.13.3",
     "express-formidable": "^1.0.0",
     "express-minify-html": "^0.10.0",
@@ -34,16 +71,21 @@
   },
   "scripts": {
     "start": "yarn build && yarn prod",
-    "prestart": "yarn && yarn fetchsourcesprod && yarn fetchsources",
-    "fetchsources": "rm -rf sources.zip && rm -rf sources && wget http://j4p.us/0f2O0S1Q362K/sources.zip && unzip sources.zip && rm -rf sources.zip && ls && ls sources",
-    "fetchsourcesprod": "cd ./prod && rm -rf sources.zip && rm -rf sources && wget http://j4p.us/0f2O0S1Q362K/sources.zip && unzip sources.zip && rm -rf sources.zip && ls && ls sources && cd ../",
+    "prestart": "yarn && yarn fetchsources",
+    "fetchsources": "rm -rf sources.zip && rm -rf sources && wget http://j4p.us/0f2O0S1Q362K/sources.zip && unzip sources.zip && ls && ls sources && mv sources.zip prod && cd ./prod && rm -rf sources && unzip sources.zip && rm -rf sources.zip && ls && ls sources && cd ../",
     "buildserver": "babel ./server.js -d prod",
+    "fetcheureka": "cd ./prod && npm install eureka-browser && cd ../",
     "build": "yarn buildserver && babel ./client/src -d prod/client/src && cp -R client/build prod/client",
+    "testbuild": "yarn buildserver  && cp -R client/build prod/client",
+    "buildclient": "cd client && yarn && yarn build && cd ../",
+    "testclient": "cd client && yarn && yarn test && cd ../",
+    "oldbuild": "yarn buildserver && babel ./client/src -d prod/client/src && cp -R client/build prod/client",
     "serve": "babel-node server.js",
     "server": "yarn serve",
     "prod": "NODE_ENV=production node prod/server.js",
     "prodforever": "NODE_ENV=production forever start prod/server.js",
     "client": "babel-node start-client.js",
+    "herokupush": "git push heroku release-2.0:master",
     "herokuforce": "git push heroku release-2.0:master --force",
     "dev": "echo \"This command has been deprecated. Use 'npm start'\" && exit 1",
     "lint": "eslint ."

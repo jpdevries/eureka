@@ -320,10 +320,20 @@ To fire up a testing server run the following:
 ```bash
 git clone -b release-2.0 git://github.com/jpdevries/eureka.git
 cd eureka
-yarn prestart # install and build
-yarn fetchsources # do once, fetches media source data
-yarn server # start the server
+yarn prestart
+yarn build
+yarn serve # start the  development server
 # open http://localhost:3001 # Node server
+```
+
+To host the compiled production server run
+```bash
+yarn start # install, fetch sources, build
+```
+
+or
+```bash
+yarn prod # fire up the production server
 ```
 
 The testing server hosts the `sources` and `client/build` directories along with a REST API to `GET`, `POST`, `PUT`, `DELETE` media items.
@@ -363,21 +373,22 @@ Find docs at the [REST API wiki page](https://github.com/jpdevries/eureka/wiki/R
   <!-- for performance, optimization, and accessibility it best to support server-side rendering by initially delivering a base HTML layer
   see server-side rendering below -->
 </div>
-<script src="assets/js/vendor/eureka/eureka.2.0.0.min.js"></script>
+
 ```
 
 **JS**
 ```js
 import React from 'react';
 import ReactDOM from 'react-dom';
-
-import EurekaMediaBrowser from 'EurekaMediaBrowser';
+import { EurekaMediaBrowser } from 'eureka-browser';
 
 ReactDOM.render(
   <EurekaMediaBrowser />,
   document.getElementById('eureka-root')
 );
 ```
+
+Eureka will then be injected into the DOM and eagerly reach out to the REST API for the JSON data it needs to offer the&nbsp;interface.
 
 Configure the `EurekaMediaBrowser` via the optional attributes found in the default configuration&nbsp;below:
 ```xml

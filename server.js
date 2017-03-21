@@ -12,10 +12,34 @@ isProd = (process.env.NODE_ENV == 'production') ? true : false;
 import React from 'react';
 import ReactDOM from 'react-dom/server';
 
+
+/*
 import actions from './client/src/model/actions';
 import store from './client/src/model/store';
 import EurekaMediaBrowser from './client/src/EurekaMediaBrowser';
 import utility from './client/src/utility/utility';
+*/
+
+
+/*
+import { // load it from the local, ES 6/7 source
+  EurekaMediaBrowser,
+  actions,
+  store,
+  utility
+} from './client/src/main.js';
+*/
+
+
+
+import { // load the dist (transpiled)
+  EurekaMediaBrowser,
+  actions,
+  store,
+  utility
+} from 'eureka-browser'; // from 'eureka-browser'; // from './client/src/main'; from './client/dist/main';
+
+
 
 if(isProd) {
   app.use(minifyHTML({
@@ -55,23 +79,6 @@ app.get('/', (req, res) => {
   });
 
 });
-
-/*app.get('/server', (req, res) => {
-  serveIt(req.params.dir).then((eurekaMarkup) => {
-    res.end(`<!DOCTYPE html>
-    <html lang="en">
-      <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1">
-        <title data-site-name="Eureka Media Browser">Eureka Media Browser</title>
-        <link rel="stylesheet" href="assets/css/main.css">
-      </head>
-      <body>
-        <div id="root">${eurekaMarkup}</div>
-      </body>
-    </html>`);
-  });
-});*/
 
 app.use('/',express.static('client/build'));
 
@@ -198,6 +205,7 @@ function serveIt(dir = "/") {
         cd: dir
       }))
     )).then(() => {
+      console.log('time for eurekaMarkup');
       const eurekaMarkup = ReactDOM.renderToStaticMarkup(
         <EurekaMediaBrowser currentDirectory={dir} />
       );

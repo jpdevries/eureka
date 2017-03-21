@@ -282,7 +282,7 @@ var viewReducer = function(state, action) {
 }
 
 var initialSourceState = {
-  currentSource: 0,
+  currentSource: "0",
   sources: [/*{
     name: 'Filesystem',
     id: 'fileystem'
@@ -305,7 +305,7 @@ var sourceReducer = function(state, action) {
 
     case actions.UPDATE_SOURCE:
     return Object.assign({}, state, {
-      currentSource: action.source
+      currentSource: action.source.currentSource
     });
     break;
   }
