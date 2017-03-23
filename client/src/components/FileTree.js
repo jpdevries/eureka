@@ -59,8 +59,8 @@ const FileTree = (props) => {
       (item.children || true) ? // still deciding if we need this disabled for now
       <details key={index}>
         <summary contextMenu={`context_menu__${item.cd.replace(/^[^a-z]+|[^\w:.-]+/gi, "")}`} className={(props.content.cd === item.cd) ? 'active' : undefined}>
-          <Icon icon="folder" />
-          <Icon icon="folder-open" />
+          <Icon {...props} icon="folder" />
+          <Icon {...props} icon="folder-open" />
           <FileTreeSpan {...props} item={item} index={index} key={index} />
 
           <menu hidden="true" type="context" id={`context_menu__${item.cd.replace(/^[^a-z]+|[^\w:.-]+/gi, "")}`}>

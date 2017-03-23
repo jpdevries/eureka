@@ -73,7 +73,7 @@ class EurekaTable extends Component {
                   dir:dir
                 }
               });
-            }}>Name&ensp;{(!utility.serverSideRendering) ? <Icon icon="sort" /> : undefined}</th>
+            }}>Name&ensp;{(!utility.serverSideRendering) ? <Icon {...props}  icon="sort" /> : undefined}</th>
             <th scope="col" role="columnheader" className="visually-hidden">Actions</th>
             <th scope="col" role="columnheader" onClick={(event) => {
               let dir = this.state.sort.dir;
@@ -86,7 +86,7 @@ class EurekaTable extends Component {
                   dir:dir
                 }
               });
-              }}>Dimensions&ensp;{(!utility.serverSideRendering) ? <Icon icon="sort" /> : undefined}</th>
+              }}>Dimensions&ensp;{(!utility.serverSideRendering) ? <Icon {...props} icon="sort" /> : undefined}</th>
             <th scope="col" role="columnheader" onClick={(event) => {
               let dir = this.state.sort.dir;
               if(this.state.sort.by === 'fileSize') {
@@ -98,7 +98,7 @@ class EurekaTable extends Component {
                   dir:dir
                 }
               });
-              }}>File Size&ensp;{(!utility.serverSideRendering) ? <Icon icon="sort" /> : undefined}</th>
+              }}>File Size&ensp;{(!utility.serverSideRendering) ? <Icon {...props} icon="sort" /> : undefined}</th>
             <th scope="col" role="columnheader" onClick={(event) => {
                 let dir = this.state.sort.dir;
                 if(this.state.sort.by === 'editedOn') {
@@ -110,7 +110,7 @@ class EurekaTable extends Component {
                     dir:dir
                   }
                 });
-              }}>Edited On&ensp;{(!utility.serverSideRendering) ? <Icon icon="sort" /> : undefined}</th>
+              }}>Edited On&ensp;{(!utility.serverSideRendering) ? <Icon {...props} icon="sort" /> : undefined}</th>
           </tr>
         </thead>
         <EurekaTableTbody {...props} sort={this.state.sort} />

@@ -33,7 +33,7 @@ class ModalRenameItemForm extends Component {
       disable = true;
       sameName = true;
       label = `${entities.decode('&ensp;')}Cannot rename ${props.item.filename} to the same name`;
-      labelIcon = (<Icon icon="exclamation-triangle" />);
+      labelIcon = (<Icon {...props} icon="exclamation-triangle" />);
     }
 
     /*if(!disable) {
@@ -47,7 +47,7 @@ class ModalRenameItemForm extends Component {
             const entities = new Entities();
 
             label = `${entities.decode('&ensp;')}Directory ${path.join('/', props.content.cd, folderName)} already exists`;
-            labelIcon = (<Icon icon="exclamation-triangle" />);
+            labelIcon = (<Icon {...props} icon="exclamation-triangle" />);
             directoryExists = true;
             return true;
           }

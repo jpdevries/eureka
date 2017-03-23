@@ -6,7 +6,7 @@ import actions from '../model/actions';
 import Icon from './Icon';
 
 const TreeToggle = (props) => {
-  //<Icon icon={`caret-square-o-${props.view.sourceTreeOpen ? 'left' : 'right'}`} />&ensp;
+  //<Icon {...props} icon={`caret-square-o-${props.view.sourceTreeOpen ? 'left' : 'right'}`} />&ensp;
   return (
     
       <div>

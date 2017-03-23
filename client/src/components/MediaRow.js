@@ -127,7 +127,7 @@ const MediaRow = (props) => {
 
       default:
       const icon = utility.getIconByExtension(pathParse(props.item.filename).ext);
-      return (<p><Icon icon={icon} />&ensp;{props.item.absoluteURL}</p>);
+      return (<p><Icon {...props} icon={icon} />&ensp;{props.item.absoluteURL}</p>);
     }
   })(pathParse(props.item.filename).ext);
 

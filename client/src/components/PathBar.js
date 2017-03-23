@@ -45,7 +45,7 @@ const PathBar = (props) => {
       <div className="eureka__hide-for-mobile-up" aria-hidden="true">
         <details>
           <summary>
-            <Icon icon={icon} />&ensp;
+            <Icon {...props} icon={icon} />&ensp;
             {`${props.view.focusedMediaItem.directory}${props.view.focusedMediaItem.filename}`}
           </summary>
           <div>
@@ -58,7 +58,7 @@ const PathBar = (props) => {
       </div>
       <div className="eureka__show-for-mobile-up">
         <a role="presentation" href={props.view.focusedMediaItem.absoluteURL} target={`_${encodeURI(props.view.focusedMediaItem.absoluteURL)}`}>
-          <Icon icon={icon} />&ensp;
+          <Icon {...props} icon={icon} />&ensp;
           {path.join(props.view.focusedMediaItem.directory, props.view.focusedMediaItem.filename)}
         </a>
       </div>

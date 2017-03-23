@@ -80,7 +80,7 @@ var ModalRenameItemForm = function (_Component) {
               const Entities = require('html-entities').AllHtmlEntities;
                const entities = new Entities();
                label = `${entities.decode('&ensp;')}Directory ${path.join('/', props.content.cd, folderName)} already exists`;
-              labelIcon = (<Icon icon="exclamation-triangle" />);
+              labelIcon = (<Icon {...props} icon="exclamation-triangle" />);
               directoryExists = true;
               return true;
             }
