@@ -137,7 +137,7 @@ var EurekaTable = function (_Component) {
                   });
                 } },
               'Name\u2002',
-              !_utility2.default.serverSideRendering ? _react2.default.createElement(_Icon2.default, { icon: 'sort' }) : undefined
+              !_utility2.default.serverSideRendering ? _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'sort' })) : undefined
             ),
             _react2.default.createElement(
               'th',
@@ -159,7 +159,7 @@ var EurekaTable = function (_Component) {
                   });
                 } },
               'Dimensions\u2002',
-              !_utility2.default.serverSideRendering ? _react2.default.createElement(_Icon2.default, { icon: 'sort' }) : undefined
+              !_utility2.default.serverSideRendering ? _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'sort' })) : undefined
             ),
             _react2.default.createElement(
               'th',
@@ -176,7 +176,7 @@ var EurekaTable = function (_Component) {
                   });
                 } },
               'File Size\u2002',
-              !_utility2.default.serverSideRendering ? _react2.default.createElement(_Icon2.default, { icon: 'sort' }) : undefined
+              !_utility2.default.serverSideRendering ? _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'sort' })) : undefined
             ),
             _react2.default.createElement(
               'th',
@@ -193,7 +193,7 @@ var EurekaTable = function (_Component) {
                   });
                 } },
               'Edited On\u2002',
-              !_utility2.default.serverSideRendering ? _react2.default.createElement(_Icon2.default, { icon: 'sort' }) : undefined
+              !_utility2.default.serverSideRendering ? _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'sort' })) : undefined
             )
           )
         ),

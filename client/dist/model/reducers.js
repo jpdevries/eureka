@@ -26,6 +26,8 @@ var initialConfigState = {
   mediaSource: undefined,
   currentDirectory: "/",
   uid: "0",
+  iconSVG: './img/icons.svg',
+  assetsBasePath: './assets/',
   emphasisFocusedMediaItem: true,
   headers: { 'Powered-By': 'Eureka by Markup.tips' },
   intervals: { searchBarPlaceholder: false, fetchDirectoryContents: 18000, updateSourceTree: false }

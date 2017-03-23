@@ -155,7 +155,7 @@ var MediaRow = function MediaRow(props) {
         return _react2.default.createElement(
           'p',
           null,
-          _react2.default.createElement(_Icon2.default, { icon: icon }),
+          _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: icon })),
           '\u2002',
           props.item.absoluteURL
         );

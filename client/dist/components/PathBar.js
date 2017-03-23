@@ -68,7 +68,7 @@ var PathBar = function PathBar(props) {
         _react2.default.createElement(
           'summary',
           null,
-          _react2.default.createElement(_Icon2.default, { icon: icon }),
+          _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: icon })),
           '\u2002',
           '' + props.view.focusedMediaItem.directory + props.view.focusedMediaItem.filename
         ),
@@ -90,7 +90,7 @@ var PathBar = function PathBar(props) {
       _react2.default.createElement(
         'a',
         { role: 'presentation', href: props.view.focusedMediaItem.absoluteURL, target: '_' + encodeURI(props.view.focusedMediaItem.absoluteURL) },
-        _react2.default.createElement(_Icon2.default, { icon: icon }),
+        _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: icon })),
         '\u2002',
         _path2.default.join(props.view.focusedMediaItem.directory, props.view.focusedMediaItem.filename)
       )
