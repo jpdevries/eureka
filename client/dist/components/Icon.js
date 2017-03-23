@@ -19,7 +19,7 @@ var Icon = function Icon(props) {
   return _react2.default.createElement(
     'svg',
     { 'aria-hidden': props.ariaHidden === undefined ? true : props.ariaHidden, className: 'icon icon-' + props.icon },
-    _react2.default.createElement('use', { xlinkHref: _path2.default.join(props.config.assetsBasePath, props.config.iconSVG) + '#icon-' + props.icon })
+    _react2.default.createElement('use', { xlinkHref: _path2.default.join(props.config.assetsBasePath || './assets/', props.config.iconSVG || './img/icons.svg') + '#icon-' + props.icon })
   );
 };
 
