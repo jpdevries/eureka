@@ -1,5 +1,7 @@
 body, [class*="modal-section"] {
+  padding:0;
   > #root, > .eureka-root {
+    padding:.5rem;
     .eureka {
       &.eureka__view-mode__table, &.eureka__view-mode__list {
         .eureka__browse-content>.eureka__stage>.eureka__table-wrapper>div>table {

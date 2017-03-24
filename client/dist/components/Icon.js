@@ -15,11 +15,14 @@ var _path2 = _interopRequireDefault(_path);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Icon = function Icon(props) {
-  console.log(props);
+  var config = Object.assign({}, {
+    assetsBasePath: './assets/',
+    iconSVG: './img/icons.svg'
+  }, props.config);
   return _react2.default.createElement(
     'svg',
     { 'aria-hidden': props.ariaHidden === undefined ? true : props.ariaHidden, className: 'icon icon-' + props.icon },
-    _react2.default.createElement('use', { xlinkHref: _path2.default.join(props.config.assetsBasePath || './assets/', props.config.iconSVG || './img/icons.svg') + '#icon-' + props.icon })
+    _react2.default.createElement('use', { xlinkHref: _path2.default.join(config.assetsBasePath, config.iconSVG) + '#icon-' + props.icon })
   );
 };
 
