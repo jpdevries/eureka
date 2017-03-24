@@ -1,5 +1,5 @@
 body, [class*="modal-section"] {
-  > #root, .eureka-root {
+  > #root, > .eureka-root {
     .eureka {
       &.eureka__view-mode__table, &.eureka__view-mode__list {
         .eureka__browse-content>.eureka__stage>.eureka__table-wrapper>div>table {
@@ -64,7 +64,7 @@ body, [class*="modal-section"] {
     }
   }
 
-  > #root {
+  > #root, > .eureka-root {
 
     .eureka>.eureka__browse-content>.eureka__stage>.eureka__table-wrapper>div>table>tbody {
       &:not(.empty) {
@@ -117,7 +117,7 @@ body, [class*="modal-section"] {
     max-height: 100vh;
     overflow-y:hidden;
     flex-direction: column;
-    > #root {
+    > #root, > .eureka-root {
       /*display:grid;
       grid-gap:0;
       grid-template-columns:20vw auto;
