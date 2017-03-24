@@ -3,10 +3,13 @@ import React from 'react';
 import path from 'path';
 
 const Icon = (props) => {
-  console.log(props);
+  const config = Object.assign({}, {
+    assetsBasePath:'./assets/',
+    iconSVG:'./img/icons.svg'
+  }, props.config);
   return (
     <svg aria-hidden={props.ariaHidden === undefined ? true : props.ariaHidden} className={`icon icon-${props.icon}`}>
-      <use xlinkHref={`${path.join(props.config.assetsBasePath || './assets/', props.config.iconSVG || './img/icons.svg')}#icon-${props.icon}`}></use>
+      <use xlinkHref={`${path.join(config.assetsBasePath, config.iconSVG)}#icon-${props.icon}`}></use>
     </svg>
   )
 };
