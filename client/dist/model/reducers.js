@@ -30,7 +30,15 @@ var initialConfigState = {
   assetsBasePath: './assets/',
   emphasisFocusedMediaItem: true,
   headers: { 'Powered-By': 'Eureka by Markup.tips' },
-  intervals: { searchBarPlaceholder: false, fetchDirectoryContents: 18000, updateSourceTree: false }
+  intervals: { searchBarPlaceholder: false, fetchDirectoryContents: 18000, updateSourceTree: false },
+  callbacks: {
+    close: function close() {
+      console.log('handle close');
+    },
+    choose: function choose(chosenOne) {
+      console.log('handle choose', chosenOne);
+    }
+  }
 };
 
 var configReducer = function configReducer(state, action) {

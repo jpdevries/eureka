@@ -21,7 +21,12 @@ var ChooseBar = function ChooseBar(props) {
     { 'aria-hidden': props.ariaHidden, className: 'eureka__button-bar eureka__choose-bar' },
     _react2.default.createElement(
       'button',
-      { 'aria-label': 'Close Media Browser' },
+      { 'aria-label': 'Close Media Browser', onClick: function onClick(event) {
+          console.log('closing');
+          try {
+            props.config.callbacks.close();
+          } catch (e) {}
+        } },
       'Cancel'
     ),
     _react2.default.createElement(
