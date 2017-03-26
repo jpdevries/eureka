@@ -1,4 +1,5 @@
 # Eureka 🌲
+[![Build Status](https://travis-ci.org/jpdevries/eureka.svg?branch=release-2.0)](https://travis-ci.org/jpdevries/eureka) [![npm version](https://badge.fury.io/js/lazyload-script.svg)](https://badge.fury.io/js/lazyload-script)
 
 Eureka is a progressively enhanced flexible media browser. Connected to your media sources through a REST API, this accessible web component allows users to browse media sources, upload files, and choose media items.
 
