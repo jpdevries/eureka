@@ -92,6 +92,36 @@ The semantic HTML layer remains usable even absent of style as pure&nbsp;HTML.
       <td align="center"><span aria-label="supported">✅</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
     </tr>
+        <tr>
+      <td>Keyboard Support</td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+    </tr>
+    <tr>
+      <td>ARIA Support</td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="partial supported">✳️</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+    </tr>
+    <tr>
+      <td>WCAG Level AA</td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+    </tr>
     <tr>
       <td>Media Source panel</td>
       <td align="center"><span aria-label="not supported">❌</span></td>
@@ -234,36 +264,6 @@ The semantic HTML layer remains usable even absent of style as pure&nbsp;HTML.
     </tr>
     <tr>
       <td>Mobile First Layout</td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-    </tr>
-    <tr>
-      <td>Keyboard Support</td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-    </tr>
-    <tr>
-      <td>ARIA Support</td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="partial supported">✳️</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-    </tr>
-    <tr>
-      <td>WCAG Level AA</td>
       <td align="center"><span aria-label="supported">✅</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
