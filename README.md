@@ -18,7 +18,7 @@ Join the conversation in our public Gitter chat room.
 Don't forget to [browse the Wiki](https://github.com/jpdevries/eureka/wiki) for [more information on the REST API](https://github.com/jpdevries/eureka/wiki/REST-API), [patterns](https://github.com/jpdevries/eureka/wiki/Patterns), [screenshots](https://github.com/jpdevries/eureka/wiki/Screenshots) and&nbsp;more.
 
 ## 🍻 Support
-The Eureka Media Browser is provided free as in beer.  
+The Eureka Media Browser and supporting resources are provided free as in&nbsp;beer.  
 [Gratuities are accepted through Square&nbsp;Cash](https://cash.me/$MarkupTips).
 
 ## Powered By 🚀
@@ -437,7 +437,7 @@ Configure the `EurekaMediaBrowser` via the optional attributes found in the defa
 | `emphasisFocusedMediaItem` | `true`      |    Whether or not to emphasis selected media items (defaults to emphasizing the filename, only applies to table and list view modes) |
 
 ## 🗄 REST API
-Eureka is hungry. It needs a REST API to feed it JSON data.  
+Eureka is hungry for remote media sources. It needs a REST API to feed it JSON&nbsp;data.  
 Find docs at the [REST API wiki page](https://github.com/jpdevries/eureka/wiki/REST-API).
 
 ## 📠 Server Side Rendering

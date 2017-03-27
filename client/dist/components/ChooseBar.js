@@ -25,13 +25,22 @@ var ChooseBar = function ChooseBar(props) {
           console.log('closing');
           try {
             props.config.callbacks.close();
-          } catch (e) {}
+          } catch (e) {
+            console.log(e);
+          }
         } },
       'Cancel'
     ),
     _react2.default.createElement(
       'button',
-      { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'choose-button', className: 'eureka__primary', disabled: !props.view.focusedMediaItem && !_utility2.default.serverSideRendering },
+      { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'choose-button', className: 'eureka__primary', disabled: !props.view.focusedMediaItem && !_utility2.default.serverSideRendering, onClick: function onClick(event) {
+          if (!props.view.focusedMediaItem) return;
+          try {
+            props.config.callbacks.choose(props.view.focusedMediaItem);
+          } catch (e) {
+            console.log(e);
+          }
+        } },
       'Choose ',
       _react2.default.createElement(
         'span',

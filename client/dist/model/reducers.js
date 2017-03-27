@@ -32,12 +32,8 @@ var initialConfigState = {
   headers: { 'Powered-By': 'Eureka by Markup.tips' },
   intervals: { searchBarPlaceholder: false, fetchDirectoryContents: 18000, updateSourceTree: false },
   callbacks: {
-    close: function close() {
-      console.log('handle close');
-    },
-    choose: function choose(chosenOne) {
-      console.log('handle choose', chosenOne);
-    }
+    close: undefined,
+    choose: undefined
   }
 };
 
