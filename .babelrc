@@ -1,6 +1,8 @@
 {
-  "presets": ["es2015", "react"],
-  "plugins": [],
+  "presets": ["es2015", "react", "stage-0"],
+  "plugins": [
+
+  ],
   "ignore": [
     "**/*.test.js"
   ]

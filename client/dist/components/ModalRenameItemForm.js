@@ -24,6 +24,12 @@ var _Icon = require('./Icon');
 
 var _Icon2 = _interopRequireDefault(_Icon);
 
+var _reactIntl = require('react-intl');
+
+var _definedMessages = require('../i18n/definedMessages');
+
+var _definedMessages2 = _interopRequireDefault(_definedMessages);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -61,15 +67,23 @@ var ModalRenameItemForm = function (_Component) {
           Entities = require('html-entities').AllHtmlEntities,
           entities = new Entities();
 
+      var formatMessage = props.intl.formatMessage;
+
+      var filename = props.item.filename;
+
       var disable = false,
           sameName = false,
           label = 'Rename item',
           labelIcon = undefined;
 
+      var cannotRenameMessage = formatMessage(_definedMessages2.default.cannotRename, {
+        filename: filename
+      });
+
       if (state.newName === props.item.filename) {
         disable = true;
         sameName = true;
-        label = entities.decode('&ensp;') + 'Cannot rename ' + props.item.filename + ' to the same name';
+        label = '' + entities.decode('&ensp;') + cannotRenameMessage;
         labelIcon = _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'exclamation-triangle' }));
       }
 
@@ -119,12 +133,15 @@ var ModalRenameItemForm = function (_Component) {
                 if (state.newName) return;
                 _this2.refs.input.focus();
               }, onClick: props.onCancel },
-            'Cancel ',
+            _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'cancel', defaultMessage: 'Cancel' }),
+            ' ',
             _react2.default.createElement(
               'span',
               { className: 'visually-hidden' },
-              ' remaning item ',
-              props.item.filename
+              ' ',
+              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'renamingItem', defaultMessage: 'renaming item {filename}', values: {
+                  filename: filename
+                } })
             )
           ),
           _react2.default.createElement(

@@ -15,11 +15,19 @@ var pathParse = require('path-parse');
 import classNames from 'classnames';
 import Icon from './Icon';
 
-const MediaRow = (props) => {
+import { FormattedMessage } from 'react-intl';
 
+import definedMessages from '../i18n/definedMessages';
+
+
+
+const MediaRow = (props) => {
+  console.log('MediaRow', props);
   const entities = new Entities();
   const item = props.item;
   const index = props.index;
+
+  const formatMessage = props.intl.formatMessage;
 
   const ariaLabel = `${props.item.filename} displays at ${props.item.dimensions.join('x')}, weighs ${filesize(props.item.fileSize, {round: 0})}, and was edited on ${new Date(props.item.editedOn).toLocaleString(props.view.locale,{ weekday:'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' })}`;
 
@@ -59,7 +67,7 @@ const MediaRow = (props) => {
       return (
         <video width="320" height="240" controls={props.view.mode !== 'list'}>
           <source src={props.item.absoluteURL} type="video/mp4" />
-        Your browser does not support the video tag.
+          <FormattedMessage id="support.noVideo" defaultMessage="Your browser does not support the video tag." />
         </video>
       );
       break;
@@ -68,7 +76,7 @@ const MediaRow = (props) => {
       return (
         <video width="320" height="240"  controls={props.view.mode !== 'list'}>
           <source src={props.item.absoluteURL} type="video/ogg" />
-        Your browser does not support the video tag.
+          <FormattedMessage id="support.noVideo" defaultMessage="Your browser does not support the video tag." />
         </video>
       );
       break;
@@ -78,7 +86,7 @@ const MediaRow = (props) => {
       return (
         <video width="320" height="240"  controls={props.view.mode !== 'list'}>
           <source src={props.item.absoluteURL} type="video/webm" />
-        Your browser does not support the video tag.
+          <FormattedMessage id="support.noVideo" defaultMessage="Your browser does not support the video tag." />
         </video>
       );
       break;
@@ -93,7 +101,7 @@ const MediaRow = (props) => {
       return (
         <audio controls>
           <source src={props.item.absoluteURL} type="audio/ogg" />
-          Your browser does not support the audio tag.
+          <FormattedMessage id="support.noAudio" defaultMessage="Your browser does not support the audio tag." />
         </audio>
       );
       break;
@@ -102,7 +110,7 @@ const MediaRow = (props) => {
       return (
         <audio controls>
           <source src={props.item.absoluteURL} type="audio/mpeg" />
-          Your browser does not support the audio tag.
+          <FormattedMessage id="support.noAudio" defaultMessage="Your browser does not support the audio tag." />
         </audio>
       );
       break;
@@ -111,7 +119,7 @@ const MediaRow = (props) => {
       return (
         <audio controls>
           <source src={props.item.absoluteURL} type="audio/wav" />
-          Your browser does not support the audio tag.
+          <FormattedMessage id="support.noAudio" defaultMessage="Your browser does not support the audio tag." />
         </audio>
       );
       break;
@@ -120,7 +128,7 @@ const MediaRow = (props) => {
       return (
         <audio controls>
           <source src={props.item.absoluteURL} type="audio/flac" />
-          Your browser does not support the audio tag.
+          <FormattedMessage id="support.noAudio" defaultMessage="Your browser does not support the audio tag." />
         </audio>
       );
       break;
@@ -137,7 +145,7 @@ const MediaRow = (props) => {
 
   const mediaId = `${props.config.storagePrefix || 'eureka__'}__media__${utility.cssSafe(props.item.filename)}`,
   mediaSelectId = `${props.config.storagePrefix || 'eureka__'}__radio_${utility.cssSafe(props.item.filename)}`,
-  mediaSelect = (utility.serverSideRendering) ? <td><input id={mediaSelectId} value={props.item.filename} name="eureka__chosen_item" type="radio" aria-labelledby={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }choose-button`} aria-describedby={`${mediaId} ${utility.cssSafe(props.item.filename)}`} /><span className="visually-hidden">&ensp;Select ${props.item.filename}</span></td> : undefined,
+  mediaSelect = (utility.serverSideRendering) ? <td><input id={mediaSelectId} value={props.item.filename} name="eureka__chosen_item" type="radio" aria-labelledby={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }choose-button`} aria-describedby={`${mediaId} ${utility.cssSafe(props.item.filename)}`} /><span className="visually-hidden">&ensp;<FormattedMessage id="select" defaultMessage="Select" /> ${props.item.filename}</span></td> : undefined,
   className = (props.config.emphasisFocusedMediaItem && props.item == props.view.focusedMediaItem) ? {'eureka__focused-media-item':true} : {},
   tabIndex = (utility.serverSideRendering) ? undefined : "0",
   ext = pathParse(props.item.absoluteURL).ext,
@@ -160,11 +168,13 @@ const MediaRow = (props) => {
     }
   })(ext);
 
-
+  const openInANewTabMessage = formatMessage(definedMessages.openFileInNewTab, {
+    filename: props.item.fileName
+  });
 
   if(utility.serverSideRendering && isLinkableFileType) {
     //media = <label style={{display:'block'}} htmlFor={mediaSelectId} aria-labelledby={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }filename__${utility.cssSafe(props.item.filename)}`}>{media}</label>;
-    media = <a href={props.item.absoluteURL} target={`_${mediaSelectId}`} aria-label={`Open ${props.item.fileName} in a new tab`} role="presentation">{media}</a>;
+    media = <a href={props.item.absoluteURL} target={`_${mediaSelectId}`} aria-label={openInANewTabMessage} role="presentation">{media}</a>;
   }
 
   let fileName = utility.wordBreaksEvery(props.item.filename);
@@ -179,7 +189,7 @@ const MediaRow = (props) => {
       <td role="gridcell" id={mediaId} title={ariaLabel} className="eureka__td-media" onDoubleClick={(event) => {
           console.log(event, props.item);
       }}>
-        <span className="visually-hidden">Media Contents</span>
+        <span className="visually-hidden"><FormattedMessage id="media.contents" defaultMessage="Media Contents" /></span>
         {media}
       </td>
       <td id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }filename__${utility.cssSafe(props.item.filename)}`} role="gridcell" className="eureka__td-filename" contentEditable={contentEditable} onBlur={(event) => {

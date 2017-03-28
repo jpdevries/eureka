@@ -24,6 +24,8 @@ var _Icon = require('./Icon');
 
 var _Icon2 = _interopRequireDefault(_Icon);
 
+var _reactIntl = require('react-intl');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -112,12 +114,17 @@ var ModalCreateDirectoryForm = function (_Component) {
                 if (state.createDirectory) return;
                 _this2.refs.input.focus();
               }, onClick: props.onCancel },
-            'Cancel ',
+            _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'cancel', defaultMessage: 'Cancel' }),
+            ' ',
             _react2.default.createElement(
               'span',
               { className: 'visually-hidden' },
-              ' creating directory ',
-              state.createDirectory
+              ' ',
+              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'directory.cancelCreating', defaultMessage: 'creating directory {cd}', value: {
+                  cd: state.createDirectory
+                }, values: {
+                  state: state
+                } })
             )
           ),
           _react2.default.createElement(
@@ -125,11 +132,14 @@ var ModalCreateDirectoryForm = function (_Component) {
             { type: 'submit', onBlur: function onBlur(event) {
                 _this2.refs.input.focus();
               }, disabled: disable },
-            'Create ',
+            _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'create', defaultMessage: 'Create' }),
+            ' ',
             _react2.default.createElement(
               'span',
               { className: 'visually-hidden' },
-              ' directory ',
+              ' ',
+              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'directory', defaultMessage: 'directory' }),
+              ' ',
               state.createDirectory
             )
           )

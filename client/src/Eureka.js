@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import MediaSourceSelector from './components/MediaSourceSelector';
 import MediaDirectorySelector from './components/MediaDirectorySelector';
 import TreeBar from './components/TreeBar';
@@ -15,18 +15,31 @@ import Modal from './components/Modal';
 import ModalCreateDirectoryForm from './components/ModalCreateDirectoryForm';
 import ModalRenameItemForm from './components/ModalRenameItemForm';
 
+import {formatMessage} from 'react-intl';
+
 const path = require('path');
 
 const pathParse = require('path-parse');
+
+
 
 import store from './model/store';
 import actions from './model/actions';
 import utility from './utility/utility';
 
+import { FormattedMessage, FormattedPlural, FormattedNumber, FormattedRelative, defineMessages } from 'react-intl';
+import definedMessages from './i18n/definedMessages';
+
 const CREATE_DIRECTORY = 'create_directory';
 const RENAME_ITEM = 'rename_item';
 
+
+
 class Eureka extends Component {
+  /*static propTypes = {
+    intl: PropTypes.object.isRequired,
+  }*/
+
   constructor(props) {
     super(props);
     this.state = {
@@ -39,7 +52,7 @@ class Eureka extends Component {
     store.dispatch(actions.fetchMediaSources()).then(() => { // hit the server and get the media sources
       store.dispatch(actions.updateSourceTree(this.props.source.sources[0].id)).then((content) => { // then hit server for the directory tree of the first (default) media source
         const props = this.props;
-        
+
         store.dispatch(actions.updateContent({ // updates the "current directory" of the view right away
           cd: props.content.cd
         }));
@@ -163,16 +176,22 @@ class Eureka extends Component {
   }
 
   render() {
-    const props = this.props;
-    const state = this.state;
-    const modalOpen = false;
+    const props = this.props,
+    state = this.state,
+    modalOpen = false,
+    { formatMessage, formatDate } = this.props.intl,
+    createDirectoryMessage = formatMessage(definedMessages.directory),
+    renameItemMessage = formatMessage(definedMessages.rename, {
+      item:(state.renamingItem) ? ` ${state.renamingItem.filename}` : ''
+    });
+
 
     const modal = (() => {
       if(state.modalOpen) {
         switch(state.currentModal) {
           case CREATE_DIRECTORY:
           return (
-            <Modal onCancel={this.onModalCancel.bind(this)} onSubmit={this.onModalSubmit.bind(this)} title="Create Directory" {...props}>
+            <Modal onCancel={this.onModalCancel.bind(this)} onSubmit={this.onModalSubmit.bind(this)} title={createDirectoryMessage} {...props}>
               <ModalCreateDirectoryForm {...props} />
             </Modal>
           );
@@ -180,7 +199,7 @@ class Eureka extends Component {
 
           case RENAME_ITEM:
           return (
-            <Modal onCancel={this.onModalCancel.bind(this)} onSubmit={this.onRenameItemModalSubmit.bind(this)} title={`Rename Item ${state.renamingItem.filename}`} {...props}>
+            <Modal onCancel={this.onModalCancel.bind(this)} onSubmit={this.onRenameItemModalSubmit.bind(this)} title={renameItemMessage} {...props}>
               <ModalRenameItemForm {...props} item={state.renamingItem} />
             </Modal>
           );

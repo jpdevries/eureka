@@ -40,6 +40,12 @@ var _utility = require('../utility/utility');
 
 var _utility2 = _interopRequireDefault(_utility);
 
+var _reactIntl = require('react-intl');
+
+var _definedMessages = require('../i18n/definedMessages');
+
+var _definedMessages2 = _interopRequireDefault(_definedMessages);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -146,11 +152,13 @@ var EurekaTableTbody = function (_Component) {
       var contents = props.content.contents;
 
       if (props.view.filter) {
-        // filter based on filename, dimensions, date
-        var filter = props.view.filter.toLowerCase();
-        contents = contents.filter(function (value) {
-          return value.filename.toLowerCase().includes(filter) || value.dimensions.join('x').toLowerCase().includes(filter) || new Date(value.editedOn).toLocaleString().toLowerCase().includes(filter) || new Date(value.editedOn).toLocaleString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }).toLowerCase().includes(filter) || (0, _filesize2.default)(value.fileSize, { round: 0 }).toLowerCase().includes(filter) || (0, _filesize2.default)(value.fileSize, { round: 0 }).toLowerCase().replace(/ +?/g, '').includes(filter);
-        });
+        (function () {
+          // filter based on filename, dimensions, date
+          var filter = props.view.filter.toLowerCase();
+          contents = contents.filter(function (value) {
+            return value.filename.toLowerCase().includes(filter) || value.dimensions.join('x').toLowerCase().includes(filter) || new Date(value.editedOn).toLocaleString().toLowerCase().includes(filter) || new Date(value.editedOn).toLocaleString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }).toLowerCase().includes(filter) || (0, _filesize2.default)(value.fileSize, { round: 0 }).toLowerCase().includes(filter) || (0, _filesize2.default)(value.fileSize, { round: 0 }).toLowerCase().replace(/ +?/g, '').includes(filter);
+          });
+        })();
       }
 
       contents = contents.sort(function (a, b) {
@@ -204,6 +212,8 @@ var EurekaTableTbody = function (_Component) {
 }(_react.Component);
 
 function NoResults(props) {
+  var searchTryAnother = _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'search.tryAnother', defaultMessage: 'Try another search' });
+
   return props.view.filter ? _react2.default.createElement(
     'tr',
     { role: 'row' },
@@ -213,18 +223,21 @@ function NoResults(props) {
       _react2.default.createElement(
         'p',
         { className: 'alert-info eureka__notice', 'aria-live': 'assertive' },
-        'Uh oh. No results found for "',
-        props.view.filter,
-        '". ',
+        _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'search.noResults', defaultMessage: 'Uh oh. No results found for "{filter}"', values: {
+            filter: props.view.filter
+          } }),
+        '. ',
         _react2.default.createElement(
           'a',
           { href: '#eureka__filter', onClick: function onClick(event) {
               event.preventDefault();
               document.getElementById('eureka__filter').focus();
             } },
-          'Try another search'
+          searchTryAnother
         ),
-        ' or ',
+        ' ',
+        _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'grammar.or', defaultMessage: 'or' }),
+        ' ',
         _react2.default.createElement(
           'a',
           { href: '#eureka__filter', onClick: function onClick(event) {
@@ -234,7 +247,7 @@ function NoResults(props) {
               }));
               document.getElementById('eureka__filter').value = '';
             } },
-          'clear the search\xA0filter'
+          _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'search.clearFilter', defaultMessage: 'clear the search\xA0filter' })
         ),
         '.'
       )
@@ -248,11 +261,12 @@ function NoResults(props) {
       _react2.default.createElement(
         'p',
         { className: 'alert-info eureka__notice', 'aria-live': 'assertive' },
-        'Directory "',
-        props.content.cd,
-        '" appears to be empty.',
+        _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'directory.appearsToBeEmpty', defaultMessage: 'Directory "{cd}" appears to be empty.', values: {
+            cd: props.content.cd
+          } }),
         _react2.default.createElement('br', null),
-        'Perhaps you\'d like to ',
+        _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'perhapsYouWouldLikeTo', defaultMessage: 'Perhaps you\'d like to' }),
+        ' ',
         _react2.default.createElement(
           'a',
           { href: '#eureka__upload-form', onClick: function onClick(event) {
@@ -266,11 +280,13 @@ function NoResults(props) {
                 document.querySelector('.eureka__drop-area-zone').click();
               }
             } },
-          'upload some files',
+          _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'upload.someFiles', defaultMessage: 'upload some files' }),
           _react2.default.createElement(
             'span',
             { className: 'visually-hidden' },
-            ' to ',
+            ' ',
+            _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'grammar.to', defaultMessage: 'to' }),
+            ' ',
             props.content.cd
           )
         ),

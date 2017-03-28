@@ -5,6 +5,8 @@ import actions from '../model/actions';
 
 import Icon from './Icon';
 
+import definedMessages from '../i18n/definedMessages';
+
 class FileTreeSpan extends Component {
   constructor(props) {
     super(props);
@@ -54,6 +56,15 @@ class FileTreeSpan extends Component {
 
 const FileTree = (props) => {
 
+  const formatMessage = props.intl.formatMessage,
+  chmodDirectoryMessage = formatMessage(definedMessages.chmodDirectory),
+  renameMessage = formatMessage(definedMessages.rename),
+  refreshDirectoryMessage = formatMessage(definedMessages.refreshDirectory),
+  uploadFilesMessage = formatMessage(definedMessages.uploadFiles),
+  createFileMessage = formatMessage(definedMessages.createFile),
+  quickCreateFileMessage = formatMessage(definedMessages.quickCreateFile),
+  deleteDirectoryMessage = formatMessage(definedMessages.deleteDirectory);
+
   function listTree(tree) {
     return tree.map((item, index) => (
       (item.children || true) ? // still deciding if we need this disabled for now
@@ -67,14 +78,14 @@ const FileTree = (props) => {
               <menuitem label="Create Directory Here" onClick={(event) => {
 
                 }}></menuitem>
-              <menuitem label="Chmod Directory"></menuitem>
-              <menuitem label="Rename"></menuitem>
-              <menuitem label="Refresh Directory"></menuitem>
+              <menuitem label={chmodDirectoryMessage}></menuitem>
+              <menuitem label={renameMessage}></menuitem>
+              <menuitem label={refreshDirectoryMessage}></menuitem>
               <hr />
-              <menuitem label="Upload Files"></menuitem>
-              <menuitem label="Create Files"></menuitem>
-              <menuitem label="Quick Create Files"></menuitem>
-              <menuitem label="Delete Directory" onClick={(event) => {
+              <menuitem label={uploadFilesMessage}></menuitem>
+              <menuitem label={createFileMessage}></menuitem>
+              <menuitem label={quickCreateFileMessage}></menuitem>
+              <menuitem label={deleteDirectoryMessage} onClick={(event) => {
                   store.dispatch(actions.deleteMediaItem(props.source.currentSource, item.cd))
                 }}></menuitem>
           </menu>

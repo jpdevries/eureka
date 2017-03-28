@@ -1,0 +1,10 @@
+[
+  {
+    "id": "directory.create",
+    "defaultMessage": "Create a Directory"
+  },
+  {
+    "id": "rename.item",
+    "defaultMessage": "Rename Item{item}"
+  }
+]

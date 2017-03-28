@@ -26,6 +26,12 @@ var _filesize = require('filesize');
 
 var _filesize2 = _interopRequireDefault(_filesize);
 
+var _reactIntl = require('react-intl');
+
+var _definedMessages = require('../i18n/definedMessages');
+
+var _definedMessages2 = _interopRequireDefault(_definedMessages);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -84,6 +90,8 @@ var SearchBar = function (_Component) {
 
       var props = this.props;
 
+      var formatMessage = props.intl.formatMessage;
+
       var options = [_react2.default.createElement(
         'option',
         { key: '0' },
@@ -118,19 +126,28 @@ var SearchBar = function (_Component) {
         })
       );
 
+      var filterTitle = formatMessage(_definedMessages2.default.filterContentsOfBy, {
+        cd: props.content.cd
+      });
+
+      var contentsOfBy = formatMessage(_definedMessages2.default.contentsOfBy, {
+        cd: props.content.cd
+      });
+
+      var filterMessage = _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'filter', defaultMessage: 'Filter' });
+
       return !_utility2.default.serverSideRendering ? _react2.default.createElement(
         'form',
         { className: 'eureka__search-bar' },
         _react2.default.createElement(
           'label',
-          { htmlFor: 'eureka__filter', title: 'Filter contents of ' + props.content.cd + ' by filename, filesize, dimensions or even modification date' },
-          'Filter',
+          { htmlFor: 'eureka__filter', title: filterTitle },
+          filterMessage,
           _react2.default.createElement(
             'span',
             { className: 'visually-hidden' },
-            ' contents of ',
-            props.content.cd,
-            ' by filename, filesize, dimensions or even modification date'
+            ' ',
+            contentsOfBy
           ),
           ':\u2002'
         ),
@@ -145,14 +162,13 @@ var SearchBar = function (_Component) {
         { className: 'eureka__search-bar' },
         _react2.default.createElement(
           'label',
-          { htmlFor: 'eureka__filter', title: 'Filter contents of ' + props.content.cd + ' by filename, filesize, dimensions or even modification date' },
-          'Filter',
+          { htmlFor: 'eureka__filter', title: filterTitle },
+          filterMessage,
           _react2.default.createElement(
             'span',
             { className: 'visually-hidden' },
-            ' contents of ',
-            props.content.cd,
-            ' by filename, filesize, dimensions or even modification date'
+            ' ',
+            contentsOfBy
           ),
           ':\u2002'
         ),

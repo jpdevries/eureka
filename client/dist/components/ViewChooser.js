@@ -22,9 +22,20 @@ var _Icon = require('./Icon');
 
 var _Icon2 = _interopRequireDefault(_Icon);
 
+var _reactIntl = require('react-intl');
+
+var _definedMessages = require('../i18n/definedMessages');
+
+var _definedMessages2 = _interopRequireDefault(_definedMessages);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var ViewChooser = function ViewChooser(props) {
+  var formatMessage = props.intl.formatMessage,
+      tabularLayoutMessage = formatMessage(_definedMessages2.default.tabularLayoutDescription),
+      thumbLayoutMessage = formatMessage(_definedMessages2.default.thumbnailLayoutDescription),
+      gridLayoutMessage = formatMessage(_definedMessages2.default.gridLayoutDescription),
+      listLayoutMessage = formatMessage(_definedMessages2.default.listLayoutDescription);
 
   return _react2.default.createElement(
     'form',
@@ -51,12 +62,12 @@ var ViewChooser = function ViewChooser(props) {
           '\u2003',
           _react2.default.createElement(
             'label',
-            { htmlFor: 'eureka__view-table', title: 'Tabular Layout displays image thumbnails along with Name, Description, File Size and Edited On columns' },
+            { htmlFor: 'eureka__view-table', title: tabularLayoutMessage },
             _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'th-list' })),
             _react2.default.createElement(
               'span',
               { className: 'visually-hidden' },
-              'Table Layout'
+              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'layout.table', defaultMessage: 'Table Layout' })
             )
           )
         ),
@@ -71,12 +82,12 @@ var ViewChooser = function ViewChooser(props) {
           '\u2003',
           _react2.default.createElement(
             'label',
-            { htmlFor: 'eureka__view-thumb', title: 'Thumbnail layout displays a grid of medium sized thumbnails' },
+            { htmlFor: 'eureka__view-thumb', title: thumbLayoutMessage },
             _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'th-large' })),
             _react2.default.createElement(
               'span',
               { className: 'visually-hidden' },
-              'Thumbnail Layout'
+              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'layout.thumb', defaultMessage: 'Thumbnail Layout' })
             )
           )
         ),
@@ -91,12 +102,12 @@ var ViewChooser = function ViewChooser(props) {
           '\u2003',
           _react2.default.createElement(
             'label',
-            { htmlFor: 'eureka__view-grid', title: 'Grid View displays images a grid of large images' },
+            { htmlFor: 'eureka__view-grid', title: gridLayoutMessage },
             _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'square' })),
             _react2.default.createElement(
               'span',
               { className: 'visually-hidden' },
-              'Grid View'
+              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'layout.grid', defaultMessage: 'Grid Layout' })
             )
           )
         ),
@@ -111,12 +122,12 @@ var ViewChooser = function ViewChooser(props) {
           '\u2003',
           _react2.default.createElement(
             'label',
-            { htmlFor: 'eureka__view-list', title: 'List Layout displays Name, Description, File Size and Edited On columns' },
+            { htmlFor: 'eureka__view-list', title: listLayoutMessage },
             _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'list' })),
             _react2.default.createElement(
               'span',
               { className: 'visually-hidden' },
-              'List Layout'
+              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'layout.list', defaultMessage: 'List Layout' })
             )
           )
         )

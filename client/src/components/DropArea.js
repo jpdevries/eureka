@@ -7,6 +7,9 @@ import actions from '../model/actions';
 
 import Icon from './Icon';
 
+import { FormattedMessage, FormattedPlural, FormattedNumber, FormattedRelative, defineMessages } from 'react-intl';
+import definedMessages from '../i18n/definedMessages';
+
 class DropArea extends Component {
 
   onDrop(files) {
@@ -23,9 +26,14 @@ class DropArea extends Component {
   }
 
   render() {
-    const props = this.props;
-    return ( //
-      <div className={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }drop-area`} title={`Drag files here to be uploaded to ${props.content.cd}`}>
+    const props = this.props,
+    formatMessage = props.intl.formatMessage,
+    dragFilesToBeUploadedToMessage = formatMessage(definedMessages.dragFilesToBeUploadedTo, {
+      cd: props.content.cd
+    });
+
+    return (
+      <div className={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }drop-area`} title={dragFilesToBeUploadedToMessage}>
         <Dropzone onDrop={this.onDrop.bind(this)} className={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }drop-area-zone`} activeClassName={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }drop-area-zone-active`} style={{}} >
           <Icon {...props} icon="upload" />
         </Dropzone>

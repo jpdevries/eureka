@@ -28,6 +28,12 @@ var _Icon = require('./Icon');
 
 var _Icon2 = _interopRequireDefault(_Icon);
 
+var _reactIntl = require('react-intl');
+
+var _definedMessages = require('../i18n/definedMessages');
+
+var _definedMessages2 = _interopRequireDefault(_definedMessages);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -62,16 +68,19 @@ var DropArea = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      var props = this.props;
-      return (//
+      var props = this.props,
+          formatMessage = props.intl.formatMessage,
+          dragFilesToBeUploadedToMessage = formatMessage(_definedMessages2.default.dragFilesToBeUploadedTo, {
+        cd: props.content.cd
+      });
+
+      return _react2.default.createElement(
+        'div',
+        { className: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'drop-area', title: dragFilesToBeUploadedToMessage },
         _react2.default.createElement(
-          'div',
-          { className: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'drop-area', title: 'Drag files here to be uploaded to ' + props.content.cd },
-          _react2.default.createElement(
-            _reactDropzone2.default,
-            { onDrop: this.onDrop.bind(this), className: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'drop-area-zone', activeClassName: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'drop-area-zone-active', style: {} },
-            _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'upload' }))
-          )
+          _reactDropzone2.default,
+          { onDrop: this.onDrop.bind(this), className: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'drop-area-zone', activeClassName: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'drop-area-zone-active', style: {} },
+          _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'upload' }))
         )
       );
     }

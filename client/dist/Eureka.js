@@ -72,6 +72,8 @@ var _ModalRenameItemForm = require('./components/ModalRenameItemForm');
 
 var _ModalRenameItemForm2 = _interopRequireDefault(_ModalRenameItemForm);
 
+var _reactIntl = require('react-intl');
+
 var _store = require('./model/store');
 
 var _store2 = _interopRequireDefault(_store);
@@ -83,6 +85,10 @@ var _actions2 = _interopRequireDefault(_actions);
 var _utility = require('./utility/utility');
 
 var _utility2 = _interopRequireDefault(_utility);
+
+var _definedMessages = require('./i18n/definedMessages');
+
+var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -101,6 +107,10 @@ var RENAME_ITEM = 'rename_item';
 
 var Eureka = function (_Component) {
   _inherits(Eureka, _Component);
+
+  /*static propTypes = {
+    intl: PropTypes.object.isRequired,
+  }*/
 
   function Eureka(props) {
     _classCallCheck(this, Eureka);
@@ -264,9 +274,17 @@ var Eureka = function (_Component) {
     value: function render() {
       var _this5 = this;
 
-      var props = this.props;
-      var state = this.state;
-      var modalOpen = false;
+      var props = this.props,
+          state = this.state,
+          modalOpen = false,
+          _props$intl = this.props.intl,
+          formatMessage = _props$intl.formatMessage,
+          formatDate = _props$intl.formatDate,
+          createDirectoryMessage = formatMessage(_definedMessages2.default.directory),
+          renameItemMessage = formatMessage(_definedMessages2.default.rename, {
+        item: state.renamingItem ? ' ' + state.renamingItem.filename : ''
+      });
+
 
       var modal = function () {
         if (state.modalOpen) {
@@ -274,7 +292,7 @@ var Eureka = function (_Component) {
             case CREATE_DIRECTORY:
               return _react2.default.createElement(
                 _Modal2.default,
-                _extends({ onCancel: _this5.onModalCancel.bind(_this5), onSubmit: _this5.onModalSubmit.bind(_this5), title: 'Create Directory' }, props),
+                _extends({ onCancel: _this5.onModalCancel.bind(_this5), onSubmit: _this5.onModalSubmit.bind(_this5), title: createDirectoryMessage }, props),
                 _react2.default.createElement(_ModalCreateDirectoryForm2.default, props)
               );
               break;
@@ -282,7 +300,7 @@ var Eureka = function (_Component) {
             case RENAME_ITEM:
               return _react2.default.createElement(
                 _Modal2.default,
-                _extends({ onCancel: _this5.onModalCancel.bind(_this5), onSubmit: _this5.onRenameItemModalSubmit.bind(_this5), title: 'Rename Item ' + state.renamingItem.filename }, props),
+                _extends({ onCancel: _this5.onModalCancel.bind(_this5), onSubmit: _this5.onRenameItemModalSubmit.bind(_this5), title: renameItemMessage }, props),
                 _react2.default.createElement(_ModalRenameItemForm2.default, _extends({}, props, { item: state.renamingItem }))
               );
               break;

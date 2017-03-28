@@ -12,16 +12,34 @@ var _utility = require('../utility/utility');
 
 var _utility2 = _interopRequireDefault(_utility);
 
+var _reactIntl = require('react-intl');
+
+var _definedMessages = require('../i18n/definedMessages');
+
+var _definedMessages2 = _interopRequireDefault(_definedMessages);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var ChooseBar = function ChooseBar(props) {
   //console.log('ChooseBar',props);
+
+
+  var _props$intl = props.intl,
+      formatMessage = _props$intl.formatMessage,
+      formatPlural = _props$intl.formatPlural,
+      closeMediaBrowserMessage = formatMessage(_definedMessages2.default.closeMediaBrowser),
+      chooseMessage = formatMessage(_definedMessages2.default.choose),
+      mediaItem = formatMessage(_definedMessages2.default.mediaItem),
+      pluralItemPlaceholder = formatPlural(_definedMessages2.default.pluralItem),
+      cancelMessage = formatMessage(_definedMessages2.default.cancel);
+
+
   return _react2.default.createElement(
     'div',
     { 'aria-hidden': props.ariaHidden, className: 'eureka__button-bar eureka__choose-bar' },
     _react2.default.createElement(
       'button',
-      { 'aria-label': 'Close Media Browser', onClick: function onClick(event) {
+      { 'aria-label': closeMediaBrowserMessage, onClick: function onClick(event) {
           console.log('closing');
           try {
             props.config.callbacks.close();
@@ -29,7 +47,7 @@ var ChooseBar = function ChooseBar(props) {
             console.log(e);
           }
         } },
-      'Cancel'
+      cancelMessage
     ),
     _react2.default.createElement(
       'button',
@@ -41,16 +59,17 @@ var ChooseBar = function ChooseBar(props) {
             console.log(e);
           }
         } },
-      'Choose ',
+      chooseMessage,
+      ' ',
       _react2.default.createElement(
         'span',
         { className: 'visually-hidden' },
         ' ',
         function () {
           try {
-            return props.view.focusedMediaItem.filename || ' an image';
+            return props.view.focusedMediaItem.filename || ' ' + pluralItemPlaceholder;
           } catch (e) {
-            return ' media item';
+            return ' ' + mediaItem;
           }
         }()
       )

@@ -22,6 +22,8 @@ var _utility = require('../utility/utility');
 
 var _utility2 = _interopRequireDefault(_utility);
 
+var _reactIntl = require('react-intl');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -57,7 +59,7 @@ var MediaDirectorySelector = function MediaDirectorySelector(props) {
   var submit = _utility2.default.serverSideRendering ? _react2.default.createElement(
     'button',
     { type: 'submit' },
-    'Set Directory'
+    _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'directory.set', defaultMessage: 'Set Directory' })
   ) : undefined;
   var select = _react2.default.createElement(
     'select',
@@ -102,7 +104,8 @@ var MediaDirectorySelector = function MediaDirectorySelector(props) {
     _react2.default.createElement(
       'label',
       { htmlFor: 'eureka__media-browser_0__browsing' },
-      'Browse Directory:'
+      _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'directory.browse', defaultMessage: 'Browse Directory' }),
+      ':'
     ),
     '\u2002',
     form

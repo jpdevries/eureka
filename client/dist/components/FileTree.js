@@ -24,6 +24,10 @@ var _Icon = require('./Icon');
 
 var _Icon2 = _interopRequireDefault(_Icon);
 
+var _definedMessages = require('../i18n/definedMessages');
+
+var _definedMessages2 = _interopRequireDefault(_definedMessages);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -95,6 +99,15 @@ var FileTreeSpan = function (_Component) {
 
 var FileTree = function FileTree(props) {
 
+  var formatMessage = props.intl.formatMessage,
+      chmodDirectoryMessage = formatMessage(_definedMessages2.default.chmodDirectory),
+      renameMessage = formatMessage(_definedMessages2.default.rename),
+      refreshDirectoryMessage = formatMessage(_definedMessages2.default.refreshDirectory),
+      uploadFilesMessage = formatMessage(_definedMessages2.default.uploadFiles),
+      createFileMessage = formatMessage(_definedMessages2.default.createFile),
+      quickCreateFileMessage = formatMessage(_definedMessages2.default.quickCreateFile),
+      deleteDirectoryMessage = formatMessage(_definedMessages2.default.deleteDirectory);
+
   function listTree(tree) {
     return tree.map(function (item, index) {
       return item.children || true ? // still deciding if we need this disabled for now
@@ -111,14 +124,14 @@ var FileTree = function FileTree(props) {
             'menu',
             { hidden: 'true', type: 'context', id: 'context_menu__' + item.cd.replace(/^[^a-z]+|[^\w:.-]+/gi, "") },
             _react2.default.createElement('menuitem', { label: 'Create Directory Here', onClick: function onClick(event) {} }),
-            _react2.default.createElement('menuitem', { label: 'Chmod Directory' }),
-            _react2.default.createElement('menuitem', { label: 'Rename' }),
-            _react2.default.createElement('menuitem', { label: 'Refresh Directory' }),
+            _react2.default.createElement('menuitem', { label: chmodDirectoryMessage }),
+            _react2.default.createElement('menuitem', { label: renameMessage }),
+            _react2.default.createElement('menuitem', { label: refreshDirectoryMessage }),
             _react2.default.createElement('hr', null),
-            _react2.default.createElement('menuitem', { label: 'Upload Files' }),
-            _react2.default.createElement('menuitem', { label: 'Create Files' }),
-            _react2.default.createElement('menuitem', { label: 'Quick Create Files' }),
-            _react2.default.createElement('menuitem', { label: 'Delete Directory', onClick: function onClick(event) {
+            _react2.default.createElement('menuitem', { label: uploadFilesMessage }),
+            _react2.default.createElement('menuitem', { label: createFileMessage }),
+            _react2.default.createElement('menuitem', { label: quickCreateFileMessage }),
+            _react2.default.createElement('menuitem', { label: deleteDirectoryMessage, onClick: function onClick(event) {
                 _store2.default.dispatch(_actions2.default.deleteMediaItem(props.source.currentSource, item.cd));
               } })
           )

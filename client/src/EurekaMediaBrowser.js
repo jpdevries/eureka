@@ -11,6 +11,8 @@ import Eureka from './Eureka';
 const actions = require('./model/actions'),
 store = require('./model/store');
 
+import { injectIntl, FormattedMessage, FormattedPlural, FormattedNumber, FormattedRelative, defineMessages } from 'react-intl';
+
 class EurekaMediaBrowser extends Component {
   constructor(props) {
     super(props);
@@ -19,7 +21,6 @@ class EurekaMediaBrowser extends Component {
 
     store.subscribe(() => {
       const state = store.getState();
-      console.log(state);
       /*try {
         const siteName = title.dataset.siteName,
         title = document.querySelector('head > title'),
@@ -50,16 +51,16 @@ class EurekaMediaBrowser extends Component {
           fetched: state.fetched,
           config: state.config
         }
-    })(Eureka);
+    })(injectIntl(Eureka)); // shoot it up with some i18n
   }
   render() {
+    const props = this.props;
+
     return (<Provider store={store}>
-        <this.EurekaController />
+        <this.EurekaController {...props} />
     </Provider>);
   }
 }
 
-
-
-
-export default EurekaMediaBrowser;
+// i18n FTW
+export default injectIntl(EurekaMediaBrowser);

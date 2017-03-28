@@ -7,6 +7,9 @@ import utility from './../utility/utility';
 
 var classNames = require('classnames');
 
+import { FormattedMessage } from 'react-intl';
+import definedMessages from '../i18n/definedMessages';
+
 class UploadForm extends Component {
 
   handleSubmit(event) {
@@ -23,16 +26,17 @@ class UploadForm extends Component {
 
   render() {
     const props = this.props,
-    submit = utility.serverSideRendering ? <button type="submit" formmethod="post">Upload Files</button> : undefined,
+    uploadFilesMessage = <FormattedMessage id="upload.files" defaultMessage="Upload Files" />,
+    submit = utility.serverSideRendering ? <button type="submit" formmethod="post">{uploadFilesMessage}</button> : undefined,
     form = (utility.serverSideRendering) ? (
       <div>
-          <label htmlFor="eureka__upload-form">Upload Files<span className={classNames({"visually-hidden": !utility.serverSideRendering})} > to {props.content.cd}</span>:&ensp;</label>
+          <label htmlFor="eureka__upload-form">{uploadFilesMessage}<span className={classNames({"visually-hidden": !utility.serverSideRendering})} > to {props.content.cd}</span>:&ensp;</label>
           <input id="eureka__upload-form" multiple="multiple" name="eureka__uploadFiles" type="file" />
           {submit}
       </div>
     ) : (
       <form onSubmit={this.handleSubmit.bind(this)} encType="multipart/form-data" ref={(form) => { this.form = form; }}>
-          <label htmlFor="eureka__upload-form">Upload Files<span className="visually-hidden"> to {props.content.cd}</span>:&ensp;</label>
+          <label htmlFor="eureka__upload-form">{uploadFilesMessage}<span className="visually-hidden"> <FormattedMessage id="grammar.to" defaultMessage="to" /> {props.content.cd}</span>:&ensp;</label>
           <input id="eureka__upload-form" multiple="multiple" name="eureka__uploadFiles" type="file" onChange={(e) => {
               this.form.dispatchEvent(new Event("submit")); // so there is no click button they need to click
           }} />

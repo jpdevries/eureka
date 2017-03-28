@@ -13,6 +13,9 @@ import Icon from './Icon';
 
 import utility from '../utility/utility';
 
+import { FormattedMessage } from 'react-intl';
+import definedMessages from '../i18n/definedMessages';
+
 class EurekaTable extends Component {
 
   constructor(props) {
@@ -41,14 +44,23 @@ class EurekaTable extends Component {
 
   render () {
     const props = this.props,
-    state = this.state;
+    state = this.state,
+    formatMessage = props.intl.formatMessage;
 
     const html5ContextMenus = (props.content.contents.length) ? props.content.contents.map((item, index) => (
       <menu key={index} hidden="true" type="context" id={`context_menu__tbody-${index}`}>
-          <menuitem label={`Expand ${item.filename}`}></menuitem>
-          <menuitem label={`Choose ${item.filename}`}></menuitem>
-          <menuitem label={`Rename ${item.filename}`}></menuitem>
-          <menuitem label={`Delete ${item.filename}`} onClick={(event) => {
+          <menuitem label={formatMessage(definedMessages.expandItem, {
+            filename: item.filename
+          })}></menuitem>
+          <menuitem label={formatMessage(definedMessages.chooseItem, {
+            filename: item.filename
+          })}></menuitem>
+          <menuitem label={formatMessage(definedMessages.renameItem, {
+            filename: item.filename
+          })}></menuitem>
+          <menuitem label={formatMessage(definedMessages.deleteItem, {
+            filename: item.filename
+          })} onClick={(event) => {
               store.dispatch(actions.deleteMediaItem(props.source.currentSource, item.absolutePath));
             }}></menuitem>
       </menu>
@@ -61,7 +73,7 @@ class EurekaTable extends Component {
         <thead hidden={!props.content.contents.length} className={classNames((store.getState().view.isTableScrolling) ? 'eureka__tbody-scrolling' : undefined)}>
           <tr>
             {selectHead}
-            <th scope="col" role="columnheader">Media</th>
+            <th scope="col" role="columnheader"><FormattedMessage id="media" defaultMessage="Media" /></th>
             <th scope="col" role="columnheader" onClick={(event) => {
               let dir = this.state.sort.dir;
               if(this.state.sort.by === 'filename') {
@@ -73,7 +85,7 @@ class EurekaTable extends Component {
                   dir:dir
                 }
               });
-            }}>Name&ensp;{(!utility.serverSideRendering) ? <Icon {...props}  icon="sort" /> : undefined}</th>
+            }}><FormattedMessage id="name" defaultMessage="Name" />&ensp;{(!utility.serverSideRendering) ? <Icon {...props}  icon="sort" /> : undefined}</th>
             <th scope="col" role="columnheader" className="visually-hidden">Actions</th>
             <th scope="col" role="columnheader" onClick={(event) => {
               let dir = this.state.sort.dir;
@@ -86,7 +98,7 @@ class EurekaTable extends Component {
                   dir:dir
                 }
               });
-              }}>Dimensions&ensp;{(!utility.serverSideRendering) ? <Icon {...props} icon="sort" /> : undefined}</th>
+            }}><FormattedMessage id="dimensions" defaultMessage="Dimensions" />&ensp;{(!utility.serverSideRendering) ? <Icon {...props} icon="sort" /> : undefined}</th>
             <th scope="col" role="columnheader" onClick={(event) => {
               let dir = this.state.sort.dir;
               if(this.state.sort.by === 'fileSize') {
@@ -98,7 +110,7 @@ class EurekaTable extends Component {
                   dir:dir
                 }
               });
-              }}>File Size&ensp;{(!utility.serverSideRendering) ? <Icon {...props} icon="sort" /> : undefined}</th>
+            }}><FormattedMessage id="fileSize" defaultMessage="File Size" />&ensp;{(!utility.serverSideRendering) ? <Icon {...props} icon="sort" /> : undefined}</th>
             <th scope="col" role="columnheader" onClick={(event) => {
                 let dir = this.state.sort.dir;
                 if(this.state.sort.by === 'editedOn') {
@@ -110,7 +122,7 @@ class EurekaTable extends Component {
                     dir:dir
                   }
                 });
-              }}>Edited On&ensp;{(!utility.serverSideRendering) ? <Icon {...props} icon="sort" /> : undefined}</th>
+              }}><FormattedMessage id="editedOn" defaultMessage="Edited On" />&ensp;{(!utility.serverSideRendering) ? <Icon {...props} icon="sort" /> : undefined}</th>
           </tr>
         </thead>
         <EurekaTableTbody {...props} sort={this.state.sort} />

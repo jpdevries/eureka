@@ -20,9 +20,17 @@ var _Icon = require('./Icon');
 
 var _Icon2 = _interopRequireDefault(_Icon);
 
+var _definedMessages = require('../i18n/definedMessages');
+
+var _definedMessages2 = _interopRequireDefault(_definedMessages);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var TreeToggle = function TreeToggle(props) {
+  var formatMessage = props.intl.formatMessage,
+      closeMessage = formatMessage(_definedMessages2.default.close),
+      openMessage = formatMessage(_definedMessages2.default.open),
+      mediaSourceTreeMessage = formatMessage(_definedMessages2.default.mediaSourceTreeMessage);
   //<Icon {...props} icon={`caret-square-o-${props.view.sourceTreeOpen ? 'left' : 'right'}`} />&ensp;
   return _react2.default.createElement(
     'div',
@@ -34,9 +42,10 @@ var TreeToggle = function TreeToggle(props) {
             sourceTreeOpen: !props.view.sourceTreeOpen
           }));
         } },
-      (props.view.sourceTreeOpen ? 'Close' : 'Open') + ' Media Source Tree'
+      (props.view.sourceTreeOpen ? closeMessage : openMessage) + ' ' + mediaSourceTreeMessage
     )
   );
 };
 
+//import { FormattedMessage } from 'react-intl';
 exports.default = TreeToggle;

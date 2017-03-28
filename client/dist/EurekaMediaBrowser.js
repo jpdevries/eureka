@@ -22,6 +22,8 @@ var _Eureka = require('./Eureka');
 
 var _Eureka2 = _interopRequireDefault(_Eureka);
 
+var _reactIntl = require('react-intl');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -45,7 +47,6 @@ var EurekaMediaBrowser = function (_Component) {
 
     store.subscribe(function () {
       var state = store.getState();
-      console.log(state);
       /*try {
         const siteName = title.dataset.siteName,
         title = document.querySelector('head > title'),
@@ -80,15 +81,17 @@ var EurekaMediaBrowser = function (_Component) {
           fetched: state.fetched,
           config: state.config
         };
-      })(_Eureka2.default);
+      })((0, _reactIntl.injectIntl)(_Eureka2.default)); // shoot it up with some i18n
     }
   }, {
     key: 'render',
     value: function render() {
+      var props = this.props;
+
       return _react2.default.createElement(
         _reactRedux.Provider,
         { store: store },
-        _react2.default.createElement(this.EurekaController, null)
+        _react2.default.createElement(this.EurekaController, props)
       );
     }
   }]);
@@ -96,4 +99,7 @@ var EurekaMediaBrowser = function (_Component) {
   return EurekaMediaBrowser;
 }(_react.Component);
 
-exports.default = EurekaMediaBrowser;
+// i18n FTW
+
+
+exports.default = (0, _reactIntl.injectIntl)(EurekaMediaBrowser);

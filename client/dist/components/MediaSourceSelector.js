@@ -16,6 +16,8 @@ var _actions = require('../model/actions');
 
 var _actions2 = _interopRequireDefault(_actions);
 
+var _reactIntl = require('react-intl');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var MediaSourceSelector = function MediaSourceSelector(props) {
@@ -39,9 +41,12 @@ var MediaSourceSelector = function MediaSourceSelector(props) {
         _react2.default.createElement(
           'span',
           { className: 'visually-hidden' },
-          'Choose a '
+          _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'choose', defaultMessage: 'Choose' }),
+          ' ',
+          _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'grammar.a', defaultMessage: 'a' }),
+          ' '
         ),
-        'Media Source'
+        _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'media.source', defaultMessage: 'Media Source' })
       )
     ),
     _react2.default.createElement(

@@ -6,6 +6,8 @@ import classNames from 'classnames';
 
 import Icon from './Icon';
 
+import { FormattedMessage } from 'react-intl';
+
 class ModalCreateDirectoryForm extends Component {
   constructor(props) {
     super(props);
@@ -13,30 +15,30 @@ class ModalCreateDirectoryForm extends Component {
       createDirectory:''
     };
   }
-  
+
   componentDidMount() {
     this.refs.input.focus(); // simulate HTML5 autofocus
   }
-  
+
   render() {
     const state = this.state;
     const props = this.props;
-    
+
     let disable = !state.createDirectory;
     let directoryExists = false;
-    
+
     let label = `Create a new directory in ${path.join('/', props.content.cd)}`;
     let labelIcon = undefined;
-    
+
     if(!disable) {
       disable = (() => {
         for(let i = 0; i < props.fetched.lastDirectoriesFetched.length; i++) {
-          const folderName = props.fetched.lastDirectoriesFetched[i]; 
+          const folderName = props.fetched.lastDirectoriesFetched[i];
           console.log(folderName, state.createDirectory, folderName === state.createDirectory);
           if(folderName === state.createDirectory) {
             const Entities = require('html-entities').AllHtmlEntities;
             const entities = new Entities();
-            
+
             label = `${entities.decode('&ensp;')}Directory ${path.join('/', props.content.cd, folderName)} already exists`;
             labelIcon = (<Icon {...props} icon="exclamation-triangle" />);
             directoryExists = true;
@@ -46,9 +48,9 @@ class ModalCreateDirectoryForm extends Component {
         return disable;
       })();
     }
-    
-    
-    
+
+
+
     return (
       <form onSubmit={(event) => {
           event.preventDefault();
@@ -66,16 +68,20 @@ class ModalCreateDirectoryForm extends Component {
           <button type="reset" onBlur={(event) => {
               if(state.createDirectory) return;
               this.refs.input.focus();
-            }} onClick={props.onCancel}>Cancel <span className="visually-hidden"> creating directory {state.createDirectory}</span></button>
+            }} onClick={props.onCancel}><FormattedMessage id="cancel" defaultMessage="Cancel" /> <span className="visually-hidden"> <FormattedMessage id="directory.cancelCreating" defaultMessage={'creating directory {cd}'} value={{
+              cd: state.createDirectory
+            }} values={{
+              state: state
+            }} /></span></button>
           <button type="submit" onBlur={(event) => {
               this.refs.input.focus();
-            }} disabled={disable}>Create <span className="visually-hidden"> directory {state.createDirectory}</span></button>
+            }} disabled={disable}><FormattedMessage id="create" defaultMessage="Create" /> <span className="visually-hidden"> <FormattedMessage id="directory" defaultMessage="directory" /> {state.createDirectory}</span></button>
         </div>
       </form>
     );
   }
-  
-  
+
+
 }
 
 

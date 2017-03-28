@@ -2,23 +2,32 @@ import React from 'react';
 
 import Icon from './Icon';
 
-const TreeBar = (props) => {
+import { FormattedMessage } from 'react-intl';
+import definedMessages from '../i18n/definedMessages';
 
-  const uploadBtn = (props.config.allowUploads) ? (
-    <button title={`Upload File to ${props.content.cd}`} onClick={(event) => {
+const TreeBar = (props) => {
+  const formatMessage = props.intl.formatMessage,
+  uploadFileToMessage = formatMessage(definedMessages.uploadFileTo, {
+    cd: props.content.cd
+  }),
+  uploadBtn = (props.config.allowUploads) ? (
+    <button title={uploadFileToMessage} onClick={(event) => {
         try {
           event.target.parentNode.parentNode.querySelector('.eureka__drop-area-zone').click();
         } catch(e) {}
       }}>
-      <span className="visually-hidden">Upload File to {props.content.cd}</span>
+      <span className="visually-hidden">{uploadFileToMessage}</span>
       <Icon {...props} icon="upload" />
     </button>
-  ) : undefined;
+  ) : undefined,
+  createDirectoryInMessage = formatMessage(definedMessages.createNewDirectoryIn, {
+    cd: props.content.cd
+  })
 
   return (
     <div className="eureka__tree-bar">
-      <button title={`Create a new Directory in ${props.content.cd}`} onClick={props.onCreateDirectory}>
-        <span className="visually-hidden">Create a new Directory in {props.content.cd}</span>
+      <button title={createDirectoryInMessage} onClick={props.onCreateDirectory}>
+        <span className="visually-hidden">{createDirectoryInMessage}</span>
         <Icon {...props} icon="plus-square" />
       </button>
       {uploadBtn}

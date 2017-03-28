@@ -34,6 +34,12 @@ var _Icon = require('./Icon');
 
 var _Icon2 = _interopRequireDefault(_Icon);
 
+var _reactIntl = require('react-intl');
+
+var _definedMessages = require('../i18n/definedMessages');
+
+var _definedMessages2 = _interopRequireDefault(_definedMessages);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -45,9 +51,12 @@ var pathParse = require('path-parse');
 var MediaRow = function MediaRow(props) {
   var _React$createElement;
 
+  console.log('MediaRow', props);
   var entities = new Entities();
   var item = props.item;
   var index = props.index;
+
+  var formatMessage = props.intl.formatMessage;
 
   var ariaLabel = props.item.filename + ' displays at ' + props.item.dimensions.join('x') + ', weighs ' + (0, _filesize2.default)(props.item.fileSize, { round: 0 }) + ', and was edited on ' + new Date(props.item.editedOn).toLocaleString(props.view.locale, { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' });
 
@@ -87,7 +96,7 @@ var MediaRow = function MediaRow(props) {
           'video',
           { width: '320', height: '240', controls: props.view.mode !== 'list' },
           _react2.default.createElement('source', { src: props.item.absoluteURL, type: 'video/mp4' }),
-          'Your browser does not support the video tag.'
+          _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noVideo', defaultMessage: 'Your browser does not support the video tag.' })
         );
         break;
 
@@ -96,7 +105,7 @@ var MediaRow = function MediaRow(props) {
           'video',
           { width: '320', height: '240', controls: props.view.mode !== 'list' },
           _react2.default.createElement('source', { src: props.item.absoluteURL, type: 'video/ogg' }),
-          'Your browser does not support the video tag.'
+          _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noVideo', defaultMessage: 'Your browser does not support the video tag.' })
         );
         break;
 
@@ -106,7 +115,7 @@ var MediaRow = function MediaRow(props) {
           'video',
           { width: '320', height: '240', controls: props.view.mode !== 'list' },
           _react2.default.createElement('source', { src: props.item.absoluteURL, type: 'video/webm' }),
-          'Your browser does not support the video tag.'
+          _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noVideo', defaultMessage: 'Your browser does not support the video tag.' })
         );
         break;
 
@@ -119,7 +128,7 @@ var MediaRow = function MediaRow(props) {
           'audio',
           { controls: true },
           _react2.default.createElement('source', { src: props.item.absoluteURL, type: 'audio/ogg' }),
-          'Your browser does not support the audio tag.'
+          _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support the audio tag.' })
         );
         break;
 
@@ -128,7 +137,7 @@ var MediaRow = function MediaRow(props) {
           'audio',
           { controls: true },
           _react2.default.createElement('source', { src: props.item.absoluteURL, type: 'audio/mpeg' }),
-          'Your browser does not support the audio tag.'
+          _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support the audio tag.' })
         );
         break;
 
@@ -137,7 +146,7 @@ var MediaRow = function MediaRow(props) {
           'audio',
           { controls: true },
           _react2.default.createElement('source', { src: props.item.absoluteURL, type: 'audio/wav' }),
-          'Your browser does not support the audio tag.'
+          _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support the audio tag.' })
         );
         break;
 
@@ -146,7 +155,7 @@ var MediaRow = function MediaRow(props) {
           'audio',
           { controls: true },
           _react2.default.createElement('source', { src: props.item.absoluteURL, type: 'audio/flac' }),
-          'Your browser does not support the audio tag.'
+          _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support the audio tag.' })
         );
         break;
 
@@ -173,7 +182,9 @@ var MediaRow = function MediaRow(props) {
     _react2.default.createElement(
       'span',
       { className: 'visually-hidden' },
-      '\u2002Select $',
+      '\u2002',
+      _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'select', defaultMessage: 'Select' }),
+      ' $',
       props.item.filename
     )
   ) : undefined,
@@ -199,11 +210,15 @@ var MediaRow = function MediaRow(props) {
     }
   }(ext);
 
+  var openInANewTabMessage = formatMessage(_definedMessages2.default.openFileInNewTab, {
+    filename: props.item.fileName
+  });
+
   if (_utility2.default.serverSideRendering && isLinkableFileType) {
     //media = <label style={{display:'block'}} htmlFor={mediaSelectId} aria-labelledby={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }filename__${utility.cssSafe(props.item.filename)}`}>{media}</label>;
     media = _react2.default.createElement(
       'a',
-      { href: props.item.absoluteURL, target: '_' + mediaSelectId, 'aria-label': 'Open ' + props.item.fileName + ' in a new tab', role: 'presentation' },
+      { href: props.item.absoluteURL, target: '_' + mediaSelectId, 'aria-label': openInANewTabMessage, role: 'presentation' },
       media
     );
   }
@@ -229,7 +244,7 @@ var MediaRow = function MediaRow(props) {
       _react2.default.createElement(
         'span',
         { className: 'visually-hidden' },
-        'Media Contents'
+        _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'media.contents', defaultMessage: 'Media Contents' })
       ),
       media
     ),

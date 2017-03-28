@@ -12,6 +12,9 @@ import classNames from 'classnames';
 
 import utility from '../utility/utility';
 
+import { FormattedMessage } from 'react-intl';
+import definedMessages from '../i18n/definedMessages';
+
 class EurekaTableTbody extends Component {
   constructor(props) {
     super(props);
@@ -150,20 +153,26 @@ class EurekaTableTbody extends Component {
 }
 
 function NoResults(props) {
+  const searchTryAnother = (
+    <FormattedMessage id="search.tryAnother" defaultMessage="Try another search" />
+  );
+
   return (props.view.filter) ? (
     <tr role="row">
       <td role="presentation" colSpan="5" className="comfortable">
         <p className="alert-info eureka__notice" aria-live="assertive">
-          Uh oh. No results found for "{props.view.filter}". <a href="#eureka__filter" onClick={(event) => {
+          <FormattedMessage id="search.noResults" defaultMessage='Uh oh. No results found for "{filter}"' values={{
+            filter: props.view.filter
+          }} />. <a href="#eureka__filter" onClick={(event) => {
             event.preventDefault();
             document.getElementById('eureka__filter').focus();
-          }}>Try another search</a> or <a href="#eureka__filter" onClick={(event) => {
+          }}>{searchTryAnother}</a> <FormattedMessage id="grammar.or" defaultMessage="or" /> <a href="#eureka__filter" onClick={(event) => {
             event.preventDefault();
             store.dispatch(actions.updateView({
               filter:undefined
             }));
             document.getElementById('eureka__filter').value = '';
-          }}>clear the search&nbsp;filter</a>.
+          }}><FormattedMessage id="search.clearFilter" defaultMessage="clear the search&nbsp;filter" /></a>.
         </p>
       </td>
     </tr>
@@ -171,7 +180,9 @@ function NoResults(props) {
     <tr>
       <td role="presentation" colSpan="5" className="comfortable">
         <p className="alert-info eureka__notice" aria-live="assertive">
-          Directory "{props.content.cd}" appears to be empty.<br />Perhaps you'd like to <a href="#eureka__upload-form" onClick={(event) => {
+          <FormattedMessage id="directory.appearsToBeEmpty" defaultMessage='Directory "{cd}" appears to be empty.' values={{
+            cd: props.content.cd
+          }} /><br /><FormattedMessage id="perhapsYouWouldLikeTo" defaultMessage="Perhaps you'd like to" /> <a href="#eureka__upload-form" onClick={(event) => {
             event.preventDefault();
             //document.getElementById('eureka__upload-form').focus();
 
@@ -180,7 +191,7 @@ function NoResults(props) {
             } catch (e) {
               document.querySelector('.eureka__drop-area-zone').click();
             }
-          }}>upload some files<span className="visually-hidden"> to {props.content.cd}</span></a>?
+          }}><FormattedMessage id="upload.someFiles" defaultMessage="upload some files" /><span className="visually-hidden"> <FormattedMessage id="grammar.to" defaultMessage="to" /> {props.content.cd}</span></a>?
         </p>
       </td>
     </tr>

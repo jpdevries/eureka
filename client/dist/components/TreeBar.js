@@ -14,13 +14,22 @@ var _Icon = require('./Icon');
 
 var _Icon2 = _interopRequireDefault(_Icon);
 
+var _reactIntl = require('react-intl');
+
+var _definedMessages = require('../i18n/definedMessages');
+
+var _definedMessages2 = _interopRequireDefault(_definedMessages);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var TreeBar = function TreeBar(props) {
-
-  var uploadBtn = props.config.allowUploads ? _react2.default.createElement(
+  var formatMessage = props.intl.formatMessage,
+      uploadFileToMessage = formatMessage(_definedMessages2.default.uploadFileTo, {
+    cd: props.content.cd
+  }),
+      uploadBtn = props.config.allowUploads ? _react2.default.createElement(
     'button',
-    { title: 'Upload File to ' + props.content.cd, onClick: function onClick(event) {
+    { title: uploadFileToMessage, onClick: function onClick(event) {
         try {
           event.target.parentNode.parentNode.querySelector('.eureka__drop-area-zone').click();
         } catch (e) {}
@@ -28,23 +37,24 @@ var TreeBar = function TreeBar(props) {
     _react2.default.createElement(
       'span',
       { className: 'visually-hidden' },
-      'Upload File to ',
-      props.content.cd
+      uploadFileToMessage
     ),
     _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'upload' }))
-  ) : undefined;
+  ) : undefined,
+      createDirectoryInMessage = formatMessage(_definedMessages2.default.createNewDirectoryIn, {
+    cd: props.content.cd
+  });
 
   return _react2.default.createElement(
     'div',
     { className: 'eureka__tree-bar' },
     _react2.default.createElement(
       'button',
-      { title: 'Create a new Directory in ' + props.content.cd, onClick: props.onCreateDirectory },
+      { title: createDirectoryInMessage, onClick: props.onCreateDirectory },
       _react2.default.createElement(
         'span',
         { className: 'visually-hidden' },
-        'Create a new Directory in ',
-        props.content.cd
+        createDirectoryInMessage
       ),
       _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'plus-square' }))
     ),

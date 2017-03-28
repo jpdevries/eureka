@@ -40,6 +40,12 @@ var _utility = require('../utility/utility');
 
 var _utility2 = _interopRequireDefault(_utility);
 
+var _reactIntl = require('react-intl');
+
+var _definedMessages = require('../i18n/definedMessages');
+
+var _definedMessages2 = _interopRequireDefault(_definedMessages);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -86,16 +92,25 @@ var EurekaTable = function (_Component) {
       var _this2 = this;
 
       var props = this.props,
-          state = this.state;
+          state = this.state,
+          formatMessage = props.intl.formatMessage;
 
       var html5ContextMenus = props.content.contents.length ? props.content.contents.map(function (item, index) {
         return _react2.default.createElement(
           'menu',
           { key: index, hidden: 'true', type: 'context', id: 'context_menu__tbody-' + index },
-          _react2.default.createElement('menuitem', { label: 'Expand ' + item.filename }),
-          _react2.default.createElement('menuitem', { label: 'Choose ' + item.filename }),
-          _react2.default.createElement('menuitem', { label: 'Rename ' + item.filename }),
-          _react2.default.createElement('menuitem', { label: 'Delete ' + item.filename, onClick: function onClick(event) {
+          _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.expandItem, {
+              filename: item.filename
+            }) }),
+          _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.chooseItem, {
+              filename: item.filename
+            }) }),
+          _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.renameItem, {
+              filename: item.filename
+            }) }),
+          _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.deleteItem, {
+              filename: item.filename
+            }), onClick: function onClick(event) {
               _store2.default.dispatch(_actions2.default.deleteMediaItem(props.source.currentSource, item.absolutePath));
             } })
         );
@@ -120,7 +135,7 @@ var EurekaTable = function (_Component) {
             _react2.default.createElement(
               'th',
               { scope: 'col', role: 'columnheader' },
-              'Media'
+              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'media', defaultMessage: 'Media' })
             ),
             _react2.default.createElement(
               'th',
@@ -136,7 +151,8 @@ var EurekaTable = function (_Component) {
                     }
                   });
                 } },
-              'Name\u2002',
+              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'name', defaultMessage: 'Name' }),
+              '\u2002',
               !_utility2.default.serverSideRendering ? _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'sort' })) : undefined
             ),
             _react2.default.createElement(
@@ -158,7 +174,8 @@ var EurekaTable = function (_Component) {
                     }
                   });
                 } },
-              'Dimensions\u2002',
+              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'dimensions', defaultMessage: 'Dimensions' }),
+              '\u2002',
               !_utility2.default.serverSideRendering ? _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'sort' })) : undefined
             ),
             _react2.default.createElement(
@@ -175,7 +192,8 @@ var EurekaTable = function (_Component) {
                     }
                   });
                 } },
-              'File Size\u2002',
+              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'fileSize', defaultMessage: 'File Size' }),
+              '\u2002',
               !_utility2.default.serverSideRendering ? _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'sort' })) : undefined
             ),
             _react2.default.createElement(
@@ -192,7 +210,8 @@ var EurekaTable = function (_Component) {
                     }
                   });
                 } },
-              'Edited On\u2002',
+              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'editedOn', defaultMessage: 'Edited On' }),
+              '\u2002',
               !_utility2.default.serverSideRendering ? _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'sort' })) : undefined
             )
           )

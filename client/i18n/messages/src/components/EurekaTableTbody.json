@@ -1,0 +1,34 @@
+[
+  {
+    "id": "search.tryAnother",
+    "defaultMessage": "Try another search"
+  },
+  {
+    "id": "search.noResults",
+    "defaultMessage": "Uh oh. No results found for \"{filter}\""
+  },
+  {
+    "id": "grammar.or",
+    "defaultMessage": "or"
+  },
+  {
+    "id": "search.clearFilter",
+    "defaultMessage": "clear the search filter"
+  },
+  {
+    "id": "directory.appearsToBeEmpty",
+    "defaultMessage": "Directory \"{cd}\" appears to be empty."
+  },
+  {
+    "id": "perhapsYouWouldLikeTo",
+    "defaultMessage": "Perhaps you'd like to"
+  },
+  {
+    "id": "upload.someFiles",
+    "defaultMessage": "upload some files"
+  },
+  {
+    "id": "grammar.to",
+    "defaultMessage": "to"
+  }
+]

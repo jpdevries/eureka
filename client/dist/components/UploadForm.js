@@ -22,6 +22,12 @@ var _utility = require('./../utility/utility');
 
 var _utility2 = _interopRequireDefault(_utility);
 
+var _reactIntl = require('react-intl');
+
+var _definedMessages = require('../i18n/definedMessages');
+
+var _definedMessages2 = _interopRequireDefault(_definedMessages);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -82,10 +88,11 @@ var UploadForm = function (_Component) {
       var _this2 = this;
 
       var props = this.props,
+          uploadFilesMessage = _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'upload.files', defaultMessage: 'Upload Files' }),
           submit = _utility2.default.serverSideRendering ? _react2.default.createElement(
         'button',
         { type: 'submit', formmethod: 'post' },
-        'Upload Files'
+        uploadFilesMessage
       ) : undefined,
           form = _utility2.default.serverSideRendering ? _react2.default.createElement(
         'div',
@@ -93,7 +100,7 @@ var UploadForm = function (_Component) {
         _react2.default.createElement(
           'label',
           { htmlFor: 'eureka__upload-form' },
-          'Upload Files',
+          uploadFilesMessage,
           _react2.default.createElement(
             'span',
             { className: classNames({ "visually-hidden": !_utility2.default.serverSideRendering }) },
@@ -112,11 +119,13 @@ var UploadForm = function (_Component) {
         _react2.default.createElement(
           'label',
           { htmlFor: 'eureka__upload-form' },
-          'Upload Files',
+          uploadFilesMessage,
           _react2.default.createElement(
             'span',
             { className: 'visually-hidden' },
-            ' to ',
+            ' ',
+            _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'grammar.to', defaultMessage: 'to' }),
+            ' ',
             props.content.cd
           ),
           ':\u2002'

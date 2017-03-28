@@ -5,8 +5,10 @@ import actions from '../model/actions';
 
 import utility from '../utility/utility';
 
+import { FormattedMessage } from 'react-intl';
 
 const MediaDirectorySelector = (props) => {
+
   const optgroups = props.directory.map((source, index) => { // todo: rename props.directory to something that makes more sense (or combine it with the sources reducer?)
     const opts = source.directories.sort((a,b) => {
       if(a.cd === b.cd) return 0;
@@ -23,7 +25,7 @@ const MediaDirectorySelector = (props) => {
   });
 
   const hiddenInput = <input type="hidden" name={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }mediaSourceId`} name={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }mediaSourceId`} value={props.config.uid} />
-  const submit = (utility.serverSideRendering) ? <button type="submit">Set Directory</button> : undefined;
+  const submit = (utility.serverSideRendering) ? <button type="submit"><FormattedMessage id="directory.set" defaultMessage="Set Directory" /></button> : undefined;
   const select = (
     <select aria-live="polite" value={`${props.source.currentSource}||${props.content.cd}`} name="eureka__media-browser_0__browsing" id="eureka__media-browser_0__browsing" onChange={(event) => {
         const [cs, cd] = utility.parseMediaSourceOutOfCombinedPath(event.target.value, '||'); // option values are like 0||assets/img/redwoods where 0 is the media source id and assets/img/redwoods is the directory
@@ -58,7 +60,7 @@ const MediaDirectorySelector = (props) => {
 
   return (
     <div className="eureka__media-directory-selector">
-      <label htmlFor="eureka__media-browser_0__browsing">Browse Directory:</label>&ensp;
+      <label htmlFor="eureka__media-browser_0__browsing"><FormattedMessage id="directory.browse" defaultMessage="Browse Directory" />:</label>&ensp;
       {form}
     </div>
   );

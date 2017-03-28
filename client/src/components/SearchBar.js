@@ -7,6 +7,9 @@ import utility from '../utility/utility';
 
 import filesize from 'filesize';
 
+import { FormattedMessage } from 'react-intl';
+import definedMessages from '../i18n/definedMessages';
+
 class SearchBar extends Component {
   constructor(props) {
     super(props);
@@ -44,6 +47,8 @@ class SearchBar extends Component {
   render() {
     const props = this.props;
 
+    const formatMessage = props.intl.formatMessage;
+
     const options = [
       <option key="0">FileSystem</option>
     ];
@@ -76,9 +81,19 @@ class SearchBar extends Component {
       </datalist>
     );
 
+    const filterTitle = formatMessage(definedMessages.filterContentsOfBy, {
+      cd: props.content.cd
+    });
+
+    const contentsOfBy = formatMessage(definedMessages.contentsOfBy, {
+      cd: props.content.cd
+    });
+
+    const filterMessage = <FormattedMessage id="filter" defaultMessage="Filter" />;
+
     return (!utility.serverSideRendering) ? (
       <form className="eureka__search-bar">
-      <label htmlFor="eureka__filter" title={`Filter contents of ${props.content.cd} by filename, filesize, dimensions or even modification date`}>Filter<span className="visually-hidden"> contents of {props.content.cd} by filename, filesize, dimensions or even modification date</span>:&ensp;</label>
+      <label htmlFor="eureka__filter" title={filterTitle}>{filterMessage}<span className="visually-hidden"> {contentsOfBy}</span>:&ensp;</label>
       <input list={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }__datalist`} type="text" name="eureka__filter" id="eureka__filter" placeholder={placeholder} value={props.view.filter} onChange={(event) => {
           store.dispatch(actions.updateView({
             filter:event.target.value || undefined
@@ -88,7 +103,7 @@ class SearchBar extends Component {
       </form>
     ) : (
       <div className="eureka__search-bar">
-      <label htmlFor="eureka__filter" title={`Filter contents of ${props.content.cd} by filename, filesize, dimensions or even modification date`}>Filter<span className="visually-hidden"> contents of {props.content.cd} by filename, filesize, dimensions or even modification date</span>:&ensp;</label>
+      <label htmlFor="eureka__filter" title={filterTitle}>{filterMessage}<span className="visually-hidden"> {contentsOfBy}</span>:&ensp;</label>
       <input list={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }__datalist`} type="text" name="eureka__filter" id="eureka__filter" placeholder={placeholder} value={props.view.filter} onChange={(event) => {
           store.dispatch(actions.updateView({
             filter:event.target.value || undefined

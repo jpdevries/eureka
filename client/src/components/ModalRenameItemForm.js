@@ -6,6 +6,9 @@ import classNames from 'classnames';
 
 import Icon from './Icon';
 
+import { FormattedMessage } from 'react-intl';
+import definedMessages from '../i18n/definedMessages';
+
 class ModalRenameItemForm extends Component {
   constructor(props) {
     super(props);
@@ -24,15 +27,23 @@ class ModalRenameItemForm extends Component {
     Entities = require('html-entities').AllHtmlEntities,
     entities = new Entities();
 
+    const formatMessage = props.intl.formatMessage;
+
+    const filename = props.item.filename;
+
     let disable = false,
     sameName = false,
     label = `Rename item`,
     labelIcon = undefined;
 
+    const cannotRenameMessage = formatMessage(definedMessages.cannotRename, {
+      filename: filename
+    });
+
     if(state.newName === props.item.filename) {
       disable = true;
       sameName = true;
-      label = `${entities.decode('&ensp;')}Cannot rename ${props.item.filename} to the same name`;
+      label = `${entities.decode('&ensp;')}${cannotRenameMessage}`;
       labelIcon = (<Icon {...props} icon="exclamation-triangle" />);
     }
 
@@ -59,6 +70,7 @@ class ModalRenameItemForm extends Component {
 
 
     return (
+
       <form onSubmit={(event) => {
         event.preventDefault();
         props.onSubmit(state.newName, props.item);
@@ -75,7 +87,9 @@ class ModalRenameItemForm extends Component {
           <button type="reset" onBlur={(event) => {
               if(state.newName) return;
               this.refs.input.focus();
-            }} onClick={props.onCancel}>Cancel <span className="visually-hidden"> remaning item {props.item.filename}</span></button>
+            }} onClick={props.onCancel}><FormattedMessage id="cancel" defaultMessage="Cancel" /> <span className="visually-hidden"> <FormattedMessage id="renamingItem" defaultMessage={'renaming item {filename}'} values={{
+              filename: filename
+            }} /></span></button>
           <button type="submit" onBlur={(event) => {
               this.refs.input.focus();
             }} disabled={disable}>Rename <span className="visually-hidden"> item {props.item.filename} to {state.newName}</span></button>
