@@ -13,7 +13,7 @@ import { IntlProvider, addLocaleData } from 'react-intl';
 import en from 'react-intl/locale-data/en';
 
 import { FormattedMessage, FormattedPlural, FormattedNumber, FormattedRelative, injectIntl } from 'react-intl';
-import localeData from './../i18n/locales/data.json';
+import localeData from './../i18n/locales/en.json';
 
 addLocaleData([...en]);
 

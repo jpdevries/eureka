@@ -14,7 +14,7 @@ import ReactDOM from 'react-dom/server';
 
 import { IntlProvider, addLocaleData } from 'react-intl';
 import en from 'react-intl/locale-data/en';
-import localeData from './client/i18n/locales/data.json';
+import localeData from './client/i18n/locales/en.json';
 
 addLocaleData([...en]);
 

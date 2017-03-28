@@ -30,9 +30,9 @@ var _en = require('react-intl/locale-data/en');
 
 var _en2 = _interopRequireDefault(_en);
 
-var _data = require('./../i18n/locales/data.json');
+var _en3 = require('./../i18n/locales/en.json');
 
-var _data2 = _interopRequireDefault(_data);
+var _en4 = _interopRequireDefault(_en3);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -51,7 +51,7 @@ var actions = require('./model/actions'),
 
 var language = navigator.languages && navigator.languages[0] || navigator.language || navigator.userLanguage;
 var languageWithoutRegionCode = language.toLowerCase().split(/[_-]+/)[0];
-var messages = _data2.default[languageWithoutRegionCode] || _data2.default[language] || _data2.default.en;
+var messages = _en4.default[languageWithoutRegionCode] || _en4.default[language] || _en4.default.en;
 
 var EurekaMediaBrowser = function (_Component) {
   _inherits(EurekaMediaBrowser, _Component);
