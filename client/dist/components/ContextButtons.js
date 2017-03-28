@@ -27,7 +27,7 @@ var _definedMessages2 = _interopRequireDefault(_definedMessages);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var ContextButtons = function ContextButtons(props) {
-  console.log('ContextButtons', props);
+  //console.log('ContextButtons', props);
   var item = props.item;
 
   var formatMessage = props.intl.formatMessage,

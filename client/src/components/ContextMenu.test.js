@@ -6,17 +6,27 @@ import {cssSafe} from '../utility/utility';
 
 import renderer from 'react-test-renderer';
 
+import { IntlProvider, addLocaleData } from 'react-intl';
+import en from 'react-intl/locale-data/en';
+
+import { FormattedMessage, FormattedPlural, FormattedNumber, FormattedRelative, injectIntl } from 'react-intl';
+import localeData from '../../i18n/locales/data.json';
+
+addLocaleData([...en]);
+
+const ContextMenuIntl = injectIntl(ContextMenu);
+
 it('renders without crashing', () => {
   const tr = document.createElement('tr');
   const item = {
     filename: 'sky.jpg'
   };
   //props.view.sourceTreeOpen}
-  ReactDOM.render(<ContextMenu config={{
+  ReactDOM.render(<IntlProvider><ContextMenuIntl config={{
     allowRename:true,
     allowDelete:true,
     storagePrefix:'eureka__'
-  }} item={item} hidden={false}  />, tr);
+  }} item={item} hidden={false}  /></IntlProvider>, tr);
 
 });
 
@@ -26,11 +36,11 @@ it('should contain a delete button if allowDelete is true', () => {
     filename: 'sky.jpg'
   };
   //props.view.sourceTreeOpen}
-  ReactDOM.render(<ContextMenu config={{
+  ReactDOM.render(<IntlProvider><ContextMenuIntl config={{
     allowRename:true,
     allowDelete:true,
     storagePrefix:'eureka__'
-  }} item={item} hidden={false}  />, tr);
+  }} item={item} hidden={false}  /></IntlProvider>, tr);
 
   if(!tr.querySelector(`#eureka__delete__${cssSafe(item.filename)}`)) {
     const err = 'it should contain a delete button if allowDelete is true';
@@ -46,11 +56,11 @@ it('should not contain a delete button if allowDelete is not true', () => {
     filename: 'sky.jpg'
   };
   //props.view.sourceTreeOpen}
-  ReactDOM.render(<ContextMenu config={{
+  ReactDOM.render(<IntlProvider><ContextMenuIntl config={{
     allowRename:true,
     allowDelete:false,
     storagePrefix:'eureka__'
-  }} item={item} hidden={false}  />, tr);
+  }} item={item} hidden={false}  /></IntlProvider>, tr);
 
   if(tr.querySelector(`#eureka__delete__${cssSafe(item.filename)}`)) {
     const err = 'it should not contain a delete button if allowDelete is not true';
@@ -66,11 +76,11 @@ it('should contain a rename button if allowRename is true', () => {
     filename: 'sky.jpg'
   };
   //props.view.sourceTreeOpen}
-  ReactDOM.render(<ContextMenu config={{
+  ReactDOM.render(<IntlProvider><ContextMenuIntl config={{
     allowRename:true,
     allowDelete:true,
     storagePrefix:'eureka__'
-  }} item={item} hidden={false}  />, tr);
+  }} item={item} hidden={false}  /></IntlProvider>, tr);
 
   if(!tr.querySelector(`#eureka__rename__${cssSafe(item.filename)}`)) {
     const err = 'it should contain a rename button if allowRename is true';
@@ -86,11 +96,11 @@ it('should not contain a rename button if allowRename is not true', () => {
     filename: 'sky.jpg'
   };
   //props.view.sourceTreeOpen}
-  ReactDOM.render(<ContextMenu config={{
+  ReactDOM.render(<IntlProvider><ContextMenuIntl config={{
     allowRename:false,
     allowDelete:true,
     storagePrefix:'eureka__'
-  }} item={item} hidden={false}  />, tr);
+  }} item={item} hidden={false}  /></IntlProvider>, tr);
 
   if(tr.querySelector(`#eureka__rename__${cssSafe(item.filename)}`)) {
     const err = 'it should not contain a rename button if allowRename is not true';
@@ -106,11 +116,11 @@ it('should be semantically hidden if hidden is true', () => {
     filename: 'sky.jpg'
   };
   //props.view.sourceTreeOpen}
-  ReactDOM.render(<ContextMenu config={{
+  ReactDOM.render(<IntlProvider><ContextMenuIntl config={{
     allowRename:false,
     allowDelete:true,
     storagePrefix:'eureka__'
-  }} item={item} hidden={true}  />, tr);
+  }} item={item} hidden={true}  /></IntlProvider>, tr);
 
   if(!tr.querySelector(`td`).hasAttribute('hidden')) {
     const err = 'it should be semantically hidden if hidden is not true';
@@ -126,11 +136,11 @@ it('should not be semantically hidden if hidden is not true', () => {
     filename: 'sky.jpg'
   };
   //props.view.sourceTreeOpen}
-  ReactDOM.render(<ContextMenu config={{
+  ReactDOM.render(<IntlProvider><ContextMenuIntl config={{
     allowRename:false,
     allowDelete:true,
     storagePrefix:'eureka__'
-  }} item={item} hidden={false}  />, tr);
+  }} item={item} hidden={false}  /></IntlProvider>, tr);
 
   if(tr.querySelector(`td`).hasAttribute('hidden')) {
     const err = 'it should be semantically hidden if hidden is not true';
@@ -145,11 +155,11 @@ it('renders a snapshot', () => {
     filename: 'sky.jpg'
   },
   icon = renderer.create((
-    <ContextMenu config={{
+    <IntlProvider><ContextMenuIntl config={{
       allowRename:false,
       allowDelete:true,
       storagePrefix:'eureka__'
-    }} item={item} hidden={false}  />
+    }} item={item} hidden={false}  /></IntlProvider>
   )).toJSON();
 
   expect(icon).toMatchSnapshot();

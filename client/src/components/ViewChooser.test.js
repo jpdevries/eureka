@@ -2,6 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ViewChooser from './ViewChooser';
 
+import { IntlProvider, addLocaleData } from 'react-intl';
+import en from 'react-intl/locale-data/en';
+
+import { FormattedMessage, FormattedPlural, FormattedNumber, FormattedRelative, injectIntl } from 'react-intl';
+import localeData from '../../i18n/locales/data.json';
+
+addLocaleData([...en]);
+
+const ViewChooserIntl = injectIntl(ViewChooser);
+
 const actions = require('../model/actions'),
 store = require('../model/store');
 
@@ -17,7 +27,7 @@ it('renders without crashing', () => {
     }
   };
 
-  ReactDOM.render(<ViewChooser {...props} />, div);
+  ReactDOM.render(<IntlProvider><ViewChooserIntl {...props} /></IntlProvider>, div);
 });
 
 it('should check the radio associated with the current view mode', () => {
@@ -33,7 +43,7 @@ it('should check the radio associated with the current view mode', () => {
     }
   };
 
-  ReactDOM.render(<ViewChooser {...props} />, div);
+  ReactDOM.render(<IntlProvider><ViewChooserIntl {...props} /></IntlProvider>, div);
 
   if(div.querySelector('input[type="radio"]:checked').value !== mode) {
     const err = 'should check the radio associated with the current view mode';
@@ -54,7 +64,7 @@ it('should update the Redux store when a view mode radio input is checked', () =
     }
   };
 
-  ReactDOM.render(<ViewChooser {...props} />, div);
+  ReactDOM.render(<IntlProvider><ViewChooserIntl {...props} /></IntlProvider>, div);
 
   new Promise((resolve, reject) => {
     const radios = div.querySelectorAll('input[type="radio"]'),

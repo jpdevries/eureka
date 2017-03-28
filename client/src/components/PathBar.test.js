@@ -6,6 +6,16 @@ import utility from '../utility/utility';
 
 import renderer from 'react-test-renderer';
 
+import { IntlProvider, addLocaleData } from 'react-intl';
+import en from 'react-intl/locale-data/en';
+
+import { FormattedMessage, FormattedPlural, FormattedNumber, FormattedRelative, injectIntl } from 'react-intl';
+import localeData from '../../i18n/locales/data.json';
+
+addLocaleData([...en]);
+
+const PathBarIntl = injectIntl(PathBar);
+
 const pathParse = require('path-parse');
 
 it('renders without crashing', () => {
@@ -25,7 +35,7 @@ it('renders without crashing', () => {
     }
   };
 
-  ReactDOM.render(<PathBar {...props} />, div);
+  ReactDOM.render(<IntlProvider><PathBarIntl {...props} /></IntlProvider>, div);
 });
 
 it('should display the correct icon based on filename extension', () => {
@@ -45,7 +55,7 @@ it('should display the correct icon based on filename extension', () => {
     }
   };
 
-  ReactDOM.render(<PathBar {...props} />, div);
+  ReactDOM.render(<IntlProvider><PathBarIntl {...props} /></IntlProvider>, div);
 
   const icon = utility.getIconByExtension(pathParse(props.view.focusedMediaItem.filename).ext);
 
@@ -74,7 +84,7 @@ it('summary should contain correct absolutePath', () => {
     }
   };
 
-  ReactDOM.render(<PathBar {...props} />, div);
+  ReactDOM.render(<IntlProvider><PathBarIntl {...props} /></IntlProvider>, div);
 
   if(!div.querySelector('summary').innerHTML.includes(props.view.focusedMediaItem.absolutePath)) {
     const err = `summary should contain correct absolutePath expects ${props.view.focusedMediaItem.absolutePath}`;
@@ -99,6 +109,6 @@ it('renders a snapshot', () => {
     }
   };
 
-  const pathbar = renderer.create(<PathBar {...props} />).toJSON();
+  const pathbar = renderer.create(<IntlProvider><PathBarIntl {...props} /></IntlProvider>).toJSON();
   expect(pathbar).toMatchSnapshot();
 });

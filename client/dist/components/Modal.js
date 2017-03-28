@@ -32,7 +32,7 @@ var Modal = function Modal(props) {
         'aria-pressed': 'false', className: 'eureka__modal-scrim', onClick: props.onCancel },
       _react2.default.createElement(
         'span',
-        { className: 'visually-hidden' },
+        { className: 'visually-hidden test' },
         _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'modal.closeWindow', defaultMessage: 'Close {title} Modal Window', values: {
             title: props.title
           } })

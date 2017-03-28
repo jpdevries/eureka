@@ -11,7 +11,17 @@ import Eureka from './Eureka';
 const actions = require('./model/actions'),
 store = require('./model/store');
 
-import { injectIntl, FormattedMessage, FormattedPlural, FormattedNumber, FormattedRelative, defineMessages } from 'react-intl';
+import { IntlProvider, addLocaleData } from 'react-intl';
+import en from 'react-intl/locale-data/en';
+
+import { FormattedMessage, FormattedPlural, FormattedNumber, FormattedRelative, injectIntl } from 'react-intl';
+import localeData from './../i18n/locales/data.json';
+
+addLocaleData([...en]);
+
+const language = (navigator.languages && navigator.languages[0]) || navigator.language || navigator.userLanguage;
+const languageWithoutRegionCode = language.toLowerCase().split(/[_-]+/)[0];
+const messages = localeData[languageWithoutRegionCode] || localeData[language] || localeData.en;
 
 class EurekaMediaBrowser extends Component {
   constructor(props) {
@@ -41,6 +51,7 @@ class EurekaMediaBrowser extends Component {
     });
   }
   componentWillMount() {
+
     this.EurekaController = connect(function(state, props) { // todo list
         return {
           content: state.content,
@@ -56,11 +67,15 @@ class EurekaMediaBrowser extends Component {
   render() {
     const props = this.props;
 
-    return (<Provider store={store}>
-        <this.EurekaController {...props} />
-    </Provider>);
+    return (
+      <Provider store={store}>
+        <IntlProvider {...props} locale={language} messages={messages}>
+          <this.EurekaController {...props}  />
+        </IntlProvider>
+      </Provider>
+    );
   }
 }
 
 // i18n FTW
-export default injectIntl(EurekaMediaBrowser);
+export default EurekaMediaBrowser;

@@ -51,7 +51,7 @@ var pathParse = require('path-parse');
 var MediaRow = function MediaRow(props) {
   var _React$createElement;
 
-  console.log('MediaRow', props);
+  //console.log('MediaRow', props);
   var entities = new Entities();
   var item = props.item;
   var index = props.index;

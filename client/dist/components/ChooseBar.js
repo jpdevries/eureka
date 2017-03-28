@@ -60,7 +60,6 @@ var ChooseBar = function ChooseBar(props) {
           }
         } },
       chooseMessage,
-      ' ',
       _react2.default.createElement(
         'span',
         { className: 'visually-hidden' },

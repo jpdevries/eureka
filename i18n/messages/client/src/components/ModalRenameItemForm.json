@@ -1,0 +1,10 @@
+[
+  {
+    "id": "cancel",
+    "defaultMessage": "Cancel"
+  },
+  {
+    "id": "renamingItem",
+    "defaultMessage": "renaming item {filename}"
+  }
+]

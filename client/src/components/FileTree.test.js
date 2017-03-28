@@ -11,6 +11,16 @@ import renderer from 'react-test-renderer';
 
 import { fetchMediaSourcesData, updateSourceTreeData, fetchDirectoryContentsData } from '../model/dummy';
 
+import { IntlProvider, addLocaleData } from 'react-intl';
+import en from 'react-intl/locale-data/en';
+
+import { FormattedMessage, FormattedPlural, FormattedNumber, FormattedRelative, injectIntl } from 'react-intl';
+import localeData from '../../i18n/locales/data.json';
+
+addLocaleData([...en]);
+
+const FileTreeIntl = injectIntl(FileTree);
+
 const actions = require('../model/actions'),
 store = require('../model/store');
 
@@ -37,5 +47,5 @@ it('renders without crashing', () => {
     }
   });
 
-  ReactDOM.render(<FileTree {...props} />, div);
+  ReactDOM.render(<IntlProvider><FileTreeIntl {...props} /></IntlProvider>, div);
 });

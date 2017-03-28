@@ -9,7 +9,7 @@ import { FormattedMessage, FormattedPlural, FormattedNumber, FormattedRelative, 
 import definedMessages from '../i18n/definedMessages';
 
 const ContextButtons = (props) => {
-  console.log('ContextButtons', props);
+  //console.log('ContextButtons', props);
   const item = props.item;
 
   const { formatMessage } = props.intl,

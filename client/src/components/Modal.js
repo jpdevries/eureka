@@ -15,9 +15,11 @@ const Modal = (props) => {
       </div>
       <div role="button" tabIndex="0"
  aria-pressed="false" className="eureka__modal-scrim" onClick={props.onCancel}>
-        <span className="visually-hidden"><FormattedMessage id="modal.closeWindow" defaultMessage={`Close {title} Modal Window`} values={{
-          title: props.title
-        }} /></span>
+        <span className="visually-hidden test">
+          <FormattedMessage id="modal.closeWindow" defaultMessage={`Close {title} Modal Window`} values={{
+            title: props.title
+          }} />
+        </span>
       </div>
     </div>
   );

@@ -9,6 +9,16 @@ import { Provider } from 'react-redux';
 
 import renderer from 'react-test-renderer';
 
+import { IntlProvider, addLocaleData } from 'react-intl';
+import en from 'react-intl/locale-data/en';
+
+import { FormattedMessage, FormattedPlural, FormattedNumber, FormattedRelative, injectIntl } from 'react-intl';
+import localeData from '../../i18n/locales/data.json';
+
+addLocaleData([...en]);
+
+const MediaRowIntl = injectIntl(MediaRow);
+
 import { fetchMediaSourcesData, updateSourceTreeData, fetchDirectoryContentsData } from '../model/dummy';
 
 const actions = require('../model/actions'),
@@ -38,7 +48,7 @@ it('renders without crashing', () => {
     onFocus:function(){}
   });
 
-  ReactDOM.render(<MediaRow {...props} />, tbody);
+  ReactDOM.render(<IntlProvider><MediaRowIntl {...props} /></IntlProvider>, tbody);
 });
 
 
@@ -52,6 +62,6 @@ it('renders a snapshot', () => {
     onFocus:function(){}
   });
 
-  const mediaRow = renderer.create(<MediaRow {...props} />).toJSON();
+  const mediaRow = renderer.create(<IntlProvider><MediaRowIntl {...props} /></IntlProvider>).toJSON();
   expect(mediaRow).toMatchSnapshot();
 });

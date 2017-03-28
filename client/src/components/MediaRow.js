@@ -22,7 +22,7 @@ import definedMessages from '../i18n/definedMessages';
 
 
 const MediaRow = (props) => {
-  console.log('MediaRow', props);
+  //console.log('MediaRow', props);
   const entities = new Entities();
   const item = props.item;
   const index = props.index;

@@ -14,6 +14,16 @@ import utility from '../utility/utility';
 
 import { fetchMediaSourcesData, updateSourceTreeData, fetchDirectoryContentsData } from '../model/dummy';
 
+import { IntlProvider, addLocaleData } from 'react-intl';
+import en from 'react-intl/locale-data/en';
+
+import { FormattedMessage, FormattedPlural, FormattedNumber, FormattedRelative, injectIntl } from 'react-intl';
+import localeData from '../../i18n/locales/data.json';
+
+addLocaleData([...en]);
+
+const EurekaTableIntl = injectIntl(EurekaTable);
+
 store.dispatch(actions.fetchMediaSourcesSuccess(
   fetchMediaSourcesData
 ));
@@ -37,7 +47,7 @@ function getEurekaTableControllerProvider() {
       fetched: state.fetched,
       config: state.config
     }
-  })(EurekaTable);
+  })(EurekaTableIntl);
 
   return (
     <Provider store={store}>
@@ -49,13 +59,13 @@ function getEurekaTableControllerProvider() {
 it('renders without crashing', () => {
   const div = document.createElement('div');
 
-  ReactDOM.render(getEurekaTableControllerProvider(), div);
+  ReactDOM.render(<IntlProvider>{getEurekaTableControllerProvider()}</IntlProvider>, div);
 });
 
 it('should list the current media items of the current directory of the current media source', () => {
   const div = document.createElement('div');
 
-  ReactDOM.render(getEurekaTableControllerProvider(), div);
+  ReactDOM.render(<IntlProvider>{getEurekaTableControllerProvider()}</IntlProvider>, div);
 
   const state = store.getState();
   state.content.contents.map((item) => {

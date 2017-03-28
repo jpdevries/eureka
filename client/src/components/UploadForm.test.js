@@ -9,6 +9,16 @@ import { Provider } from 'react-redux';
 
 import renderer from 'react-test-renderer';
 
+import { IntlProvider, addLocaleData } from 'react-intl';
+import en from 'react-intl/locale-data/en';
+
+import { FormattedMessage, FormattedPlural, FormattedNumber, FormattedRelative, injectIntl } from 'react-intl';
+import localeData from '../../i18n/locales/data.json';
+
+addLocaleData([...en]);
+
+const UploadFormIntl = injectIntl(UploadForm);
+
 import { fetchMediaSourcesData, updateSourceTreeData, fetchDirectoryContentsData } from '../model/dummy';
 
 const actions = require('../model/actions'),
@@ -33,9 +43,9 @@ it('renders without crashing', () => {
   const props = Object.assign({}, state, {
     item: state.content.contents[0],
     view: {
-      focusedMediaItem: state.content.contents[0]
+      focusedMediaItem: state.content.contents[0] 
     }
   });
 
-  ReactDOM.render(<UploadForm {...props} />, div);
+  ReactDOM.render(<IntlProvider><UploadFormIntl {...props} /></IntlProvider>, div);
 });

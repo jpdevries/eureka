@@ -6,6 +6,16 @@ import {cssSafe} from '../utility/utility';
 
 import renderer from 'react-test-renderer';
 
+import { IntlProvider, addLocaleData } from 'react-intl';
+import en from 'react-intl/locale-data/en';
+
+import { FormattedMessage, FormattedPlural, FormattedNumber, FormattedRelative, injectIntl } from 'react-intl';
+import localeData from '../../i18n/locales/data.json';
+
+addLocaleData([...en]);
+
+const ContextButtonsIntl = injectIntl(ContextButtons);
+
 it('renders without crashing', () => {
   const div = document.createElement('div');
   const item = {
@@ -20,7 +30,7 @@ it('renders without crashing', () => {
   };
 
   //props.view.sourceTreeOpen}
-  ReactDOM.render(<ContextButtons item={item} {...props} />, div);
+  ReactDOM.render(<IntlProvider><ContextButtonsIntl item={item} {...props} /></IntlProvider>, div);
 
 });
 
@@ -38,7 +48,7 @@ it('should add a rename button if config.allowRename is true', () => {
   };
 
   //props.view.sourceTreeOpen}
-  ReactDOM.render(<ContextButtons item={item} {...props} />, div);
+  ReactDOM.render(<IntlProvider><ContextButtonsIntl item={item} {...props} /></IntlProvider>, div);
 
   if(!div.querySelector(`#${props.config.storagePrefix}rename__${cssSafe(item.filename)}`)) {
     const err = `should add a rename button if config.allowRename is true`;
@@ -61,7 +71,7 @@ it('should not add a rename button if config.allowRename is not true', () => {
   };
 
   //props.view.sourceTreeOpen}
-  ReactDOM.render(<ContextButtons item={item} {...props} />, div);
+  ReactDOM.render(<IntlProvider><ContextButtonsIntl item={item} {...props} /></IntlProvider>, div);
 
   if(div.querySelector(`#${props.config.storagePrefix}rename__${cssSafe(item.filename)}`)) {
     const err = `should not add a rename button if config.allowRename is not true`;
@@ -81,6 +91,6 @@ it('renders a snapshot', () => {
       storagePrefix: 'eureka__'
     }
   };
-  const contextButtons = renderer.create(<ContextButtons item={item} {...props} />).toJSON();
+  const contextButtons = renderer.create(<IntlProvider><ContextButtonsIntl item={item} {...props} /></IntlProvider>).toJSON();
   expect(contextButtons).toMatchSnapshot();
 });

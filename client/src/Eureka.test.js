@@ -9,6 +9,16 @@ import { Provider } from 'react-redux';
 
 import renderer from 'react-test-renderer';
 
+import { IntlProvider, addLocaleData } from 'react-intl';
+import en from 'react-intl/locale-data/en';
+
+import { FormattedMessage, FormattedPlural, FormattedNumber, FormattedRelative, injectIntl } from 'react-intl';
+import localeData from './../i18n/locales/data.json';
+
+addLocaleData([...en]);
+
+const EurekaIntl = injectIntl(Eureka);
+
 const actions = require('./model/actions'),
 store = require('./model/store'),
 initialConfig = store.getState();
@@ -25,11 +35,13 @@ function getEurekaProvider() {
       fetched: state.fetched,
       config: state.config
     }
-  })(Eureka);
+  })(EurekaIntl);
 
   return (
     <Provider store={store}>
-        <EurekaController />
+        <IntlProvider>
+          <EurekaController />
+        </IntlProvider>
     </Provider>
   );
 }

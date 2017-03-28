@@ -9,6 +9,16 @@ import { Provider } from 'react-redux';
 
 import renderer from 'react-test-renderer';
 
+import { IntlProvider, addLocaleData } from 'react-intl';
+import en from 'react-intl/locale-data/en';
+
+import { FormattedMessage, FormattedPlural, FormattedNumber, FormattedRelative, injectIntl } from 'react-intl';
+import localeData from '../../i18n/locales/data.json';
+
+addLocaleData([...en]);
+
+const MediaSourceSelectorIntl = injectIntl(MediaSourceSelector);
+
 const actions = require('../model/actions'),
 store = require('../model/store');
 
@@ -23,7 +33,7 @@ function getMediaSourceSelectorController() {
       fetched: state.fetched,
       config: state.config
     }
-  })(MediaSourceSelector);
+  })(MediaSourceSelectorIntl);
 }
 
 it('renders without crashing', () => {
@@ -32,7 +42,7 @@ it('renders without crashing', () => {
 
   ReactDOM.render((
     <Provider store={store}>
-        <MediaSourceSelectorController />
+        <IntlProvider><MediaSourceSelectorController /></IntlProvider>
     </Provider>
   ), div);
 });
@@ -43,7 +53,7 @@ it('renders a snapshot', () => {
   const MediaSourceSelectorController = getMediaSourceSelectorController();
   const mediaSource = renderer.create(
     <Provider store={store}>
-        <MediaSourceSelectorController />
+        <IntlProvider><MediaSourceSelectorController /></IntlProvider>
     </Provider>
   ).toJSON();
 

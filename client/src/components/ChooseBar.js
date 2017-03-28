@@ -33,7 +33,7 @@ const ChooseBar = (props) => {
         } catch (e) {
           console.log(e)
         }
-      }}>{chooseMessage} <span className="visually-hidden"> {(() => {
+      }}>{chooseMessage}<span className="visually-hidden"> {(() => {
           try {
             return props.view.focusedMediaItem.filename || ` ${pluralItemPlaceholder}`
           } catch (e) {

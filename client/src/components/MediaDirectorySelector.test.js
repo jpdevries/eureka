@@ -14,6 +14,16 @@ store = require('../model/store');
 
 import utility from '../utility/utility';
 
+import { IntlProvider, addLocaleData } from 'react-intl';
+import en from 'react-intl/locale-data/en';
+
+import { FormattedMessage, FormattedPlural, FormattedNumber, FormattedRelative, injectIntl } from 'react-intl';
+import localeData from '../../i18n/locales/data.json';
+
+addLocaleData([...en]);
+
+const MediaDirectorySelectorIntl = injectIntl(MediaDirectorySelector);
+
 import { fetchMediaSourcesData, updateSourceTreeData, fetchDirectoryContentsData } from '../model/dummy';
 
 store.dispatch(actions.fetchMediaSourcesSuccess(
@@ -35,5 +45,5 @@ it('renders without crashing', () => {
   const props = Object.assign({}, state, {
   });
 
-  ReactDOM.render(<MediaDirectorySelector {...props} />, div);
+  ReactDOM.render(<IntlProvider><MediaDirectorySelectorIntl {...props} /></IntlProvider>, div);
 });

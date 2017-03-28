@@ -1,0 +1,150 @@
+[
+  {
+    "id": "directory.create",
+    "defaultMessage": "Create a Directory"
+  },
+  {
+    "id": "directory.createNewIn",
+    "defaultMessage": "Create a new Directory in {cd}"
+  },
+  {
+    "id": "choose",
+    "defaultMessage": "Choose"
+  },
+  {
+    "id": "cancel",
+    "defaultMessage": "Cancel"
+  },
+  {
+    "id": "mediaSourceTree",
+    "defaultMessage": "Media Source Tree"
+  },
+  {
+    "id": "close",
+    "defaultMessage": "Close"
+  },
+  {
+    "id": "open",
+    "defaultMessage": "Open"
+  },
+  {
+    "id": "rename",
+    "defaultMessage": "Rename"
+  },
+  {
+    "id": "delete",
+    "defaultMessage": "Delete"
+  },
+  {
+    "id": "in",
+    "defaultMessage": "in"
+  },
+  {
+    "id": "file.create",
+    "defaultMessage": "Create File"
+  },
+  {
+    "id": "contents.ofby",
+    "defaultMessage": "contents of {cd} by filename, filesize, dimensions or even modification date"
+  },
+  {
+    "id": "contents.filterBy",
+    "defaultMessage": "Filter contents of {cd} by filename, filesize, dimensions or even modification date"
+  },
+  {
+    "id": "file.quickCreate",
+    "defaultMessage": "Quick Create Files"
+  },
+  {
+    "id": "rename.cannot",
+    "defaultMessage": "Cannot rename {filename} to the same name"
+  },
+  {
+    "id": "expand",
+    "defaultMessage": "Expand"
+  },
+  {
+    "id": "choose.item",
+    "defaultMessage": "Choose {filename}"
+  },
+  {
+    "id": "rename.item",
+    "defaultMessage": "Rename {filename}"
+  },
+  {
+    "id": "directory.delete",
+    "defaultMessage": "Delete Directory"
+  },
+  {
+    "id": "delete.item",
+    "defaultMessage": "Delete {filename}"
+  },
+  {
+    "id": "expand.item",
+    "defaultMessage": "Expand {filename}"
+  },
+  {
+    "id": "directory.refresh",
+    "defaultMessage": "Refresh Directory"
+  },
+  {
+    "id": "upload.files",
+    "defaultMessage": "Upload Files"
+  },
+  {
+    "id": "upload.filesTo",
+    "defaultMessage": "Upload File to {cd}"
+  },
+  {
+    "id": "close.mediaBrowser",
+    "defaultMessage": "Close Media Browser"
+  },
+  {
+    "id": "context.performActions",
+    "defaultMessage": "Perform Actions such as Expand or Choose on {filename}"
+  },
+  {
+    "id": "directory.chmod",
+    "defaultMessage": "chmod Directory"
+  },
+  {
+    "id": "item",
+    "defaultMessage": "item"
+  },
+  {
+    "id": "layout.tabular",
+    "defaultMessage": "Tabular Layout displays image thumbnails along with Name, Description, File Size and Edited On columns"
+  },
+  {
+    "id": "layout.thumbnail",
+    "defaultMessage": "Thumbnail layout displays a grid of medium sized thumbnails"
+  },
+  {
+    "id": "layout.grid",
+    "defaultMessage": "Grid View displays images a grid of large images"
+  },
+  {
+    "id": "layout.list",
+    "defaultMessage": "List Layout displays Name, Description, File Size and Edited On columns"
+  },
+  {
+    "id": "file.openInNewTab",
+    "defaultMessage": "Open {filename} in a new tab"
+  },
+  {
+    "id": "mediaItem",
+    "defaultMessage": "media item"
+  },
+  {
+    "id": "pluralItem",
+    "defaultMessage": "a media item"
+  },
+  {
+    "id": "media.sourceTree",
+    "defaultMessage": "Media Source Tree"
+  },
+  {
+    "id": "upload.dragFilestoUpload",
+    "defaultMessage": "Drag files here to be uploaded to {cd}"
+  }
+]

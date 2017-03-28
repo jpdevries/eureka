@@ -4,6 +4,16 @@ import DropArea from './DropArea';
 
 import {cssSafe} from '../utility/utility';
 
+import { IntlProvider, addLocaleData } from 'react-intl';
+import en from 'react-intl/locale-data/en';
+
+import { FormattedMessage, FormattedPlural, FormattedNumber, FormattedRelative, injectIntl } from 'react-intl';
+import localeData from '../../i18n/locales/data.json';
+
+addLocaleData([...en]);
+
+const DropAreaIntl = injectIntl(DropArea);
+
 const actions = require('../model/actions'),
 store = require('../model/store');
 
@@ -17,12 +27,12 @@ it('renders without crashing', () => {
     filename: 'sky.jpg'
   };
 
-  ReactDOM.render(<DropArea config={{
+  ReactDOM.render(<IntlProvider><DropAreaIntl config={{
     storagePrefix:'eureka__'
   }} view={{
     sourceTreeOpen: true
   }} content={{
     cd: './'
-  }} />, div);
+  }} /></IntlProvider>, div);
 
 });
