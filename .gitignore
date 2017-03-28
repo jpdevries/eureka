@@ -34,4 +34,6 @@ _build/scss/html5-boilerplate
 
 .tscache
 
+prod/client/i18n
+
 __snapshots__

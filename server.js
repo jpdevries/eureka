@@ -12,6 +12,13 @@ isProd = (process.env.NODE_ENV == 'production') ? true : false;
 import React from 'react';
 import ReactDOM from 'react-dom/server';
 
+import { IntlProvider, addLocaleData } from 'react-intl';
+import en from 'react-intl/locale-data/en';
+import localeData from './client/i18n/locales/data.json';
+
+addLocaleData([...en]);
+
+
 
 /*
 import actions from './client/src/model/actions';
@@ -205,9 +212,22 @@ function serveIt(dir = "/") {
         cd: dir
       }))
     )).then(() => {
+
+
+      const language = 'en-US';
+      console.log('.');
+      const languageWithoutRegionCode = language.toLowerCase().split(/[_-]+/)[0];
+      console.log('..');
+      const messages = localeData[languageWithoutRegionCode] || localeData[language] || localeData.en;
+      console.log('...');
       console.log('time for eurekaMarkup');
+      console.log(language);
+      console.log(languageWithoutRegionCode);
+      console.log(messages);
       const eurekaMarkup = ReactDOM.renderToStaticMarkup(
-        <EurekaMediaBrowser currentDirectory={dir} />
+        <IntlProvider locale={language} messages={messages}>
+          <EurekaMediaBrowser currentDirectory={dir} />
+        </IntlProvider>
       );
       resolve(eurekaMarkup);
     });

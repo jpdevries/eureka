@@ -14,13 +14,13 @@ var _en = require('react-intl/locale-data/en');
 
 var _en2 = _interopRequireDefault(_en);
 
-var _EurekaMediaBrowser = require('./EurekaMediaBrowser');
-
-var _EurekaMediaBrowser2 = _interopRequireDefault(_EurekaMediaBrowser);
-
 var _data = require('./../i18n/locales/data.json');
 
 var _data2 = _interopRequireDefault(_data);
+
+var _EurekaMediaBrowser = require('./EurekaMediaBrowser');
+
+var _EurekaMediaBrowser2 = _interopRequireDefault(_EurekaMediaBrowser);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -34,6 +34,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 var language = navigator.languages && navigator.languages[0] || navigator.language || navigator.userLanguage;
 var languageWithoutRegionCode = language.toLowerCase().split(/[_-]+/)[0];
 var messages = _data2.default[languageWithoutRegionCode] || _data2.default[language] || _data2.default.en;
+
+console.log(language, languageWithoutRegionCode);
 
 _reactDom2.default.render(_react2.default.createElement(
   _reactIntl.IntlProvider,

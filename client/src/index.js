@@ -8,6 +8,7 @@ import en from 'react-intl/locale-data/en';
 
 
 import { FormattedMessage, FormattedPlural, FormattedNumber, FormattedRelative } from 'react-intl';
+import localeData from './../i18n/locales/data.json';
 
 addLocaleData([...en]);
 
@@ -17,9 +18,9 @@ const language = (navigator.languages && navigator.languages[0]) || navigator.la
 const languageWithoutRegionCode = language.toLowerCase().split(/[_-]+/)[0];
 const messages = localeData[languageWithoutRegionCode] || localeData[language] || localeData.en;
 
+console.log(language, languageWithoutRegionCode);
 
 
-import localeData from './../i18n/locales/data.json';
 
 ReactDOM.render(
   <IntlProvider locale={language} messages={messages}>
