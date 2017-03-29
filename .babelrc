@@ -3,7 +3,7 @@
   "plugins": [
     [
       "react-intl", {
-        "messagesDir": "./i18n/messages",
+        "messagesDir": "./client/i18n/messages",
         "enforceDescriptions": false
       }
     ]

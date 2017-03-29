@@ -249,7 +249,7 @@ class Eureka extends Component {
           <div className="eureka__stage__filter-view">
             <header>
               <h2>
-                <span className="visually-hidden">Browse </span>Media Content
+                <span className="visually-hidden"><FormattedMessage id="media.browse" defaultMessage="Browse" /> </span><FormattedMessage id="media.contents" defaultMessage="Media Content" />
               </h2>
               {searchBar}
             </header>

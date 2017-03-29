@@ -37,3 +37,5 @@ _build/scss/html5-boilerplate
 prod/client/i18n
 
 __snapshots__
+
+/i18n

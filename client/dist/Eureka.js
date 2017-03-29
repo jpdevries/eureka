@@ -355,9 +355,10 @@ var Eureka = function (_Component) {
                 _react2.default.createElement(
                   'span',
                   { className: 'visually-hidden' },
-                  'Browse '
+                  _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'media.browse', defaultMessage: 'Browse' }),
+                  ' '
                 ),
-                'Media Content'
+                _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'media.contents', defaultMessage: 'Media Content' })
               ),
               searchBar
             ),
