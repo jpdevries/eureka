@@ -123,6 +123,16 @@ The semantic HTML layer remains usable even absent of style as pure&nbsp;HTML.
       <td align="center"><span aria-label="supported">✅</span></td>
     </tr>
     <tr>
+      <td>Internationalization</td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+    </tr>
+    <tr>
       <td>Media Source panel</td>
       <td align="center"><span aria-label="not supported">❌</span></td>
       <td align="center"><span aria-label="not supported">❌</span></td>
