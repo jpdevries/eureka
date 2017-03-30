@@ -379,11 +379,17 @@ The development server, like any other React app created with `create-react-app`
 
 ## 🛠 Usage
 
-**HTML**
+#### HTML
 The `<EurekaMediaBrowser>` React component is styled by a standard CSS stylesheet. Include the CSS for the appropriate version of the media browser. Reference the theming section for [more information of styling Eureka](https://github.com/jpdevries/eureka#-theming).
 
 ```html
 <link rel="stylesheet" type="text/css" media="screen" href="assets/css/eureka.0.0.20.min.css">
+```
+
+You'll find minified and unminified stylesheets, along with source maps, in the `build/assets/js` directory of the `./node_modules/eureka-browser/` directory. You can also install Eureka via bower:
+
+```bash
+bower install eureka-browser#release-2.0
 ```
 
 ```html
@@ -394,7 +400,7 @@ The `<EurekaMediaBrowser>` React component is styled by a standard CSS styleshee
 
 ```
 
-**JS**
+#### JS
 ```js
 import React from 'react';
 import ReactDOM from 'react-dom';
