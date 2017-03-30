@@ -318,6 +318,9 @@ The semantic HTML layer remains usable even absent of style as pure&nbsp;HTML.
 ## 🌐 Browser Support
 The server side rendering and HTML&ndash;first design patterns begin progressively enhancing a universally supported HTML layer. So basic features are supported in any browser. JavaScript support begins at IE9. Desired CSS layout requires Flexbox and is further enhanced with Grid Layout.
 
+## 🔡 i18n
+Eureka is on Crowdin. Please [contribute to our translations](https://crowdin.com/project/eureka-browser) if you are&nbsp;able.
+
 ## ♿️ Accessibility Proclaimer
 Eureka strives for WCAG Level AA success criteria in all scenarios with some accessibility preference features leaning towards Level AAA. Please [log *any* a11y issues here](https://github.com/jpdevries/eureka/issues).
 
