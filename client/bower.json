@@ -1,7 +1,11 @@
 {
-  "name": "eureka",
-  "description": "",
-  "main": "",
+  "name": "eureka-browser",
+  "description": "Eureka is a progressively enhanced Media Browser Component.",
+  "main": [
+    "build/assets/css/eurekea.0.0.20.min.css",
+    "build/assets/js/eurekea.0.0.20.min.js"
+  ],
+  "version": "0.0.20",
   "authors": [
     "JP de Vries <mail@devries.jp>"
   ],
@@ -13,7 +17,15 @@
     "node_modules",
     "bower_components",
     "test",
-    "tests"
+    "tests",
+    "lib",
+    "public",
+    "src",
+    ".babelrc",
+    ".DS_Store",
+    "gruntfile.js",
+    "package.json",
+    "yarn.lock"
   ],
   "dependencies": {
     "url-search-params": "^0.6.2"
