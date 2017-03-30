@@ -24,7 +24,7 @@ var initialConfigState = {
   allowRename: true,
   allowDelete: true,
   confirmBeforeDelete: false,
-  localse: "en-US",
+  locales: "en-US",
   mediaSource: undefined,
   currentDirectory: "/",
   uid: "0",

@@ -32,6 +32,8 @@ _build/scss/html5-boilerplate
 /sources
 /sources.zip
 
+crowdin.yml
+
 .tscache
 
 prod/client/i18n

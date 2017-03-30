@@ -40,4 +40,4 @@ var defaultMessages = (0, _glob.sync)(filePattern).map(function (filename) {
 (0, _mkdirp.sync)(outputDir);
 
 // Write the messages to this directory
-fs.writeFileSync(outputDir + 'en.json', '{ "en": ' + JSON.stringify(defaultMessages, null, 2) + ' }');
+fs.writeFileSync(outputDir + 'en.json', JSON.stringify(defaultMessages, null, 2));

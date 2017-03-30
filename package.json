@@ -79,7 +79,7 @@
     "fetchsources": "rm -rf sources.zip && rm -rf sources && wget http://j4p.us/01093x3k1200/sources.zip && unzip sources.zip && ls && ls sources && mv sources.zip prod && cd ./prod && rm -rf sources && unzip sources.zip && rm -rf sources.zip && ls && ls sources && cd ../",
     "buildserver": "babel ./server.js -d prod",
     "fetcheureka": "cd ./prod && npm install eureka-browser && cd ../",
-    "build": "yarn buildserver && babel ./client/src -d ./client/dist && yarn i18n && cp -R ./client/dist ./prod/client/src && cp -R client/build prod/client && rm -rf prod/client/i18n && mkdir prod/client/i18n && cp -R client/i18n/* prod/client/i18n && rm -rf i18n",
+    "build": "yarn buildserver && babel ./client/src -d ./client/dist && yarn i18n && cp -R ./client/dist ./prod/client && cp -R client/build prod/client && rm -rf prod/client/i18n && mkdir prod/client/i18n && cp -R client/i18n/* prod/client/i18n && rm -rf i18n",
     "testbuild": "yarn buildserver  && cp -R client/build prod/client",
     "buildclient": "cd client && yarn && yarn build && cd ../",
     "installclient": "cd client && yarn && cd ../",
@@ -93,6 +93,7 @@
     "client": "babel-node start-client.js",
     "herokupush": "git push heroku release-2.0:master",
     "herokuforce": "git push heroku release-2.0:master --force",
+    "heroku": "yarn herokupush",
     "dev": "echo \"This command has been deprecated. Use 'npm start'\" && exit 1",
     "lint": "eslint ."
   },

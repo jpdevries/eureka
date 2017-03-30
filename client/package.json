@@ -1,7 +1,7 @@
 {
   "name": "eureka-browser",
   "description": "Eureka is a progressively enhanced Media Browser Component.",
-  "version": "0.0.15",
+  "version": "0.0.17",
   "license": "BSD-3-Clause",
   "author": {
     "name": "JP de Vries",
@@ -41,6 +41,7 @@
     "build/assets/js/",
     "build/static/",
     "dist/",
+    "i18n/",
     "src/"
   ],
   "devDependencies": {
@@ -56,14 +57,15 @@
     "grunt-postcss": "^0.8.0",
     "grunt-sass": "^2.0.0",
     "grunt-webpack": "^2.0.1",
+    "lazyload-script": "^0.0.5",
     "react-scripts": "0.9.0",
-    "react-test-renderer": "^15.4.2" 
+    "react-test-renderer": "^15.4.2"
   },
   "dependencies": {
     "babel-plugin-react-intl": "^2.3.1",
-    "babel-preset-stage-0": "^6.22.0",
     "babel-preset-es2015": "^6.24.0",
     "babel-preset-react": "^6.23.0",
+    "babel-preset-stage-0": "^6.22.0",
     "classnames": "^2.2.5",
     "css-safe": "^0.1.0",
     "filesize": "^3.5.4",
@@ -85,7 +87,7 @@
     "build": "yarn i18n && react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "babel" : "babel ./src -d ./dist",
+    "babel": "babel ./src -d ./dist",
     "i18n": "cd ./i18n && node build.js && cd ../"
   }
 }

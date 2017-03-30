@@ -1,4 +1,4 @@
-{ "en": {
+{
   "close.mediaBrowser": "Close Media Browser",
   "choose": "Choose",
   "item": "item",
@@ -65,4 +65,4 @@
   "file.openInNewTab": "Open {filename} in a new tab",
   "media.sourceTree": "Media Source Tree",
   "upload.dragFilestoUpload": "Drag files here to be uploaded to {cd}"
-} }
+}

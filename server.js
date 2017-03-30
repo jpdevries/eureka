@@ -13,10 +13,13 @@ import React from 'react';
 import ReactDOM from 'react-dom/server';
 
 import { IntlProvider, addLocaleData } from 'react-intl';
+
 import en from 'react-intl/locale-data/en';
+import nl from 'react-intl/locale-data/nl';
+
 import localeData from './client/i18n/locales/en.json';
 
-addLocaleData([...en]);
+addLocaleData([...en, ...nl]);
 
 
 
@@ -44,7 +47,7 @@ import { // load the dist (transpiled)
   actions,
   store,
   utility
-} from 'eureka-browser'; // from 'eureka-browser'; // from './client/src/main'; from './client/dist/main';
+} from './client/dist/main'; //from 'eureka-browser'; // from 'eureka-browser'; // from './client/src/main'; from './client/dist/main';
 
 
 
@@ -78,10 +81,22 @@ store.dispatch(actions.updateConfig({
 
 app.get('/', (req, res) => {
 
-  serveIt('/').then((eurekaMarkup) => {
+  serveIt('/', req.query.ln || undefined).then((eurekaMarkup) => {
     console.log(path.join(__dirname, 'client/build/index.html'));
-    const build = fs.readFileSync(path.join(__dirname, 'client/build/index.html'), 'utf8').replace('<div id="root"></div>',`<div id="root">${eurekaMarkup}</div>`);
+    let build = fs.readFileSync(path.join(__dirname, 'client/build/index.html'), 'utf8').replace('<div id="root"></div>',`<div id="root">${eurekaMarkup}</div>`).replace(`<html lang="en">`,`<html lang="${req.query.ln || 'en'}">`);
     //const build = '<h1>YOLO</h1>';
+
+    /*if(req.query.ln) {
+      const languageWithoutRegionCode = req.query.ln.toLowerCase().split(/[_-]+/)[0];
+      build = build.replace('</body>',`
+      <script src="https://unpkg.com/react-intl@latest/locale-data/${languageWithoutRegionCode}.js"></script>
+      <script>
+          ReactIntl.addLocaleData(ReactIntlLocaleData.${languageWithoutRegionCode});
+      </script>
+      </body>
+      `);
+    }*/
+
     res.end(build);
   });
 
@@ -169,7 +184,7 @@ app.post('/', (req, res) => {
   });
 });
 
-function serveIt(dir = "/") {
+function serveIt(dir = "/", lang = undefined) {
   console.log('serveIt', dir);
   return new Promise((resolve, reject) => {
     store.dispatch(actions.updateConfig({
@@ -214,20 +229,35 @@ function serveIt(dir = "/") {
     )).then(() => {
 
 
-      const language = 'en-US';
-      console.log('.');
+      const language = lang || 'en-US';
+      //console.log(language, '.');
       const languageWithoutRegionCode = language.toLowerCase().split(/[_-]+/)[0];
-      console.log('..');
-      const messages = localeData[languageWithoutRegionCode] || localeData[language] || localeData.en;
-      console.log('...');
-      console.log('time for eurekaMarkup');
-      console.log(language);
-      console.log(languageWithoutRegionCode);
-      console.log(messages);
-      const eurekaMarkup = ReactDOM.renderToStaticMarkup(
-        <IntlProvider locale={language} messages={messages}>
-          <EurekaMediaBrowser currentDirectory={dir} />
-        </IntlProvider>
+      //console.log('..', languageWithoutRegionCode);
+
+      const messages = (() => {
+        //console.log('m.');
+        //return localeData[languageWithoutRegionCode] || localeData[language] || localeData.en;
+        if(language && languageWithoutRegionCode != 'en') {
+          //console.log(path.join(__dirname, `/client/i18n/locales/en.json`));
+          //console.log('m..');
+          try {
+            return JSON.parse(fs.readFileSync(path.join(__dirname, `/client/i18n/locales/${languageWithoutRegionCode}.json`)))
+          } catch(e) {
+            //console.log('uh oh', e);
+            return localeData[languageWithoutRegionCode] || localeData[language] || localeData.en;
+          }
+          //console.log('localeData',localeData);
+        }
+        console.log('double uh oh');
+        return localeData[languageWithoutRegionCode] || localeData[language] || localeData.en;
+      })();
+      //console.log('...');
+      //console.log('time for eurekaMarkup!');
+      //console.log(language);
+      //console.log(languageWithoutRegionCode);
+      //console.log(messages);
+      const eurekaMarkup = ReactDOM.renderToStaticMarkup( //<IntlProvider locale={language} messages={messages}>
+        <EurekaMediaBrowser messages={messages} currentDirectory={dir} lang={language} />
       );
       resolve(eurekaMarkup);
     });

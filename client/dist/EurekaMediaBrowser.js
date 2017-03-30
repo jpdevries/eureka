@@ -26,13 +26,17 @@ var _Eureka2 = _interopRequireDefault(_Eureka);
 
 var _reactIntl = require('react-intl');
 
+var _utility = require('./utility/utility');
+
+var _utility2 = _interopRequireDefault(_utility);
+
 var _en = require('react-intl/locale-data/en');
 
 var _en2 = _interopRequireDefault(_en);
 
-var _en3 = require('./../i18n/locales/en.json');
+var _i18n = require('./model/i18n.js');
 
-var _en4 = _interopRequireDefault(_en3);
+var _i18n2 = _interopRequireDefault(_i18n);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -46,12 +50,14 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 var actions = require('./model/actions'),
     store = require('./model/store');
+//import localeData from './../i18n/locales/en.json';
 
+//import dutchData from './../i18n/locales/nl.json';
+//console.log('en',en);
+//console.log('localeData',localeData);
 (0, _reactIntl.addLocaleData)([].concat(_toConsumableArray(_en2.default)));
 
-var language = navigator.languages && navigator.languages[0] || navigator.language || navigator.userLanguage;
-var languageWithoutRegionCode = language.toLowerCase().split(/[_-]+/)[0];
-var messages = _en4.default[languageWithoutRegionCode] || _en4.default[language] || _en4.default.en;
+var defaultLang = 'en';
 
 var EurekaMediaBrowser = function (_Component) {
   _inherits(EurekaMediaBrowser, _Component);
@@ -59,12 +65,58 @@ var EurekaMediaBrowser = function (_Component) {
   function EurekaMediaBrowser(props) {
     _classCallCheck(this, EurekaMediaBrowser);
 
+    //console.log(props.lang);
+
+    //console.log('A');
+    //console.log(navigator.languages, navigator.languages[0], navigator.language, navigator.userLanguage);
+
     var _this = _possibleConstructorReturn(this, (EurekaMediaBrowser.__proto__ || Object.getPrototypeOf(EurekaMediaBrowser)).call(this, props));
+
+    var language = _this.getLanguage(props);
+
+    //console.log('B', language);
+
+    var languageWithoutRegionCode = language.toLowerCase().split(/[_-]+/)[0];
+
+    //console.log('bolo', languageWithoutRegionCode);
+
+    var i18nEdpoint = function () {
+      try {
+        return props.endpoints.i18n;
+      } catch (e) {
+        return 'assets/js/i18n/';
+      }
+    }();
+
+    //console.log(i18nEdpoint);
+
 
     store.dispatch(actions.updateConfig(props));
 
+    var shouldFetch = function () {
+      if (_utility2.default.serverSideRendering) return false;
+      try {
+        return !props.lang || props.lang == 'en' || _this.state.i18n[props.lang] !== undefined ? false : true;
+      } catch (err) {
+        return props.lang !== 'en' ? true : false;
+      }
+    }();
+
+    if (shouldFetch) fetch('' + i18nEdpoint + languageWithoutRegionCode + '.json').then(function (response) {
+      //console.log('woooho!!!');
+      response.json().then(function (json) {
+        //console.log(json)
+        var state = _this.state;
+        _this.setState({
+          i18n: json
+        });
+      });
+    });
+
     store.subscribe(function () {
       var state = store.getState();
+      //console.log('state.i18n!!!', state.i18n);
+      //console.log(state);
       /*try {
         const siteName = title.dataset.siteName,
         title = document.querySelector('head > title'),
@@ -86,6 +138,15 @@ var EurekaMediaBrowser = function (_Component) {
   }
 
   _createClass(EurekaMediaBrowser, [{
+    key: 'getLanguage',
+    value: function getLanguage(props) {
+      try {
+        return props.lang ? props.lang : document.documentElement.lang || navigator.languages && navigator.languages[0] || navigator.language || navigator.userLanguage;
+      } catch (e) {
+        return 'en-US';
+      }
+    }
+  }, {
     key: 'componentWillMount',
     value: function componentWillMount() {
 
@@ -105,7 +166,49 @@ var EurekaMediaBrowser = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
+      var _this2 = this;
+
       var props = this.props;
+      var state = this.state;
+
+      console.log('FREAKING YOLO');
+
+      //console.log('state', state);
+
+      var language = this.getLanguage(props);
+      var languageWithoutRegionCode = language.toLowerCase().split(/[_-]+/)[0];
+      //console.log('languageWithoutRegionCode',languageWithoutRegionCode);
+      var messages = function () {
+        if (_utility2.default.serverSideRendering) return props.messages;
+
+        if (languageWithoutRegionCode == 'en') {
+          return _i18n2.default[languageWithoutRegionCode] || _i18n2.default[language] || _i18n2.default.en;
+        } else {
+          var fetchedLexiconData = function () {
+            try {
+              return _this2.state.i18n;
+            } catch (e) {
+              return _i18n2.default;
+            }
+          }();
+          //console.log('fetchedLexiconData', fetchedLexiconData);
+          return fetchedLexiconData[languageWithoutRegionCode] || fetchedLexiconData[language] || _i18n2.default[languageWithoutRegionCode] || _i18n2.default[language] || _i18n2.default.en;
+        }
+      }();
+
+      //console.log('messages',messages);
+
+      var lang = function () {
+        //console.log(props);
+        //return 'nl';
+        try {
+          return _this2.state.i18n ? props.lang : EurekaMediaBrowser.defaultProps.lang; // the component is en-US unless/until the lexicons have async loaded
+        } catch (e) {
+          return EurekaMediaBrowser.defaultProps.lang;
+        }
+      }();
+
+      console.log('EurekaMediaBrowser messages', messages);
 
       return _react2.default.createElement(
         _reactRedux.Provider,
@@ -113,7 +216,7 @@ var EurekaMediaBrowser = function (_Component) {
         _react2.default.createElement(
           _reactIntl.IntlProvider,
           _extends({}, props, { locale: language, messages: messages }),
-          _react2.default.createElement(this.EurekaController, props)
+          _react2.default.createElement(this.EurekaController, _extends({}, props, { lang: lang }))
         )
       );
     }
@@ -122,7 +225,10 @@ var EurekaMediaBrowser = function (_Component) {
   return EurekaMediaBrowser;
 }(_react.Component);
 
+EurekaMediaBrowser.defaultProps = {
+  i18n: 'assets/js/i18n/',
+  lang: 'en-US'
+};
+
 // i18n FTW
-
-
 exports.default = EurekaMediaBrowser;
