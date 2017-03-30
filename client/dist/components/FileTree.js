@@ -109,11 +109,23 @@ var FileTree = function FileTree(props) {
       deleteDirectoryMessage = formatMessage(_definedMessages2.default.deleteDirectory);
 
   function listTree(tree) {
+    function shouldBeOpen(item) {
+      console.log('shouldBeOpen', props.content.cd, item.cd, props.content.cd.indexOf(item.cd));
+      try {
+        return props.content.cd.indexOf(item.cd) === 0 ? true : undefined;
+      } catch (e) {
+        return undefined;
+      }
+    }
+
     return tree.map(function (item, index) {
       return item.children || true ? // still deciding if we need this disabled for now
       _react2.default.createElement(
         'details',
-        { key: index },
+        { onToggle: function onToggle(event) {
+            console.log('TOGGLE!!!', item);
+            console.log(event.target.hasAttribute('open'));
+          }, key: index, open: shouldBeOpen(item) },
         _react2.default.createElement(
           'summary',
           { contextMenu: 'context_menu__' + item.cd.replace(/^[^a-z]+|[^\w:.-]+/gi, ""), className: props.content.cd === item.cd ? 'active' : undefined },
