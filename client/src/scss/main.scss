@@ -1,5 +1,22 @@
 @import "bourbon/bourbon";
+
+$border-box-sizing:false;
 @import "neat/neat";
+$border-box-sizing:false;
+
+@if $border-box-sizing == false {
+  .eureka {
+    box-sizing: border-box;
+  }
+
+  .eureka * {
+    &,
+    &::after,
+    &::before {
+      box-sizing: inherit;
+    }
+  }
+}
 
 @import "spec/tacular";
 

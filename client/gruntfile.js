@@ -1,7 +1,9 @@
 module.exports = function(grunt) {
   grunt.initConfig({
+    pkg: grunt.file.readJSON('package.json'),
     dirs:{
-      build:'_build/',
+      build:'./build/',
+      static:'./static/',
       theme:'./public/',
       lib:'./lib/',
       assets:'./assets/',
@@ -96,6 +98,12 @@ module.exports = function(grunt) {
       }
     },
     copy: {
+      /*eureka: {
+        files: [{
+          src: '<%= dirs.build %><%= dirs.static %><%= dirs.js %>main.*.js',
+          dest: '<%= dirs.build %><%= dirs.assets %><%= dirs.js %>eureka.<%= pkg.version %>.min.js'
+        }]
+      },*/
       misc: {
         files: [{
             src: 'bourbon/**/*',
@@ -112,6 +120,15 @@ module.exports = function(grunt) {
             cwd: '<%= dirs.lib %>spectacular/',
             dest: '<%= dirs.scss %>',
             expand: true
+        },{
+          src: '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>main.css',
+          dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.<%= pkg.version %>.css'
+        },{
+          src: '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>main.min.css',
+          dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.<%= pkg.version %>.min.css'
+        },{
+          src: '<%= dirs.build %><%= dirs.static %><%= dirs.js %>main.*.js',
+          dest: '<%= dirs.build %><%= dirs.assets %><%= dirs.js %>eureka.<%= pkg.version %>.min.js'
         }]
       }
     },
@@ -147,6 +164,20 @@ module.exports = function(grunt) {
         src: '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>*.css'
       }
     },
+    bump: {
+      pkg: {
+        files: [{
+            src: './public/index.html',
+            dest: './public/index.html'
+        }],
+        options: {
+            replacements: [{
+                pattern: /<link rel="stylesheet" type="text\/css" href="assets\/css\/eureka.\d*.\d*.\d*.min.css/i,
+                replacement: `<link rel="stylesheet" type="text/css" href="assets/css/eureka.<%= pkg.version %>.min.css`
+            }]
+        }
+      }
+    },
     cssmin:{
       ship: {
         options:{
@@ -179,6 +210,9 @@ module.exports = function(grunt) {
           message: "JavaScript minified."
       }
     },
+    clean: {
+      buildjs: ['<%= dirs.build %><%= dirs.assets %><%= dirs.js %>*.js']
+    },
     watch: { /* trigger tasks on save */
       options: {
           livereload: true
@@ -201,7 +235,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-sass');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-postcss');
+  grunt.loadNpmTasks('grunt-string-replace');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-clean');
+
+  grunt.renameTask('string-replace','bump');
 
   grunt.registerTask('default', ['growl:watch', 'watch']);
-  grunt.registerTask('build',['bower','copy','modernizr','sass','postcss','growl:build']);
+  grunt.registerTask('build',['bower','copy','modernizr','sass','postcss','cssmin','growl:build']);
 };
