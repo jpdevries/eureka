@@ -380,7 +380,7 @@ The development server, like any other React app created with `create-react-app`
 ## 🛠 Usage
 
 #### HTML
-The `<EurekaMediaBrowser>` React component is styled by a standard CSS stylesheet. Include the CSS for the appropriate version of the media browser. Reference the theming section for [more information of styling Eureka](https://github.com/jpdevries/eureka#-theming).
+The `<EurekaMediaBrowser>` React component is styled by a standard CSS stylesheet. Include the CSS for the appropriate version of the media browser. Reference the theming section for [more information on styling Eureka](https://github.com/jpdevries/eureka#-theming).
 
 ```html
 <link rel="stylesheet" type="text/css" media="screen" href="assets/css/eureka.0.0.20.min.css">
