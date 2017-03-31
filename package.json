@@ -94,6 +94,7 @@
     "herokupush": "git push heroku release-2.0:master",
     "herokuforce": "git push heroku release-2.0:master --force",
     "heroku": "yarn herokupush",
+    "pretag": "cd ./client && yarn pretag && cd../",
     "dev": "echo \"This command has been deprecated. Use 'npm start'\" && exit 1",
     "lint": "eslint ."
   },
