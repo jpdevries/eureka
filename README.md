@@ -383,17 +383,19 @@ The development server, like any other React app created with `create-react-app`
 npm install eureka-browser --save
 ```
 
+You can also install Eureka via Bower, which is a good way to fetch its stylesheet and icon sprite
+
+```bash
+bower install eureka-browser#release-2.0
+ls bower_components/eureka-browser/client/build/assets/css/ # default eureka theme
+ls bower_components/eureka-browser/client/build/assets/img # icon sprite
+```
+
 #### HTML
 The `<EurekaMediaBrowser>` React component is styled by a standard CSS stylesheet. Include the CSS for the appropriate version of the media browser. Reference the theming section for [more information on styling Eureka](https://github.com/jpdevries/eureka#-theming).
 
 ```html
-<link rel="stylesheet" type="text/css" media="screen" href="assets/css/eureka.0.0.20.min.css">
-```
-
-You'll find minified and unminified stylesheets, along with source maps, in the `./node_modules/eureka-browser/build/assets/js` directory. You can also install Eureka via bower:
-
-```bash
-bower install eureka-browser#release-2.0
+<link rel="stylesheet" type="text/css" media="screen" href="bower_components/eureka-browser/client/build/assets/css/eureka.0.0.20.min.css">
 ```
 
 ```html
