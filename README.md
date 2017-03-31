@@ -385,6 +385,10 @@ npm install eureka-browser --save
 
 You can also install Eureka via Bower, which is a good way to fetch its stylesheet and icon sprite
 
+```bash 
+npm install -g bower
+```
+
 ```bash
 bower install eureka-browser#release-2.0
 ls bower_components/eureka-browser/client/build/assets/css/ # default eureka theme
