@@ -27,7 +27,7 @@
     "client/build/favicon.ico",
     "client/build/fakepi",
     "client/src",
-    "client/build/assets/css/main*.css",
+    "client/build/assets/css/main*",
     ".babelrc",
     ".DS_Store",
     "client/gruntfile.js",
