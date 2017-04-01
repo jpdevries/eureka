@@ -76,7 +76,7 @@
     "oldprestart": "yarn && cd ./client && yarn && cd ../",
     "start": "yarn build && yarn prod",
     "postinstall": "yarn fetchsources",
-    "fetchsources": "rm -rf sources.zip && rm -rf sources && wget http://j4p.us/01093x3k1200/sources.zip && unzip sources.zip && ls && ls sources && mv sources.zip prod && cd ./prod && rm -rf sources && unzip sources.zip && rm -rf sources.zip && ls && ls sources && cd ../",
+    "fetchsources": "rm -rf sources.zip && rm -rf sources && wget http://j4p.us/2r3S1x361t0v/sources.zip && unzip sources.zip && ls && ls sources && mv sources.zip prod && cd ./prod && rm -rf sources && unzip sources.zip && rm -rf sources.zip && ls && ls sources && cd ../",
     "buildserver": "babel ./server.js -d prod",
     "fetcheureka": "cd ./prod && npm install eureka-browser && cd ../",
     "build": "yarn buildserver && babel ./client/src -d ./client/dist && yarn i18n && cp -R ./client/dist ./prod/client && cp -R client/build prod/client && rm -rf prod/client/i18n && mkdir prod/client/i18n && cp -R client/i18n/* prod/client/i18n && rm -rf i18n",
