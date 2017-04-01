@@ -385,7 +385,7 @@ npm install eureka-browser --save
 
 You can also install Eureka via Bower, which is a good way to fetch its stylesheet and icon sprite
 
-```bash 
+```bash
 npm install -g bower
 ```
 
@@ -454,7 +454,7 @@ Configure the `EurekaMediaBrowser` via the optional attributes found in the defa
 | ------------- |:-------------:| -----|
 | `basePath`      | `"/"` | Prepended to URLs for XHR requests to the Rest API.<br>Set to the absolute path of your Rest API. |
 | `allowUploads`      | `true`      |   Whether or not to allow uploading of media items |
-| `treeHidden` | `true`      |    Whether or not the Media Source tree "sidebar" should be initially closed |
+| `treeHidden` | `true`      |    Whether or not the Media Source Panel "sidebar" should be initially closed |
 | `useLocalStorage` | `true`      |    Whether or not to use the JavaScript `localStorage` API to remember session data such as the last visited directory and view mode preference |
 | `storagePrefix` | `"eureka__"`      |    Prepended to `localStorage` keys |
 | `allowRename` | `true`      |    Whether or not to offer users the ability to rename directories and media items |
@@ -463,8 +463,12 @@ Configure the `EurekaMediaBrowser` via the optional attributes found in the defa
 | `locale` | `"en-US"`      |    The localization to use. See Lexicons. |
 | `mediaSource` | `undefined`      |    The default initial media source id to use |
 | `currentDirectory` | `"/"`      |    The default initial directory to use |
+| `uid` | `"0"`      |    A unique identifier used to ensure multiple `<EurekaMediaBrowser>` components on the same page do not share the same DOM ids  |
+| `assetsBasePath` | `"./assets/"`      |    Relative path to the Eureka assets directory |
+| `iconSVG` | `"./img/icons.svg"`      |    Path, relative to `assetsBasePath`, to the Eureka icon sprite sheet |
+| `callbacks` | `{close: undefined, choose: undefined}`      |    Object containing close and choose callbacks |
 | `headers` | `{'Powered-By': 'Eureka by Markup.tips'}`      |    Additional request headers sent with XHR requests |
-| `intervals` | `{searchBarPlaceholder: false,fetchDirectoryContents: 18000,updateSourceTree: false}`      |    Intervals for whether or not and how often to update the  |
+| `intervals` | `{searchBarPlaceholder: false,fetchDirectoryContents: 18000,updateSourceTree: false}`      |    Intervals for whether or not and how often to do things like hit the REST API for updated data or update the placeholder attribute based on the current directory listing  |
 | `enlargeFocusedRows` | `false`      |    Whether or not to enlarge thumbnails of focused rows |
 | `mode` | `"table"`      |    Initial view mode (table, thumb, grid, list) |
 | `sort` | `"name"`      |    Initial column to sort media items on |
@@ -500,7 +504,7 @@ Request additional theming options and share your themes by [opening an issue](h
 | `--light-bg` | Generic light background color, used for panels |
 | `--link-color` | Default anchor text color |
 | `--panel-border-color` | Border color of panel components |
-| `--subtle` | Subtle color, used for media source tree |
+| `--subtle` | Subtle color, used for Media Source Panel |
 | `--very-subtle` | Very subtle color, used for drop zone area |
 | `--very-subtle-icon-opacity` | Opacity for very subtle icons |
 

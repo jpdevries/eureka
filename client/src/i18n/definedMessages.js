@@ -19,7 +19,7 @@ export default defineMessages({
   },
   mediaSourceTree: {
     id: 'mediaSourceTree',
-    defaultMessage: 'Media Source Tree'
+    defaultMessage: 'Media Source Panel'
   },
   close: {
     id: 'close',
@@ -150,7 +150,7 @@ export default defineMessages({
   },
   mediaSourceTreeMessage: {
     id: 'media.sourceTree',
-    defaultMessage: 'Media Source Tree'
+    defaultMessage: 'Media Source Panel'
   },
   dragFilesToBeUploadedTo: {
     id: 'upload.dragFilestoUpload',

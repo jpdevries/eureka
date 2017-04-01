@@ -16,6 +16,10 @@ var _reactDom = require('react-dom');
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
+var _path = require('path');
+
+var _path2 = _interopRequireDefault(_path);
+
 var _redux = require('redux');
 
 var _reactRedux = require('react-redux');
@@ -79,19 +83,17 @@ var EurekaMediaBrowser = function (_Component) {
     var languageWithoutRegionCode = language.toLowerCase().split(/[_-]+/)[0];
 
     //console.log('bolo', languageWithoutRegionCode);
+    store.dispatch(actions.updateConfig(props));
 
     var i18nEdpoint = function () {
       try {
         return props.endpoints.i18n;
       } catch (e) {
-        return 'assets/js/i18n/';
+        return _path2.default.join(store.getState().config.assetsBasePath, './js/i18n/locales/');
       }
     }();
 
-    //console.log(i18nEdpoint);
-
-
-    store.dispatch(actions.updateConfig(props));
+    console.log('i18nEdpoint', i18nEdpoint);
 
     var shouldFetch = function () {
       if (_utility2.default.serverSideRendering) return false;
@@ -103,9 +105,9 @@ var EurekaMediaBrowser = function (_Component) {
     }();
 
     if (shouldFetch) fetch('' + i18nEdpoint + languageWithoutRegionCode + '.json').then(function (response) {
-      //console.log('woooho!!!');
+      console.log('woooho!!!');
       response.json().then(function (json) {
-        //console.log(json)
+        console.log(json);
         var state = _this.state;
         _this.setState({
           i18n: json
@@ -116,7 +118,7 @@ var EurekaMediaBrowser = function (_Component) {
     store.subscribe(function () {
       var state = store.getState();
       //console.log('state.i18n!!!', state.i18n);
-      //console.log(state);
+      console.log(state);
       /*try {
         const siteName = title.dataset.siteName,
         title = document.querySelector('head > title'),
@@ -171,13 +173,11 @@ var EurekaMediaBrowser = function (_Component) {
       var props = this.props;
       var state = this.state;
 
-      console.log('FREAKING YOLO');
-
       //console.log('state', state);
 
       var language = this.getLanguage(props);
       var languageWithoutRegionCode = language.toLowerCase().split(/[_-]+/)[0];
-      //console.log('languageWithoutRegionCode',languageWithoutRegionCode);
+      console.log('languageWithoutRegionCode', languageWithoutRegionCode);
       var messages = function () {
         if (_utility2.default.serverSideRendering) return props.messages;
 
@@ -191,8 +191,9 @@ var EurekaMediaBrowser = function (_Component) {
               return _i18n2.default;
             }
           }();
-          //console.log('fetchedLexiconData', fetchedLexiconData);
-          return fetchedLexiconData[languageWithoutRegionCode] || fetchedLexiconData[language] || _i18n2.default[languageWithoutRegionCode] || _i18n2.default[language] || _i18n2.default.en;
+          console.log('fetchedLexiconData', fetchedLexiconData);
+          return fetchedLexiconData || _i18n2.default;
+          //return fetchedLexiconData[languageWithoutRegionCode] || fetchedLexiconData[language] || localeData[languageWithoutRegionCode] || localeData[language] || localeData.en;
         }
       }();
 

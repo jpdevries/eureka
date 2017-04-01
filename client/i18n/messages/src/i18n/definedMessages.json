@@ -17,7 +17,7 @@
   },
   {
     "id": "mediaSourceTree",
-    "defaultMessage": "Media Source Tree"
+    "defaultMessage": "Media Source Panel"
   },
   {
     "id": "close",
@@ -141,7 +141,7 @@
   },
   {
     "id": "media.sourceTree",
-    "defaultMessage": "Media Source Tree"
+    "defaultMessage": "Media Source Panel"
   },
   {
     "id": "upload.dragFilestoUpload",

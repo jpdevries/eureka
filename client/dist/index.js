@@ -22,6 +22,8 @@ var _reactIntl2 = _interopRequireDefault(_reactIntl);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 var language = document.documentElement.lang || navigator.languages && navigator.languages[0] || navigator.language || navigator.userLanguage;
 var languageWithoutRegionCode = language.toLowerCase().split(/[_-]+/)[0];
 var languageKey = languageWithoutRegionCode.toLowerCase();
@@ -40,7 +42,9 @@ if (languageKey != 'en') {
 }
 
 function render() {
-  _reactDom2.default.render(_react2.default.createElement(_EurekaMediaBrowser2.default, {
+  var _React$createElement;
+
+  _reactDom2.default.render(_react2.default.createElement(_EurekaMediaBrowser2.default, (_React$createElement = {
     basePath: '/core/components/eureka/',
     allowUploads: true,
     treeHidden: true,
@@ -50,12 +54,10 @@ function render() {
     allowDelete: true,
     mode: 'table',
     confirmBeforeDelete: true,
-    enlargeFocusedRows: false,
-    currentDirectory: 'assets/img/hawaii',
     allowFullscreen: true,
-    emphasisFocusedMediaItem: true,
-    endpoints: {
-      i18n: 'assets/js/i18n/'
-    }
-  }), document.getElementById('root'));
+    enlargeFocusedRows: false,
+    currentDirectory: 'assets/img/hawaii'
+  }, _defineProperty(_React$createElement, 'allowFullscreen', true), _defineProperty(_React$createElement, 'emphasisFocusedMediaItem', true), _defineProperty(_React$createElement, 'lang', 'nl'), _defineProperty(_React$createElement, 'endpoints', {
+    i18n: './assets/js/i18n/locales/'
+  }), _React$createElement)), document.getElementById('root'));
 }

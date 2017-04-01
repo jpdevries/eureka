@@ -29,7 +29,7 @@ exports.default = (0, _reactIntl.defineMessages)((_defineMessages = {
   },
   mediaSourceTree: {
     'id': 'mediaSourceTree',
-    'defaultMessage': 'Media Source Tree'
+    'defaultMessage': 'Media Source Panel'
   },
   close: {
     'id': 'close',
@@ -147,7 +147,7 @@ exports.default = (0, _reactIntl.defineMessages)((_defineMessages = {
   'defaultMessage': 'a media item'
 }), _defineProperty(_defineMessages, 'mediaSourceTreeMessage', {
   'id': 'media.sourceTree',
-  'defaultMessage': 'Media Source Tree'
+  'defaultMessage': 'Media Source Panel'
 }), _defineProperty(_defineMessages, 'dragFilesToBeUploadedTo', {
   'id': 'upload.dragFilestoUpload',
   'defaultMessage': 'Drag files here to be uploaded to {cd}'

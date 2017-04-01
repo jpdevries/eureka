@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
+import path from 'path';
+
 import { createStore } from 'redux';
 
 import { connect } from 'react-redux';
@@ -43,19 +45,17 @@ class EurekaMediaBrowser extends Component {
     const languageWithoutRegionCode = language.toLowerCase().split(/[_-]+/)[0];
 
     //console.log('bolo', languageWithoutRegionCode);
+    store.dispatch(actions.updateConfig(props));
 
     const i18nEdpoint = (() => {
       try {
         return props.endpoints.i18n
       } catch(e) {
-        return 'assets/js/i18n/';
+        return path.join(store.getState().config.assetsBasePath, './js/i18n/locales/');
       }
     })();
 
-    //console.log(i18nEdpoint);
-
-
-    store.dispatch(actions.updateConfig(props));
+    console.log('i18nEdpoint',i18nEdpoint);
 
     const shouldFetch = (() => {
       if(utility.serverSideRendering) return false;
@@ -68,9 +68,9 @@ class EurekaMediaBrowser extends Component {
 
 
     if(shouldFetch) fetch(`${i18nEdpoint}${languageWithoutRegionCode}.json`).then((response) => {
-      //console.log('woooho!!!');
+      console.log('woooho!!!');
       response.json().then((json) => {
-        //console.log(json)
+        console.log(json)
         const state = this.state;
         this.setState({
           i18n: json
@@ -81,7 +81,7 @@ class EurekaMediaBrowser extends Component {
     store.subscribe(() => {
       const state = store.getState();
       //console.log('state.i18n!!!', state.i18n);
-      //console.log(state);
+      console.log(state);
       /*try {
         const siteName = title.dataset.siteName,
         title = document.querySelector('head > title'),
@@ -127,13 +127,11 @@ class EurekaMediaBrowser extends Component {
     const props = this.props;
     const state = this.state;
 
-    console.log('FREAKING YOLO');
-
     //console.log('state', state);
 
     const language = this.getLanguage(props);
     const languageWithoutRegionCode = language.toLowerCase().split(/[_-]+/)[0];
-    //console.log('languageWithoutRegionCode',languageWithoutRegionCode);
+    console.log('languageWithoutRegionCode',languageWithoutRegionCode);
     const messages = (() => {
       if(utility.serverSideRendering) return props.messages;
 
@@ -148,8 +146,9 @@ class EurekaMediaBrowser extends Component {
           }
 
         })();
-        //console.log('fetchedLexiconData', fetchedLexiconData);
-        return fetchedLexiconData[languageWithoutRegionCode] || fetchedLexiconData[language] || localeData[languageWithoutRegionCode] || localeData[language] || localeData.en;
+        console.log('fetchedLexiconData', fetchedLexiconData);
+        return fetchedLexiconData || localeData;
+        //return fetchedLexiconData[languageWithoutRegionCode] || fetchedLexiconData[language] || localeData[languageWithoutRegionCode] || localeData[language] || localeData.en;
       }
     })();
 

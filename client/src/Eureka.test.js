@@ -179,7 +179,7 @@ it('should not hide media source panel if treeHidden is not set to true', () => 
 
 });
 
-it('should remove upload features from media source tree if allowUploads is set to false', () => {
+it('should remove upload features from Media Source Panel if allowUploads is set to false', () => {
   const div = document.createElement('div');
   const props = {
     allowUploads:false,
@@ -199,7 +199,7 @@ it('should remove upload features from media source tree if allowUploads is set 
 
 });
 
-it('should not remove upload features from media source tree if allowUploads is not set to false', () => {
+it('should not remove upload features from Media Source Panel if allowUploads is not set to false', () => {
   const div = document.createElement('div');
   const props = {
     allowUploads:true,
@@ -223,7 +223,7 @@ it('should not remove upload features from media source tree if allowUploads is 
 
 });
 
-it('should not remove upload features from media source tree if allowUploads is not set to false', () => {
+it('should not remove upload features from Media Source Panel if allowUploads is not set to false', () => {
   const div = document.createElement('div');
   const props = {
     allowUploads:true,

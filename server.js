@@ -102,7 +102,10 @@ app.get('/', (req, res) => {
 
 });
 
+
 app.use('/',express.static('client/build'));
+app.use('/assets/js/i18n/locales', express.static('client/i18n/locales'));
+
 
 app.post('/', (req, res) => {
   console.log('params',req.params);
@@ -196,7 +199,7 @@ function serveIt(dir = "/", lang = undefined) {
         mediaSources
       )))
     )).then(() => {
-      return new Promise((resolve, reject) => { // get the media source tree listing
+      return new Promise((resolve, reject) => { // get the Media Source Panel listing
         const path = `${__dirname}/sources/filesystem/`;
         //const data = [{"name":"assets","cd":"assets","children":[{"name":"img","cd":"assets/img","children":[{"name":"hawaii","cd":"assets/img/hawaii","children":[]},{"name":"redwoods","cd":"assets/img/redwoods","children":[]}]},{"name":"screenshots","cd":"assets/screenshots","children":[]},{"name":"uploads","cd":"assets/uploads","children":[]}]},{"name":"camera","cd":"camera","children":[]},{"name":"foo","cd":"foo","children":[]}];
         recursivelyGetSourceDirectories(path).then((results) => (
@@ -241,14 +244,14 @@ function serveIt(dir = "/", lang = undefined) {
           //console.log(path.join(__dirname, `/client/i18n/locales/en.json`));
           //console.log('m..');
           try {
-            return JSON.parse(fs.readFileSync(path.join(__dirname, `/client/i18n/locales/${languageWithoutRegionCode}.json`)))
+            return JSON.parse(fs.readFileSync(path.join(__dirname, `/client/build/assets/js/i18n/locales/${languageWithoutRegionCode}.json`)))
           } catch(e) {
             //console.log('uh oh', e);
             return localeData[languageWithoutRegionCode] || localeData[language] || localeData.en;
           }
           //console.log('localeData',localeData);
         }
-        console.log('double uh oh');
+        //console.log('double uh oh');
         return localeData[languageWithoutRegionCode] || localeData[language] || localeData.en;
       })();
       //console.log('...');

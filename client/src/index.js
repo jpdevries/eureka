@@ -39,12 +39,14 @@ function render() {
       allowDelete={true}
       mode="table"
       confirmBeforeDelete={true}
+      allowFullscreen={true}
       enlargeFocusedRows={false}
       currentDirectory="assets/img/hawaii"
       allowFullscreen={true}
       emphasisFocusedMediaItem={true}
+      lang="nl"
       endpoints={{
-        i18n: 'assets/js/i18n/'
+        i18n: './assets/js/i18n/locales/'
       }}
     />,
     document.getElementById('root')

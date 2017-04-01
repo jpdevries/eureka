@@ -418,7 +418,7 @@ Configure the `EurekaMediaBrowser` via the optional attributes found in the defa
 | ------------- |:-------------:| -----|
 | `basePath`      | `"/"` | Prepended to URLs for XHR requests to the Rest API.<br>Set to the absolute path of your Rest API. |
 | `allowUploads`      | `true`      |   Whether or not to allow uploading of media items |
-| `treeHidden` | `true`      |    Whether or not the Media Source tree "sidebar" should be initially closed |
+| `treeHidden` | `true`      |    Whether or not the Media Source Panel "sidebar" should be initially closed |
 | `useLocalStorage` | `true`      |    Whether or not to use the JavaScript `localStorage` API to remember session data such as the last visited directory and view mode preference |
 | `storagePrefix` | `"eureka__"`      |    Prepended to `localStorage` keys |
 | `allowRename` | `true`      |    Whether or not to offer users the ability to rename directories and media items |
@@ -461,7 +461,7 @@ Request additional theming options and share your themes by [opening an issue](h
 | `--light-bg` | Generic light background color, used for panels |
 | `--link-color` | Default anchor text color |
 | `--panel-border-color` | Border color of panel components |
-| `--subtle` | Subtle color, used for media source tree |
+| `--subtle` | Subtle color, used for Media Source Panel |
 | `--very-subtle` | Very subtle color, used for drop zone area |
 | `--very-subtle-icon-opacity` | Opacity for very subtle icons |
 
