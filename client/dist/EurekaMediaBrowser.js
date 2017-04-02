@@ -1,9 +1,5 @@
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -93,8 +89,6 @@ var EurekaMediaBrowser = function (_Component) {
       }
     }();
 
-    console.log('i18nEdpoint', i18nEdpoint);
-
     var shouldFetch = function () {
       if (_utility2.default.serverSideRendering) return false;
       try {
@@ -105,9 +99,7 @@ var EurekaMediaBrowser = function (_Component) {
     }();
 
     if (shouldFetch) fetch('' + i18nEdpoint + languageWithoutRegionCode + '.json').then(function (response) {
-      console.log('woooho!!!');
       response.json().then(function (json) {
-        console.log(json);
         var state = _this.state;
         _this.setState({
           i18n: json
@@ -191,7 +183,6 @@ var EurekaMediaBrowser = function (_Component) {
               return _i18n2.default;
             }
           }();
-          console.log('fetchedLexiconData', fetchedLexiconData);
           return fetchedLexiconData || _i18n2.default;
           //return fetchedLexiconData[languageWithoutRegionCode] || fetchedLexiconData[language] || localeData[languageWithoutRegionCode] || localeData[language] || localeData.en;
         }
@@ -209,8 +200,6 @@ var EurekaMediaBrowser = function (_Component) {
         }
       }();
 
-      console.log('EurekaMediaBrowser messages', messages);
-
       return _react2.default.createElement(
         _reactRedux.Provider,
         { store: store },
@@ -227,9 +216,11 @@ var EurekaMediaBrowser = function (_Component) {
 }(_react.Component);
 
 EurekaMediaBrowser.defaultProps = {
-  i18n: 'assets/js/i18n/',
+  i18n: 'assets/js/i18n/locales/',
   lang: 'en-US'
 };
 
-// i18n FTW
-exports.default = EurekaMediaBrowser;
+module.exports = {
+  EurekaMediaBrowser: EurekaMediaBrowser
+};
+//export default EurekaMediaBrowser;

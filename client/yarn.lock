@@ -3172,12 +3172,6 @@ grunt-postcss@^0.8.0:
     diff "^2.0.2"
     postcss "^5.0.0"
 
-grunt-rm@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/grunt-rm/-/grunt-rm-0.0.4.tgz#95e39c83bae80a7bbe5d0467422aa76eeccf0874"
-  dependencies:
-    rimraf "2.0.2"
-
 grunt-sass@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/grunt-sass/-/grunt-sass-2.0.0.tgz#9074cf9d7b4592e20f7788caa727b8f9aa06b60a"
@@ -4102,7 +4096,7 @@ jsesc@~0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-0.5.0.tgz#e7dee66e35d6fc16f710fe91d5cf69f70f08911d"
 
-json-loader@0.5.4:
+json-loader@0.5.4, json-loader@^0.5.4:
   version "0.5.4"
   resolved "https://registry.yarnpkg.com/json-loader/-/json-loader-0.5.4.tgz#8baa1365a632f58a3c46d20175fc6002c96e37de"
 
@@ -6129,17 +6123,7 @@ right-align@^0.1.1:
   dependencies:
     align-text "^0.1.1"
 
-rimraf@2, rimraf@^2.2.8, rimraf@~2.2.0, rimraf@~2.2.8:
-  version "2.2.8"
-  resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.2.8.tgz#e439be2aaee327321952730f99a8929e4fc50582"
-
-rimraf@2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.0.2.tgz#2a860f3f74bd7975002f73cb0b003b218ec351e4"
-  optionalDependencies:
-    graceful-fs "~1.1"
-
-rimraf@^2.4.3, rimraf@^2.4.4, rimraf@^2.5.1, rimraf@~2.5.1, rimraf@~2.5.4:
+rimraf@2, rimraf@^2.2.8, rimraf@^2.4.3, rimraf@^2.4.4, rimraf@^2.5.1, rimraf@~2.5.1, rimraf@~2.5.4:
   version "2.5.4"
   resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.5.4.tgz#96800093cbf1a0c86bd95b4625467535c29dfa04"
   dependencies:
@@ -6150,6 +6134,10 @@ rimraf@~2.0.2:
   resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.0.3.tgz#f50a2965e7144e9afd998982f15df706730f56a9"
   optionalDependencies:
     graceful-fs "~1.1"
+
+rimraf@~2.2.0, rimraf@~2.2.8:
+  version "2.2.8"
+  resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.2.8.tgz#e439be2aaee327321952730f99a8929e4fc50582"
 
 ripemd160@0.2.0:
   version "0.2.0"

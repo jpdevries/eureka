@@ -1,10 +1,10 @@
 [
   {
-    "id": "directory.create",
-    "defaultMessage": "Create a Directory"
+    "id": "media.browse",
+    "defaultMessage": "Browse"
   },
   {
-    "id": "rename.item",
-    "defaultMessage": "Rename Item{item}"
+    "id": "media.contents",
+    "defaultMessage": "Media Content"
   }
 ]

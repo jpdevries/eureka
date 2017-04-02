@@ -166,8 +166,6 @@ var FileTree = function FileTree(props) {
     });
   }
 
-  console.log('props.tree', props.tree);
-
   var contentList = listTree([{
     cd: './',
     name: './',

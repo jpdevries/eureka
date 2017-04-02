@@ -55,7 +55,6 @@ class EurekaMediaBrowser extends Component {
       }
     })();
 
-    console.log('i18nEdpoint',i18nEdpoint);
 
     const shouldFetch = (() => {
       if(utility.serverSideRendering) return false;
@@ -68,9 +67,7 @@ class EurekaMediaBrowser extends Component {
 
 
     if(shouldFetch) fetch(`${i18nEdpoint}${languageWithoutRegionCode}.json`).then((response) => {
-      console.log('woooho!!!');
       response.json().then((json) => {
-        console.log(json)
         const state = this.state;
         this.setState({
           i18n: json
@@ -146,7 +143,6 @@ class EurekaMediaBrowser extends Component {
           }
 
         })();
-        console.log('fetchedLexiconData', fetchedLexiconData);
         return fetchedLexiconData || localeData;
         //return fetchedLexiconData[languageWithoutRegionCode] || fetchedLexiconData[language] || localeData[languageWithoutRegionCode] || localeData[language] || localeData.en;
       }
@@ -164,8 +160,6 @@ class EurekaMediaBrowser extends Component {
       }
     })();
 
-    console.log('EurekaMediaBrowser messages',messages);
-
     return (
       <Provider store={store}>
         <IntlProvider {...props} locale={language} messages={messages}>
@@ -177,9 +171,8 @@ class EurekaMediaBrowser extends Component {
 }
 
 EurekaMediaBrowser.defaultProps = {
-  i18n: 'assets/js/i18n/',
+  i18n: 'assets/js/i18n/locales/',
   lang: 'en-US'
 };
 
-// i18n FTW
 export default EurekaMediaBrowser;
