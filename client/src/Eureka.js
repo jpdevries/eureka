@@ -146,19 +146,19 @@ class Eureka extends Component {
 
   onRenameItemModalSubmit(newName, item) {
     console.log('onRenameItemModalSubmit!!!', newName, item);
-    console.log(item.absolutePath);
+    console.log(item.path);
     const decoratedActions = this.decoratedActions;
     const dir = (() => {
       try { // this is bullshit webpack isn't including the parse method with the Node path module
-        return path.parse(item.absolutePath).dir;
+        return path.parse(item.path).dir;
       } catch(e) {
-        console.log('oh crap', item.absolutePath);
+        console.log('oh crap', item.path);
         console.log(e);
-        return pathParse(item.absolutePath).dir;
+        return pathParse(item.path).dir;
       }
     })();
 
-    store.dispatch(decoratedActions.renameItem(this.props.source.currentSource, item.absolutePath, newName)).then((results) => {
+    store.dispatch(decoratedActions.renameItem(this.props.source.currentSource, item.path, newName)).then((results) => {
       console.log('results!!!', results);
       store.dispatch(decoratedActions.updateContent({contents:results.contents.filter((file) => (
         file.filename

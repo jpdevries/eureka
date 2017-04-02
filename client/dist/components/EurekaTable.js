@@ -116,7 +116,7 @@ var EurekaTable = function (_Component) {
           _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.deleteItem, {
               filename: item.filename
             }), onClick: function onClick(event) {
-              _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.absolutePath));
+              _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path));
             } })
         );
       }) : undefined;

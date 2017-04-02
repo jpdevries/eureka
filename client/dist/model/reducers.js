@@ -58,7 +58,7 @@ var initialContentState = {
     /*{
       filename:'foo.jpg',
       directory:'assets/images',
-      absolutePath:'http://placehold.it/350x150',
+      path:'http://placehold.it/350x150',
       absoluteURL:'http://placehold.it/350x150',
       dimensions:[350,150],
       fileSize:24800,
@@ -67,7 +67,7 @@ var initialContentState = {
     {
       filename:'bar.jpg',
       directory:'assets/images',
-      absolutePath:'http://placehold.it/300x150',
+      path:'http://placehold.it/300x150',
       absoluteURL:'http://placehold.it/350x150',
       dimensions:[300,150],
       fileSize:24800,
@@ -109,13 +109,13 @@ var contentReducer = function contentReducer(state, action) {
       });
 
     case actions.DELETE_MEDIA_ITEM_SUCCESS:
-      //console.log(actions.DELETE_MEDIA_ITEM_SUCCESS, action.source, action.absolutePath, state);
+      //console.log(actions.DELETE_MEDIA_ITEM_SUCCESS, action.source, action.path, state);
 
 
       return Object.assign({}, state, {
-        cd: state.cd === action.absolutePath ? path.join(state.cd, '..') : state.cd,
+        cd: state.cd === action.path ? path.join(state.cd, '..') : state.cd,
         contents: state.contents.filter(function (file) {
-          return file.absolutePath !== action.absolutePath;
+          return file.path !== action.path;
         })
       });
       break;
@@ -224,7 +224,7 @@ var treeReducer = function treeReducer(state, action) {
 
         var recursivelyRemoveDirectory = function recursivelyRemoveDirectory(children) {
           return children.map(function (child) {
-            if (child.cd === action.absolutePath) {
+            if (child.cd === action.path) {
               stillSearching = false;
               return undefined;
             }
@@ -293,7 +293,7 @@ var viewReducer = function viewReducer(state, action) {
 
     case actions.DELETE_MEDIA_ITEM_SUCCESS:
       try {
-        if (state.focusedMediaItem.absolutePath === action.absolutePath) return Object.assign({}, state, {
+        if (state.focusedMediaItem.path === action.path) return Object.assign({}, state, {
           focusedMediaItem: undefined
         });
       } catch (e) {}

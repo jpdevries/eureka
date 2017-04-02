@@ -196,12 +196,12 @@ const fetchMediaSourcesError = function(error) {
 }
 
 const DELETE_MEDIA_ITEM_SUCCESS = 'delete_media_item_success';
-const deleteMediaItemSuccess = function(source, absolutePath) {
-  //console.log('DELETE_MEDIA_ITEM_SUCCESS', source, absolutePath);
+const deleteMediaItemSuccess = function(source, path) {
+  //console.log('DELETE_MEDIA_ITEM_SUCCESS', source, path);
   return {
     type:DELETE_MEDIA_ITEM_SUCCESS,
     source: source,
-    absolutePath: absolutePath
+    path: path
   }
 }
 
@@ -220,10 +220,10 @@ const deleteMediaItemError = function(error) {
   }
 }
 
-const deleteMediaItem = (source, absolutePath) => (
+const deleteMediaItem = (source, path) => (
   (dispatch) => (
     fetch(utility.makeURL(`/core/components/eureka/media/sources/${source}`, {
-      absolutePath: absolutePath
+      path: path
     }), {
       method: 'DELETE',
       headers: {
@@ -240,11 +240,11 @@ const deleteMediaItem = (source, absolutePath) => (
     }).then((response) => (
       response.json()
     )).then((contents) => {
-      if(contents === false) throw new Error(`Unable to delete directory ${absolutePath}`)
+      if(contents === false) throw new Error(`Unable to delete directory ${path}`)
       return contents;
     }).then((contents) => (
       dispatch(
-        deleteMediaItemSuccess(source, absolutePath)
+        deleteMediaItemSuccess(source, path)
       )
     )).catch((error) => (
       dispatch(

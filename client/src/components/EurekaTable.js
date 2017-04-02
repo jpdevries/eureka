@@ -66,7 +66,7 @@ class EurekaTable extends Component {
           <menuitem label={formatMessage(definedMessages.deleteItem, {
             filename: item.filename
           })} onClick={(event) => {
-              store.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.absolutePath));
+              store.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path));
             }}></menuitem>
       </menu>
     )) : undefined;

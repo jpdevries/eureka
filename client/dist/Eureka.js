@@ -132,7 +132,6 @@ var Eureka = function (_Component) {
       var _this2 = this;
 
       var props = this.props;
-      //console.log('componentDidMount',this.props);
       var decoratedActions = this.decoratedActions;
       _store2.default.dispatch(decoratedActions.fetchMediaSources()).then(function () {
         // hit the server and get the media sources
@@ -240,20 +239,20 @@ var Eureka = function (_Component) {
       var _this4 = this;
 
       console.log('onRenameItemModalSubmit!!!', newName, item);
-      console.log(item.absolutePath);
+      console.log(item.path);
       var decoratedActions = this.decoratedActions;
       var dir = function () {
         try {
           // this is bullshit webpack isn't including the parse method with the Node path module
-          return path.parse(item.absolutePath).dir;
+          return path.parse(item.path).dir;
         } catch (e) {
-          console.log('oh crap', item.absolutePath);
+          console.log('oh crap', item.path);
           console.log(e);
-          return pathParse(item.absolutePath).dir;
+          return pathParse(item.path).dir;
         }
       }();
 
-      _store2.default.dispatch(decoratedActions.renameItem(this.props.source.currentSource, item.absolutePath, newName)).then(function (results) {
+      _store2.default.dispatch(decoratedActions.renameItem(this.props.source.currentSource, item.path, newName)).then(function (results) {
         console.log('results!!!', results);
         _store2.default.dispatch(decoratedActions.updateContent({ contents: results.contents.filter(function (file) {
             return file.filename;

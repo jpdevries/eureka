@@ -66,7 +66,7 @@ it('should display the correct icon based on filename extension', () => {
   }
 });
 
-it('summary should contain correct absolutePath', () => {
+it('summary should contain correct path', () => {
   const div = document.createElement('div');
 
   const props = {
@@ -79,15 +79,15 @@ it('summary should contain correct absolutePath', () => {
         directory:'/',
         absoluteURL:'cheese.jpg',
         filename:'cheese.jpg',
-        absolutePath:'/cheese.jpg'
+        path:'/cheese.jpg'
       }
     }
   };
 
   ReactDOM.render(<IntlProvider><PathBarIntl {...props} /></IntlProvider>, div);
 
-  if(!div.querySelector('summary').innerHTML.includes(props.view.focusedMediaItem.absolutePath)) {
-    const err = `summary should contain correct absolutePath expects ${props.view.focusedMediaItem.absolutePath}`;
+  if(!div.querySelector('summary').innerHTML.includes(props.view.focusedMediaItem.path)) {
+    const err = `summary should contain correct path expects ${props.view.focusedMediaItem.path}`;
     console.log(err);
     throw new Error(err);
   }
@@ -104,7 +104,7 @@ it('renders a snapshot', () => {
         directory:'/',
         absoluteURL:'cheese.jpg',
         filename:'cheese.jpg',
-        absolutePath:'/cheese.jpg'
+        path:'/cheese.jpg'
       }
     }
   };

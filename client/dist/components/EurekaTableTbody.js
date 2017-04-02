@@ -141,8 +141,8 @@ var EurekaTableTbody = function (_Component) {
       function shouldHide(item) {
 
         try {
-          //console.log('shouldHide',props.view.focusedMediaItem.absolutePath,item.absolutePath,props.view.focusedMediaItem.absolutePath !== item.absolutePath);
-          return props.view.focusedMediaItem.absolutePath !== item.absolutePath;
+          //console.log('shouldHide',props.view.focusedMediaItem.path,item.path,props.view.focusedMediaItem.path !== item.path);
+          return props.view.focusedMediaItem.path !== item.path;
         } catch (e) {
           //console.log('shouldHide',true);
           return true;

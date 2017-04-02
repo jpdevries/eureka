@@ -417,7 +417,7 @@ function getDirectoryListing(baseURL = '', dirPath = '', includeFiles = true, in
           filename:isFile ? file : undefined,
           foldername:!isFile ? file : undefined,
           directory:isFile ? dirPath.replace(baseURL, '') : path.join(dirPath,file).replace(baseURL, ''),
-          absolutePath:path.join(dirPath,file),
+          path:path.join(dirPath,file),
           absoluteURL:path.join(dirPath,file).replace(__dirname, ''),
           editedOn:mtime,
           dimensions:[Math.round(Math.random()*420),Math.round(Math.random()*180)],
@@ -525,13 +525,13 @@ Delete a directory
 */
 
 app.delete('/core/components/eureka/media/sources/:source', (req, res) => {
-  const absolutePath = req.query.absolutePath,
+  const path = req.query.path,
   source = req.params.source;
 
   // this is kinda janky but whatever
-  let deletePath = absolutePath.includes(__dirname) ? absolutePath :  path.join(path.join(__dirname, 'sources/filesystem'), absolutePath);
+  let deletePath = path.includes(__dirname) ? path :  path.join(path.join(__dirname, 'sources/filesystem'), path);
 
-  console.log(`delete ${absolutePath} source ${source}`);
+  console.log(`delete ${path} source ${source}`);
 
   rmdir(deletePath, function (err, dirs, files) {
     if(err) {

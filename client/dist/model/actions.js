@@ -189,12 +189,12 @@ var fetchMediaSourcesError = function fetchMediaSourcesError(error) {
 };
 
 var DELETE_MEDIA_ITEM_SUCCESS = 'delete_media_item_success';
-var deleteMediaItemSuccess = function deleteMediaItemSuccess(source, absolutePath) {
-  //console.log('DELETE_MEDIA_ITEM_SUCCESS', source, absolutePath);
+var deleteMediaItemSuccess = function deleteMediaItemSuccess(source, path) {
+  //console.log('DELETE_MEDIA_ITEM_SUCCESS', source, path);
   return {
     type: DELETE_MEDIA_ITEM_SUCCESS,
     source: source,
-    absolutePath: absolutePath
+    path: path
   };
 };
 
@@ -213,10 +213,10 @@ var deleteMediaItemError = function deleteMediaItemError(error) {
   };
 };
 
-var deleteMediaItem = function deleteMediaItem(source, absolutePath) {
+var deleteMediaItem = function deleteMediaItem(source, path) {
   return function (dispatch) {
     return fetch(_utility2.default.makeURL('/core/components/eureka/media/sources/' + source, {
-      absolutePath: absolutePath
+      path: path
     }), {
       method: 'DELETE',
       headers: {
@@ -233,10 +233,10 @@ var deleteMediaItem = function deleteMediaItem(source, absolutePath) {
     }).then(function (response) {
       return response.json();
     }).then(function (contents) {
-      if (contents === false) throw new Error('Unable to delete directory ' + absolutePath);
+      if (contents === false) throw new Error('Unable to delete directory ' + path);
       return contents;
     }).then(function (contents) {
-      return dispatch(deleteMediaItemSuccess(source, absolutePath));
+      return dispatch(deleteMediaItemSuccess(source, path));
     }).catch(function (error) {
       return dispatch(deleteMediaItemError(error));
     });

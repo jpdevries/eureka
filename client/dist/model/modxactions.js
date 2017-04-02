@@ -95,10 +95,10 @@ var fetchMediaSources = function fetchMediaSources() {
   };
 };
 
-var deleteMediaItem = function deleteMediaItem(source, absolutePath) {
+var deleteMediaItem = function deleteMediaItem(source, path) {
   return function (dispatch) {
     return fetch(_utility2.default.makeURL(eurekaConnector, {
-      absolutePath: absolutePath,
+      path: path,
       a: 'media/sources/' + source
     }), {
       method: 'DELETE',
@@ -116,10 +116,10 @@ var deleteMediaItem = function deleteMediaItem(source, absolutePath) {
     }).then(function (response) {
       return response.json();
     }).then(function (contents) {
-      if (contents === false) throw new Error('Unable to delete directory ' + absolutePath);
+      if (contents === false) throw new Error('Unable to delete directory ' + path);
       return contents;
     }).then(function (contents) {
-      return dispatch((0, _actions.deleteMediaItemSuccess)(source, absolutePath));
+      return dispatch((0, _actions.deleteMediaItemSuccess)(source, path));
     }).catch(function (error) {
       return dispatch((0, _actions.deleteMediaItemError)(error));
     });
