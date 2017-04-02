@@ -74,7 +74,7 @@ const FileTree = (props) => {
     function shouldBeOpen(item) {
       console.log('shouldBeOpen', props.content.cd, item.cd, props.content.cd.indexOf(item.cd));
       try {
-        return (props.content.cd.indexOf(item.cd) === 0) ? true : undefined;
+        return (item.cd == './' || props.content.cd.indexOf(item.cd) === 0) ? true : undefined;
       } catch (e) {
         return undefined;
       }
@@ -118,7 +118,11 @@ const FileTree = (props) => {
     ));
   }
 
-  const contentList = listTree(props.tree);
+  const contentList = listTree([{
+    cd: './',
+    name: './',
+    children: props.tree
+  }]);
 
   return (
     <nav className="eureka__tree">
