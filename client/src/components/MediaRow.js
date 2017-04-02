@@ -4,7 +4,6 @@ import filesize from 'filesize';
 
 import ContextMenu from './ContextMenu';
 
-const Entities = require('html-entities').AllHtmlEntities;
 
 import utility from './../utility/utility';
 
@@ -23,7 +22,6 @@ import definedMessages from '../i18n/definedMessages';
 
 const MediaRow = (props) => {
   //console.log('MediaRow', props);
-  const entities = new Entities();
   const item = props.item;
   const index = props.index;
 
@@ -194,16 +192,14 @@ const MediaRow = (props) => {
       </td>
       <td id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }filename__${utility.cssSafe(props.item.filename)}`} role="gridcell" className="eureka__td-filename" contentEditable={contentEditable} onBlur={(event) => {
           try {
-            if(!entities.decode(event.target.innerHTML).trim()) {
+            if(!(event.target.innerHTML).trim()) {
               event.target.innerHTML = props.item.filename;
               //alert('file name cannot be empty'); // i mostly hate alerts
               throw new Error('file name cannot be empty');
             }
 
             console.log(event.target.innerHTML, event.target.innerHTML.trim());
-            console.log('test', entities.decode('&lt;&nbsp;&gt;&quot;&apos;&amp;&copy;&reg;&#8710;'));
-            console.log('props.item!', props.item);
-            props.onRenameItemModalSubmit(entities.decode(event.target.innerHTML.trim()), props.item);
+            props.onRenameItemModalSubmit((event.target.innerHTML.trim()), props.item);
           } catch (e) {
             console.log(e);
           }

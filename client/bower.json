@@ -12,7 +12,7 @@
   "license": "MIT",
   "homepage": "https://github.com/jpdevries/eureka",
   "private": true,
-  "ignore": [
+  "ignore": [ 
     "**/.*",
     "node_modules",
     "bower_components",

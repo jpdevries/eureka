@@ -64,10 +64,7 @@ var ModalRenameItemForm = function (_Component) {
 
       var state = this.state,
           props = this.props,
-          Entities = require('html-entities').AllHtmlEntities,
-          entities = new Entities();
-
-      var formatMessage = props.intl.formatMessage;
+          formatMessage = props.intl.formatMessage;
 
       var filename = props.item.filename;
 
@@ -83,7 +80,7 @@ var ModalRenameItemForm = function (_Component) {
       if (state.newName === props.item.filename) {
         disable = true;
         sameName = true;
-        label = '' + entities.decode('&ensp;') + cannotRenameMessage;
+        label = '&ensp;' + cannotRenameMessage;
         labelIcon = _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'exclamation-triangle' }));
       }
 

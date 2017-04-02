@@ -44,15 +44,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var Entities = require('html-entities').AllHtmlEntities;
-
 var pathParse = require('path-parse');
 
 var MediaRow = function MediaRow(props) {
   var _React$createElement;
 
   //console.log('MediaRow', props);
-  var entities = new Entities();
   var item = props.item;
   var index = props.index;
 
@@ -252,16 +249,14 @@ var MediaRow = function MediaRow(props) {
       'td',
       { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'filename__' + _utility2.default.cssSafe(props.item.filename), role: 'gridcell', className: 'eureka__td-filename', contentEditable: contentEditable, onBlur: function onBlur(event) {
           try {
-            if (!entities.decode(event.target.innerHTML).trim()) {
+            if (!event.target.innerHTML.trim()) {
               event.target.innerHTML = props.item.filename;
               //alert('file name cannot be empty'); // i mostly hate alerts
               throw new Error('file name cannot be empty');
             }
 
             console.log(event.target.innerHTML, event.target.innerHTML.trim());
-            console.log('test', entities.decode('&lt;&nbsp;&gt;&quot;&apos;&amp;&copy;&reg;&#8710;'));
-            console.log('props.item!', props.item);
-            props.onRenameItemModalSubmit(entities.decode(event.target.innerHTML.trim()), props.item);
+            props.onRenameItemModalSubmit(event.target.innerHTML.trim(), props.item);
           } catch (e) {
             console.log(e);
           }

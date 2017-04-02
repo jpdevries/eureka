@@ -73,10 +73,8 @@ var ModalCreateDirectoryForm = function (_Component) {
             var folderName = props.fetched.lastDirectoriesFetched[i];
             console.log(folderName, state.createDirectory, folderName === state.createDirectory);
             if (folderName === state.createDirectory) {
-              var Entities = require('html-entities').AllHtmlEntities;
-              var entities = new Entities();
 
-              label = entities.decode('&ensp;') + 'Directory ' + _path2.default.join('/', props.content.cd, folderName) + ' already exists';
+              label = '&ensp;' + 'Directory ' + _path2.default.join('/', props.content.cd, folderName) + ' already exists';
               labelIcon = _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'exclamation-triangle' }));
               directoryExists = true;
               return true;
