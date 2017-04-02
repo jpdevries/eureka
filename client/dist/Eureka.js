@@ -143,7 +143,7 @@ var Eureka = function (_Component) {
             cd: props.content.cd
           }));
           _store2.default.dispatch(decoratedActions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
-            dir: props.content.cd
+            path: props.content.cd
           }));
 
           if (props.view.intervals.fetchDirectoryContents !== undefined && props.view.intervals.fetchDirectoryContents > 0) {
@@ -156,7 +156,7 @@ var Eureka = function (_Component) {
                 cd: props.content.cd
               }));
               _store2.default.dispatch(decoratedActions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
-                dir: props.content.cd
+                path: props.content.cd
               }));
             }, props.view.intervals.fetchDirectoryContents);
           }
@@ -223,7 +223,7 @@ var Eureka = function (_Component) {
             });
           }).then(function () {
             _store2.default.dispatch(decoratedActions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
-              dir: _store2.default.getState().content.cd
+              path: _store2.default.getState().content.cd
             }));
           });
           break;

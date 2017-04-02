@@ -283,7 +283,7 @@ exports.uploadFilesError = uploadFilesError;
 const uploadFiles = (source, directory, formData) => (
   (dispatch) => (
     fetch(utility.makeURL(`/core/components/eureka/media/sources/${source}`, {
-      dir: directory
+      path: directory
     }), {
       method: 'POST',
       body: formData,

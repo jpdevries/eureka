@@ -268,7 +268,7 @@ exports.uploadFilesError = uploadFilesError;
 var uploadFiles = function uploadFiles(source, directory, formData) {
   return function (dispatch) {
     return fetch(_utility2.default.makeURL('/core/components/eureka/media/sources/' + source, {
-      dir: directory
+      path: directory
     }), {
       method: 'POST',
       body: formData,

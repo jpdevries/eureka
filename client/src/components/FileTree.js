@@ -31,7 +31,7 @@ class FileTreeSpan extends Component {
             cd: item.cd
           }));
           store.dispatch(decoratedActions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
-            dir:item.cd
+            path:item.cd
           }));
         }}
         onDoubleClick={(event) => {

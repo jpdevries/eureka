@@ -79,7 +79,7 @@ var MediaDirectorySelector = function MediaDirectorySelector(props) {
           cd: cd
         }));
         _store2.default.dispatch(decoratedActions.fetchDirectoryContents(cs, { // asyncronously fetches the directory contents from the API
-          dir: cd
+          path: cd
         }));
       } },
     optgroups

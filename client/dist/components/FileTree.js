@@ -73,7 +73,7 @@ var FileTreeSpan = function (_Component) {
               cd: item.cd
             }));
             _store2.default.dispatch(decoratedActions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
-              dir: item.cd
+              path: item.cd
             }));
           },
           onDoubleClick: function onDoubleClick(event) {

@@ -452,7 +452,7 @@ Retrieve a list of directories
 */
 
 app.get('/core/components/eureka/media/sources/:source', (req, res) => {
-  let dir = req.query.dir,
+  let dir = req.query.path,
   source = req.params.source;
 
   if(dir) {
@@ -482,7 +482,7 @@ Upload a file
 
 app.post('/core/components/eureka/media/sources/:source', (req, res) => {
 
-  const dir = req.query.dir,
+  const dir = req.query.path,
   uploadDir = path.join(__dirname, path.join('/sources/filesystem/', dir)),
   form = new formidable.IncomingForm();
 

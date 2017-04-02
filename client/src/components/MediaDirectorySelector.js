@@ -38,7 +38,7 @@ const MediaDirectorySelector = (props) => {
           cd: cd
         }));
         store.dispatch(decoratedActions.fetchDirectoryContents(cs, { // asyncronously fetches the directory contents from the API
-          dir:cd
+          path:cd
         }));
       }}>
       {optgroups}

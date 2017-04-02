@@ -60,7 +60,7 @@ class Eureka extends Component {
           cd: props.content.cd
         }));
         store.dispatch(decoratedActions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
-          dir: props.content.cd
+          path: props.content.cd
         }));
 
         if(props.view.intervals.fetchDirectoryContents !== undefined && props.view.intervals.fetchDirectoryContents > 0) {
@@ -72,7 +72,7 @@ class Eureka extends Component {
               cd: props.content.cd
             }));
             store.dispatch(decoratedActions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
-              dir: props.content.cd
+              path: props.content.cd
             }));
 
           }, props.view.intervals.fetchDirectoryContents);
@@ -133,7 +133,7 @@ class Eureka extends Component {
         });
       }).then(() => {
         store.dispatch(decoratedActions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
-          dir:store.getState().content.cd
+          path:store.getState().content.cd
         }));
       });
       break;
