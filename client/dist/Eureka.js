@@ -335,9 +335,17 @@ var Eureka = function (_Component) {
 
       var pathBar = props.view.focusedMediaItem ? _react2.default.createElement(_PathBar2.default, props) : undefined;
 
+      var shouldDisplayChooseBar = function () {
+        try {
+          if (props.config.callbacks.choose) return true;
+        } catch (e) {
+          return false;
+        }
+      }();
+
       var treeToggle = !_utility2.default.serverSideRendering ? _react2.default.createElement(_TreeToggle2.default, props) : undefined;
       var viewChooser = !_utility2.default.serverSideRendering ? _react2.default.createElement(_ViewChooser2.default, props) : undefined;
-      var chooseBar = _react2.default.createElement(_ChooseBar2.default, _extends({ ariaHidden: state.modalOpen }, props));
+      var chooseBar = shouldDisplayChooseBar ? _react2.default.createElement(_ChooseBar2.default, _extends({ ariaHidden: state.modalOpen }, props)) : undefined;
       var enlargeFocusedRows = props.view.enlargeFocusedRows ? ' eureka__enlarge-focused-rows' : '';
       var searchBar = !_utility2.default.serverSideRendering ? _react2.default.createElement(_SearchBar2.default, props) : undefined;
       var serverSideClass = _utility2.default.serverSideRendering ? ' eureka__server-side' : '';

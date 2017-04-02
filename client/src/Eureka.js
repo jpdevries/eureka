@@ -241,9 +241,15 @@ class Eureka extends Component {
       <PathBar {...props} />
     ) : undefined;
 
+    const shouldDisplayChooseBar = (() => {
+      try {
+        if(props.config.callbacks.choose) return true;
+      } catch(e) { return false }
+    })();
+
     const treeToggle = (!utility.serverSideRendering) ? <TreeToggle {...props} /> : undefined;
     const viewChooser = (!utility.serverSideRendering) ? <ViewChooser {...props} /> : undefined;
-    const chooseBar = <ChooseBar ariaHidden={state.modalOpen} {...props} />;
+    const chooseBar = (shouldDisplayChooseBar) ? <ChooseBar ariaHidden={state.modalOpen} {...props} /> : undefined;
     const enlargeFocusedRows = (props.view.enlargeFocusedRows) ? ' eureka__enlarge-focused-rows' : '';
     const searchBar = (!utility.serverSideRendering) ? <SearchBar {...props} /> : undefined;
     const serverSideClass = (utility.serverSideRendering) ? ' eureka__server-side' : '';

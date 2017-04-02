@@ -45,6 +45,11 @@ function render() {
       allowFullscreen={true}
       emphasisFocusedMediaItem={true}
       lang="en-US"
+      callbacks={{
+        choose: function(item) {
+          alert('yolo')
+        }
+      }}
       endpoints={{
         i18n: './assets/js/i18n/locales/'
       }}
