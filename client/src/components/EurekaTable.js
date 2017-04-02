@@ -27,6 +27,7 @@ class EurekaTable extends Component {
         renamingItem: undefined
       }
     };
+    this.decoratedActions = props.decoratedActions ? Object.assign({}, actions, props.decoratedActions) : actions;
   }
 
   onDrop(files) {
@@ -35,17 +36,21 @@ class EurekaTable extends Component {
 
     const formData = new FormData();
 
+    const decoratedActions = this.decoratedActions;
+
     files.forEach((file) => {
       formData.append('eureka__uploadFiles', file, file.name);
     });
 
-    store.dispatch(actions.uploadFiles(props.source.currentSource, props.content.cd, formData));
+    store.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData));
   }
 
   render () {
     const props = this.props,
     state = this.state,
     formatMessage = props.intl.formatMessage;
+
+    const decoratedActions = this.decoratedActions;
 
     const html5ContextMenus = (props.content.contents.length) ? props.content.contents.map((item, index) => (
       <menu key={index} hidden="true" type="context" id={`context_menu__tbody-${index}`}>
@@ -61,7 +66,7 @@ class EurekaTable extends Component {
           <menuitem label={formatMessage(definedMessages.deleteItem, {
             filename: item.filename
           })} onClick={(event) => {
-              store.dispatch(actions.deleteMediaItem(props.source.currentSource, item.absolutePath));
+              store.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.absolutePath));
             }}></menuitem>
       </menu>
     )) : undefined;

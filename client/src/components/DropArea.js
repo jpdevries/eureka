@@ -11,10 +11,17 @@ import { FormattedMessage, FormattedPlural, FormattedNumber, FormattedRelative, 
 import definedMessages from '../i18n/definedMessages';
 
 class DropArea extends Component {
+  constructor(props) {
+    super(props);
+
+    this.decoratedActions = props.decoratedActions ? Object.assign({}, actions, props.decoratedActions) : actions;
+  }
 
   onDrop(files) {
     const props = this.props;
     console.log('Received files: ', files);
+
+    const decoratedActions = this.decoratedActions;
 
     const formData = new FormData();
 
@@ -22,7 +29,7 @@ class DropArea extends Component {
       formData.append('eureka__uploadFiles', file, file.name);
     });
 
-    store.dispatch(actions.uploadFiles(props.source.currentSource, props.content.cd, formData))
+    store.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData))
   }
 
   render() {

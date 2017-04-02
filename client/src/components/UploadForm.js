@@ -11,17 +11,23 @@ import { FormattedMessage } from 'react-intl';
 import definedMessages from '../i18n/definedMessages';
 
 class UploadForm extends Component {
+  constructor(props) {
+    super(props);
+    this.decoratedActions = props.decoratedActions ? Object.assign({}, actions, props.decoratedActions) : actions;
+  }
 
   handleSubmit(event) {
     event.preventDefault();
 
     const props = this.props;
 
+    const decoratedActions = this.decoratedActions;
+
     const formData = new FormData(event.target);
     for(var pair of formData.entries()) {
        console.log(pair[0], pair[1]);
     }
-    store.dispatch(actions.uploadFiles(props.source.currentSource, props.content.cd, formData));
+    store.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData));
   }
 
   render() {

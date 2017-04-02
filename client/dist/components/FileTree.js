@@ -47,6 +47,7 @@ var FileTreeSpan = function (_Component) {
     _this.state = {
       editable: false
     };
+    _this.decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
     return _this;
   }
 
@@ -59,6 +60,8 @@ var FileTreeSpan = function (_Component) {
           props = this.props,
           item = props.item;
 
+      var decoratedActions = this.decoratedActions;
+
       return _react2.default.createElement(
         'span',
         { ref: function ref(span) {
@@ -66,10 +69,10 @@ var FileTreeSpan = function (_Component) {
           }, contentEditable: state.editable, onClick: function onClick(event) {
             event.preventDefault();
             //event.stopPropagation();
-            _store2.default.dispatch(_actions2.default.updateContent({ // updates the "current directory" of the view right away
+            _store2.default.dispatch(decoratedActions.updateContent({ // updates the "current directory" of the view right away
               cd: item.cd
             }));
-            _store2.default.dispatch(_actions2.default.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
+            _store2.default.dispatch(decoratedActions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
               dir: item.cd
             }));
           },
@@ -98,6 +101,8 @@ var FileTreeSpan = function (_Component) {
 }(_react.Component);
 
 var FileTree = function FileTree(props) {
+
+  var decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
 
   var formatMessage = props.intl.formatMessage,
       chmodDirectoryMessage = formatMessage(_definedMessages2.default.chmodDirectory),
@@ -144,7 +149,7 @@ var FileTree = function FileTree(props) {
             _react2.default.createElement('menuitem', { label: createFileMessage }),
             _react2.default.createElement('menuitem', { label: quickCreateFileMessage }),
             _react2.default.createElement('menuitem', { label: deleteDirectoryMessage, onClick: function onClick(event) {
-                _store2.default.dispatch(_actions2.default.deleteMediaItem(props.source.currentSource, item.cd));
+                _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.cd));
               } })
           )
         ),

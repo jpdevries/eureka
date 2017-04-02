@@ -69,6 +69,7 @@ var EurekaTable = function (_Component) {
         renamingItem: undefined
       }
     };
+    _this.decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
     return _this;
   }
 
@@ -80,11 +81,13 @@ var EurekaTable = function (_Component) {
 
       var formData = new FormData();
 
+      var decoratedActions = this.decoratedActions;
+
       files.forEach(function (file) {
         formData.append('eureka__uploadFiles', file, file.name);
       });
 
-      _store2.default.dispatch(_actions2.default.uploadFiles(props.source.currentSource, props.content.cd, formData));
+      _store2.default.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData));
     }
   }, {
     key: 'render',
@@ -94,6 +97,8 @@ var EurekaTable = function (_Component) {
       var props = this.props,
           state = this.state,
           formatMessage = props.intl.formatMessage;
+
+      var decoratedActions = this.decoratedActions;
 
       var html5ContextMenus = props.content.contents.length ? props.content.contents.map(function (item, index) {
         return _react2.default.createElement(
@@ -111,7 +116,7 @@ var EurekaTable = function (_Component) {
           _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.deleteItem, {
               filename: item.filename
             }), onClick: function onClick(event) {
-              _store2.default.dispatch(_actions2.default.deleteMediaItem(props.source.currentSource, item.absolutePath));
+              _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.absolutePath));
             } })
         );
       }) : undefined;

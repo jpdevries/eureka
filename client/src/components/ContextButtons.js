@@ -12,6 +12,8 @@ const ContextButtons = (props) => {
   //console.log('ContextButtons', props);
   const item = props.item;
 
+  const decoratedActions = props.decoratedActions ? Object.assign({}, actions, props.decoratedActions) : actions;
+
   const { formatMessage } = props.intl,
   renameMessage = formatMessage(definedMessages.rename),
   renameItemMessage = formatMessage(definedMessages.renameItem, {
@@ -36,7 +38,7 @@ const ContextButtons = (props) => {
   const renameBtn = (props.config.allowRename) ? (<button id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }rename__${cssSafe(item.filename)}`} role="option" title={renameItemMessage} onClick={props.onRenameItem ? props.onRenameItem.bind(null, item) : undefined}>{renameMessage}<span className="visually-hidden"> {item.filename}</span></button>) : undefined,
   deleteBtn = (props.config.allowDelete) ? (
     <button id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }delete__${cssSafe(item.filename)}`} role="option" onClick={(event) => {
-        store.dispatch(actions.deleteMediaItem(props.source.currentSource, item.absolutePath));
+        store.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.absolutePath));
       }} title={deleteItemMessage} className="dangerous">{deleteMessage}<span className="visually-hidden"> {item.filename}</span></button>
   ) : undefined;
 

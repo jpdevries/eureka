@@ -9,6 +9,8 @@ import { FormattedMessage } from 'react-intl';
 
 const MediaDirectorySelector = (props) => {
 
+  const decoratedActions = props.decoratedActions ? Object.assign({}, actions, props.decoratedActions) : actions;
+
   const optgroups = props.directory.map((source, index) => { // todo: rename props.directory to something that makes more sense (or combine it with the sources reducer?)
     const opts = source.directories.sort((a,b) => {
       if(a.cd === b.cd) return 0;
@@ -29,13 +31,13 @@ const MediaDirectorySelector = (props) => {
   const select = (
     <select aria-live="polite" value={`${props.source.currentSource}||${props.content.cd}`} name="eureka__media-browser_0__browsing" id="eureka__media-browser_0__browsing" onChange={(event) => {
         const [cs, cd] = utility.parseMediaSourceOutOfCombinedPath(event.target.value, '||'); // option values are like 0||assets/img/redwoods where 0 is the media source id and assets/img/redwoods is the directory
-        store.dispatch(actions.updateSource({
+        store.dispatch(decoratedActions.updateSource({
           currentSource: cs
         }))
-        store.dispatch(actions.updateContent({ // updates the "current directory" of the view right away
+        store.dispatch(decoratedActions.updateContent({ // updates the "current directory" of the view right away
           cd: cd
         }));
-        store.dispatch(actions.fetchDirectoryContents(cs, { // asyncronously fetches the directory contents from the API
+        store.dispatch(decoratedActions.fetchDirectoryContents(cs, { // asyncronously fetches the directory contents from the API
           dir:cd
         }));
       }}>

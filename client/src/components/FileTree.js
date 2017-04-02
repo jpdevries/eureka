@@ -13,6 +13,7 @@ class FileTreeSpan extends Component {
     this.state = {
       editable:false
     };
+    this.decoratedActions = props.decoratedActions ? Object.assign({}, actions, props.decoratedActions) : actions;
   }
 
   render() {
@@ -20,14 +21,16 @@ class FileTreeSpan extends Component {
     props = this.props,
     item = props.item;
 
+    const decoratedActions = this.decoratedActions;
+
     return (
       <span ref={(span) => (this.span = span)} contentEditable={state.editable} onClick={(event) => {
           event.preventDefault();
           //event.stopPropagation();
-          store.dispatch(actions.updateContent({ // updates the "current directory" of the view right away
+          store.dispatch(decoratedActions.updateContent({ // updates the "current directory" of the view right away
             cd: item.cd
           }));
-          store.dispatch(actions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
+          store.dispatch(decoratedActions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
             dir:item.cd
           }));
         }}
@@ -56,6 +59,8 @@ class FileTreeSpan extends Component {
 
 const FileTree = (props) => {
 
+  const decoratedActions = props.decoratedActions ? Object.assign({}, actions, props.decoratedActions) : actions;
+
   const formatMessage = props.intl.formatMessage,
   chmodDirectoryMessage = formatMessage(definedMessages.chmodDirectory),
   renameMessage = formatMessage(definedMessages.rename),
@@ -67,15 +72,15 @@ const FileTree = (props) => {
 
   function listTree(tree) {
     function shouldBeOpen(item) {
-      console.log('shouldBeOpen', props.content.cd, item.cd, props.content.cd.indexOf(item.cd)); 
+      console.log('shouldBeOpen', props.content.cd, item.cd, props.content.cd.indexOf(item.cd));
       try {
         return (props.content.cd.indexOf(item.cd) === 0) ? true : undefined;
       } catch (e) {
         return undefined;
-      } 
-      
+      }
+
     }
-    
+
     return tree.map((item, index) => (
       (item.children || true) ? // still deciding if we need this disabled for now
       <details onToggle={(event) => {
@@ -99,7 +104,7 @@ const FileTree = (props) => {
               <menuitem label={createFileMessage}></menuitem>
               <menuitem label={quickCreateFileMessage}></menuitem>
               <menuitem label={deleteDirectoryMessage} onClick={(event) => {
-                  store.dispatch(actions.deleteMediaItem(props.source.currentSource, item.cd))
+                  store.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.cd))
                 }}></menuitem>
           </menu>
 

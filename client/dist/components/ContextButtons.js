@@ -30,6 +30,8 @@ var ContextButtons = function ContextButtons(props) {
   //console.log('ContextButtons', props);
   var item = props.item;
 
+  var decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
+
   var formatMessage = props.intl.formatMessage,
       renameMessage = formatMessage(_definedMessages2.default.rename),
       renameItemMessage = formatMessage(_definedMessages2.default.renameItem, {
@@ -66,7 +68,7 @@ var ContextButtons = function ContextButtons(props) {
       deleteBtn = props.config.allowDelete ? _react2.default.createElement(
     'button',
     { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'delete__' + (0, _utility.cssSafe)(item.filename), role: 'option', onClick: function onClick(event) {
-        _store2.default.dispatch(_actions2.default.deleteMediaItem(props.source.currentSource, item.absolutePath));
+        _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.absolutePath));
       }, title: deleteItemMessage, className: 'dangerous' },
     deleteMessage,
     _react2.default.createElement(

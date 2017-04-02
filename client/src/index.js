@@ -44,7 +44,7 @@ function render() {
       currentDirectory="assets/img/hawaii"
       allowFullscreen={true}
       emphasisFocusedMediaItem={true}
-      lang="nl"
+      lang="en-US"
       endpoints={{
         i18n: './assets/js/i18n/locales/'
       }}

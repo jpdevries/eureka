@@ -57,7 +57,7 @@ function render() {
     allowFullscreen: true,
     enlargeFocusedRows: false,
     currentDirectory: 'assets/img/hawaii'
-  }, _defineProperty(_React$createElement, 'allowFullscreen', true), _defineProperty(_React$createElement, 'emphasisFocusedMediaItem', true), _defineProperty(_React$createElement, 'lang', 'nl'), _defineProperty(_React$createElement, 'endpoints', {
+  }, _defineProperty(_React$createElement, 'allowFullscreen', true), _defineProperty(_React$createElement, 'emphasisFocusedMediaItem', true), _defineProperty(_React$createElement, 'lang', 'en-US'), _defineProperty(_React$createElement, 'endpoints', {
     i18n: './assets/js/i18n/locales/'
   }), _React$createElement)), document.getElementById('root'));
 }

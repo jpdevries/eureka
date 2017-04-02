@@ -41,10 +41,13 @@ var classNames = require('classnames');
 var UploadForm = function (_Component) {
   _inherits(UploadForm, _Component);
 
-  function UploadForm() {
+  function UploadForm(props) {
     _classCallCheck(this, UploadForm);
 
-    return _possibleConstructorReturn(this, (UploadForm.__proto__ || Object.getPrototypeOf(UploadForm)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (UploadForm.__proto__ || Object.getPrototypeOf(UploadForm)).call(this, props));
+
+    _this.decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
+    return _this;
   }
 
   _createClass(UploadForm, [{
@@ -53,6 +56,8 @@ var UploadForm = function (_Component) {
       event.preventDefault();
 
       var props = this.props;
+
+      var decoratedActions = this.decoratedActions;
 
       var formData = new FormData(event.target);
       var _iteratorNormalCompletion = true;
@@ -80,7 +85,7 @@ var UploadForm = function (_Component) {
         }
       }
 
-      _store2.default.dispatch(_actions2.default.uploadFiles(props.source.currentSource, props.content.cd, formData));
+      _store2.default.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData));
     }
   }, {
     key: 'render',

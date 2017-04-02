@@ -47,16 +47,19 @@ class Eureka extends Component {
       currentModal:undefined,
       renamingItem:undefined
     };
+    this.decoratedActions = props.decoratedActions ? Object.assign({}, actions, props.decoratedActions) : actions;
   }
   componentDidMount() {
-    store.dispatch(actions.fetchMediaSources()).then(() => { // hit the server and get the media sources
-      store.dispatch(actions.updateSourceTree(this.props.source.sources[0].id)).then((content) => { // then hit server for the directory tree of the first (default) media source
+    const props = this.props;
+    const decoratedActions = this.decoratedActions;
+    store.dispatch(decoratedActions.fetchMediaSources()).then(() => { // hit the server and get the media sources
+      store.dispatch(decoratedActions.updateSourceTree(this.props.source.sources[0].id)).then((content) => { // then hit server for the directory tree of the first (default) media source
         const props = this.props;
 
-        store.dispatch(actions.updateContent({ // updates the "current directory" of the view right away
+        store.dispatch(decoratedActions.updateContent({ // updates the "current directory" of the view right away
           cd: props.content.cd
         }));
-        store.dispatch(actions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
+        store.dispatch(decoratedActions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
           dir: props.content.cd
         }));
 
@@ -65,10 +68,10 @@ class Eureka extends Component {
             const state = store.getState();
             const props = this.props;
 
-            store.dispatch(actions.updateContent({ // updates the "current directory" of the view right away
+            store.dispatch(decoratedActions.updateContent({ // updates the "current directory" of the view right away
               cd: props.content.cd
             }));
-            store.dispatch(actions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
+            store.dispatch(decoratedActions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
               dir: props.content.cd
             }));
 
@@ -77,7 +80,7 @@ class Eureka extends Component {
 
         if(props.view.intervals.updateSourceTree !== undefined && props.view.intervals.updateSourceTree > 0) { // hit the server and get the (top-level-ish) directory tree of the current source
           setInterval(() => {
-            store.dispatch(actions.updateSourceTree(props.source.currentSource));
+            store.dispatch(decoratedActions.updateSourceTree(props.source.currentSource));
           }, props.view.intervals.updateSourceTree);
         }
       });
@@ -115,6 +118,7 @@ class Eureka extends Component {
   }
 
   onModalSubmit(createDirectory) {
+    const decoratedActions = this.decoratedActions;
     const props = this.props;
     event.preventDefault();
     console.log('onModalSubmit',createDirectory);
@@ -122,13 +126,13 @@ class Eureka extends Component {
     switch(this.state.currentModal) {
       case CREATE_DIRECTORY:
       console.log(store.getState().content.cd, path.join(store.getState().content.cd, 'foo'));
-      store.dispatch(actions.createDirectory(store.getState().source.currentSource, path.join(store.getState().content.cd, createDirectory))).then(() => {
+      store.dispatch(decoratedActions.createDirectory(store.getState().source.currentSource, path.join(store.getState().content.cd, createDirectory))).then(() => {
         this.setState({
           modalOpen:false,
           currentModal:undefined
         });
       }).then(() => {
-        store.dispatch(actions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
+        store.dispatch(decoratedActions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
           dir:store.getState().content.cd
         }));
       });
@@ -143,6 +147,7 @@ class Eureka extends Component {
   onRenameItemModalSubmit(newName, item) {
     console.log('onRenameItemModalSubmit!!!', newName, item);
     console.log(item.absolutePath);
+    const decoratedActions = this.decoratedActions;
     const dir = (() => {
       try { // this is bullshit webpack isn't including the parse method with the Node path module
         return path.parse(item.absolutePath).dir;
@@ -153,9 +158,9 @@ class Eureka extends Component {
       }
     })();
 
-    store.dispatch(actions.renameItem(this.props.source.currentSource, item.absolutePath, newName)).then((results) => {
+    store.dispatch(decoratedActions.renameItem(this.props.source.currentSource, item.absolutePath, newName)).then((results) => {
       console.log('results!!!', results);
-      store.dispatch(actions.updateContent({contents:results.contents.filter((file) => (
+      store.dispatch(decoratedActions.updateContent({contents:results.contents.filter((file) => (
         file.filename
       ))}));
       this.setState({

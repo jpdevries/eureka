@@ -21,6 +21,8 @@ var _reactIntl = require('react-intl');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var MediaSourceSelector = function MediaSourceSelector(props) {
+  var decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
+  console.log('MediaSourceSelector', decoratedActions);
   var options = props.source.sources.map(function (source, index) {
     return _react2.default.createElement(
       'option',
@@ -52,8 +54,8 @@ var MediaSourceSelector = function MediaSourceSelector(props) {
     _react2.default.createElement(
       'select',
       { value: props.source.currentSource, id: 'media-source-selector__select', onChange: function onChange(event) {
-          props.dispatch(_actions2.default.updateSource(event.target.value));
-          props.dispatch(_actions2.default.updateSourceTree(event.target.value));
+          props.dispatch(decoratedActions.updateSource(event.target.value));
+          props.dispatch(decoratedActions.updateSourceTree(event.target.value));
         } },
       options
     )

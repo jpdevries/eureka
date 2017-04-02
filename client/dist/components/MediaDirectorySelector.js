@@ -31,6 +31,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 var MediaDirectorySelector = function MediaDirectorySelector(props) {
   var _React$createElement;
 
+  var decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
+
   var optgroups = props.directory.map(function (source, index) {
     // todo: rename props.directory to something that makes more sense (or combine it with the sources reducer?)
     var opts = source.directories.sort(function (a, b) {
@@ -70,13 +72,13 @@ var MediaDirectorySelector = function MediaDirectorySelector(props) {
             cd = _utility$parseMediaSo2[1]; // option values are like 0||assets/img/redwoods where 0 is the media source id and assets/img/redwoods is the directory
 
 
-        _store2.default.dispatch(_actions2.default.updateSource({
+        _store2.default.dispatch(decoratedActions.updateSource({
           currentSource: cs
         }));
-        _store2.default.dispatch(_actions2.default.updateContent({ // updates the "current directory" of the view right away
+        _store2.default.dispatch(decoratedActions.updateContent({ // updates the "current directory" of the view right away
           cd: cd
         }));
-        _store2.default.dispatch(_actions2.default.fetchDirectoryContents(cs, { // asyncronously fetches the directory contents from the API
+        _store2.default.dispatch(decoratedActions.fetchDirectoryContents(cs, { // asyncronously fetches the directory contents from the API
           dir: cd
         }));
       } },

@@ -45,10 +45,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var DropArea = function (_Component) {
   _inherits(DropArea, _Component);
 
-  function DropArea() {
+  function DropArea(props) {
     _classCallCheck(this, DropArea);
 
-    return _possibleConstructorReturn(this, (DropArea.__proto__ || Object.getPrototypeOf(DropArea)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (DropArea.__proto__ || Object.getPrototypeOf(DropArea)).call(this, props));
+
+    _this.decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
+    return _this;
   }
 
   _createClass(DropArea, [{
@@ -57,13 +60,15 @@ var DropArea = function (_Component) {
       var props = this.props;
       console.log('Received files: ', files);
 
+      var decoratedActions = this.decoratedActions;
+
       var formData = new FormData();
 
       files.forEach(function (file) {
         formData.append('eureka__uploadFiles', file, file.name);
       });
 
-      _store2.default.dispatch(_actions2.default.uploadFiles(props.source.currentSource, props.content.cd, formData));
+      _store2.default.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData));
     }
   }, {
     key: 'render',
