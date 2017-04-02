@@ -23,7 +23,7 @@
       }
     </style>
 
-    <link rel="stylesheet" type="text/css" href="assets/css/eureka.0.0.22.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/eureka.0.0.23.min.css">
 
     <style type="text/css">
       @media screen and (-ms-high-contrast: active) {
@@ -107,6 +107,24 @@
         --very-subtle-icon-opacity:1;
       }
 
+      body {
+        background: #ececec;
+        font: 400 .8125em/1.375em "Helvetica Neue",Helvetica,Arial,Tahoma,sans-serif;
+        color: #081922;
+        margin: 0;
+        padding: 8px;
+        padding: 8px;
+        padding: .5rem;
+
+        display: -ms-flexbox;
+        display: flex;
+        height: 100vh;
+        max-height: 100vh;
+        overflow-y: hidden;
+        -ms-flex-direction: column;
+        flex-direction: column;
+      }
+
     </style>
 
     <!--
@@ -120,7 +138,7 @@
     -->
     <title data-site-name="Eureka Media Browser">Eureka Media Browser</title>
   </head>
-  <body>
+  <body class="modal-section">
     <div id="root"></div>
 
     <script>
