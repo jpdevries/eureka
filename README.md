@@ -475,6 +475,9 @@ Configure the `EurekaMediaBrowser` via the optional attributes found in the defa
 Eureka is hungry for remote media sources. It needs a REST API to feed it JSON&nbsp;data.  
 Find docs at the [REST API wiki page](https://github.com/jpdevries/eureka/wiki/REST-API).
 
+### Decorating Actions
+Eureka's core Redux actions assume you'll be using a REST API. If REST isn't really your thing, or you need to modify the Redux actions for some other reason, you can decorate the actions Eureka will use. This is done using a Higher Order Component that wraps `EurekaMediaBrowser` and injects a `decoratedActions` property which will be applied as a shallow merge on top of the default&nbsp;actions. Reference this [Gist example of decorating actions](https://gist.github.com/jpdevries/e967056bd31cf6f01df0e431df68283b) for an example.
+
 ## 📠 Server Side Rendering
 Eureka is progressively enhanced with React to be asynchronous and a richer experience in capable browsers successfully that successfully execute scripts. But Eureka's support doesn't end at modern browsers because its design process doesn't start there. Eureka is a semantic and synchronous HTML form before it is an enhanced Virtual&nbsp;DOM.  
 
