@@ -393,6 +393,7 @@ npm install -g bower
 bower install eureka-browser#release-2.0
 ls bower_components/eureka-browser/client/build/assets/css/ # default eureka theme
 ls bower_components/eureka-browser/client/build/assets/img # icon sprite
+ls bower_components/eureka-browser/client/build/assets/js # bundled and unbundled UMD exports of EurekaMediaBrowser component
 ```
 
 #### HTML
