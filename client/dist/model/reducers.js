@@ -15,6 +15,8 @@ var actions = require('./actions'),
     update = require('react-addons-update'),
     path = require('path');
 
+var pkg = require("./../../package.json");
+
 var initialConfigState = {
   basePath: '/',
   allowUploads: true,
@@ -28,7 +30,7 @@ var initialConfigState = {
   mediaSource: undefined,
   currentDirectory: "/",
   uid: "0",
-  iconSVG: './img/icons.svg',
+  iconSVG: './img/icons.' + pkg.version + '.min.svg',
   assetsBasePath: './assets/',
   emphasisFocusedMediaItem: true,
   headers: { 'Powered-By': 'Eureka by Markup.tips' },

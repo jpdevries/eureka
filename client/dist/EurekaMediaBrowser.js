@@ -94,9 +94,10 @@ var EurekaMediaBrowser = function (_Component) {
     }();
 
     var shouldFetch = function () {
+      console.log('shouldFetch', props.lang);
       if (_utility2.default.serverSideRendering) return false;
       try {
-        return !props.lang || props.lang == 'en' || _this.state.i18n[props.lang] !== undefined ? false : true;
+        return !props.lang || languageWithoutRegionCode == 'en' || _this.state.i18n[props.lang] !== undefined || _this.state.i18n[languageWithoutRegionCode] !== undefined ? false : true;
       } catch (err) {
         return props.lang !== 'en' ? true : false;
       }

@@ -21,6 +21,7 @@
     "lib",
     "client/public",
     "client/src",
+    "client/build/assets/img/src",
     ".babelrc",
     ".DS_Store",
     "client/gruntfile.js",

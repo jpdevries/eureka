@@ -57,9 +57,10 @@ class EurekaMediaBrowser extends Component {
 
 
     const shouldFetch = (() => {
+      console.log('shouldFetch', props.lang);
       if(utility.serverSideRendering) return false;
       try {
-        return (!props.lang || props.lang == 'en' || this.state.i18n[props.lang] !== undefined) ? false : true;
+        return (!props.lang || languageWithoutRegionCode == 'en' || this.state.i18n[props.lang] !== undefined || this.state.i18n[languageWithoutRegionCode] !== undefined) ? false : true;
       } catch(err) {
         return (props.lang !== 'en') ? true : false;
       }

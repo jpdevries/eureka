@@ -55,6 +55,7 @@ module.exports = function(grunt) {
       assets:'./assets/',
       js:'./js/',
       css:'./css/',
+      img:'./img/',
       scss:'src/scss/'
     },
     bower: {
@@ -173,6 +174,9 @@ module.exports = function(grunt) {
           src: '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>main.min.css',
           dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.<%= pkg.version %>.min.css'
         }/*,{
+          src: '<%= dirs.theme %><%= dirs.assets %><%= dirs.img %>icons.svg',
+          dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.img %>icons.<%= pkg.version %>.svg'
+        }*//*,{
           src: '<%= dirs.build %><%= dirs.static %><%= dirs.js %>main.*.js',
           dest: '<%= dirs.build %><%= dirs.assets %><%= dirs.js %>eureka.<%= pkg.version %>.min.js'
         }*/]
@@ -234,7 +238,20 @@ module.exports = function(grunt) {
         }
       },
     },
-
+    svgo: {
+      static: {
+        options: {
+          cleanupIDs: false,
+          cleanupIds: false,
+          plugins: [{
+                      cleanupIDs: false
+                  }]
+        },
+        files: {
+          '<%= dirs.theme %><%= dirs.assets %><%= dirs.img %>icons.<%= pkg.version %>.min.svg': '<%= dirs.theme %><%= dirs.assets %><%= dirs.img %>icons.<%= pkg.version %>.svg'
+        }
+      }
+    },
     webpack: {
       'eureka-umd-bundle': Object.assign({}, webpackConfig, {
         // webpack options
@@ -299,7 +316,27 @@ module.exports = function(grunt) {
       buildjs: [
         '<%= dirs.build %><%= dirs.assets %><%= dirs.js %>*.js',
         '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>*.js'
+      ],
+      buildimg: [
+        '<%= dirs.theme %><%= dirs.assets %><%= dirs.img %>*.svg'
       ]
+    },
+    svgstore: {
+      icons: {
+        files: {
+          '<%= dirs.theme %><%= dirs.assets %><%= dirs.img %>icons.<%= pkg.version %>.svg': ['<%= dirs.theme %><%= dirs.assets %><%= dirs.img %>src/svg/*.svg']
+        },
+        options: {
+          formatting : {
+            indent_size : 2
+          },
+          prefix: 'icon-',
+          cleanup: true,
+          convertNameToId: function(name) {
+            return name.replace(/^\w+\_/, '');
+          }
+        }
+      }
     },
     watch: { /* trigger tasks on save */
       options: {
@@ -327,9 +364,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-webpack');
+  grunt.loadNpmTasks('grunt-svgo');
+  grunt.loadNpmTasks('grunt-svgstore');
 
   grunt.renameTask('string-replace','bump');
 
   grunt.registerTask('default', ['growl:watch', 'watch']);
-  grunt.registerTask('build',['bower','copy','modernizr','sass','postcss','cssmin','webpack','uglify','growl:build']);
+  grunt.registerTask('build',['bower','copy','modernizr','sass','postcss','cssmin','webpack','uglify','clean:buildimg','svgstore','svgo','growl:build']);
 };

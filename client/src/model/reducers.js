@@ -3,6 +3,8 @@ combineReducers = require('redux').combineReducers,
 update = require('react-addons-update'),
 path = require('path');
 
+const pkg = require("./../../package.json");
+
 import utility from '../utility/utility';
 
 const initialConfigState = {
@@ -18,7 +20,7 @@ const initialConfigState = {
   mediaSource:undefined,
   currentDirectory:"/",
   uid:"0",
-  iconSVG:'./img/icons.svg',
+  iconSVG:`./img/icons.${pkg.version}.min.svg`,
   assetsBasePath:'./assets/',
   emphasisFocusedMediaItem:true,
   headers:{'Powered-By': 'Eureka by Markup.tips'},
