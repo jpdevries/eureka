@@ -30,7 +30,7 @@ The Eureka Media Browser is pretty lightweight all things&nbsp;considered.
 | SVG Icons      | `5.04kB`      |
 | React Component | `42.73kB`      |
 
-### HTML&ndash;first
+### 📄 HTML&ndash;first
 As a progressively enhanced web component, Eureka is functional HTML&ndash;first. This means that technically anything other than the initial HTML layer is a non&ndash;critical enhancement. Critical features supported by the HTML layer, such as browse, upload, and choose, are universally supported and do not depend on modern&nbsp;browsers, CSS styles, or&nbsp;script.
 
 Take a gander at Eureka in the nued by waking our incredibly lightweight [raw HTML&nbsp;example](https://reacteureka.herokuapp.com/nued).
@@ -54,7 +54,7 @@ Take a gander at Eureka in the nued by waking our incredibly lightweight [raw HT
    - ARIA & Keyboard Support
    - high contrast themes
 
-## Features
+## 🚥 Features 
 The level of isomorphism between the client and server side one can achieve with Node is unmatched. Eureka takes advantage of this unique strength of Node by, through an isomorphic server and standard synchronous forms, achieving full support for critical&nbsp;features.
 
 No features rely solely on sight or the use of a mouse. Keyboard use is supported. Accommodations are taken for users that benefit from high contrast themes. Visually hidden text is used to convey aspects of the interface that are otherwise visually implied to screen readers and assistive&nbsp;technology.
@@ -497,7 +497,7 @@ ls bower_components/eureka-browser/client/build/assets/js # bundled and unbundle
 Eureka is hungry for remote media sources. It needs a REST API to feed it JSON&nbsp;data.  
 Find docs at the [REST API wiki page](https://github.com/jpdevries/eureka/wiki/REST-API).
 
-### Decorating Actions
+### 💄 Decorating Actions
 Eureka's core Redux actions assume you'll be using a REST API. If REST isn't really your thing, or you need to modify the Redux actions for some other reason, you can decorate the actions Eureka will use. This is done using a Higher Order Component that wraps `EurekaMediaBrowser` and injects a `decoratedActions` property which will be applied as a shallow merge on top of the default&nbsp;actions. Reference this [Gist example of decorating actions](https://gist.github.com/jpdevries/e967056bd31cf6f01df0e431df68283b) for an example.
 
 ## 📠 Server Side Rendering
