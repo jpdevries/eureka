@@ -399,6 +399,20 @@ The development server, like any other React app created with `create-react-app`
 npm install eureka-browser --save
 ```
 
+#### Bower
+You can also install Eureka via Bower, which is a good way to fetch its stylesheet and icon sprite. There is also a UMD export of the `EurekaMediaBrowser` component for the unlikely case you'll need&nbsp;it.
+
+```bash
+npm install -g bower
+```
+
+```bash
+bower install eureka-browser#release-2.0
+ls bower_components/eureka-browser/client/build/assets/css/ # default eureka theme
+ls bower_components/eureka-browser/client/build/assets/img # icon sprite
+ls bower_components/eureka-browser/client/build/assets/js # bundled and unbundled UMD exports of EurekaMediaBrowser component
+```
+
 #### HTML
 The `<EurekaMediaBrowser>` React component is styled by a standard CSS stylesheet. Include the CSS for the appropriate version of the media browser. Reference the theming section for [more information on styling Eureka](https://github.com/jpdevries/eureka#-theming).
 
@@ -451,19 +465,6 @@ Configure the `EurekaMediaBrowser` via the optional attributes found in the defa
       updateSourceTree: false
     }}
   />
-```
-#### Bower
-You can also install Eureka via Bower, which is a good way to fetch its stylesheet and icon sprite. There is also a UMD export of the `EurekaMediaBrowser` component for the unlikely case you'll need&nbsp;it.
-
-```bash
-npm install -g bower
-```
-
-```bash
-bower install eureka-browser#release-2.0
-ls bower_components/eureka-browser/client/build/assets/css/ # default eureka theme
-ls bower_components/eureka-browser/client/build/assets/img # icon sprite
-ls bower_components/eureka-browser/client/build/assets/js # bundled and unbundled UMD exports of EurekaMediaBrowser component
 ```
 
 ## ⚙️ Options
