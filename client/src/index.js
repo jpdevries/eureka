@@ -32,18 +32,16 @@ function render() {
     <EurekaMediaBrowser
       basePath="/core/components/eureka/"
       allowUploads={true}
-      treeHidden={true}
       lang={languageKey}
       useLocalStorage={true}
       allowRename={true}
       allowDelete={true}
-      mode="table"
       confirmBeforeDelete={true}
       allowFullscreen={true}
       enlargeFocusedRows={false}
-      currentDirectory="assets/img/hawaii"
       allowFullscreen={true}
       emphasisFocusedMediaItem={true}
+      storagePrefix={'eureka__'}
       lang="en-US"
       callbacks={{
         choose: function(item) {

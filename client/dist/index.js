@@ -47,17 +47,14 @@ function render() {
   _reactDom2.default.render(_react2.default.createElement(_EurekaMediaBrowser2.default, (_React$createElement = {
     basePath: '/core/components/eureka/',
     allowUploads: true,
-    treeHidden: true,
     lang: languageKey,
     useLocalStorage: true,
     allowRename: true,
     allowDelete: true,
-    mode: 'table',
     confirmBeforeDelete: true,
     allowFullscreen: true,
-    enlargeFocusedRows: false,
-    currentDirectory: 'assets/img/hawaii'
-  }, _defineProperty(_React$createElement, 'allowFullscreen', true), _defineProperty(_React$createElement, 'emphasisFocusedMediaItem', true), _defineProperty(_React$createElement, 'lang', 'en-US'), _defineProperty(_React$createElement, 'callbacks', {
+    enlargeFocusedRows: false
+  }, _defineProperty(_React$createElement, 'allowFullscreen', true), _defineProperty(_React$createElement, 'emphasisFocusedMediaItem', true), _defineProperty(_React$createElement, 'storagePrefix', 'eureka__'), _defineProperty(_React$createElement, 'lang', 'en-US'), _defineProperty(_React$createElement, 'callbacks', {
     choose: function choose(item) {
       alert('yolo');
     }

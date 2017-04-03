@@ -18,7 +18,13 @@ const initialConfigState = {
   confirmBeforeDelete:false,
   locales:"en-US",
   mediaSource:undefined,
-  currentDirectory:"/",
+  currentDirectory:(() => {
+    try {
+      return localStorage.getItem('eureka__currentDirectory') || "/"
+    } catch(e) {
+      return "/"
+    }
+  })(),
   uid:"0",
   iconSVG:`./img/icons.${pkg.version}.min.svg`,
   assetsBasePath:'./assets/',
@@ -45,9 +51,14 @@ var configReducer = function(state, action) {
   return state;
 }
 
-
-const initialContentState = {
-  cd: '/',
+const initialContentState = Object.assign({}, {
+  cd: (() => {
+    try {
+      return localStorage.getItem('eureka__currentDirectory') || "/"
+    } catch(e) {
+      return "/"
+    }
+  })(),
   contents:[
     /*{
       filename:'foo.jpg',
@@ -68,14 +79,18 @@ const initialContentState = {
       editedOn:1487107348619
     }*/
   ]
-};
+}, (() => {
+  try {
+    return JSON.parse(localStorage.getItem(`${initialConfigState.storagePrefix}content`)) || {}
+  } catch(e) { return {} }
+})());
 
 var contentReducer = function(state, action) {
   state = state || initialContentState;
 
   switch(action.type) {
     case actions.UPDATE_CONFIG:
-    //console.log('UPDATE_CONFIG!!!', state, action.config);
+    console.log('UPDATE_CONFIG!!!', action.config);
     if(action.config.currentDirectory) return Object.assign({},state,{
       cd:action.config.currentDirectory
     })
@@ -234,8 +249,20 @@ var initialViewState = {
   focusedMediaItem: undefined,
   filter: undefined,
   //cd: '/',
-  mode:'table',
-  sourceTreeOpen: false,
+  mode:(() => {
+    try {
+      return localStorage.getItem(`${initialConfigState.storagePrefix}mode`) || "table"
+    } catch(e) {
+      return "table"
+    }
+  })(),
+  sourceTreeOpen: (() => {
+    try {
+      return localStorage.getItem(`${initialConfigState.storagePrefix}treeHidden`) == 'false' || false
+    } catch(e) {
+      return false
+    }
+  })(),
   enlargeFocusedRows: false,
   locale:"en-US",
   sort:'name',
@@ -247,6 +274,8 @@ var initialViewState = {
   },
 
 };
+
+console.log('initialViewState',initialViewState);
 
 var viewReducer = function(state, action) {
   state = state || initialViewState;
@@ -260,7 +289,7 @@ var viewReducer = function(state, action) {
     case actions.UPDATE_CONFIG:
     let o = {};
     o = Object.assign({},o,{
-      sourceTreeOpen:action.config.treeHidden !== undefined ? !action.config.treeHidden : o.sourceTreeOpen || undefined
+      sourceTreeOpen:action.config.treeHidden !== undefined ? !action.config.treeHidden : state.sourceTreeOpen || false
     });
     if(action.config.intervals) o = Object.assign({},o,{intervals:action.config.intervals});
     if(action.config.mode) o = Object.assign({},o,{mode:action.config.mode});
@@ -300,6 +329,25 @@ var initialSourceState = {
   }*/]
 };
 
+initialSourceState = Object.assign({}, {
+  currentSource: "0",
+  sources: [/*{
+    name: 'Filesystem',
+    id: 'fileystem'
+  },{
+    name: 'Amazon S3',
+    id: 's3'
+  }*/]
+}, (() => {
+  try {
+    return JSON.parse(localStorage.getItem(`${initialConfigState.storagePrefix}source`)) || {}
+  } catch(e) {
+    return {}
+  }
+})());
+
+console.log(`${initialConfigState.storagePrefix}source`, initialSourceState);
+
 
 
 var sourceReducer = function(state, action) {
@@ -313,7 +361,7 @@ var sourceReducer = function(state, action) {
 
     case actions.UPDATE_SOURCE:
     return Object.assign({}, state, {
-      currentSource: action.source.currentSource
+      currentSource: action.source
     });
     break;
   }

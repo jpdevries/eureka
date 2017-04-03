@@ -44,8 +44,79 @@ class EurekaMediaBrowser extends Component {
 
     const languageWithoutRegionCode = language.toLowerCase().split(/[_-]+/)[0];
 
+    let config = Object.assign({}, props, {});
+
+
+    if(props.storagePrefix !== 'eureka__' || true) { // they are using a non-default localStorage prefix
+      console.log('holy shit!', props);
+      const config = Object.assign({}, {
+        currentDirectory:(() => {
+          try {
+            return localStorage.getItem(`${props.storagePrefix}currentDirectory`) || undefined
+          } catch(e) { return undefined }
+        })(),
+        mode:(() => {
+          try {
+            return localStorage.getItem(`${props.storagePrefix}mode`) || undefined
+          } catch(e) { return undefined }
+        })(),
+        sort:(() => {
+          try {
+            return localStorage.getItem(`${props.storagePrefix}sort`) || undefined
+          } catch(e) { return undefined }
+        })(),
+        /*source:(() => {
+          try {
+            return JSON.parse(localStorage.getItem(`${props.storagePrefix}source`)) || undefined
+          } catch(e) { return undefined }
+        })(),*/
+        treeHidden:(() => {
+          try {
+            return JSON.parse(localStorage.getItem(`${props.storagePrefix}treeHidden`)) || undefined
+          } catch(e) { return undefined }
+        })()
+      }, props);
+
+      console.log('config',config);
+
+      const localSources = (() => {
+        try {
+          return JSON.parse(localStorage.getItem(`${props.storagePrefix}source`)) || undefined
+        } catch(e) { return undefined }
+      })();
+
+      const localContent = (() => {
+        try {
+          return JSON.parse(localStorage.getItem(`${props.storagePrefix}content`)) || undefined
+        } catch(e) { return undefined }
+      })();
+
+      if(localSources) {
+        if(localSources.sources !== undefined) store.dispatch(actions.fetchMediaSourcesSuccess(localSources.sources));
+        if(localSources.currentSource !== undefined) store.dispatch(actions.updateSource(localSources.currentSource.toString()));
+      }
+
+      if(localContent) {
+        console.log('updating localContent', localContent);
+        store.dispatch(actions.updateContent(localContent));
+      }
+
+      /*console.log(
+        config,
+        localStorage.getItem(`${props.storagePrefix}currentDirectory`),
+        localStorage.getItem(`${props.storagePrefix}mode`),
+        localStorage.getItem(`${props.storagePrefix}sort`),
+        localStorage.getItem(`${props.storagePrefix}source`),
+        localStorage.getItem(`${props.storagePrefix}treeHidden`)
+      );*/
+    }
+
+
     //console.log('bolo', languageWithoutRegionCode);
-    store.dispatch(actions.updateConfig(props));
+    store.dispatch(actions.updateConfig(config));
+    console.log('config updated', config);
+
+
 
     const i18nEdpoint = (() => {
       try {
@@ -78,15 +149,8 @@ class EurekaMediaBrowser extends Component {
 
     store.subscribe(() => {
       const state = store.getState();
-      //console.log('state.i18n!!!', state.i18n);
-      console.log(state);
-      /*try {
-        const siteName = title.dataset.siteName,
-        title = document.querySelector('head > title'),
-        ct = (`${state.content.cd} of ${state.source.sources[state.source.currentSource].name} media source`);
-        title.innerHTML = `${ct} | ${siteName}`;
-      } catch (e) {}*/
 
+      // whenever the state changes we store pieces of the state locally so that next time Eureka fires up it can render the user interface without delay
       if(state.config.useLocalStorage) {
         try {
           localStorage.setItem(`${state.config.storagePrefix}currentDirectory`, state.content.cd);
@@ -94,6 +158,8 @@ class EurekaMediaBrowser extends Component {
           localStorage.setItem(`${state.config.storagePrefix}mode`, state.view.mode);
           localStorage.setItem(`${state.config.storagePrefix}sort`, state.view.sort);
           localStorage.setItem(`${state.config.storagePrefix}treeHidden`, !state.view.sourceTreeOpen);
+          localStorage.setItem(`${state.config.storagePrefix}treeHidden`, !state.view.sourceTreeOpen);
+          localStorage.setItem(`${state.config.storagePrefix}content`, JSON.stringify(state.content));
         } catch (e) { }
       }
 

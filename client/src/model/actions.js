@@ -44,6 +44,7 @@ const updateContent = function(content) {
 
 const UPDATE_CONFIG = 'update_config';
 const updateConfig = function(config) {
+  console.log('updateConfig', config);
   return {
     type:UPDATE_CONFIG,
     config:config,
@@ -181,7 +182,7 @@ const FETCH_MEDIA_SOURCES_SUCCESS = 'fetch_media_sources_success';
 const FETCH_MEDIA_SOURCES_ERROR = 'fetch_media_sources_error';
 
 const fetchMediaSourcesSuccess = function(sources) {
-  //console.log('fetchMediaSourcesSuccess', sources);
+  console.log('fetchMediaSourcesSuccess', sources);
   return {
     type:FETCH_MEDIA_SOURCES_SUCCESS,
     sources:sources
