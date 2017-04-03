@@ -281,12 +281,12 @@ module.exports = function(grunt) {
     uglify: {
       'eureka-browser-umd': {
         files: {
-          '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka-browser.<%= pkg.version %>.min.js': ['<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka-browser.0.0.24.js']
+          '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka-browser.<%= pkg.version %>.min.js': ['<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka-browser.<%= pkg.version %>.js']
         }
       },
       'eureka-browser-umd-bundle': {
         files: {
-          '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka-browser.bundle.<%= pkg.version %>.min.js': ['<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka-browser.bundle.0.0.24.js']
+          '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka-browser.bundle.<%= pkg.version %>.min.js': ['<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>eureka-browser.bundle.<%= pkg.version %>.js']
         }
       }
     },
