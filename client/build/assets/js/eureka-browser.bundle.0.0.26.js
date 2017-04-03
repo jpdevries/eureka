@@ -138,8 +138,88 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    var languageWithoutRegionCode = language.toLowerCase().split(/[_-]+/)[0];
 
+	    var config = Object.assign({}, props, {});
+
+	    if (props.storagePrefix !== 'eureka__' || true) {
+	      // they are using a non-default localStorage prefix
+	      console.log('holy shit!', props);
+	      var _config = Object.assign({}, {
+	        currentDirectory: function () {
+	          try {
+	            return localStorage.getItem(props.storagePrefix + 'currentDirectory') || undefined;
+	          } catch (e) {
+	            return undefined;
+	          }
+	        }(),
+	        mode: function () {
+	          try {
+	            return localStorage.getItem(props.storagePrefix + 'mode') || undefined;
+	          } catch (e) {
+	            return undefined;
+	          }
+	        }(),
+	        sort: function () {
+	          try {
+	            return localStorage.getItem(props.storagePrefix + 'sort') || undefined;
+	          } catch (e) {
+	            return undefined;
+	          }
+	        }(),
+	        /*source:(() => {
+	          try {
+	            return JSON.parse(localStorage.getItem(`${props.storagePrefix}source`)) || undefined
+	          } catch(e) { return undefined }
+	        })(),*/
+	        treeHidden: function () {
+	          try {
+	            return JSON.parse(localStorage.getItem(props.storagePrefix + 'treeHidden')) || undefined;
+	          } catch (e) {
+	            return undefined;
+	          }
+	        }()
+	      }, props);
+
+	      console.log('config', _config);
+
+	      var localSources = function () {
+	        try {
+	          return JSON.parse(localStorage.getItem(props.storagePrefix + 'source')) || undefined;
+	        } catch (e) {
+	          return undefined;
+	        }
+	      }();
+
+	      var localContent = function () {
+	        try {
+	          return JSON.parse(localStorage.getItem(props.storagePrefix + 'content')) || undefined;
+	        } catch (e) {
+	          return undefined;
+	        }
+	      }();
+
+	      if (localSources) {
+	        if (localSources.sources !== undefined) store.dispatch(actions.fetchMediaSourcesSuccess(localSources.sources));
+	        if (localSources.currentSource !== undefined) store.dispatch(actions.updateSource(localSources.currentSource.toString()));
+	      }
+
+	      if (localContent) {
+	        console.log('updating localContent', localContent);
+	        store.dispatch(actions.updateContent(localContent));
+	      }
+
+	      /*console.log(
+	        config,
+	        localStorage.getItem(`${props.storagePrefix}currentDirectory`),
+	        localStorage.getItem(`${props.storagePrefix}mode`),
+	        localStorage.getItem(`${props.storagePrefix}sort`),
+	        localStorage.getItem(`${props.storagePrefix}source`),
+	        localStorage.getItem(`${props.storagePrefix}treeHidden`)
+	      );*/
+	    }
+
 	    //console.log('bolo', languageWithoutRegionCode);
-	    store.dispatch(actions.updateConfig(props));
+	    store.dispatch(actions.updateConfig(config));
+	    console.log('config updated', config);
 
 	    var i18nEdpoint = function () {
 	      try {
@@ -170,15 +250,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    store.subscribe(function () {
 	      var state = store.getState();
-	      //console.log('state.i18n!!!', state.i18n);
-	      console.log(state);
-	      /*try {
-	        const siteName = title.dataset.siteName,
-	        title = document.querySelector('head > title'),
-	        ct = (`${state.content.cd} of ${state.source.sources[state.source.currentSource].name} media source`);
-	        title.innerHTML = `${ct} | ${siteName}`;
-	      } catch (e) {}*/
 
+	      // whenever the state changes we store pieces of the state locally so that next time Eureka fires up it can render the user interface without delay
 	      if (state.config.useLocalStorage) {
 	        try {
 	          localStorage.setItem(state.config.storagePrefix + 'currentDirectory', state.content.cd);
@@ -186,6 +259,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	          localStorage.setItem(state.config.storagePrefix + 'mode', state.view.mode);
 	          localStorage.setItem(state.config.storagePrefix + 'sort', state.view.sort);
 	          localStorage.setItem(state.config.storagePrefix + 'treeHidden', !state.view.sourceTreeOpen);
+	          localStorage.setItem(state.config.storagePrefix + 'treeHidden', !state.view.sourceTreeOpen);
+	          localStorage.setItem(state.config.storagePrefix + 'content', JSON.stringify(state.content));
 	        } catch (e) {}
 	      }
 	    });
@@ -24744,7 +24819,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  confirmBeforeDelete: false,
 	  locales: "en-US",
 	  mediaSource: undefined,
-	  currentDirectory: "/",
+	  currentDirectory: function () {
+	    try {
+	      return localStorage.getItem('eureka__currentDirectory') || "/";
+	    } catch (e) {
+	      return "/";
+	    }
+	  }(),
 	  uid: "0",
 	  iconSVG: './img/icons.' + pkg.version + '.min.svg',
 	  assetsBasePath: './assets/',
@@ -24770,8 +24851,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return state;
 	};
 
-	var initialContentState = {
-	  cd: '/',
+	var initialContentState = Object.assign({}, {
+	  cd: function () {
+	    try {
+	      return localStorage.getItem('eureka__currentDirectory') || "/";
+	    } catch (e) {
+	      return "/";
+	    }
+	  }(),
 	  contents: [
 	    /*{
 	      filename:'foo.jpg',
@@ -24792,14 +24879,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	      editedOn:1487107348619
 	    }*/
 	  ]
-	};
+	}, function () {
+	  try {
+	    return JSON.parse(localStorage.getItem(initialConfigState.storagePrefix + 'content')) || {};
+	  } catch (e) {
+	    return {};
+	  }
+	}());
 
 	var contentReducer = function contentReducer(state, action) {
 	  state = state || initialContentState;
 
 	  switch (action.type) {
 	    case actions.UPDATE_CONFIG:
-	      //console.log('UPDATE_CONFIG!!!', state, action.config);
+	      console.log('UPDATE_CONFIG!!!', action.config);
 	      if (action.config.currentDirectory) return Object.assign({}, state, {
 	        cd: action.config.currentDirectory
 	      });
@@ -24969,8 +25062,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	  focusedMediaItem: undefined,
 	  filter: undefined,
 	  //cd: '/',
-	  mode: 'table',
-	  sourceTreeOpen: false,
+	  mode: function () {
+	    try {
+	      return localStorage.getItem(initialConfigState.storagePrefix + 'mode') || "table";
+	    } catch (e) {
+	      return "table";
+	    }
+	  }(),
+	  sourceTreeOpen: function () {
+	    try {
+	      return localStorage.getItem(initialConfigState.storagePrefix + 'treeHidden') == 'false' || false;
+	    } catch (e) {
+	      return false;
+	    }
+	  }(),
 	  enlargeFocusedRows: false,
 	  locale: "en-US",
 	  sort: 'name',
@@ -24983,6 +25088,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	};
 
+	console.log('initialViewState', initialViewState);
+
 	var viewReducer = function viewReducer(state, action) {
 	  state = state || initialViewState;
 
@@ -24994,7 +25101,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    case actions.UPDATE_CONFIG:
 	      var o = {};
 	      o = Object.assign({}, o, {
-	        sourceTreeOpen: action.config.treeHidden !== undefined ? !action.config.treeHidden : o.sourceTreeOpen || undefined
+	        sourceTreeOpen: action.config.treeHidden !== undefined ? !action.config.treeHidden : state.sourceTreeOpen || false
 	      });
 	      if (action.config.intervals) o = Object.assign({}, o, { intervals: action.config.intervals });
 	      if (action.config.mode) o = Object.assign({}, o, { mode: action.config.mode });
@@ -25031,6 +25138,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }*/]
 	};
 
+	initialSourceState = Object.assign({}, {
+	  currentSource: "0",
+	  sources: [/*{
+	            name: 'Filesystem',
+	            id: 'fileystem'
+	            },{
+	            name: 'Amazon S3',
+	            id: 's3'
+	            }*/]
+	}, function () {
+	  try {
+	    return JSON.parse(localStorage.getItem(initialConfigState.storagePrefix + 'source')) || {};
+	  } catch (e) {
+	    return {};
+	  }
+	}());
+
+	console.log(initialConfigState.storagePrefix + 'source', initialSourceState);
+
 	var sourceReducer = function sourceReducer(state, action) {
 	  state = state || initialSourceState;
 	  switch (action.type) {
@@ -25042,7 +25168,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    case actions.UPDATE_SOURCE:
 	      return Object.assign({}, state, {
-	        currentSource: action.source.currentSource
+	        currentSource: action.source
 	      });
 	      break;
 	  }
@@ -25475,6 +25601,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var UPDATE_CONFIG = 'update_config';
 	var updateConfig = function updateConfig(config) {
+	  console.log('updateConfig', config);
 	  return {
 	    type: UPDATE_CONFIG,
 	    config: config
@@ -25599,7 +25726,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var FETCH_MEDIA_SOURCES_ERROR = 'fetch_media_sources_error';
 
 	var fetchMediaSourcesSuccess = function fetchMediaSourcesSuccess(sources) {
-	  //console.log('fetchMediaSourcesSuccess', sources);
+	  console.log('fetchMediaSourcesSuccess', sources);
 	  return {
 	    type: FETCH_MEDIA_SOURCES_SUCCESS,
 	    sources: sources
@@ -26542,7 +26669,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.25",
+		"version": "0.0.26",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
