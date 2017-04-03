@@ -102,6 +102,15 @@ app.get('/', (req, res) => {
 
 });
 
+app.get('/nued', (req, res) => {
+
+  serveIt('/', req.query.ln || undefined).then((eurekaMarkup) => {
+    let build = fs.readFileSync(path.join(__dirname, 'client/build/nued.html'), 'utf8').replace('<div id="root"></div>',`<div id="root">${eurekaMarkup}</div>`).replace(`<html lang="en">`,`<html lang="${req.query.ln || 'en'}">`);
+    res.end(build);
+  });
+
+});
+
 
 app.use('/',express.static('client/build'));
 app.use('/assets/js/i18n/locales', express.static('client/i18n/locales'));
@@ -110,6 +119,8 @@ app.use('/assets/js/i18n/locales', express.static('client/i18n/locales'));
 app.post('/', (req, res) => {
   console.log('params',req.params);
   console.log('query',req.query);
+  const referer = req.header('Referer');
+  const isNued = referer.includes('/nued');
 
   const form = new formidable.IncomingForm();
   form.multiples = true;
@@ -167,18 +178,8 @@ app.post('/', (req, res) => {
       });
     } else {
       serveIt(cd).then((eurekaMarkup) => {
-        res.end(`<!DOCTYPE html>
-        <html lang="en">
-          <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width,initial-scale=1">
-            <title data-site-name="Eureka Media Browser">Eureka Media Browser</title>
-            <link rel="stylesheet" href="assets/css/main.css">
-          </head>
-          <body>
-            <div id="root">${eurekaMarkup}</div>
-          </body>
-        </html>`);
+        let build = fs.readFileSync(path.join(__dirname, `client/build/${isNued ? 'nued' : 'index'}.html`), 'utf8').replace('<div id="root"></div>',`<div id="root">${eurekaMarkup}</div>`).replace(`<html lang="en">`,`<html lang="${req.query.ln || 'en'}">`);
+        res.end(build);
       });
     }
 

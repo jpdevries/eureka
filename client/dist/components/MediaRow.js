@@ -181,7 +181,7 @@ var MediaRow = function MediaRow(props) {
       { className: 'visually-hidden' },
       '\u2002',
       _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'select', defaultMessage: 'Select' }),
-      ' $',
+      ' ',
       props.item.filename
     )
   ) : undefined,

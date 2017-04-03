@@ -30,6 +30,11 @@ The Eureka Media Browser is pretty lightweight all things&nbsp;considered.
 | SVG Icons      | `5.04kB`      |
 | React Component | `42.73kB`      |
 
+### HTML&ndash;first
+As a progressively enhanced web component, Eureka is functional HTML&ndash;first. This means that technically anything other than the initial HTML layer is a non&ndash;critical enhancement. Critical features supported by the HTML layer, such as browse, upload, and choose, are universally supported and do not depend on modern&nbsp;browsers.
+
+Take a gander at Eureka in the nued by waking our [raw HTML&nbsp;example](reacteureka.herokuapp.com/nued).
+
 ## Powered By 🚀
  - Progressively Enhanced from HTML components
  - All&ndash;new Virtual DOM powered by React/Redux
@@ -485,6 +490,8 @@ ls bower_components/eureka-browser/client/build/assets/js # bundled and unbundle
 | `sort` | `"name"`      |    Initial column to sort media items on |
 | `allowFullscreen` | `true`      |    Whether or not the interface should offer a fullscreen button |
 | `emphasisFocusedMediaItem` | `true`      |    Whether or not to emphasis selected media items (defaults to emphasizing the filename, only applies to table and list view modes) |
+
+*Please take note that when `useLocalStorage` is `true` any options manually passed in as props will take&nbsp;precedent.*
 
 ## 🗄 REST API
 Eureka is hungry for remote media sources. It needs a REST API to feed it JSON&nbsp;data.  
