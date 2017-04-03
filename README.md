@@ -21,6 +21,15 @@ Don't forget to [browse the Wiki](https://github.com/jpdevries/eureka/wiki) for 
 The Eureka Media Browser and supporting resources are provided free as in&nbsp;beer.  
 [Gratuities are accepted through Square&nbsp;Cash](https://cash.me/$MarkupTips).
 
+## 🏋️‍♀️ Weigh In
+The Eureka Media Browser is pretty lightweight all things&nbsp;considered.
+
+| Asset        | Weight (GZIP minified)
+| ------------- |:-------------:|
+| CSS Stylesheet      | `5.03kB` |
+| SVG Icons      | `5.04kB`      |
+| React Component | `42.73kB`      |
+
 ## Powered By 🚀
  - Progressively Enhanced from HTML components
  - All&ndash;new Virtual DOM powered by React/Redux
