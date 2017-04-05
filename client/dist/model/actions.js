@@ -34,6 +34,7 @@ var updateView = function updateView(view) {
 
 var UPDATE_SOURCE = 'update_source';
 var updateSource = function updateSource(source) {
+  console.log('updating source', source);
   return {
     type: UPDATE_SOURCE,
     source: source

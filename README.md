@@ -35,7 +35,7 @@ As a progressively enhanced web component, Eureka is functional HTML&ndash;first
 
 😲 Take a gander at Eureka in the nued by waking our incredibly lightweight [raw HTML&nbsp;example](https://reacteureka.herokuapp.com/nued).
 
-We also encourage you to temporarily disable JavaScript in your browser and party with Eureka like it's&nbsp;1999. 
+We also encourage you to temporarily disable JavaScript in your browser and party with Eureka like it's&nbsp;1999.
 
 ## Powered By 🚀
  - Progressively Enhanced from HTML components
@@ -56,7 +56,7 @@ We also encourage you to temporarily disable JavaScript in your browser and part
    - ARIA & Keyboard Support
    - high contrast themes
 
-## 🚥 Features 
+## 🚥 Features
 The level of isomorphism between the client and server side one can achieve with Node is unmatched. Eureka takes advantage of this unique strength of Node by, through an isomorphic server and standard synchronous forms, achieving full support for critical&nbsp;features.
 
 No features rely solely on sight or the use of a mouse. Keyboard use is supported. Accommodations are taken for users that benefit from high contrast themes. Visually hidden text is used to convey aspects of the interface that are otherwise visually implied to screen readers and assistive&nbsp;technology.
@@ -331,68 +331,6 @@ The semantic HTML layer remains usable even absent of style as pure&nbsp;HTML.
   </tbody>
 </table>
 
-## 🌐 Browser Support
-The server side rendering and HTML&ndash;first design patterns begin progressively enhancing a universally supported HTML layer. So basic features are supported in any browser. JavaScript support begins at IE9. Desired CSS layout requires Flexbox and is further enhanced with Grid Layout.
-
-## 🔡 i18n
-Eureka is on Crowdin. Please [contribute to our translations](https://crowdin.com/project/eureka-browser) if you are&nbsp;able.
-
-## ♿️ Accessibility Proclaimer
-Eureka strives for WCAG Level AA success criteria in all scenarios with some accessibility preference features leaning towards Level AAA. Please [log *any* a11y issues here](https://github.com/jpdevries/eureka/issues).
-
-## ✅ Getting Started
-We're going to use `yarn` so make sure that is installed.
-
-```bash
-npm install yarn -g
-```
-
-To fire up a testing server run the following:
-
-```bash
-git clone -b release-2.0 git://github.com/jpdevries/eureka.git
-cd eureka
-yarn prestart
-yarn build
-yarn serve # start the  development server
-# open http://localhost:3001 # Node server
-```
-
-To host the compiled production server run
-```bash
-yarn start # install, fetch sources, build
-```
-
-or
-```bash
-yarn prod # fire up the production server
-```
-
-The testing server hosts the `sources` and `client/build` directories along with a REST API to `GET`, `POST`, `PUT`, `DELETE` media items.
-
-![](http://j4p.us/22241J1A3N06/Screen%20Shot%202017-03-13%20at%2012.56.51%20AM.png)
-
-## ⚒ Development
-The Eureka component is created with `create-react-app` and found in the `client` directory. There you can run React tests, build the React component, and start the development server.
-
-Firstly, you'll need the testing server running for the REST API:
-```bash
-cd eureka
-yarn server
-```
-
-Now, in another terminal tab:
-
-```bash
-cd client
-yarn build
-yarn test
-yarn start
-# open http://localhost:3000 # development server
-```
-
-The development server, like any other React app created with `create-react-app`, will automatically inject changes as you save changes to your source files.
-
 ## 🛠 Usage
 
 ```bash
@@ -496,6 +434,68 @@ Configure the `EurekaMediaBrowser` via the optional attributes found in the defa
 
 *Please take note that when `useLocalStorage` is `true` any options manually passed in as props will take&nbsp;precedent.*
 
+## 🌐 Browser Support
+The server side rendering and HTML&ndash;first design patterns begin progressively enhancing a universally supported HTML layer. So basic features are supported in any browser. JavaScript support begins at IE9. Desired CSS layout requires Flexbox and is further enhanced with Grid Layout.
+
+## 🔡 i18n
+Eureka is on Crowdin. Please [contribute to our translations](https://crowdin.com/project/eureka-browser) if you are&nbsp;able.
+
+## ♿️ Accessibility Proclaimer
+Eureka strives for WCAG Level AA success criteria in all scenarios with some accessibility preference features leaning towards Level AAA. Please [log *any* a11y issues here](https://github.com/jpdevries/eureka/issues).
+
+## ✅ Getting Started
+We're going to use `yarn` so make sure that is installed.
+
+```bash
+npm install yarn -g
+```
+
+To fire up a testing server run the following:
+
+```bash
+git clone -b release-2.0 git://github.com/jpdevries/eureka.git
+cd eureka
+yarn prestart
+yarn build
+yarn serve # start the  development server
+# open http://localhost:3001 # Node server
+```
+
+To host the compiled production server run
+```bash
+yarn start # install, fetch sources, build
+```
+
+or
+```bash
+yarn prod # fire up the production server
+```
+
+The testing server hosts the `sources` and `client/build` directories along with a REST API to `GET`, `POST`, `PUT`, `DELETE` media items.
+
+![](http://j4p.us/22241J1A3N06/Screen%20Shot%202017-03-13%20at%2012.56.51%20AM.png)
+
+## ⚒ Development
+The Eureka component is created with `create-react-app` and found in the `client` directory. There you can run React tests, build the React component, and start the development server.
+
+Firstly, you'll need the testing server running for the REST API:
+```bash
+cd eureka
+yarn server
+```
+
+Now, in another terminal tab:
+
+```bash
+cd client
+yarn build
+yarn test
+yarn start
+# open http://localhost:3000 # development server
+```
+
+The development server, like any other React app created with `create-react-app`, will automatically inject changes as you save changes to your source files.
+
 ## 🗄 REST API
 Eureka is hungry for remote media sources. It needs a REST API to feed it JSON&nbsp;data.  
 Find docs at the [REST API wiki page](https://github.com/jpdevries/eureka/wiki/REST-API).
@@ -504,7 +504,7 @@ Find docs at the [REST API wiki page](https://github.com/jpdevries/eureka/wiki/R
 Eureka's core Redux actions assume you'll be using a REST API. If REST isn't really your thing, or you need to modify the Redux actions for some other reason, you can decorate the actions Eureka will use. This is done using a Higher Order Component that wraps `EurekaMediaBrowser` and injects a `decoratedActions` property which will be applied as a shallow merge on top of the default&nbsp;actions. Reference this [Gist example of decorating actions](https://gist.github.com/jpdevries/e967056bd31cf6f01df0e431df68283b) for an example.
 
 ## 📠 Server Side Rendering
-Eureka is progressively enhanced with React to be asynchronous and a richer experience in capable browsers successfully that successfully execute scripts. But Eureka's support doesn't end at modern browsers because its design process doesn't start there. Eureka is a semantic and synchronous HTML form before it is an enhanced Virtual&nbsp;DOM.  
+Eureka is progressively enhanced with React to be asynchronous and a richer experience in capable browsers that successfully execute scripts. But Eureka's support doesn't end at modern browsers because its design process doesn't start there. Eureka is a semantic and synchronous HTML form before it is an enhanced Virtual&nbsp;DOM.  
 
 Reference the [Server Side Rendering Wiki page](https://github.com/jpdevries/eureka/wiki/Server-Side-Rendering) for documentations and examples on achieving world wide&nbsp;support.
 

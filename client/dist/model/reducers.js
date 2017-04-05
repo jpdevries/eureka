@@ -20,21 +20,27 @@ var pkg = require("./../../package.json");
 var initialConfigState = {
   basePath: '/',
   allowUploads: true,
-  treeHidden: true,
+  treeHidden: function () {
+    try {
+      return localStorage.getItem('eureka__treeHidden') == 'true';
+    } catch (e) {
+      return true;
+    }
+  }(),
   useLocalStorage: true,
   storagePrefix: "eureka__",
   allowRename: true,
   allowDelete: true,
   confirmBeforeDelete: false,
   locales: "en-US",
-  mediaSource: undefined,
-  currentDirectory: function () {
+  mediaSource: function () {
     try {
-      return localStorage.getItem('eureka__currentDirectory') || "/";
+      return localStorage.getItem('eureka__mediaSource');
     } catch (e) {
-      return "/";
+      return undefined;
     }
   }(),
+  currentDirectory: undefined,
   uid: "0",
   iconSVG: './img/icons.' + pkg.version + '.min.svg',
   assetsBasePath: './assets/',
@@ -101,7 +107,7 @@ var contentReducer = function contentReducer(state, action) {
 
   switch (action.type) {
     case actions.UPDATE_CONFIG:
-      console.log('UPDATE_CONFIG!!!', action.config);
+      //console.log('UPDATE_CONFIG!!!', action.config);
       if (action.config.currentDirectory) return Object.assign({}, state, {
         cd: action.config.currentDirectory
       });
@@ -287,7 +293,13 @@ var initialViewState = {
   }(),
   enlargeFocusedRows: false,
   locale: "en-US",
-  sort: 'name',
+  sort: function () {
+    try {
+      return localStorage.getItem(initialConfigState.storagePrefix + 'sort') || "name";
+    } catch (e) {
+      return "name";
+    }
+  }(),
   isTableScrolling: false,
   intervals: {
     searchBarPlaceholder: false,
@@ -337,7 +349,13 @@ var viewReducer = function viewReducer(state, action) {
 };
 
 var initialSourceState = {
-  currentSource: "0",
+  currentSource: function () {
+    try {
+      return localStorage.getItem('eureka__currentSource') || "0";
+    } catch (e) {
+      return "0";
+    }
+  }(),
   sources: [/*{
             name: 'Filesystem',
             id: 'fileystem'
@@ -347,35 +365,20 @@ var initialSourceState = {
             }*/]
 };
 
-initialSourceState = Object.assign({}, {
-  currentSource: "0",
-  sources: [/*{
-            name: 'Filesystem',
-            id: 'fileystem'
-            },{
-            name: 'Amazon S3',
-            id: 's3'
-            }*/]
-}, function () {
-  try {
-    return JSON.parse(localStorage.getItem(initialConfigState.storagePrefix + 'source')) || {};
-  } catch (e) {
-    return {};
-  }
-}());
-
 console.log(initialConfigState.storagePrefix + 'source', initialSourceState);
 
 var sourceReducer = function sourceReducer(state, action) {
   state = state || initialSourceState;
   switch (action.type) {
     case actions.FETCH_MEDIA_SOURCES_SUCCESS:
+      console.log(actions.FETCH_MEDIA_SOURCES_SUCCESS);
       return Object.assign({}, state, {
         sources: action.sources
       });
       break;
 
     case actions.UPDATE_SOURCE:
+      console.log(actions.UPDATE_SOURCE, action.source);
       return Object.assign({}, state, {
         currentSource: action.source
       });

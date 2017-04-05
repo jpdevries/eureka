@@ -28,6 +28,7 @@ const updateView = function(view) {
 
 const UPDATE_SOURCE = 'update_source';
 const updateSource = function(source) {
+  console.log('updating source', source);
   return {
     type:UPDATE_SOURCE,
     source:source,

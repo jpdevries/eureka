@@ -15,9 +15,10 @@ const MediaDirectorySelector = (props) => {
     const opts = source.directories.sort((a,b) => {
       if(a.cd === b.cd) return 0;
       return (a.cd > b.cd) ? 1 : -1;
-    }).map((directory, index) => (
-      <option key={index} value={`${source.id}||${directory.cd}`} data-checked={props.source.currentSource.id == source.id && props.content.cd == directory.cd}>{directory.cd}</option>
-    ));
+    }).map((directory, index) => {
+      console.log(props.source.currentSource.id == source.id && props.content.cd == directory.cd, props.source.currentSource.id, source.id, props.content.cd, directory.cd);
+      return <option key={index} value={`${source.id}||${directory.cd}`} checked={props.source.currentSource.id == source.id && props.content.cd == directory.cd}>{directory.cd}</option>;
+    });
     return (
       <optgroup key={index} label={source.name} data-source={source.id === undefined ? index : source.id}>
         <option value={`${source.id}||/`} checked={props.content.cd == "/" && props.source.currentSource == source.id}>./</option>
@@ -31,14 +32,13 @@ const MediaDirectorySelector = (props) => {
   const select = (
     <select aria-live="polite" value={`${props.source.currentSource}||${props.content.cd}`} name="eureka__media-browser_0__browsing" id="eureka__media-browser_0__browsing" onChange={(event) => {
         const [cs, cd] = utility.parseMediaSourceOutOfCombinedPath(event.target.value, '||'); // option values are like 0||assets/img/redwoods where 0 is the media source id and assets/img/redwoods is the directory
-        store.dispatch(decoratedActions.updateSource({
-          currentSource: cs
-        }))
+        console.log('YOLO',cs,cd);
+        store.dispatch(decoratedActions.updateSource(cs))
         store.dispatch(decoratedActions.updateContent({ // updates the "current directory" of the view right away
           cd: cd
         }));
         store.dispatch(decoratedActions.fetchDirectoryContents(cs, { // asyncronously fetches the directory contents from the API
-          path:cd
+          path: cd
         }));
       }}>
       {optgroups}
