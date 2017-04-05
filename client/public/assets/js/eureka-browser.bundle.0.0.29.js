@@ -250,17 +250,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    store.subscribe(function () {
 	      var state = store.getState();
+	      console.log(state);
 
 	      // whenever the state changes we store pieces of the state locally so that next time Eureka fires up it can render the user interface without delay
 	      if (state.config.useLocalStorage) {
 	        try {
 	          localStorage.setItem(state.config.storagePrefix + 'currentDirectory', state.content.cd);
+	          localStorage.setItem(state.config.storagePrefix + 'currentSource', state.source.currentSource);
 	          localStorage.setItem(state.config.storagePrefix + 'source', JSON.stringify(state.source));
 	          localStorage.setItem(state.config.storagePrefix + 'mode', state.view.mode);
 	          localStorage.setItem(state.config.storagePrefix + 'sort', state.view.sort);
 	          localStorage.setItem(state.config.storagePrefix + 'treeHidden', !state.view.sourceTreeOpen);
-	          localStorage.setItem(state.config.storagePrefix + 'treeHidden', !state.view.sourceTreeOpen);
 	          localStorage.setItem(state.config.storagePrefix + 'content', JSON.stringify(state.content));
+	          localStorage.setItem(state.config.storagePrefix + 'tree', JSON.stringify(state.tree));
 	        } catch (e) {}
 	      }
 	    });
@@ -24811,21 +24813,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	var initialConfigState = {
 	  basePath: '/',
 	  allowUploads: true,
-	  treeHidden: true,
+	  treeHidden: function () {
+	    try {
+	      return localStorage.getItem('eureka__treeHidden') == 'true';
+	    } catch (e) {
+	      return true;
+	    }
+	  }(),
 	  useLocalStorage: true,
 	  storagePrefix: "eureka__",
 	  allowRename: true,
 	  allowDelete: true,
 	  confirmBeforeDelete: false,
 	  locales: "en-US",
-	  mediaSource: undefined,
-	  currentDirectory: function () {
+	  mediaSource: function () {
 	    try {
-	      return localStorage.getItem('eureka__currentDirectory') || "/";
+	      return localStorage.getItem('eureka__mediaSource');
 	    } catch (e) {
-	      return "/";
+	      return undefined;
 	    }
 	  }(),
+	  currentDirectory: undefined,
 	  uid: "0",
 	  iconSVG: './img/icons.' + pkg.version + '.min.svg',
 	  assetsBasePath: './assets/',
@@ -24892,7 +24900,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  switch (action.type) {
 	    case actions.UPDATE_CONFIG:
-	      console.log('UPDATE_CONFIG!!!', action.config);
+	      //console.log('UPDATE_CONFIG!!!', action.config);
 	      if (action.config.currentDirectory) return Object.assign({}, state, {
 	        cd: action.config.currentDirectory
 	      });
@@ -24935,17 +24943,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return state;
 	};
 
-	var initialTreeReducer = [/*{
-	                          name:'assets',
-	                          cd:'assets',
-	                          children:[{
-	                          name:'img',
-	                          cd:'assets/img'
-	                          }]
-	                          },{
-	                          name:'uploads',
-	                          cd:'uploads'
-	                          }*/];
+	var initialTreeReducer = function () {
+	  try {
+	    return JSON.parse(localStorage.getItem('eureka__tree'));
+	  } catch (e) {
+	    return [/*{
+	            name:'assets',
+	            cd:'assets',
+	            children:[{
+	            name:'img',
+	            cd:'assets/img'
+	            }]
+	            },{
+	            name:'uploads',
+	            cd:'uploads'
+	            }*/];
+	  }
+	}();
 
 	var cd = '';
 	var treeReducer = function treeReducer(state, action) {
@@ -25078,7 +25092,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }(),
 	  enlargeFocusedRows: false,
 	  locale: "en-US",
-	  sort: 'name',
+	  sort: function () {
+	    try {
+	      return localStorage.getItem(initialConfigState.storagePrefix + 'sort') || "name";
+	    } catch (e) {
+	      return "name";
+	    }
+	  }(),
 	  isTableScrolling: false,
 	  intervals: {
 	    searchBarPlaceholder: false,
@@ -25128,7 +25148,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	var initialSourceState = {
-	  currentSource: "0",
+	  currentSource: function () {
+	    try {
+	      return localStorage.getItem('eureka__currentSource') || "0";
+	    } catch (e) {
+	      return "0";
+	    }
+	  }(),
 	  sources: [/*{
 	            name: 'Filesystem',
 	            id: 'fileystem'
@@ -25138,35 +25164,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }*/]
 	};
 
-	initialSourceState = Object.assign({}, {
-	  currentSource: "0",
-	  sources: [/*{
-	            name: 'Filesystem',
-	            id: 'fileystem'
-	            },{
-	            name: 'Amazon S3',
-	            id: 's3'
-	            }*/]
-	}, function () {
-	  try {
-	    return JSON.parse(localStorage.getItem(initialConfigState.storagePrefix + 'source')) || {};
-	  } catch (e) {
-	    return {};
-	  }
-	}());
-
 	console.log(initialConfigState.storagePrefix + 'source', initialSourceState);
 
 	var sourceReducer = function sourceReducer(state, action) {
 	  state = state || initialSourceState;
 	  switch (action.type) {
 	    case actions.FETCH_MEDIA_SOURCES_SUCCESS:
+	      console.log(actions.FETCH_MEDIA_SOURCES_SUCCESS);
 	      return Object.assign({}, state, {
 	        sources: action.sources
 	      });
 	      break;
 
 	    case actions.UPDATE_SOURCE:
+	      console.log(actions.UPDATE_SOURCE, action.source);
 	      return Object.assign({}, state, {
 	        currentSource: action.source
 	      });
@@ -25585,6 +25596,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var UPDATE_SOURCE = 'update_source';
 	var updateSource = function updateSource(source) {
+	  console.log('updating source', source);
 	  return {
 	    type: UPDATE_SOURCE,
 	    source: source
@@ -26669,7 +26681,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.28",
+		"version": "0.0.29",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -31146,9 +31158,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (a.cd === b.cd) return 0;
 	      return a.cd > b.cd ? 1 : -1;
 	    }).map(function (directory, index) {
+	      console.log(props.source.currentSource.id == source.id && props.content.cd == directory.cd, props.source.currentSource.id, source.id, props.content.cd, directory.cd);
 	      return _react2.default.createElement(
 	        'option',
-	        { key: index, value: source.id + '||' + directory.cd, 'data-checked': props.source.currentSource.id == source.id && props.content.cd == directory.cd },
+	        { key: index, value: source.id + '||' + directory.cd, checked: props.source.currentSource.id == source.id && props.content.cd == directory.cd },
 	        directory.cd
 	      );
 	    });
@@ -31179,9 +31192,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            cd = _utility$parseMediaSo2[1]; // option values are like 0||assets/img/redwoods where 0 is the media source id and assets/img/redwoods is the directory
 
 
-	        _store2.default.dispatch(decoratedActions.updateSource({
-	          currentSource: cs
-	        }));
+	        console.log('YOLO', cs, cd);
+	        _store2.default.dispatch(decoratedActions.updateSource(cs));
 	        _store2.default.dispatch(decoratedActions.updateContent({ // updates the "current directory" of the view right away
 	          cd: cd
 	        }));
@@ -33952,7 +33964,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  function listTree(tree) {
 	    function shouldBeOpen(item) {
-	      console.log('shouldBeOpen', props.content.cd, item.cd, props.content.cd.indexOf(item.cd));
+	      //console.log('shouldBeOpen', props.content.cd, item.cd, props.content.cd.indexOf(item.cd));
 	      try {
 	        return item.cd == './' || props.content.cd.indexOf(item.cd) === 0 ? true : undefined;
 	      } catch (e) {

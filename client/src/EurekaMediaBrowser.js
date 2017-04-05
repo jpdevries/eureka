@@ -161,6 +161,7 @@ class EurekaMediaBrowser extends Component {
           localStorage.setItem(`${state.config.storagePrefix}sort`, state.view.sort);
           localStorage.setItem(`${state.config.storagePrefix}treeHidden`, !state.view.sourceTreeOpen);
           localStorage.setItem(`${state.config.storagePrefix}content`, JSON.stringify(state.content));
+          localStorage.setItem(`${state.config.storagePrefix}tree`, JSON.stringify(state.tree));
         } catch (e) { }
       }
 

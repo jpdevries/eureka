@@ -139,17 +139,23 @@ var contentReducer = function(state, action) {
   return state;
 }
 
-var initialTreeReducer = [/*{
-  name:'assets',
-  cd:'assets',
-  children:[{
-    name:'img',
-    cd:'assets/img'
-  }]
-},{
-  name:'uploads',
-  cd:'uploads'
-}*/];
+var initialTreeReducer = (() => {
+  try {
+    return JSON.parse(localStorage.getItem('eureka__tree'));
+  } catch(e) {
+    return [/*{
+      name:'assets',
+      cd:'assets',
+      children:[{
+        name:'img',
+        cd:'assets/img'
+      }]
+    },{
+      name:'uploads',
+      cd:'uploads'
+    }*/];
+  }
+})();
 
 let cd = '';
 var treeReducer = function(state, action) {

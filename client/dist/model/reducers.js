@@ -150,17 +150,23 @@ var contentReducer = function contentReducer(state, action) {
   return state;
 };
 
-var initialTreeReducer = [/*{
-                          name:'assets',
-                          cd:'assets',
-                          children:[{
-                          name:'img',
-                          cd:'assets/img'
-                          }]
-                          },{
-                          name:'uploads',
-                          cd:'uploads'
-                          }*/];
+var initialTreeReducer = function () {
+  try {
+    return JSON.parse(localStorage.getItem('eureka__tree'));
+  } catch (e) {
+    return [/*{
+            name:'assets',
+            cd:'assets',
+            children:[{
+            name:'img',
+            cd:'assets/img'
+            }]
+            },{
+            name:'uploads',
+            cd:'uploads'
+            }*/];
+  }
+}();
 
 var cd = '';
 var treeReducer = function treeReducer(state, action) {

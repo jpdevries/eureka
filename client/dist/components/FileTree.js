@@ -115,7 +115,7 @@ var FileTree = function FileTree(props) {
 
   function listTree(tree) {
     function shouldBeOpen(item) {
-      console.log('shouldBeOpen', props.content.cd, item.cd, props.content.cd.indexOf(item.cd));
+      //console.log('shouldBeOpen', props.content.cd, item.cd, props.content.cd.indexOf(item.cd));
       try {
         return item.cd == './' || props.content.cd.indexOf(item.cd) === 0 ? true : undefined;
       } catch (e) {
