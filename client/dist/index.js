@@ -48,7 +48,7 @@ function render() {
     basePath: '/core/components/eureka/',
     allowUploads: true,
     lang: languageKey,
-    useLocalStorage: true,
+    useLocalStorage: false,
     allowRename: true,
     allowDelete: true,
     confirmBeforeDelete: true,
