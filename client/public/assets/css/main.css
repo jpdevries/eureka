@@ -616,6 +616,10 @@ a[role="presentation"] {
   .eureka .eureka__tree {
     margin-bottom: 16px;
     margin-bottom: 1rem; }
+    @media (pointer: coarse) {
+      .eureka .eureka__tree {
+        font-size: 1.1em;
+        line-height: 1.5; } }
   .eureka .eureka__tree-toggle {
     margin-bottom: 16px;
     margin-bottom: 1rem; }

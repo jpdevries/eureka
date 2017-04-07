@@ -91,7 +91,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "yarn i18n && react-scripts build",
+    "build": "yarn i18n && react-scripts build && grunt buildcss",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "babel": "babel ./src -d ./dist",

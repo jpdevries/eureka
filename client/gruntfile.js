@@ -371,4 +371,5 @@ module.exports = function(grunt) {
 
   grunt.registerTask('default', ['growl:watch', 'watch']);
   grunt.registerTask('build',['bower','copy','modernizr','sass','postcss','cssmin','webpack','uglify','clean:buildimg','svgstore','svgo','growl:build']);
+  grunt.registerTask('buildcss',['sass','postcss','cssmin','growl:sass']);
 };

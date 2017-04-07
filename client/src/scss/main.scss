@@ -341,6 +341,10 @@ a[role="presentation"] {
 
   .eureka__tree {
     margin-bottom:1rem;
+    @media (pointer: coarse) { // make the tree for fat finger friendly 
+      font-size:1.1em;
+      line-height:1.5
+    }
   }
 
   .eureka__tree-toggle {
