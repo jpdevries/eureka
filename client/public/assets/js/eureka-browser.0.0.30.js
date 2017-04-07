@@ -1368,7 +1368,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  allowDelete: true,
 	  confirmBeforeDelete: false,
 	  locales: "en-US",
-	  mediaSource: undefined,
+	  mediaSource: "0",
 	  currentDirectory: "/",
 	  uid: "0",
 	  iconSVG: './img/icons.' + pkg.version + '.min.svg',
@@ -1667,7 +1667,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    case actions.UPDATE_SOURCE:
 	      return Object.assign({}, state, {
-	        currentSource: action.source.currentSource
+	        currentSource: action.source
 	      });
 	      break;
 	  }
@@ -3369,7 +3369,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.29",
+		"version": "0.0.30",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -3464,7 +3464,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			"eject": "react-scripts eject",
 			"babel": "babel ./src -d ./dist",
 			"i18n": "cd ./i18n && node build.js && cd ../",
-			"pretag": "rm -rf public/assets/css && grunt clean:buildjs && grunt build && grunt copy && grunt postcss && grunt bump && yarn build && grunt copy"
+			"pretag": "rm -rf public/assets/css && grunt clean:buildjs && grunt build && grunt sass && grunt copy && grunt postcss && grunt bump && yarn build && grunt copy"
 		}
 	};
 
