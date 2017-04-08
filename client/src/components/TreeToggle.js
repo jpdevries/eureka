@@ -17,7 +17,7 @@ const TreeToggle = (props) => {
   return (
 
       <div>
-        <button id="eureka__tree-toggle__button" aria-controls="eureka__pathbrowser" aria-expanded={props.view.sourceTreeOpen} onClick={(event) => {
+        <button role="menuitem" id="eureka__tree-toggle__button" aria-controls="eureka__pathbrowser" aria-expanded={props.view.sourceTreeOpen} onClick={(event) => {
           store.dispatch(actions.updateView({
             sourceTreeOpen: !props.view.sourceTreeOpen
           }))  

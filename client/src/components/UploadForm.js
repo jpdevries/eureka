@@ -36,13 +36,13 @@ class UploadForm extends Component {
     submit = utility.serverSideRendering ? <button type="submit" formmethod="post">{uploadFilesMessage}</button> : undefined,
     form = (utility.serverSideRendering) ? (
       <div>
-          <label htmlFor="eureka__upload-form">{uploadFilesMessage}<span className={classNames({"visually-hidden": !utility.serverSideRendering})} > to {props.content.cd}</span>:&ensp;</label>
+          <label role="menuitem" htmlFor="eureka__upload-form">{uploadFilesMessage}<span className={classNames({"visually-hidden": !utility.serverSideRendering})} > to {props.content.cd}</span>:&ensp;</label>
           <input id="eureka__upload-form" multiple="multiple" name="eureka__uploadFiles" type="file" />
           {submit}
       </div>
     ) : (
       <form onSubmit={this.handleSubmit.bind(this)} encType="multipart/form-data" ref={(form) => { this.form = form; }}>
-          <label htmlFor="eureka__upload-form">{uploadFilesMessage}<span className="visually-hidden"> <FormattedMessage id="grammar.to" defaultMessage="to" /> {props.content.cd}</span>:&ensp;</label>
+          <label role="menuitem" htmlFor="eureka__upload-form">{uploadFilesMessage}<span className="visually-hidden"> <FormattedMessage id="grammar.to" defaultMessage="to" /> {props.content.cd}</span>:&ensp;</label>
           <input id="eureka__upload-form" multiple="multiple" name="eureka__uploadFiles" type="file" onChange={(e) => {
               this.form.dispatchEvent(new Event("submit")); // so there is no click button they need to click
           }} />

@@ -87,7 +87,7 @@ const FileTree = (props) => {
           console.log('TOGGLE!!!', item);
           console.log(event.target.hasAttribute('open'));
         }} key={index} open={shouldBeOpen(item)}>
-        <summary contextMenu={`context_menu__${item.cd.replace(/^[^a-z]+|[^\w:.-]+/gi, "")}`} className={(props.content.cd === item.cd) ? 'active' : undefined}>
+        <summary role="treeitem" contextMenu={`context_menu__${item.cd.replace(/^[^a-z]+|[^\w:.-]+/gi, "")}`} className={(props.content.cd === item.cd) ? 'active' : undefined}>
           <Icon {...props} icon="folder" />
           <Icon {...props} icon="folder-open" />
           <FileTreeSpan {...props} item={item} index={index} key={index} />
@@ -125,7 +125,7 @@ const FileTree = (props) => {
   }]);
 
   return (
-    <nav className="eureka__tree">
+    <nav className="eureka__tree" role="tree">
       {contentList}
     </nav>
   );

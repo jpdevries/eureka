@@ -104,7 +104,7 @@ var UploadForm = function (_Component) {
         null,
         _react2.default.createElement(
           'label',
-          { htmlFor: 'eureka__upload-form' },
+          { role: 'menuitem', htmlFor: 'eureka__upload-form' },
           uploadFilesMessage,
           _react2.default.createElement(
             'span',
@@ -123,7 +123,7 @@ var UploadForm = function (_Component) {
           } },
         _react2.default.createElement(
           'label',
-          { htmlFor: 'eureka__upload-form' },
+          { role: 'menuitem', htmlFor: 'eureka__upload-form' },
           uploadFilesMessage,
           _react2.default.createElement(
             'span',

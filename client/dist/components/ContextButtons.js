@@ -81,7 +81,7 @@ var ContextButtons = function ContextButtons(props) {
 
   return _react2.default.createElement(
     'div',
-    { className: 'eureka__button-bar eureka__context-buttons', role: 'listbox', 'aria-label': performContextualActionsMessage, tabIndex: '0', 'aria-activedescendant': 'expand__' + (0, _utility.cssSafe)(item.filename) },
+    { className: 'eureka__button-bar eureka__context-buttons', role: 'listbox', 'future-role': 'toolbar listbox', 'aria-label': performContextualActionsMessage, tabIndex: '0', 'aria-activedescendant': 'expand__' + (0, _utility.cssSafe)(item.filename) },
     _react2.default.createElement(
       'a',
       { role: 'option', id: 'expand__' + (0, _utility.cssSafe)(item.filename), href: item.absoluteURL, target: '_' + encodeURI(item.absoluteURL), className: 'button', title: expandItemMessage },

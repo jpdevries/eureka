@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 
 const Modal = (props) => {
   return (
-    <div className="eureka__modal">
+    <div className="eureka__modal" role="dialog">
       <div className="eureka__modal-panel">
         <h2>
           {props.title}

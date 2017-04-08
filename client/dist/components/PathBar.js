@@ -86,7 +86,7 @@ var PathBar = function PathBar(props) {
     ),
     _react2.default.createElement(
       'div',
-      { className: 'eureka__show-for-mobile-up' },
+      { role: 'status', className: 'eureka__show-for-mobile-up' },
       _react2.default.createElement(
         'a',
         { role: 'presentation', href: props.view.focusedMediaItem.absoluteURL, target: '_' + encodeURI(props.view.focusedMediaItem.absoluteURL) },

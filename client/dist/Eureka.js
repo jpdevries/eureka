@@ -377,7 +377,7 @@ var Eureka = function (_Component) {
             ),
             _react2.default.createElement(
               'div',
-              { className: 'eureka__tree-toggle' },
+              { role: 'menubar', className: 'eureka__tree-toggle' },
               treeToggle,
               mediaDirectorySelector,
               uploadForm,
@@ -393,15 +393,19 @@ var Eureka = function (_Component) {
       );
 
       return _utility2.default.serverSideRendering ? _react2.default.createElement(
-        'form',
-        { lang: props.lang || undefined, method: 'POST', action: props.config.basePath, encType: 'multipart/form-data', className: 'eureka eureka__view-mode__' + props.view.mode + enlargeFocusedRows + serverSideClass },
-        formDiv,
-        pathBar,
-        chooseBar,
-        modal
+        'div',
+        { role: 'widget' },
+        _react2.default.createElement(
+          'form',
+          { lang: props.lang || undefined, method: 'POST', action: props.config.basePath, encType: 'multipart/form-data', className: 'eureka eureka__view-mode__' + props.view.mode + enlargeFocusedRows + serverSideClass },
+          formDiv,
+          pathBar,
+          chooseBar,
+          modal
+        )
       ) : _react2.default.createElement(
         'div',
-        { lang: props.lang || undefined, className: 'eureka eureka__view-mode__' + props.view.mode + enlargeFocusedRows + serverSideClass },
+        { role: 'widget', lang: props.lang || undefined, className: 'eureka eureka__view-mode__' + props.view.mode + enlargeFocusedRows + serverSideClass },
         formDiv,
         pathBar,
         chooseBar,

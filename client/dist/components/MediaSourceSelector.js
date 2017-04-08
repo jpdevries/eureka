@@ -33,7 +33,7 @@ var MediaSourceSelector = function MediaSourceSelector(props) {
 
   return _react2.default.createElement(
     'div',
-    { className: 'eureka__media-source-selector' },
+    { className: 'eureka__media-source-selector', role: 'complementary', 'future-role': 'complementary composite' },
     _react2.default.createElement(
       'h2',
       null,

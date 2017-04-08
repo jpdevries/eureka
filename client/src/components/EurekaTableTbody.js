@@ -145,7 +145,7 @@ class EurekaTableTbody extends Component {
 
     return (
       //onScroll={this.handleScroll.bind(this)}
-      <tbody aria-live="polite" className={classNames({empty:!contents.length})} ref={(tbody) => { this.tbody = tbody }} >
+      <tbody role="rowgroup" aria-live="polite" className={classNames({empty:!contents.length})} ref={(tbody) => { this.tbody = tbody }} >
         {contentList}
       </tbody>
     );

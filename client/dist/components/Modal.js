@@ -15,7 +15,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var Modal = function Modal(props) {
   return _react2.default.createElement(
     'div',
-    { className: 'eureka__modal' },
+    { className: 'eureka__modal', role: 'dialog' },
     _react2.default.createElement(
       'div',
       { className: 'eureka__modal-panel' },

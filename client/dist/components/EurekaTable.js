@@ -48,6 +48,8 @@ var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -92,7 +94,12 @@ var EurekaTable = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _this2 = this;
+      var _this2 = this,
+          _React$createElement2,
+          _React$createElement3,
+          _React$createElement4,
+          _React$createElement5,
+          _React$createElement6;
 
       var props = this.props,
           state = this.state,
@@ -129,7 +136,7 @@ var EurekaTable = function (_Component) {
 
       var table = _react2.default.createElement(
         'table',
-        { className: 'eureka__table', cellSpacing: '0', cellPadding: '0' },
+        { className: 'eureka__table', cellSpacing: '0', cellPadding: '0', role: 'grid' },
         _react2.default.createElement(
           'thead',
           { hidden: !props.content.contents.length, className: (0, _classnames2.default)(_store2.default.getState().view.isTableScrolling ? 'eureka__tbody-scrolling' : undefined) },
@@ -139,82 +146,82 @@ var EurekaTable = function (_Component) {
             selectHead,
             _react2.default.createElement(
               'th',
-              { scope: 'col', role: 'columnheader' },
+              _defineProperty({ role: 'rowheader', scope: 'col' }, 'role', 'columnheader'),
               _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'media', defaultMessage: 'Media' })
             ),
             _react2.default.createElement(
               'th',
-              { scope: 'col', role: 'columnheader', onClick: function onClick(event) {
-                  var dir = _this2.state.sort.dir;
-                  if (_this2.state.sort.by === 'filename') {
-                    dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
+              (_React$createElement2 = { role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement2, 'role', 'columnheader'), _defineProperty(_React$createElement2, 'onClick', function onClick(event) {
+                var dir = _this2.state.sort.dir;
+                if (_this2.state.sort.by === 'filename') {
+                  dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
+                }
+                _this2.setState({
+                  sort: {
+                    by: 'filename',
+                    dir: dir
                   }
-                  _this2.setState({
-                    sort: {
-                      by: 'filename',
-                      dir: dir
-                    }
-                  });
-                } },
+                });
+              }), _React$createElement2),
               _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'name', defaultMessage: 'Name' }),
               '\u2002',
               !_utility2.default.serverSideRendering ? _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'sort' })) : undefined
             ),
             _react2.default.createElement(
               'th',
-              { scope: 'col', role: 'columnheader', className: 'visually-hidden' },
+              (_React$createElement3 = { role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement3, 'role', 'columnheader'), _defineProperty(_React$createElement3, 'className', 'visually-hidden'), _React$createElement3),
               'Actions'
             ),
             _react2.default.createElement(
               'th',
-              { scope: 'col', role: 'columnheader', onClick: function onClick(event) {
-                  var dir = _this2.state.sort.dir;
-                  if (_this2.state.sort.by === 'dimensions') {
-                    dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
+              (_React$createElement4 = { role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement4, 'role', 'columnheader'), _defineProperty(_React$createElement4, 'onClick', function onClick(event) {
+                var dir = _this2.state.sort.dir;
+                if (_this2.state.sort.by === 'dimensions') {
+                  dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
+                }
+                _this2.setState({
+                  sort: {
+                    by: 'dimensions',
+                    dir: dir
                   }
-                  _this2.setState({
-                    sort: {
-                      by: 'dimensions',
-                      dir: dir
-                    }
-                  });
-                } },
+                });
+              }), _React$createElement4),
               _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'dimensions', defaultMessage: 'Dimensions' }),
               '\u2002',
               !_utility2.default.serverSideRendering ? _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'sort' })) : undefined
             ),
             _react2.default.createElement(
               'th',
-              { scope: 'col', role: 'columnheader', onClick: function onClick(event) {
-                  var dir = _this2.state.sort.dir;
-                  if (_this2.state.sort.by === 'fileSize') {
-                    dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
+              (_React$createElement5 = { role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement5, 'role', 'columnheader'), _defineProperty(_React$createElement5, 'onClick', function onClick(event) {
+                var dir = _this2.state.sort.dir;
+                if (_this2.state.sort.by === 'fileSize') {
+                  dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
+                }
+                _this2.setState({
+                  sort: {
+                    by: 'fileSize',
+                    dir: dir
                   }
-                  _this2.setState({
-                    sort: {
-                      by: 'fileSize',
-                      dir: dir
-                    }
-                  });
-                } },
+                });
+              }), _React$createElement5),
               _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'fileSize', defaultMessage: 'File Size' }),
               '\u2002',
               !_utility2.default.serverSideRendering ? _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'sort' })) : undefined
             ),
             _react2.default.createElement(
               'th',
-              { scope: 'col', role: 'columnheader', onClick: function onClick(event) {
-                  var dir = _this2.state.sort.dir;
-                  if (_this2.state.sort.by === 'editedOn') {
-                    dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
+              (_React$createElement6 = { role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement6, 'role', 'columnheader'), _defineProperty(_React$createElement6, 'onClick', function onClick(event) {
+                var dir = _this2.state.sort.dir;
+                if (_this2.state.sort.by === 'editedOn') {
+                  dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
+                }
+                _this2.setState({
+                  sort: {
+                    by: 'editedOn',
+                    dir: dir
                   }
-                  _this2.setState({
-                    sort: {
-                      by: 'editedOn',
-                      dir: dir
-                    }
-                  });
-                } },
+                });
+              }), _React$createElement6),
               _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'editedOn', defaultMessage: 'Edited On' }),
               '\u2002',
               !_utility2.default.serverSideRendering ? _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'sort' })) : undefined

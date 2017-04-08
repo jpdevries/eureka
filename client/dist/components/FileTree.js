@@ -133,7 +133,7 @@ var FileTree = function FileTree(props) {
           }, key: index, open: shouldBeOpen(item) },
         _react2.default.createElement(
           'summary',
-          { contextMenu: 'context_menu__' + item.cd.replace(/^[^a-z]+|[^\w:.-]+/gi, ""), className: props.content.cd === item.cd ? 'active' : undefined },
+          { role: 'treeitem', contextMenu: 'context_menu__' + item.cd.replace(/^[^a-z]+|[^\w:.-]+/gi, ""), className: props.content.cd === item.cd ? 'active' : undefined },
           _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'folder' })),
           _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'folder-open' })),
           _react2.default.createElement(FileTreeSpan, _extends({}, props, { item: item, index: index, key: index })),
@@ -174,7 +174,7 @@ var FileTree = function FileTree(props) {
 
   return _react2.default.createElement(
     'nav',
-    { className: 'eureka__tree' },
+    { className: 'eureka__tree', role: 'tree' },
     contentList
   );
 };

@@ -1184,7 +1184,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            ),
 	            _react2.default.createElement(
 	              'div',
-	              { className: 'eureka__tree-toggle' },
+	              { role: 'menubar', className: 'eureka__tree-toggle' },
 	              treeToggle,
 	              mediaDirectorySelector,
 	              uploadForm,
@@ -1200,15 +1200,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	      );
 
 	      return _utility2.default.serverSideRendering ? _react2.default.createElement(
-	        'form',
-	        { lang: props.lang || undefined, method: 'POST', action: props.config.basePath, encType: 'multipart/form-data', className: 'eureka eureka__view-mode__' + props.view.mode + enlargeFocusedRows + serverSideClass },
-	        formDiv,
-	        pathBar,
-	        chooseBar,
-	        modal
+	        'div',
+	        { role: 'widget' },
+	        _react2.default.createElement(
+	          'form',
+	          { lang: props.lang || undefined, method: 'POST', action: props.config.basePath, encType: 'multipart/form-data', className: 'eureka eureka__view-mode__' + props.view.mode + enlargeFocusedRows + serverSideClass },
+	          formDiv,
+	          pathBar,
+	          chooseBar,
+	          modal
+	        )
 	      ) : _react2.default.createElement(
 	        'div',
-	        { lang: props.lang || undefined, className: 'eureka eureka__view-mode__' + props.view.mode + enlargeFocusedRows + serverSideClass },
+	        { role: 'widget', lang: props.lang || undefined, className: 'eureka eureka__view-mode__' + props.view.mode + enlargeFocusedRows + serverSideClass },
 	        formDiv,
 	        pathBar,
 	        chooseBar,
@@ -1261,7 +1265,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  return _react2.default.createElement(
 	    'div',
-	    { className: 'eureka__media-source-selector' },
+	    { className: 'eureka__media-source-selector', role: 'complementary', 'future-role': 'complementary composite' },
 	    _react2.default.createElement(
 	      'h2',
 	      null,
@@ -7931,7 +7935,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  ) : undefined;
 	  var select = _react2.default.createElement(
 	    'select',
-	    { 'aria-live': 'polite', value: props.source.currentSource + '||' + props.content.cd, name: 'eureka__media-browser_0__browsing', id: 'eureka__media-browser_0__browsing', onChange: function onChange(event) {
+	    { role: 'navigation', 'aria-live': 'polite', value: props.source.currentSource + '||' + props.content.cd, name: 'eureka__media-browser_0__browsing', id: 'eureka__media-browser_0__browsing', onChange: function onChange(event) {
 	        var _utility$parseMediaSo = _utility2.default.parseMediaSourceOutOfCombinedPath(event.target.value, '||'),
 	            _utility$parseMediaSo2 = _slicedToArray(_utility$parseMediaSo, 2),
 	            cs = _utility$parseMediaSo2[0],
@@ -8287,7 +8291,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    null,
 	    _react2.default.createElement(
 	      'button',
-	      { id: 'eureka__tree-toggle__button', 'aria-controls': 'eureka__pathbrowser', 'aria-expanded': props.view.sourceTreeOpen, onClick: function onClick(event) {
+	      { role: 'menuitem', id: 'eureka__tree-toggle__button', 'aria-controls': 'eureka__pathbrowser', 'aria-expanded': props.view.sourceTreeOpen, onClick: function onClick(event) {
 	          _store2.default.dispatch(_actions2.default.updateView({
 	            sourceTreeOpen: !props.view.sourceTreeOpen
 	          }));
@@ -8528,7 +8532,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      return !_utility2.default.serverSideRendering ? _react2.default.createElement(
 	        'form',
-	        { className: 'eureka__search-bar' },
+	        { role: 'search', className: 'eureka__search-bar' },
 	        _react2.default.createElement(
 	          'label',
 	          { htmlFor: 'eureka__filter', title: filterTitle },
@@ -8950,6 +8954,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -8994,7 +9000,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this2 = this;
+	      var _this2 = this,
+	          _React$createElement2,
+	          _React$createElement3,
+	          _React$createElement4,
+	          _React$createElement5,
+	          _React$createElement6;
 
 	      var props = this.props,
 	          state = this.state,
@@ -9031,7 +9042,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      var table = _react2.default.createElement(
 	        'table',
-	        { className: 'eureka__table', cellSpacing: '0', cellPadding: '0' },
+	        { className: 'eureka__table', cellSpacing: '0', cellPadding: '0', role: 'grid' },
 	        _react2.default.createElement(
 	          'thead',
 	          { hidden: !props.content.contents.length, className: (0, _classnames2.default)(_store2.default.getState().view.isTableScrolling ? 'eureka__tbody-scrolling' : undefined) },
@@ -9041,82 +9052,82 @@ return /******/ (function(modules) { // webpackBootstrap
 	            selectHead,
 	            _react2.default.createElement(
 	              'th',
-	              { scope: 'col', role: 'columnheader' },
+	              _defineProperty({ role: 'rowheader', scope: 'col' }, 'role', 'columnheader'),
 	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'media', defaultMessage: 'Media' })
 	            ),
 	            _react2.default.createElement(
 	              'th',
-	              { scope: 'col', role: 'columnheader', onClick: function onClick(event) {
-	                  var dir = _this2.state.sort.dir;
-	                  if (_this2.state.sort.by === 'filename') {
-	                    dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
+	              (_React$createElement2 = { role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement2, 'role', 'columnheader'), _defineProperty(_React$createElement2, 'onClick', function onClick(event) {
+	                var dir = _this2.state.sort.dir;
+	                if (_this2.state.sort.by === 'filename') {
+	                  dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
+	                }
+	                _this2.setState({
+	                  sort: {
+	                    by: 'filename',
+	                    dir: dir
 	                  }
-	                  _this2.setState({
-	                    sort: {
-	                      by: 'filename',
-	                      dir: dir
-	                    }
-	                  });
-	                } },
+	                });
+	              }), _React$createElement2),
 	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'name', defaultMessage: 'Name' }),
 	              '\u2002',
 	              !_utility2.default.serverSideRendering ? _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'sort' })) : undefined
 	            ),
 	            _react2.default.createElement(
 	              'th',
-	              { scope: 'col', role: 'columnheader', className: 'visually-hidden' },
+	              (_React$createElement3 = { role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement3, 'role', 'columnheader'), _defineProperty(_React$createElement3, 'className', 'visually-hidden'), _React$createElement3),
 	              'Actions'
 	            ),
 	            _react2.default.createElement(
 	              'th',
-	              { scope: 'col', role: 'columnheader', onClick: function onClick(event) {
-	                  var dir = _this2.state.sort.dir;
-	                  if (_this2.state.sort.by === 'dimensions') {
-	                    dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
+	              (_React$createElement4 = { role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement4, 'role', 'columnheader'), _defineProperty(_React$createElement4, 'onClick', function onClick(event) {
+	                var dir = _this2.state.sort.dir;
+	                if (_this2.state.sort.by === 'dimensions') {
+	                  dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
+	                }
+	                _this2.setState({
+	                  sort: {
+	                    by: 'dimensions',
+	                    dir: dir
 	                  }
-	                  _this2.setState({
-	                    sort: {
-	                      by: 'dimensions',
-	                      dir: dir
-	                    }
-	                  });
-	                } },
+	                });
+	              }), _React$createElement4),
 	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'dimensions', defaultMessage: 'Dimensions' }),
 	              '\u2002',
 	              !_utility2.default.serverSideRendering ? _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'sort' })) : undefined
 	            ),
 	            _react2.default.createElement(
 	              'th',
-	              { scope: 'col', role: 'columnheader', onClick: function onClick(event) {
-	                  var dir = _this2.state.sort.dir;
-	                  if (_this2.state.sort.by === 'fileSize') {
-	                    dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
+	              (_React$createElement5 = { role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement5, 'role', 'columnheader'), _defineProperty(_React$createElement5, 'onClick', function onClick(event) {
+	                var dir = _this2.state.sort.dir;
+	                if (_this2.state.sort.by === 'fileSize') {
+	                  dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
+	                }
+	                _this2.setState({
+	                  sort: {
+	                    by: 'fileSize',
+	                    dir: dir
 	                  }
-	                  _this2.setState({
-	                    sort: {
-	                      by: 'fileSize',
-	                      dir: dir
-	                    }
-	                  });
-	                } },
+	                });
+	              }), _React$createElement5),
 	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'fileSize', defaultMessage: 'File Size' }),
 	              '\u2002',
 	              !_utility2.default.serverSideRendering ? _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'sort' })) : undefined
 	            ),
 	            _react2.default.createElement(
 	              'th',
-	              { scope: 'col', role: 'columnheader', onClick: function onClick(event) {
-	                  var dir = _this2.state.sort.dir;
-	                  if (_this2.state.sort.by === 'editedOn') {
-	                    dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
+	              (_React$createElement6 = { role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement6, 'role', 'columnheader'), _defineProperty(_React$createElement6, 'onClick', function onClick(event) {
+	                var dir = _this2.state.sort.dir;
+	                if (_this2.state.sort.by === 'editedOn') {
+	                  dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
+	                }
+	                _this2.setState({
+	                  sort: {
+	                    by: 'editedOn',
+	                    dir: dir
 	                  }
-	                  _this2.setState({
-	                    sort: {
-	                      by: 'editedOn',
-	                      dir: dir
-	                    }
-	                  });
-	                } },
+	                });
+	              }), _React$createElement6),
 	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'editedOn', defaultMessage: 'Edited On' }),
 	              '\u2002',
 	              !_utility2.default.serverSideRendering ? _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'sort' })) : undefined
@@ -9350,7 +9361,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        //onScroll={this.handleScroll.bind(this)}
 	        _react2.default.createElement(
 	          'tbody',
-	          { 'aria-live': 'polite', className: (0, _classnames2.default)({ empty: !contents.length }), ref: function ref(tbody) {
+	          { role: 'rowgroup', 'aria-live': 'polite', className: (0, _classnames2.default)({ empty: !contents.length }), ref: function ref(tbody) {
 	              _this2.tbody = tbody;
 	            } },
 	          contentList
@@ -9502,7 +9513,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var pathParse = __webpack_require__(60);
 
 	var MediaRow = function MediaRow(props) {
-	  var _React$createElement;
+	  var _React$createElement, _React$createElement2;
 
 	  //console.log('MediaRow', props);
 	  var item = props.item;
@@ -9686,7 +9697,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	  return _react2.default.createElement(
 	    'tr',
-	    (_React$createElement = { role: 'row', className: (0, _classnames2.default)(className), id: _utility2.default.cssSafe(props.item.filename), 'aria-label': ariaLabel }, _defineProperty(_React$createElement, 'role', 'row'), _defineProperty(_React$createElement, 'tabIndex', tabIndex), _defineProperty(_React$createElement, 'onFocus', props.onFocus.bind(undefined)), _defineProperty(_React$createElement, 'contextMenu', 'context_menu__tbody-' + props.index), _React$createElement),
+	    (_React$createElement2 = { role: 'row', className: (0, _classnames2.default)(className), id: _utility2.default.cssSafe(props.item.filename), 'aria-label': ariaLabel }, _defineProperty(_React$createElement2, 'role', 'row'), _defineProperty(_React$createElement2, 'tabIndex', tabIndex), _defineProperty(_React$createElement2, 'onFocus', props.onFocus.bind(undefined)), _defineProperty(_React$createElement2, 'contextMenu', 'context_menu__tbody-' + props.index), _React$createElement2),
 	    mediaSelect,
 	    _react2.default.createElement(
 	      'td',
@@ -9702,40 +9713,34 @@ return /******/ (function(modules) { // webpackBootstrap
 	    ),
 	    _react2.default.createElement(
 	      'td',
-	      { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'filename__' + _utility2.default.cssSafe(props.item.filename), role: 'gridcell', className: 'eureka__td-filename', contentEditable: contentEditable, onBlur: function onBlur(event) {
-	          try {
-	            if (!event.target.innerHTML.trim()) {
-	              event.target.innerHTML = props.item.filename;
-	              //alert('file name cannot be empty'); // i mostly hate alerts
-	              throw new Error('file name cannot be empty');
-	            }
+	      (_React$createElement = { role: 'gridcell', id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'filename__' + _utility2.default.cssSafe(props.item.filename) }, _defineProperty(_React$createElement, 'role', 'gridcell'), _defineProperty(_React$createElement, 'className', 'eureka__td-filename'), _defineProperty(_React$createElement, 'contentEditable', contentEditable), _defineProperty(_React$createElement, 'onBlur', function onBlur(event) {
+	        try {
+	          if (!event.target.innerHTML.trim()) {
+	            event.target.innerHTML = props.item.filename;
+	            //alert('file name cannot be empty'); // i mostly hate alerts
+	            throw new Error('file name cannot be empty');
+	          }
 
-	            console.log(event.target.innerHTML, event.target.innerHTML.trim());
-	            props.onRenameItemModalSubmit(event.target.innerHTML.trim(), props.item);
-	          } catch (e) {
-	            console.log(e);
-	          }
-	        },
-	        onKeyUp: function onKeyUp(event) {
-	          console.log('onKeyUp', event);
-	        },
-	        onKeyDown: function onKeyDown(event) {
-	          console.log('onKeyDown', event, event.keyCode);
-	          if (event.keyCode === 13) {
-	            event.preventDefault();
-	            event.target.blur();
-	          }
-	        },
-	        onPaste: function onPaste(event) {
-	          console.log('onPaste', event);
-	        },
-	        onCopy: function onCopy(event) {
-	          console.log('onCopy', event);
-	        },
-	        onCut: function onCut(event) {
-	          console.log('onCut', event);
+	          console.log(event.target.innerHTML, event.target.innerHTML.trim());
+	          props.onRenameItemModalSubmit(event.target.innerHTML.trim(), props.item);
+	        } catch (e) {
+	          console.log(e);
 	        }
-	      },
+	      }), _defineProperty(_React$createElement, 'onKeyUp', function onKeyUp(event) {
+	        console.log('onKeyUp', event);
+	      }), _defineProperty(_React$createElement, 'onKeyDown', function onKeyDown(event) {
+	        console.log('onKeyDown', event, event.keyCode);
+	        if (event.keyCode === 13) {
+	          event.preventDefault();
+	          event.target.blur();
+	        }
+	      }), _defineProperty(_React$createElement, 'onPaste', function onPaste(event) {
+	        console.log('onPaste', event);
+	      }), _defineProperty(_React$createElement, 'onCopy', function onCopy(event) {
+	        console.log('onCopy', event);
+	      }), _defineProperty(_React$createElement, 'onCut', function onCut(event) {
+	        console.log('onCut', event);
+	      }), _React$createElement),
 	      fileName
 	    ),
 	    _react2.default.createElement(_ContextMenu2.default, _extends({ className: 'eureka__context-row' }, props, { item: item, hidden: shouldHide(item), key: 'cm__' + index })),
@@ -9885,7 +9890,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  return _react2.default.createElement(
 	    'div',
-	    { className: 'eureka__button-bar eureka__context-buttons', role: 'listbox', 'aria-label': performContextualActionsMessage, tabIndex: '0', 'aria-activedescendant': 'expand__' + (0, _utility.cssSafe)(item.filename) },
+	    { className: 'eureka__button-bar eureka__context-buttons', role: 'listbox', 'future-role': 'toolbar listbox', 'aria-label': performContextualActionsMessage, tabIndex: '0', 'aria-activedescendant': 'expand__' + (0, _utility.cssSafe)(item.filename) },
 	    _react2.default.createElement(
 	      'a',
 	      { role: 'option', id: 'expand__' + (0, _utility.cssSafe)(item.filename), href: item.absoluteURL, target: '_' + encodeURI(item.absoluteURL), className: 'button', title: expandItemMessage },
@@ -10728,7 +10733,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          }, key: index, open: shouldBeOpen(item) },
 	        _react2.default.createElement(
 	          'summary',
-	          { contextMenu: 'context_menu__' + item.cd.replace(/^[^a-z]+|[^\w:.-]+/gi, ""), className: props.content.cd === item.cd ? 'active' : undefined },
+	          { role: 'treeitem', contextMenu: 'context_menu__' + item.cd.replace(/^[^a-z]+|[^\w:.-]+/gi, ""), className: props.content.cd === item.cd ? 'active' : undefined },
 	          _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'folder' })),
 	          _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'folder-open' })),
 	          _react2.default.createElement(FileTreeSpan, _extends({}, props, { item: item, index: index, key: index })),
@@ -10769,7 +10774,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  return _react2.default.createElement(
 	    'nav',
-	    { className: 'eureka__tree' },
+	    { className: 'eureka__tree', role: 'tree' },
 	    contentList
 	  );
 	};
@@ -10886,7 +10891,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        null,
 	        _react2.default.createElement(
 	          'label',
-	          { htmlFor: 'eureka__upload-form' },
+	          { role: 'menuitem', htmlFor: 'eureka__upload-form' },
 	          uploadFilesMessage,
 	          _react2.default.createElement(
 	            'span',
@@ -10905,7 +10910,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          } },
 	        _react2.default.createElement(
 	          'label',
-	          { htmlFor: 'eureka__upload-form' },
+	          { role: 'menuitem', htmlFor: 'eureka__upload-form' },
 	          uploadFilesMessage,
 	          _react2.default.createElement(
 	            'span',
@@ -11027,7 +11032,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    ),
 	    _react2.default.createElement(
 	      'div',
-	      { className: 'eureka__show-for-mobile-up' },
+	      { role: 'status', className: 'eureka__show-for-mobile-up' },
 	      _react2.default.createElement(
 	        'a',
 	        { role: 'presentation', href: props.view.focusedMediaItem.absoluteURL, target: '_' + encodeURI(props.view.focusedMediaItem.absoluteURL) },
@@ -11164,7 +11169,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Modal = function Modal(props) {
 	  return _react2.default.createElement(
 	    'div',
-	    { className: 'eureka__modal' },
+	    { className: 'eureka__modal', role: 'dialog' },
 	    _react2.default.createElement(
 	      'div',
 	      { className: 'eureka__modal-panel' },

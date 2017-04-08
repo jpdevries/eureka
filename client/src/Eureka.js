@@ -264,7 +264,7 @@ class Eureka extends Component {
               </h2>
               {searchBar}
             </header>
-            <div className="eureka__tree-toggle">
+            <div role="menubar" className="eureka__tree-toggle">
               {treeToggle}
                 {mediaDirectorySelector}
                 {uploadForm}
@@ -279,14 +279,14 @@ class Eureka extends Component {
     );
 
     return (utility.serverSideRendering) ? (
-      <form lang={props.lang || undefined} method="POST" action={props.config.basePath} encType="multipart/form-data" className={`eureka eureka__view-mode__${props.view.mode}${enlargeFocusedRows}${serverSideClass}`}>
+      <div role="widget"><form lang={props.lang || undefined} method="POST" action={props.config.basePath} encType="multipart/form-data" className={`eureka eureka__view-mode__${props.view.mode}${enlargeFocusedRows}${serverSideClass}`}>
         {formDiv}
         {pathBar}
         {chooseBar}
         {modal}
-      </form>
+      </form></div>
     ) : (
-      <div lang={props.lang || undefined} className={`eureka eureka__view-mode__${props.view.mode}${enlargeFocusedRows}${serverSideClass}`}>
+      <div role="widget" lang={props.lang || undefined} className={`eureka eureka__view-mode__${props.view.mode}${enlargeFocusedRows}${serverSideClass}`}>
         {formDiv}
         {pathBar}
         {chooseBar}

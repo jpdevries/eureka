@@ -74,12 +74,12 @@ class EurekaTable extends Component {
     const selectHead = utility.serverSideRendering ? <th scope="col" role="columnheader">Select</th> : undefined;
 
     const table = (
-      <table className="eureka__table" cellSpacing="0" cellPadding="0">
+      <table className="eureka__table" cellSpacing="0" cellPadding="0" role="grid">
         <thead hidden={!props.content.contents.length} className={classNames((store.getState().view.isTableScrolling) ? 'eureka__tbody-scrolling' : undefined)}>
           <tr>
             {selectHead}
-            <th scope="col" role="columnheader"><FormattedMessage id="media" defaultMessage="Media" /></th>
-            <th scope="col" role="columnheader" onClick={(event) => {
+            <th role="rowheader" scope="col" role="columnheader"><FormattedMessage id="media" defaultMessage="Media" /></th>
+            <th role="rowheader" scope="col" role="columnheader" onClick={(event) => {
               let dir = this.state.sort.dir;
               if(this.state.sort.by === 'filename') {
                 dir = (dir === utility.ASCENDING) ? utility.DESCENDING : utility.ASCENDING
@@ -91,8 +91,8 @@ class EurekaTable extends Component {
                 }
               });
             }}><FormattedMessage id="name" defaultMessage="Name" />&ensp;{(!utility.serverSideRendering) ? <Icon {...props}  icon="sort" /> : undefined}</th>
-            <th scope="col" role="columnheader" className="visually-hidden">Actions</th>
-            <th scope="col" role="columnheader" onClick={(event) => {
+            <th role="rowheader" scope="col" role="columnheader" className="visually-hidden">Actions</th>
+            <th role="rowheader" scope="col" role="columnheader" onClick={(event) => {
               let dir = this.state.sort.dir;
               if(this.state.sort.by === 'dimensions') {
                 dir = (dir === utility.ASCENDING) ? utility.DESCENDING : utility.ASCENDING
@@ -104,7 +104,7 @@ class EurekaTable extends Component {
                 }
               });
             }}><FormattedMessage id="dimensions" defaultMessage="Dimensions" />&ensp;{(!utility.serverSideRendering) ? <Icon {...props} icon="sort" /> : undefined}</th>
-            <th scope="col" role="columnheader" onClick={(event) => {
+            <th role="rowheader" scope="col" role="columnheader" onClick={(event) => {
               let dir = this.state.sort.dir;
               if(this.state.sort.by === 'fileSize') {
                 dir = (dir === utility.ASCENDING) ? utility.DESCENDING : utility.ASCENDING
@@ -116,7 +116,7 @@ class EurekaTable extends Component {
                 }
               });
             }}><FormattedMessage id="fileSize" defaultMessage="File Size" />&ensp;{(!utility.serverSideRendering) ? <Icon {...props} icon="sort" /> : undefined}</th>
-            <th scope="col" role="columnheader" onClick={(event) => {
+            <th role="rowheader" scope="col" role="columnheader" onClick={(event) => {
                 let dir = this.state.sort.dir;
                 if(this.state.sort.by === 'editedOn') {
                   dir = (dir === utility.ASCENDING) ? utility.DESCENDING : utility.ASCENDING

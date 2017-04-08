@@ -47,7 +47,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 var pathParse = require('path-parse');
 
 var MediaRow = function MediaRow(props) {
-  var _React$createElement;
+  var _React$createElement, _React$createElement2;
 
   //console.log('MediaRow', props);
   var item = props.item;
@@ -231,7 +231,7 @@ var MediaRow = function MediaRow(props) {
   }
   return _react2.default.createElement(
     'tr',
-    (_React$createElement = { role: 'row', className: (0, _classnames2.default)(className), id: _utility2.default.cssSafe(props.item.filename), 'aria-label': ariaLabel }, _defineProperty(_React$createElement, 'role', 'row'), _defineProperty(_React$createElement, 'tabIndex', tabIndex), _defineProperty(_React$createElement, 'onFocus', props.onFocus.bind(undefined)), _defineProperty(_React$createElement, 'contextMenu', 'context_menu__tbody-' + props.index), _React$createElement),
+    (_React$createElement2 = { role: 'row', className: (0, _classnames2.default)(className), id: _utility2.default.cssSafe(props.item.filename), 'aria-label': ariaLabel }, _defineProperty(_React$createElement2, 'role', 'row'), _defineProperty(_React$createElement2, 'tabIndex', tabIndex), _defineProperty(_React$createElement2, 'onFocus', props.onFocus.bind(undefined)), _defineProperty(_React$createElement2, 'contextMenu', 'context_menu__tbody-' + props.index), _React$createElement2),
     mediaSelect,
     _react2.default.createElement(
       'td',
@@ -247,40 +247,34 @@ var MediaRow = function MediaRow(props) {
     ),
     _react2.default.createElement(
       'td',
-      { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'filename__' + _utility2.default.cssSafe(props.item.filename), role: 'gridcell', className: 'eureka__td-filename', contentEditable: contentEditable, onBlur: function onBlur(event) {
-          try {
-            if (!event.target.innerHTML.trim()) {
-              event.target.innerHTML = props.item.filename;
-              //alert('file name cannot be empty'); // i mostly hate alerts
-              throw new Error('file name cannot be empty');
-            }
+      (_React$createElement = { role: 'gridcell', id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'filename__' + _utility2.default.cssSafe(props.item.filename) }, _defineProperty(_React$createElement, 'role', 'gridcell'), _defineProperty(_React$createElement, 'className', 'eureka__td-filename'), _defineProperty(_React$createElement, 'contentEditable', contentEditable), _defineProperty(_React$createElement, 'onBlur', function onBlur(event) {
+        try {
+          if (!event.target.innerHTML.trim()) {
+            event.target.innerHTML = props.item.filename;
+            //alert('file name cannot be empty'); // i mostly hate alerts
+            throw new Error('file name cannot be empty');
+          }
 
-            console.log(event.target.innerHTML, event.target.innerHTML.trim());
-            props.onRenameItemModalSubmit(event.target.innerHTML.trim(), props.item);
-          } catch (e) {
-            console.log(e);
-          }
-        },
-        onKeyUp: function onKeyUp(event) {
-          console.log('onKeyUp', event);
-        },
-        onKeyDown: function onKeyDown(event) {
-          console.log('onKeyDown', event, event.keyCode);
-          if (event.keyCode === 13) {
-            event.preventDefault();
-            event.target.blur();
-          }
-        },
-        onPaste: function onPaste(event) {
-          console.log('onPaste', event);
-        },
-        onCopy: function onCopy(event) {
-          console.log('onCopy', event);
-        },
-        onCut: function onCut(event) {
-          console.log('onCut', event);
+          console.log(event.target.innerHTML, event.target.innerHTML.trim());
+          props.onRenameItemModalSubmit(event.target.innerHTML.trim(), props.item);
+        } catch (e) {
+          console.log(e);
         }
-      },
+      }), _defineProperty(_React$createElement, 'onKeyUp', function onKeyUp(event) {
+        console.log('onKeyUp', event);
+      }), _defineProperty(_React$createElement, 'onKeyDown', function onKeyDown(event) {
+        console.log('onKeyDown', event, event.keyCode);
+        if (event.keyCode === 13) {
+          event.preventDefault();
+          event.target.blur();
+        }
+      }), _defineProperty(_React$createElement, 'onPaste', function onPaste(event) {
+        console.log('onPaste', event);
+      }), _defineProperty(_React$createElement, 'onCopy', function onCopy(event) {
+        console.log('onCopy', event);
+      }), _defineProperty(_React$createElement, 'onCut', function onCut(event) {
+        console.log('onCut', event);
+      }), _React$createElement),
       fileName
     ),
     _react2.default.createElement(_ContextMenu2.default, _extends({ className: 'eureka__context-row' }, props, { item: item, hidden: shouldHide(item), key: 'cm__' + index })),

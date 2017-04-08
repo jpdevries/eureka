@@ -13,7 +13,7 @@ const MediaSourceSelector = (props) => {
   ));
 
   return (
-    <div className="eureka__media-source-selector">
+    <div className="eureka__media-source-selector" role="complementary" future-role="complementary composite">
       <h2>
         <label htmlFor="media-source-selector__select"><span className="visually-hidden"><FormattedMessage id="choose" defaultMessage="Choose" /> <FormattedMessage id="grammar.a" defaultMessage="a" /> </span><FormattedMessage id="media.source" defaultMessage="Media Source" /></label>
       </h2>

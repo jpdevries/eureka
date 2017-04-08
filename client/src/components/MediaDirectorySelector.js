@@ -30,7 +30,7 @@ const MediaDirectorySelector = (props) => {
   const hiddenInput = <input type="hidden" name={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }mediaSourceId`} name={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }mediaSourceId`} value={props.config.uid} />
   const submit = (utility.serverSideRendering) ? <button type="submit"><FormattedMessage id="directory.set" defaultMessage="Set Directory" /></button> : undefined;
   const select = (
-    <select aria-live="polite" value={`${props.source.currentSource}||${props.content.cd}`} name="eureka__media-browser_0__browsing" id="eureka__media-browser_0__browsing" onChange={(event) => {
+    <select role="navigation" aria-live="polite" value={`${props.source.currentSource}||${props.content.cd}`} name="eureka__media-browser_0__browsing" id="eureka__media-browser_0__browsing" onChange={(event) => {
         const [cs, cd] = utility.parseMediaSourceOutOfCombinedPath(event.target.value, '||'); // option values are like 0||assets/img/redwoods where 0 is the media source id and assets/img/redwoods is the directory
         console.log('YOLO',cs,cd);
         store.dispatch(decoratedActions.updateSource(cs))

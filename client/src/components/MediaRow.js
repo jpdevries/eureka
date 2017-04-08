@@ -190,7 +190,7 @@ const MediaRow = (props) => {
         <span className="visually-hidden"><FormattedMessage id="media.contents" defaultMessage="Media Contents" /></span>
         {media}
       </td>
-      <td id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }filename__${utility.cssSafe(props.item.filename)}`} role="gridcell" className="eureka__td-filename" contentEditable={contentEditable} onBlur={(event) => {
+      <td role="gridcell" id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }filename__${utility.cssSafe(props.item.filename)}`} role="gridcell" className="eureka__td-filename" contentEditable={contentEditable} onBlur={(event) => {
           try {
             if(!(event.target.innerHTML).trim()) {
               event.target.innerHTML = props.item.filename;

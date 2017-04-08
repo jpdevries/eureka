@@ -199,7 +199,7 @@ var EurekaTableTbody = function (_Component) {
         //onScroll={this.handleScroll.bind(this)}
         _react2.default.createElement(
           'tbody',
-          { 'aria-live': 'polite', className: (0, _classnames2.default)({ empty: !contents.length }), ref: function ref(tbody) {
+          { role: 'rowgroup', 'aria-live': 'polite', className: (0, _classnames2.default)({ empty: !contents.length }), ref: function ref(tbody) {
               _this2.tbody = tbody;
             } },
           contentList

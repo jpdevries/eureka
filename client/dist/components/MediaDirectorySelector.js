@@ -66,7 +66,7 @@ var MediaDirectorySelector = function MediaDirectorySelector(props) {
   ) : undefined;
   var select = _react2.default.createElement(
     'select',
-    { 'aria-live': 'polite', value: props.source.currentSource + '||' + props.content.cd, name: 'eureka__media-browser_0__browsing', id: 'eureka__media-browser_0__browsing', onChange: function onChange(event) {
+    { role: 'navigation', 'aria-live': 'polite', value: props.source.currentSource + '||' + props.content.cd, name: 'eureka__media-browser_0__browsing', id: 'eureka__media-browser_0__browsing', onChange: function onChange(event) {
         var _utility$parseMediaSo = _utility2.default.parseMediaSourceOutOfCombinedPath(event.target.value, '||'),
             _utility$parseMediaSo2 = _slicedToArray(_utility$parseMediaSo, 2),
             cs = _utility$parseMediaSo2[0],

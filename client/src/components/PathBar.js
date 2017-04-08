@@ -56,7 +56,7 @@ const PathBar = (props) => {
           </div>
         </details>
       </div>
-      <div className="eureka__show-for-mobile-up">
+      <div role="status" className="eureka__show-for-mobile-up">
         <a role="presentation" href={props.view.focusedMediaItem.absoluteURL} target={`_${encodeURI(props.view.focusedMediaItem.absoluteURL)}`}>
           <Icon {...props} icon={icon} />&ensp;
           {path.join(props.view.focusedMediaItem.directory, props.view.focusedMediaItem.filename)}
