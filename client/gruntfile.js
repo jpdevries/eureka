@@ -253,7 +253,7 @@ module.exports = function(grunt) {
               pattern: /eureka-browser.bundle.\d+.\d+.\d+./,
               replacement: `eureka-browser.bundle.${grunt.option('ver') || pkg.version}.`
             }]
-            
+
         }
       }
     },
@@ -400,5 +400,5 @@ module.exports = function(grunt) {
 
   grunt.registerTask('default', ['growl:watch', 'watch']);
   grunt.registerTask('build',['bower','copy:bower','modernizr','sass','postcss','cssmin','copy:css','webpack','uglify','clean:buildimg','svgstore','svgo','growl:build']);
-  grunt.registerTask('buildcss',['sass','postcss','cssmin','growl:sass']);
+  grunt.registerTask('buildcss',['sass','postcss','cssmin','copy:css','growl:sass']);
 };

@@ -279,12 +279,12 @@ class Eureka extends Component {
     );
 
     return (utility.serverSideRendering) ? (
-      <div role="widget"><form lang={props.lang || undefined} method="POST" action={props.config.basePath} encType="multipart/form-data" className={`eureka eureka__view-mode__${props.view.mode}${enlargeFocusedRows}${serverSideClass}`}>
+      <form lang={props.lang || undefined} method="POST" action={props.config.basePath} encType="multipart/form-data" className={`eureka eureka__view-mode__${props.view.mode}${enlargeFocusedRows}${serverSideClass}`}>
         {formDiv}
         {pathBar}
         {chooseBar}
         {modal}
-      </form></div>
+      </form>
     ) : (
       <div role="widget" lang={props.lang || undefined} className={`eureka eureka__view-mode__${props.view.mode}${enlargeFocusedRows}${serverSideClass}`}>
         {formDiv}

@@ -2,10 +2,10 @@
   "name": "eureka-browser-client",
   "description": "Eureka is a progressively enhanced Media Browser Component.",
   "main": [
-    "build/assets/css/eureka.0.0.38.min.css",
-    "build/assets/js/eureka-browser.bundle.0.0.38.min.js"
+    "build/assets/css/eureka.0.0.41.min.css",
+    "build/assets/js/eureka-browser.bundle.0.0.41.min.js"
   ],
-  "version": "0.0.38",
+  "version": "0.0.41",
   "authors": [
     "JP de Vries <mail@devries.jp>"
   ],
@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "bourbon": "^4.3.2",
-    "neat": "^1.8.0",
+    "neat": "*",
     "spectacular": "^0.0.0"
   },
   "exportsOverride": {

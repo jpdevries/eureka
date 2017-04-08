@@ -1,199 +1,202 @@
 [class*="modal-section"] {
   padding:0;
-   > .eureka-root {
-    padding:.5rem;
-    .eureka {
-      &.eureka__view-mode__table, &.eureka__view-mode__list {
-        .eureka__browse-content>.eureka__stage>.eureka__table-wrapper>div>table {
-          > thead > tr, > tbody > tr {
-            display:grid;
-
-            grid-gap:0;
-            grid-template-columns:40% 24% 12% 12% 12%;
-
-          }
-          > thead > tr {
-            grid-template-areas:"media name dimensions file-size edited-on";
-          }
-          > tbody > tr {
-            grid-template-areas:"media name dimensions file-size edited-on" "actions actions actions actions actions";
-          }
-        }
-        &.eureka__server-side {
-          .eureka__browse-content>.eureka__stage>.eureka__table-wrapper>div>table {
-
-
-            > thead > tr, > tbody:not(.empty) > tr:not(.empty) {
-              @include media($gtMobile) {
-                grid-template-areas:"radio media name dimensions file-size edited-on";
-                grid-template-columns:2rem 40% 24% auto auto auto;
-                > td, > th {
-                  &:nth-of-type(1) {
-                    grid-area:radio;
-                  }
-                  &:nth-of-type(2) {
-                    grid-area:media;
-                    text-align:left;
-                  }
-                  &:nth-of-type(3) {
-                    grid-area:name;
-                  }
-                  &:nth-of-type(5) {
-                    grid-area:dimensions;
-                  }
-                  &:nth-of-type(6) {
-                    grid-area:file-size;
-                  }
-                  &:nth-of-type(7) {
-                    grid-area:edited-on;
-                  }
-                }
-              }
-            }
-
-            > thead > tr {
-              > th {
-                &:nth-of-type(1) {
-                  grid-area:none;
-                  @extend %visually-hidden;
-                }
-              }
-            }
-
-          }
-        }
-      }
-    }
-  }
-
-   > .eureka-root {
-
-    .eureka>.eureka__browse-content>.eureka__stage>.eureka__table-wrapper>div>table>tbody {
-      &:not(.empty) {
-
-        > tr:not(.empty) {
-          display:flex;
-          flex-wrap:wrap;
-
-          > * {
-            flex:1 0 auto;
-          }
-          @supports (display: flex) and ( not (display:grid) ) {
-
-          }
-          @supports (display:grid) {
-            display:grid;
-            //grid-gap:0;
-            //grid-template-columns:40% 15% 15% 15% 15%;
-            //grid-template-areas:"media name dimensions file-size edited-on" "actions actions actions actions actions";
-            > td {
-
-              &:nth-of-type(1) {
-                grid-area:media;
-              }
-              &:nth-of-type(2) {
-                grid-area:name;
-              }
-              &:nth-of-type(3) {
-                grid-area:actions;
-              }
-              &:nth-of-type(4) {
-                grid-area:dimensions;
-              }
-              &:nth-of-type(5) {
-                grid-area:file-size;
-              }
-              &:nth-of-type(6) {
-                grid-area:edited-on;
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
   @include media($gtMobile) {
     display: flex;
     height: 100vh;
     max-height: 100vh;
     overflow-y:hidden;
     flex-direction: column;
-     > .eureka-root {
-      /*display:grid;
-      grid-gap:0;
-      grid-template-columns:20vw auto;
-      grid-template-areas:"header header" "sidebar content" "footer footer";*/
+
+  } // end @include media($gtMobile)
+} // end body
+
+.eureka-root {
+ tbody { // .eureka>.eureka__browse-content>.eureka__stage>.eureka__table-wrapper>div>table>
+   &:not(.empty) {
+     > tr:not(.empty) {
+       display:flex;
+       flex-wrap:wrap;
+       > * {
+         flex:1 0 auto;
+       }
+       /*@supports (display: flex) and ( not (display:grid) ) {
+       }*/
+       @supports (display:grid) {
+         display:grid;
+         //grid-gap:0;
+         //grid-template-columns:40% 15% 15% 15% 15%;
+         //grid-template-areas:"media name dimensions file-size edited-on" "actions actions actions actions actions";
+         > td {
+           &:nth-of-type(1) {
+             grid-area:media;
+           }
+           &:nth-of-type(2) {
+             grid-area:name;
+           }
+           &:nth-of-type(3) {
+             grid-area:actions;
+           }
+           &:nth-of-type(4) {
+             grid-area:dimensions;
+           }
+           &:nth-of-type(5) {
+             grid-area:file-size;
+           }
+           &:nth-of-type(6) {
+             grid-area:edited-on;
+           }
+         }
+       }
+     }
+   }
+ }
+}
+
+.eureka-root {
+ padding:.5rem;
+ .eureka {
+   &.eureka__view-mode__table, &.eureka__view-mode__list {
+     table { // .eureka__browse-content>.eureka__stage>.eureka__table-wrapper>div>
+       > thead > tr, > tbody > tr {
+         display:grid;
+
+         grid-gap:0;
+         grid-template-columns:40% 24% 12% 12% 12%;
+
+       }
+       > thead > tr {
+         grid-template-areas:"media name dimensions file-size edited-on";
+       }
+       > tbody > tr {
+         grid-template-areas:"media name dimensions file-size edited-on" "actions actions actions actions actions";
+       }
+     }
+     &.eureka__server-side {
+       table { // .eureka__browse-content>.eureka__stage>.eureka__table-wrapper>div>
+         > thead > tr, > tbody:not(.empty) > tr:not(.empty) {
+           @include media($gtMobile) {
+             grid-template-areas:"radio media name dimensions file-size edited-on";
+             grid-template-columns:2rem 40% 24% auto auto auto;
+             > td, > th {
+               &:nth-of-type(1) {
+                 grid-area:radio;
+               }
+               &:nth-of-type(2) {
+                 grid-area:media;
+                 text-align:left;
+               }
+               &:nth-of-type(3) {
+                 grid-area:name;
+               }
+               &:nth-of-type(5) {
+                 grid-area:dimensions;
+               }
+               &:nth-of-type(6) {
+                 grid-area:file-size;
+               }
+               &:nth-of-type(7) {
+                 grid-area:edited-on;
+               }
+             }
+           }
+         }
+         > thead > tr {
+           > th {
+             &:nth-of-type(1) {
+               grid-area:none;
+               @extend %visually-hidden;
+             }
+           }
+         }
+       }
+     }
+   }
+ }
+}
+
+.eureka-root {
+  @include media($gtMobile) {
+    /*display:grid;
+    grid-gap:0;
+    grid-template-columns:20vw auto;
+    grid-template-areas:"header header" "sidebar content" "footer footer";*/
+    display:flex;
+    flex: 1;
+    flex-direction: column;
+    .eureka {
       display:flex;
-      flex: 1;
       flex-direction: column;
-      .eureka {
+      flex: 1;
+      > .eureka__browse-content {
+        display: flex;
+        flex: 1 1 100%;
+        margin-bottom: .5rem;
+      }
+      &.eureka__view-mode__table {
+        /*@supports (display: grid) {
+        }*/
+      }
+      > .eureka__browse-content {
         display:flex;
-        flex-direction: column;
-        flex: 1;
-        > .eureka__browse-content {
-          display: flex;
-          flex: 1 1 100%;
-          margin-bottom: .5rem;
-        }
-        &.eureka__view-mode__table {
-          @supports (display: grid) {
-
-          }
-
-
-
-        }
-        > .eureka__browse-content {
+        flex:1 1 100%;
+        margin-bottom:0.5rem;
+        > .eureka__pathbrowser {
+          flex:0 0 14rem;
           display:flex;
+          flex-direction:column;
+          flex-shrink:0;
+          flex-grow:0;
+          margin-right:.5rem;
+        }
+        > .eureka__stage {
+          //flex:0 1 auto;
           flex:1 1 100%;
-          margin-bottom:0.5rem;
-          > .eureka__pathbrowser {
-            flex:0 0 14rem;
-            display:flex;
-            flex-direction:column;
-            flex-shrink:0;
-            flex-grow:0;
-            margin-right:.5rem;
-          }
-          > .eureka__stage {
-            //flex:0 1 auto;
-            flex:1 1 100%;
 
-            display:flex;
-            flex-direction:column;
-            > .eureka__stage__filter-view {
-              flex-basis:auto;
-              flex-shrink:1;
-              flex-grow:0;
-              flex-direction:row;
-              > header {
-                flex-direction: row;
-                min-width:0;
-                min-height:0;
-                flex-wrap:nowrap;
-                display:flex;
-                margin-bottom:.5rem;
-                > h2 {
-                  margin-bottom:0;
-                  form {
-                    float:right;
-                  }
+          display:flex;
+          flex-direction:column;
+          > .eureka__stage__filter-view {
+            flex-basis:auto;
+            flex-shrink:1;
+            flex-grow:0;
+            flex-direction:row;
+            > header {
+              flex-direction: row;
+              min-width:0;
+              min-height:0;
+              flex-wrap:nowrap;
+              display:flex;
+              margin-bottom:.5rem;
+              > h2 {
+                margin-bottom:0;
+                form {
+                  float:right;
                 }
               }
-
             }
-            > .eureka__table-wrapper {
+          }
+          > .eureka__table-wrapper {
+            flex-basis:0;
+            flex-grow:1;
+            height:auto;
+            flex-shrink:0;
+            display:flex;
+            align-items:stretch;
+            justify-content:center;
+            flex-direction:column;
+            padding:0 .5rem .5rem 0; // removed padding-left .5rem
+            > div {
               flex-basis:0;
               flex-grow:1;
-              height:auto;
-              flex-shrink:0;
-              display:flex;
+              max-height:100%;
+              //padding-top:1rem;
+              height:100%;
               align-items:stretch;
               justify-content:center;
               flex-direction:column;
-              padding:0 .5rem .5rem 0; // removed padding-left .5rem
-              > div {
+              flex-shrink:1;
+              display:flex;
+              max-width:100%;
+              > table {
                 flex-basis:0;
                 flex-grow:1;
                 max-height:100%;
@@ -205,112 +208,96 @@
                 flex-shrink:1;
                 display:flex;
                 max-width:100%;
-                > table {
-                  flex-basis:0;
-                  flex-grow:1;
-                  max-height:100%;
-                  //padding-top:1rem;
-                  height:100%;
-                  align-items:stretch;
-                  justify-content:center;
-                  flex-direction:column;
-                  flex-shrink:1;
-                  display:flex;
-                  max-width:100%;
-                  > thead {
-                    flex-basis:auto;
-                    display:block;
-                    justify-content:flex-end;
-                    flex-shrink:0;
-                    flex-grow:0;
-                    &.eureka__tbody-scrolling {
-                      padding-right:16px; // #janky consider scrollbar of tbody
-                    }
-                    &[hidden] {
-                      display:none;
-                    }
-                    > tr {
-                      display:block;
-                      width:100%;
-
-                      display:flex;
-                      flex-wrap:wrap;
-                      @supports (display: flex) and ( not (display: grid) ) {
-
-                      }
-
-
-
-                      > th {
-                        flex:1 0 auto;
-                        //outline:1px solid red;
-                        @supports (display: flex) and ( not (display: grid) ) {
-
-                        }
-                        &:nth-of-type(1) {
-                          grid-area:media;
-                        }
-                        &:nth-of-type(2) {
-                          grid-area:name;
-                        }
-                        &:nth-of-type(3) {
-                          grid-area:none;
-                        }
-                        &:nth-of-type(4) {
-                          grid-area:dimensions;
-                        }
-                        &:nth-of-type(5) {
-                          grid-area:file-size;
-                        }
-                        &:nth-of-type(6) {
-                          grid-area:edited-on;
-                        }
-                      }
-                    }
-                  }
-                  > tbody {
-                    &.empty {
-                      display: flex;
-                      justify-content: center;
-                      align-items: center;
-                      > tr {
-                        text-align:center;
-                        display:block;
-                        td {
-                          margin:0 auto;
-                          display:inline-block;
-                        }
-                      }
-                    }
-                  }
-                  > tbody {
-                    flex-basis:0;
-                    text-align:center;
-                    display:block;
-                    flex-wrap:no-wrap;
-                    overflow-y:auto;
-                    align-items:stretch;
-                    flex-direction:row;
-                    justify-content:center;
-                    flex-shrink:1;
-                    flex-grow:1;
-                    max-width:100%;
-
-
-
-                  }
-                }
               }
             }
           }
         }
-        > .eureka__choose-bar {
-          flex:0 0 auto;
+      }
+      > .eureka__choose-bar {
+        flex:0 0 auto;
+      }
+    }
+  }
+}
+
+.eureka-root {
+  thead {
+    flex-basis:auto;
+    display:block;
+    justify-content:flex-end;
+    flex-shrink:0;
+    flex-grow:0;
+    &.eureka__tbody-scrolling {
+      padding-right:16px; // #janky consider scrollbar of tbody
+    }
+    &[hidden] {
+      display:none;
+    }
+    > tr {
+      display:block;
+      width:100%;
+
+      display:flex;
+      flex-wrap:wrap;
+      /*@supports (display: flex) and ( not (display: grid) ) {
+      }*/
+
+      > th {
+        flex:1 0 auto;
+        //outline:1px solid red;
+        @supports (display: flex) and ( not (display: grid) ) {
+
+        }
+        &:nth-of-type(1) {
+          grid-area:media;
+        }
+        &:nth-of-type(2) {
+          grid-area:name;
+        }
+        &:nth-of-type(3) {
+          grid-area:none;
+        }
+        &:nth-of-type(4) {
+          grid-area:dimensions;
+        }
+        &:nth-of-type(5) {
+          grid-area:file-size;
+        }
+        &:nth-of-type(6) {
+          grid-area:edited-on;
         }
       }
-    } // end > .root
-  } // end @include media($gtMobile)
-} // end body
+    }
+  }
+  tbody {
+    &.empty {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      > tr {
+        text-align:center;
+        display:block;
+        td {
+          margin:0 auto;
+          display:inline-block;
+        }
+      }
+    }
+  }
+  tbody {
+    flex-basis:0;
+    text-align:center;
+    display:block;
+    flex-wrap:no-wrap;
+    overflow-y:auto;
+    align-items:stretch;
+    flex-direction:row;
+    justify-content:center;
+    flex-shrink:1;
+    flex-grow:1;
+    max-width:100%;
+  }
+}
 
 .eureka__media-directory-selector {
   @include media($gtMobile) {
@@ -339,13 +326,8 @@
         margin-right:0;
       }
     }
-    button {
-
-    }
   }
 }
-
-
 
 .eureka__media-source-selector {
   @include media($gtMobile) {
@@ -388,9 +370,10 @@
         }
       }
     }
-    @include media($gtMobile) {
 
-    }
+    /*@include media($gtMobile) {
+    }*/
+
     &.eureka__enlarge-focused-rows {
       .eureka__table {
         img {
@@ -476,9 +459,8 @@
         width:100%;
       }
 
-      > td[colspan] {
-
-      }
+      /*> td[colspan] {
+      }*/
     }
   }
 
@@ -493,7 +475,6 @@
 
   &.eureka__view-mode__list {
     .eureka__table {
-
       thead {
         th {
           &:first-child {

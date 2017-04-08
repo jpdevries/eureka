@@ -19,63 +19,6 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
 */
 [class*="modal-section"] {
   padding: 0; }
-  [class*="modal-section"] > .eureka-root {
-    padding: 8px;
-    padding: .5rem; }
-    [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr, [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody > tr, [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr, [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody > tr {
-      display: -ms-grid;
-      display: grid;
-      grid-gap: 0;
-      -ms-grid-columns: 40% 24% 12% 12% 12%;
-          grid-template-columns: 40% 24% 12% 12% 12%; }
-    [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr, [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr {
-      grid-template-areas: "media name dimensions file-size edited-on"; }
-    [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody > tr, [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody > tr {
-      grid-template-areas: "media name dimensions file-size edited-on" "actions actions actions actions actions"; }
-    @media screen and (min-width: 641px) {
-      [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr, [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr, [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) {
-        grid-template-areas: "radio media name dimensions file-size edited-on";
-        -ms-grid-columns: 2rem 40% 24% auto auto auto;
-            grid-template-columns: 2rem 40% 24% auto auto auto; }
-        [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > td:nth-of-type(1), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(1), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(1), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > th:nth-of-type(1), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > td:nth-of-type(1), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(1), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(1), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > th:nth-of-type(1) {
-          grid-area: radio; }
-        [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > td:nth-of-type(2), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(2), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(2), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > th:nth-of-type(2), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > td:nth-of-type(2), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(2), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(2), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > th:nth-of-type(2) {
-          grid-area: media;
-          text-align: left; }
-        [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > td:nth-of-type(3), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(3), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(3), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > th:nth-of-type(3), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > td:nth-of-type(3), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(3), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(3), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > th:nth-of-type(3) {
-          grid-area: name; }
-        [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > td:nth-of-type(5), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(5), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(5), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > th:nth-of-type(5), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > td:nth-of-type(5), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(5), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(5), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > th:nth-of-type(5) {
-          grid-area: dimensions; }
-        [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > td:nth-of-type(6), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(6), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(6), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > th:nth-of-type(6), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > td:nth-of-type(6), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(6), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(6), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > th:nth-of-type(6) {
-          grid-area: file-size; }
-        [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > td:nth-of-type(7), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(7), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(7), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > th:nth-of-type(7), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > td:nth-of-type(7), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(7), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(7), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > th:nth-of-type(7) {
-          grid-area: edited-on; } }
-    [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(1), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(1) {
-      grid-area: none; }
-  [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) {
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-wrap: wrap;
-        flex-wrap: wrap; }
-    [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > * {
-      -ms-flex: 1 0 auto;
-          flex: 1 0 auto; }
-    @supports ((display: -ms-grid) or (display: grid)) {
-      [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) {
-        display: -ms-grid;
-        display: grid; }
-        [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(1) {
-          grid-area: media; }
-        [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(2) {
-          grid-area: name; }
-        [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(3) {
-          grid-area: actions; }
-        [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(4) {
-          grid-area: dimensions; }
-        [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(5) {
-          grid-area: file-size; }
-        [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(6) {
-          grid-area: edited-on; } }
   @media screen and (min-width: 641px) {
     [class*="modal-section"] {
       display: -ms-flexbox;
@@ -84,203 +27,274 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
       max-height: 100vh;
       overflow-y: hidden;
       -ms-flex-direction: column;
-          flex-direction: column; }
-      [class*="modal-section"] > .eureka-root {
-        /*display:grid;
-      grid-gap:0;
-      grid-template-columns:20vw auto;
-      grid-template-areas:"header header" "sidebar content" "footer footer";*/
+          flex-direction: column; } }
+
+.eureka-root tbody:not(.empty) > tr:not(.empty) {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  /*@supports (display: flex) and ( not (display:grid) ) {
+       }*/ }
+  .eureka-root tbody:not(.empty) > tr:not(.empty) > * {
+    -ms-flex: 1 0 auto;
+        flex: 1 0 auto; }
+  @supports ((display: -ms-grid) or (display: grid)) {
+    .eureka-root tbody:not(.empty) > tr:not(.empty) {
+      display: -ms-grid;
+      display: grid; }
+      .eureka-root tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(1) {
+        grid-area: media; }
+      .eureka-root tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(2) {
+        grid-area: name; }
+      .eureka-root tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(3) {
+        grid-area: actions; }
+      .eureka-root tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(4) {
+        grid-area: dimensions; }
+      .eureka-root tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(5) {
+        grid-area: file-size; }
+      .eureka-root tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(6) {
+        grid-area: edited-on; } }
+
+.eureka-root {
+  padding: 8px;
+  padding: .5rem; }
+  .eureka-root .eureka.eureka__view-mode__table table > thead > tr, .eureka-root .eureka.eureka__view-mode__table table > tbody > tr, .eureka-root .eureka.eureka__view-mode__list table > thead > tr, .eureka-root .eureka.eureka__view-mode__list table > tbody > tr {
+    display: -ms-grid;
+    display: grid;
+    grid-gap: 0;
+    -ms-grid-columns: 40% 24% 12% 12% 12%;
+        grid-template-columns: 40% 24% 12% 12% 12%; }
+  .eureka-root .eureka.eureka__view-mode__table table > thead > tr, .eureka-root .eureka.eureka__view-mode__list table > thead > tr {
+    grid-template-areas: "media name dimensions file-size edited-on"; }
+  .eureka-root .eureka.eureka__view-mode__table table > tbody > tr, .eureka-root .eureka.eureka__view-mode__list table > tbody > tr {
+    grid-template-areas: "media name dimensions file-size edited-on" "actions actions actions actions actions"; }
+  @media screen and (min-width: 641px) {
+    .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr, .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > tbody:not(.empty) > tr:not(.empty), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr, .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > tbody:not(.empty) > tr:not(.empty) {
+      grid-template-areas: "radio media name dimensions file-size edited-on";
+      -ms-grid-columns: 2rem 40% 24% auto auto auto;
+          grid-template-columns: 2rem 40% 24% auto auto auto; }
+      .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > td:nth-of-type(1), .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > th:nth-of-type(1), .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(1), .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > tbody:not(.empty) > tr:not(.empty) > th:nth-of-type(1), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > td:nth-of-type(1), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > th:nth-of-type(1), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(1), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > tbody:not(.empty) > tr:not(.empty) > th:nth-of-type(1) {
+        grid-area: radio; }
+      .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > td:nth-of-type(2), .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > th:nth-of-type(2), .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(2), .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > tbody:not(.empty) > tr:not(.empty) > th:nth-of-type(2), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > td:nth-of-type(2), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > th:nth-of-type(2), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(2), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > tbody:not(.empty) > tr:not(.empty) > th:nth-of-type(2) {
+        grid-area: media;
+        text-align: left; }
+      .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > td:nth-of-type(3), .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > th:nth-of-type(3), .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(3), .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > tbody:not(.empty) > tr:not(.empty) > th:nth-of-type(3), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > td:nth-of-type(3), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > th:nth-of-type(3), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(3), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > tbody:not(.empty) > tr:not(.empty) > th:nth-of-type(3) {
+        grid-area: name; }
+      .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > td:nth-of-type(5), .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > th:nth-of-type(5), .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(5), .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > tbody:not(.empty) > tr:not(.empty) > th:nth-of-type(5), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > td:nth-of-type(5), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > th:nth-of-type(5), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(5), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > tbody:not(.empty) > tr:not(.empty) > th:nth-of-type(5) {
+        grid-area: dimensions; }
+      .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > td:nth-of-type(6), .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > th:nth-of-type(6), .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(6), .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > tbody:not(.empty) > tr:not(.empty) > th:nth-of-type(6), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > td:nth-of-type(6), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > th:nth-of-type(6), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(6), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > tbody:not(.empty) > tr:not(.empty) > th:nth-of-type(6) {
+        grid-area: file-size; }
+      .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > td:nth-of-type(7), .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > th:nth-of-type(7), .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(7), .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > tbody:not(.empty) > tr:not(.empty) > th:nth-of-type(7), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > td:nth-of-type(7), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > th:nth-of-type(7), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(7), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > tbody:not(.empty) > tr:not(.empty) > th:nth-of-type(7) {
+        grid-area: edited-on; } }
+  .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > th:nth-of-type(1), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > th:nth-of-type(1) {
+    grid-area: none; }
+
+@media screen and (min-width: 641px) {
+  .eureka-root {
+    /*display:grid;
+    grid-gap:0;
+    grid-template-columns:20vw auto;
+    grid-template-areas:"header header" "sidebar content" "footer footer";*/
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex: 1;
+        flex: 1;
+    -ms-flex-direction: column;
+        flex-direction: column; }
+    .eureka-root .eureka {
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-direction: column;
+          flex-direction: column;
+      -ms-flex: 1;
+          flex: 1; }
+      .eureka-root .eureka > .eureka__browse-content {
         display: -ms-flexbox;
         display: flex;
-        -ms-flex: 1;
-            flex: 1;
-        -ms-flex-direction: column;
-            flex-direction: column; }
-        [class*="modal-section"] > .eureka-root .eureka {
+        -ms-flex: 1 1 100%;
+            flex: 1 1 100%;
+        margin-bottom: .5rem; }
+      .eureka-root .eureka.eureka__view-mode__table {
+        /*@supports (display: grid) {
+        }*/ }
+      .eureka-root .eureka > .eureka__browse-content {
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex: 1 1 100%;
+            flex: 1 1 100%;
+        margin-bottom: 0.5rem; }
+        .eureka-root .eureka > .eureka__browse-content > .eureka__pathbrowser {
+          -ms-flex: 0 0 14rem;
+              flex: 0 0 14rem;
           display: -ms-flexbox;
           display: flex;
           -ms-flex-direction: column;
               flex-direction: column;
-          -ms-flex: 1;
-              flex: 1; }
-          [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content {
-            display: -ms-flexbox;
-            display: flex;
-            -ms-flex: 1 1 100%;
-                flex: 1 1 100%;
-            margin-bottom: .5rem; }
-          [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content {
-            display: -ms-flexbox;
-            display: flex;
-            -ms-flex: 1 1 100%;
-                flex: 1 1 100%;
-            margin-bottom: 0.5rem; }
-            [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content > .eureka__pathbrowser {
-              -ms-flex: 0 0 14rem;
-                  flex: 0 0 14rem;
+          -ms-flex-negative: 0;
+              flex-shrink: 0;
+          -ms-flex-positive: 0;
+              flex-grow: 0;
+          margin-right: .5rem; }
+        .eureka-root .eureka > .eureka__browse-content > .eureka__stage {
+          -ms-flex: 1 1 100%;
+              flex: 1 1 100%;
+          display: -ms-flexbox;
+          display: flex;
+          -ms-flex-direction: column;
+              flex-direction: column; }
+          .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__stage__filter-view {
+            -ms-flex-preferred-size: auto;
+                flex-basis: auto;
+            -ms-flex-negative: 1;
+                flex-shrink: 1;
+            -ms-flex-positive: 0;
+                flex-grow: 0;
+            -ms-flex-direction: row;
+                flex-direction: row; }
+            .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__stage__filter-view > header {
+              -ms-flex-direction: row;
+                  flex-direction: row;
+              min-width: 0;
+              min-height: 0;
+              -ms-flex-wrap: nowrap;
+                  flex-wrap: nowrap;
               display: -ms-flexbox;
               display: flex;
+              margin-bottom: .5rem; }
+              .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__stage__filter-view > header > h2 {
+                margin-bottom: 0; }
+                .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__stage__filter-view > header > h2 form {
+                  float: right; }
+          .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper {
+            -ms-flex-preferred-size: 0;
+                flex-basis: 0;
+            -ms-flex-positive: 1;
+                flex-grow: 1;
+            height: auto;
+            -ms-flex-negative: 0;
+                flex-shrink: 0;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-align: stretch;
+                align-items: stretch;
+            -ms-flex-pack: center;
+                justify-content: center;
+            -ms-flex-direction: column;
+                flex-direction: column;
+            padding: 0 .5rem .5rem 0; }
+            .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div {
+              -ms-flex-preferred-size: 0;
+                  flex-basis: 0;
+              -ms-flex-positive: 1;
+                  flex-grow: 1;
+              max-height: 100%;
+              height: 100%;
+              -ms-flex-align: stretch;
+                  align-items: stretch;
+              -ms-flex-pack: center;
+                  justify-content: center;
               -ms-flex-direction: column;
                   flex-direction: column;
-              -ms-flex-negative: 0;
-                  flex-shrink: 0;
-              -ms-flex-positive: 0;
-                  flex-grow: 0;
-              margin-right: .5rem; }
-            [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content > .eureka__stage {
-              -ms-flex: 1 1 100%;
-                  flex: 1 1 100%;
+              -ms-flex-negative: 1;
+                  flex-shrink: 1;
               display: -ms-flexbox;
               display: flex;
-              -ms-flex-direction: column;
-                  flex-direction: column; }
-              [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__stage__filter-view {
-                -ms-flex-preferred-size: auto;
-                    flex-basis: auto;
-                -ms-flex-negative: 1;
-                    flex-shrink: 1;
-                -ms-flex-positive: 0;
-                    flex-grow: 0;
-                -ms-flex-direction: row;
-                    flex-direction: row; }
-                [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__stage__filter-view > header {
-                  -ms-flex-direction: row;
-                      flex-direction: row;
-                  min-width: 0;
-                  min-height: 0;
-                  -ms-flex-wrap: nowrap;
-                      flex-wrap: nowrap;
-                  display: -ms-flexbox;
-                  display: flex;
-                  margin-bottom: .5rem; }
-                  [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__stage__filter-view > header > h2 {
-                    margin-bottom: 0; }
-                    [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__stage__filter-view > header > h2 form {
-                      float: right; }
-              [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper {
+              max-width: 100%; }
+              .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table {
                 -ms-flex-preferred-size: 0;
                     flex-basis: 0;
                 -ms-flex-positive: 1;
                     flex-grow: 1;
-                height: auto;
-                -ms-flex-negative: 0;
-                    flex-shrink: 0;
-                display: -ms-flexbox;
-                display: flex;
+                max-height: 100%;
+                height: 100%;
                 -ms-flex-align: stretch;
                     align-items: stretch;
                 -ms-flex-pack: center;
                     justify-content: center;
                 -ms-flex-direction: column;
                     flex-direction: column;
-                padding: 0 .5rem .5rem 0; }
-                [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div {
-                  -ms-flex-preferred-size: 0;
-                      flex-basis: 0;
-                  -ms-flex-positive: 1;
-                      flex-grow: 1;
-                  max-height: 100%;
-                  height: 100%;
-                  -ms-flex-align: stretch;
-                      align-items: stretch;
-                  -ms-flex-pack: center;
-                      justify-content: center;
-                  -ms-flex-direction: column;
-                      flex-direction: column;
-                  -ms-flex-negative: 1;
-                      flex-shrink: 1;
-                  display: -ms-flexbox;
-                  display: flex;
-                  max-width: 100%; }
-                  [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table {
-                    -ms-flex-preferred-size: 0;
-                        flex-basis: 0;
-                    -ms-flex-positive: 1;
-                        flex-grow: 1;
-                    max-height: 100%;
-                    height: 100%;
-                    -ms-flex-align: stretch;
-                        align-items: stretch;
-                    -ms-flex-pack: center;
-                        justify-content: center;
-                    -ms-flex-direction: column;
-                        flex-direction: column;
-                    -ms-flex-negative: 1;
-                        flex-shrink: 1;
-                    display: -ms-flexbox;
-                    display: flex;
-                    max-width: 100%; }
-                    [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead {
-                      -ms-flex-preferred-size: auto;
-                          flex-basis: auto;
-                      display: block;
-                      -ms-flex-pack: end;
-                          justify-content: flex-end;
-                      -ms-flex-negative: 0;
-                          flex-shrink: 0;
-                      -ms-flex-positive: 0;
-                          flex-grow: 0; }
-                      [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead.eureka__tbody-scrolling {
-                        padding-right: 16px; }
-                      [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead[hidden] {
-                        display: none; }
-                      [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr {
-                        display: block;
-                        width: 100%;
-                        display: -ms-flexbox;
-                        display: flex;
-                        -ms-flex-wrap: wrap;
-                            flex-wrap: wrap; }
-                        [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th {
-                          -ms-flex: 1 0 auto;
-                              flex: 1 0 auto; }
-                          [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(1) {
-                            grid-area: media; }
-                          [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(2) {
-                            grid-area: name; }
-                          [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(3) {
-                            grid-area: none; }
-                          [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(4) {
-                            grid-area: dimensions; }
-                          [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(5) {
-                            grid-area: file-size; }
-                          [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(6) {
-                            grid-area: edited-on; }
-                    [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody.empty {
-                      display: -ms-flexbox;
-                      display: flex;
-                      -ms-flex-pack: center;
-                          justify-content: center;
-                      -ms-flex-align: center;
-                          align-items: center; }
-                      [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody.empty > tr {
-                        text-align: center;
-                        display: block; }
-                        [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody.empty > tr td {
-                          margin: 0 auto;
-                          display: inline-block; }
-                    [class*="modal-section"] > .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > tbody {
-                      -ms-flex-preferred-size: 0;
-                          flex-basis: 0;
-                      text-align: center;
-                      display: block;
-                      -ms-flex-wrap: no-wrap;
-                          flex-wrap: no-wrap;
-                      overflow-y: auto;
-                      -ms-flex-align: stretch;
-                          align-items: stretch;
-                      -ms-flex-direction: row;
-                          flex-direction: row;
-                      -ms-flex-pack: center;
-                          justify-content: center;
-                      -ms-flex-negative: 1;
-                          flex-shrink: 1;
-                      -ms-flex-positive: 1;
-                          flex-grow: 1;
-                      max-width: 100%; }
-          [class*="modal-section"] > .eureka-root .eureka > .eureka__choose-bar {
-            -ms-flex: 0 0 auto;
-                flex: 0 0 auto; } }
+                -ms-flex-negative: 1;
+                    flex-shrink: 1;
+                display: -ms-flexbox;
+                display: flex;
+                max-width: 100%; }
+      .eureka-root .eureka > .eureka__choose-bar {
+        -ms-flex: 0 0 auto;
+            flex: 0 0 auto; } }
+
+.eureka-root thead {
+  -ms-flex-preferred-size: auto;
+      flex-basis: auto;
+  display: block;
+  -ms-flex-pack: end;
+      justify-content: flex-end;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  -ms-flex-positive: 0;
+      flex-grow: 0; }
+  .eureka-root thead.eureka__tbody-scrolling {
+    padding-right: 16px; }
+  .eureka-root thead[hidden] {
+    display: none; }
+  .eureka-root thead > tr {
+    display: block;
+    width: 100%;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    /*@supports (display: flex) and ( not (display: grid) ) {
+      }*/ }
+    .eureka-root thead > tr > th {
+      -ms-flex: 1 0 auto;
+          flex: 1 0 auto; }
+      .eureka-root thead > tr > th:nth-of-type(1) {
+        grid-area: media; }
+      .eureka-root thead > tr > th:nth-of-type(2) {
+        grid-area: name; }
+      .eureka-root thead > tr > th:nth-of-type(3) {
+        grid-area: none; }
+      .eureka-root thead > tr > th:nth-of-type(4) {
+        grid-area: dimensions; }
+      .eureka-root thead > tr > th:nth-of-type(5) {
+        grid-area: file-size; }
+      .eureka-root thead > tr > th:nth-of-type(6) {
+        grid-area: edited-on; }
+
+.eureka-root tbody.empty {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: center;
+      justify-content: center;
+  -ms-flex-align: center;
+      align-items: center; }
+  .eureka-root tbody.empty > tr {
+    text-align: center;
+    display: block; }
+    .eureka-root tbody.empty > tr td {
+      margin: 0 auto;
+      display: inline-block; }
+
+.eureka-root tbody {
+  -ms-flex-preferred-size: 0;
+      flex-basis: 0;
+  text-align: center;
+  display: block;
+  -ms-flex-wrap: no-wrap;
+      flex-wrap: no-wrap;
+  overflow-y: auto;
+  -ms-flex-align: stretch;
+      align-items: stretch;
+  -ms-flex-direction: row;
+      flex-direction: row;
+  -ms-flex-pack: center;
+      justify-content: center;
+  -ms-flex-negative: 1;
+      flex-shrink: 1;
+  -ms-flex-positive: 1;
+      flex-grow: 1;
+  max-width: 100%; }
 
 @media screen and (min-width: 641px) {
   .eureka__media-directory-selector form {
@@ -302,35 +316,31 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
       .eureka__server-side .eureka__tree-toggle .eureka__upload-form {
         margin-right: 0; } }
 
-.eureka.eureka__view-mode__table .eureka__table img {
-  max-height: 20vh; }
-
-.eureka.eureka__view-mode__table .eureka__table thead th:first-child {
-  padding-left: 8px;
-  padding-left: .5rem; }
-
-.eureka.eureka__view-mode__table .eureka__table thead th:last-child {
-  padding-right: 8px;
-  padding-right: .5rem; }
-
-.eureka.eureka__view-mode__table .eureka__table tr[contextmenu] td:first-child {
-  padding-left: 8px;
-  padding-left: .5rem; }
-
-.eureka.eureka__view-mode__table .eureka__table tr[contextmenu] td:last-child {
-  padding-right: 8px;
-  padding-right: .5rem; }
-
-.eureka.eureka__view-mode__table .eureka__table tr td, .eureka.eureka__view-mode__table .eureka__table tr th {
-  text-align: right; }
-  .eureka.eureka__view-mode__table .eureka__table tr td:nth-of-type(1), .eureka.eureka__view-mode__table .eureka__table tr th:nth-of-type(1) {
-    text-align: left; }
-
-.eureka.eureka__view-mode__table.eureka__enlarge-focused-rows .eureka__table img {
-  max-height: 20vh; }
-
-.eureka.eureka__view-mode__table.eureka__enlarge-focused-rows .eureka__table tr:focus img {
-  max-height: 30vh; }
+.eureka.eureka__view-mode__table {
+  /*@include media($gtMobile) {
+    }*/ }
+  .eureka.eureka__view-mode__table .eureka__table img {
+    max-height: 20vh; }
+  .eureka.eureka__view-mode__table .eureka__table thead th:first-child {
+    padding-left: 8px;
+    padding-left: .5rem; }
+  .eureka.eureka__view-mode__table .eureka__table thead th:last-child {
+    padding-right: 8px;
+    padding-right: .5rem; }
+  .eureka.eureka__view-mode__table .eureka__table tr[contextmenu] td:first-child {
+    padding-left: 8px;
+    padding-left: .5rem; }
+  .eureka.eureka__view-mode__table .eureka__table tr[contextmenu] td:last-child {
+    padding-right: 8px;
+    padding-right: .5rem; }
+  .eureka.eureka__view-mode__table .eureka__table tr td, .eureka.eureka__view-mode__table .eureka__table tr th {
+    text-align: right; }
+    .eureka.eureka__view-mode__table .eureka__table tr td:nth-of-type(1), .eureka.eureka__view-mode__table .eureka__table tr th:nth-of-type(1) {
+      text-align: left; }
+  .eureka.eureka__view-mode__table.eureka__enlarge-focused-rows .eureka__table img {
+    max-height: 20vh; }
+  .eureka.eureka__view-mode__table.eureka__enlarge-focused-rows .eureka__table tr:focus img {
+    max-height: 30vh; }
 
 .eureka.eureka__view-mode__thumb .eureka__table thead, .eureka.eureka__view-mode__grid .eureka__table thead {
   display: none !important; }
@@ -385,7 +395,9 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
     display: flex;
     -ms-flex-order: 10;
         order: 10;
-    width: 100%; }
+    width: 100%;
+    /*> td[colspan] {
+      }*/ }
     .eureka .eureka__context-row[hidden] {
       display: none !important; }
     .eureka .eureka__context-row .eureka__context-buttons {
@@ -444,7 +456,7 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
 .dangerous {
   color: var(--dangerous, red); }
 
-[class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(1), [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(1), .visually-hidden, .eureka .eureka__layout-chooser legend, .eureka .eureka__layout-chooser .eureka__icon-radio-btns input[type="radio"] {
+.eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > th:nth-of-type(1), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > th:nth-of-type(1), .visually-hidden, .eureka .eureka__layout-chooser legend, .eureka .eureka__layout-chooser .eureka__icon-radio-btns input[type="radio"] {
   /*https://developer.yahoo.com/blogs/ydn/clip-hidden-content-better-accessibility-53456.html*/
   position: absolute !important;
   clip: rect(1px 1px 1px 1px);
@@ -455,7 +467,7 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
   height: 1px !important;
   width: 1px !important;
   overflow: hidden; }
-  body:hover [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(1) a, [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side body:hover .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(1) a, body:hover [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(1) a, [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side body:hover .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(1) a, body:hover .visually-hidden a, body:hover .eureka .eureka__layout-chooser legend a, .eureka .eureka__layout-chooser body:hover legend a, body:hover .eureka .eureka__layout-chooser .eureka__icon-radio-btns input[type="radio"] a, .eureka .eureka__layout-chooser .eureka__icon-radio-btns body:hover input[type="radio"] a, body:hover [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(1) input, [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side body:hover .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(1) input, body:hover [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(1) input, [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side body:hover .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(1) input, body:hover .visually-hidden input, body:hover .eureka .eureka__layout-chooser legend input, .eureka .eureka__layout-chooser body:hover legend input, body:hover .eureka .eureka__layout-chooser .eureka__icon-radio-btns input[type="radio"] input, .eureka .eureka__layout-chooser .eureka__icon-radio-btns body:hover input[type="radio"] input, body:hover [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(1) button, [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__table.eureka__server-side body:hover .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(1) button, body:hover [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(1) button, [class*="modal-section"] > .eureka-root .eureka.eureka__view-mode__list.eureka__server-side body:hover .eureka__browse-content > .eureka__stage > .eureka__table-wrapper > div > table > thead > tr > th:nth-of-type(1) button, body:hover .visually-hidden button, body:hover .eureka .eureka__layout-chooser legend button, .eureka .eureka__layout-chooser body:hover legend button, body:hover .eureka .eureka__layout-chooser .eureka__icon-radio-btns input[type="radio"] button, .eureka .eureka__layout-chooser .eureka__icon-radio-btns body:hover input[type="radio"] button {
+  body:hover .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > th:nth-of-type(1) a, .eureka-root .eureka.eureka__view-mode__table.eureka__server-side body:hover table > thead > tr > th:nth-of-type(1) a, body:hover .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > th:nth-of-type(1) a, .eureka-root .eureka.eureka__view-mode__list.eureka__server-side body:hover table > thead > tr > th:nth-of-type(1) a, body:hover .visually-hidden a, body:hover .eureka .eureka__layout-chooser legend a, .eureka .eureka__layout-chooser body:hover legend a, body:hover .eureka .eureka__layout-chooser .eureka__icon-radio-btns input[type="radio"] a, .eureka .eureka__layout-chooser .eureka__icon-radio-btns body:hover input[type="radio"] a, body:hover .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > th:nth-of-type(1) input, .eureka-root .eureka.eureka__view-mode__table.eureka__server-side body:hover table > thead > tr > th:nth-of-type(1) input, body:hover .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > th:nth-of-type(1) input, .eureka-root .eureka.eureka__view-mode__list.eureka__server-side body:hover table > thead > tr > th:nth-of-type(1) input, body:hover .visually-hidden input, body:hover .eureka .eureka__layout-chooser legend input, .eureka .eureka__layout-chooser body:hover legend input, body:hover .eureka .eureka__layout-chooser .eureka__icon-radio-btns input[type="radio"] input, .eureka .eureka__layout-chooser .eureka__icon-radio-btns body:hover input[type="radio"] input, body:hover .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > th:nth-of-type(1) button, .eureka-root .eureka.eureka__view-mode__table.eureka__server-side body:hover table > thead > tr > th:nth-of-type(1) button, body:hover .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > th:nth-of-type(1) button, .eureka-root .eureka.eureka__view-mode__list.eureka__server-side body:hover table > thead > tr > th:nth-of-type(1) button, body:hover .visually-hidden button, body:hover .eureka .eureka__layout-chooser legend button, .eureka .eureka__layout-chooser body:hover legend button, body:hover .eureka .eureka__layout-chooser .eureka__icon-radio-btns input[type="radio"] button, .eureka .eureka__layout-chooser .eureka__icon-radio-btns body:hover input[type="radio"] button {
     display: none !important; }
 
 .flex-bar, .eureka .eureka__button-bar, .eureka .eureka__tree-bar {
@@ -516,6 +528,17 @@ a[role="presentation"] {
         display:none;
       }
     }
+  }*/
+  /*&.eureka__view-mode__thumb {
+
+  }
+
+  &.eureka__view-mode__grid {
+
+  }
+
+  &.eureka__view-mode__list {
+
   }*/
   /*#eureka__tree-toggle__button {
     position:relative;

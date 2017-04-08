@@ -8,7 +8,6 @@ $border-box-sizing:false;
   .eureka {
     box-sizing: border-box;
   }
-
   .eureka * {
     &,
     &::after,
@@ -30,9 +29,6 @@ $active:#3697cd; // MODX blue
 $color:#081922; // MODX font color
 $faded:#556C88; // MODX lighter color
 $dangerous:red;
-
-
-
 
 $palettes: ( // http://erskinedesign.com/blog/friendlier-colour-names-sass-maps/
     faded: (
@@ -128,7 +124,7 @@ a[role="presentation"] {
     overflow: visible;
     padding: 0;
     -webkit-appearance: none; /* for input */
-        -ms-user-select: none;
+    -ms-user-select: none;
 }
 
 /* start leave out */
@@ -172,10 +168,6 @@ a[role="presentation"] {
 }
 
 .eureka {
-
-
-
-
   a {
     color:var(--link-color, $active);
   }
@@ -307,7 +299,7 @@ a[role="presentation"] {
     }
   }*/
 
-  &.eureka__view-mode__thumb {
+  /*&.eureka__view-mode__thumb {
 
   }
 
@@ -317,7 +309,7 @@ a[role="presentation"] {
 
   &.eureka__view-mode__list {
 
-  }
+  }*/
 
   .alert-info { // blue MODX message style
     background-color: var(--light-bg, #d9edf7);
@@ -341,7 +333,7 @@ a[role="presentation"] {
 
   .eureka__tree {
     margin-bottom:1rem;
-    @media (pointer: coarse) { // make the tree for fat finger friendly 
+    @media (pointer: coarse) { // make the tree for fat finger friendly
       font-size:1.4em;
       line-height:1.8;
     }

@@ -24652,16 +24652,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      );
 
 	      return _utility2.default.serverSideRendering ? _react2.default.createElement(
-	        'div',
-	        { role: 'widget' },
-	        _react2.default.createElement(
-	          'form',
-	          { lang: props.lang || undefined, method: 'POST', action: props.config.basePath, encType: 'multipart/form-data', className: 'eureka eureka__view-mode__' + props.view.mode + enlargeFocusedRows + serverSideClass },
-	          formDiv,
-	          pathBar,
-	          chooseBar,
-	          modal
-	        )
+	        'form',
+	        { lang: props.lang || undefined, method: 'POST', action: props.config.basePath, encType: 'multipart/form-data', className: 'eureka eureka__view-mode__' + props.view.mode + enlargeFocusedRows + serverSideClass },
+	        formDiv,
+	        pathBar,
+	        chooseBar,
+	        modal
 	      ) : _react2.default.createElement(
 	        'div',
 	        { role: 'widget', lang: props.lang || undefined, className: 'eureka eureka__view-mode__' + props.view.mode + enlargeFocusedRows + serverSideClass },
@@ -26625,7 +26621,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.38",
+		"version": "0.0.41",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -26720,7 +26716,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			"eject": "react-scripts eject",
 			"babel": "babel ./src -d ./dist",
 			"i18n": "cd ./i18n && node build.js && cd ../",
-			"pretag": "grunt bump && grunt buildcss && yarn build && rm -rf public/assets/css && grunt clean:buildjs && grunt build"
+			"pretag": "grunt bump && grunt buildcss && yarn build && rm -rf public/assets/css && grunt clean:buildjs && grunt build",
+			"pretagsay": "yarn pretag && say \"Eureka Prepared for Tagging\""
 		}
 	};
 

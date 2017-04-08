@@ -393,16 +393,12 @@ var Eureka = function (_Component) {
       );
 
       return _utility2.default.serverSideRendering ? _react2.default.createElement(
-        'div',
-        { role: 'widget' },
-        _react2.default.createElement(
-          'form',
-          { lang: props.lang || undefined, method: 'POST', action: props.config.basePath, encType: 'multipart/form-data', className: 'eureka eureka__view-mode__' + props.view.mode + enlargeFocusedRows + serverSideClass },
-          formDiv,
-          pathBar,
-          chooseBar,
-          modal
-        )
+        'form',
+        { lang: props.lang || undefined, method: 'POST', action: props.config.basePath, encType: 'multipart/form-data', className: 'eureka eureka__view-mode__' + props.view.mode + enlargeFocusedRows + serverSideClass },
+        formDiv,
+        pathBar,
+        chooseBar,
+        modal
       ) : _react2.default.createElement(
         'div',
         { role: 'widget', lang: props.lang || undefined, className: 'eureka eureka__view-mode__' + props.view.mode + enlargeFocusedRows + serverSideClass },
