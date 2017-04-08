@@ -3373,7 +3373,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.36",
+		"version": "0.0.38",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -3468,7 +3468,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			"eject": "react-scripts eject",
 			"babel": "babel ./src -d ./dist",
 			"i18n": "cd ./i18n && node build.js && cd ../",
-			"pretag": "grunt bump && yarn build && rm -rf public/assets/css && grunt clean:buildjs && grunt build"
+			"pretag": "grunt bump && grunt buildcss && yarn build && rm -rf public/assets/css && grunt clean:buildjs && grunt build"
 		}
 	};
 
