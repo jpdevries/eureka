@@ -551,9 +551,7 @@ a[role="presentation"] {
     .eureka .eureka__modal .eureka__modal-panel .flex-bar > :disabled:last-child {
       filter: grayscale(100%); }
   .eureka a.button {
-    text-decoration: none;
-    font: 11px system-ui;
-    font: .6875rem system-ui; }
+    text-decoration: none; }
   .eureka button, .eureka a.button {
     background: var(--button-bg, white);
     box-shadow: 0 0 0 1px var(--border-color, #E4E4E4);
