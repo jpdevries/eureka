@@ -83,7 +83,7 @@ app.get('/', (req, res) => {
 
   serveIt('/', req.query.ln || undefined).then((eurekaMarkup) => {
     console.log(path.join(__dirname, 'client/build/index.html'));
-    let build = fs.readFileSync(path.join(__dirname, 'client/build/index.html'), 'utf8').replace('<div id="root"></div>',`<div id="root">${eurekaMarkup}</div>`).replace(`<html lang="en">`,`<html lang="${req.query.ln || 'en'}">`);
+    let build = fs.readFileSync(path.join(__dirname, 'client/build/index.html'), 'utf8').replace('<div id="root" class="eureka-root">',`<div id="root">${eurekaMarkup}</div>`).replace(`<html lang="en">`,`<html lang="${req.query.ln || 'en'}">`);
     //const build = '<h1>YOLO</h1>';
 
     /*if(req.query.ln) {
@@ -105,14 +105,14 @@ app.get('/', (req, res) => {
 app.get('/nued', (req, res) => {
 
   serveIt('/', req.query.ln || undefined).then((eurekaMarkup) => {
-    let build = fs.readFileSync(path.join(__dirname, 'client/build/nued.html'), 'utf8').replace('<div id="root"></div>',`<div id="root">${eurekaMarkup}</div>`).replace(`<html lang="en">`,`<html lang="${req.query.ln || 'en'}">`);
+    let build = fs.readFileSync(path.join(__dirname, 'client/build/nued.html'), 'utf8').replace('<div id="root" class="eureka-root">',`<div id="root">${eurekaMarkup}</div>`).replace(`<html lang="en">`,`<html lang="${req.query.ln || 'en'}">`);
     res.end(build);
   });
 
 });
 
 
-app.use('/',express.static('client/build'));
+app.use('/',express.static('client/build')); // serve the create react app
 app.use('/assets/js/i18n/locales', express.static('client/i18n/locales'));
 
 
@@ -178,7 +178,7 @@ app.post('/', (req, res) => {
       });
     } else {
       serveIt(cd).then((eurekaMarkup) => {
-        let build = fs.readFileSync(path.join(__dirname, `client/build/${isNued ? 'nued' : 'index'}.html`), 'utf8').replace('<div id="root"></div>',`<div id="root">${eurekaMarkup}</div>`).replace(`<html lang="en">`,`<html lang="${req.query.ln || 'en'}">`);
+        let build = fs.readFileSync(path.join(__dirname, `client/build/${isNued ? 'nued' : 'index'}.html`), 'utf8').replace('<div id="root" class="eureka-root">',`<div id="root" class="eureka-root">${eurekaMarkup}</div>`).replace(`<html lang="en">`,`<html lang="${req.query.ln || 'en'}">`);
         res.end(build);
       });
     }
@@ -260,7 +260,7 @@ function serveIt(dir = "/", lang = undefined) {
       //console.log(language);
       //console.log(languageWithoutRegionCode);
       //console.log(messages);
-      const eurekaMarkup = ReactDOM.renderToStaticMarkup( //<IntlProvider locale={language} messages={messages}>
+      const eurekaMarkup = ReactDOM.renderToString( //<IntlProvider locale={language} messages={messages}>
         <EurekaMediaBrowser messages={messages} currentDirectory={dir} lang={language} />
       );
       resolve(eurekaMarkup);
