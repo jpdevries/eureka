@@ -3464,7 +3464,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			"eject": "react-scripts eject",
 			"babel": "babel ./src -d ./dist",
 			"i18n": "cd ./i18n && node build.js && cd ../",
-			"pretag": "rm -rf public/assets/css && grunt clean:buildjs && grunt build && grunt sass && grunt copy && grunt postcss && grunt bump && yarn build && grunt copy"
+			"pretag": "yarn build && rm -rf public/assets/css && grunt clean:buildjs && grunt build && grunt bump"
 		}
 	};
 

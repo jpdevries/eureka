@@ -151,7 +151,16 @@ module.exports = function(grunt) {
           dest: '<%= dirs.build %><%= dirs.assets %><%= dirs.js %>eureka.<%= pkg.version %>.min.js'
         }]
       },*/
-      misc: {
+      css: {
+        files: [{
+          src: '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>main.css',
+          dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.<%= pkg.version %>.css'
+        },{
+          src: '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>main.min.css',
+          dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.<%= pkg.version %>.min.css'
+        }]
+      },
+      bower: {
         files: [{
             src: 'bourbon/**/*',
             cwd: '<%= dirs.lib %>',
@@ -167,13 +176,7 @@ module.exports = function(grunt) {
             cwd: '<%= dirs.lib %>spectacular/',
             dest: '<%= dirs.scss %>',
             expand: true
-        },{
-          src: '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>main.css',
-          dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.<%= pkg.version %>.css'
-        },{
-          src: '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>main.min.css',
-          dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.<%= pkg.version %>.min.css'
-        }/*,{
+        },/*,{
           src: '<%= dirs.theme %><%= dirs.assets %><%= dirs.img %>icons.svg',
           dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.img %>icons.<%= pkg.version %>.svg'
         }*//*,{
@@ -370,6 +373,6 @@ module.exports = function(grunt) {
   grunt.renameTask('string-replace','bump');
 
   grunt.registerTask('default', ['growl:watch', 'watch']);
-  grunt.registerTask('build',['bower','copy','modernizr','sass','postcss','cssmin','webpack','uglify','clean:buildimg','svgstore','svgo','growl:build']);
+  grunt.registerTask('build',['bower','copy:bower','modernizr','sass','postcss','cssmin','copy:css','webpack','uglify','clean:buildimg','svgstore','svgo','growl:build']);
   grunt.registerTask('buildcss',['sass','postcss','cssmin','growl:sass']);
 };
