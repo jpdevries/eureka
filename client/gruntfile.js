@@ -1,4 +1,5 @@
 module.exports = function(grunt) {
+  const pkg = grunt.file.readJSON('package.json');
   const webpackConfig = {
     stats: {
         // Configure the console output
@@ -46,7 +47,7 @@ module.exports = function(grunt) {
     }
   };
   grunt.initConfig({
-    pkg: grunt.file.readJSON('package.json'),
+    pkg: pkg,
     dirs:{
       build:'./build/',
       static:'./static/',
@@ -218,7 +219,7 @@ module.exports = function(grunt) {
       }
     },
     bump: {
-      pkg: {
+      index: {
         files: [{
             src: './public/index.html',
             dest: './public/index.html'
@@ -228,6 +229,31 @@ module.exports = function(grunt) {
                 pattern: /<link rel="stylesheet" type="text\/css" href="assets\/css\/eureka.\d*.\d*.\d*.min.css/i,
                 replacement: `<link rel="stylesheet" type="text/css" href="assets/css/eureka.<%= pkg.version %>.min.css`
             }]
+        }
+      },
+      pkg: {
+        files: [{
+            src: './package.json',
+            dest: './package.json'
+        }, {
+            src: './bower.json',
+            dest: './bower.json'
+        }],
+        options: {
+            replacements: [{
+                pattern: /"version":\s*"\d+.\d+.\d+"/,
+                replacement: '"version": "' + (grunt.option('ver') || '<%= pkg.version %>') + '"'
+            }, {
+                pattern: /"release"\s*:\s*"(.*?)"/,
+                replacement: '"release": "' + (grunt.option('rel') || '<%= pkg.release %>') + '"'
+            },{
+              pattern: /eureka.\d+.\d+.\d+/,
+              replacement: `eureka.${grunt.option('ver') || pkg.version}`
+            },{
+              pattern: /eureka-browser.bundle.\d+.\d+.\d+./,
+              replacement: `eureka-browser.bundle.${grunt.option('ver') || pkg.version}.`
+            }]
+            
         }
       }
     },
