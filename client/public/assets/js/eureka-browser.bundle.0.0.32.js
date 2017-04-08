@@ -26909,7 +26909,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.30",
+		"version": "0.0.32",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",

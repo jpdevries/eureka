@@ -1,7 +1,7 @@
 {
   "name": "eureka-browser",
   "description": "Eureka is a progressively enhanced Media Browser Component.",
-  "version": "0.0.30",
+  "version": "0.0.32",
   "license": "BSD-3-Clause",
   "author": {
     "name": "JP de Vries",
@@ -91,7 +91,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "yarn i18n && react-scripts build && grunt buildcss",
+    "build": "yarn i18n && react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "babel": "babel ./src -d ./dist",
