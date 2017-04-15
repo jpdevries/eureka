@@ -131,6 +131,7 @@ var Eureka = function (_Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
+      console.log('componentDidMount!!!');
       var props = this.props;
       var decoratedActions = this.decoratedActions;
       _store2.default.dispatch(decoratedActions.fetchMediaSources(props.config.headers)).then(function () {

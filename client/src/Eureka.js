@@ -50,6 +50,7 @@ class Eureka extends Component {
     this.decoratedActions = props.decoratedActions ? Object.assign({}, actions, props.decoratedActions) : actions;
   }
   componentDidMount() {
+    console.log('componentDidMount!!!');
     const props = this.props;
     const decoratedActions = this.decoratedActions;
     store.dispatch(decoratedActions.fetchMediaSources(props.config.headers)).then(() => { // hit the server and get the media sources

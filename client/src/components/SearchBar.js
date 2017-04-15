@@ -17,15 +17,17 @@ class SearchBar extends Component {
       placeholderField:'filename',
       lastDir:'/'
     };
-  }
-
-  componentDidMount() {
-    this.pickRandomField();
-    if(this.props.view.intervals.searchBarPlaceholder) {
+    if(!utility.serverSideRendering && this.props.view.intervals.searchBarPlaceholder) {
       setInterval(() => {
         this.pickRandomField();
       }, this.props.view.intervals.searchBarPlaceholder);
     }
+  }
+
+  componentDidMount() {
+    console.log('componentDidMount');
+    this.pickRandomField();
+
 
     /*store.subscribe(() => {
       if(this.state.lastDir !== store.getState().content.cd) this.pickRandomField();

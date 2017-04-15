@@ -52,20 +52,19 @@ var SearchBar = function (_Component) {
       placeholderField: 'filename',
       lastDir: '/'
     };
+    if (!_utility2.default.serverSideRendering && _this.props.view.intervals.searchBarPlaceholder) {
+      setInterval(function () {
+        _this.pickRandomField();
+      }, _this.props.view.intervals.searchBarPlaceholder);
+    }
     return _this;
   }
 
   _createClass(SearchBar, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
-      var _this2 = this;
-
+      console.log('componentDidMount');
       this.pickRandomField();
-      if (this.props.view.intervals.searchBarPlaceholder) {
-        setInterval(function () {
-          _this2.pickRandomField();
-        }, this.props.view.intervals.searchBarPlaceholder);
-      }
 
       /*store.subscribe(() => {
         if(this.state.lastDir !== store.getState().content.cd) this.pickRandomField();
@@ -86,7 +85,7 @@ var SearchBar = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _this3 = this;
+      var _this2 = this;
 
       var props = this.props;
 
@@ -103,7 +102,7 @@ var SearchBar = function (_Component) {
 
         var randomItem = props.content.contents[Math.round(Math.random() * (props.content.contents.length - 1))];
 
-        switch (_this3.state.placeholderField) {
+        switch (_this2.state.placeholderField) {
           case 'filename':
             return randomItem.filename;
 

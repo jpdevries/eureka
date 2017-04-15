@@ -53,7 +53,7 @@ function render() {
         foo: 'bar'
       }}
       intervals={{
-        searchBarPlaceholder: 3000
+        searchBarPlaceholder: 8000
       }}
     />,
     document.getElementById('root')

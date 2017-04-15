@@ -61,6 +61,6 @@ function render() {
   }), _defineProperty(_React$createElement, 'headers', {
     foo: 'bar'
   }), _defineProperty(_React$createElement, 'intervals', {
-    searchBarPlaceholder: 3000
+    searchBarPlaceholder: 8000
   }), _React$createElement)), document.getElementById('root'));
 }
