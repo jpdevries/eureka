@@ -122,8 +122,6 @@ var EurekaMediaBrowser = function (_Component) {
         }()
       }, props);
 
-      console.log('config', _config);
-
       var localSources = function () {
         try {
           return JSON.parse(localStorage.getItem(props.storagePrefix + 'source')) || undefined;
@@ -146,7 +144,6 @@ var EurekaMediaBrowser = function (_Component) {
       }
 
       if (localContent) {
-        //console.log('updating localContent', localContent);
         store.dispatch(actions.updateContent(localContent));
       }
 
@@ -162,7 +159,6 @@ var EurekaMediaBrowser = function (_Component) {
 
     //console.log('bolo', languageWithoutRegionCode);
     store.dispatch(actions.updateConfig(config));
-    console.log('config updated', config);
 
     var i18nEdpoint = function () {
       try {
@@ -173,7 +169,7 @@ var EurekaMediaBrowser = function (_Component) {
     }();
 
     var shouldFetch = function () {
-      /console.log('shouldFetch', props.lang);
+      console.log('shouldFetch', props.lang);
       if (_utility2.default.serverSideRendering) return false;
       try {
         return !props.lang || languageWithoutRegionCode == 'en' || _this.state.i18n[props.lang] !== undefined || _this.state.i18n[languageWithoutRegionCode] !== undefined ? false : true;
@@ -193,19 +189,22 @@ var EurekaMediaBrowser = function (_Component) {
 
     store.subscribe(function () {
       var state = store.getState();
-      //console.log(state);
+      console.log(state);
 
       // whenever the state changes we store pieces of the state locally so that next time Eureka fires up it can render the user interface without delay
       if (state.config.useLocalStorage) {
         try {
           localStorage.setItem(state.config.storagePrefix + 'currentDirectory', state.content.cd);
+          localStorage.setItem(state.config.storagePrefix + 'directory', JSON.stringify(state.directory));
           localStorage.setItem(state.config.storagePrefix + 'currentSource', state.source.currentSource);
           localStorage.setItem(state.config.storagePrefix + 'source', JSON.stringify(state.source));
-          localStorage.setItem(state.config.storagePrefix + 'mode', state.view.mode);
-          localStorage.setItem(state.config.storagePrefix + 'sort', state.view.sort);
-          localStorage.setItem(state.config.storagePrefix + 'treeHidden', !state.view.sourceTreeOpen);
+          //localStorage.setItem(`${state.config.storagePrefix}mode`, state.view.mode);
+          //localStorage.setItem(`${state.config.storagePrefix}sort`, state.view.sort);
+          //localStorage.setItem(`${state.config.storagePrefix}treeHidden`, !state.view.sourceTreeOpen);
           localStorage.setItem(state.config.storagePrefix + 'content', JSON.stringify(state.content));
           localStorage.setItem(state.config.storagePrefix + 'tree', JSON.stringify(state.tree));
+          console.log(state.view, JSON.stringify(state.view));
+          localStorage.setItem(state.config.storagePrefix + 'view', JSON.stringify(state.view));
         } catch (e) {}
       }
     });
@@ -246,11 +245,8 @@ var EurekaMediaBrowser = function (_Component) {
       var props = this.props;
       var state = this.state;
 
-      //console.log('state', state);
-
       var language = this.getLanguage(props);
       var languageWithoutRegionCode = language.toLowerCase().split(/[_-]+/)[0];
-      //console.log('languageWithoutRegionCode', languageWithoutRegionCode);
       var messages = function () {
         if (_utility2.default.serverSideRendering) return props.messages;
 

@@ -178,8 +178,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }()
 	      }, props);
 
-	      console.log('config', _config);
-
 	      var localSources = function () {
 	        try {
 	          return JSON.parse(localStorage.getItem(props.storagePrefix + 'source')) || undefined;
@@ -202,7 +200,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 
 	      if (localContent) {
-	        console.log('updating localContent', localContent);
 	        store.dispatch(actions.updateContent(localContent));
 	      }
 
@@ -218,7 +215,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    //console.log('bolo', languageWithoutRegionCode);
 	    store.dispatch(actions.updateConfig(config));
-	    console.log('config updated', config);
 
 	    var i18nEdpoint = function () {
 	      try {
@@ -255,13 +251,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (state.config.useLocalStorage) {
 	        try {
 	          localStorage.setItem(state.config.storagePrefix + 'currentDirectory', state.content.cd);
+	          localStorage.setItem(state.config.storagePrefix + 'directory', JSON.stringify(state.directory));
 	          localStorage.setItem(state.config.storagePrefix + 'currentSource', state.source.currentSource);
 	          localStorage.setItem(state.config.storagePrefix + 'source', JSON.stringify(state.source));
-	          localStorage.setItem(state.config.storagePrefix + 'mode', state.view.mode);
-	          localStorage.setItem(state.config.storagePrefix + 'sort', state.view.sort);
-	          localStorage.setItem(state.config.storagePrefix + 'treeHidden', !state.view.sourceTreeOpen);
+	          //localStorage.setItem(`${state.config.storagePrefix}mode`, state.view.mode);
+	          //localStorage.setItem(`${state.config.storagePrefix}sort`, state.view.sort);
+	          //localStorage.setItem(`${state.config.storagePrefix}treeHidden`, !state.view.sourceTreeOpen);
 	          localStorage.setItem(state.config.storagePrefix + 'content', JSON.stringify(state.content));
 	          localStorage.setItem(state.config.storagePrefix + 'tree', JSON.stringify(state.tree));
+	          console.log(state.view, JSON.stringify(state.view));
+	          localStorage.setItem(state.config.storagePrefix + 'view', JSON.stringify(state.view));
 	        } catch (e) {}
 	      }
 	    });
@@ -302,11 +301,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var props = this.props;
 	      var state = this.state;
 
-	      //console.log('state', state);
-
 	      var language = this.getLanguage(props);
 	      var languageWithoutRegionCode = language.toLowerCase().split(/[_-]+/)[0];
-	      console.log('languageWithoutRegionCode', languageWithoutRegionCode);
 	      var messages = function () {
 	        if (_utility2.default.serverSideRendering) return props.messages;
 
@@ -978,7 +974,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      document.body.addEventListener('keyup', function (event) {
 	        var key = event.keyCode || event.charCode || 0;
-	        console.log(key);
+	        //console.log(key);
 	        switch (key) {
 	          case 27:
 	            // Escape
@@ -1017,7 +1013,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var decoratedActions = this.decoratedActions;
 	      var props = this.props;
 	      event.preventDefault();
-	      console.log('onModalSubmit', createDirectory);
+	      //console.log('onModalSubmit',createDirectory);
 
 	      switch (this.state.currentModal) {
 	        case CREATE_DIRECTORY:
@@ -1044,22 +1040,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function onRenameItemModalSubmit(newName, item) {
 	      var _this4 = this;
 
-	      console.log('onRenameItemModalSubmit!!!', newName, item);
-	      console.log(item.path);
+	      //console.log('onRenameItemModalSubmit!!!', newName, item);
+	      //console.log(item.path);
 	      var decoratedActions = this.decoratedActions;
 	      var dir = function () {
 	        try {
 	          // this is bullshit webpack isn't including the parse method with the Node path module
 	          return path.parse(item.path).dir;
 	        } catch (e) {
-	          console.log('oh crap', item.path);
+	          //console.log('oh crap', item.path);
 	          console.log(e);
 	          return pathParse(item.path).dir;
 	        }
 	      }();
 
 	      _store2.default.dispatch(decoratedActions.renameItem(this.props.source.currentSource, item.path, newName)).then(function (results) {
-	        console.log('results!!!', results);
+	        //console.log('results!!!', results);
 	        _store2.default.dispatch(decoratedActions.updateContent({ contents: results.contents.filter(function (file) {
 	            return file.filename;
 	          }) }));
@@ -1073,7 +1069,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'onRenameItem',
 	    value: function onRenameItem(item) {
-	      console.log('onRenameItem', item);
+	      //console.log('onRenameItem', item);
 	      this.setState({
 	        renamingItem: item,
 	        modalOpen: true,
@@ -1249,7 +1245,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var MediaSourceSelector = function MediaSourceSelector(props) {
 	  var decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
-	  console.log('MediaSourceSelector', decoratedActions);
+	  //console.log('MediaSourceSelector',decoratedActions);
 	  var options = props.source.sources.map(function (source, index) {
 	    return _react2.default.createElement(
 	      'option',
@@ -1394,7 +1390,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return state;
 	};
 
-	var initialContentState = {
+	var initialContentState = Object.assign({}, {
 	  cd: '/',
 	  contents: [
 	    /*{
@@ -1416,7 +1412,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	      editedOn:1487107348619
 	    }*/
 	  ]
-	};
+	}, function () {
+	  try {
+	    return JSON.parse(localStorage.getItem('eureka__content'));
+	  } catch (e) {
+	    return {};
+	  }
+	}());
 
 	var contentReducer = function contentReducer(state, action) {
 	  state = state || initialContentState;
@@ -1466,17 +1468,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return state;
 	};
 
-	var initialTreeReducer = [/*{
-	                          name:'assets',
-	                          cd:'assets',
-	                          children:[{
-	                          name:'img',
-	                          cd:'assets/img'
-	                          }]
-	                          },{
-	                          name:'uploads',
-	                          cd:'uploads'
-	                          }*/];
+	var initialTreeReducer = function () {
+	  try {
+	    var lt = JSON.parse(localStorage.getItem('eureka__tree'));
+	    return Array.isArray(lt) ? lt : [];
+	  } catch (e) {
+	    return [/*{
+	             name:'assets',
+	             cd:'assets',
+	             children:[{
+	               name:'img',
+	               cd:'assets/img'
+	             }]
+	            },{
+	             name:'uploads',
+	             cd:'uploads'
+	            }*/];
+	  }
+	}();
 
 	var cd = '';
 	var treeReducer = function treeReducer(state, action) {
@@ -1589,7 +1598,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return state;
 	};
 
-	var initialViewState = {
+	var initialViewState = Object.assign({}, {
 	  focusedMediaItem: undefined,
 	  filter: undefined,
 	  //cd: '/',
@@ -1604,8 +1613,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	    fetchDirectoryContents: false,
 	    updateSourceTree: false
 	  }
+	}, function () {
+	  try {
+	    return JSON.parse(localStorage.getItem('eureka__view'));
+	  } catch (e) {
+	    return {};
+	  }
+	  /*return {
+	    mode: localStorage.getItem('eureka__mode') || undefined,
+	    sort: localStorage.getItem('eureka__sort') || undefined,
+	    sourceTreeOpen: localStorage.getItem('eureka__treeHidden') == 'false' || undefined
+	  }*/
+	}());
 
-	};
+	//console.log('initialViewState', initialViewState);
 
 	var viewReducer = function viewReducer(state, action) {
 	  state = state || initialViewState;
@@ -1617,14 +1638,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    case actions.UPDATE_CONFIG:
 	      var o = {};
-	      o = Object.assign({}, o, {
-	        sourceTreeOpen: action.config.treeHidden !== undefined ? !action.config.treeHidden : o.sourceTreeOpen || undefined
-	      });
+	      /*o = Object.assign({},o,{
+	        sourceTreeOpen:action.config.treeHidden !== undefined ? !action.config.treeHidden : o.sourceTreeOpen || undefined
+	      });*/
 	      if (action.config.intervals) o = Object.assign({}, o, { intervals: action.config.intervals });
 	      if (action.config.mode) o = Object.assign({}, o, { mode: action.config.mode });
 	      if (action.config.sort) o = Object.assign({}, o, { sort: action.config.sort });
 	      if (action.config.locale) o = Object.assign({}, o, { locale: action.config.locale });
 	      if (action.config.enlargeFocusedRows !== undefined) o = Object.assign({}, o, { enlargeFocusedRows: action.config.enlargeFocusedRows });
+	      //if(action.config.treeHidden !== undefined) o = Object.assign({},o,{sourceTreeOpen:action.config.treeHidden});
 
 	      return Object.assign({}, state, o);
 
@@ -1644,7 +1666,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return state;
 	};
 
-	var initialSourceState = {
+	var initialSourceState = Object.assign({}, {
 	  currentSource: "0",
 	  sources: [/*{
 	            name: 'Filesystem',
@@ -1653,7 +1675,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            name: 'Amazon S3',
 	            id: 's3'
 	            }*/]
-	};
+	}, function () {
+	  try {
+	    return JSON.parse(localStorage.getItem('eureka__source'));
+	  } catch (e) {
+	    return {};
+	  }
+	}());
 
 	var sourceReducer = function sourceReducer(state, action) {
 	  state = state || initialSourceState;
@@ -1674,11 +1702,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return state;
 	};
 
-	var initialDirectoryState = [{
-	  name: 'Filesystem',
-	  id: 'fileystem',
-	  directories: []
-	}];
+	var initialDirectoryState = function () {
+	  try {
+	    var ld = JSON.parse('eureka__directory');
+	    if (!Array.isArray(ld)) throw new Error('eureka__directory is not an Array');
+	    return ld;
+	  } catch (e) {
+	    return [{
+	      name: 'Filesystem',
+	      id: 'fileystem',
+	      directories: []
+	    }];
+	  }
+	}();
 
 	var cs = void 0;
 	var directoryReducer = function directoryReducer(state, action) {
@@ -1832,7 +1868,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var DESCENDING = 'descending';
 
 	function makeURL(str, params) {
-	  console.log('makeURL', str, params);
+	  //console.log('makeURL', str, params);
 	  try {
 	    var url = new URL(str, window.location.origin); // #janky note: probably need to variabilize baseUrl
 	    Object.keys(params).forEach(function (key) {
@@ -2083,7 +2119,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var UPDATE_SOURCE = 'update_source';
 	var updateSource = function updateSource(source) {
-	  console.log('updating source', source);
 	  return {
 	    type: UPDATE_SOURCE,
 	    source: source
@@ -2135,7 +2170,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	var UPDATE_SOURCE_TREE_SUCCESS = 'update_source_tree_success';
 	var UPDATE_SOURCE_TREE_ERROR = 'update_source_tree_error';
 	var updateSourceTreeSuccess = function updateSourceTreeSuccess(contents) {
-	  //console.log('contents',contents);
 	  return {
 	    type: UPDATE_SOURCE_TREE_SUCCESS,
 	    contents: contents
@@ -2225,7 +2259,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var FETCH_MEDIA_SOURCES_ERROR = 'fetch_media_sources_error';
 
 	var fetchMediaSourcesSuccess = function fetchMediaSourcesSuccess(sources) {
-	  console.log('fetchMediaSourcesSuccess', sources);
+	  //console.log('fetchMediaSourcesSuccess', sources);
 	  return {
 	    type: FETCH_MEDIA_SOURCES_SUCCESS,
 	    sources: sources
@@ -3173,7 +3207,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * LICENSE file in the root directory of this source tree. An additional grant
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
-	 *
+	 * 
 	 */
 	'use strict';
 
@@ -3368,7 +3402,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.42",
+		"version": "0.0.43",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -7904,7 +7938,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (a.cd === b.cd) return 0;
 	      return a.cd > b.cd ? 1 : -1;
 	    }).map(function (directory, index) {
-	      console.log(props.source.currentSource.id == source.id && props.content.cd == directory.cd, props.source.currentSource.id, source.id, props.content.cd, directory.cd);
+	      //console.log(props.source.currentSource.id == source.id && props.content.cd == directory.cd, props.source.currentSource.id, source.id, props.content.cd, directory.cd);
 	      return _react2.default.createElement(
 	        'option',
 	        { key: index, value: source.id + '||' + directory.cd, checked: props.source.currentSource.id == source.id && props.content.cd == directory.cd },
@@ -7936,9 +7970,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            _utility$parseMediaSo2 = _slicedToArray(_utility$parseMediaSo, 2),
 	            cs = _utility$parseMediaSo2[0],
 	            cd = _utility$parseMediaSo2[1]; // option values are like 0||assets/img/redwoods where 0 is the media source id and assets/img/redwoods is the directory
+	        //console.log('YOLO',cs,cd);
 
 
-	        console.log('YOLO', cs, cd);
 	        _store2.default.dispatch(decoratedActions.updateSource(cs));
 	        _store2.default.dispatch(decoratedActions.updateContent({ // updates the "current directory" of the view right away
 	          cd: cd
@@ -8346,7 +8380,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _react2.default.createElement(
 	      'button',
 	      { 'aria-label': closeMediaBrowserMessage, onClick: function onClick(event) {
-	          console.log('closing');
+	          //console.log('closing');
 	          try {
 	            props.config.callbacks.close();
 	          } catch (e) {
@@ -9241,7 +9275,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
-	      console.log('EurekaTableTbody componentDidMount');
+	      //console.log('EurekaTableTbody componentDidMount');
 	      _store2.default.dispatch(_actions2.default.updateView({
 	        isTableScrolling: this.isScrollable(this.tbody)
 	      }));
@@ -9698,7 +9732,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _react2.default.createElement(
 	      'td',
 	      { role: 'gridcell', id: mediaId, title: ariaLabel, className: 'eureka__td-media', onDoubleClick: function onDoubleClick(event) {
-	          console.log(event, props.item);
+	          //console.log(event, props.item);
 	        } },
 	      _react2.default.createElement(
 	        'span',
@@ -9717,15 +9751,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	            throw new Error('file name cannot be empty');
 	          }
 
-	          console.log(event.target.innerHTML, event.target.innerHTML.trim());
+	          //console.log(event.target.innerHTML, event.target.innerHTML.trim());
 	          props.onRenameItemModalSubmit(event.target.innerHTML.trim(), props.item);
 	        } catch (e) {
 	          console.log(e);
 	        }
 	      }), _defineProperty(_React$createElement, 'onKeyUp', function onKeyUp(event) {
-	        console.log('onKeyUp', event);
+	        //console.log('onKeyUp', event);
 	      }), _defineProperty(_React$createElement, 'onKeyDown', function onKeyDown(event) {
-	        console.log('onKeyDown', event, event.keyCode);
+	        //console.log('onKeyDown', event, event.keyCode);
 	        if (event.keyCode === 13) {
 	          event.preventDefault();
 	          event.target.blur();
@@ -10135,43 +10169,43 @@ return /******/ (function(modules) { // webpackBootstrap
 	/***/ function(module, exports, __webpack_require__) {
 
 		'use strict';
-
+		
 		Object.defineProperty(exports, "__esModule", {
 		  value: true
 		});
-
+		
 		var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
+		
 		var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
+		
 		var _react = __webpack_require__(1);
-
+		
 		var _react2 = _interopRequireDefault(_react);
-
+		
 		var _attrAccept = __webpack_require__(2);
-
+		
 		var _attrAccept2 = _interopRequireDefault(_attrAccept);
-
+		
 		var _getDataTransferItems = __webpack_require__(3);
-
+		
 		var _getDataTransferItems2 = _interopRequireDefault(_getDataTransferItems);
-
+		
 		function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
+		
 		function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-
+		
 		function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
+		
 		function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
+		
 		function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /* eslint prefer-template: 0 */
-
-
+		
+		
 		var supportMultiple = typeof document !== 'undefined' && document && document.createElement ? 'multiple' in document.createElement('input') : true;
-
+		
 		var Dropzone = function (_React$Component) {
 		  _inherits(Dropzone, _React$Component);
-
+		
 		  _createClass(Dropzone, null, [{
 		    key: 'renderChildren',
 		    value: function renderChildren(children, isDragActive, isDragReject) {
@@ -10181,12 +10215,12 @@ return /******/ (function(modules) { // webpackBootstrap
 		      return children;
 		    }
 		  }]);
-
+		
 		  function Dropzone(props, context) {
 		    _classCallCheck(this, Dropzone);
-
+		
 		    var _this = _possibleConstructorReturn(this, (Dropzone.__proto__ || Object.getPrototypeOf(Dropzone)).call(this, props, context));
-
+		
 		    _this.onClick = _this.onClick.bind(_this);
 		    _this.onDragStart = _this.onDragStart.bind(_this);
 		    _this.onDragEnter = _this.onDragEnter.bind(_this);
@@ -10201,7 +10235,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    };
 		    return _this;
 		  }
-
+		
 		  _createClass(Dropzone, [{
 		    key: 'componentDidMount',
 		    value: function componentDidMount() {
@@ -10226,17 +10260,17 @@ return /******/ (function(modules) { // webpackBootstrap
 		    key: 'onDragEnter',
 		    value: function onDragEnter(e) {
 		      e.preventDefault();
-
+		
 		      // Count the dropzone and any children that are entered.
 		      ++this.enterCounter;
-
+		
 		      var allFilesAccepted = this.allFilesAccepted((0, _getDataTransferItems2.default)(e, this.props.multiple));
-
+		
 		      this.setState({
 		        isDragActive: allFilesAccepted,
 		        isDragReject: !allFilesAccepted
 		      });
-
+		
 		      if (this.props.onDragEnter) {
 		        this.props.onDragEnter.call(this, e);
 		      }
@@ -10252,7 +10286,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		      } catch (err) {
 		        // continue regardless of error
 		      }
-
+		
 		      if (this.props.onDragOver) {
 		        this.props.onDragOver.call(this, e);
 		      }
@@ -10262,17 +10296,17 @@ return /******/ (function(modules) { // webpackBootstrap
 		    key: 'onDragLeave',
 		    value: function onDragLeave(e) {
 		      e.preventDefault();
-
+		
 		      // Only deactivate once the dropzone and all children was left.
 		      if (--this.enterCounter > 0) {
 		        return;
 		      }
-
+		
 		      this.setState({
 		        isDragActive: false,
 		        isDragReject: false
 		      });
-
+		
 		      if (this.props.onDragLeave) {
 		        this.props.onDragLeave.call(this, e);
 		      }
@@ -10281,49 +10315,49 @@ return /******/ (function(modules) { // webpackBootstrap
 		    key: 'onDrop',
 		    value: function onDrop(e) {
 		      var _this2 = this;
-
+		
 		      var _props = this.props,
 		          onDrop = _props.onDrop,
 		          onDropAccepted = _props.onDropAccepted,
 		          onDropRejected = _props.onDropRejected,
 		          multiple = _props.multiple,
 		          disablePreview = _props.disablePreview;
-
+		
 		      var fileList = (0, _getDataTransferItems2.default)(e, multiple);
 		      var acceptedFiles = [];
 		      var rejectedFiles = [];
-
+		
 		      // Stop default browser behavior
 		      e.preventDefault();
-
+		
 		      // Reset the counter along with the drag on a drop.
 		      this.enterCounter = 0;
 		      this.isFileDialogActive = false;
-
+		
 		      fileList.forEach(function (file) {
 		        if (!disablePreview) {
 		          file.preview = window.URL.createObjectURL(file); // eslint-disable-line no-param-reassign
 		        }
-
+		
 		        if (_this2.fileAccepted(file) && _this2.fileMatchSize(file)) {
 		          acceptedFiles.push(file);
 		        } else {
 		          rejectedFiles.push(file);
 		        }
 		      });
-
+		
 		      if (onDrop) {
 		        onDrop.call(this, acceptedFiles, rejectedFiles, e);
 		      }
-
+		
 		      if (rejectedFiles.length > 0 && onDropRejected) {
 		        onDropRejected.call(this, rejectedFiles, e);
 		      }
-
+		
 		      if (acceptedFiles.length > 0 && onDropAccepted) {
 		        onDropAccepted.call(this, acceptedFiles, e);
 		      }
-
+		
 		      // Reset drag state
 		      this.setState({
 		        isDragActive: false,
@@ -10336,7 +10370,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		      var _props2 = this.props,
 		          onClick = _props2.onClick,
 		          disableClick = _props2.disableClick;
-
+		
 		      if (!disableClick) {
 		        e.stopPropagation();
 		        this.open();
@@ -10354,7 +10388,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		      var isFileDialogActive = this.isFileDialogActive;
 		      // execute the timeout only if the onFileDialogCancel is defined and FileDialog
 		      // is opened in the browser
-
+		
 		      if (onFileDialogCancel && isFileDialogActive) {
 		        setTimeout(function () {
 		          // Returns an object as FileList
@@ -10392,7 +10426,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    key: 'render',
 		    value: function render() {
 		      var _this3 = this;
-
+		
 		      var _props3 = this.props,
 		          accept = _props3.accept,
 		          activeClassName = _props3.activeClassName,
@@ -10402,27 +10436,27 @@ return /******/ (function(modules) { // webpackBootstrap
 		          rejectClassName = _props3.rejectClassName,
 		          children = _props3.children,
 		          rest = _objectWithoutProperties(_props3, ['accept', 'activeClassName', 'inputProps', 'multiple', 'name', 'rejectClassName', 'children']);
-
+		
 		      var activeStyle = rest.activeStyle,
 		          className = rest.className,
 		          rejectStyle = rest.rejectStyle,
 		          style = rest.style,
 		          props = _objectWithoutProperties(rest, ['activeStyle', 'className', 'rejectStyle', 'style']);
-
+		
 		      var _state = this.state,
 		          isDragActive = _state.isDragActive,
 		          isDragReject = _state.isDragReject;
-
-
+		
+		
 		      className = className || '';
-
+		
 		      if (isDragActive && activeClassName) {
 		        className += ' ' + activeClassName;
 		      }
 		      if (isDragReject && rejectClassName) {
 		        className += ' ' + rejectClassName;
 		      }
-
+		
 		      if (!className && !style && !activeStyle && !rejectStyle) {
 		        style = {
 		          width: 200,
@@ -10441,7 +10475,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		          backgroundColor: '#ffdddd'
 		        };
 		      }
-
+		
 		      var appliedStyle = void 0;
 		      if (activeStyle && isDragActive) {
 		        appliedStyle = _extends({}, style, activeStyle);
@@ -10450,7 +10484,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		      } else {
 		        appliedStyle = _extends({}, style);
 		      }
-
+		
 		      var inputAttributes = {
 		        accept: accept,
 		        type: 'file',
@@ -10461,18 +10495,18 @@ return /******/ (function(modules) { // webpackBootstrap
 		        }, // eslint-disable-line
 		        onChange: this.onDrop
 		      };
-
+		
 		      if (name && name.length) {
 		        inputAttributes.name = name;
 		      }
-
+		
 		      // Remove custom properties before passing them to the wrapper div element
 		      var customProps = ['acceptedFiles', 'disablePreview', 'disableClick', 'onDropAccepted', 'onDropRejected', 'onFileDialogCancel', 'maxSize', 'minSize'];
 		      var divProps = _extends({}, props);
 		      customProps.forEach(function (prop) {
 		        return delete divProps[prop];
 		      });
-
+		
 		      return _react2.default.createElement(
 		        'div',
 		        _extends({
@@ -10491,10 +10525,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		      );
 		    }
 		  }]);
-
+		
 		  return Dropzone;
 		}(_react2.default.Component);
-
+		
 		Dropzone.defaultProps = {
 		  disablePreview: false,
 		  disableClick: false,
@@ -10502,7 +10536,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		  maxSize: Infinity,
 		  minSize: 0
 		};
-
+		
 		Dropzone.propTypes = {
 		  onClick: _react2.default.PropTypes.func,
 		  onDrop: _react2.default.PropTypes.func,
@@ -10512,7 +10546,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		  onDragEnter: _react2.default.PropTypes.func,
 		  onDragOver: _react2.default.PropTypes.func,
 		  onDragLeave: _react2.default.PropTypes.func,
-
+		
 		  children: _react2.default.PropTypes.oneOfType([_react2.default.PropTypes.node, _react2.default.PropTypes.func]), // Contents of the dropzone
 		  style: _react2.default.PropTypes.object, // CSS styles to apply
 		  activeStyle: _react2.default.PropTypes.object, // CSS styles to apply when drop will be accepted
@@ -10520,11 +10554,11 @@ return /******/ (function(modules) { // webpackBootstrap
 		  className: _react2.default.PropTypes.string, // Optional className
 		  activeClassName: _react2.default.PropTypes.string, // className for accepted state
 		  rejectClassName: _react2.default.PropTypes.string, // className for rejected state
-
+		
 		  disablePreview: _react2.default.PropTypes.bool, // Enable/disable preview generation
 		  disableClick: _react2.default.PropTypes.bool, // Disallow clicking on the dropzone container to open file dialog
 		  onFileDialogCancel: _react2.default.PropTypes.func, // Provide a callback on clicking the cancel button of the file dialog
-
+		
 		  inputProps: _react2.default.PropTypes.object, // Pass additional attributes to the <input type="file"/> tag
 		  multiple: _react2.default.PropTypes.bool, // Allow dropping multiple files
 		  accept: _react2.default.PropTypes.string, // Allow specific types of files. See https://github.com/okonet/attr-accept for more information
@@ -10532,7 +10566,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		  maxSize: _react2.default.PropTypes.number,
 		  minSize: _react2.default.PropTypes.number
 		};
-
+		
 		exports.default = Dropzone;
 		module.exports = exports['default'];
 
@@ -10553,14 +10587,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	/***/ function(module, exports) {
 
 		"use strict";
-
+		
 		Object.defineProperty(exports, "__esModule", {
 		  value: true
 		});
 		exports.default = getDataTransferFiles;
 		function getDataTransferFiles(event) {
 		  var isMultipleAllowed = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-
+		
 		  var dataTransferItemsList = [];
 		  if (event.dataTransfer) {
 		    var dt = event.dataTransfer;
@@ -10574,11 +10608,11 @@ return /******/ (function(modules) { // webpackBootstrap
 		  } else if (event.target && event.target.files) {
 		    dataTransferItemsList = event.target.files;
 		  }
-
+		
 		  if (dataTransferItemsList.length > 0) {
 		    dataTransferItemsList = isMultipleAllowed ? dataTransferItemsList : [dataTransferItemsList[0]];
 		  }
-
+		
 		  // Convert from DataTransferItemsList to the native Array
 		  return Array.prototype.slice.call(dataTransferItemsList);
 		}
@@ -11106,7 +11140,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'onDrop',
 	    value: function onDrop(files) {
 	      var props = this.props;
-	      console.log('Received files: ', files);
+	      //console.log('Received files: ', files);
 
 	      var decoratedActions = this.decoratedActions;
 
@@ -11270,7 +11304,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        disable = function () {
 	          for (var i = 0; i < props.fetched.lastDirectoriesFetched.length; i++) {
 	            var folderName = props.fetched.lastDirectoriesFetched[i];
-	            console.log(folderName, state.createDirectory, folderName === state.createDirectory);
+	            //console.log(folderName, state.createDirectory, folderName === state.createDirectory);
 	            if (folderName === state.createDirectory) {
 
 	              label = '&ensp;' + 'Directory ' + _path2.default.join('/', props.content.cd, folderName) + ' already exists';

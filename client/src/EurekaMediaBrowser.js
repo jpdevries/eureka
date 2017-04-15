@@ -151,13 +151,16 @@ class EurekaMediaBrowser extends Component {
       if(state.config.useLocalStorage) {
         try {
           localStorage.setItem(`${state.config.storagePrefix}currentDirectory`, state.content.cd);
+          localStorage.setItem(`${state.config.storagePrefix}directory`, JSON.stringify(state.directory));
           localStorage.setItem(`${state.config.storagePrefix}currentSource`, state.source.currentSource);
           localStorage.setItem(`${state.config.storagePrefix}source`, JSON.stringify(state.source));
-          localStorage.setItem(`${state.config.storagePrefix}mode`, state.view.mode);
-          localStorage.setItem(`${state.config.storagePrefix}sort`, state.view.sort);
-          localStorage.setItem(`${state.config.storagePrefix}treeHidden`, !state.view.sourceTreeOpen);
+          //localStorage.setItem(`${state.config.storagePrefix}mode`, state.view.mode);
+          //localStorage.setItem(`${state.config.storagePrefix}sort`, state.view.sort);
+          //localStorage.setItem(`${state.config.storagePrefix}treeHidden`, !state.view.sourceTreeOpen);
           localStorage.setItem(`${state.config.storagePrefix}content`, JSON.stringify(state.content));
           localStorage.setItem(`${state.config.storagePrefix}tree`, JSON.stringify(state.tree));
+          console.log(state.view, JSON.stringify(state.view));
+          localStorage.setItem(`${state.config.storagePrefix}view`, JSON.stringify(state.view));
         } catch (e) { }
       }
 

@@ -54,7 +54,7 @@ var configReducer = function configReducer(state, action) {
   return state;
 };
 
-var initialContentState = {
+var initialContentState = Object.assign({}, {
   cd: '/',
   contents: [
     /*{
@@ -76,7 +76,13 @@ var initialContentState = {
       editedOn:1487107348619
     }*/
   ]
-};
+}, function () {
+  try {
+    return JSON.parse(localStorage.getItem('eureka__content'));
+  } catch (e) {
+    return {};
+  }
+}());
 
 var contentReducer = function contentReducer(state, action) {
   state = state || initialContentState;
@@ -126,17 +132,24 @@ var contentReducer = function contentReducer(state, action) {
   return state;
 };
 
-var initialTreeReducer = [/*{
-                          name:'assets',
-                          cd:'assets',
-                          children:[{
-                          name:'img',
-                          cd:'assets/img'
-                          }]
-                          },{
-                          name:'uploads',
-                          cd:'uploads'
-                          }*/];
+var initialTreeReducer = function () {
+  try {
+    var lt = JSON.parse(localStorage.getItem('eureka__tree'));
+    return Array.isArray(lt) ? lt : [];
+  } catch (e) {
+    return [/*{
+             name:'assets',
+             cd:'assets',
+             children:[{
+               name:'img',
+               cd:'assets/img'
+             }]
+            },{
+             name:'uploads',
+             cd:'uploads'
+            }*/];
+  }
+}();
 
 var cd = '';
 var treeReducer = function treeReducer(state, action) {
@@ -249,7 +262,7 @@ var treeReducer = function treeReducer(state, action) {
   return state;
 };
 
-var initialViewState = {
+var initialViewState = Object.assign({}, {
   focusedMediaItem: undefined,
   filter: undefined,
   //cd: '/',
@@ -264,8 +277,20 @@ var initialViewState = {
     fetchDirectoryContents: false,
     updateSourceTree: false
   }
+}, function () {
+  try {
+    return JSON.parse(localStorage.getItem('eureka__view'));
+  } catch (e) {
+    return {};
+  }
+  /*return {
+    mode: localStorage.getItem('eureka__mode') || undefined,
+    sort: localStorage.getItem('eureka__sort') || undefined,
+    sourceTreeOpen: localStorage.getItem('eureka__treeHidden') == 'false' || undefined
+  }*/
+}());
 
-};
+//console.log('initialViewState', initialViewState);
 
 var viewReducer = function viewReducer(state, action) {
   state = state || initialViewState;
@@ -277,14 +302,15 @@ var viewReducer = function viewReducer(state, action) {
 
     case actions.UPDATE_CONFIG:
       var o = {};
-      o = Object.assign({}, o, {
-        sourceTreeOpen: action.config.treeHidden !== undefined ? !action.config.treeHidden : o.sourceTreeOpen || undefined
-      });
+      /*o = Object.assign({},o,{
+        sourceTreeOpen:action.config.treeHidden !== undefined ? !action.config.treeHidden : o.sourceTreeOpen || undefined
+      });*/
       if (action.config.intervals) o = Object.assign({}, o, { intervals: action.config.intervals });
       if (action.config.mode) o = Object.assign({}, o, { mode: action.config.mode });
       if (action.config.sort) o = Object.assign({}, o, { sort: action.config.sort });
       if (action.config.locale) o = Object.assign({}, o, { locale: action.config.locale });
       if (action.config.enlargeFocusedRows !== undefined) o = Object.assign({}, o, { enlargeFocusedRows: action.config.enlargeFocusedRows });
+      //if(action.config.treeHidden !== undefined) o = Object.assign({},o,{sourceTreeOpen:action.config.treeHidden});
 
       return Object.assign({}, state, o);
 
@@ -304,7 +330,7 @@ var viewReducer = function viewReducer(state, action) {
   return state;
 };
 
-var initialSourceState = {
+var initialSourceState = Object.assign({}, {
   currentSource: "0",
   sources: [/*{
             name: 'Filesystem',
@@ -313,7 +339,13 @@ var initialSourceState = {
             name: 'Amazon S3',
             id: 's3'
             }*/]
-};
+}, function () {
+  try {
+    return JSON.parse(localStorage.getItem('eureka__source'));
+  } catch (e) {
+    return {};
+  }
+}());
 
 var sourceReducer = function sourceReducer(state, action) {
   state = state || initialSourceState;
@@ -334,11 +366,19 @@ var sourceReducer = function sourceReducer(state, action) {
   return state;
 };
 
-var initialDirectoryState = [{
-  name: 'Filesystem',
-  id: 'fileystem',
-  directories: []
-}];
+var initialDirectoryState = function () {
+  try {
+    var ld = JSON.parse('eureka__directory');
+    if (!Array.isArray(ld)) throw new Error('eureka__directory is not an Array');
+    return ld;
+  } catch (e) {
+    return [{
+      name: 'Filesystem',
+      id: 'fileystem',
+      directories: []
+    }];
+  }
+}();
 
 var cs = void 0;
 var directoryReducer = function directoryReducer(state, action) {

@@ -211,11 +211,11 @@ var Eureka = function (_Component) {
       var decoratedActions = this.decoratedActions;
       var props = this.props;
       event.preventDefault();
-      //console.log('onModalSubmit', createDirectory);
+      //console.log('onModalSubmit',createDirectory);
 
       switch (this.state.currentModal) {
         case CREATE_DIRECTORY:
-          //console.log(_store2.default.getState().content.cd, path.join(_store2.default.getState().content.cd, 'foo'));
+          console.log(_store2.default.getState().content.cd, path.join(_store2.default.getState().content.cd, 'foo'));
           _store2.default.dispatch(decoratedActions.createDirectory(_store2.default.getState().source.currentSource, path.join(_store2.default.getState().content.cd, createDirectory))).then(function () {
             _this3.setState({
               modalOpen: false,
@@ -267,7 +267,7 @@ var Eureka = function (_Component) {
   }, {
     key: 'onRenameItem',
     value: function onRenameItem(item) {
-      console.log('onRenameItem', item);
+      //console.log('onRenameItem', item);
       this.setState({
         renamingItem: item,
         modalOpen: true,

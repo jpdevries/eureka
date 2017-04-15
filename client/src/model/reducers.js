@@ -45,7 +45,6 @@ var configReducer = function(state, action) {
   return state;
 }
 
-console.log('TESTESTTEST');
 const initialContentState = Object.assign({}, {
   cd: '/',
   contents:[
@@ -124,17 +123,26 @@ var contentReducer = function(state, action) {
   return state;
 }
 
-var initialTreeReducer = [/*{
-  name:'assets',
-  cd:'assets',
-  children:[{
-    name:'img',
-    cd:'assets/img'
-  }]
-},{
-  name:'uploads',
-  cd:'uploads'
-}*/];
+var initialTreeReducer = (() => {
+  try {
+    const lt = JSON.parse(localStorage.getItem('eureka__tree'));
+    return Array.isArray(lt) ? lt : [];
+  } catch(e) {
+    return (
+      [/*{
+        name:'assets',
+        cd:'assets',
+        children:[{
+          name:'img',
+          cd:'assets/img'
+        }]
+      },{
+        name:'uploads',
+        cd:'uploads'
+      }*/]
+    );
+  }
+})();
 
 let cd = '';
 var treeReducer = function(state, action) {
@@ -236,7 +244,7 @@ var treeReducer = function(state, action) {
   return state;
 }
 
-var initialViewState = {
+var initialViewState = Object.assign({}, {
   focusedMediaItem: undefined,
   filter: undefined,
   //cd: '/',
@@ -250,9 +258,23 @@ var initialViewState = {
     searchBarPlaceholder: false,
     fetchDirectoryContents: false,
     updateSourceTree: false
-  },
+  }
+}, (() => {
+  try {
+    return (
+      JSON.parse(localStorage.getItem('eureka__view'))
+    );
+  } catch(e) {
+    return {};
+  }
+  /*return {
+    mode: localStorage.getItem('eureka__mode') || undefined,
+    sort: localStorage.getItem('eureka__sort') || undefined,
+    sourceTreeOpen: localStorage.getItem('eureka__treeHidden') == 'false' || undefined
+  }*/
+})());
 
-};
+//console.log('initialViewState', initialViewState);
 
 var viewReducer = function(state, action) {
   state = state || initialViewState;
@@ -265,14 +287,15 @@ var viewReducer = function(state, action) {
 
     case actions.UPDATE_CONFIG:
     let o = {};
-    o = Object.assign({},o,{
+    /*o = Object.assign({},o,{
       sourceTreeOpen:action.config.treeHidden !== undefined ? !action.config.treeHidden : o.sourceTreeOpen || undefined
-    });
+    });*/
     if(action.config.intervals) o = Object.assign({},o,{intervals:action.config.intervals});
     if(action.config.mode) o = Object.assign({},o,{mode:action.config.mode});
     if(action.config.sort) o = Object.assign({},o,{sort:action.config.sort});
     if(action.config.locale) o = Object.assign({},o,{locale:action.config.locale});
     if(action.config.enlargeFocusedRows !== undefined) o = Object.assign({},o,{enlargeFocusedRows:action.config.enlargeFocusedRows});
+    //if(action.config.treeHidden !== undefined) o = Object.assign({},o,{sourceTreeOpen:action.config.treeHidden});
 
     return Object.assign({},state,o);
 
@@ -295,7 +318,7 @@ var viewReducer = function(state, action) {
   return state;
 }
 
-var initialSourceState = {
+var initialSourceState = Object.assign({}, {
   currentSource: "0",
   sources: [/*{
     name: 'Filesystem',
@@ -304,9 +327,15 @@ var initialSourceState = {
     name: 'Amazon S3',
     id: 's3'
   }*/]
-};
-
-
+}, (() => {
+  try {
+    return (
+      JSON.parse(localStorage.getItem('eureka__source'))
+    );
+  } catch(e) {
+    return {};
+  }
+})());
 
 var sourceReducer = function(state, action) {
   state = state || initialSourceState;
@@ -328,11 +357,19 @@ var sourceReducer = function(state, action) {
 }
 
 
-var initialDirectoryState = [{
-  name: 'Filesystem',
-  id: 'fileystem',
-  directories:[]
-}];
+var initialDirectoryState = (() => {
+  try {
+    const ld = JSON.parse('eureka__directory');
+    if(!Array.isArray(ld)) throw new Error('eureka__directory is not an Array');
+    return ld;
+  } catch(e) {
+    return [{
+      name: 'Filesystem',
+      id: 'fileystem',
+      directories:[]
+    }];
+  }
+})();
 
 let cs;
 var directoryReducer = function(state, action) {

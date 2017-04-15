@@ -34,7 +34,6 @@ var updateView = function updateView(view) {
 
 var UPDATE_SOURCE = 'update_source';
 var updateSource = function updateSource(source) {
-  //console.log('updating source', source);
   return {
     type: UPDATE_SOURCE,
     source: source
@@ -51,7 +50,7 @@ var updateContent = function updateContent(content) {
 
 var UPDATE_CONFIG = 'update_config';
 var updateConfig = function updateConfig(config) {
-  //console.log('updateConfig', config);
+  console.log('updateConfig', config);
   return {
     type: UPDATE_CONFIG,
     config: config
@@ -86,7 +85,6 @@ var updateSourceTree = function updateSourceTree(source) {
 var UPDATE_SOURCE_TREE_SUCCESS = 'update_source_tree_success';
 var UPDATE_SOURCE_TREE_ERROR = 'update_source_tree_error';
 var updateSourceTreeSuccess = function updateSourceTreeSuccess(contents) {
-  //console.log('contents',contents);
   return {
     type: UPDATE_SOURCE_TREE_SUCCESS,
     contents: contents

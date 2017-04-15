@@ -44,7 +44,7 @@ var ChooseBar = function ChooseBar(props) {
           try {
             props.config.callbacks.close();
           } catch (e) {
-            //console.log(e);
+            console.log(e);
           }
         } },
       cancelMessage
@@ -56,7 +56,7 @@ var ChooseBar = function ChooseBar(props) {
           try {
             props.config.callbacks.choose(props.view.focusedMediaItem);
           } catch (e) {
-            //console.log(e);
+            console.log(e);
           }
         } },
       chooseMessage,

@@ -25,7 +25,7 @@ function makeURL(str, params) {
     var url;
 
     var _ret = function () {
-      //console.log(e);
+      console.log(e);
       url = str.indexOf('?') > -1 ? str.substr(0, str.indexOf('?')) + '?' : str + '?';
 
       var ps = [];

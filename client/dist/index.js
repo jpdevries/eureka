@@ -30,7 +30,6 @@ var languageKey = languageWithoutRegionCode.toLowerCase();
 
 if (languageKey != 'en') {
   Promise.all([(0, _lazyloadScript2.default)('https://unpkg.com/react-intl@latest/locale-data/' + languageKey + '.js', 'react-intl-' + languageKey.toLowerCase() + '.js')]).then(function (data) {
-    console.log(data);
     console.log('window.ReactIntlLocaleData[languageKey]', window.ReactIntlLocaleData[languageKey]);
     (0, _reactIntl.addLocaleData)(window.ReactIntlLocaleData[languageKey]);
   }).then(function () {
@@ -47,7 +46,7 @@ function render() {
     basePath: '/core/components/eureka/',
     allowUploads: true,
     lang: languageKey,
-    useLocalStorage: false,
+    useLocalStorage: true,
     allowRename: true,
     allowDelete: true,
     confirmBeforeDelete: true,

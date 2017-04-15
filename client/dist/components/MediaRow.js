@@ -269,11 +269,11 @@ var MediaRow = function MediaRow(props) {
           event.target.blur();
         }
       }), _defineProperty(_React$createElement, 'onPaste', function onPaste(event) {
-        //console.log('onPaste', event);
+        console.log('onPaste', event);
       }), _defineProperty(_React$createElement, 'onCopy', function onCopy(event) {
-        //console.log('onCopy', event);
+        console.log('onCopy', event);
       }), _defineProperty(_React$createElement, 'onCut', function onCut(event) {
-        //console.log('onCut', event);
+        console.log('onCut', event);
       }), _React$createElement),
       fileName
     ),

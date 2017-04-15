@@ -119,7 +119,7 @@ var EurekaTableTbody = function (_Component) {
   }, {
     key: 'handleRenameStart',
     value: function handleRenameStart(item) {
-      //console.log('handleRenameStart', item);
+      console.log('handleRenameStart', item);
     }
   }, {
     key: 'handleScroll',
