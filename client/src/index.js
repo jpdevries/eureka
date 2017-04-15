@@ -28,7 +28,7 @@ if(languageKey != 'en') {
 function render() {
   ReactDOM.render(
     <EurekaMediaBrowser
-      basePath="/core/components/eureka/"
+      basePath="/assets/components/eureka/"
       allowUploads={true}
       lang={languageKey}
       useLocalStorage={true}

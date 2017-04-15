@@ -214,7 +214,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    //console.log('bolo', languageWithoutRegionCode);
-	    console.log('config', config);
 	    store.dispatch(actions.updateConfig(config));
 
 	    var i18nEdpoint = function () {
@@ -25607,7 +25606,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var updateSourceTree = function updateSourceTree(source) {
 	  var customHeaders = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 	  return function (dispatch) {
-	    return fetch('/core/components/eureka/media/sources/' + source, {
+	    return fetch('/assets/components/eureka/media/sources/' + source, {
 	      method: 'GET',
 	      headers: Object.assign({}, {
 	        'Accept': 'application/json',
@@ -25650,7 +25649,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var fetchDirectoryContents = function fetchDirectoryContents(source, params) {
 	  var customHeaders = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 	  return function (dispatch) {
-	    return fetch(_utility2.default.makeURL('/core/components/eureka/media/sources/' + source, params), {
+	    return fetch(_utility2.default.makeURL('/assets/components/eureka/media/sources/' + source, params), {
 	      method: 'GET',
 	      headers: Object.assign({}, {
 	        'Accept': 'application/json',
@@ -25697,7 +25696,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var fetchMediaSources = function fetchMediaSources() {
 	  var customHeaders = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 	  return function (dispatch) {
-	    return fetch('/core/components/eureka/media/sources', {
+	    return fetch('/assets/components/eureka/media/sources', {
 	      method: 'GET',
 	      headers: Object.assign({}, {
 	        'Accept': 'application/json',
@@ -25766,7 +25765,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var deleteMediaItem = function deleteMediaItem(source, path) {
 	  var customHeaders = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 	  return function (dispatch) {
-	    return fetch(_utility2.default.makeURL('/core/components/eureka/media/sources/' + source, {
+	    return fetch(_utility2.default.makeURL('/assets/components/eureka/media/sources/' + source, {
 	      path: path
 	    }), {
 	      method: 'DELETE',
@@ -25819,7 +25818,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var uploadFiles = function uploadFiles(source, directory, formData) {
 	  var customHeaders = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 	  return function (dispatch) {
-	    return fetch(_utility2.default.makeURL('/core/components/eureka/media/sources/' + source, {
+	    return fetch(_utility2.default.makeURL('/assets/components/eureka/media/sources/' + source, {
 	      path: directory
 	    }), {
 	      method: 'POST',
@@ -25848,7 +25847,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var createDirectory = function createDirectory(source, dir) {
 	  var customHeaders = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 	  return function (dispatch) {
-	    return fetch(_utility2.default.makeURL('/core/components/eureka/media/sources/' + source, {
+	    return fetch(_utility2.default.makeURL('/assets/components/eureka/media/sources/' + source, {
 	      path: dir
 	    }), {
 	      method: 'PUT',
@@ -25948,7 +25947,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var renameDirectory = function renameDirectory(source, dirPath, name) {
 	  var customHeaders = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 	  return function (dispatch) {
-	    return fetch(_utility2.default.makeURL('/core/components/eureka/media/sources/' + source, {
+	    return fetch(_utility2.default.makeURL('/assets/components/eureka/media/sources/' + source, {
 	      path: dirPath,
 	      name: name
 	    }), {
@@ -26007,7 +26006,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var renameItem = function renameItem(source, filePath, name) {
 	  var customHeaders = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 	  return function (dispatch) {
-	    return fetch(_utility2.default.makeURL('/core/components/eureka/media/sources/' + source, {
+	    return fetch(_utility2.default.makeURL('/assets/components/eureka/media/sources/' + source, {
 	      path: filePath,
 	      name: name
 	    }), {
@@ -26672,7 +26671,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.49",
+		"version": "0.0.52",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",

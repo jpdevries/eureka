@@ -434,7 +434,7 @@ function getDirectoryListing(baseURL = '', dirPath = '', includeFiles = true, in
 }
 
 
-app.get('/core/components/eureka/media/sources/', (req, res) => {
+app.get('/assets/components/eureka/media/sources/', (req, res) => {
 
   getMediaSources().then((results) => (
     res.json(results)
@@ -453,7 +453,7 @@ Retrieve a list of directories
 `GET /sources/:id/`
 */
 
-app.get('/core/components/eureka/media/sources/:source', (req, res) => {
+app.get('/assets/components/eureka/media/sources/:source', (req, res) => {
   let dir = req.query.path,
   source = req.params.source;
 
@@ -482,7 +482,7 @@ Upload a file
 
 */
 
-app.post('/core/components/eureka/media/sources/:source', (req, res) => {
+app.post('/assets/components/eureka/media/sources/:source', (req, res) => {
 
   const dir = req.query.path,
   uploadDir = path.join(__dirname, path.join('/sources/filesystem/', dir)),
@@ -526,7 +526,7 @@ Delete a directory
 `DELETE /sources/:id/?dir=foo`
 */
 
-app.delete('/core/components/eureka/media/sources/:source', (req, res) => {
+app.delete('/assets/components/eureka/media/sources/:source', (req, res) => {
   const path = req.query.path,
   source = req.params.source;
 
@@ -573,7 +573,7 @@ Rename a directory
 `PUT /sources/:id/?dir=foo&name=bar`
 */
 
-app.put('/core/components/eureka/media/sources/:source', (req, res) => {
+app.put('/assets/components/eureka/media/sources/:source', (req, res) => {
   const filePath = req.query.path,
   name = req.query.name;
 

@@ -277,7 +277,7 @@ module.exports = function(grunt) {
                   }]
         },
         files: {
-          '<%= dirs.build %><%= dirs.assets %><%= dirs.img %>icons.<%= pkg.version %>.min.svg': '<%= dirs.build %><%= dirs.assets %><%= dirs.img %>icons.<%= pkg.version %>.svg'
+          '<%= dirs.theme %><%= dirs.assets %><%= dirs.img %>icons.<%= pkg.version %>.min.svg': '<%= dirs.theme %><%= dirs.assets %><%= dirs.img %>icons.<%= pkg.version %>.svg'
         }
       }
     },
@@ -347,13 +347,14 @@ module.exports = function(grunt) {
         '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>*.js'
       ],
       buildimg: [
-        '<%= dirs.build %><%= dirs.assets %><%= dirs.img %>*.svg'
+        '<%= dirs.build %><%= dirs.assets %><%= dirs.img %>*.svg',
+        '<%= dirs.theme %><%= dirs.assets %><%= dirs.img %>*.svg'
       ]
     },
     svgstore: {
       icons: {
         files: {
-          '<%= dirs.build %><%= dirs.assets %><%= dirs.img %>icons.<%= pkg.version %>.svg': ['<%= dirs.build %><%= dirs.assets %><%= dirs.img %>src/svg/*.svg']
+          '<%= dirs.theme %><%= dirs.assets %><%= dirs.img %>icons.<%= pkg.version %>.svg': ['<%= dirs.theme %><%= dirs.assets %><%= dirs.img %>src/svg/*.svg']
         },
         options: {
           formatting : {

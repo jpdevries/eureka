@@ -158,7 +158,6 @@ var EurekaMediaBrowser = function (_Component) {
     }
 
     //console.log('bolo', languageWithoutRegionCode);
-    console.log('config', config);
     store.dispatch(actions.updateConfig(config));
 
     var i18nEdpoint = function () {

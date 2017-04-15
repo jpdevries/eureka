@@ -53,7 +53,7 @@ const updateConfig = function(config) {
 
 const updateSourceTree = (source, customHeaders = {}) => (
   (dispatch) => (
-    fetch(`/core/components/eureka/media/sources/${source}`, {
+    fetch(`/assets/components/eureka/media/sources/${source}`, {
       method: 'GET',
       headers: Object.assign({}, {
         'Accept': 'application/json',
@@ -99,7 +99,7 @@ const updateSourceTreeError = function(error) {
 
 const fetchDirectoryContents = (source, params, customHeaders = {}) => (
   (dispatch) => (
-    fetch(utility.makeURL(`/core/components/eureka/media/sources/${source}`, params), {
+    fetch(utility.makeURL(`/assets/components/eureka/media/sources/${source}`, params), {
       method: 'GET',
       headers: Object.assign({}, {
         'Accept': 'application/json',
@@ -150,7 +150,7 @@ exports.fetchDirectoryContentsError = fetchDirectoryContentsError;
 
 const fetchMediaSources = (customHeaders = {}) => (
   (dispatch) => (
-    fetch('/core/components/eureka/media/sources', {
+    fetch('/assets/components/eureka/media/sources', {
       method: 'GET',
       headers: Object.assign({}, {
         'Accept': 'application/json',
@@ -222,7 +222,7 @@ const deleteMediaItemError = function(error) {
 
 const deleteMediaItem = (source, path, customHeaders = {}) => (
   (dispatch) => (
-    fetch(utility.makeURL(`/core/components/eureka/media/sources/${source}`, {
+    fetch(utility.makeURL(`/assets/components/eureka/media/sources/${source}`, {
       path: path
     }), {
       method: 'DELETE',
@@ -282,7 +282,7 @@ exports.uploadFilesError = uploadFilesError;
 
 const uploadFiles = (source, directory, formData, customHeaders = {}) => (
   (dispatch) => (
-    fetch(utility.makeURL(`/core/components/eureka/media/sources/${source}`, {
+    fetch(utility.makeURL(`/assets/components/eureka/media/sources/${source}`, {
       path: directory
     }), {
       method: 'POST',
@@ -315,7 +315,7 @@ const uploadFiles = (source, directory, formData, customHeaders = {}) => (
 
 const createDirectory = (source, dir, customHeaders = {}) => (
   (dispatch) => (
-    fetch(utility.makeURL(`/core/components/eureka/media/sources/${source}`,{
+    fetch(utility.makeURL(`/assets/components/eureka/media/sources/${source}`,{
       path:dir
     }), {
       method: 'PUT',
@@ -430,7 +430,7 @@ exports.deleteMediaItem = deleteMediaItem;
 
 const renameDirectory = (source, dirPath, name, customHeaders = {}) => (
   (dispatch) => (
-    fetch(utility.makeURL(`/core/components/eureka/media/sources/${source}`,{
+    fetch(utility.makeURL(`/assets/components/eureka/media/sources/${source}`,{
       path:dirPath,
       name:name
     }), {
@@ -508,7 +508,7 @@ exports.renameDirectory = renameDirectory;
 
 const renameItem = (source, filePath, name, customHeaders = {}) => (
   (dispatch) => (
-    fetch(utility.makeURL(`/core/components/eureka/media/sources/${source}`,{
+    fetch(utility.makeURL(`/assets/components/eureka/media/sources/${source}`,{
       path:filePath,
       name:name
     }), {
