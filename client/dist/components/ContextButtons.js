@@ -79,37 +79,39 @@ var ContextButtons = function ContextButtons(props) {
     )
   ) : undefined;
 
-  return _react2.default.createElement(
-    'div',
-    { className: 'eureka__button-bar eureka__context-buttons', role: 'listbox', 'future-role': 'toolbar listbox', 'aria-label': performContextualActionsMessage, tabIndex: '0', 'aria-activedescendant': 'expand__' + (0, _utility.cssSafe)(item.filename) },
+  return (// future-role="toolbar listbox"
     _react2.default.createElement(
-      'a',
-      { role: 'option', id: 'expand__' + (0, _utility.cssSafe)(item.filename), href: item.absoluteURL, target: '_' + encodeURI(item.absoluteURL), className: 'button', title: expandItemMessage },
-      expandMessage,
+      'div',
+      { className: 'eureka__button-bar eureka__context-buttons', role: 'listbox', 'aria-label': performContextualActionsMessage, tabIndex: '0', 'aria-activedescendant': 'expand__' + (0, _utility.cssSafe)(item.filename) },
       _react2.default.createElement(
-        'span',
-        { className: 'visually-hidden' },
-        ' ',
-        item.filename
-      )
-    ),
-    _react2.default.createElement(
-      'button',
-      { role: 'option', id: 'choose__' + (0, _utility.cssSafe)(item.filename), title: chooseItemMessage, onClick: function onClick(event) {
-          document.dispatchEvent(new CustomEvent('EurekaFoundIt', {
-            detail: item
-          }));
-        } },
-      chooseMessage,
+        'a',
+        { role: 'option', id: 'expand__' + (0, _utility.cssSafe)(item.filename), href: item.absoluteURL, target: '_' + encodeURI(item.absoluteURL), className: 'button', title: expandItemMessage },
+        expandMessage,
+        _react2.default.createElement(
+          'span',
+          { className: 'visually-hidden' },
+          ' ',
+          item.filename
+        )
+      ),
       _react2.default.createElement(
-        'span',
-        { className: 'visually-hidden' },
-        ' ',
-        item.filename
-      )
-    ),
-    renameBtn,
-    deleteBtn
+        'button',
+        { role: 'option', id: 'choose__' + (0, _utility.cssSafe)(item.filename), title: chooseItemMessage, onClick: function onClick(event) {
+            document.dispatchEvent(new CustomEvent('EurekaFoundIt', {
+              detail: item
+            }));
+          } },
+        chooseMessage,
+        _react2.default.createElement(
+          'span',
+          { className: 'visually-hidden' },
+          ' ',
+          item.filename
+        )
+      ),
+      renameBtn,
+      deleteBtn
+    )
   );
 };
 

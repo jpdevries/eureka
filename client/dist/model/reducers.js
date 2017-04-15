@@ -278,8 +278,13 @@ var initialViewState = Object.assign({}, {
     updateSourceTree: false
   }
 }, function () {
+  return {};
   try {
-    return JSON.parse(localStorage.getItem('eureka__view'));
+    var json = JSON.parse(localStorage.getItem('eureka__view'));
+    console.log('initialViewState', initialViewState);
+    return Object.assign({}, json, {
+      sourceTreeOpen: json.treeHidden == 'false' || undefined
+    });
   } catch (e) {
     return {};
   }
@@ -310,7 +315,7 @@ var viewReducer = function viewReducer(state, action) {
       if (action.config.sort) o = Object.assign({}, o, { sort: action.config.sort });
       if (action.config.locale) o = Object.assign({}, o, { locale: action.config.locale });
       if (action.config.enlargeFocusedRows !== undefined) o = Object.assign({}, o, { enlargeFocusedRows: action.config.enlargeFocusedRows });
-      //if(action.config.treeHidden !== undefined) o = Object.assign({},o,{sourceTreeOpen:action.config.treeHidden});
+      if (action.config.treeHidden !== undefined) o = Object.assign({}, o, { sourceTreeOpen: !action.config.treeHidden });
 
       return Object.assign({}, state, o);
 

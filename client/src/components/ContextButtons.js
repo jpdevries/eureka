@@ -44,8 +44,8 @@ const ContextButtons = (props) => {
 
 
 
-  return (
-    <div className="eureka__button-bar eureka__context-buttons" role="listbox" future-role="toolbar listbox" aria-label={performContextualActionsMessage} tabIndex="0" aria-activedescendant={`expand__${cssSafe(item.filename)}`}>
+  return ( // future-role="toolbar listbox"
+    <div className="eureka__button-bar eureka__context-buttons" role="listbox"  aria-label={performContextualActionsMessage} tabIndex="0" aria-activedescendant={`expand__${cssSafe(item.filename)}`}>
       <a role="option" id={`expand__${cssSafe(item.filename)}`} href={item.absoluteURL} target={`_${encodeURI(item.absoluteURL)}`} className="button" title={expandItemMessage}>{expandMessage}<span className="visually-hidden"> {item.filename}</span></a>
       <button role="option" id={`choose__${cssSafe(item.filename)}`} title={chooseItemMessage} onClick={(event) => {
         document.dispatchEvent(new CustomEvent('EurekaFoundIt', {

@@ -31,33 +31,35 @@ var MediaSourceSelector = function MediaSourceSelector(props) {
     );
   });
 
-  return _react2.default.createElement(
-    'div',
-    { className: 'eureka__media-source-selector', role: 'complementary', 'future-role': 'complementary composite' },
+  return (// future-role="complementary composite"
     _react2.default.createElement(
-      'h2',
-      null,
+      'div',
+      { className: 'eureka__media-source-selector', role: 'complementary' },
       _react2.default.createElement(
-        'label',
-        { htmlFor: 'media-source-selector__select' },
+        'h2',
+        null,
         _react2.default.createElement(
-          'span',
-          { className: 'visually-hidden' },
-          _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'choose', defaultMessage: 'Choose' }),
-          ' ',
-          _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'grammar.a', defaultMessage: 'a' }),
-          ' '
-        ),
-        _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'media.source', defaultMessage: 'Media Source' })
+          'label',
+          { htmlFor: 'media-source-selector__select' },
+          _react2.default.createElement(
+            'span',
+            { className: 'visually-hidden' },
+            _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'choose', defaultMessage: 'Choose' }),
+            ' ',
+            _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'grammar.a', defaultMessage: 'a' }),
+            ' '
+          ),
+          _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'media.source', defaultMessage: 'Media Source' })
+        )
+      ),
+      _react2.default.createElement(
+        'select',
+        { value: props.source.currentSource, id: 'media-source-selector__select', onChange: function onChange(event) {
+            props.dispatch(decoratedActions.updateSource(event.target.value));
+            props.dispatch(decoratedActions.updateSourceTree(event.target.value));
+          } },
+        options
       )
-    ),
-    _react2.default.createElement(
-      'select',
-      { value: props.source.currentSource, id: 'media-source-selector__select', onChange: function onChange(event) {
-          props.dispatch(decoratedActions.updateSource(event.target.value));
-          props.dispatch(decoratedActions.updateSourceTree(event.target.value));
-        } },
-      options
     )
   );
 };

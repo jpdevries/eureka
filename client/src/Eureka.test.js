@@ -163,7 +163,8 @@ it('should hide media source panel if treeHidden is set to true', () => {
 it('should not hide media source panel if treeHidden is not set to true', () => {
   const div = document.createElement('div');
   const props = {
-    treeHidden:false
+    treeHidden: false,
+    useLocalStorage: false
   };
 
   store.dispatch(actions.updateConfig(props));

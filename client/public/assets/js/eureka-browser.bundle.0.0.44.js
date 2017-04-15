@@ -24706,33 +24706,35 @@ return /******/ (function(modules) { // webpackBootstrap
 	    );
 	  });
 
-	  return _react2.default.createElement(
-	    'div',
-	    { className: 'eureka__media-source-selector', role: 'complementary', 'future-role': 'complementary composite' },
+	  return (// future-role="complementary composite"
 	    _react2.default.createElement(
-	      'h2',
-	      null,
+	      'div',
+	      { className: 'eureka__media-source-selector', role: 'complementary' },
 	      _react2.default.createElement(
-	        'label',
-	        { htmlFor: 'media-source-selector__select' },
+	        'h2',
+	        null,
 	        _react2.default.createElement(
-	          'span',
-	          { className: 'visually-hidden' },
-	          _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'choose', defaultMessage: 'Choose' }),
-	          ' ',
-	          _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'grammar.a', defaultMessage: 'a' }),
-	          ' '
-	        ),
-	        _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'media.source', defaultMessage: 'Media Source' })
+	          'label',
+	          { htmlFor: 'media-source-selector__select' },
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'visually-hidden' },
+	            _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'choose', defaultMessage: 'Choose' }),
+	            ' ',
+	            _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'grammar.a', defaultMessage: 'a' }),
+	            ' '
+	          ),
+	          _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'media.source', defaultMessage: 'Media Source' })
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'select',
+	        { value: props.source.currentSource, id: 'media-source-selector__select', onChange: function onChange(event) {
+	            props.dispatch(decoratedActions.updateSource(event.target.value));
+	            props.dispatch(decoratedActions.updateSourceTree(event.target.value));
+	          } },
+	        options
 	      )
-	    ),
-	    _react2.default.createElement(
-	      'select',
-	      { value: props.source.currentSource, id: 'media-source-selector__select', onChange: function onChange(event) {
-	          props.dispatch(decoratedActions.updateSource(event.target.value));
-	          props.dispatch(decoratedActions.updateSourceTree(event.target.value));
-	        } },
-	      options
 	    )
 	  );
 	};
@@ -25066,8 +25068,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    updateSourceTree: false
 	  }
 	}, function () {
+	  return {};
 	  try {
-	    return JSON.parse(localStorage.getItem('eureka__view'));
+	    var json = JSON.parse(localStorage.getItem('eureka__view'));
+	    console.log('initialViewState', initialViewState);
+	    return Object.assign({}, json, {
+	      sourceTreeOpen: json.treeHidden == 'false' || undefined
+	    });
 	  } catch (e) {
 	    return {};
 	  }
@@ -25098,7 +25105,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (action.config.sort) o = Object.assign({}, o, { sort: action.config.sort });
 	      if (action.config.locale) o = Object.assign({}, o, { locale: action.config.locale });
 	      if (action.config.enlargeFocusedRows !== undefined) o = Object.assign({}, o, { enlargeFocusedRows: action.config.enlargeFocusedRows });
-	      //if(action.config.treeHidden !== undefined) o = Object.assign({},o,{sourceTreeOpen:action.config.treeHidden});
+	      if (action.config.treeHidden !== undefined) o = Object.assign({}, o, { sourceTreeOpen: !action.config.treeHidden });
 
 	      return Object.assign({}, state, o);
 
@@ -26654,7 +26661,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.43",
+		"version": "0.0.44",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -33112,37 +33119,39 @@ return /******/ (function(modules) { // webpackBootstrap
 	    )
 	  ) : undefined;
 
-	  return _react2.default.createElement(
-	    'div',
-	    { className: 'eureka__button-bar eureka__context-buttons', role: 'listbox', 'future-role': 'toolbar listbox', 'aria-label': performContextualActionsMessage, tabIndex: '0', 'aria-activedescendant': 'expand__' + (0, _utility.cssSafe)(item.filename) },
+	  return (// future-role="toolbar listbox"
 	    _react2.default.createElement(
-	      'a',
-	      { role: 'option', id: 'expand__' + (0, _utility.cssSafe)(item.filename), href: item.absoluteURL, target: '_' + encodeURI(item.absoluteURL), className: 'button', title: expandItemMessage },
-	      expandMessage,
+	      'div',
+	      { className: 'eureka__button-bar eureka__context-buttons', role: 'listbox', 'aria-label': performContextualActionsMessage, tabIndex: '0', 'aria-activedescendant': 'expand__' + (0, _utility.cssSafe)(item.filename) },
 	      _react2.default.createElement(
-	        'span',
-	        { className: 'visually-hidden' },
-	        ' ',
-	        item.filename
-	      )
-	    ),
-	    _react2.default.createElement(
-	      'button',
-	      { role: 'option', id: 'choose__' + (0, _utility.cssSafe)(item.filename), title: chooseItemMessage, onClick: function onClick(event) {
-	          document.dispatchEvent(new CustomEvent('EurekaFoundIt', {
-	            detail: item
-	          }));
-	        } },
-	      chooseMessage,
+	        'a',
+	        { role: 'option', id: 'expand__' + (0, _utility.cssSafe)(item.filename), href: item.absoluteURL, target: '_' + encodeURI(item.absoluteURL), className: 'button', title: expandItemMessage },
+	        expandMessage,
+	        _react2.default.createElement(
+	          'span',
+	          { className: 'visually-hidden' },
+	          ' ',
+	          item.filename
+	        )
+	      ),
 	      _react2.default.createElement(
-	        'span',
-	        { className: 'visually-hidden' },
-	        ' ',
-	        item.filename
-	      )
-	    ),
-	    renameBtn,
-	    deleteBtn
+	        'button',
+	        { role: 'option', id: 'choose__' + (0, _utility.cssSafe)(item.filename), title: chooseItemMessage, onClick: function onClick(event) {
+	            document.dispatchEvent(new CustomEvent('EurekaFoundIt', {
+	              detail: item
+	            }));
+	          } },
+	        chooseMessage,
+	        _react2.default.createElement(
+	          'span',
+	          { className: 'visually-hidden' },
+	          ' ',
+	          item.filename
+	        )
+	      ),
+	      renameBtn,
+	      deleteBtn
+	    )
 	  );
 	};
 
