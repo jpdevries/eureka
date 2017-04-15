@@ -152,6 +152,14 @@ module.exports = function(grunt) {
           dest: '<%= dirs.build %><%= dirs.assets %><%= dirs.js %>eureka.<%= pkg.version %>.min.js'
         }]
       },*/
+      img: {
+        files: [{
+          src: '<%= dirs.build %><%= dirs.assets %><%= dirs.img %>*.svg',
+          dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.img %>',
+          flatten: true,
+          expand: true
+        }]
+      },
       css: {
         files: [{
           src: '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>main.css',
@@ -277,7 +285,7 @@ module.exports = function(grunt) {
                   }]
         },
         files: {
-          '<%= dirs.theme %><%= dirs.assets %><%= dirs.img %>icons.<%= pkg.version %>.min.svg': '<%= dirs.theme %><%= dirs.assets %><%= dirs.img %>icons.<%= pkg.version %>.svg'
+          '<%= dirs.build %><%= dirs.assets %><%= dirs.img %>icons.<%= pkg.version %>.min.svg': '<%= dirs.build %><%= dirs.assets %><%= dirs.img %>icons.<%= pkg.version %>.svg'
         }
       }
     },
@@ -354,7 +362,7 @@ module.exports = function(grunt) {
     svgstore: {
       icons: {
         files: {
-          '<%= dirs.theme %><%= dirs.assets %><%= dirs.img %>icons.<%= pkg.version %>.svg': ['<%= dirs.theme %><%= dirs.assets %><%= dirs.img %>src/svg/*.svg']
+          '<%= dirs.build %><%= dirs.assets %><%= dirs.img %>icons.<%= pkg.version %>.svg': ['<%= dirs.theme %><%= dirs.assets %><%= dirs.img %>src/svg/*.svg']
         },
         options: {
           formatting : {
@@ -400,6 +408,6 @@ module.exports = function(grunt) {
   grunt.renameTask('string-replace','bump');
 
   grunt.registerTask('default', ['growl:watch', 'watch']);
-  grunt.registerTask('build',['bower','copy:bower','modernizr','sass','postcss','cssmin','copy:css','webpack','uglify','clean:buildimg','svgstore','svgo','growl:build']);
+  grunt.registerTask('build',['bower','copy:bower','modernizr','sass','postcss','cssmin','copy:css','webpack','uglify','clean:buildimg','svgstore','svgo','copy:img','growl:build']);
   grunt.registerTask('buildcss',['sass','postcss','cssmin','copy:css','growl:sass']);
 };
