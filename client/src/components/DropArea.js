@@ -19,7 +19,7 @@ class DropArea extends Component {
 
   onDrop(files) {
     const props = this.props;
-    console.log('Received files: ', files);
+    //console.log('Received files: ', files);
 
     const decoratedActions = this.decoratedActions;
 

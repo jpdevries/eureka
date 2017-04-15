@@ -84,7 +84,7 @@ var FileTreeSpan = function (_Component) {
             //if(!state.editable)
           },
           onKeyDown: function onKeyDown(event) {
-            console.log('onKeyDown', event, event.keyCode, event.keyCode === 13);
+            //console.log('onKeyDown', event, event.keyCode, event.keyCode === 13);
             if (event.keyCode === 13) {
               event.preventDefault();
               event.stopPropagation();
@@ -128,8 +128,8 @@ var FileTree = function FileTree(props) {
       _react2.default.createElement(
         'details',
         { onToggle: function onToggle(event) {
-            console.log('TOGGLE!!!', item);
-            console.log(event.target.hasAttribute('open'));
+            //console.log('TOGGLE!!!', item);
+            //console.log(event.target.hasAttribute('open'));
           }, key: index, open: shouldBeOpen(item) },
         _react2.default.createElement(
           'summary',

@@ -30,7 +30,6 @@ var languageKey = languageWithoutRegionCode.toLowerCase();
 
 if (languageKey != 'en') {
   Promise.all([(0, _lazyloadScript2.default)('https://unpkg.com/react-intl@latest/locale-data/' + languageKey + '.js', 'react-intl-' + languageKey.toLowerCase() + '.js')]).then(function (data) {
-    console.log('YloLo!');
     console.log(data);
     console.log('window.ReactIntlLocaleData[languageKey]', window.ReactIntlLocaleData[languageKey]);
     (0, _reactIntl.addLocaleData)(window.ReactIntlLocaleData[languageKey]);

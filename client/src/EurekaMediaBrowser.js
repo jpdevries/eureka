@@ -48,7 +48,6 @@ class EurekaMediaBrowser extends Component {
 
 
     if(props.storagePrefix !== 'eureka__' || true) { // they are using a non-default localStorage prefix
-      console.log('holy shit!', props);
       const config = Object.assign({}, {
         currentDirectory:(() => {
           try {
@@ -77,7 +76,6 @@ class EurekaMediaBrowser extends Component {
         })()
       }, props);
 
-      console.log('config',config);
 
       const localSources = (() => {
         try {
@@ -97,7 +95,6 @@ class EurekaMediaBrowser extends Component {
       }
 
       if(localContent) {
-        console.log('updating localContent', localContent);
         store.dispatch(actions.updateContent(localContent));
       }
 
@@ -114,7 +111,6 @@ class EurekaMediaBrowser extends Component {
 
     //console.log('bolo', languageWithoutRegionCode);
     store.dispatch(actions.updateConfig(config));
-    console.log('config updated', config);
 
 
 
@@ -193,11 +189,8 @@ class EurekaMediaBrowser extends Component {
     const props = this.props;
     const state = this.state;
 
-    //console.log('state', state);
-
     const language = this.getLanguage(props);
     const languageWithoutRegionCode = language.toLowerCase().split(/[_-]+/)[0];
-    console.log('languageWithoutRegionCode',languageWithoutRegionCode);
     const messages = (() => {
       if(utility.serverSideRendering) return props.messages;
 

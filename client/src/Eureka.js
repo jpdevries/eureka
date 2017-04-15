@@ -88,7 +88,7 @@ class Eureka extends Component {
 
     document.body.addEventListener('keyup', (event) => {
       const key = event.keyCode || event.charCode || 0;
-      console.log(key);
+      //console.log(key);
       switch(key) {
         case 27: // Escape
         this.setState({
@@ -121,7 +121,7 @@ class Eureka extends Component {
     const decoratedActions = this.decoratedActions;
     const props = this.props;
     event.preventDefault();
-    console.log('onModalSubmit',createDirectory);
+    //console.log('onModalSubmit',createDirectory);
 
     switch(this.state.currentModal) {
       case CREATE_DIRECTORY:
@@ -145,21 +145,21 @@ class Eureka extends Component {
   }
 
   onRenameItemModalSubmit(newName, item) {
-    console.log('onRenameItemModalSubmit!!!', newName, item);
-    console.log(item.path);
+    //console.log('onRenameItemModalSubmit!!!', newName, item);
+    //console.log(item.path);
     const decoratedActions = this.decoratedActions;
     const dir = (() => {
       try { // this is bullshit webpack isn't including the parse method with the Node path module
         return path.parse(item.path).dir;
       } catch(e) {
-        console.log('oh crap', item.path);
+        //console.log('oh crap', item.path);
         console.log(e);
         return pathParse(item.path).dir;
       }
     })();
 
     store.dispatch(decoratedActions.renameItem(this.props.source.currentSource, item.path, newName)).then((results) => {
-      console.log('results!!!', results);
+      //console.log('results!!!', results);
       store.dispatch(decoratedActions.updateContent({contents:results.contents.filter((file) => (
         file.filename
       ))}));
@@ -172,7 +172,7 @@ class Eureka extends Component {
   }
 
   onRenameItem(item) {
-    console.log('onRenameItem', item);
+    //console.log('onRenameItem', item);
     this.setState({
       renamingItem:item,
       modalOpen:true,

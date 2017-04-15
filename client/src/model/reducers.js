@@ -45,8 +45,8 @@ var configReducer = function(state, action) {
   return state;
 }
 
-
-const initialContentState = {
+console.log('TESTESTTEST');
+const initialContentState = Object.assign({}, {
   cd: '/',
   contents:[
     /*{
@@ -68,7 +68,13 @@ const initialContentState = {
       editedOn:1487107348619
     }*/
   ]
-};
+}, (() => {
+  try {
+    return (JSON.parse(localStorage.getItem('eureka__content')))
+  } catch(e) {
+    return {};
+  }
+})());
 
 var contentReducer = function(state, action) {
   state = state || initialContentState;

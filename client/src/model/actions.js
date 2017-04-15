@@ -28,7 +28,6 @@ const updateView = function(view) {
 
 const UPDATE_SOURCE = 'update_source';
 const updateSource = function(source) {
-  console.log('updating source', source);
   return {
     type:UPDATE_SOURCE,
     source:source,
@@ -84,7 +83,6 @@ const updateSourceTree = (source) => (
 const UPDATE_SOURCE_TREE_SUCCESS = 'update_source_tree_success';
 const UPDATE_SOURCE_TREE_ERROR = 'update_source_tree_error';
 const updateSourceTreeSuccess = function(contents) {
-  //console.log('contents',contents);
   return {
     type:UPDATE_SOURCE_TREE_SUCCESS,
     contents:contents,
@@ -183,7 +181,7 @@ const FETCH_MEDIA_SOURCES_SUCCESS = 'fetch_media_sources_success';
 const FETCH_MEDIA_SOURCES_ERROR = 'fetch_media_sources_error';
 
 const fetchMediaSourcesSuccess = function(sources) {
-  console.log('fetchMediaSourcesSuccess', sources);
+  //console.log('fetchMediaSourcesSuccess', sources);
   return {
     type:FETCH_MEDIA_SOURCES_SUCCESS,
     sources:sources

@@ -19,7 +19,7 @@ const ChooseBar = (props) => {
   return (
     <div aria-hidden={props.ariaHidden} className="eureka__button-bar eureka__choose-bar">
       <button aria-label={closeMediaBrowserMessage} onClick={(event) => {
-        console.log('closing');
+        //console.log('closing');
         try {
           props.config.callbacks.close()
         } catch (e) {

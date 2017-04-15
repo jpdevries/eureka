@@ -7,7 +7,7 @@ import { FormattedMessage } from 'react-intl';
 
 const MediaSourceSelector = (props) => {
   const decoratedActions = (props.decoratedActions) ? Object.assign({}, actions, props.decoratedActions) : actions;
-  console.log('MediaSourceSelector',decoratedActions);
+  //console.log('MediaSourceSelector',decoratedActions);
   const options = props.source.sources.map((source, index) => (
     <option key={index} value={source.id === undefined ? index : source.id}>{source.name}</option>
   ));

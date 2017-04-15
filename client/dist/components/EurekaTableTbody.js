@@ -83,7 +83,7 @@ var EurekaTableTbody = function (_Component) {
   }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
-      console.log('EurekaTableTbody componentDidMount');
+      //console.log('EurekaTableTbody componentDidMount');
       _store2.default.dispatch(_actions2.default.updateView({
         isTableScrolling: this.isScrollable(this.tbody)
       }));
@@ -119,7 +119,7 @@ var EurekaTableTbody = function (_Component) {
   }, {
     key: 'handleRenameStart',
     value: function handleRenameStart(item) {
-      console.log('handleRenameStart', item);
+      //console.log('handleRenameStart', item);
     }
   }, {
     key: 'handleScroll',

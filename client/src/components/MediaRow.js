@@ -185,7 +185,7 @@ const MediaRow = (props) => {
     <tr role="row" className={classNames(className)} id={utility.cssSafe(props.item.filename)} aria-label={ariaLabel} role="row" tabIndex={tabIndex} onFocus={props.onFocus.bind(this)} contextMenu={`context_menu__tbody-${props.index}`}>
       {mediaSelect}
       <td role="gridcell" id={mediaId} title={ariaLabel} className="eureka__td-media" onDoubleClick={(event) => {
-          console.log(event, props.item);
+          //console.log(event, props.item);
       }}>
         <span className="visually-hidden"><FormattedMessage id="media.contents" defaultMessage="Media Contents" /></span>
         {media}
@@ -198,17 +198,17 @@ const MediaRow = (props) => {
               throw new Error('file name cannot be empty');
             }
 
-            console.log(event.target.innerHTML, event.target.innerHTML.trim());
+            //console.log(event.target.innerHTML, event.target.innerHTML.trim());
             props.onRenameItemModalSubmit((event.target.innerHTML.trim()), props.item);
           } catch (e) {
             console.log(e);
           }
         }}
         onKeyUp={(event) => {
-           console.log('onKeyUp', event);
+           //console.log('onKeyUp', event);
          }}
          onKeyDown={(event) => {
-            console.log('onKeyDown', event, event.keyCode);
+            //console.log('onKeyDown', event, event.keyCode);
             if(event.keyCode === 13) {
               event.preventDefault();
               event.target.blur();

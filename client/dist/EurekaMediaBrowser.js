@@ -86,7 +86,6 @@ var EurekaMediaBrowser = function (_Component) {
 
     if (props.storagePrefix !== 'eureka__' || true) {
       // they are using a non-default localStorage prefix
-      console.log('holy shit!', props);
       var _config = Object.assign({}, {
         currentDirectory: function () {
           try {
@@ -147,7 +146,7 @@ var EurekaMediaBrowser = function (_Component) {
       }
 
       if (localContent) {
-        console.log('updating localContent', localContent);
+        //console.log('updating localContent', localContent);
         store.dispatch(actions.updateContent(localContent));
       }
 
@@ -174,7 +173,7 @@ var EurekaMediaBrowser = function (_Component) {
     }();
 
     var shouldFetch = function () {
-      console.log('shouldFetch', props.lang);
+      /console.log('shouldFetch', props.lang);
       if (_utility2.default.serverSideRendering) return false;
       try {
         return !props.lang || languageWithoutRegionCode == 'en' || _this.state.i18n[props.lang] !== undefined || _this.state.i18n[languageWithoutRegionCode] !== undefined ? false : true;
@@ -194,7 +193,7 @@ var EurekaMediaBrowser = function (_Component) {
 
     store.subscribe(function () {
       var state = store.getState();
-      console.log(state);
+      //console.log(state);
 
       // whenever the state changes we store pieces of the state locally so that next time Eureka fires up it can render the user interface without delay
       if (state.config.useLocalStorage) {
@@ -251,7 +250,7 @@ var EurekaMediaBrowser = function (_Component) {
 
       var language = this.getLanguage(props);
       var languageWithoutRegionCode = language.toLowerCase().split(/[_-]+/)[0];
-      console.log('languageWithoutRegionCode', languageWithoutRegionCode);
+      //console.log('languageWithoutRegionCode', languageWithoutRegionCode);
       var messages = function () {
         if (_utility2.default.serverSideRendering) return props.messages;
 

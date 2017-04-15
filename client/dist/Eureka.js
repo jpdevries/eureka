@@ -172,7 +172,7 @@ var Eureka = function (_Component) {
 
       document.body.addEventListener('keyup', function (event) {
         var key = event.keyCode || event.charCode || 0;
-        console.log(key);
+        //console.log(key);
         switch (key) {
           case 27:
             // Escape
@@ -211,11 +211,11 @@ var Eureka = function (_Component) {
       var decoratedActions = this.decoratedActions;
       var props = this.props;
       event.preventDefault();
-      console.log('onModalSubmit', createDirectory);
+      //console.log('onModalSubmit', createDirectory);
 
       switch (this.state.currentModal) {
         case CREATE_DIRECTORY:
-          console.log(_store2.default.getState().content.cd, path.join(_store2.default.getState().content.cd, 'foo'));
+          //console.log(_store2.default.getState().content.cd, path.join(_store2.default.getState().content.cd, 'foo'));
           _store2.default.dispatch(decoratedActions.createDirectory(_store2.default.getState().source.currentSource, path.join(_store2.default.getState().content.cd, createDirectory))).then(function () {
             _this3.setState({
               modalOpen: false,
@@ -238,22 +238,22 @@ var Eureka = function (_Component) {
     value: function onRenameItemModalSubmit(newName, item) {
       var _this4 = this;
 
-      console.log('onRenameItemModalSubmit!!!', newName, item);
-      console.log(item.path);
+      //console.log('onRenameItemModalSubmit!!!', newName, item);
+      //console.log(item.path);
       var decoratedActions = this.decoratedActions;
       var dir = function () {
         try {
           // this is bullshit webpack isn't including the parse method with the Node path module
           return path.parse(item.path).dir;
         } catch (e) {
-          console.log('oh crap', item.path);
+          //console.log('oh crap', item.path);
           console.log(e);
           return pathParse(item.path).dir;
         }
       }();
 
       _store2.default.dispatch(decoratedActions.renameItem(this.props.source.currentSource, item.path, newName)).then(function (results) {
-        console.log('results!!!', results);
+        //console.log('results!!!', results);
         _store2.default.dispatch(decoratedActions.updateContent({ contents: results.contents.filter(function (file) {
             return file.filename;
           }) }));

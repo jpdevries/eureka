@@ -34,7 +34,7 @@ class ModalCreateDirectoryForm extends Component {
       disable = (() => {
         for(let i = 0; i < props.fetched.lastDirectoriesFetched.length; i++) {
           const folderName = props.fetched.lastDirectoriesFetched[i];
-          console.log(folderName, state.createDirectory, folderName === state.createDirectory);
+          //console.log(folderName, state.createDirectory, folderName === state.createDirectory);
           if(folderName === state.createDirectory) {
 
             label = `${('&ensp;')}Directory ${path.join('/', props.content.cd, folderName)} already exists`;

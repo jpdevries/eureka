@@ -58,7 +58,7 @@ var DropArea = function (_Component) {
     key: 'onDrop',
     value: function onDrop(files) {
       var props = this.props;
-      console.log('Received files: ', files);
+      //console.log('Received files: ', files);
 
       var decoratedActions = this.decoratedActions;
 

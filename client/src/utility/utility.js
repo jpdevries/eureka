@@ -4,7 +4,7 @@ const ASCENDING = 'ascending';
 const DESCENDING = 'descending';
 
 function makeURL(str,params) {
-  console.log('makeURL', str, params);
+  //console.log('makeURL', str, params);
   try {
     var url = new URL(str, window.location.origin); // #janky note: probably need to variabilize baseUrl
     Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));

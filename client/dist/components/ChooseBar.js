@@ -40,11 +40,11 @@ var ChooseBar = function ChooseBar(props) {
     _react2.default.createElement(
       'button',
       { 'aria-label': closeMediaBrowserMessage, onClick: function onClick(event) {
-          console.log('closing');
+          //console.log('closing');
           try {
             props.config.callbacks.close();
           } catch (e) {
-            console.log(e);
+            //console.log(e);
           }
         } },
       cancelMessage
@@ -56,7 +56,7 @@ var ChooseBar = function ChooseBar(props) {
           try {
             props.config.callbacks.choose(props.view.focusedMediaItem);
           } catch (e) {
-            console.log(e);
+            //console.log(e);
           }
         } },
       chooseMessage,

@@ -14,7 +14,7 @@ var ASCENDING = 'ascending';
 var DESCENDING = 'descending';
 
 function makeURL(str, params) {
-  console.log('makeURL', str, params);
+  //console.log('makeURL', str, params);
   try {
     var url = new URL(str, window.location.origin); // #janky note: probably need to variabilize baseUrl
     Object.keys(params).forEach(function (key) {
@@ -25,7 +25,7 @@ function makeURL(str, params) {
     var url;
 
     var _ret = function () {
-      console.log(e);
+      //console.log(e);
       url = str.indexOf('?') > -1 ? str.substr(0, str.indexOf('?')) + '?' : str + '?';
 
       var ps = [];

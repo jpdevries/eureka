@@ -22,7 +22,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var MediaSourceSelector = function MediaSourceSelector(props) {
   var decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
-  console.log('MediaSourceSelector', decoratedActions);
+  //console.log('MediaSourceSelector', decoratedActions);
   var options = props.source.sources.map(function (source, index) {
     return _react2.default.createElement(
       'option',

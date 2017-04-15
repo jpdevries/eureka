@@ -236,7 +236,7 @@ var MediaRow = function MediaRow(props) {
     _react2.default.createElement(
       'td',
       { role: 'gridcell', id: mediaId, title: ariaLabel, className: 'eureka__td-media', onDoubleClick: function onDoubleClick(event) {
-          console.log(event, props.item);
+          //console.log(event, props.item);
         } },
       _react2.default.createElement(
         'span',
@@ -255,25 +255,25 @@ var MediaRow = function MediaRow(props) {
             throw new Error('file name cannot be empty');
           }
 
-          console.log(event.target.innerHTML, event.target.innerHTML.trim());
+          //console.log(event.target.innerHTML, event.target.innerHTML.trim());
           props.onRenameItemModalSubmit(event.target.innerHTML.trim(), props.item);
         } catch (e) {
           console.log(e);
         }
       }), _defineProperty(_React$createElement, 'onKeyUp', function onKeyUp(event) {
-        console.log('onKeyUp', event);
+        //console.log('onKeyUp', event);
       }), _defineProperty(_React$createElement, 'onKeyDown', function onKeyDown(event) {
-        console.log('onKeyDown', event, event.keyCode);
+        //console.log('onKeyDown', event, event.keyCode);
         if (event.keyCode === 13) {
           event.preventDefault();
           event.target.blur();
         }
       }), _defineProperty(_React$createElement, 'onPaste', function onPaste(event) {
-        console.log('onPaste', event);
+        //console.log('onPaste', event);
       }), _defineProperty(_React$createElement, 'onCopy', function onCopy(event) {
-        console.log('onCopy', event);
+        //console.log('onCopy', event);
       }), _defineProperty(_React$createElement, 'onCut', function onCut(event) {
-        console.log('onCut', event);
+        //console.log('onCut', event);
       }), _React$createElement),
       fileName
     ),
