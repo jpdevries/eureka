@@ -82,7 +82,7 @@ store.dispatch(actions.updateConfig({
 app.get('/', (req, res) => {
 
   serveIt('/', req.query.ln || undefined).then((eurekaMarkup) => {
-    console.log(path.join(__dirname, 'client/build/index.html'));
+    //console.log(path.join(__dirname, 'client/build/index.html'));
     let build = fs.readFileSync(path.join(__dirname, 'client/build/index.html'), 'utf8').replace('<div id="root" class="eureka-root">',`<div id="root" class="eureka-root">${eurekaMarkup}</div>`).replace(`<html lang="en">`,`<html lang="${req.query.ln || 'en'}">`);
     //const build = '<h1>YOLO</h1>';
 
@@ -117,8 +117,8 @@ app.use('/assets/js/i18n/locales', express.static('client/i18n/locales'));
 
 
 app.post('/', (req, res) => {
-  console.log('params',req.params);
-  console.log('query',req.query);
+  //console.log('params',req.params);
+  //console.log('query',req.query);
   const referer = req.header('Referer');
   const isNued = referer.includes('/nued');
 
@@ -126,11 +126,11 @@ app.post('/', (req, res) => {
   form.multiples = true;
 
   form.parse(req, function(err, fields, files) {
-    console.log('fields', fields);
-    console.log('PARSE');
+    //console.log('fields', fields);
+    //console.log('PARSE');
 
     const uploadFiles = files.eureka__uploadFiles;
-    console.log(uploadFiles);
+    //console.log(uploadFiles);
 
 
     const [cs, cd] = utility.parseMediaSourceOutOfCombinedPath(fields[`eureka__media-browser_${fields.eureka__mediaSourceId}__browsing`], '||');
@@ -178,7 +178,7 @@ app.post('/', (req, res) => {
       });
     } else {
       serveIt(cd).then((eurekaMarkup) => {
-        console.log(eurekaMarkup);
+        //console.log(eurekaMarkup);
         let build = fs.readFileSync(path.join(__dirname, `client/build/${isNued ? 'nued' : 'index'}.html`), 'utf8').replace('<div id="root" class="eureka-root">',`<div id="root" class="eureka-root">${eurekaMarkup}</div>`).replace(`<html lang="en">`,`<html lang="${req.query.ln || 'en'}">`);
         res.end(build);
       });
@@ -190,7 +190,7 @@ app.post('/', (req, res) => {
 });
 
 function serveIt(dir = "/", lang = undefined) {
-  console.log('serveIt', dir);
+  //console.log('serveIt', dir);
   return new Promise((resolve, reject) => {
     store.dispatch(actions.updateConfig({
       uid:"0"
@@ -337,7 +337,7 @@ function recursivelyGetSourceDirectories(path) {
       {size, atime, mtime, ctime} = stat,
       isFile = stat.isFile();
 
-      if(!isFile) {
+      if(!isFile) { // it is a folder
         results.push(new Promise((resolve, reject) => {
           recursivelyGetSourceDirectories(`${path}${file}`).then((children) => {
             resolve({
@@ -530,7 +530,7 @@ app.delete('/core/components/eureka/media/sources/:source', (req, res) => {
   const path = req.query.path,
   source = req.params.source;
 
-  // this is kinda janky but whatever
+  // this is kinda #janky but whatever
   let deletePath = path.includes(__dirname) ? path :  path.join(path.join(__dirname, 'sources/filesystem'), path);
 
   console.log(`delete ${path} source ${source}`);

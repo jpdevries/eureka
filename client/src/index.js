@@ -51,6 +51,9 @@ function render() {
       endpoints={{
         i18n: './assets/js/i18n/locales/'
       }}
+      intervals={{
+        searchBarPlaceholder: 3000
+      }}
     />,
     document.getElementById('root')
   );

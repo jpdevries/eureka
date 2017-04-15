@@ -56,20 +56,24 @@ $palettes: ( // http://erskinedesign.com/blog/friendlier-colour-names-sass-maps/
     @return map-get(map-get($palettes, $palette), $tone);
 }
 
-%visually-hidden { /*https://developer.yahoo.com/blogs/ydn/clip-hidden-content-better-accessibility-53456.html*/
-    position: absolute !important;
-    clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
-    clip: rect(1px, 1px, 1px, 1px);
-    padding:0 !important;
-    border:0 !important;
-    height: 1px !important;
-    width: 1px !important;
-    overflow: hidden;
-    body:hover & {
-      a,input,button {
-        display: none !important;
-      }
+@mixin visually-hidden() {
+  position: absolute !important;
+  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+  clip: rect(1px, 1px, 1px, 1px);
+  padding:0 !important;
+  border:0 !important;
+  height: 1px !important;
+  width: 1px !important;
+  overflow: hidden;
+  body:hover & {
+    a,input,button {
+      display: none !important;
     }
+  }
+}
+
+%visually-hidden { /*https://developer.yahoo.com/blogs/ydn/clip-hidden-content-better-accessibility-53456.html*/
+  @include visually-hidden;
 }
 
 %flex-bar {

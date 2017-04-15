@@ -60,5 +60,7 @@ function render() {
     }
   }), _defineProperty(_React$createElement, 'endpoints', {
     i18n: './assets/js/i18n/locales/'
+  }), _defineProperty(_React$createElement, 'intervals', {
+    searchBarPlaceholder: 3000
   }), _React$createElement)), document.getElementById('root'));
 }

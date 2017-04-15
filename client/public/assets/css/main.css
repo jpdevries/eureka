@@ -69,6 +69,8 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
     grid-template-areas: "media name dimensions file-size edited-on"; }
   .eureka-root .eureka.eureka__view-mode__table table > tbody > tr, .eureka-root .eureka.eureka__view-mode__list table > tbody > tr {
     grid-template-areas: "media name dimensions file-size edited-on" "actions actions actions actions actions"; }
+  .eureka-root .eureka.eureka__view-mode__table table > tbody.empty > tr, .eureka-root .eureka.eureka__view-mode__list table > tbody.empty > tr {
+    display: block; }
   @media screen and (min-width: 641px) {
     .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr, .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > tbody:not(.empty) > tr:not(.empty), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr, .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > tbody:not(.empty) > tr:not(.empty) {
       grid-template-areas: "radio media name dimensions file-size edited-on";

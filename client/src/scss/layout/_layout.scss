@@ -70,6 +70,9 @@
        > tbody > tr {
          grid-template-areas:"media name dimensions file-size edited-on" "actions actions actions actions actions";
        }
+       > tbody.empty > tr {
+         display: block;
+       }
      }
      &.eureka__server-side {
        table { // .eureka__browse-content>.eureka__stage>.eureka__table-wrapper>div>

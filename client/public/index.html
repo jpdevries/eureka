@@ -23,11 +23,11 @@
       }
     </style>
 
-    <link rel="stylesheet" type="text/css" href="assets/css/eureka.0.0.41.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/eureka.0.0.42.min.css">
 
     <style type="text/css">
       @media screen and (-ms-high-contrast: active) {
-        body {
+        .eureka-root {
           /* black on white */
           --panel-border-color:rgb(8,8,8);
           --light-bg:white;
@@ -41,7 +41,7 @@
         }
       }
       @media screen and (-ms-high-contrast: black-on-white) {
-        body {
+        .eureka-root {
           /* black on white */
           --panel-border-color:rgb(8,8,8);
           --light-bg:white;
@@ -55,7 +55,7 @@
         }
       }
       @media screen and (-ms-high-contrast: white-on-black) {
-        body {
+        .eureka-root {
           /* white on black */
           background:var(--light-bg, rgb(8,8,8));
           color:var(--color, white);
@@ -119,15 +119,7 @@
 
       }
 
-      @media screen and (min-width: 641px) {
-        display: -ms-flexbox;
-        display: flex;
-        height: 100vh;
-        max-height: 100vh;
-        overflow-y: hidden;
-        -ms-flex-direction: column;
-        flex-direction: column;
-      }
+
 
     </style>
 
