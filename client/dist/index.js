@@ -46,7 +46,7 @@ function render() {
     basePath: '/core/components/eureka/',
     allowUploads: true,
     lang: languageKey,
-    useLocalStorage: false,
+    useLocalStorage: true,
     allowRename: true,
     allowDelete: true,
     confirmBeforeDelete: true,
@@ -55,10 +55,12 @@ function render() {
     enlargeFocusedRows: false
   }, _defineProperty(_React$createElement, 'allowFullscreen', true), _defineProperty(_React$createElement, 'emphasisFocusedMediaItem', true), _defineProperty(_React$createElement, 'storagePrefix', 'eureka__'), _defineProperty(_React$createElement, 'lang', 'en-US'), _defineProperty(_React$createElement, 'callbacks', {
     choose: function choose(item) {
-      alert('yolo');
+      alert(JSON.stringify(item));
     }
   }), _defineProperty(_React$createElement, 'endpoints', {
     i18n: './assets/js/i18n/locales/'
+  }), _defineProperty(_React$createElement, 'headers', {
+    foo: 'bar'
   }), _defineProperty(_React$createElement, 'intervals', {
     searchBarPlaceholder: 3000
   }), _React$createElement)), document.getElementById('root'));

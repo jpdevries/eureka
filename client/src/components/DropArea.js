@@ -29,7 +29,7 @@ class DropArea extends Component {
       formData.append('eureka__uploadFiles', file, file.name);
     });
 
-    store.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData))
+    store.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData, props.config.headers))
   }
 
   render() {

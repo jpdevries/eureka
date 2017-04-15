@@ -38,7 +38,7 @@ const ContextButtons = (props) => {
   const renameBtn = (props.config.allowRename) ? (<button id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }rename__${cssSafe(item.filename)}`} role="option" title={renameItemMessage} onClick={props.onRenameItem ? props.onRenameItem.bind(null, item) : undefined}>{renameMessage}<span className="visually-hidden"> {item.filename}</span></button>) : undefined,
   deleteBtn = (props.config.allowDelete) ? (
     <button id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }delete__${cssSafe(item.filename)}`} role="option" onClick={(event) => {
-        store.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path));
+        store.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path, props.config.headers));
       }} title={deleteItemMessage} className="dangerous">{deleteMessage}<span className="visually-hidden"> {item.filename}</span></button>
   ) : undefined;
 

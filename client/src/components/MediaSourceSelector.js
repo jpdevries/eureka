@@ -22,7 +22,8 @@ const MediaSourceSelector = (props) => {
           (event.target.value)
         ));
         props.dispatch(decoratedActions.updateSourceTree(
-          (event.target.value)
+          (event.target.value),
+          props.config.headers
         ));
         }}>
         {options}

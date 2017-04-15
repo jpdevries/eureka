@@ -58,13 +58,14 @@ var updateConfig = function updateConfig(config) {
 };
 
 var updateSourceTree = function updateSourceTree(source) {
+  var customHeaders = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   return function (dispatch) {
     return fetch('/core/components/eureka/media/sources/' + source, {
       method: 'GET',
-      headers: {
+      headers: Object.assign({}, {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
-      }
+      }, customHeaders)
     }).then(function (response) {
       if (response.state < 200 || response.state >= 300) {
         var error = new Error(response.statusText);
@@ -100,13 +101,14 @@ var updateSourceTreeError = function updateSourceTreeError(error) {
 };
 
 var fetchDirectoryContents = function fetchDirectoryContents(source, params) {
+  var customHeaders = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
   return function (dispatch) {
     return fetch(_utility2.default.makeURL('/core/components/eureka/media/sources/' + source, params), {
       method: 'GET',
-      headers: {
+      headers: Object.assign({}, {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
-      }
+      }, customHeaders)
     }).then(function (response) {
       if (response.state < 200 || response.state >= 300) {
         var error = new Error(response.statusText);
@@ -146,13 +148,14 @@ var fetchDirectoryContentsError = function fetchDirectoryContentsError(error) {
 exports.fetchDirectoryContentsError = fetchDirectoryContentsError;
 
 var fetchMediaSources = function fetchMediaSources() {
+  var customHeaders = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   return function (dispatch) {
     return fetch('/core/components/eureka/media/sources', {
       method: 'GET',
-      headers: {
+      headers: Object.assign({}, {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
-      }
+      }, customHeaders)
     }).then(function (response) {
       if (response.state < 200 || response.state >= 300) {
         var error = new Error(response.statusText);
@@ -214,15 +217,16 @@ var deleteMediaItemError = function deleteMediaItemError(error) {
 };
 
 var deleteMediaItem = function deleteMediaItem(source, path) {
+  var customHeaders = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
   return function (dispatch) {
     return fetch(_utility2.default.makeURL('/core/components/eureka/media/sources/' + source, {
       path: path
     }), {
       method: 'DELETE',
-      headers: {
+      headers: Object.assign({}, {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
-      }
+      }, customHeaders)
     }).then(function (response) {
       if (response.state < 200 || response.state >= 300) {
         var error = new Error(response.statusText);
@@ -266,16 +270,17 @@ exports.UPLOAD_FILES_ERROR = UPLOAD_FILES_ERROR;
 exports.uploadFilesError = uploadFilesError;
 
 var uploadFiles = function uploadFiles(source, directory, formData) {
+  var customHeaders = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
   return function (dispatch) {
     return fetch(_utility2.default.makeURL('/core/components/eureka/media/sources/' + source, {
       path: directory
     }), {
       method: 'POST',
       body: formData,
-      headers: {
+      headers: Object.assign({}, {
         //'Accept': 'application/json',
         //'Content-Type': 'application/json'
-      }
+      }, customHeaders)
     }).then(function (response) {
       if (response.state < 200 || response.state >= 300) {
         var error = new Error(response.statusText);
@@ -294,15 +299,16 @@ var uploadFiles = function uploadFiles(source, directory, formData) {
 };
 
 var createDirectory = function createDirectory(source, dir) {
+  var customHeaders = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
   return function (dispatch) {
     return fetch(_utility2.default.makeURL('/core/components/eureka/media/sources/' + source, {
       path: dir
     }), {
       method: 'PUT',
-      headers: {
+      headers: Object.assign({}, {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
-      }
+      }, customHeaders)
     }).then(function (response) {
       if (response.state < 200 || response.state >= 300) {
         var error = new Error(response.statusText);
@@ -393,16 +399,17 @@ exports.deleteMediaItemError = deleteMediaItemError;
 exports.deleteMediaItem = deleteMediaItem;
 
 var renameDirectory = function renameDirectory(source, dirPath, name) {
+  var customHeaders = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
   return function (dispatch) {
     return fetch(_utility2.default.makeURL('/core/components/eureka/media/sources/' + source, {
       path: dirPath,
       name: name
     }), {
       method: 'PUT',
-      headers: {
+      headers: Object.assign({}, {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
-      }
+      }, customHeaders)
     }).then(function (response) {
       if (response.state < 200 || response.state >= 300) {
         var error = new Error(response.statusText);
@@ -451,16 +458,17 @@ exports.renameDirectoryError = renameDirectoryError;
 exports.renameDirectory = renameDirectory;
 
 var renameItem = function renameItem(source, filePath, name) {
+  var customHeaders = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
   return function (dispatch) {
     return fetch(_utility2.default.makeURL('/core/components/eureka/media/sources/' + source, {
       path: filePath,
       name: name
     }), {
       method: 'PUT',
-      headers: {
+      headers: Object.assign({}, {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
-      }
+      }, customHeaders)
     }).then(function (response) {
       if (response.state < 200 || response.state >= 300) {
         var error = new Error(response.statusText);

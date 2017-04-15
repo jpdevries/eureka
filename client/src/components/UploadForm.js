@@ -27,7 +27,7 @@ class UploadForm extends Component {
     for(var pair of formData.entries()) {
        console.log(pair[0], pair[1]);
     }
-    store.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData));
+    store.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData, props.config.headers));
   }
 
   render() {

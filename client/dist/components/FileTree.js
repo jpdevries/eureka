@@ -74,7 +74,7 @@ var FileTreeSpan = function (_Component) {
             }));
             _store2.default.dispatch(decoratedActions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
               path: item.cd
-            }));
+            }, props.config.headers));
           },
           onDoubleClick: function onDoubleClick(event) {
             _this2.setState({
@@ -149,7 +149,7 @@ var FileTree = function FileTree(props) {
             _react2.default.createElement('menuitem', { label: createFileMessage }),
             _react2.default.createElement('menuitem', { label: quickCreateFileMessage }),
             _react2.default.createElement('menuitem', { label: deleteDirectoryMessage, onClick: function onClick(event) {
-                _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.cd));
+                _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.cd, props.config.headers));
               } })
           )
         ),

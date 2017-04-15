@@ -85,7 +85,7 @@ var UploadForm = function (_Component) {
         }
       }
 
-      _store2.default.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData));
+      _store2.default.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData, props.config.headers));
     }
   }, {
     key: 'render',

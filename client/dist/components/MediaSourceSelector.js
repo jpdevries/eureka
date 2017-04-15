@@ -56,7 +56,7 @@ var MediaSourceSelector = function MediaSourceSelector(props) {
         'select',
         { value: props.source.currentSource, id: 'media-source-selector__select', onChange: function onChange(event) {
             props.dispatch(decoratedActions.updateSource(event.target.value));
-            props.dispatch(decoratedActions.updateSourceTree(event.target.value));
+            props.dispatch(decoratedActions.updateSourceTree(event.target.value, props.config.headers));
           } },
         options
       )

@@ -52,8 +52,8 @@ class Eureka extends Component {
   componentDidMount() {
     const props = this.props;
     const decoratedActions = this.decoratedActions;
-    store.dispatch(decoratedActions.fetchMediaSources()).then(() => { // hit the server and get the media sources
-      store.dispatch(decoratedActions.updateSourceTree(this.props.source.sources[0].id)).then((content) => { // then hit server for the directory tree of the first (default) media source
+    store.dispatch(decoratedActions.fetchMediaSources(props.config.headers)).then(() => { // hit the server and get the media sources
+      store.dispatch(decoratedActions.updateSourceTree(this.props.source.sources[0].id), props.config.headers).then((content) => { // then hit server for the directory tree of the first (default) media source
         const props = this.props;
 
         store.dispatch(decoratedActions.updateContent({ // updates the "current directory" of the view right away
@@ -61,7 +61,7 @@ class Eureka extends Component {
         }));
         store.dispatch(decoratedActions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
           path: props.content.cd
-        }));
+        }, props.config.headers));
 
         if(props.view.intervals.fetchDirectoryContents !== undefined && props.view.intervals.fetchDirectoryContents > 0) {
           setInterval(() => { // every so often hit the server and update the displayed contents of the current directory
@@ -73,14 +73,14 @@ class Eureka extends Component {
             }));
             store.dispatch(decoratedActions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
               path: props.content.cd
-            }));
+            }, props.config.headers));
 
           }, props.view.intervals.fetchDirectoryContents);
         }
 
         if(props.view.intervals.updateSourceTree !== undefined && props.view.intervals.updateSourceTree > 0) { // hit the server and get the (top-level-ish) directory tree of the current source
           setInterval(() => {
-            store.dispatch(decoratedActions.updateSourceTree(props.source.currentSource));
+            store.dispatch(decoratedActions.updateSourceTree(props.source.currentSource, props.config.headers));
           }, props.view.intervals.updateSourceTree);
         }
       });
@@ -126,7 +126,7 @@ class Eureka extends Component {
     switch(this.state.currentModal) {
       case CREATE_DIRECTORY:
       console.log(store.getState().content.cd, path.join(store.getState().content.cd, 'foo'));
-      store.dispatch(decoratedActions.createDirectory(store.getState().source.currentSource, path.join(store.getState().content.cd, createDirectory))).then(() => {
+      store.dispatch(decoratedActions.createDirectory(store.getState().source.currentSource, path.join(store.getState().content.cd, createDirectory, props.config.headers))).then(() => {
         this.setState({
           modalOpen:false,
           currentModal:undefined
@@ -134,7 +134,7 @@ class Eureka extends Component {
       }).then(() => {
         store.dispatch(decoratedActions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
           path:store.getState().content.cd
-        }));
+        }, props.config.headers));
       });
       break;
 
@@ -158,7 +158,7 @@ class Eureka extends Component {
       }
     })();
 
-    store.dispatch(decoratedActions.renameItem(this.props.source.currentSource, item.path, newName)).then((results) => {
+    store.dispatch(decoratedActions.renameItem(this.props.source.currentSource, item.path, newName, this.props.config.headers)).then((results) => {
       //console.log('results!!!', results);
       store.dispatch(decoratedActions.updateContent({contents:results.contents.filter((file) => (
         file.filename

@@ -68,7 +68,7 @@ var ContextButtons = function ContextButtons(props) {
       deleteBtn = props.config.allowDelete ? _react2.default.createElement(
     'button',
     { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'delete__' + (0, _utility.cssSafe)(item.filename), role: 'option', onClick: function onClick(event) {
-        _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path));
+        _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path, props.config.headers));
       }, title: deleteItemMessage, className: 'dangerous' },
     deleteMessage,
     _react2.default.createElement(

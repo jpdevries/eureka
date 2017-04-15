@@ -133,9 +133,9 @@ var Eureka = function (_Component) {
 
       var props = this.props;
       var decoratedActions = this.decoratedActions;
-      _store2.default.dispatch(decoratedActions.fetchMediaSources()).then(function () {
+      _store2.default.dispatch(decoratedActions.fetchMediaSources(props.config.headers)).then(function () {
         // hit the server and get the media sources
-        _store2.default.dispatch(decoratedActions.updateSourceTree(_this2.props.source.sources[0].id)).then(function (content) {
+        _store2.default.dispatch(decoratedActions.updateSourceTree(_this2.props.source.sources[0].id), props.config.headers).then(function (content) {
           // then hit server for the directory tree of the first (default) media source
           var props = _this2.props;
 
@@ -144,7 +144,7 @@ var Eureka = function (_Component) {
           }));
           _store2.default.dispatch(decoratedActions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
             path: props.content.cd
-          }));
+          }, props.config.headers));
 
           if (props.view.intervals.fetchDirectoryContents !== undefined && props.view.intervals.fetchDirectoryContents > 0) {
             setInterval(function () {
@@ -157,14 +157,14 @@ var Eureka = function (_Component) {
               }));
               _store2.default.dispatch(decoratedActions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
                 path: props.content.cd
-              }));
+              }, props.config.headers));
             }, props.view.intervals.fetchDirectoryContents);
           }
 
           if (props.view.intervals.updateSourceTree !== undefined && props.view.intervals.updateSourceTree > 0) {
             // hit the server and get the (top-level-ish) directory tree of the current source
             setInterval(function () {
-              _store2.default.dispatch(decoratedActions.updateSourceTree(props.source.currentSource));
+              _store2.default.dispatch(decoratedActions.updateSourceTree(props.source.currentSource, props.config.headers));
             }, props.view.intervals.updateSourceTree);
           }
         });
@@ -216,7 +216,7 @@ var Eureka = function (_Component) {
       switch (this.state.currentModal) {
         case CREATE_DIRECTORY:
           console.log(_store2.default.getState().content.cd, path.join(_store2.default.getState().content.cd, 'foo'));
-          _store2.default.dispatch(decoratedActions.createDirectory(_store2.default.getState().source.currentSource, path.join(_store2.default.getState().content.cd, createDirectory))).then(function () {
+          _store2.default.dispatch(decoratedActions.createDirectory(_store2.default.getState().source.currentSource, path.join(_store2.default.getState().content.cd, createDirectory, props.config.headers))).then(function () {
             _this3.setState({
               modalOpen: false,
               currentModal: undefined
@@ -224,7 +224,7 @@ var Eureka = function (_Component) {
           }).then(function () {
             _store2.default.dispatch(decoratedActions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
               path: _store2.default.getState().content.cd
-            }));
+            }, props.config.headers));
           });
           break;
 
@@ -252,7 +252,7 @@ var Eureka = function (_Component) {
         }
       }();
 
-      _store2.default.dispatch(decoratedActions.renameItem(this.props.source.currentSource, item.path, newName)).then(function (results) {
+      _store2.default.dispatch(decoratedActions.renameItem(this.props.source.currentSource, item.path, newName, this.props.config.headers)).then(function (results) {
         //console.log('results!!!', results);
         _store2.default.dispatch(decoratedActions.updateContent({ contents: results.contents.filter(function (file) {
             return file.filename;

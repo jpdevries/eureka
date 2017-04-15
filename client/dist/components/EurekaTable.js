@@ -89,7 +89,7 @@ var EurekaTable = function (_Component) {
         formData.append('eureka__uploadFiles', file, file.name);
       });
 
-      _store2.default.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData));
+      _store2.default.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData, props.config.headers));
     }
   }, {
     key: 'render',
@@ -123,7 +123,7 @@ var EurekaTable = function (_Component) {
           _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.deleteItem, {
               filename: item.filename
             }), onClick: function onClick(event) {
-              _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path));
+              _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path, props.config.headers));
             } })
         );
       }) : undefined;

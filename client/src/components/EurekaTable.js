@@ -42,7 +42,7 @@ class EurekaTable extends Component {
       formData.append('eureka__uploadFiles', file, file.name);
     });
 
-    store.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData));
+    store.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData, props.config.headers));
   }
 
   render () {
@@ -66,7 +66,7 @@ class EurekaTable extends Component {
           <menuitem label={formatMessage(definedMessages.deleteItem, {
             filename: item.filename
           })} onClick={(event) => {
-              store.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path));
+              store.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path, props.config.headers));
             }}></menuitem>
       </menu>
     )) : undefined;

@@ -24387,9 +24387,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      var props = this.props;
 	      var decoratedActions = this.decoratedActions;
-	      _store2.default.dispatch(decoratedActions.fetchMediaSources()).then(function () {
+	      _store2.default.dispatch(decoratedActions.fetchMediaSources(props.config.headers)).then(function () {
 	        // hit the server and get the media sources
-	        _store2.default.dispatch(decoratedActions.updateSourceTree(_this2.props.source.sources[0].id)).then(function (content) {
+	        _store2.default.dispatch(decoratedActions.updateSourceTree(_this2.props.source.sources[0].id), props.config.headers).then(function (content) {
 	          // then hit server for the directory tree of the first (default) media source
 	          var props = _this2.props;
 
@@ -24398,7 +24398,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          }));
 	          _store2.default.dispatch(decoratedActions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
 	            path: props.content.cd
-	          }));
+	          }, props.config.headers));
 
 	          if (props.view.intervals.fetchDirectoryContents !== undefined && props.view.intervals.fetchDirectoryContents > 0) {
 	            setInterval(function () {
@@ -24411,14 +24411,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	              }));
 	              _store2.default.dispatch(decoratedActions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
 	                path: props.content.cd
-	              }));
+	              }, props.config.headers));
 	            }, props.view.intervals.fetchDirectoryContents);
 	          }
 
 	          if (props.view.intervals.updateSourceTree !== undefined && props.view.intervals.updateSourceTree > 0) {
 	            // hit the server and get the (top-level-ish) directory tree of the current source
 	            setInterval(function () {
-	              _store2.default.dispatch(decoratedActions.updateSourceTree(props.source.currentSource));
+	              _store2.default.dispatch(decoratedActions.updateSourceTree(props.source.currentSource, props.config.headers));
 	            }, props.view.intervals.updateSourceTree);
 	          }
 	        });
@@ -24470,7 +24470,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      switch (this.state.currentModal) {
 	        case CREATE_DIRECTORY:
 	          console.log(_store2.default.getState().content.cd, path.join(_store2.default.getState().content.cd, 'foo'));
-	          _store2.default.dispatch(decoratedActions.createDirectory(_store2.default.getState().source.currentSource, path.join(_store2.default.getState().content.cd, createDirectory))).then(function () {
+	          _store2.default.dispatch(decoratedActions.createDirectory(_store2.default.getState().source.currentSource, path.join(_store2.default.getState().content.cd, createDirectory, props.config.headers))).then(function () {
 	            _this3.setState({
 	              modalOpen: false,
 	              currentModal: undefined
@@ -24478,7 +24478,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          }).then(function () {
 	            _store2.default.dispatch(decoratedActions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
 	              path: _store2.default.getState().content.cd
-	            }));
+	            }, props.config.headers));
 	          });
 	          break;
 
@@ -24506,7 +24506,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      }();
 
-	      _store2.default.dispatch(decoratedActions.renameItem(this.props.source.currentSource, item.path, newName)).then(function (results) {
+	      _store2.default.dispatch(decoratedActions.renameItem(this.props.source.currentSource, item.path, newName, this.props.config.headers)).then(function (results) {
 	        //console.log('results!!!', results);
 	        _store2.default.dispatch(decoratedActions.updateContent({ contents: results.contents.filter(function (file) {
 	            return file.filename;
@@ -24731,7 +24731,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        'select',
 	        { value: props.source.currentSource, id: 'media-source-selector__select', onChange: function onChange(event) {
 	            props.dispatch(decoratedActions.updateSource(event.target.value));
-	            props.dispatch(decoratedActions.updateSourceTree(event.target.value));
+	            props.dispatch(decoratedActions.updateSourceTree(event.target.value, props.config.headers));
 	          } },
 	        options
 	      )
@@ -25602,13 +25602,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	var updateSourceTree = function updateSourceTree(source) {
+	  var customHeaders = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 	  return function (dispatch) {
 	    return fetch('/core/components/eureka/media/sources/' + source, {
 	      method: 'GET',
-	      headers: {
+	      headers: Object.assign({}, {
 	        'Accept': 'application/json',
 	        'Content-Type': 'application/json'
-	      }
+	      }, customHeaders)
 	    }).then(function (response) {
 	      if (response.state < 200 || response.state >= 300) {
 	        var error = new Error(response.statusText);
@@ -25644,13 +25645,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	var fetchDirectoryContents = function fetchDirectoryContents(source, params) {
+	  var customHeaders = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 	  return function (dispatch) {
 	    return fetch(_utility2.default.makeURL('/core/components/eureka/media/sources/' + source, params), {
 	      method: 'GET',
-	      headers: {
+	      headers: Object.assign({}, {
 	        'Accept': 'application/json',
 	        'Content-Type': 'application/json'
-	      }
+	      }, customHeaders)
 	    }).then(function (response) {
 	      if (response.state < 200 || response.state >= 300) {
 	        var error = new Error(response.statusText);
@@ -25690,13 +25692,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.fetchDirectoryContentsError = fetchDirectoryContentsError;
 
 	var fetchMediaSources = function fetchMediaSources() {
+	  var customHeaders = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 	  return function (dispatch) {
 	    return fetch('/core/components/eureka/media/sources', {
 	      method: 'GET',
-	      headers: {
+	      headers: Object.assign({}, {
 	        'Accept': 'application/json',
 	        'Content-Type': 'application/json'
-	      }
+	      }, customHeaders)
 	    }).then(function (response) {
 	      if (response.state < 200 || response.state >= 300) {
 	        var error = new Error(response.statusText);
@@ -25758,15 +25761,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	var deleteMediaItem = function deleteMediaItem(source, path) {
+	  var customHeaders = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 	  return function (dispatch) {
 	    return fetch(_utility2.default.makeURL('/core/components/eureka/media/sources/' + source, {
 	      path: path
 	    }), {
 	      method: 'DELETE',
-	      headers: {
+	      headers: Object.assign({}, {
 	        'Accept': 'application/json',
 	        'Content-Type': 'application/json'
-	      }
+	      }, customHeaders)
 	    }).then(function (response) {
 	      if (response.state < 200 || response.state >= 300) {
 	        var error = new Error(response.statusText);
@@ -25810,16 +25814,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.uploadFilesError = uploadFilesError;
 
 	var uploadFiles = function uploadFiles(source, directory, formData) {
+	  var customHeaders = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 	  return function (dispatch) {
 	    return fetch(_utility2.default.makeURL('/core/components/eureka/media/sources/' + source, {
 	      path: directory
 	    }), {
 	      method: 'POST',
 	      body: formData,
-	      headers: {
+	      headers: Object.assign({}, {
 	        //'Accept': 'application/json',
 	        //'Content-Type': 'application/json'
-	      }
+	      }, customHeaders)
 	    }).then(function (response) {
 	      if (response.state < 200 || response.state >= 300) {
 	        var error = new Error(response.statusText);
@@ -25838,15 +25843,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	var createDirectory = function createDirectory(source, dir) {
+	  var customHeaders = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 	  return function (dispatch) {
 	    return fetch(_utility2.default.makeURL('/core/components/eureka/media/sources/' + source, {
 	      path: dir
 	    }), {
 	      method: 'PUT',
-	      headers: {
+	      headers: Object.assign({}, {
 	        'Accept': 'application/json',
 	        'Content-Type': 'application/json'
-	      }
+	      }, customHeaders)
 	    }).then(function (response) {
 	      if (response.state < 200 || response.state >= 300) {
 	        var error = new Error(response.statusText);
@@ -25937,16 +25943,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.deleteMediaItem = deleteMediaItem;
 
 	var renameDirectory = function renameDirectory(source, dirPath, name) {
+	  var customHeaders = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 	  return function (dispatch) {
 	    return fetch(_utility2.default.makeURL('/core/components/eureka/media/sources/' + source, {
 	      path: dirPath,
 	      name: name
 	    }), {
 	      method: 'PUT',
-	      headers: {
+	      headers: Object.assign({}, {
 	        'Accept': 'application/json',
 	        'Content-Type': 'application/json'
-	      }
+	      }, customHeaders)
 	    }).then(function (response) {
 	      if (response.state < 200 || response.state >= 300) {
 	        var error = new Error(response.statusText);
@@ -25995,16 +26002,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.renameDirectory = renameDirectory;
 
 	var renameItem = function renameItem(source, filePath, name) {
+	  var customHeaders = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 	  return function (dispatch) {
 	    return fetch(_utility2.default.makeURL('/core/components/eureka/media/sources/' + source, {
 	      path: filePath,
 	      name: name
 	    }), {
 	      method: 'PUT',
-	      headers: {
+	      headers: Object.assign({}, {
 	        'Accept': 'application/json',
 	        'Content-Type': 'application/json'
-	      }
+	      }, customHeaders)
 	    }).then(function (response) {
 	      if (response.state < 200 || response.state >= 300) {
 	        var error = new Error(response.statusText);
@@ -26661,7 +26669,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.44",
+		"version": "0.0.45",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -31180,7 +31188,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }));
 	        _store2.default.dispatch(decoratedActions.fetchDirectoryContents(cs, { // asyncronously fetches the directory contents from the API
 	          path: cd
-	        }));
+	        }, props.config.headers));
 	      } },
 	    optgroups
 	  );
@@ -32226,7 +32234,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        formData.append('eureka__uploadFiles', file, file.name);
 	      });
 
-	      _store2.default.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData));
+	      _store2.default.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData, props.config.headers));
 	    }
 	  }, {
 	    key: 'render',
@@ -32260,7 +32268,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.deleteItem, {
 	              filename: item.filename
 	            }), onClick: function onClick(event) {
-	              _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path));
+	              _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path, props.config.headers));
 	            } })
 	        );
 	      }) : undefined;
@@ -33108,7 +33116,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      deleteBtn = props.config.allowDelete ? _react2.default.createElement(
 	    'button',
 	    { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'delete__' + (0, _utility.cssSafe)(item.filename), role: 'option', onClick: function onClick(event) {
-	        _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path));
+	        _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path, props.config.headers));
 	      }, title: deleteItemMessage, className: 'dangerous' },
 	    deleteMessage,
 	    _react2.default.createElement(
@@ -33907,7 +33915,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }));
 	            _store2.default.dispatch(decoratedActions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
 	              path: item.cd
-	            }));
+	            }, props.config.headers));
 	          },
 	          onDoubleClick: function onDoubleClick(event) {
 	            _this2.setState({
@@ -33982,7 +33990,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            _react2.default.createElement('menuitem', { label: createFileMessage }),
 	            _react2.default.createElement('menuitem', { label: quickCreateFileMessage }),
 	            _react2.default.createElement('menuitem', { label: deleteDirectoryMessage, onClick: function onClick(event) {
-	                _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.cd));
+	                _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.cd, props.config.headers));
 	              } })
 	          )
 	        ),
@@ -34105,7 +34113,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      }
 
-	      _store2.default.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData));
+	      _store2.default.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData, props.config.headers));
 	    }
 	  }, {
 	    key: 'render',
@@ -34353,7 +34361,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        formData.append('eureka__uploadFiles', file, file.name);
 	      });
 
-	      _store2.default.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData));
+	      _store2.default.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData, props.config.headers));
 	    }
 	  }, {
 	    key: 'render',

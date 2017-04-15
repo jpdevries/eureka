@@ -32,7 +32,7 @@ class FileTreeSpan extends Component {
           }));
           store.dispatch(decoratedActions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
             path:item.cd
-          }));
+          }, props.config.headers));
         }}
         onDoubleClick={(event) => {
           this.setState({
@@ -104,7 +104,7 @@ const FileTree = (props) => {
               <menuitem label={createFileMessage}></menuitem>
               <menuitem label={quickCreateFileMessage}></menuitem>
               <menuitem label={deleteDirectoryMessage} onClick={(event) => {
-                  store.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.cd))
+                  store.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.cd, props.config.headers))
                 }}></menuitem>
           </menu>
 

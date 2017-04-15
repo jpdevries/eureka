@@ -31,7 +31,7 @@ function render() {
       basePath="/core/components/eureka/"
       allowUploads={true}
       lang={languageKey}
-      useLocalStorage={false}
+      useLocalStorage={true}
       allowRename={true}
       allowDelete={true}
       confirmBeforeDelete={true}
@@ -44,11 +44,14 @@ function render() {
       lang="en-US"
       callbacks={{
         choose: function(item) {
-          alert('yolo')
+          alert(JSON.stringify(item))
         }
       }}
       endpoints={{
         i18n: './assets/js/i18n/locales/'
+      }}
+      headers={{
+        foo: 'bar'
       }}
       intervals={{
         searchBarPlaceholder: 3000

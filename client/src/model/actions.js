@@ -51,14 +51,14 @@ const updateConfig = function(config) {
   }
 }
 
-const updateSourceTree = (source) => (
+const updateSourceTree = (source, customHeaders = {}) => (
   (dispatch) => (
     fetch(`/core/components/eureka/media/sources/${source}`, {
       method: 'GET',
-      headers: {
+      headers: Object.assign({}, {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
-      }
+      }, customHeaders)
     }).then((response) => {
       if(response.state < 200 || response.state >= 300) {
         var error = new Error(response.statusText)
@@ -97,14 +97,14 @@ const updateSourceTreeError = function(error) {
   }
 }
 
-const fetchDirectoryContents = (source, params) => (
+const fetchDirectoryContents = (source, params, customHeaders = {}) => (
   (dispatch) => (
     fetch(utility.makeURL(`/core/components/eureka/media/sources/${source}`, params), {
       method: 'GET',
-      headers: {
+      headers: Object.assign({}, {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
-      }
+      }, customHeaders)
     }).then((response) => {
       if(response.state < 200 || response.state >= 300) {
         var error = new Error(response.statusText)
@@ -148,14 +148,14 @@ const fetchDirectoryContentsError = function(error) {
 
 exports.fetchDirectoryContentsError = fetchDirectoryContentsError;
 
-const fetchMediaSources = () => (
+const fetchMediaSources = (customHeaders = {}) => (
   (dispatch) => (
     fetch('/core/components/eureka/media/sources', {
       method: 'GET',
-      headers: {
+      headers: Object.assign({}, {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
-      }
+      }, customHeaders)
     }).then((response) => {
       if(response.state < 200 || response.state >= 300) {
         var error = new Error(response.statusText)
@@ -220,16 +220,16 @@ const deleteMediaItemError = function(error) {
   }
 }
 
-const deleteMediaItem = (source, path) => (
+const deleteMediaItem = (source, path, customHeaders = {}) => (
   (dispatch) => (
     fetch(utility.makeURL(`/core/components/eureka/media/sources/${source}`, {
       path: path
     }), {
       method: 'DELETE',
-      headers: {
+      headers: Object.assign({}, {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
-      }
+      }, customHeaders)
     }).then((response) => {
       if(response.state < 200 || response.state >= 300) {
         var error = new Error(response.statusText)
@@ -280,17 +280,17 @@ exports.UPLOAD_FILES_ERROR = UPLOAD_FILES_ERROR;
 exports.uploadFilesError = uploadFilesError;
 
 
-const uploadFiles = (source, directory, formData) => (
+const uploadFiles = (source, directory, formData, customHeaders = {}) => (
   (dispatch) => (
     fetch(utility.makeURL(`/core/components/eureka/media/sources/${source}`, {
       path: directory
     }), {
       method: 'POST',
       body: formData,
-      headers: {
+      headers: Object.assign({}, {
         //'Accept': 'application/json',
         //'Content-Type': 'application/json'
-      }
+      }, customHeaders)
     }).then((response) => {
       if(response.state < 200 || response.state >= 300) {
         var error = new Error(response.statusText)
@@ -313,16 +313,16 @@ const uploadFiles = (source, directory, formData) => (
 );
 
 
-const createDirectory = (source, dir) => (
+const createDirectory = (source, dir, customHeaders = {}) => (
   (dispatch) => (
     fetch(utility.makeURL(`/core/components/eureka/media/sources/${source}`,{
       path:dir
     }), {
       method: 'PUT',
-      headers: {
+      headers: Object.assign({}, {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
-      }
+      }, customHeaders)
     }).then((response) => {
       if(response.state < 200 || response.state >= 300) {
         var error = new Error(response.statusText)
@@ -428,17 +428,17 @@ exports.deleteMediaItem = deleteMediaItem;
 
 
 
-const renameDirectory = (source, dirPath, name) => (
+const renameDirectory = (source, dirPath, name, customHeaders = {}) => (
   (dispatch) => (
     fetch(utility.makeURL(`/core/components/eureka/media/sources/${source}`,{
       path:dirPath,
       name:name
     }), {
       method: 'PUT',
-      headers: {
+      headers: Object.assign({}, {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
-      }
+      }, customHeaders)
     }).then((response) => {
       if(response.state < 200 || response.state >= 300) {
         var error = new Error(response.statusText)
@@ -506,17 +506,17 @@ exports.renameDirectory = renameDirectory;
 
 
 
-const renameItem = (source, filePath, name) => (
+const renameItem = (source, filePath, name, customHeaders = {}) => (
   (dispatch) => (
     fetch(utility.makeURL(`/core/components/eureka/media/sources/${source}`,{
       path:filePath,
       name:name
     }), {
       method: 'PUT',
-      headers: {
+      headers: Object.assign({}, {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
-      }
+      }, customHeaders)
     }).then((response) => {
       if(response.state < 200 || response.state >= 300) {
         var error = new Error(response.statusText)
