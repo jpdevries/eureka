@@ -71,7 +71,7 @@ class EurekaMediaBrowser extends Component {
         })(),*/
         treeHidden:(() => {
           try {
-            return JSON.parse(localStorage.getItem(`${props.storagePrefix}treeHidden`)) || undefined
+            return !(JSON.parse(localStorage.getItem(`${props.storagePrefix}view`)).sourceTreeOpen)
           } catch(e) { return undefined }
         })()
       }, props);

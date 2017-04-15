@@ -171,7 +171,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        })(),*/
 	        treeHidden: function () {
 	          try {
-	            return JSON.parse(localStorage.getItem(props.storagePrefix + 'treeHidden')) || undefined;
+	            return !JSON.parse(localStorage.getItem(props.storagePrefix + 'view')).sourceTreeOpen;
 	          } catch (e) {
 	            return undefined;
 	          }
@@ -214,6 +214,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    //console.log('bolo', languageWithoutRegionCode);
+	    console.log('config', config);
 	    store.dispatch(actions.updateConfig(config));
 
 	    var i18nEdpoint = function () {
@@ -1616,13 +1617,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    updateSourceTree: false
 	  }
 	}, function () {
-	  return {};
 	  try {
 	    var json = JSON.parse(localStorage.getItem('eureka__view'));
-	    console.log('initialViewState', initialViewState);
-	    return Object.assign({}, json, {
-	      sourceTreeOpen: json.treeHidden == 'false' || undefined
-	    });
+	    console.log('json', json);
+	    return json;
+	    /*return (
+	      Object.assign({}, json, {
+	        sourceTreeOpen: json.treeHidden == 'false' || undefined
+	      })
+	    );*/
 	  } catch (e) {
 	    return {};
 	  }
@@ -1633,7 +1636,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }*/
 	}());
 
-	//console.log('initialViewState', initialViewState);
+	console.log('initialViewState', initialViewState);
 
 	var viewReducer = function viewReducer(state, action) {
 	  state = state || initialViewState;
@@ -3417,7 +3420,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.46",
+		"version": "0.0.49",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",

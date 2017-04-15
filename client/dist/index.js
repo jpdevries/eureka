@@ -51,7 +51,6 @@ function render() {
     allowDelete: true,
     confirmBeforeDelete: true,
     allowFullscreen: true,
-    treeHidden: false,
     enlargeFocusedRows: false
   }, _defineProperty(_React$createElement, 'allowFullscreen', true), _defineProperty(_React$createElement, 'emphasisFocusedMediaItem', true), _defineProperty(_React$createElement, 'storagePrefix', 'eureka__'), _defineProperty(_React$createElement, 'lang', 'en-US'), _defineProperty(_React$createElement, 'callbacks', {
     choose: function choose(item) {

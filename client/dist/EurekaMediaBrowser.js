@@ -115,7 +115,7 @@ var EurekaMediaBrowser = function (_Component) {
         })(),*/
         treeHidden: function () {
           try {
-            return JSON.parse(localStorage.getItem(props.storagePrefix + 'treeHidden')) || undefined;
+            return !JSON.parse(localStorage.getItem(props.storagePrefix + 'view')).sourceTreeOpen;
           } catch (e) {
             return undefined;
           }
@@ -158,6 +158,7 @@ var EurekaMediaBrowser = function (_Component) {
     }
 
     //console.log('bolo', languageWithoutRegionCode);
+    console.log('config', config);
     store.dispatch(actions.updateConfig(config));
 
     var i18nEdpoint = function () {

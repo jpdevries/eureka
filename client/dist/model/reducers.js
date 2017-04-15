@@ -278,13 +278,15 @@ var initialViewState = Object.assign({}, {
     updateSourceTree: false
   }
 }, function () {
-  return {};
   try {
     var json = JSON.parse(localStorage.getItem('eureka__view'));
-    console.log('initialViewState', initialViewState);
-    return Object.assign({}, json, {
-      sourceTreeOpen: json.treeHidden == 'false' || undefined
-    });
+    console.log('json', json);
+    return json;
+    /*return (
+      Object.assign({}, json, {
+        sourceTreeOpen: json.treeHidden == 'false' || undefined
+      })
+    );*/
   } catch (e) {
     return {};
   }
@@ -295,7 +297,7 @@ var initialViewState = Object.assign({}, {
   }*/
 }());
 
-//console.log('initialViewState', initialViewState);
+console.log('initialViewState', initialViewState);
 
 var viewReducer = function viewReducer(state, action) {
   state = state || initialViewState;
