@@ -19,7 +19,7 @@ it('renders without crashing', () => {
 
   const props = {
     config: {
-      storagePrefix:'eureka__'
+      storagePrefix: 'eureka__'
     },
     view: {
       focusedMediaItem: undefined

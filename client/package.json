@@ -1,7 +1,7 @@
 {
   "name": "eureka-browser",
   "description": "Eureka is a progressively enhanced Media Browser Component.",
-  "version": "0.0.53",
+  "version": "0.0.54",
   "license": "BSD-3-Clause",
   "author": {
     "name": "JP de Vries",
@@ -48,6 +48,8 @@
     "autoprefixer": "^6.7.3",
     "concurrently": "^3.3.0",
     "cssnano": "^3.10.0",
+    "eslint": "^3.19.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
     "grunt-bower-task": "^0.4.0",
     "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-copy": "^1.0.0",

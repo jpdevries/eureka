@@ -355,8 +355,8 @@ module.exports = function(grunt) {
         '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>*.js'
       ],
       buildimg: [
-        '<%= dirs.build %><%= dirs.assets %><%= dirs.img %>*.svg',
-        '<%= dirs.theme %><%= dirs.assets %><%= dirs.img %>*.svg'
+        '<%= dirs.build %><%= dirs.assets %><%= dirs.img %>icons.*.svg',
+        '<%= dirs.theme %><%= dirs.assets %><%= dirs.img %>icons.*.svg'
       ]
     },
     svgstore: {
@@ -385,7 +385,7 @@ module.exports = function(grunt) {
               livereload: true
           },
           files: '<%= dirs.scss %>**/*.scss',
-          tasks: ['sass:dev', 'postcss', 'cssmin', 'growl:sass']
+          tasks: ['sass:dev', 'postcss', 'cssmin', 'copy:css', 'growl:sass']
       }
     },
   });

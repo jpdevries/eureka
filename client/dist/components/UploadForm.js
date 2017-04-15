@@ -88,6 +88,21 @@ var UploadForm = function (_Component) {
       _store2.default.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData, props.config.headers));
     }
   }, {
+    key: 'handleLabelKeyPress',
+    value: function handleLabelKeyPress(e) {
+      //console.log(e.target.matches());
+      //console.log(e.nativeEvent.code.toLowerCase());
+      //console.log(e.target.parentNode.querySelector('input[type="file"]'));
+      switch (e.nativeEvent.code.toLowerCase()) {
+        case 'space':
+        case 'enter':
+        case 'return':
+          //console.log(e.target.parentNode.querySelector('input[type="file"]'));
+          e.target.parentNode.querySelector('input[type="file"]').click();
+          break;
+      }
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _this2 = this;
@@ -104,7 +119,7 @@ var UploadForm = function (_Component) {
         null,
         _react2.default.createElement(
           'label',
-          { role: 'menuitem', htmlFor: 'eureka__upload-form' },
+          { tabIndex: '0', role: 'menuitem', htmlFor: 'eureka__upload-form' },
           uploadFilesMessage,
           _react2.default.createElement(
             'span',
@@ -123,7 +138,7 @@ var UploadForm = function (_Component) {
           } },
         _react2.default.createElement(
           'label',
-          { role: 'menuitem', htmlFor: 'eureka__upload-form' },
+          { onKeyPress: this.handleLabelKeyPress, tabIndex: '0', role: 'menuitem', htmlFor: 'eureka__upload-form' },
           uploadFilesMessage,
           _react2.default.createElement(
             'span',
@@ -132,8 +147,7 @@ var UploadForm = function (_Component) {
             _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'grammar.to', defaultMessage: 'to' }),
             ' ',
             props.content.cd
-          ),
-          ':\u2002'
+          )
         ),
         _react2.default.createElement('input', { id: 'eureka__upload-form', multiple: 'multiple', name: 'eureka__uploadFiles', type: 'file', onChange: function onChange(e) {
             _this2.form.dispatchEvent(new Event("submit")); // so there is no click button they need to click

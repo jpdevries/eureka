@@ -4,7 +4,7 @@
 .eureka *, .eureka *::after, .eureka *::before {
   box-sizing: inherit; }
 
-.eureka button, .eureka a.button, .eureka .eureka__layout-chooser .eureka__icon-radio-btns label {
+.eureka button, .eureka a.button, .eureka .eureka__media-directory-selector select, .eureka .eureka__upload-form label, .eureka .eureka__layout-chooser .eureka__icon-radio-btns label {
   cursor: pointer; }
 
 .eureka .eureka__modal, .eureka .eureka__modal .eureka__modal-scrim {
@@ -458,7 +458,7 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
 .dangerous {
   color: var(--dangerous, red); }
 
-.eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > th:nth-of-type(1), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > th:nth-of-type(1), .visually-hidden, .eureka .eureka__layout-chooser legend, .eureka .eureka__layout-chooser .eureka__icon-radio-btns input[type="radio"] {
+.eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > th:nth-of-type(1), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > th:nth-of-type(1), .visually-hidden, .eureka .eureka__upload-form input[type="file"], .eureka .eureka__layout-chooser legend, .eureka .eureka__layout-chooser .eureka__icon-radio-btns input[type="radio"] {
   /*https://developer.yahoo.com/blogs/ydn/clip-hidden-content-better-accessibility-53456.html*/
   position: absolute !important;
   clip: rect(1px 1px 1px 1px);
@@ -469,7 +469,7 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
   height: 1px !important;
   width: 1px !important;
   overflow: hidden; }
-  body:hover .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > th:nth-of-type(1) a, .eureka-root .eureka.eureka__view-mode__table.eureka__server-side body:hover table > thead > tr > th:nth-of-type(1) a, body:hover .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > th:nth-of-type(1) a, .eureka-root .eureka.eureka__view-mode__list.eureka__server-side body:hover table > thead > tr > th:nth-of-type(1) a, body:hover .visually-hidden a, body:hover .eureka .eureka__layout-chooser legend a, .eureka .eureka__layout-chooser body:hover legend a, body:hover .eureka .eureka__layout-chooser .eureka__icon-radio-btns input[type="radio"] a, .eureka .eureka__layout-chooser .eureka__icon-radio-btns body:hover input[type="radio"] a, body:hover .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > th:nth-of-type(1) input, .eureka-root .eureka.eureka__view-mode__table.eureka__server-side body:hover table > thead > tr > th:nth-of-type(1) input, body:hover .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > th:nth-of-type(1) input, .eureka-root .eureka.eureka__view-mode__list.eureka__server-side body:hover table > thead > tr > th:nth-of-type(1) input, body:hover .visually-hidden input, body:hover .eureka .eureka__layout-chooser legend input, .eureka .eureka__layout-chooser body:hover legend input, body:hover .eureka .eureka__layout-chooser .eureka__icon-radio-btns input[type="radio"] input, .eureka .eureka__layout-chooser .eureka__icon-radio-btns body:hover input[type="radio"] input, body:hover .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > th:nth-of-type(1) button, .eureka-root .eureka.eureka__view-mode__table.eureka__server-side body:hover table > thead > tr > th:nth-of-type(1) button, body:hover .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > th:nth-of-type(1) button, .eureka-root .eureka.eureka__view-mode__list.eureka__server-side body:hover table > thead > tr > th:nth-of-type(1) button, body:hover .visually-hidden button, body:hover .eureka .eureka__layout-chooser legend button, .eureka .eureka__layout-chooser body:hover legend button, body:hover .eureka .eureka__layout-chooser .eureka__icon-radio-btns input[type="radio"] button, .eureka .eureka__layout-chooser .eureka__icon-radio-btns body:hover input[type="radio"] button {
+  body:hover .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > th:nth-of-type(1) a, .eureka-root .eureka.eureka__view-mode__table.eureka__server-side body:hover table > thead > tr > th:nth-of-type(1) a, body:hover .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > th:nth-of-type(1) a, .eureka-root .eureka.eureka__view-mode__list.eureka__server-side body:hover table > thead > tr > th:nth-of-type(1) a, body:hover .visually-hidden a, body:hover .eureka .eureka__upload-form input[type="file"] a, .eureka .eureka__upload-form body:hover input[type="file"] a, body:hover .eureka .eureka__layout-chooser legend a, .eureka .eureka__layout-chooser body:hover legend a, body:hover .eureka .eureka__layout-chooser .eureka__icon-radio-btns input[type="radio"] a, .eureka .eureka__layout-chooser .eureka__icon-radio-btns body:hover input[type="radio"] a, body:hover .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > th:nth-of-type(1) input, .eureka-root .eureka.eureka__view-mode__table.eureka__server-side body:hover table > thead > tr > th:nth-of-type(1) input, body:hover .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > th:nth-of-type(1) input, .eureka-root .eureka.eureka__view-mode__list.eureka__server-side body:hover table > thead > tr > th:nth-of-type(1) input, body:hover .visually-hidden input, body:hover .eureka .eureka__upload-form input[type="file"] input, .eureka .eureka__upload-form body:hover input[type="file"] input, body:hover .eureka .eureka__layout-chooser legend input, .eureka .eureka__layout-chooser body:hover legend input, body:hover .eureka .eureka__layout-chooser .eureka__icon-radio-btns input[type="radio"] input, .eureka .eureka__layout-chooser .eureka__icon-radio-btns body:hover input[type="radio"] input, body:hover .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > th:nth-of-type(1) button, .eureka-root .eureka.eureka__view-mode__table.eureka__server-side body:hover table > thead > tr > th:nth-of-type(1) button, body:hover .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > th:nth-of-type(1) button, .eureka-root .eureka.eureka__view-mode__list.eureka__server-side body:hover table > thead > tr > th:nth-of-type(1) button, body:hover .visually-hidden button, body:hover .eureka .eureka__upload-form input[type="file"] button, .eureka .eureka__upload-form body:hover input[type="file"] button, body:hover .eureka .eureka__layout-chooser legend button, .eureka .eureka__layout-chooser body:hover legend button, body:hover .eureka .eureka__layout-chooser .eureka__icon-radio-btns input[type="radio"] button, .eureka .eureka__layout-chooser .eureka__icon-radio-btns body:hover input[type="radio"] button {
     display: none !important; }
 
 .flex-bar, .eureka .eureka__button-bar, .eureka .eureka__tree-bar {
@@ -722,6 +722,43 @@ a[role="presentation"] {
     .eureka .eureka__media-directory-selector button[type="submit"] {
       margin-left: 16px;
       margin-left: 1rem; }
+    .eureka .eureka__media-directory-selector form {
+      position: relative;
+      /*&::after {
+        display:inline-block;
+        width:1em;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background:red;
+        content:'.';
+      }*/ }
+    .eureka .eureka__media-directory-selector select {
+      background: var(--button-bg, white);
+      box-shadow: 0 0 0 1px var(--border-color, #E4E4E4);
+      color: var(--button-color, #555555);
+      border: 0;
+      border-radius: 3px;
+      padding: .5em .5em;
+      -webkit-appearance: none;
+         -moz-appearance: none;
+              appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 51 74.88'><rect y='19.88' width='51' height='55' fill='none'/><path d='M37,28.88A1.56,1.56,0,0,1,36.52,30L25.14,41.39a1.59,1.59,0,0,1-2.29,0L11.48,30a1.63,1.63,0,0,1,1.14-2.77H35.38A1.65,1.65,0,0,1,37,28.88Zm0-9.75a1.65,1.65,0,0,1-1.62,1.63H12.63A1.62,1.62,0,0,1,11.48,18L22.86,6.61a1.59,1.59,0,0,1,2.29,0L36.52,18A1.56,1.56,0,0,1,37,19.13Z' transform='translate(-0.5 -6.13)' fill='#979797'/></svg>");
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-scale: 70% 70%;
+      background-position: right .5em;
+      /*&:hover {
+        background: transparent;
+        //background-image: url('../img/select-arrow.svg');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-scale: 70% 70%;
+        background-position: right .5em;
+        color: currentColor;
+        //--border-color: var(--active, $active);
+      }*/ }
   .eureka .eureka__tree-bar {
     margin: 16px 0 0 0;
     margin: 1rem 0 0 0; }
@@ -738,6 +775,21 @@ a[role="presentation"] {
   .eureka .eureka__upload-form {
     margin-bottom: 16px;
     margin-bottom: 1rem; }
+    .eureka .eureka__upload-form label {
+      background: var(--button-bg, white);
+      box-shadow: 0 0 0 1px var(--border-color, #E4E4E4);
+      color: var(--button-color, #555555);
+      border: 0;
+      border-radius: 3px;
+      padding: .5em .5em;
+      font-size: 11px;
+      font-size: .6875rem;
+      text-align: center; }
+      .eureka .eureka__upload-form label:hover {
+        background: #3697cd;
+        color: white; }
+        .eureka .eureka__upload-form label:hover svg {
+          fill: white; }
   .eureka .eureka__choose-bar {
     -ms-flex-pack: end;
         justify-content: flex-end;

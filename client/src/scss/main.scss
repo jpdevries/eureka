@@ -76,6 +76,8 @@ $palettes: ( // http://erskinedesign.com/blog/friendlier-colour-names-sass-maps/
   @include visually-hidden;
 }
 
+
+
 %flex-bar {
   display:flex;
 
@@ -98,6 +100,10 @@ $palettes: ( // http://erskinedesign.com/blog/friendlier-colour-names-sass-maps/
 a[role="presentation"] {
   color:currentColor !important;
   text-decoration:none !important;
+}
+
+#eureka__upload-form {
+
 }
 
 .eureka__table tr[tabindex] {
@@ -184,20 +190,26 @@ a[role="presentation"] {
     color:var(--subtle, palette(heading, dark));
   }
 
-  @mixin button() {
+  @mixin button($doHover: true) {
     background:var(--button-bg, white);
     box-shadow: 0 0 0 1px var(--border-color, #E4E4E4);
     color:var(--button-color, #555555);
     border: 0;
     border-radius: 3px;
     padding:.5em .5em;
-    &:hover {
-      background: $active;
-      color: white;
-      svg {
-        fill: white;
+    @if $doHover {
+      &:hover {
+        background: $active;
+        color: white;
+        svg {
+          fill: white;
+        }
       }
     }
+  }
+
+  %button {
+    @include button();
   }
 
   button[id^="eureka__tree-toggle__button"] { // keep this loose so we can append a React id
@@ -440,6 +452,42 @@ a[role="presentation"] {
     button[type="submit"] {
       margin-left:1rem;
     }
+    form {
+      position: relative;
+      /*&::after {
+        display:inline-block;
+        width:1em;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background:red;
+        content:'.';
+      }*/
+    }
+    select {
+      @extend %clickable;
+      @include button(false);
+      appearance: none;
+      //background-image: url('../img/select-arrow.svg');
+      background-image:
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 51 74.88'><rect y='19.88' width='51' height='55' fill='none'/><path d='M37,28.88A1.56,1.56,0,0,1,36.52,30L25.14,41.39a1.59,1.59,0,0,1-2.29,0L11.48,30a1.63,1.63,0,0,1,1.14-2.77H35.38A1.65,1.65,0,0,1,37,28.88Zm0-9.75a1.65,1.65,0,0,1-1.62,1.63H12.63A1.62,1.62,0,0,1,11.48,18L22.86,6.61a1.59,1.59,0,0,1,2.29,0L36.52,18A1.56,1.56,0,0,1,37,19.13Z' transform='translate(-0.5 -6.13)' fill='#979797'/></svg>");
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-scale: 70% 70%;
+      background-position: right .5em;
+      /*&:hover {
+        background: transparent;
+        //background-image: url('../img/select-arrow.svg');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-scale: 70% 70%;
+        background-position: right .5em;
+        color: currentColor;
+        //--border-color: var(--active, $active);
+      }*/
+      //background: red;
+    }
   }
 
   .eureka__tree-bar {
@@ -461,7 +509,16 @@ a[role="presentation"] {
   }
 
   .eureka__upload-form {
-    margin-bottom:1rem;
+    margin-bottom: 1rem;
+    label {
+      @extend %clickable;
+      @include button();
+      font-size: .6875rem;
+      text-align: center;
+    }
+    input[type="file"] {
+      @extend %visually-hidden;
+    }
   }
 
   *[class^="alert"] {

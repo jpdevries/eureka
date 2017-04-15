@@ -16,6 +16,8 @@ class UploadForm extends Component {
     this.decoratedActions = props.decoratedActions ? Object.assign({}, actions, props.decoratedActions) : actions;
   }
 
+
+
   handleSubmit(event) {
     event.preventDefault();
 
@@ -30,19 +32,33 @@ class UploadForm extends Component {
     store.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData, props.config.headers));
   }
 
+  handleLabelKeyPress(e) {
+    //console.log(e.target.matches());
+    //console.log(e.nativeEvent.code.toLowerCase());
+    //console.log(e.target.parentNode.querySelector('input[type="file"]'));
+    switch(e.nativeEvent.code.toLowerCase()) {
+      case 'space':
+      case 'enter':
+      case 'return':
+      //console.log(e.target.parentNode.querySelector('input[type="file"]'));
+      e.target.parentNode.querySelector('input[type="file"]').click();
+      break;
+    }
+  }
+
   render() {
     const props = this.props,
     uploadFilesMessage = <FormattedMessage id="upload.files" defaultMessage="Upload Files" />,
     submit = utility.serverSideRendering ? <button type="submit" formmethod="post">{uploadFilesMessage}</button> : undefined,
     form = (utility.serverSideRendering) ? (
       <div>
-          <label role="menuitem" htmlFor="eureka__upload-form">{uploadFilesMessage}<span className={classNames({"visually-hidden": !utility.serverSideRendering})} > to {props.content.cd}</span>:&ensp;</label>
+          <label tabIndex="0" role="menuitem" htmlFor="eureka__upload-form">{uploadFilesMessage}<span className={classNames({"visually-hidden": !utility.serverSideRendering})} > to {props.content.cd}</span>:&ensp;</label>
           <input id="eureka__upload-form" multiple="multiple" name="eureka__uploadFiles" type="file" />
           {submit}
       </div>
     ) : (
       <form onSubmit={this.handleSubmit.bind(this)} encType="multipart/form-data" ref={(form) => { this.form = form; }}>
-          <label role="menuitem" htmlFor="eureka__upload-form">{uploadFilesMessage}<span className="visually-hidden"> <FormattedMessage id="grammar.to" defaultMessage="to" /> {props.content.cd}</span>:&ensp;</label>
+          <label onKeyPress={this.handleLabelKeyPress} tabIndex="0" role="menuitem" htmlFor="eureka__upload-form">{uploadFilesMessage}<span className="visually-hidden"> <FormattedMessage id="grammar.to" defaultMessage="to" /> {props.content.cd}</span></label>
           <input id="eureka__upload-form" multiple="multiple" name="eureka__uploadFiles" type="file" onChange={(e) => {
               this.form.dispatchEvent(new Event("submit")); // so there is no click button they need to click
           }} />
