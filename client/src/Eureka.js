@@ -50,9 +50,9 @@ class Eureka extends Component {
     this.decoratedActions = props.decoratedActions ? Object.assign({}, actions, props.decoratedActions) : actions;
   }
   componentDidMount() {
-    console.log('componentDidMount!!!');
-    const props = this.props;
-    const decoratedActions = this.decoratedActions;
+    const props = this.props,
+    decoratedActions = this.decoratedActions;
+
     store.dispatch(decoratedActions.fetchMediaSources(props.config.headers)).then(() => { // hit the server and get the media sources
       store.dispatch(decoratedActions.updateSourceTree(this.props.source.sources[0].id), props.config.headers).then((content) => { // then hit server for the directory tree of the first (default) media source
         const props = this.props;
@@ -273,7 +273,7 @@ class Eureka extends Component {
             </div>
           </div>
           <div className="eureka__table-wrapper">
-            <EurekaTable {...props} onRenameItem={this.onRenameItem.bind(this)} onSubmit={this.onRenameItemModalSubmit.bind(this)} />
+            <EurekaTable view={props.view} {...props} decoratedActions={props.decoratedActions} source={props.source} content={props.content} config={props.config} onRenameItem={this.onRenameItem.bind(this)} onSubmit={this.onRenameItemModalSubmit.bind(this)} />
           </div>
         </div>
       </div>

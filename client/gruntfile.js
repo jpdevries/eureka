@@ -167,6 +167,11 @@ module.exports = function(grunt) {
         },{
           src: '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>main.min.css',
           dest: '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>eureka.<%= pkg.version %>.min.css'
+        },{
+          src: '<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>/**/*',
+          dest: '<%= dirs.build %><%= dirs.assets %><%= dirs.css %>',
+          flatten: true,
+          expand: true
         }]
       },
       bower: {

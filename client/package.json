@@ -1,7 +1,7 @@
 {
   "name": "eureka-browser",
   "description": "Eureka is a progressively enhanced Media Browser Component.",
-  "version": "0.0.56",
+  "version": "0.0.57",
   "license": "BSD-3-Clause",
   "author": {
     "name": "JP de Vries",
@@ -82,12 +82,12 @@
     "isomorphic-fetch": "^2.2.1",
     "path-parse": "^1.0.5",
     "pixrem": "^3.0.2",
-    "react": "^15.4.2",
-    "react-addons-update": "^15.4.2",
-    "react-dom": "^15.4.2",
+    "react": "^15.5.0",
+    "react-addons-update": "^15.5.0",
+    "react-dom": "^15.5.0",
     "react-dropzone": "^3.10.0",
     "react-intl": "^2.2.3",
-    "react-redux": "^5.0.2",
+    "react-redux": "^5.0.4",
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0"
   },
@@ -98,7 +98,7 @@
     "eject": "react-scripts eject",
     "babel": "babel ./src -d ./dist",
     "i18n": "cd ./i18n && node build.js && cd ../",
-    "pretag": "grunt bump && grunt buildcss && yarn build && rm -rf public/assets/css && grunt clean:buildjs && grunt build",
+    "pretag": "yarn i18n && grunt bump && grunt buildcss && yarn build && rm -rf public/assets/css && grunt clean:buildjs && grunt build",
     "pretagsay": "yarn pretag && say \"Eureka Prepared for Tagging\""
   }
 }

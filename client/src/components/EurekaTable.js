@@ -61,7 +61,7 @@ class EurekaTable extends Component {
             filename: item.filename
           })}></menuitem>
           <menuitem label={formatMessage(definedMessages.renameItem, {
-            filename: item.filename
+            item: item.filename
           })}></menuitem>
           <menuitem label={formatMessage(definedMessages.deleteItem, {
             filename: item.filename
@@ -130,7 +130,7 @@ class EurekaTable extends Component {
               }}><FormattedMessage id="editedOn" defaultMessage="Edited On" />&ensp;{(!utility.serverSideRendering) ? <Icon {...props} icon="sort" /> : undefined}</th>
           </tr>
         </thead>
-        <EurekaTableTbody {...props} sort={this.state.sort} />
+        <EurekaTableTbody {...props} intl={props.intl} filter={props.view.filter} content={props.content} sort={this.state.sort} />
       </table>
     );
 

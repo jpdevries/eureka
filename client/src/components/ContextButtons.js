@@ -17,7 +17,7 @@ const ContextButtons = (props) => {
   const { formatMessage } = props.intl,
   renameMessage = formatMessage(definedMessages.rename),
   renameItemMessage = formatMessage(definedMessages.renameItem, {
-    filename: ` ${item.filename}`
+    item: ` ${item.filename}`
   }),
   performContextualActionsMessage = formatMessage(definedMessages.performContextualActions, {
     filename: item.filename
@@ -46,7 +46,7 @@ const ContextButtons = (props) => {
 
   return ( // future-role="toolbar listbox"
     <div className="eureka__button-bar eureka__context-buttons" role="listbox"  aria-label={performContextualActionsMessage} tabIndex="0" aria-activedescendant={`expand__${cssSafe(item.filename)}`}>
-      <a role="option" id={`expand__${cssSafe(item.filename)}`} href={item.absoluteURL} target={`_${encodeURI(item.absoluteURL)}`} className="button" title={expandItemMessage}>{expandMessage}<span className="visually-hidden"> {item.filename}</span></a>
+      <a onBlur={props.onBlur} role="option" id={`expand__${cssSafe(item.filename)}`} href={item.absoluteURL} target={`_${encodeURI(item.absoluteURL)}`} className="button" title={expandItemMessage}>{expandMessage}<span className="visually-hidden"> {item.filename}</span></a>
       <button role="option" id={`choose__${cssSafe(item.filename)}`} title={chooseItemMessage} onClick={(event) => {
         document.dispatchEvent(new CustomEvent('EurekaFoundIt', {
           detail: item

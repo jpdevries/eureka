@@ -24385,9 +24385,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function componentDidMount() {
 	      var _this2 = this;
 
-	      console.log('componentDidMount!!!');
-	      var props = this.props;
-	      var decoratedActions = this.decoratedActions;
+	      var props = this.props,
+	          decoratedActions = this.decoratedActions;
+
 	      _store2.default.dispatch(decoratedActions.fetchMediaSources(props.config.headers)).then(function () {
 	        // hit the server and get the media sources
 	        _store2.default.dispatch(decoratedActions.updateSourceTree(_this2.props.source.sources[0].id), props.config.headers).then(function (content) {
@@ -24642,7 +24642,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          _react2.default.createElement(
 	            'div',
 	            { className: 'eureka__table-wrapper' },
-	            _react2.default.createElement(_EurekaTable2.default, _extends({}, props, { onRenameItem: this.onRenameItem.bind(this), onSubmit: this.onRenameItemModalSubmit.bind(this) }))
+	            _react2.default.createElement(_EurekaTable2.default, _extends({ view: props.view }, props, { decoratedActions: props.decoratedActions, source: props.source, content: props.content, config: props.config, onRenameItem: this.onRenameItem.bind(this), onSubmit: this.onRenameItemModalSubmit.bind(this) }))
 	          )
 	        )
 	      );
@@ -26672,7 +26672,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.56",
+		"version": "0.0.57",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -26769,7 +26769,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			"eject": "react-scripts eject",
 			"babel": "babel ./src -d ./dist",
 			"i18n": "cd ./i18n && node build.js && cd ../",
-			"pretag": "grunt bump && grunt buildcss && yarn build && rm -rf public/assets/css && grunt clean:buildjs && grunt build",
+			"pretag": "yarn i18n && grunt bump && grunt buildcss && yarn build && rm -rf public/assets/css && grunt clean:buildjs && grunt build",
 			"pretagsay": "yarn pretag && say \"Eureka Prepared for Tagging\""
 		}
 	};
@@ -32267,7 +32267,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	              filename: item.filename
 	            }) }),
 	          _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.renameItem, {
-	              filename: item.filename
+	              item: item.filename
 	            }) }),
 	          _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.deleteItem, {
 	              filename: item.filename
@@ -32377,7 +32377,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            )
 	          )
 	        ),
-	        _react2.default.createElement(_EurekaTableTbody2.default, _extends({}, props, { sort: this.state.sort }))
+	        _react2.default.createElement(_EurekaTableTbody2.default, _extends({}, props, { intl: props.intl, filter: props.view.filter, content: props.content, sort: this.state.sort }))
 	      );
 
 	      return props.config.allowUploads && !_utility2.default.serverSideRendering ? _react2.default.createElement(
@@ -32467,6 +32467,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    var _this = _possibleConstructorReturn(this, (EurekaTableTbody.__proto__ || Object.getPrototypeOf(EurekaTableTbody)).call(this, props));
 
+	    console.log(props);
+
+	    _this.state = {
+	      focusedMediaItem: undefined,
+	      filter: undefined
+	    };
+
 	    _this.handleResize = _this.handleResizeEvent.bind(_this);
 	    return _this;
 	  }
@@ -32541,7 +32548,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function render() {
 	      var _this2 = this;
 
-	      var props = this.props;
+	      var props = this.props,
+	          state = this.state;
 
 	      function shouldHide(item) {
 
@@ -32556,7 +32564,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      var contents = props.content.contents;
 
-	      if (props.view.filter) {
+	      if (props.filter) {
 	        (function () {
 	          // filter based on filename, dimensions, date
 	          var filter = props.view.filter.toLowerCase();
@@ -32591,10 +32599,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	      });
 
 	      var contentList = contents.length ? contents.map(function (item, index) {
-	        return [_react2.default.createElement(_MediaRow2.default, _extends({}, props, { renameStart: _this2.handleRenameStart, item: item, index: index, key: index, onFocus: function onFocus(event) {
-	            _store2.default.dispatch(_actions2.default.updateView({
+	        return [_react2.default.createElement(_MediaRow2.default, _extends({}, props, { intl: props.intl, focusedMediaItem: state.focusedMediaItem, renameStart: _this2.handleRenameStart, item: item, index: index, key: index, onFocus: function onFocus(event) {
+	            /*store.dispatch(actions.updateView({
 	              focusedMediaItem: item
-	            }));
+	            }));*/
+	            _this2.setState({
+	              focusedMediaItem: item
+	            });
 	          },
 	          onBlur: function onBlur(event) {}
 	        }))];
@@ -32769,8 +32780,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function shouldHide(item) {
 
 	    try {
-	      //console.log('shouldHide',props.view.focusedMediaItem.path,item.path,props.view.focusedMediaItem.path !== item.path);
-	      return props.view.focusedMediaItem.path !== item.path;
+	      //console.log('shouldHide',props.focusedMediaItem.path,item.path,props.focusedMediaItem.path !== item.path);
+	      return props.focusedMediaItem.path !== item.path;
 	    } catch (e) {
 	      //console.log('shouldHide',true);
 	      return true;
@@ -32894,7 +32905,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      props.item.filename
 	    )
 	  ) : undefined,
-	      className = props.config.emphasisFocusedMediaItem && props.item == props.view.focusedMediaItem ? { 'eureka__focused-media-item': true } : {},
+	      className = props.config.emphasisFocusedMediaItem && props.item == props.focusedMediaItem ? { 'eureka__focused-media-item': true } : {},
 	      tabIndex = _utility2.default.serverSideRendering ? undefined : "0",
 	      ext = pathParse(props.item.absoluteURL).ext,
 	      isLinkableFileType = function (ext) {
@@ -33087,7 +33098,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var formatMessage = props.intl.formatMessage,
 	      renameMessage = formatMessage(_definedMessages2.default.rename),
 	      renameItemMessage = formatMessage(_definedMessages2.default.renameItem, {
-	    filename: ' ' + item.filename
+	    item: ' ' + item.filename
 	  }),
 	      performContextualActionsMessage = formatMessage(_definedMessages2.default.performContextualActions, {
 	    filename: item.filename

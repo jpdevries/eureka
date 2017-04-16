@@ -39,6 +39,12 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
   .eureka-root tbody:not(.empty) > tr:not(.empty) > * {
     -ms-flex: 1 0 auto;
         flex: 1 0 auto; }
+  .eureka-root tbody:not(.empty) > tr:not(.empty):focus > td.eureka__context-row[hidden] {
+    display: block !important; }
+  .eureka-root tbody:not(.empty) > tr:not(.empty):focus-within > td.eureka__context-row[hidden] {
+    display: block !important; }
+  .eureka-root tbody:not(.empty) > tr:not(.empty).eureka__focused-media-item > td.eureka__context-row[hidden] {
+    display: block !important; }
   @supports ((display: -ms-grid) or (display: grid)) {
     .eureka-root tbody:not(.empty) > tr:not(.empty) {
       display: -ms-grid;

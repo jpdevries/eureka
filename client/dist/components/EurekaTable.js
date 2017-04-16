@@ -118,7 +118,7 @@ var EurekaTable = function (_Component) {
               filename: item.filename
             }) }),
           _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.renameItem, {
-              filename: item.filename
+              item: item.filename
             }) }),
           _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.deleteItem, {
               filename: item.filename
@@ -228,7 +228,7 @@ var EurekaTable = function (_Component) {
             )
           )
         ),
-        _react2.default.createElement(_EurekaTableTbody2.default, _extends({}, props, { sort: this.state.sort }))
+        _react2.default.createElement(_EurekaTableTbody2.default, _extends({}, props, { intl: props.intl, filter: props.view.filter, content: props.content, sort: this.state.sort }))
       );
 
       return props.config.allowUploads && !_utility2.default.serverSideRendering ? _react2.default.createElement(

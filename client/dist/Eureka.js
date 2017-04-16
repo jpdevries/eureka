@@ -131,9 +131,9 @@ var Eureka = function (_Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      console.log('componentDidMount!!!');
-      var props = this.props;
-      var decoratedActions = this.decoratedActions;
+      var props = this.props,
+          decoratedActions = this.decoratedActions;
+
       _store2.default.dispatch(decoratedActions.fetchMediaSources(props.config.headers)).then(function () {
         // hit the server and get the media sources
         _store2.default.dispatch(decoratedActions.updateSourceTree(_this2.props.source.sources[0].id), props.config.headers).then(function (content) {
@@ -388,7 +388,7 @@ var Eureka = function (_Component) {
           _react2.default.createElement(
             'div',
             { className: 'eureka__table-wrapper' },
-            _react2.default.createElement(_EurekaTable2.default, _extends({}, props, { onRenameItem: this.onRenameItem.bind(this), onSubmit: this.onRenameItemModalSubmit.bind(this) }))
+            _react2.default.createElement(_EurekaTable2.default, _extends({ view: props.view }, props, { decoratedActions: props.decoratedActions, source: props.source, content: props.content, config: props.config, onRenameItem: this.onRenameItem.bind(this), onSubmit: this.onRenameItemModalSubmit.bind(this) }))
           )
         )
       );

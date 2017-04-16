@@ -60,8 +60,8 @@ var MediaRow = function MediaRow(props) {
   function shouldHide(item) {
 
     try {
-      //console.log('shouldHide',props.view.focusedMediaItem.path,item.path,props.view.focusedMediaItem.path !== item.path);
-      return props.view.focusedMediaItem.path !== item.path;
+      //console.log('shouldHide',props.focusedMediaItem.path,item.path,props.focusedMediaItem.path !== item.path);
+      return props.focusedMediaItem.path !== item.path;
     } catch (e) {
       //console.log('shouldHide',true);
       return true;
@@ -185,7 +185,7 @@ var MediaRow = function MediaRow(props) {
       props.item.filename
     )
   ) : undefined,
-      className = props.config.emphasisFocusedMediaItem && props.item == props.view.focusedMediaItem ? { 'eureka__focused-media-item': true } : {},
+      className = props.config.emphasisFocusedMediaItem && props.item == props.focusedMediaItem ? { 'eureka__focused-media-item': true } : {},
       tabIndex = _utility2.default.serverSideRendering ? undefined : "0",
       ext = pathParse(props.item.absoluteURL).ext,
       isLinkableFileType = function (ext) {

@@ -62,6 +62,13 @@ var EurekaTableTbody = function (_PureComponent) {
 
     var _this = _possibleConstructorReturn(this, (EurekaTableTbody.__proto__ || Object.getPrototypeOf(EurekaTableTbody)).call(this, props));
 
+    console.log(props);
+
+    _this.state = {
+      focusedMediaItem: undefined,
+      filter: undefined
+    };
+
     _this.handleResize = _this.handleResizeEvent.bind(_this);
     return _this;
   }
@@ -136,7 +143,8 @@ var EurekaTableTbody = function (_PureComponent) {
     value: function render() {
       var _this2 = this;
 
-      var props = this.props;
+      var props = this.props,
+          state = this.state;
 
       function shouldHide(item) {
 
@@ -151,14 +159,12 @@ var EurekaTableTbody = function (_PureComponent) {
 
       var contents = props.content.contents;
 
-      if (props.view.filter) {
-        (function () {
-          // filter based on filename, dimensions, date
-          var filter = props.view.filter.toLowerCase();
-          contents = contents.filter(function (value) {
-            return value.filename.toLowerCase().includes(filter) || value.dimensions.join('x').toLowerCase().includes(filter) || new Date(value.editedOn).toLocaleString().toLowerCase().includes(filter) || new Date(value.editedOn).toLocaleString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }).toLowerCase().includes(filter) || (0, _filesize2.default)(value.fileSize, { round: 0 }).toLowerCase().includes(filter) || (0, _filesize2.default)(value.fileSize, { round: 0 }).toLowerCase().replace(/ +?/g, '').includes(filter);
-          });
-        })();
+      if (props.filter) {
+        // filter based on filename, dimensions, date
+        var filter = props.view.filter.toLowerCase();
+        contents = contents.filter(function (value) {
+          return value.filename.toLowerCase().includes(filter) || value.dimensions.join('x').toLowerCase().includes(filter) || new Date(value.editedOn).toLocaleString().toLowerCase().includes(filter) || new Date(value.editedOn).toLocaleString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }).toLowerCase().includes(filter) || (0, _filesize2.default)(value.fileSize, { round: 0 }).toLowerCase().includes(filter) || (0, _filesize2.default)(value.fileSize, { round: 0 }).toLowerCase().replace(/ +?/g, '').includes(filter);
+        });
       }
 
       contents = contents.sort(function (a, b) {
@@ -186,10 +192,13 @@ var EurekaTableTbody = function (_PureComponent) {
       });
 
       var contentList = contents.length ? contents.map(function (item, index) {
-        return [_react2.default.createElement(_MediaRow2.default, _extends({}, props, { renameStart: _this2.handleRenameStart, item: item, index: index, key: index, onFocus: function onFocus(event) {
-            _store2.default.dispatch(_actions2.default.updateView({
+        return [_react2.default.createElement(_MediaRow2.default, _extends({}, props, { intl: props.intl, focusedMediaItem: state.focusedMediaItem, renameStart: _this2.handleRenameStart, item: item, index: index, key: index, onFocus: function onFocus(event) {
+            /*store.dispatch(actions.updateView({
               focusedMediaItem: item
-            }));
+            }));*/
+            _this2.setState({
+              focusedMediaItem: item
+            });
           },
           onBlur: function onBlur(event) {}
         }))];

@@ -35,7 +35,7 @@ var ContextButtons = function ContextButtons(props) {
   var formatMessage = props.intl.formatMessage,
       renameMessage = formatMessage(_definedMessages2.default.rename),
       renameItemMessage = formatMessage(_definedMessages2.default.renameItem, {
-    filename: ' ' + item.filename
+    item: ' ' + item.filename
   }),
       performContextualActionsMessage = formatMessage(_definedMessages2.default.performContextualActions, {
     filename: item.filename

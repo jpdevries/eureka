@@ -19,6 +19,11 @@ class EurekaTableTbody extends PureComponent {
   constructor(props) {
     super(props);
 
+    this.state = {
+      focusedMediaItem: undefined,
+      filter: undefined
+    };
+
     this.handleResize = this.handleResizeEvent.bind(this);
   }
 
@@ -37,7 +42,7 @@ class EurekaTableTbody extends PureComponent {
   componentDidMount() {
     //console.log('EurekaTableTbody componentDidMount');
     store.dispatch(actions.updateView({
-      isTableScrolling:this.isScrollable(this.tbody)
+      isTableScrolling: this.isScrollable(this.tbody)
     }));
   }
 
@@ -58,8 +63,6 @@ class EurekaTableTbody extends PureComponent {
 }
 
   handleResizeEvent(event) {
-    //console.log('handleResize',this,event);
-    //console.log(this.isScrollable(this.tbody));
     const isScrollable = this.isScrollable(this.tbody);
     if(isScrollable === store.getState().view.isTableScrolling) return;
     store.dispatch(actions.updateView({
@@ -72,7 +75,6 @@ class EurekaTableTbody extends PureComponent {
   }
 
   handleScroll(event) {
-    //console.log('handleScroll', event);
     const isScrollable = this.isScrollable(this.tbody);
     if(isScrollable === store.getState().view.isTableScrolling) return;
     store.dispatch(actions.updateView({
@@ -80,8 +82,21 @@ class EurekaTableTbody extends PureComponent {
     }));
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+
+    if(this.state.filter) return true;
+    try {
+      console.log('shouldComponentUpdate', (this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path), this.state.focusedMediaItem.path, nextProps.view.focusedMediaItem.path);
+      //if((this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path)) return true; // #janky SLOOOOW
+    } catch (e) {}
+    console.log(!(this.props.content.contents === nextProps.content.contents));
+    return !(this.props.content.contents === nextProps.content.contents);
+  }
+
   render () {
-    const props = this.props;
+    //console.log('rendering EurekaTableTbody');
+    const props = this.props,
+    state = this.state;
 
     function shouldHide(item) {
 
@@ -96,7 +111,7 @@ class EurekaTableTbody extends PureComponent {
 
     let contents = props.content.contents;
 
-    if(props.view.filter) { // filter based on filename, dimensions, date
+    if(props.filter) { // filter based on filename, dimensions, date
       const filter = props.view.filter.toLowerCase();
       contents = contents.filter((value) => (
         value.filename.toLowerCase().includes(filter) || value.dimensions.join('x').toLowerCase().includes(filter) || new Date(value.editedOn).toLocaleString().toLowerCase().includes(filter) || new Date(value.editedOn).toLocaleString(undefined,{ weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }).toLowerCase().includes(filter) || filesize(value.fileSize, {round: 0}).toLowerCase().includes(filter) || filesize(value.fileSize, {round: 0}).toLowerCase().replace(/ +?/g, '').includes(filter)
@@ -129,9 +144,13 @@ class EurekaTableTbody extends PureComponent {
 
     const contentList = (contents.length) ? contents.map((item, index) => (
       [
-        <MediaRow {...props} renameStart={this.handleRenameStart} item={item} index={index} key={index} onFocus={(event) => {
+        <MediaRow {...props} intl={props.intl} focusedMediaItem={state.focusedMediaItem} renameStart={this.handleRenameStart} item={item} index={index} key={index} onFocus={(event) => {
+
+            this.setState({
+              focusedMediaItem: item
+            })
             store.dispatch(actions.updateView({
-              focusedMediaItem:item
+              focusedMediaItem: item
             }));
           }}
           onBlur={(event) => {

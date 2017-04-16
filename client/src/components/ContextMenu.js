@@ -9,7 +9,7 @@ const ContextMenu = (props) => {
   const item = props.item;
   return (
       <td className={props.className} hidden={props.hidden === undefined ? true : props.hidden}>
-        <ContextButtons {...props} />
+        <ContextButtons onBlur={props.onBlur} onFirstFocus={props.onFirstFocus} {...props} />
       </td>
   );
 }
