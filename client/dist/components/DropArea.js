@@ -42,8 +42,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var DropArea = function (_Component) {
-  _inherits(DropArea, _Component);
+var DropArea = function (_PureComponent) {
+  _inherits(DropArea, _PureComponent);
 
   function DropArea(props) {
     _classCallCheck(this, DropArea);
@@ -92,6 +92,6 @@ var DropArea = function (_Component) {
   }]);
 
   return DropArea;
-}(_react.Component);
+}(_react.PureComponent);
 
 exports.default = DropArea;

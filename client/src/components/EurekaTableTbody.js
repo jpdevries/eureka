@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import MediaRow from './MediaRow';
 import ContextMenu from './ContextMenu';
@@ -15,7 +15,7 @@ import utility from '../utility/utility';
 import { FormattedMessage } from 'react-intl';
 import definedMessages from '../i18n/definedMessages';
 
-class EurekaTableTbody extends Component {
+class EurekaTableTbody extends PureComponent {
   constructor(props) {
     super(props);
 

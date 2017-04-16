@@ -119,8 +119,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var defaultLang = 'en';
 
-	var EurekaMediaBrowser = function (_Component) {
-	  _inherits(EurekaMediaBrowser, _Component);
+	var EurekaMediaBrowser = function (_PureComponent) {
+	  _inherits(EurekaMediaBrowser, _PureComponent);
 
 	  function EurekaMediaBrowser(props) {
 	    _classCallCheck(this, EurekaMediaBrowser);
@@ -346,7 +346,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 
 	  return EurekaMediaBrowser;
-	}(_react.Component);
+	}(_react.PureComponent);
 
 	EurekaMediaBrowser.defaultProps = {
 	  i18n: 'assets/js/i18n/locales/',
@@ -24825,7 +24825,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  assetsBasePath: './assets/',
 	  emphasisFocusedMediaItem: true,
 	  headers: { 'Powered-By': 'Eureka by Markup.tips' },
-	  intervals: { searchBarPlaceholder: false, fetchDirectoryContents: 18000, updateSourceTree: false },
+	  intervals: { searchBarPlaceholder: 60000, fetchDirectoryContents: 18000, updateSourceTree: false },
 	  callbacks: {
 	    close: undefined,
 	    choose: undefined
@@ -32459,8 +32459,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var EurekaTableTbody = function (_Component) {
-	  _inherits(EurekaTableTbody, _Component);
+	var EurekaTableTbody = function (_PureComponent) {
+	  _inherits(EurekaTableTbody, _PureComponent);
 
 	  function EurekaTableTbody(props) {
 	    _classCallCheck(this, EurekaTableTbody);
@@ -32614,7 +32614,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 
 	  return EurekaTableTbody;
-	}(_react.Component);
+	}(_react.PureComponent);
 
 	function NoResults(props) {
 	  var searchTryAnother = _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'search.tryAnother', defaultMessage: 'Try another search' });
@@ -33881,8 +33881,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var FileTreeSpan = function (_Component) {
-	  _inherits(FileTreeSpan, _Component);
+	var FileTreeSpan = function (_PureComponent) {
+	  _inherits(FileTreeSpan, _PureComponent);
 
 	  function FileTreeSpan(props) {
 	    _classCallCheck(this, FileTreeSpan);
@@ -33943,7 +33943,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 
 	  return FileTreeSpan;
-	}(_react.Component);
+	}(_react.PureComponent);
 
 	var FileTree = function FileTree(props) {
 
@@ -34070,8 +34070,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var classNames = __webpack_require__(265);
 
-	var UploadForm = function (_Component) {
-	  _inherits(UploadForm, _Component);
+	var UploadForm = function (_PureComponent) {
+	  _inherits(UploadForm, _PureComponent);
 
 	  function UploadForm(props) {
 	    _classCallCheck(this, UploadForm);
@@ -34195,7 +34195,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 
 	  return UploadForm;
-	}(_react.Component);
+	}(_react.PureComponent);
 
 	exports.default = UploadForm;
 
@@ -34353,8 +34353,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var DropArea = function (_Component) {
-	  _inherits(DropArea, _Component);
+	var DropArea = function (_PureComponent) {
+	  _inherits(DropArea, _PureComponent);
 
 	  function DropArea(props) {
 	    _classCallCheck(this, DropArea);
@@ -34403,7 +34403,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 
 	  return DropArea;
-	}(_react.Component);
+	}(_react.PureComponent);
 
 	exports.default = DropArea;
 
@@ -34657,8 +34657,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var ModalRenameItemForm = function (_Component) {
-	  _inherits(ModalRenameItemForm, _Component);
+	var ModalRenameItemForm = function (_PureComponent) {
+	  _inherits(ModalRenameItemForm, _PureComponent);
 
 	  function ModalRenameItemForm(props) {
 	    _classCallCheck(this, ModalRenameItemForm);
@@ -34781,7 +34781,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 
 	  return ModalRenameItemForm;
-	}(_react.Component);
+	}(_react.PureComponent);
 
 	exports.default = ModalRenameItemForm;
 

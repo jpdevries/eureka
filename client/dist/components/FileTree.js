@@ -36,8 +36,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var FileTreeSpan = function (_Component) {
-  _inherits(FileTreeSpan, _Component);
+var FileTreeSpan = function (_PureComponent) {
+  _inherits(FileTreeSpan, _PureComponent);
 
   function FileTreeSpan(props) {
     _classCallCheck(this, FileTreeSpan);
@@ -98,7 +98,7 @@ var FileTreeSpan = function (_Component) {
   }]);
 
   return FileTreeSpan;
-}(_react.Component);
+}(_react.PureComponent);
 
 var FileTree = function FileTree(props) {
 

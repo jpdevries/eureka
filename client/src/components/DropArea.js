@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import Dropzone from 'react-dropzone';
 
@@ -10,7 +10,7 @@ import Icon from './Icon';
 import { FormattedMessage, FormattedPlural, FormattedNumber, FormattedRelative, defineMessages } from 'react-intl';
 import definedMessages from '../i18n/definedMessages';
 
-class DropArea extends Component {
+class DropArea extends PureComponent {
   constructor(props) {
     super(props);
 

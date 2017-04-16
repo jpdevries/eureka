@@ -63,8 +63,8 @@ var actions = require('./model/actions'),
 
 var defaultLang = 'en';
 
-var EurekaMediaBrowser = function (_Component) {
-  _inherits(EurekaMediaBrowser, _Component);
+var EurekaMediaBrowser = function (_PureComponent) {
+  _inherits(EurekaMediaBrowser, _PureComponent);
 
   function EurekaMediaBrowser(props) {
     _classCallCheck(this, EurekaMediaBrowser);
@@ -290,7 +290,7 @@ var EurekaMediaBrowser = function (_Component) {
   }]);
 
   return EurekaMediaBrowser;
-}(_react.Component);
+}(_react.PureComponent);
 
 EurekaMediaBrowser.defaultProps = {
   i18n: 'assets/js/i18n/locales/',

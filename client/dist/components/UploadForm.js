@@ -38,8 +38,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var classNames = require('classnames');
 
-var UploadForm = function (_Component) {
-  _inherits(UploadForm, _Component);
+var UploadForm = function (_PureComponent) {
+  _inherits(UploadForm, _PureComponent);
 
   function UploadForm(props) {
     _classCallCheck(this, UploadForm);
@@ -163,6 +163,6 @@ var UploadForm = function (_Component) {
   }]);
 
   return UploadForm;
-}(_react.Component);
+}(_react.PureComponent);
 
 exports.default = UploadForm;

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import ReactDOM from 'react-dom';
 
 import path from 'path';
@@ -29,7 +29,7 @@ addLocaleData([...en]);
 
 const defaultLang = 'en';
 
-class EurekaMediaBrowser extends Component {
+class EurekaMediaBrowser extends PureComponent {
   constructor(props) {
     super(props);
 

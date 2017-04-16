@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import path from 'path';
 
@@ -9,7 +9,7 @@ import Icon from './Icon';
 import { FormattedMessage } from 'react-intl';
 import definedMessages from '../i18n/definedMessages';
 
-class ModalRenameItemForm extends Component {
+class ModalRenameItemForm extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {

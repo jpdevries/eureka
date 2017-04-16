@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import store from '../model/store';
 import actions from '../model/actions';
@@ -10,7 +10,7 @@ var classNames = require('classnames');
 import { FormattedMessage } from 'react-intl';
 import definedMessages from '../i18n/definedMessages';
 
-class UploadForm extends Component {
+class UploadForm extends PureComponent {
   constructor(props) {
     super(props);
     this.decoratedActions = props.decoratedActions ? Object.assign({}, actions, props.decoratedActions) : actions;

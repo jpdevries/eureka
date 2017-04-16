@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import store from '../model/store';
 import actions from '../model/actions';
@@ -7,7 +7,7 @@ import Icon from './Icon';
 
 import definedMessages from '../i18n/definedMessages';
 
-class FileTreeSpan extends Component {
+class FileTreeSpan extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
