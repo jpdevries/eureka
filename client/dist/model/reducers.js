@@ -34,7 +34,7 @@ var initialConfigState = {
   assetsBasePath: './assets/',
   emphasisFocusedMediaItem: true,
   headers: { 'Powered-By': 'Eureka by Markup.tips' },
-  intervals: { searchBarPlaceholder: false, fetchDirectoryContents: 18000, updateSourceTree: false },
+  intervals: { searchBarPlaceholder: 60000, fetchDirectoryContents: 18000, updateSourceTree: false },
   callbacks: {
     close: undefined,
     choose: undefined
