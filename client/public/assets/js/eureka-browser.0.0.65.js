@@ -3357,7 +3357,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.64",
+		"version": "0.0.65",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -8518,7 +8518,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      return !_utility2.default.serverSideRendering ? _react2.default.createElement(
 	        'form',
-	        { role: 'search', className: 'eureka__search-bar' },
+	        { role: 'search', className: 'eureka__search-bar', onSubmit: function onSubmit(event) {
+	            return event.preventDefault();
+	          } },
 	        _react2.default.createElement(
 	          'label',
 	          { htmlFor: 'eureka__filter', title: filterTitle },

@@ -94,7 +94,7 @@ class SearchBar extends Component {
     const filterMessage = <FormattedMessage id="filter" defaultMessage="Filter" />;
 
     return (!utility.serverSideRendering) ? (
-      <form role="search" className="eureka__search-bar">
+      <form role="search" className="eureka__search-bar" onSubmit={(event) => (event.preventDefault())}>
       <label htmlFor="eureka__filter" title={filterTitle}>{filterMessage}<span className="visually-hidden"> {contentsOfBy}</span>:&ensp;</label>
       <input list={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }__datalist`} type="text" name="eureka__filter" id="eureka__filter" placeholder={placeholder} value={props.view.filter} onChange={(event) => {
           store.dispatch(actions.updateView({

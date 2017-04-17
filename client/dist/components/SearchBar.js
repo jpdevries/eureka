@@ -137,7 +137,9 @@ var SearchBar = function (_Component) {
 
       return !_utility2.default.serverSideRendering ? _react2.default.createElement(
         'form',
-        { role: 'search', className: 'eureka__search-bar' },
+        { role: 'search', className: 'eureka__search-bar', onSubmit: function onSubmit(event) {
+            return event.preventDefault();
+          } },
         _react2.default.createElement(
           'label',
           { htmlFor: 'eureka__filter', title: filterTitle },
