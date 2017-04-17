@@ -36,6 +36,10 @@ var _definedMessages = require('../i18n/definedMessages');
 
 var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
+var _FullScreenPureComponent = require('./FullScreenPureComponent');
+
+var _FullScreenPureComponent2 = _interopRequireDefault(_FullScreenPureComponent);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -44,42 +48,16 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var ViewChooser = function (_PureComponent) {
-  _inherits(ViewChooser, _PureComponent);
+var ViewChooser = function (_FullScreenPureCompon) {
+  _inherits(ViewChooser, _FullScreenPureCompon);
 
-  function ViewChooser(props) {
+  function ViewChooser() {
     _classCallCheck(this, ViewChooser);
 
-    var _this = _possibleConstructorReturn(this, (ViewChooser.__proto__ || Object.getPrototypeOf(ViewChooser)).call(this, props));
-
-    _this.state = {
-      ifFullscreen: false,
-      supportsFullscreen: _this.featureDetectFullscreen()
-    };
-
-    // isn't this fun? why are you crying?
-    document.onfullscreenchange = document.onwebkitfullscreenchange = document.onmozfullscreenchange = document.onmsfullscreenchange = document.onwebkitfullscreenchange = _this.handleFullScreenChange.bind(_this);
-    return _this;
+    return _possibleConstructorReturn(this, (ViewChooser.__proto__ || Object.getPrototypeOf(ViewChooser)).apply(this, arguments));
   }
 
   _createClass(ViewChooser, [{
-    key: 'handleFullScreenChange',
-    value: function handleFullScreenChange(event) {
-      this.setState({
-        isFullscreen: this.getFullScreenElement() !== undefined
-      });
-    }
-  }, {
-    key: 'featureDetectFullscreen',
-    value: function featureDetectFullscreen() {
-      return document.fullscreenEnabled || document.webkitFullscreenEnabled || document.mozFullScreenEnabled || document.msFullscreenEnabled;
-    }
-  }, {
-    key: 'getFullScreenElement',
-    value: function getFullScreenElement() {
-      return document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement || undefined;
-    }
-  }, {
     key: 'render',
     value: function render() {
       var _this2 = this;
@@ -93,17 +71,16 @@ var ViewChooser = function (_PureComponent) {
           fullscreenToggle = this.state.supportsFullscreen ? _react2.default.createElement(
         'div',
         null,
-        _react2.default.createElement('input', { type: 'checkbox', id: 'eureka__fullscreen-toggle', name: 'eureka__fullscreen-toggle', checked: this.state.isFullscreen, onChange: function onChange(event) {
+        _react2.default.createElement('input', { type: 'checkbox', id: 'eureka__fullscreen-toggle', name: 'eureka__fullscreen-toggle', value: '1', onChange: function onChange(event) {
             var closestRoot = event.target.closest('.eureka-root');
+            var isFullscreen = false;
             if (event.target.checked) {
               try {
                 closestRoot.requestFullscreen();
               } catch (e) {
                 (0, _utility.runPrefixMethod)(closestRoot, 'RequestFullscreen');
               }
-              _this2.setState({
-                isFullscreen: true
-              });
+              isFullscreen = true;
             } else {
               try {
                 closestRoot.exitFullscreen();
@@ -111,10 +88,10 @@ var ViewChooser = function (_PureComponent) {
                 (0, _utility.runPrefixMethod)(document, 'ExitFullscreen');
                 (0, _utility.runPrefixMethod)(document, 'CancelFullscreen');
               }
-              _this2.setState({
-                isFullscreen: false
-              });
             }
+            _this2.setState({
+              isFullscreen: isFullscreen
+            });
           } }),
         _react2.default.createElement(
           'label',
@@ -232,6 +209,6 @@ var ViewChooser = function (_PureComponent) {
   }]);
 
   return ViewChooser;
-}(_react.PureComponent);
+}(_FullScreenPureComponent2.default);
 
 exports.default = ViewChooser;

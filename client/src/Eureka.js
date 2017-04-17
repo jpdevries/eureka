@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import MediaSourceSelector from './components/MediaSourceSelector';
 import MediaDirectorySelector from './components/MediaDirectorySelector';
 import TreeBar from './components/TreeBar';

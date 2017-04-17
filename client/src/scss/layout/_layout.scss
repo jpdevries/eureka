@@ -33,6 +33,12 @@
           }
         }
 
+        > td.eureka__td-media {
+          @include media($mobile) {
+            text-align: center;
+          }
+        }
+
         &:focus {
           > td.eureka__context-row {
             display: block !important;

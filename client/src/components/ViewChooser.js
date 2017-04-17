@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 
 import store from '../model/store';
 import actions from '../model/actions';
@@ -12,38 +12,9 @@ import { runPrefixMethod } from '../utility/utility';
 import { FormattedMessage } from 'react-intl';
 import definedMessages from '../i18n/definedMessages';
 
-class ViewChooser extends PureComponent {
-  constructor(props) {
-    super(props);
+import FullScreenPureComponent from './FullScreenPureComponent';
 
-    this.state = {
-      ifFullscreen: false,
-      supportsFullscreen: this.featureDetectFullscreen()
-    };
-
-    // isn't this fun? why are you crying?
-    document.onfullscreenchange = document.onwebkitfullscreenchange = document.onmozfullscreenchange = document.onmsfullscreenchange = document.onwebkitfullscreenchange = this.handleFullScreenChange.bind(this);
-  }
-
-  handleFullScreenChange(event) {
-    this.setState({
-      isFullscreen: this.getFullScreenElement() !== undefined
-    });
-  }
-
-  featureDetectFullscreen() {
-    return (
-    	document.fullscreenEnabled ||
-    	document.webkitFullscreenEnabled ||
-    	document.mozFullScreenEnabled ||
-    	document.msFullscreenEnabled
-    );
-  }
-
-  getFullScreenElement() {
-    return document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement || undefined;
-  }
-
+class ViewChooser extends FullScreenPureComponent {
   render() {
     const props = this.props,
     formatMessage = props.intl.formatMessage,
@@ -53,17 +24,16 @@ class ViewChooser extends PureComponent {
     listLayoutMessage = formatMessage(definedMessages.listLayoutDescription),
     fullscreenToggle = (this.state.supportsFullscreen) ? (
       <div>
-        <input type="checkbox" id="eureka__fullscreen-toggle" name="eureka__fullscreen-toggle" checked={this.state.isFullscreen} onChange={(event) => {
+        <input type="checkbox" id="eureka__fullscreen-toggle" name="eureka__fullscreen-toggle" value="1" onChange={(event) => {
           const closestRoot = event.target.closest('.eureka-root');
+          let isFullscreen = false;
           if(event.target.checked) {
               try {
                 closestRoot.requestFullscreen();
               } catch(e) {
                 runPrefixMethod(closestRoot, 'RequestFullscreen');
               }
-              this.setState({
-                isFullscreen: true
-              });
+              isFullscreen = true;
           } else {
             try {
               closestRoot.exitFullscreen();
@@ -71,10 +41,10 @@ class ViewChooser extends PureComponent {
               runPrefixMethod(document, 'ExitFullscreen');
               runPrefixMethod(document, 'CancelFullscreen');
             }
-            this.setState({
-              isFullscreen: false
-            });
           }
+          this.setState({
+            isFullscreen: isFullscreen
+          });
         }} />
         <label className={classNames({
           'eureka__checked-active': this.state.isFullscreen
