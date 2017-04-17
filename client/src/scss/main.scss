@@ -399,6 +399,14 @@ a[role="presentation"] {
     tr[contextmenu] {
       padding-top:.5rem;
       padding-bottom:.5rem;
+      /*&:first-child {
+        padding-top:0;
+      }*/
+      &.eureka__focused-media-item {
+        &:last-child {
+          padding-bottom:0;
+        }
+      }
     }
     td.comfortable {
       @extend %padded;

@@ -770,7 +770,12 @@ a[role="presentation"] {
       padding-top: 8px;
       padding-top: .5rem;
       padding-bottom: 8px;
-      padding-bottom: .5rem; }
+      padding-bottom: .5rem;
+      /*&:first-child {
+        padding-top:0;
+      }*/ }
+      .eureka .eureka__table tr[contextmenu].eureka__focused-media-item:last-child {
+        padding-bottom: 0; }
     .eureka .eureka__table td.comfortable p[class^="alert"] {
       margin: 0; }
   .eureka .eureka__stage {

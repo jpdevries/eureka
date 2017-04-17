@@ -25477,7 +25477,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  locale: "en-US",
 	  sort: 'name',
 	  isTableScrolling: false,
-	  allowFullscreen: false,
+	  allowFullscreen: true,
 	  intervals: {
 	    searchBarPlaceholder: false,
 	    fetchDirectoryContents: false,
@@ -27175,7 +27175,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.66",
+		"version": "0.0.67",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",

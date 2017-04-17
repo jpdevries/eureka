@@ -26,9 +26,9 @@ The Eureka Media Browser is pretty lightweight all things&nbsp;considered.
 
 | Asset        | Weight (GZIP minified)
 | ------------- |:-------------:|
-| CSS Stylesheet      | `4.41kB` |
+| CSS Stylesheet      | `5.18kB` |
 | SVG Icons      | `5.04kB`      |
-| React Component | `41.37kB`    |
+| React Component | `46.04kB`    |
 
 ### 📄 HTML&ndash;first
 As a progressively enhanced web component, Eureka is functional HTML&ndash;first. This means that technically anything other than the initial HTML layer is a non&ndash;critical enhancement. Critical features supported by the HTML layer, such as browse, upload, and choose, are universally supported and do not depend on modern&nbsp;browsers, CSS styles, or&nbsp;script.

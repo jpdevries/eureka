@@ -261,7 +261,7 @@ var initialViewState = Object.assign({}, {
   locale: "en-US",
   sort: 'name',
   isTableScrolling: false,
-  allowFullscreen: false,
+  allowFullscreen: true,
   intervals: {
     searchBarPlaceholder: false,
     fetchDirectoryContents: false,
