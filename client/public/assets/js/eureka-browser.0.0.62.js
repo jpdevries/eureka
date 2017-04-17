@@ -3357,7 +3357,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.61",
+		"version": "0.0.62",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -8800,7 +8800,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var _this = _possibleConstructorReturn(this, (ViewChooser.__proto__ || Object.getPrototypeOf(ViewChooser)).call(this, props));
 
 	    _this.state = {
-	      ifFullscreen: false
+	      ifFullscreen: false,
+	      supportsFullscreen: _this.featureDetectFullscreen()
 	    };
 
 	    // isn't this fun? why are you crying?
@@ -8814,6 +8815,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.setState({
 	        isFullscreen: this.getFullScreenElement() !== undefined
 	      });
+	    }
+	  }, {
+	    key: 'featureDetectFullscreen',
+	    value: function featureDetectFullscreen() {
+	      return document.fullscreenEnabled || document.webkitFullscreenEnabled || document.mozFullScreenEnabled || document.msFullscreenEnabled;
 	    }
 	  }, {
 	    key: 'getFullScreenElement',
@@ -8830,7 +8836,46 @@ return /******/ (function(modules) { // webpackBootstrap
 	          tabularLayoutMessage = formatMessage(_definedMessages2.default.tabularLayoutDescription),
 	          thumbLayoutMessage = formatMessage(_definedMessages2.default.thumbnailLayoutDescription),
 	          gridLayoutMessage = formatMessage(_definedMessages2.default.gridLayoutDescription),
-	          listLayoutMessage = formatMessage(_definedMessages2.default.listLayoutDescription);
+	          listLayoutMessage = formatMessage(_definedMessages2.default.listLayoutDescription),
+	          fullscreenToggle = this.state.supportsFullscreen ? _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement('input', { type: 'checkbox', id: 'eureka__fullscreen-toggle', name: 'eureka__fullscreen-toggle', checked: this.state.isFullscreen, onChange: function onChange(event) {
+	            var closestRoot = event.target.closest('.eureka-root');
+	            if (event.target.checked) {
+	              try {
+	                closestRoot.requestFullscreen();
+	              } catch (e) {
+	                (0, _utility.runPrefixMethod)(closestRoot, 'RequestFullscreen');
+	              }
+	              _this2.setState({
+	                isFullscreen: true
+	              });
+	            } else {
+	              try {
+	                closestRoot.exitFullscreen();
+	              } catch (e) {
+	                (0, _utility.runPrefixMethod)(document, 'ExitFullscreen');
+	                (0, _utility.runPrefixMethod)(document, 'CancelFullscreen');
+	              }
+	              _this2.setState({
+	                isFullscreen: false
+	              });
+	            }
+	          } }),
+	        _react2.default.createElement(
+	          'label',
+	          { className: (0, _classnames2.default)({
+	              'eureka__checked-active': this.state.isFullscreen
+	            }), htmlFor: 'eureka__fullscreen-toggle' },
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'visually-hidden' },
+	            _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'layout.fullscreenMode', defaultMessage: 'Fullscreen Mode' })
+	          ),
+	          _react2.default.createElement(_Icon2.default, _extends({}, props, { 'aria-hidden': 'true', icon: this.state.isFullscreen ? 'compress' : 'expand' }))
+	        )
+	      ) : undefined;
 
 	      return _react2.default.createElement(
 	        'form',
@@ -8926,45 +8971,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                )
 	              )
 	            ),
-	            _react2.default.createElement(
-	              'div',
-	              null,
-	              _react2.default.createElement('input', { type: 'checkbox', id: 'eureka__fullscreen-toggle', name: 'eureka__fullscreen-toggle', checked: this.state.isFullscreen, onChange: function onChange(event) {
-	                  var closestRoot = event.target.closest('.eureka-root');
-	                  if (event.target.checked) {
-	                    try {
-	                      closestRoot.requestFullscreen();
-	                    } catch (e) {
-	                      (0, _utility.runPrefixMethod)(closestRoot, 'RequestFullscreen');
-	                    }
-	                    _this2.setState({
-	                      isFullscreen: true
-	                    });
-	                  } else {
-	                    try {
-	                      closestRoot.exitFullscreen();
-	                    } catch (e) {
-	                      (0, _utility.runPrefixMethod)(document, 'ExitFullscreen');
-	                      (0, _utility.runPrefixMethod)(document, 'CancelFullscreen');
-	                    }
-	                    _this2.setState({
-	                      isFullscreen: false
-	                    });
-	                  }
-	                } }),
-	              _react2.default.createElement(
-	                'label',
-	                { className: (0, _classnames2.default)({
-	                    'eureka__checked-active': this.state.isFullscreen
-	                  }), htmlFor: 'eureka__fullscreen-toggle' },
-	                _react2.default.createElement(
-	                  'span',
-	                  { className: 'visually-hidden' },
-	                  _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'layout.fullscreenMode', defaultMessage: 'Fullscreen Mode' })
-	                ),
-	                _react2.default.createElement(_Icon2.default, _extends({}, props, { 'aria-hidden': 'true', icon: this.state.isFullscreen ? 'compress' : 'expand' }))
-	              )
-	            )
+	            fullscreenToggle
 	          )
 	        )
 	      );

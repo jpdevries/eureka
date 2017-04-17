@@ -1,5 +1,9 @@
 [
   {
+    "id": "layout.fullscreenMode",
+    "defaultMessage": "Fullscreen Mode"
+  },
+  {
     "id": "layout.table",
     "defaultMessage": "Table Layout"
   },
@@ -14,9 +18,5 @@
   {
     "id": "layout.list",
     "defaultMessage": "List Layout"
-  },
-  {
-    "id": "layout.fullscreenMode",
-    "defaultMessage": "Fullscreen Mode"
   }
 ]

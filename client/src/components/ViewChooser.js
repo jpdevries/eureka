@@ -17,7 +17,8 @@ class ViewChooser extends PureComponent {
     super(props);
 
     this.state = {
-      ifFullscreen: false
+      ifFullscreen: false,
+      supportsFullscreen: this.featureDetectFullscreen()
     };
 
     // isn't this fun? why are you crying?
@@ -30,6 +31,15 @@ class ViewChooser extends PureComponent {
     });
   }
 
+  featureDetectFullscreen() {
+    return (
+    	document.fullscreenEnabled ||
+    	document.webkitFullscreenEnabled ||
+    	document.mozFullScreenEnabled ||
+    	document.msFullscreenEnabled
+    );
+  }
+
   getFullScreenElement() {
     return document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement || undefined;
   }
@@ -40,7 +50,40 @@ class ViewChooser extends PureComponent {
     tabularLayoutMessage = formatMessage(definedMessages.tabularLayoutDescription),
     thumbLayoutMessage = formatMessage(definedMessages.thumbnailLayoutDescription),
     gridLayoutMessage = formatMessage(definedMessages.gridLayoutDescription),
-    listLayoutMessage = formatMessage(definedMessages.listLayoutDescription);
+    listLayoutMessage = formatMessage(definedMessages.listLayoutDescription),
+    fullscreenToggle = (this.state.supportsFullscreen) ? (
+      <div>
+        <input type="checkbox" id="eureka__fullscreen-toggle" name="eureka__fullscreen-toggle" checked={this.state.isFullscreen} onChange={(event) => {
+          const closestRoot = event.target.closest('.eureka-root');
+          if(event.target.checked) {
+              try {
+                closestRoot.requestFullscreen();
+              } catch(e) {
+                runPrefixMethod(closestRoot, 'RequestFullscreen');
+              }
+              this.setState({
+                isFullscreen: true
+              });
+          } else {
+            try {
+              closestRoot.exitFullscreen();
+            } catch (e) {
+              runPrefixMethod(document, 'ExitFullscreen');
+              runPrefixMethod(document, 'CancelFullscreen');
+            }
+            this.setState({
+              isFullscreen: false
+            });
+          }
+        }} />
+        <label className={classNames({
+          'eureka__checked-active': this.state.isFullscreen
+        })} htmlFor="eureka__fullscreen-toggle">
+          <span className="visually-hidden"><FormattedMessage id="layout.fullscreenMode" defaultMessage="Fullscreen Mode" /></span>
+          <Icon {...props} aria-hidden="true" icon={this.state.isFullscreen ? 'compress' : 'expand'} />
+        </label>
+      </div>
+    ) : undefined;
 
     return (
       <form className="eureka__layout-chooser">
@@ -96,37 +139,7 @@ class ViewChooser extends PureComponent {
               </label>
             </div>
 
-            <div>
-              <input type="checkbox" id="eureka__fullscreen-toggle" name="eureka__fullscreen-toggle" checked={this.state.isFullscreen} onChange={(event) => {
-                const closestRoot = event.target.closest('.eureka-root');
-                if(event.target.checked) {
-                    try {
-                      closestRoot.requestFullscreen();
-                    } catch(e) {
-                      runPrefixMethod(closestRoot, 'RequestFullscreen');
-                    }
-                    this.setState({
-                      isFullscreen: true
-                    });
-                } else {
-                  try {
-                    closestRoot.exitFullscreen();
-                  } catch (e) {
-                    runPrefixMethod(document, 'ExitFullscreen');
-                    runPrefixMethod(document, 'CancelFullscreen');
-                  }
-                  this.setState({
-                    isFullscreen: false
-                  });
-                }
-              }} />
-              <label className={classNames({
-                'eureka__checked-active': this.state.isFullscreen
-              })} htmlFor="eureka__fullscreen-toggle">
-                <span className="visually-hidden"><FormattedMessage id="layout.fullscreenMode" defaultMessage="Fullscreen Mode" /></span>
-                <Icon {...props} aria-hidden="true" icon={this.state.isFullscreen ? 'compress' : 'expand'} />
-              </label>
-            </div>
+            {fullscreenToggle}
 
           </div>
 
