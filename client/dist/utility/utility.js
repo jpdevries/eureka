@@ -1,5 +1,7 @@
 'use strict';
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
@@ -232,6 +234,27 @@ function notify(message) {
   // want to be respectful there is no need to bother them any more.
 }
 
+function runPrefixMethod(obj, method) {
+  console.log('runPrefixMethod');
+  var pfx = ["webkit", "moz", "ms", "o", ""];
+  var p = 0,
+      m,
+      t;
+  while (p < pfx.length && !obj[m]) {
+    m = method;
+    if (pfx[p] == "") {
+      m = m.substr(0, 1).toLowerCase() + m.substr(1);
+    }
+    m = pfx[p] + m;
+    t = _typeof(obj[m]);
+    if (t != "undefined") {
+      pfx = [pfx[p]];
+      return t == "function" ? obj[m]() : obj[m];
+    }
+    p++;
+  }
+}
+
 exports.parseMediaSourceOutOfCombinedPath = parseMediaSourceOutOfCombinedPath;
 
 exports.getIconByExtension = getIconByExtension;
@@ -247,3 +270,5 @@ exports.cssSafe = cssSafe;
 exports.wordBreaksEvery = wordBreaksEvery;
 
 exports.notify = notify;
+
+exports.runPrefixMethod = runPrefixMethod;

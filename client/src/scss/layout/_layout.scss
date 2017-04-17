@@ -12,7 +12,14 @@
 
 .eureka-root {
 
+  &:-webkit-full-screen {
+    width: 100vw;
+    height: 100vh;
+  }
 
+  label[for*="fullscreen-toggle"] {
+    margin-left: .5rem;
+  }
 
   .eureka__view-mode__table, .eureka__view-mode__list { // this is pretty janky looking, but needed after optimizing React
     tbody:not(.empty) {
@@ -490,11 +497,15 @@
         }
       }
       tbody {
-        display: flex !important;
+        @include media($gtMobile) {
+          display: flex !important;
+        }
         flex-wrap: wrap;
         justify-content: center;
         tr[tabindex] {
-          display:inline-block;
+          @include media($gtMobile) {
+            display:inline-block;
+          }
           margin:0 .5rem .5rem 0;
           flex-basis:42vw;
           width:100%;
@@ -509,13 +520,29 @@
     }
   }
 
+  &.eureka__view-mode__thumb {
+    .eureka__table tbody {
+      @include media($mobile) {
+        display: flex;
+      }
+    }
+  }
+
   &.eureka__view-mode__grid {
     .eureka__table {
       tbody {
         tr[tabindex] {
-          flex-basis:60vw;
+          //flex-basis:60vw;
+          @include media($mobile) {
+            margin-bottom: 0;
+          }
           @include media($gtMobile) {
             flex-basis:25vw;
+          }
+          > td:not(.eureka__context-row) {
+            @include media($mobile) {
+              padding-right: 0;
+            }
           }
         }
       }

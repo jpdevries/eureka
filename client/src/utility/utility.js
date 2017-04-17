@@ -184,7 +184,7 @@ function notify(message, options = {
   //icon: 'http://localhost:3000/assets/img/src/png/trash-o.png'
 }) {
   // Let's check if the browser supports notifications
-  if (!("Notification" in window)) { 
+  if (!("Notification" in window)) {
     //alert(message);
   }
 
@@ -210,6 +210,25 @@ function notify(message, options = {
   // want to be respectful there is no need to bother them any more.
 }
 
+function runPrefixMethod(obj, method) {
+    console.log('runPrefixMethod');
+    var pfx = ["webkit", "moz", "ms", "o", ""];
+    var p = 0, m, t;
+    while (p < pfx.length && !obj[m]) {
+        m = method;
+        if (pfx[p] == "") {
+            m = m.substr(0,1).toLowerCase() + m.substr(1);
+        }
+        m = pfx[p] + m;
+        t = typeof obj[m];
+        if (t != "undefined") {
+            pfx = [pfx[p]];
+            return (t == "function" ? obj[m]() : obj[m]);
+        }
+        p++;
+    }
+}
+
 exports.parseMediaSourceOutOfCombinedPath = parseMediaSourceOutOfCombinedPath;
 
 exports.getIconByExtension = getIconByExtension;
@@ -225,3 +244,5 @@ exports.cssSafe = cssSafe;
 exports.wordBreaksEvery = wordBreaksEvery;
 
 exports.notify = notify;
+
+exports.runPrefixMethod = runPrefixMethod;

@@ -14,5 +14,9 @@
   {
     "id": "layout.list",
     "defaultMessage": "List Layout"
+  },
+  {
+    "id": "layout.fullscreenMode",
+    "defaultMessage": "Fullscreen Mode"
   }
 ]

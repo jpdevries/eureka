@@ -842,7 +842,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ViewChooser2 = _interopRequireDefault(_ViewChooser);
 
-	var _EurekaTable = __webpack_require__(51);
+	var _EurekaTable = __webpack_require__(52);
 
 	var _EurekaTable2 = _interopRequireDefault(_EurekaTable);
 
@@ -1844,6 +1844,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
@@ -2076,6 +2078,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // want to be respectful there is no need to bother them any more.
 	}
 
+	function runPrefixMethod(obj, method) {
+	  console.log('runPrefixMethod');
+	  var pfx = ["webkit", "moz", "ms", "o", ""];
+	  var p = 0,
+	      m,
+	      t;
+	  while (p < pfx.length && !obj[m]) {
+	    m = method;
+	    if (pfx[p] == "") {
+	      m = m.substr(0, 1).toLowerCase() + m.substr(1);
+	    }
+	    m = pfx[p] + m;
+	    t = _typeof(obj[m]);
+	    if (t != "undefined") {
+	      pfx = [pfx[p]];
+	      return t == "function" ? obj[m]() : obj[m];
+	    }
+	    p++;
+	  }
+	}
+
 	exports.parseMediaSourceOutOfCombinedPath = parseMediaSourceOutOfCombinedPath;
 
 	exports.getIconByExtension = getIconByExtension;
@@ -2091,6 +2114,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.wordBreaksEvery = wordBreaksEvery;
 
 	exports.notify = notify;
+
+	exports.runPrefixMethod = runPrefixMethod;
 
 /***/ },
 /* 13 */
@@ -3332,7 +3357,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.60",
+		"version": "0.0.61",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -8728,6 +8753,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
@@ -8744,6 +8771,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Icon2 = _interopRequireDefault(_Icon);
 
+	var _classnames = __webpack_require__(51);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	var _utility = __webpack_require__(12);
+
 	var _reactIntl = __webpack_require__(19);
 
 	var _definedMessages = __webpack_require__(45);
@@ -8752,116 +8785,237 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var ViewChooser = function ViewChooser(props) {
-	  var formatMessage = props.intl.formatMessage,
-	      tabularLayoutMessage = formatMessage(_definedMessages2.default.tabularLayoutDescription),
-	      thumbLayoutMessage = formatMessage(_definedMessages2.default.thumbnailLayoutDescription),
-	      gridLayoutMessage = formatMessage(_definedMessages2.default.gridLayoutDescription),
-	      listLayoutMessage = formatMessage(_definedMessages2.default.listLayoutDescription);
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	  return _react2.default.createElement(
-	    'form',
-	    { className: 'eureka__layout-chooser' },
-	    _react2.default.createElement(
-	      'fieldset',
-	      null,
-	      _react2.default.createElement(
-	        'legend',
-	        null,
-	        'Choose a Layout Mode'
-	      ),
-	      _react2.default.createElement(
-	        'div',
-	        { className: 'eureka__icon-radio-btns' },
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var ViewChooser = function (_PureComponent) {
+	  _inherits(ViewChooser, _PureComponent);
+
+	  function ViewChooser(props) {
+	    _classCallCheck(this, ViewChooser);
+
+	    var _this = _possibleConstructorReturn(this, (ViewChooser.__proto__ || Object.getPrototypeOf(ViewChooser)).call(this, props));
+
+	    _this.state = {
+	      ifFullscreen: false
+	    };
+	    return _this;
+	  }
+
+	  _createClass(ViewChooser, [{
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+
+	      var props = this.props,
+	          formatMessage = props.intl.formatMessage,
+	          tabularLayoutMessage = formatMessage(_definedMessages2.default.tabularLayoutDescription),
+	          thumbLayoutMessage = formatMessage(_definedMessages2.default.thumbnailLayoutDescription),
+	          gridLayoutMessage = formatMessage(_definedMessages2.default.gridLayoutDescription),
+	          listLayoutMessage = formatMessage(_definedMessages2.default.listLayoutDescription);
+
+	      return _react2.default.createElement(
+	        'form',
+	        { className: 'eureka__layout-chooser' },
 	        _react2.default.createElement(
-	          'div',
+	          'fieldset',
 	          null,
-	          _react2.default.createElement('input', { type: 'radio', id: 'eureka__view-table', name: 'eureka__view', onChange: function onChange(event) {
-	              return _store2.default.dispatch(_actions2.default.updateView({
-	                mode: event.target.value
-	              }));
-	            }, checked: props.view.mode === 'table', value: 'table' }),
-	          '\u2003',
 	          _react2.default.createElement(
-	            'label',
-	            { htmlFor: 'eureka__view-table', title: tabularLayoutMessage },
-	            _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'th-list' })),
-	            _react2.default.createElement(
-	              'span',
-	              { className: 'visually-hidden' },
-	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'layout.table', defaultMessage: 'Table Layout' })
-	            )
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          null,
-	          _react2.default.createElement('input', { type: 'radio', id: 'eureka__view-thumb', name: 'eureka__view', onChange: function onChange(event) {
-	              return _store2.default.dispatch(_actions2.default.updateView({
-	                mode: event.target.value
-	              }));
-	            }, checked: props.view.mode === 'thumb', value: 'thumb' }),
-	          '\u2003',
+	            'legend',
+	            null,
+	            'Choose a Layout Mode'
+	          ),
 	          _react2.default.createElement(
-	            'label',
-	            { htmlFor: 'eureka__view-thumb', title: thumbLayoutMessage },
-	            _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'th-large' })),
+	            'div',
+	            { className: 'eureka__icon-radio-btns' },
 	            _react2.default.createElement(
-	              'span',
-	              { className: 'visually-hidden' },
-	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'layout.thumb', defaultMessage: 'Thumbnail Layout' })
-	            )
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          null,
-	          _react2.default.createElement('input', { type: 'radio', id: 'eureka__view-grid', name: 'eureka__view', onChange: function onChange(event) {
-	              return _store2.default.dispatch(_actions2.default.updateView({
-	                mode: event.target.value
-	              }));
-	            }, checked: props.view.mode === 'grid', value: 'grid' }),
-	          '\u2003',
-	          _react2.default.createElement(
-	            'label',
-	            { htmlFor: 'eureka__view-grid', title: gridLayoutMessage },
-	            _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'square' })),
+	              'div',
+	              null,
+	              _react2.default.createElement('input', { type: 'radio', id: 'eureka__view-table', name: 'eureka__view', onChange: function onChange(event) {
+	                  return _store2.default.dispatch(_actions2.default.updateView({
+	                    mode: event.target.value
+	                  }));
+	                }, checked: props.view.mode === 'table', value: 'table' }),
+	              '\u2003',
+	              _react2.default.createElement(
+	                'label',
+	                { htmlFor: 'eureka__view-table', title: tabularLayoutMessage },
+	                _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'th-list' })),
+	                _react2.default.createElement(
+	                  'span',
+	                  { className: 'visually-hidden' },
+	                  _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'layout.table', defaultMessage: 'Table Layout' })
+	                )
+	              )
+	            ),
 	            _react2.default.createElement(
-	              'span',
-	              { className: 'visually-hidden' },
-	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'layout.grid', defaultMessage: 'Grid Layout' })
-	            )
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          null,
-	          _react2.default.createElement('input', { type: 'radio', id: 'eureka__view-list', name: 'eureka__view', onChange: function onChange(event) {
-	              return _store2.default.dispatch(_actions2.default.updateView({
-	                mode: event.target.value
-	              }));
-	            }, checked: props.view.mode === 'list', value: 'list' }),
-	          '\u2003',
-	          _react2.default.createElement(
-	            'label',
-	            { htmlFor: 'eureka__view-list', title: listLayoutMessage },
-	            _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'list' })),
+	              'div',
+	              null,
+	              _react2.default.createElement('input', { type: 'radio', id: 'eureka__view-thumb', name: 'eureka__view', onChange: function onChange(event) {
+	                  return _store2.default.dispatch(_actions2.default.updateView({
+	                    mode: event.target.value
+	                  }));
+	                }, checked: props.view.mode === 'thumb', value: 'thumb' }),
+	              '\u2003',
+	              _react2.default.createElement(
+	                'label',
+	                { htmlFor: 'eureka__view-thumb', title: thumbLayoutMessage },
+	                _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'th-large' })),
+	                _react2.default.createElement(
+	                  'span',
+	                  { className: 'visually-hidden' },
+	                  _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'layout.thumb', defaultMessage: 'Thumbnail Layout' })
+	                )
+	              )
+	            ),
 	            _react2.default.createElement(
-	              'span',
-	              { className: 'visually-hidden' },
-	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'layout.list', defaultMessage: 'List Layout' })
+	              'div',
+	              null,
+	              _react2.default.createElement('input', { type: 'radio', id: 'eureka__view-grid', name: 'eureka__view', onChange: function onChange(event) {
+	                  return _store2.default.dispatch(_actions2.default.updateView({
+	                    mode: event.target.value
+	                  }));
+	                }, checked: props.view.mode === 'grid', value: 'grid' }),
+	              '\u2003',
+	              _react2.default.createElement(
+	                'label',
+	                { htmlFor: 'eureka__view-grid', title: gridLayoutMessage },
+	                _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'square' })),
+	                _react2.default.createElement(
+	                  'span',
+	                  { className: 'visually-hidden' },
+	                  _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'layout.grid', defaultMessage: 'Grid Layout' })
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              null,
+	              _react2.default.createElement('input', { type: 'radio', id: 'eureka__view-list', name: 'eureka__view', onChange: function onChange(event) {
+	                  return _store2.default.dispatch(_actions2.default.updateView({
+	                    mode: event.target.value
+	                  }));
+	                }, checked: props.view.mode === 'list', value: 'list' }),
+	              '\u2003',
+	              _react2.default.createElement(
+	                'label',
+	                { htmlFor: 'eureka__view-list', title: listLayoutMessage },
+	                _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'list' })),
+	                _react2.default.createElement(
+	                  'span',
+	                  { className: 'visually-hidden' },
+	                  _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'layout.list', defaultMessage: 'List Layout' })
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              null,
+	              _react2.default.createElement('input', { type: 'checkbox', id: 'eureka__fullscreen-toggle', onChange: function onChange(event) {
+	                  if (event.target.checked) {
+	                    try {
+	                      document.querySelector('.eureka-root').requestFullscreen();
+	                    } catch (e) {
+	                      (0, _utility.runPrefixMethod)(document.querySelector('.eureka-root'), 'RequestFullscreen');
+	                    }
+	                    _this2.setState({
+	                      isFullscreen: true
+	                    });
+	                  } else {
+	                    try {
+	                      document.querySelector('.eureka-root').exitFullscreen();
+	                    } catch (e) {
+	                      (0, _utility.runPrefixMethod)(document, 'ExitFullscreen');
+	                      (0, _utility.runPrefixMethod)(document, 'CancelFullscreen');
+	                    }
+	                    _this2.setState({
+	                      isFullscreen: false
+	                    });
+	                  }
+	                } }),
+	              _react2.default.createElement(
+	                'label',
+	                { className: (0, _classnames2.default)({
+	                    'eureka__checked-active': this.state.isFullscreen
+	                  }), htmlFor: 'eureka__fullscreen-toggle' },
+	                _react2.default.createElement(
+	                  'span',
+	                  { className: 'visually-hidden' },
+	                  _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'layout.fullscreenMode', defaultMessage: 'Fullscreen Mode' })
+	                ),
+	                _react2.default.createElement(_Icon2.default, _extends({}, props, { 'aria-hidden': 'true', icon: this.state.isFullscreen ? 'compress' : 'expand' }))
+	              )
 	            )
 	          )
 	        )
-	      )
-	    )
-	  );
-	};
+	      );
+	    }
+	  }]);
+
+	  return ViewChooser;
+	}(_react.PureComponent);
 
 	exports.default = ViewChooser;
 
 /***/ },
 /* 51 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	  Copyright (c) 2016 Jed Watson.
+	  Licensed under the MIT License (MIT), see
+	  http://jedwatson.github.io/classnames
+	*/
+	/* global define */
+
+	(function () {
+		'use strict';
+
+		var hasOwn = {}.hasOwnProperty;
+
+		function classNames () {
+			var classes = [];
+
+			for (var i = 0; i < arguments.length; i++) {
+				var arg = arguments[i];
+				if (!arg) continue;
+
+				var argType = typeof arg;
+
+				if (argType === 'string' || argType === 'number') {
+					classes.push(arg);
+				} else if (Array.isArray(arg)) {
+					classes.push(classNames.apply(null, arg));
+				} else if (argType === 'object') {
+					for (var key in arg) {
+						if (hasOwn.call(arg, key) && arg[key]) {
+							classes.push(key);
+						}
+					}
+				}
+			}
+
+			return classes.join(' ');
+		}
+
+		if (typeof module !== 'undefined' && module.exports) {
+			module.exports = classNames;
+		} else if (true) {
+			// register as 'classnames', consistent with npm package name
+			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+				return classNames;
+			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		} else {
+			window.classNames = classNames;
+		}
+	}());
+
+
+/***/ },
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8886,11 +9040,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _actions2 = _interopRequireDefault(_actions);
 
-	var _EurekaTableTbody = __webpack_require__(52);
+	var _EurekaTableTbody = __webpack_require__(53);
 
 	var _EurekaTableTbody2 = _interopRequireDefault(_EurekaTableTbody);
 
-	var _classnames = __webpack_require__(56);
+	var _classnames = __webpack_require__(51);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -9123,7 +9277,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = EurekaTable;
 
 /***/ },
-/* 52 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9140,11 +9294,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _MediaRow = __webpack_require__(53);
+	var _MediaRow = __webpack_require__(54);
 
 	var _MediaRow2 = _interopRequireDefault(_MediaRow);
 
-	var _ContextMenu = __webpack_require__(54);
+	var _ContextMenu = __webpack_require__(55);
 
 	var _ContextMenu2 = _interopRequireDefault(_ContextMenu);
 
@@ -9160,7 +9314,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _filesize2 = _interopRequireDefault(_filesize);
 
-	var _classnames = __webpack_require__(56);
+	var _classnames = __webpack_require__(51);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -9444,7 +9598,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = EurekaTableTbody;
 
 /***/ },
-/* 53 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9465,7 +9619,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _filesize2 = _interopRequireDefault(_filesize);
 
-	var _ContextMenu = __webpack_require__(54);
+	var _ContextMenu = __webpack_require__(55);
 
 	var _ContextMenu2 = _interopRequireDefault(_ContextMenu);
 
@@ -9477,7 +9631,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _path2 = _interopRequireDefault(_path);
 
-	var _classnames = __webpack_require__(56);
+	var _classnames = __webpack_require__(51);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -9814,7 +9968,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = MediaRow;
 
 /***/ },
-/* 54 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9837,7 +9991,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _actions2 = _interopRequireDefault(_actions);
 
-	var _ContextButtons = __webpack_require__(55);
+	var _ContextButtons = __webpack_require__(56);
 
 	var _ContextButtons2 = _interopRequireDefault(_ContextButtons);
 
@@ -9855,7 +10009,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = ContextMenu;
 
 /***/ },
-/* 55 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9985,60 +10139,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	exports.default = ContextButtons;
-
-/***/ },
-/* 56 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
-	  Copyright (c) 2016 Jed Watson.
-	  Licensed under the MIT License (MIT), see
-	  http://jedwatson.github.io/classnames
-	*/
-	/* global define */
-
-	(function () {
-		'use strict';
-
-		var hasOwn = {}.hasOwnProperty;
-
-		function classNames () {
-			var classes = [];
-
-			for (var i = 0; i < arguments.length; i++) {
-				var arg = arguments[i];
-				if (!arg) continue;
-
-				var argType = typeof arg;
-
-				if (argType === 'string' || argType === 'number') {
-					classes.push(arg);
-				} else if (Array.isArray(arg)) {
-					classes.push(classNames.apply(null, arg));
-				} else if (argType === 'object') {
-					for (var key in arg) {
-						if (hasOwn.call(arg, key) && arg[key]) {
-							classes.push(key);
-						}
-					}
-				}
-			}
-
-			return classes.join(' ');
-		}
-
-		if (typeof module !== 'undefined' && module.exports) {
-			module.exports = classNames;
-		} else if (true) {
-			// register as 'classnames', consistent with npm package name
-			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
-				return classNames;
-			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-		} else {
-			window.classNames = classNames;
-		}
-	}());
-
 
 /***/ },
 /* 57 */
@@ -11924,7 +12024,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var classNames = __webpack_require__(56);
+	var classNames = __webpack_require__(51);
 
 	var UploadForm = function (_PureComponent) {
 	  _inherits(UploadForm, _PureComponent);
@@ -12075,7 +12175,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Icon2 = _interopRequireDefault(_Icon);
 
-	var _ContextButtons = __webpack_require__(55);
+	var _ContextButtons = __webpack_require__(56);
 
 	var _ContextButtons2 = _interopRequireDefault(_ContextButtons);
 
@@ -12334,7 +12434,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _path2 = _interopRequireDefault(_path);
 
-	var _classnames = __webpack_require__(56);
+	var _classnames = __webpack_require__(51);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -12491,7 +12591,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _path2 = _interopRequireDefault(_path);
 
-	var _classnames = __webpack_require__(56);
+	var _classnames = __webpack_require__(51);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -12708,6 +12808,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		"layout.thumb": "Thumbnail Layout",
 		"layout.grid": "Grid Layout",
 		"layout.list": "List Layout",
+		"layout.fullscreenMode": "Fullscreen Mode",
 		"media.browse": "Browse",
 		"directory.create": "Create a Directory",
 		"directory.createNewIn": "Create a new Directory in {cd}",

@@ -180,6 +180,7 @@ a[role="presentation"] {
 }
 
 .eureka {
+
   a {
     color:var(--link-color, $active);
   }
@@ -630,7 +631,7 @@ a[role="presentation"] {
         justify-content: center;
       }
 
-      input[type="radio"] {
+      input[type="radio"], input[type="checkbox"] {
         @extend %visually-hidden;
         &:checked {
           + {
