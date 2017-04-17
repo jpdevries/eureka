@@ -19,7 +19,21 @@ class ViewChooser extends PureComponent {
     this.state = {
       ifFullscreen: false
     };
+
+    // isn't this fun? why are you crying?
+    document.onfullscreenchange = document.onwebkitfullscreenchange = document.onmozfullscreenchange = document.onmsfullscreenchange = document.onwebkitfullscreenchange = this.handleFullScreenChange.bind(this);
   }
+
+  handleFullScreenChange(event) {
+    this.setState({
+      isFullscreen: this.getFullScreenElement() !== undefined
+    });
+  }
+
+  getFullScreenElement() {
+    return document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement || undefined;
+  }
+
   render() {
     const props = this.props,
     formatMessage = props.intl.formatMessage,
@@ -83,19 +97,20 @@ class ViewChooser extends PureComponent {
             </div>
 
             <div>
-              <input type="checkbox" id="eureka__fullscreen-toggle" onChange={(event) => {
+              <input type="checkbox" id="eureka__fullscreen-toggle" name="eureka__fullscreen-toggle" checked={this.state.isFullscreen} onChange={(event) => {
+                const closestRoot = event.target.closest('.eureka-root');
                 if(event.target.checked) {
                     try {
-                      document.querySelector('.eureka-root').requestFullscreen();
+                      closestRoot.requestFullscreen();
                     } catch(e) {
-                      runPrefixMethod(document.querySelector('.eureka-root'), 'RequestFullscreen');
+                      runPrefixMethod(closestRoot, 'RequestFullscreen');
                     }
                     this.setState({
                       isFullscreen: true
                     });
                 } else {
                   try {
-                    document.querySelector('.eureka-root').exitFullscreen();
+                    closestRoot.exitFullscreen();
                   } catch (e) {
                     runPrefixMethod(document, 'ExitFullscreen');
                     runPrefixMethod(document, 'CancelFullscreen');

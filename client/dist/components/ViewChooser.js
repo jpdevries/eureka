@@ -55,10 +55,25 @@ var ViewChooser = function (_PureComponent) {
     _this.state = {
       ifFullscreen: false
     };
+
+    // isn't this fun? why are you crying?
+    document.onfullscreenchange = document.onwebkitfullscreenchange = document.onmozfullscreenchange = document.onmsfullscreenchange = document.onwebkitfullscreenchange = _this.handleFullScreenChange.bind(_this);
     return _this;
   }
 
   _createClass(ViewChooser, [{
+    key: 'handleFullScreenChange',
+    value: function handleFullScreenChange(event) {
+      this.setState({
+        isFullscreen: this.getFullScreenElement() !== undefined
+      });
+    }
+  }, {
+    key: 'getFullScreenElement',
+    value: function getFullScreenElement() {
+      return document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement || undefined;
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _this2 = this;
@@ -167,19 +182,20 @@ var ViewChooser = function (_PureComponent) {
             _react2.default.createElement(
               'div',
               null,
-              _react2.default.createElement('input', { type: 'checkbox', id: 'eureka__fullscreen-toggle', onChange: function onChange(event) {
+              _react2.default.createElement('input', { type: 'checkbox', id: 'eureka__fullscreen-toggle', name: 'eureka__fullscreen-toggle', checked: this.state.isFullscreen, onChange: function onChange(event) {
+                  var closestRoot = event.target.closest('.eureka-root');
                   if (event.target.checked) {
                     try {
-                      document.querySelector('.eureka-root').requestFullscreen();
+                      closestRoot.requestFullscreen();
                     } catch (e) {
-                      (0, _utility.runPrefixMethod)(document.querySelector('.eureka-root'), 'RequestFullscreen');
+                      (0, _utility.runPrefixMethod)(closestRoot, 'RequestFullscreen');
                     }
                     _this2.setState({
                       isFullscreen: true
                     });
                   } else {
                     try {
-                      document.querySelector('.eureka-root').exitFullscreen();
+                      closestRoot.exitFullscreen();
                     } catch (e) {
                       (0, _utility.runPrefixMethod)(document, 'ExitFullscreen');
                       (0, _utility.runPrefixMethod)(document, 'CancelFullscreen');
