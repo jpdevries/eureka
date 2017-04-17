@@ -17,6 +17,20 @@
 /*
 http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
 */
+.eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > th:nth-of-type(1), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > th:nth-of-type(1), .visually-hidden, .eureka .eureka__upload-form input[type="file"], .eureka .eureka__layout-chooser legend, .eureka .eureka__layout-chooser .eureka__icon-radio-btns input[type="radio"] {
+  /*https://developer.yahoo.com/blogs/ydn/clip-hidden-content-better-accessibility-53456.html*/
+  position: absolute !important;
+  clip: rect(1px 1px 1px 1px);
+  /* IE6, IE7 */
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 0 !important;
+  border: 0 !important;
+  height: 1px !important;
+  width: 1px !important;
+  overflow: hidden; }
+  body:hover .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > th:nth-of-type(1) a, .eureka-root .eureka.eureka__view-mode__table.eureka__server-side body:hover table > thead > tr > th:nth-of-type(1) a, body:hover .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > th:nth-of-type(1) a, .eureka-root .eureka.eureka__view-mode__list.eureka__server-side body:hover table > thead > tr > th:nth-of-type(1) a, body:hover .visually-hidden a, body:hover .eureka .eureka__upload-form input[type="file"] a, .eureka .eureka__upload-form body:hover input[type="file"] a, body:hover .eureka .eureka__layout-chooser legend a, .eureka .eureka__layout-chooser body:hover legend a, body:hover .eureka .eureka__layout-chooser .eureka__icon-radio-btns input[type="radio"] a, .eureka .eureka__layout-chooser .eureka__icon-radio-btns body:hover input[type="radio"] a, body:hover .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > th:nth-of-type(1) input, .eureka-root .eureka.eureka__view-mode__table.eureka__server-side body:hover table > thead > tr > th:nth-of-type(1) input, body:hover .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > th:nth-of-type(1) input, .eureka-root .eureka.eureka__view-mode__list.eureka__server-side body:hover table > thead > tr > th:nth-of-type(1) input, body:hover .visually-hidden input, body:hover .eureka .eureka__upload-form input[type="file"] input, .eureka .eureka__upload-form body:hover input[type="file"] input, body:hover .eureka .eureka__layout-chooser legend input, .eureka .eureka__layout-chooser body:hover legend input, body:hover .eureka .eureka__layout-chooser .eureka__icon-radio-btns input[type="radio"] input, .eureka .eureka__layout-chooser .eureka__icon-radio-btns body:hover input[type="radio"] input, body:hover .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > th:nth-of-type(1) button, .eureka-root .eureka.eureka__view-mode__table.eureka__server-side body:hover table > thead > tr > th:nth-of-type(1) button, body:hover .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > th:nth-of-type(1) button, .eureka-root .eureka.eureka__view-mode__list.eureka__server-side body:hover table > thead > tr > th:nth-of-type(1) button, body:hover .visually-hidden button, body:hover .eureka .eureka__upload-form input[type="file"] button, .eureka .eureka__upload-form body:hover input[type="file"] button, body:hover .eureka .eureka__layout-chooser legend button, .eureka .eureka__layout-chooser body:hover legend button, body:hover .eureka .eureka__layout-chooser .eureka__icon-radio-btns input[type="radio"] button, .eureka .eureka__layout-chooser .eureka__icon-radio-btns body:hover input[type="radio"] button {
+    display: none !important; }
+
 [class*="modal-section"] {
   padding: 0; }
   @media screen and (min-width: 641px) {
@@ -29,6 +43,21 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
       -ms-flex-direction: column;
           flex-direction: column; } }
 
+.eureka-root .eureka__view-mode__table tbody:not(.empty) > tr.eureka__focused-media-item > td.eureka__context-row, .eureka-root .eureka__view-mode__list tbody:not(.empty) > tr.eureka__focused-media-item > td.eureka__context-row {
+  display: block !important; }
+  .eureka-root .eureka__view-mode__table tbody:not(.empty) > tr.eureka__focused-media-item > td.eureka__context-row[hidden], .eureka-root .eureka__view-mode__list tbody:not(.empty) > tr.eureka__focused-media-item > td.eureka__context-row[hidden] {
+    display: block !important; }
+
+.eureka-root .eureka__view-mode__table tbody:not(.empty) > tr:focus > td.eureka__context-row, .eureka-root .eureka__view-mode__list tbody:not(.empty) > tr:focus > td.eureka__context-row {
+  display: block !important; }
+  .eureka-root .eureka__view-mode__table tbody:not(.empty) > tr:focus > td.eureka__context-row[hidden], .eureka-root .eureka__view-mode__list tbody:not(.empty) > tr:focus > td.eureka__context-row[hidden] {
+    display: block !important; }
+
+.eureka-root .eureka__view-mode__table tbody:not(.empty) > tr:focus-within > td.eureka__context-row, .eureka-root .eureka__view-mode__list tbody:not(.empty) > tr:focus-within > td.eureka__context-row {
+  display: block !important; }
+  .eureka-root .eureka__view-mode__table tbody:not(.empty) > tr:focus-within > td.eureka__context-row[hidden], .eureka-root .eureka__view-mode__list tbody:not(.empty) > tr:focus-within > td.eureka__context-row[hidden] {
+    display: block !important; }
+
 .eureka-root tbody:not(.empty) > tr:not(.empty) {
   display: -ms-flexbox;
   display: flex;
@@ -39,12 +68,6 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
   .eureka-root tbody:not(.empty) > tr:not(.empty) > * {
     -ms-flex: 1 0 auto;
         flex: 1 0 auto; }
-  .eureka-root tbody:not(.empty) > tr:not(.empty):focus > td.eureka__context-row[hidden] {
-    display: block !important; }
-  .eureka-root tbody:not(.empty) > tr:not(.empty):focus-within > td.eureka__context-row[hidden] {
-    display: block !important; }
-  .eureka-root tbody:not(.empty) > tr:not(.empty).eureka__focused-media-item > td.eureka__context-row[hidden] {
-    display: block !important; }
   @supports ((display: -ms-grid) or (display: grid)) {
     .eureka-root tbody:not(.empty) > tr:not(.empty) {
       display: -ms-grid;
@@ -57,26 +80,57 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
         grid-area: actions; }
       .eureka-root tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(4) {
         grid-area: dimensions; }
+        @media screen and (max-width: 640px) {
+          .eureka-root tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(4) {
+            display: none; } }
       .eureka-root tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(5) {
         grid-area: file-size; }
+        @media screen and (max-width: 640px) {
+          .eureka-root tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(5) {
+            display: none; } }
       .eureka-root tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(6) {
-        grid-area: edited-on; } }
+        grid-area: edited-on; }
+        @media screen and (max-width: 640px) {
+          .eureka-root tbody:not(.empty) > tr:not(.empty) > td:nth-of-type(6) {
+            display: none; } } }
 
 .eureka-root {
   padding: 8px;
   padding: .5rem; }
-  .eureka-root .eureka.eureka__view-mode__table table > thead > tr, .eureka-root .eureka.eureka__view-mode__table table > tbody > tr, .eureka-root .eureka.eureka__view-mode__list table > thead > tr, .eureka-root .eureka.eureka__view-mode__list table > tbody > tr {
-    display: -ms-grid;
-    display: grid;
-    grid-gap: 0;
-    -ms-grid-columns: 40% 24% 12% 12% 12%;
-        grid-template-columns: 40% 24% 12% 12% 12%; }
-  .eureka-root .eureka.eureka__view-mode__table table > thead > tr, .eureka-root .eureka.eureka__view-mode__list table > thead > tr {
-    grid-template-areas: "media name dimensions file-size edited-on"; }
-  .eureka-root .eureka.eureka__view-mode__table table > tbody > tr, .eureka-root .eureka.eureka__view-mode__list table > tbody > tr {
-    grid-template-areas: "media name dimensions file-size edited-on" "actions actions actions actions actions"; }
-  .eureka-root .eureka.eureka__view-mode__table table > tbody.empty > tr, .eureka-root .eureka.eureka__view-mode__list table > tbody.empty > tr {
-    display: block; }
+  @media screen and (max-width: 640px) {
+    .eureka-root .eureka table > thead {
+      position: absolute !important;
+      clip: rect(1px 1px 1px 1px);
+      /* IE6, IE7 */
+      clip: rect(1px, 1px, 1px, 1px);
+      padding: 0 !important;
+      border: 0 !important;
+      height: 1px !important;
+      width: 1px !important;
+      overflow: hidden; }
+      body:hover .eureka-root .eureka table > thead a, body:hover .eureka-root .eureka table > thead input, body:hover .eureka-root .eureka table > thead button {
+        display: none !important; } }
+  @media screen and (max-width: 640px) {
+    .eureka-root .eureka tbody > tr > td:not(.eureka__context-row) {
+      padding-right: .5rem; } }
+  .eureka-root .eureka.eureka__view-mode__table table, .eureka-root .eureka.eureka__view-mode__list table {
+    /*> thead > tr {
+         grid-template-areas:"media name dimensions file-size edited-on";
+       }*/ }
+    .eureka-root .eureka.eureka__view-mode__table table > thead > tr, .eureka-root .eureka.eureka__view-mode__table table > tbody > tr, .eureka-root .eureka.eureka__view-mode__list table > thead > tr, .eureka-root .eureka.eureka__view-mode__list table > tbody > tr {
+      display: -ms-grid;
+      display: grid;
+      grid-gap: 0;
+      grid-template-areas: "media name dimensions file-size edited-on";
+      -ms-grid-columns: 40% 24% 12% 12% 12%;
+          grid-template-columns: 40% 24% 12% 12% 12%; }
+    .eureka-root .eureka.eureka__view-mode__table table > tbody > tr, .eureka-root .eureka.eureka__view-mode__list table > tbody > tr {
+      grid-template-areas: "media media media media media" "name name name name name" "actions actions actions actions actions"; }
+      @media screen and (min-width: 641px) {
+        .eureka-root .eureka.eureka__view-mode__table table > tbody > tr, .eureka-root .eureka.eureka__view-mode__list table > tbody > tr {
+          grid-template-areas: "media name dimensions file-size edited-on" "actions actions actions actions actions"; } }
+    .eureka-root .eureka.eureka__view-mode__table table > tbody.empty > tr, .eureka-root .eureka.eureka__view-mode__list table > tbody.empty > tr {
+      display: block; }
   @media screen and (min-width: 641px) {
     .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr, .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > tbody:not(.empty) > tr:not(.empty), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr, .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > tbody:not(.empty) > tr:not(.empty) {
       grid-template-areas: "radio media name dimensions file-size edited-on";
@@ -97,6 +151,11 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
         grid-area: edited-on; } }
   .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > th:nth-of-type(1), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > th:nth-of-type(1) {
     grid-area: none; }
+  .eureka-root .eureka.eureka__view-mode__list table > tbody > tr {
+    grid-template-areas: "name name name name name" "actions actions actions actions actions"; }
+    @media screen and (min-width: 641px) {
+      .eureka-root .eureka.eureka__view-mode__list table > tbody > tr {
+        grid-template-areas: "media name dimensions file-size edited-on" "actions actions actions actions actions"; } }
 
 @media screen and (min-width: 641px) {
   .eureka-root {
@@ -327,8 +386,9 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
 .eureka.eureka__view-mode__table {
   /*@include media($gtMobile) {
     }*/ }
-  .eureka.eureka__view-mode__table .eureka__table img {
-    max-height: 20vh; }
+  @media screen and (min-width: 641px) {
+    .eureka.eureka__view-mode__table .eureka__table img {
+      max-height: 20vh; } }
   .eureka.eureka__view-mode__table .eureka__table thead th:first-child {
     padding-left: 8px;
     padding-left: .5rem; }
@@ -342,7 +402,10 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
     padding-right: 8px;
     padding-right: .5rem; }
   .eureka.eureka__view-mode__table .eureka__table tr td, .eureka.eureka__view-mode__table .eureka__table tr th {
-    text-align: right; }
+    text-align: center; }
+    @media screen and (min-width: 641px) {
+      .eureka.eureka__view-mode__table .eureka__table tr td, .eureka.eureka__view-mode__table .eureka__table tr th {
+        text-align: right; } }
     .eureka.eureka__view-mode__table .eureka__table tr td:nth-of-type(1), .eureka.eureka__view-mode__table .eureka__table tr th:nth-of-type(1) {
       text-align: left; }
   .eureka.eureka__view-mode__table.eureka__enlarge-focused-rows .eureka__table img {
@@ -395,8 +458,13 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
     -ms-flex-positive: 1;
         flex-grow: 1; } }
 
+.eureka.eureka__view-mode__table .eureka__context-row {
+  margin-top: 8px;
+  margin-top: .5rem; }
+
 @media screen and (min-width: 641px) {
   .eureka .eureka__context-row {
+    margin-top: 0;
     width: 100%;
     display: block;
     display: -ms-flexbox;
@@ -436,12 +504,17 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
   text-align: right; }
   .eureka.eureka__view-mode__list .eureka__table thead td:nth-of-type(1), .eureka.eureka__view-mode__list .eureka__table thead th:nth-of-type(1), .eureka.eureka__view-mode__list .eureka__table tr[contextmenu] td:nth-of-type(1), .eureka.eureka__view-mode__list .eureka__table tr[contextmenu] th:nth-of-type(1) {
     text-align: left; }
+    @supports ((display: -ms-grid) or (display: grid)) {
+      .eureka.eureka__view-mode__list .eureka__table thead td:nth-of-type(1), .eureka.eureka__view-mode__list .eureka__table thead th:nth-of-type(1), .eureka.eureka__view-mode__list .eureka__table tr[contextmenu] td:nth-of-type(1), .eureka.eureka__view-mode__list .eureka__table tr[contextmenu] th:nth-of-type(1) {
+        display: block; } }
     @media screen and (max-width: 640px) {
       .eureka.eureka__view-mode__list .eureka__table thead td:nth-of-type(1), .eureka.eureka__view-mode__list .eureka__table thead th:nth-of-type(1), .eureka.eureka__view-mode__list .eureka__table tr[contextmenu] td:nth-of-type(1), .eureka.eureka__view-mode__list .eureka__table tr[contextmenu] th:nth-of-type(1) {
         display: none; } }
   @media screen and (max-width: 640px) {
     .eureka.eureka__view-mode__list .eureka__table thead td:nth-of-type(2), .eureka.eureka__view-mode__list .eureka__table thead th:nth-of-type(2), .eureka.eureka__view-mode__list .eureka__table tr[contextmenu] td:nth-of-type(2), .eureka.eureka__view-mode__list .eureka__table tr[contextmenu] th:nth-of-type(2) {
-      text-align: left; } }
+      text-align: center;
+      padding-top: .5rem;
+      padding-bottom: .5rem; } }
 
 @media screen and (max-width: 640px) {
   .eureka.eureka__view-mode__list .eureka__table tbody {
@@ -463,20 +536,6 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
 
 .dangerous {
   color: var(--dangerous, red); }
-
-.eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > th:nth-of-type(1), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > th:nth-of-type(1), .visually-hidden, .eureka .eureka__upload-form input[type="file"], .eureka .eureka__layout-chooser legend, .eureka .eureka__layout-chooser .eureka__icon-radio-btns input[type="radio"] {
-  /*https://developer.yahoo.com/blogs/ydn/clip-hidden-content-better-accessibility-53456.html*/
-  position: absolute !important;
-  clip: rect(1px 1px 1px 1px);
-  /* IE6, IE7 */
-  clip: rect(1px, 1px, 1px, 1px);
-  padding: 0 !important;
-  border: 0 !important;
-  height: 1px !important;
-  width: 1px !important;
-  overflow: hidden; }
-  body:hover .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > th:nth-of-type(1) a, .eureka-root .eureka.eureka__view-mode__table.eureka__server-side body:hover table > thead > tr > th:nth-of-type(1) a, body:hover .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > th:nth-of-type(1) a, .eureka-root .eureka.eureka__view-mode__list.eureka__server-side body:hover table > thead > tr > th:nth-of-type(1) a, body:hover .visually-hidden a, body:hover .eureka .eureka__upload-form input[type="file"] a, .eureka .eureka__upload-form body:hover input[type="file"] a, body:hover .eureka .eureka__layout-chooser legend a, .eureka .eureka__layout-chooser body:hover legend a, body:hover .eureka .eureka__layout-chooser .eureka__icon-radio-btns input[type="radio"] a, .eureka .eureka__layout-chooser .eureka__icon-radio-btns body:hover input[type="radio"] a, body:hover .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > th:nth-of-type(1) input, .eureka-root .eureka.eureka__view-mode__table.eureka__server-side body:hover table > thead > tr > th:nth-of-type(1) input, body:hover .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > th:nth-of-type(1) input, .eureka-root .eureka.eureka__view-mode__list.eureka__server-side body:hover table > thead > tr > th:nth-of-type(1) input, body:hover .visually-hidden input, body:hover .eureka .eureka__upload-form input[type="file"] input, .eureka .eureka__upload-form body:hover input[type="file"] input, body:hover .eureka .eureka__layout-chooser legend input, .eureka .eureka__layout-chooser body:hover legend input, body:hover .eureka .eureka__layout-chooser .eureka__icon-radio-btns input[type="radio"] input, .eureka .eureka__layout-chooser .eureka__icon-radio-btns body:hover input[type="radio"] input, body:hover .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > th:nth-of-type(1) button, .eureka-root .eureka.eureka__view-mode__table.eureka__server-side body:hover table > thead > tr > th:nth-of-type(1) button, body:hover .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > th:nth-of-type(1) button, .eureka-root .eureka.eureka__view-mode__list.eureka__server-side body:hover table > thead > tr > th:nth-of-type(1) button, body:hover .visually-hidden button, body:hover .eureka .eureka__upload-form input[type="file"] button, .eureka .eureka__upload-form body:hover input[type="file"] button, body:hover .eureka .eureka__layout-chooser legend button, .eureka .eureka__layout-chooser body:hover legend button, body:hover .eureka .eureka__layout-chooser .eureka__icon-radio-btns input[type="radio"] button, .eureka .eureka__layout-chooser .eureka__icon-radio-btns body:hover input[type="radio"] button {
-    display: none !important; }
 
 .flex-bar, .eureka .eureka__button-bar, .eureka .eureka__tree-bar {
   display: -ms-flexbox;
@@ -565,6 +624,10 @@ a[role="presentation"] {
   .eureka button[id^="eureka__tree-toggle__button"] {
     margin-bottom: 16px;
     margin-bottom: 1rem; }
+    @media screen and (max-width: 640px) {
+      .eureka button[id^="eureka__tree-toggle__button"] {
+        width: 100%;
+        min-height: 1.75rem; } }
     @media screen and (min-width: 641px) {
       .eureka button[id^="eureka__tree-toggle__button"] {
         margin-bottom: 0; } }
@@ -765,6 +828,10 @@ a[role="presentation"] {
         color: currentColor;
         //--border-color: var(--active, $active);
       }*/ }
+      @media screen and (max-width: 640px) {
+        .eureka .eureka__media-directory-selector select {
+          width: 100%;
+          margin-top: .5em; } }
   .eureka .eureka__tree-bar {
     margin: 16px 0 0 0;
     margin: 1rem 0 0 0; }
@@ -791,6 +858,9 @@ a[role="presentation"] {
       font-size: 11px;
       font-size: .6875rem;
       text-align: center; }
+      @media screen and (max-width: 640px) {
+        .eureka .eureka__upload-form label {
+          display: block; } }
       .eureka .eureka__upload-form label:hover {
         background: #3697cd;
         color: white; }
@@ -831,6 +901,8 @@ a[role="presentation"] {
     @media screen and (min-width: 641px) {
       .eureka .eureka__pathbar {
         margin-bottom: .5rem; } }
+    .eureka .eureka__pathbar summary {
+      word-wrap: break-word; }
     .eureka .eureka__pathbar details > div {
       padding-top: 16px;
       padding-top: 1rem; }

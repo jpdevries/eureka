@@ -22,6 +22,26 @@ $border-box-sizing:false;
 $gtMobileLH: min-height 360px 4 !default;
 $gtMobilePH: min-height 480px 4 !default;
 
+@mixin visually-hidden() {
+  position: absolute !important;
+  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+  clip: rect(1px, 1px, 1px, 1px);
+  padding:0 !important;
+  border:0 !important;
+  height: 1px !important;
+  width: 1px !important;
+  overflow: hidden;
+  body:hover & {
+    a,input,button {
+      display: none !important;
+    }
+  }
+}
+
+%visually-hidden { /*https://developer.yahoo.com/blogs/ydn/clip-hidden-content-better-accessibility-53456.html*/
+  @include visually-hidden;
+}
+
 @import "layout/layout";
 
 $gray:rgb(236,236,236); // MODX gray
@@ -56,25 +76,7 @@ $palettes: ( // http://erskinedesign.com/blog/friendlier-colour-names-sass-maps/
     @return map-get(map-get($palettes, $palette), $tone);
 }
 
-@mixin visually-hidden() {
-  position: absolute !important;
-  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
-  clip: rect(1px, 1px, 1px, 1px);
-  padding:0 !important;
-  border:0 !important;
-  height: 1px !important;
-  width: 1px !important;
-  overflow: hidden;
-  body:hover & {
-    a,input,button {
-      display: none !important;
-    }
-  }
-}
 
-%visually-hidden { /*https://developer.yahoo.com/blogs/ydn/clip-hidden-content-better-accessibility-53456.html*/
-  @include visually-hidden;
-}
 
 
 
@@ -214,6 +216,10 @@ a[role="presentation"] {
 
   button[id^="eureka__tree-toggle__button"] { // keep this loose so we can append a React id
     margin-bottom:1rem;
+    @include media($mobile) {
+      width: 100%;
+      min-height: 1.75rem;
+    }
     @include media($gtMobile) {
       margin-bottom:0;
     }
@@ -446,6 +452,7 @@ a[role="presentation"] {
 
   .eureka__media-directory-selector {
     margin-bottom:1rem;
+
     @include media($gtMobile) {
       margin-right:auto;
     }
@@ -466,6 +473,10 @@ a[role="presentation"] {
       }*/
     }
     select {
+      @include media($mobile) {
+        width: 100%;
+        margin-top: .5em;
+      }
       @extend %clickable;
       @include button(false);
       appearance: none;
@@ -511,6 +522,9 @@ a[role="presentation"] {
   .eureka__upload-form {
     margin-bottom: 1rem;
     label {
+      @include media($mobile) {
+        display: block;
+      }
       @extend %clickable;
       @include button();
       font-size: .6875rem;
@@ -579,6 +593,9 @@ a[role="presentation"] {
     margin-bottom:1rem;
     @include media($gtMobile) {
       margin-bottom:.5rem;
+    }
+    summary {
+      word-wrap: break-word;
     }
     details {
       > div {

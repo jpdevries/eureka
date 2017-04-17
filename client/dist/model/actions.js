@@ -50,7 +50,7 @@ var updateContent = function updateContent(content) {
 
 var UPDATE_CONFIG = 'update_config';
 var updateConfig = function updateConfig(config) {
-  console.log('updateConfig', config);
+  //console.log('updateConfig', config);
   return {
     type: UPDATE_CONFIG,
     config: config

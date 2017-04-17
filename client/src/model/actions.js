@@ -44,7 +44,7 @@ const updateContent = function(content) {
 
 const UPDATE_CONFIG = 'update_config';
 const updateConfig = function(config) {
-  console.log('updateConfig', config);
+  //console.log('updateConfig', config);
   return {
     type:UPDATE_CONFIG,
     config:config,

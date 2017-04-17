@@ -136,13 +136,12 @@ var EurekaTableTbody = function (_PureComponent) {
   }, {
     key: 'shouldComponentUpdate',
     value: function shouldComponentUpdate(nextProps, nextState) {
-
-      if (this.state.filter) return true;
+      if (nextProps.view.filter || !nextProps.view.filter && this.props.view.filter) return true;
       try {
         console.log('shouldComponentUpdate', this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path, this.state.focusedMediaItem.path, nextProps.view.focusedMediaItem.path);
         //if((this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path)) return true; // #janky SLOOOOW
       } catch (e) {}
-      console.log(!(this.props.content.contents === nextProps.content.contents));
+      //console.log(!(this.props.content.contents === nextProps.content.contents));
       return !(this.props.content.contents === nextProps.content.contents);
     }
   }, {

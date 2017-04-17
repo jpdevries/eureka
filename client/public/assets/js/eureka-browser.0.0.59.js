@@ -225,7 +225,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }();
 
 	    var shouldFetch = function () {
-	      console.log('shouldFetch', props.lang);
+	      //console.log('shouldFetch', props.lang);
 	      if (_utility2.default.serverSideRendering) return false;
 	      try {
 	        return !props.lang || languageWithoutRegionCode == 'en' || _this.state.i18n[props.lang] !== undefined || _this.state.i18n[languageWithoutRegionCode] !== undefined ? false : true;
@@ -245,7 +245,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    store.subscribe(function () {
 	      var state = store.getState();
-	      console.log(state);
+	      //console.log(state);
 
 	      // whenever the state changes we store pieces of the state locally so that next time Eureka fires up it can render the user interface without delay
 	      if (state.config.useLocalStorage) {
@@ -259,7 +259,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          //localStorage.setItem(`${state.config.storagePrefix}treeHidden`, !state.view.sourceTreeOpen);
 	          localStorage.setItem(state.config.storagePrefix + 'content', JSON.stringify(state.content));
 	          localStorage.setItem(state.config.storagePrefix + 'tree', JSON.stringify(state.tree));
-	          console.log(state.view, JSON.stringify(state.view));
+	          //console.log(state.view, JSON.stringify(state.view));
 	          localStorage.setItem(state.config.storagePrefix + 'view', JSON.stringify(state.view));
 	        } catch (e) {}
 	      }
@@ -1608,7 +1608,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}, function () {
 	  try {
 	    var json = JSON.parse(localStorage.getItem('eureka__view'));
-	    console.log('json', json);
+	    //console.log('json',json);
 	    return json;
 	    /*return (
 	      Object.assign({}, json, {
@@ -1625,7 +1625,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }*/
 	}());
 
-	console.log('initialViewState', initialViewState);
+	//console.log('initialViewState', initialViewState);
 
 	var viewReducer = function viewReducer(state, action) {
 	  state = state || initialViewState;
@@ -2148,7 +2148,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var UPDATE_CONFIG = 'update_config';
 	var updateConfig = function updateConfig(config) {
-	  console.log('updateConfig', config);
+	  //console.log('updateConfig', config);
 	  return {
 	    type: UPDATE_CONFIG,
 	    config: config
@@ -3332,7 +3332,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.58",
+		"version": "0.0.59",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -8419,7 +8419,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(SearchBar, [{
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
-	      console.log('componentDidMount');
+	      //console.log('componentDidMount');
 	      this.pickRandomField();
 
 	      /*store.subscribe(() => {
@@ -8979,13 +8979,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	          { key: index, hidden: 'true', type: 'context', id: 'context_menu__tbody-' + index },
 	          _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.expandItem, {
 	              filename: item.filename
-	            }) }),
+	            }), onClick: function onClick(event) {
+	              document.getElementById('expand__' + _utility2.default.cssSafe(item.filename)).click();
+	            } }),
 	          _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.chooseItem, {
 	              filename: item.filename
-	            }) }),
+	            }), onClick: function onClick(event) {
+	              document.getElementById('choose__' + _utility2.default.cssSafe(item.filename)).click();
+	            } }),
 	          _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.renameItem, {
 	              item: item.filename
-	            }) }),
+	            }), onClick: function onClick(event) {
+	              document.getElementById((props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'rename__' + _utility2.default.cssSafe(item.filename)).click();
+	            } }),
 	          _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.deleteItem, {
 	              filename: item.filename
 	            }), onClick: function onClick(event) {
@@ -9258,13 +9264,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'shouldComponentUpdate',
 	    value: function shouldComponentUpdate(nextProps, nextState) {
-
-	      if (this.state.filter) return true;
+	      if (nextProps.view.filter || !nextProps.view.filter && this.props.view.filter) return true;
 	      try {
 	        console.log('shouldComponentUpdate', this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path, this.state.focusedMediaItem.path, nextProps.view.focusedMediaItem.path);
 	        //if((this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path)) return true; // #janky SLOOOOW
 	      } catch (e) {}
-	      console.log(!(this.props.content.contents === nextProps.content.contents));
+	      //console.log(!(this.props.content.contents === nextProps.content.contents));
 	      return !(this.props.content.contents === nextProps.content.contents);
 	    }
 	  }, {
@@ -9928,7 +9933,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'delete__' + (0, _utility.cssSafe)(item.filename), role: 'option', onClick: function onClick(event) {
 	        _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path, props.config.headers)).then(function () {
 	          (0, _utility.notify)('Deleted item ' + item.filename, {
-	            icon: _path2.default.join(props.config.assetsBasePath, 'img/src/png/trash-o.png')
+	            badge: _path2.default.join(props.config.assetsBasePath, 'img/src/png/trash-o.png'),
+	            silent: true
 	          });
 	        });
 	      }, title: deleteItemMessage, className: 'dangerous' },

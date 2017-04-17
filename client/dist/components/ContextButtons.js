@@ -74,7 +74,8 @@ var ContextButtons = function ContextButtons(props) {
     { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'delete__' + (0, _utility.cssSafe)(item.filename), role: 'option', onClick: function onClick(event) {
         _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path, props.config.headers)).then(function () {
           (0, _utility.notify)('Deleted item ' + item.filename, {
-            icon: _path2.default.join(props.config.assetsBasePath, 'img/src/png/trash-o.png')
+            badge: _path2.default.join(props.config.assetsBasePath, 'img/src/png/trash-o.png'),
+            silent: true
           });
         });
       }, title: deleteItemMessage, className: 'dangerous' },

@@ -124,7 +124,7 @@ class EurekaMediaBrowser extends PureComponent {
 
 
     const shouldFetch = (() => {
-      console.log('shouldFetch', props.lang);
+      //console.log('shouldFetch', props.lang);
       if(utility.serverSideRendering) return false;
       try {
         return (!props.lang || languageWithoutRegionCode == 'en' || this.state.i18n[props.lang] !== undefined || this.state.i18n[languageWithoutRegionCode] !== undefined) ? false : true;
@@ -145,7 +145,7 @@ class EurekaMediaBrowser extends PureComponent {
 
     store.subscribe(() => {
       const state = store.getState();
-      console.log(state);
+      //console.log(state);
 
       // whenever the state changes we store pieces of the state locally so that next time Eureka fires up it can render the user interface without delay
       if(state.config.useLocalStorage) {
@@ -159,7 +159,7 @@ class EurekaMediaBrowser extends PureComponent {
           //localStorage.setItem(`${state.config.storagePrefix}treeHidden`, !state.view.sourceTreeOpen);
           localStorage.setItem(`${state.config.storagePrefix}content`, JSON.stringify(state.content));
           localStorage.setItem(`${state.config.storagePrefix}tree`, JSON.stringify(state.tree));
-          console.log(state.view, JSON.stringify(state.view));
+          //console.log(state.view, JSON.stringify(state.view));
           localStorage.setItem(`${state.config.storagePrefix}view`, JSON.stringify(state.view));
         } catch (e) { }
       }

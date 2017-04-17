@@ -56,13 +56,19 @@ class EurekaTable extends Component {
       <menu key={index} hidden="true" type="context" id={`context_menu__tbody-${index}`}>
           <menuitem label={formatMessage(definedMessages.expandItem, {
             filename: item.filename
-          })}></menuitem>
+          })} onClick={(event) => {
+              document.getElementById(`expand__${utility.cssSafe(item.filename)}`).click();
+            }}></menuitem>
           <menuitem label={formatMessage(definedMessages.chooseItem, {
             filename: item.filename
-          })}></menuitem>
+          })} onClick={(event) => {
+              document.getElementById(`choose__${utility.cssSafe(item.filename)}`).click();
+            }}></menuitem>
           <menuitem label={formatMessage(definedMessages.renameItem, {
             item: item.filename
-          })}></menuitem>
+          })} onClick={(event) => {
+              document.getElementById(`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }rename__${utility.cssSafe(item.filename)}`).click()
+            }}></menuitem>
           <menuitem label={formatMessage(definedMessages.deleteItem, {
             filename: item.filename
           })} onClick={(event) => {

@@ -42,7 +42,8 @@ const ContextButtons = (props) => {
     <button id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }delete__${cssSafe(item.filename)}`} role="option" onClick={(event) => {
         store.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path, props.config.headers)).then(() => {
           notify(`Deleted item ${item.filename}`, {
-            icon: path.join(props.config.assetsBasePath, 'img/src/png/trash-o.png')
+            badge: path.join(props.config.assetsBasePath, 'img/src/png/trash-o.png'),
+            silent: true
           });
         });
       }} title={deleteItemMessage} className="dangerous">{deleteMessage}<span className="visually-hidden"> {item.filename}</span></button>

@@ -25,7 +25,7 @@ class SearchBar extends Component {
   }
 
   componentDidMount() {
-    console.log('componentDidMount');
+    //console.log('componentDidMount');
     this.pickRandomField();
 
 

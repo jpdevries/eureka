@@ -269,7 +269,7 @@ var initialViewState = Object.assign({}, {
 }, function () {
   try {
     var json = JSON.parse(localStorage.getItem('eureka__view'));
-    console.log('json', json);
+    //console.log('json',json);
     return json;
     /*return (
       Object.assign({}, json, {
@@ -286,7 +286,7 @@ var initialViewState = Object.assign({}, {
   }*/
 }());
 
-console.log('initialViewState', initialViewState);
+//console.log('initialViewState', initialViewState);
 
 var viewReducer = function viewReducer(state, action) {
   state = state || initialViewState;

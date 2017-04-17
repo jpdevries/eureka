@@ -63,7 +63,7 @@ var SearchBar = function (_Component) {
   _createClass(SearchBar, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
-      console.log('componentDidMount');
+      //console.log('componentDidMount');
       this.pickRandomField();
 
       /*store.subscribe(() => {

@@ -113,13 +113,19 @@ var EurekaTable = function (_Component) {
           { key: index, hidden: 'true', type: 'context', id: 'context_menu__tbody-' + index },
           _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.expandItem, {
               filename: item.filename
-            }) }),
+            }), onClick: function onClick(event) {
+              document.getElementById('expand__' + _utility2.default.cssSafe(item.filename)).click();
+            } }),
           _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.chooseItem, {
               filename: item.filename
-            }) }),
+            }), onClick: function onClick(event) {
+              document.getElementById('choose__' + _utility2.default.cssSafe(item.filename)).click();
+            } }),
           _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.renameItem, {
               item: item.filename
-            }) }),
+            }), onClick: function onClick(event) {
+              document.getElementById((props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'rename__' + _utility2.default.cssSafe(item.filename)).click();
+            } }),
           _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.deleteItem, {
               filename: item.filename
             }), onClick: function onClick(event) {
