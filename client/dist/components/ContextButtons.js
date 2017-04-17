@@ -18,6 +18,10 @@ var _actions2 = _interopRequireDefault(_actions);
 
 var _utility = require('../utility/utility');
 
+var _path = require('path');
+
+var _path2 = _interopRequireDefault(_path);
+
 var _reactIntl = require('react-intl');
 
 var _definedMessages = require('../i18n/definedMessages');
@@ -68,7 +72,11 @@ var ContextButtons = function ContextButtons(props) {
       deleteBtn = props.config.allowDelete ? _react2.default.createElement(
     'button',
     { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'delete__' + (0, _utility.cssSafe)(item.filename), role: 'option', onClick: function onClick(event) {
-        _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path, props.config.headers));
+        _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path, props.config.headers)).then(function () {
+          (0, _utility.notify)('Deleted item ' + item.filename, {
+            icon: _path2.default.join(props.config.assetsBasePath, 'img/src/png/trash-o.png')
+          });
+        });
       }, title: deleteItemMessage, className: 'dangerous' },
     deleteMessage,
     _react2.default.createElement(
@@ -85,7 +93,7 @@ var ContextButtons = function ContextButtons(props) {
       { className: 'eureka__button-bar eureka__context-buttons', role: 'listbox', 'aria-label': performContextualActionsMessage, tabIndex: '0', 'aria-activedescendant': 'expand__' + (0, _utility.cssSafe)(item.filename) },
       _react2.default.createElement(
         'a',
-        { role: 'option', id: 'expand__' + (0, _utility.cssSafe)(item.filename), href: item.absoluteURL, target: '_' + encodeURI(item.absoluteURL), className: 'button', title: expandItemMessage },
+        { onBlur: props.onBlur, role: 'option', id: 'expand__' + (0, _utility.cssSafe)(item.filename), href: item.absoluteURL, target: '_' + encodeURI(item.absoluteURL), className: 'button', title: expandItemMessage },
         expandMessage,
         _react2.default.createElement(
           'span',

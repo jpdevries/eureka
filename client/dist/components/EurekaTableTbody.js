@@ -62,8 +62,6 @@ var EurekaTableTbody = function (_PureComponent) {
 
     var _this = _possibleConstructorReturn(this, (EurekaTableTbody.__proto__ || Object.getPrototypeOf(EurekaTableTbody)).call(this, props));
 
-    console.log(props);
-
     _this.state = {
       focusedMediaItem: undefined,
       filter: undefined
@@ -115,8 +113,6 @@ var EurekaTableTbody = function (_PureComponent) {
   }, {
     key: 'handleResizeEvent',
     value: function handleResizeEvent(event) {
-      //console.log('handleResize',this,event);
-      //console.log(this.isScrollable(this.tbody));
       var isScrollable = this.isScrollable(this.tbody);
       if (isScrollable === _store2.default.getState().view.isTableScrolling) return;
       _store2.default.dispatch(_actions2.default.updateView({
@@ -131,7 +127,6 @@ var EurekaTableTbody = function (_PureComponent) {
   }, {
     key: 'handleScroll',
     value: function handleScroll(event) {
-      //console.log('handleScroll', event);
       var isScrollable = this.isScrollable(this.tbody);
       if (isScrollable === _store2.default.getState().view.isTableScrolling) return;
       _store2.default.dispatch(_actions2.default.updateView({
@@ -139,10 +134,23 @@ var EurekaTableTbody = function (_PureComponent) {
       }));
     }
   }, {
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps, nextState) {
+
+      if (this.state.filter) return true;
+      try {
+        console.log('shouldComponentUpdate', this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path, this.state.focusedMediaItem.path, nextProps.view.focusedMediaItem.path);
+        //if((this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path)) return true; // #janky SLOOOOW
+      } catch (e) {}
+      console.log(!(this.props.content.contents === nextProps.content.contents));
+      return !(this.props.content.contents === nextProps.content.contents);
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _this2 = this;
 
+      //console.log('rendering EurekaTableTbody');
       var props = this.props,
           state = this.state;
 
@@ -193,12 +201,13 @@ var EurekaTableTbody = function (_PureComponent) {
 
       var contentList = contents.length ? contents.map(function (item, index) {
         return [_react2.default.createElement(_MediaRow2.default, _extends({}, props, { intl: props.intl, focusedMediaItem: state.focusedMediaItem, renameStart: _this2.handleRenameStart, item: item, index: index, key: index, onFocus: function onFocus(event) {
-            /*store.dispatch(actions.updateView({
-              focusedMediaItem: item
-            }));*/
+
             _this2.setState({
               focusedMediaItem: item
             });
+            _store2.default.dispatch(_actions2.default.updateView({
+              focusedMediaItem: item
+            }));
           },
           onBlur: function onBlur(event) {}
         }))];

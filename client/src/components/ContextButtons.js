@@ -3,7 +3,9 @@ import React from 'react';
 import store from '../model/store';
 import actions from '../model/actions';
 
-import {cssSafe} from '../utility/utility';
+import { cssSafe, notify } from '../utility/utility';
+
+import path from 'path';
 
 import { FormattedMessage, FormattedPlural, FormattedNumber, FormattedRelative, defineMessages } from 'react-intl';
 import definedMessages from '../i18n/definedMessages';
@@ -38,7 +40,11 @@ const ContextButtons = (props) => {
   const renameBtn = (props.config.allowRename) ? (<button id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }rename__${cssSafe(item.filename)}`} role="option" title={renameItemMessage} onClick={props.onRenameItem ? props.onRenameItem.bind(null, item) : undefined}>{renameMessage}<span className="visually-hidden"> {item.filename}</span></button>) : undefined,
   deleteBtn = (props.config.allowDelete) ? (
     <button id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }delete__${cssSafe(item.filename)}`} role="option" onClick={(event) => {
-        store.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path, props.config.headers));
+        store.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path, props.config.headers)).then(() => {
+          notify(`Deleted item ${item.filename}`, {
+            icon: path.join(props.config.assetsBasePath, 'img/src/png/trash-o.png')
+          });
+        });
       }} title={deleteItemMessage} className="dangerous">{deleteMessage}<span className="visually-hidden"> {item.filename}</span></button>
   ) : undefined;
 

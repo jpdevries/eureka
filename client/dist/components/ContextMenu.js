@@ -4,6 +4,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
@@ -27,7 +29,7 @@ var ContextMenu = function ContextMenu(props) {
   return _react2.default.createElement(
     'td',
     { className: props.className, hidden: props.hidden === undefined ? true : props.hidden },
-    _react2.default.createElement(_ContextButtons2.default, props)
+    _react2.default.createElement(_ContextButtons2.default, _extends({ onBlur: props.onBlur, onFirstFocus: props.onFirstFocus }, props))
   );
 };
 

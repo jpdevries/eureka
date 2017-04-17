@@ -32,6 +32,7 @@ class MediaRow extends PureComponent {
     //console.log('MediaRow shouldComponentUpdate', this.props, nextProps);
     if(this.props.item !== nextProps.item) return true;
     try {
+      console.log((nextProps.focusedMediaItem !== undefined));
       return (nextProps.focusedMediaItem !== undefined);
     } catch(e) {}
     console.log('MediaRow should not update');
@@ -42,19 +43,23 @@ class MediaRow extends PureComponent {
     //console.log('onBlur');
   }
 
-  removeFocusedMediaItems(except) {
-    console.log(`.eureka__focused-media-item:not(#${except})`);
-    const focusedMediaItems = document.querySelectorAll(`.eureka__focused-media-item:not(#${except})`);
+  removeFocusedMediaItems(target) { // super #janky but haven't been able to optimize another way
+    //console.log(`tr[role="row"]:not(#${target.getAttribute('id')})`);
+    const focusedMediaItems = target.closest('tbody').querySelectorAll(`tr[role="row"]`); // :not(#${target.getAttribute('id')})
     for(let i = 0; i < focusedMediaItems.length; i++) {
-      focusedMediaItems[i].classList.remove('eureka__focused-media-item');
+      if(focusedMediaItems[i].getAttribute('id') !== target.getAttribute('id')) {
+        focusedMediaItems[i].classList.remove('eureka__focused-media-item');
+        focusedMediaItems[i].querySelector('.eureka__context-row').setAttribute('hidden', 'true');
+      }
     }
   }
 
   onFocus(event) {
     if(!event.target.matches('tr')) return;
 
-    this.removeFocusedMediaItems(event.target.getAttribute('id'));
+    this.removeFocusedMediaItems(event.target);
     event.target.classList.add('eureka__focused-media-item');
+    this.props.onFocus();
   }
 
   render() {
@@ -169,6 +174,8 @@ class MediaRow extends PureComponent {
         return (<p><Icon {...props} icon={icon} />&ensp;{props.item.absoluteURL}</p>);
       }
     })(pathParse(props.item.filename).ext);
+
+    if((props.item == props.focusedMediaItem)) console.log(props.item == props.focusedMediaItem, props.item, props.focusedMediaItem);
 
 
     const mediaId = `${props.config.storagePrefix || 'eureka__'}__media__${utility.cssSafe(props.item.filename)}`,
