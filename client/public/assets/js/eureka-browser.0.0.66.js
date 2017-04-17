@@ -245,7 +245,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    store.subscribe(function () {
 	      var state = store.getState();
-	      //console.log(state);
+	      console.log(state);
 
 	      // whenever the state changes we store pieces of the state locally so that next time Eureka fires up it can render the user interface without delay
 	      if (state.config.useLocalStorage) {
@@ -259,7 +259,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          //localStorage.setItem(`${state.config.storagePrefix}treeHidden`, !state.view.sourceTreeOpen);
 	          localStorage.setItem(state.config.storagePrefix + 'content', JSON.stringify(state.content));
 	          localStorage.setItem(state.config.storagePrefix + 'tree', JSON.stringify(state.tree));
-	          //console.log(state.view, JSON.stringify(state.view));
+	          console.log('state.view', JSON.stringify(state.view));
 	          localStorage.setItem(state.config.storagePrefix + 'view', JSON.stringify(state.view));
 	        } catch (e) {}
 	      }
@@ -1600,6 +1600,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  locale: "en-US",
 	  sort: 'name',
 	  isTableScrolling: false,
+	  allowFullscreen: false,
 	  intervals: {
 	    searchBarPlaceholder: false,
 	    fetchDirectoryContents: false,
@@ -1608,7 +1609,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}, function () {
 	  try {
 	    var json = JSON.parse(localStorage.getItem('eureka__view'));
-	    //console.log('json',json);
+	    console.log('json', json);
 	    return json;
 	    /*return (
 	      Object.assign({}, json, {
@@ -1646,6 +1647,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (action.config.locale) o = Object.assign({}, o, { locale: action.config.locale });
 	      if (action.config.enlargeFocusedRows !== undefined) o = Object.assign({}, o, { enlargeFocusedRows: action.config.enlargeFocusedRows });
 	      if (action.config.treeHidden !== undefined) o = Object.assign({}, o, { sourceTreeOpen: !action.config.treeHidden });
+	      if (action.config.allowFullscreen !== undefined) o = Object.assign({}, o, { allowFullscreen: action.config.allowFullscreen });
 
 	      return Object.assign({}, state, o);
 
@@ -3357,7 +3359,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.65",
+		"version": "0.0.66",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -8811,13 +8813,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function render() {
 	      var _this2 = this;
 
+	      console.log('ViewChooser', this.props);
 	      var props = this.props,
 	          formatMessage = props.intl.formatMessage,
 	          tabularLayoutMessage = formatMessage(_definedMessages2.default.tabularLayoutDescription),
 	          thumbLayoutMessage = formatMessage(_definedMessages2.default.thumbnailLayoutDescription),
 	          gridLayoutMessage = formatMessage(_definedMessages2.default.gridLayoutDescription),
 	          listLayoutMessage = formatMessage(_definedMessages2.default.listLayoutDescription),
-	          fullscreenToggle = this.state.supportsFullscreen ? _react2.default.createElement(
+	          fullscreenToggle = props.view.allowFullscreen && this.state.supportsFullscreen ? _react2.default.createElement(
 	        'div',
 	        null,
 	        _react2.default.createElement('input', { type: 'checkbox', id: 'eureka__fullscreen-toggle', name: 'eureka__fullscreen-toggle', value: '1', onChange: function onChange(event) {

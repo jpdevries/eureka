@@ -37,7 +37,6 @@ function render() {
       confirmBeforeDelete={true}
       allowFullscreen={true}
       enlargeFocusedRows={false}
-      allowFullscreen={true}
       emphasisFocusedMediaItem={true}
       storagePrefix={'eureka__'}
       lang="en-US"

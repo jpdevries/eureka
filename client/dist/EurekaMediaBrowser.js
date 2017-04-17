@@ -189,7 +189,7 @@ var EurekaMediaBrowser = function (_PureComponent) {
 
     store.subscribe(function () {
       var state = store.getState();
-      //console.log(state);
+      console.log(state);
 
       // whenever the state changes we store pieces of the state locally so that next time Eureka fires up it can render the user interface without delay
       if (state.config.useLocalStorage) {
@@ -203,7 +203,7 @@ var EurekaMediaBrowser = function (_PureComponent) {
           //localStorage.setItem(`${state.config.storagePrefix}treeHidden`, !state.view.sourceTreeOpen);
           localStorage.setItem(state.config.storagePrefix + 'content', JSON.stringify(state.content));
           localStorage.setItem(state.config.storagePrefix + 'tree', JSON.stringify(state.tree));
-          //console.log(state.view, JSON.stringify(state.view));
+          console.log('state.view', JSON.stringify(state.view));
           localStorage.setItem(state.config.storagePrefix + 'view', JSON.stringify(state.view));
         } catch (e) {}
       }

@@ -62,13 +62,14 @@ var ViewChooser = function (_FullScreenPureCompon) {
     value: function render() {
       var _this2 = this;
 
+      console.log('ViewChooser', this.props);
       var props = this.props,
           formatMessage = props.intl.formatMessage,
           tabularLayoutMessage = formatMessage(_definedMessages2.default.tabularLayoutDescription),
           thumbLayoutMessage = formatMessage(_definedMessages2.default.thumbnailLayoutDescription),
           gridLayoutMessage = formatMessage(_definedMessages2.default.gridLayoutDescription),
           listLayoutMessage = formatMessage(_definedMessages2.default.listLayoutDescription),
-          fullscreenToggle = this.state.supportsFullscreen ? _react2.default.createElement(
+          fullscreenToggle = props.view.allowFullscreen && this.state.supportsFullscreen ? _react2.default.createElement(
         'div',
         null,
         _react2.default.createElement('input', { type: 'checkbox', id: 'eureka__fullscreen-toggle', name: 'eureka__fullscreen-toggle', value: '1', onChange: function onChange(event) {

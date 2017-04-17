@@ -254,6 +254,7 @@ var initialViewState = Object.assign({}, {
   locale:"en-US",
   sort:'name',
   isTableScrolling:false,
+  allowFullscreen: false,
   intervals: {
     searchBarPlaceholder: false,
     fetchDirectoryContents: false,
@@ -262,7 +263,7 @@ var initialViewState = Object.assign({}, {
 }, (() => {
   try {
     const json = JSON.parse(localStorage.getItem('eureka__view'));
-    //console.log('json',json);
+    console.log('json',json);
     return json;
     /*return (
       Object.assign({}, json, {
@@ -301,6 +302,7 @@ var viewReducer = function(state, action) {
     if(action.config.locale) o = Object.assign({},o,{locale:action.config.locale});
     if(action.config.enlargeFocusedRows !== undefined) o = Object.assign({},o,{enlargeFocusedRows:action.config.enlargeFocusedRows});
     if(action.config.treeHidden !== undefined) o = Object.assign({},o,{sourceTreeOpen:!action.config.treeHidden});
+    if(action.config.allowFullscreen !== undefined) o = Object.assign({},o,{allowFullscreen:action.config.allowFullscreen});
 
     return Object.assign({},state,o);
 

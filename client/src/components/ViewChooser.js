@@ -16,13 +16,14 @@ import FullScreenPureComponent from './FullScreenPureComponent';
 
 class ViewChooser extends FullScreenPureComponent {
   render() {
+    console.log('ViewChooser', this.props);
     const props = this.props,
     formatMessage = props.intl.formatMessage,
     tabularLayoutMessage = formatMessage(definedMessages.tabularLayoutDescription),
     thumbLayoutMessage = formatMessage(definedMessages.thumbnailLayoutDescription),
     gridLayoutMessage = formatMessage(definedMessages.gridLayoutDescription),
     listLayoutMessage = formatMessage(definedMessages.listLayoutDescription),
-    fullscreenToggle = (this.state.supportsFullscreen) ? (
+    fullscreenToggle = (props.view.allowFullscreen && this.state.supportsFullscreen) ? (
       <div>
         <input type="checkbox" id="eureka__fullscreen-toggle" name="eureka__fullscreen-toggle" value="1" onChange={(event) => {
           const closestRoot = event.target.closest('.eureka-root');
