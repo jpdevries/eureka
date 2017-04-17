@@ -105,6 +105,7 @@ var MediaRow = function (_PureComponent) {
 
       this.removeFocusedMediaItems(event.target);
       event.target.classList.add('eureka__focused-media-item');
+      event.target.querySelector('.eureka__context-row').removeAttribute('hidden');
       this.props.onFocus();
     }
   }, {

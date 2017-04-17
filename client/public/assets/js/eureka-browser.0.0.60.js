@@ -3332,7 +3332,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.59",
+		"version": "0.0.60",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -9554,6 +9554,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      this.removeFocusedMediaItems(event.target);
 	      event.target.classList.add('eureka__focused-media-item');
+	      event.target.querySelector('.eureka__context-row').removeAttribute('hidden');
 	      this.props.onFocus();
 	    }
 	  }, {
