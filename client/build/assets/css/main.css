@@ -45,7 +45,8 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
 
 .eureka-root:-webkit-full-screen {
   width: 100vw;
-  height: 100vh; }
+  height: 100vh;
+  overflow-y: auto; }
 
 .eureka-root label[for*="fullscreen-toggle"] {
   margin-left: 8px;

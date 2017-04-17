@@ -15,6 +15,7 @@
   &:-webkit-full-screen {
     width: 100vw;
     height: 100vh;
+    overflow-y: auto;
   }
 
   label[for*="fullscreen-toggle"] {
