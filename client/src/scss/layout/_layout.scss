@@ -16,6 +16,7 @@
     width: 100vw;
     height: 100vh;
     overflow-y: auto;
+    background: var(--bg-color, #ececec);
   }
 
   label[for*="fullscreen-toggle"] {
