@@ -562,6 +562,7 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
     padding-right: .5rem; }
 
 .dangerous {
+  color: red;
   color: var(--dangerous, red); }
 
 .flex-bar, .eureka .eureka__button-bar, .eureka .eureka__tree-bar {
@@ -600,6 +601,7 @@ a[role="presentation"] {
 }*/
 /* end leave out */
 .eureka .eureka__stage, .eureka *[class^="alert"], .eureka .eureka__pathbrowser, .eureka .eureka__pathbar, .eureka .eureka__modal .eureka__modal-panel, .eureka .eureka__context-buttons {
+  border: 1px solid #dddddd;
   border: var(--border-width, 1px) var(--border-style, solid) var(--panel-border-color, #dddddd); }
 
 .eureka .eureka__stage, .eureka *[class^="alert"], .eureka .eureka__pathbrowser, .eureka .eureka__pathbar, .eureka .eureka__modal .eureka__modal-panel, .eureka .eureka__table td.comfortable {
@@ -611,6 +613,7 @@ a[role="presentation"] {
 
 .eureka .eureka__stage, .eureka *[class^="alert"], .eureka .eureka__pathbrowser, .eureka .eureka__pathbar, .eureka .eureka__modal .eureka__modal-panel {
   border-radius: 0.25rem;
+  background: white;
   background: var(--light-bg, white); }
 
 .eureka {
@@ -643,10 +646,12 @@ a[role="presentation"] {
     }
   }*/ }
   .eureka a {
+    color: #3697cd;
     color: var(--link-color, #3697cd); }
   .eureka h1, .eureka h2, .eureka h3, .eureka h4, .eureka h5, .eureka h6 {
     font-weight: normal; }
   .eureka h1, .eureka h2, .eureka h3, .eureka h4, .eureka h5, .eureka h6, .eureka thead {
+    color: #555555;
     color: var(--subtle, #555555); }
   .eureka button[id^="eureka__tree-toggle__button"] {
     margin-bottom: 16px;
@@ -674,8 +679,11 @@ a[role="presentation"] {
   .eureka a.button {
     text-decoration: none; }
   .eureka button, .eureka a.button {
+    background: white;
     background: var(--button-bg, white);
+    box-shadow: 0 0 0 1px #E4E4E4;
     box-shadow: 0 0 0 1px var(--border-color, #E4E4E4);
+    color: #555555;
     color: var(--button-color, #555555);
     border: 0;
     border-radius: 3px;
@@ -706,15 +714,21 @@ a[role="presentation"] {
     padding-right: 8px;
     padding-right: 0.5rem; }
   .eureka input[type="text"] {
+    border-width: 1px;
     border-width: var(--border-width, 1px);
+    border-style: solid;
     border-style: var(--border-style, solid);
+    border-color: #E4E4E4;
     border-color: var(--border-color, #E4E4E4); }
   .eureka fieldset {
     border: none; }
     @media screen and (max-width: 640px) {
       .eureka fieldset {
+        border-width: 1px;
         border-width: var(--border-width, 1px);
+        border-style: solid;
         border-style: var(--border-style, solid);
+        border-color: #E4E4E4;
         border-color: var(--border-color, #E4E4E4); } }
   .eureka .active {
     font-weight: bold; }
@@ -725,8 +739,11 @@ a[role="presentation"] {
   .eureka img {
     max-width: 100%; }
   .eureka .alert-info {
+    background-color: #d9edf7;
     background-color: var(--light-bg, #d9edf7);
+    border-color: #bce8f1;
     border-color: var(--border-color, #bce8f1);
+    color: #31708f;
     color: var(--subtle, #31708f); }
   .eureka .alert-success {
     background-color: #dff0d8;
@@ -748,6 +765,7 @@ a[role="presentation"] {
   .eureka .eureka__context-buttons {
     -ms-flex-pack: distribute;
         justify-content: space-around;
+    background: #f7f7f7;
     background: var(--button-bg, #f7f7f7);
     border-left: 0;
     border-right: 0;
@@ -806,6 +824,7 @@ a[role="presentation"] {
               flex: 1 0 auto;
           max-width: 28em; } }
       .eureka .eureka__stage__filter-view .eureka__search-bar label {
+        color: #556C88;
         color: var(--subtle, #556C88); }
       @media screen and (min-width: 641px) {
         .eureka .eureka__stage__filter-view .eureka__search-bar {
@@ -836,8 +855,11 @@ a[role="presentation"] {
         content:'.';
       }*/ }
     .eureka .eureka__media-directory-selector select {
+      background: white;
       background: var(--button-bg, white);
+      box-shadow: 0 0 0 1px #E4E4E4;
       box-shadow: 0 0 0 1px var(--border-color, #E4E4E4);
+      color: #555555;
       color: var(--button-color, #555555);
       border: 0;
       border-radius: 3px;
@@ -881,8 +903,11 @@ a[role="presentation"] {
     margin-bottom: 16px;
     margin-bottom: 1rem; }
     .eureka .eureka__upload-form label {
+      background: white;
       background: var(--button-bg, white);
+      box-shadow: 0 0 0 1px #E4E4E4;
       box-shadow: 0 0 0 1px var(--border-color, #E4E4E4);
+      color: #555555;
       color: var(--button-color, #555555);
       border: 0;
       border-radius: 3px;
@@ -917,6 +942,7 @@ a[role="presentation"] {
       .eureka .eureka__pathbrowser {
         margin-bottom: 0; } }
     .eureka .eureka__pathbrowser nav {
+      color: #556C88;
       color: var(--subtle, #556C88); }
     .eureka .eureka__pathbrowser details > summary svg {
       transform: translateY(0.2em);
@@ -942,6 +968,7 @@ a[role="presentation"] {
       background: none;
       border: none; }
   .eureka .eureka__layout-chooser {
+    color: #556C88;
     color: var(--subtle, #556C88); }
     .eureka .eureka__layout-chooser fieldset {
       margin: 0;
@@ -962,6 +989,7 @@ a[role="presentation"] {
         -ms-flex-pack: center;
             justify-content: center; }
       .eureka .eureka__layout-chooser .eureka__icon-radio-btns input[type="radio"]:checked + label svg[class^="icon"], .eureka .eureka__layout-chooser .eureka__icon-radio-btns input[type="checkbox"]:checked + label svg[class^="icon"] {
+        fill: #3697cd;
         fill: var(--active, #3697cd); }
       .eureka .eureka__layout-chooser .eureka__icon-radio-btns label {
         font-size: 22.4px;
@@ -994,6 +1022,7 @@ a[role="presentation"] {
     padding: 8px;
     padding: .5rem;
     border-width: 2px;
+    border-color: #dddddd;
     border-color: var(--very-subtle, #dddddd);
     border-style: dashed;
     border-radius: 5px;
@@ -1010,15 +1039,19 @@ a[role="presentation"] {
         display: flex; } }
     .eureka .eureka__drop-area-zone svg {
       font-size: 4em;
+      fill: #dddddd;
       fill: var(--very-subtle, #dddddd);
       transition: fill 240ms ease 160ms, opacity 240ms ease;
+      opacity: 0.42;
       opacity: var(--very-subtle-icon-opacity, 0.42);
       max-height: 100%; }
     .eureka .eureka__drop-area-zone.eureka__drop-area-zone-active {
       background-color: #d9ecf6;
+      border-color: #3697cd;
       border-color: var(--active, #3697cd);
       transition: border-color 240ms ease 120ms, background-color 320ms ease 0; }
       .eureka .eureka__drop-area-zone.eureka__drop-area-zone-active svg {
+        fill: #3697cd;
         fill: var(--active, #3697cd);
         opacity: 1; }
   .eureka .eureka__modal {

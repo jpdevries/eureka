@@ -224,6 +224,7 @@ module.exports = function(grunt) {
         processors: [
           require('pixrem')(), // add fallbacks for rem units
           require('autoprefixer')({browsers: 'last 2 versions'}), // add vendor prefixes
+          require('postcss-custom-properties')({preserve: true})
           //require('cssnano')() // minify the result
         ]
       },
@@ -413,6 +414,6 @@ module.exports = function(grunt) {
   grunt.renameTask('string-replace','bump');
 
   grunt.registerTask('default', ['growl:watch', 'watch']);
-  grunt.registerTask('build',['bower','copy:bower','modernizr','sass','postcss','cssmin','copy:css','webpack','uglify','clean:buildimg','svgstore','svgo','copy:img','growl:build']);
-  grunt.registerTask('buildcss',['sass','postcss','cssmin','copy:css','growl:sass']);
+  grunt.registerTask('build',['bower','copy:bower','modernizr','sass','copy:css','postcss','cssmin','copy:css','webpack','uglify','clean:buildimg','svgstore','svgo','copy:img','growl:build']);
+  grunt.registerTask('buildcss',['sass','copy:css','postcss','cssmin','copy:css','growl:sass']);
 };

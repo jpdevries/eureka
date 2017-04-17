@@ -50,6 +50,7 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
 
 .eureka-root label[for*="fullscreen-toggle"] {
   margin-left: 8px;
+  margin-left: 8px;
   margin-left: .5rem; }
 
 .eureka-root .eureka__view-mode__table tbody:not(.empty) > tr.eureka__focused-media-item > td.eureka__context-row, .eureka-root .eureka__view-mode__list tbody:not(.empty) > tr.eureka__focused-media-item > td.eureka__context-row {
@@ -108,6 +109,7 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
             display: none; } } }
 
 .eureka-root {
+  padding: 8px;
   padding: 8px;
   padding: .5rem; }
   @media screen and (max-width: 640px) {
@@ -404,14 +406,18 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
       max-height: 20vh; } }
   .eureka.eureka__view-mode__table .eureka__table thead th:first-child {
     padding-left: 8px;
+    padding-left: 8px;
     padding-left: .5rem; }
   .eureka.eureka__view-mode__table .eureka__table thead th:last-child {
+    padding-right: 8px;
     padding-right: 8px;
     padding-right: .5rem; }
   .eureka.eureka__view-mode__table .eureka__table tr[contextmenu] td:first-child {
     padding-left: 8px;
+    padding-left: 8px;
     padding-left: .5rem; }
   .eureka.eureka__view-mode__table .eureka__table tr[contextmenu] td:last-child {
+    padding-right: 8px;
     padding-right: 8px;
     padding-right: .5rem; }
   .eureka.eureka__view-mode__table .eureka__table tr td, .eureka.eureka__view-mode__table .eureka__table tr th {
@@ -445,6 +451,7 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
       display: -ms-flexbox !important;
       display: flex !important; } }
   .eureka.eureka__view-mode__thumb .eureka__table tbody tr[tabindex], .eureka.eureka__view-mode__grid .eureka__table tbody tr[tabindex] {
+    margin: 0 8px 8px 0;
     margin: 0 8px 8px 0;
     margin: 0 .5rem .5rem 0;
     -ms-flex-preferred-size: 42vw;
@@ -487,6 +494,7 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
 
 .eureka.eureka__view-mode__table .eureka__context-row {
   margin-top: 8px;
+  margin-top: 8px;
   margin-top: .5rem; }
 
 @media screen and (min-width: 641px) {
@@ -525,6 +533,7 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
 
 .eureka.eureka__view-mode__list .eureka__table thead th:last-child {
   padding-right: 8px;
+  padding-right: 8px;
   padding-right: .5rem; }
 
 .eureka.eureka__view-mode__list .eureka__table thead td, .eureka.eureka__view-mode__list .eureka__table thead th, .eureka.eureka__view-mode__list .eureka__table tr[contextmenu] td, .eureka.eureka__view-mode__list .eureka__table tr[contextmenu] th {
@@ -556,18 +565,23 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
   padding-bottom: 0; }
   .eureka.eureka__view-mode__list .eureka__table tbody tr[contextmenu] > td:nth-of-type(2) {
     padding-left: 8px;
+    padding-left: 8px;
     padding-left: .5rem; }
   .eureka.eureka__view-mode__list .eureka__table tbody tr[contextmenu] > td:last-child {
+    padding-right: 8px;
     padding-right: 8px;
     padding-right: .5rem; }
 
 .dangerous {
+  color: red;
+  color: red;
   color: var(--dangerous, red); }
 
 .flex-bar, .eureka .eureka__button-bar, .eureka .eureka__tree-bar {
   display: -ms-flexbox;
   display: flex; }
   .flex-bar > *, .eureka .eureka__button-bar > *, .eureka .eureka__tree-bar > * {
+    margin-right: 8px;
     margin-right: 8px;
     margin-right: .5rem; }
     .flex-bar > *:last-of-type, .eureka .eureka__button-bar > *:last-of-type, .eureka .eureka__tree-bar > *:last-of-type {
@@ -600,9 +614,12 @@ a[role="presentation"] {
 }*/
 /* end leave out */
 .eureka .eureka__stage, .eureka *[class^="alert"], .eureka .eureka__pathbrowser, .eureka .eureka__pathbar, .eureka .eureka__modal .eureka__modal-panel, .eureka .eureka__context-buttons {
+  border: 1px solid #dddddd;
+  border: 1px solid #dddddd;
   border: var(--border-width, 1px) var(--border-style, solid) var(--panel-border-color, #dddddd); }
 
 .eureka .eureka__stage, .eureka *[class^="alert"], .eureka .eureka__pathbrowser, .eureka .eureka__pathbar, .eureka .eureka__modal .eureka__modal-panel, .eureka .eureka__table td.comfortable {
+  padding: 16px;
   padding: 16px;
   padding: 1rem; }
   @media screen and (min-width: 641px) {
@@ -611,6 +628,8 @@ a[role="presentation"] {
 
 .eureka .eureka__stage, .eureka *[class^="alert"], .eureka .eureka__pathbrowser, .eureka .eureka__pathbar, .eureka .eureka__modal .eureka__modal-panel {
   border-radius: 0.25rem;
+  background: white;
+  background: white;
   background: var(--light-bg, white); }
 
 .eureka {
@@ -643,12 +662,17 @@ a[role="presentation"] {
     }
   }*/ }
   .eureka a {
+    color: #3697cd;
+    color: #3697cd;
     color: var(--link-color, #3697cd); }
   .eureka h1, .eureka h2, .eureka h3, .eureka h4, .eureka h5, .eureka h6 {
     font-weight: normal; }
   .eureka h1, .eureka h2, .eureka h3, .eureka h4, .eureka h5, .eureka h6, .eureka thead {
+    color: #555555;
+    color: #555555;
     color: var(--subtle, #555555); }
   .eureka button[id^="eureka__tree-toggle__button"] {
+    margin-bottom: 16px;
     margin-bottom: 16px;
     margin-bottom: 1rem; }
     @media screen and (max-width: 640px) {
@@ -674,8 +698,14 @@ a[role="presentation"] {
   .eureka a.button {
     text-decoration: none; }
   .eureka button, .eureka a.button {
+    background: white;
+    background: white;
     background: var(--button-bg, white);
+    box-shadow: 0 0 0 1px #E4E4E4;
+    box-shadow: 0 0 0 1px #E4E4E4;
     box-shadow: 0 0 0 1px var(--border-color, #E4E4E4);
+    color: #555555;
+    color: #555555;
     color: var(--button-color, #555555);
     border: 0;
     border-radius: 3px;
@@ -702,19 +732,33 @@ a[role="presentation"] {
       background-image: linear-gradient(red, #cc0000); }
   .eureka input[type="text"] {
     padding-left: 8px;
+    padding-left: 8px;
     padding-left: 0.5rem;
+    padding-right: 8px;
     padding-right: 8px;
     padding-right: 0.5rem; }
   .eureka input[type="text"] {
+    border-width: 1px;
+    border-width: 1px;
     border-width: var(--border-width, 1px);
+    border-style: solid;
+    border-style: solid;
     border-style: var(--border-style, solid);
+    border-color: #E4E4E4;
+    border-color: #E4E4E4;
     border-color: var(--border-color, #E4E4E4); }
   .eureka fieldset {
     border: none; }
     @media screen and (max-width: 640px) {
       .eureka fieldset {
+        border-width: 1px;
+        border-width: 1px;
         border-width: var(--border-width, 1px);
+        border-style: solid;
+        border-style: solid;
         border-style: var(--border-style, solid);
+        border-color: #E4E4E4;
+        border-color: #E4E4E4;
         border-color: var(--border-color, #E4E4E4); } }
   .eureka .active {
     font-weight: bold; }
@@ -725,14 +769,21 @@ a[role="presentation"] {
   .eureka img {
     max-width: 100%; }
   .eureka .alert-info {
+    background-color: #d9edf7;
+    background-color: #d9edf7;
     background-color: var(--light-bg, #d9edf7);
+    border-color: #bce8f1;
+    border-color: #bce8f1;
     border-color: var(--border-color, #bce8f1);
+    color: #31708f;
+    color: #31708f;
     color: var(--subtle, #31708f); }
   .eureka .alert-success {
     background-color: #dff0d8;
     border-color: #d6e9c6;
     color: #3c763d; }
   .eureka .eureka__tree {
+    margin-bottom: 16px;
     margin-bottom: 16px;
     margin-bottom: 1rem; }
     @media (pointer: coarse) {
@@ -741,6 +792,7 @@ a[role="presentation"] {
         line-height: 1.8; } }
   .eureka .eureka__tree-toggle {
     margin-bottom: 16px;
+    margin-bottom: 16px;
     margin-bottom: 1rem; }
     @media screen and (min-width: 641px) {
       .eureka .eureka__tree-toggle {
@@ -748,27 +800,36 @@ a[role="presentation"] {
   .eureka .eureka__context-buttons {
     -ms-flex-pack: distribute;
         justify-content: space-around;
+    background: #f7f7f7;
+    background: #f7f7f7;
     background: var(--button-bg, #f7f7f7);
     border-left: 0;
     border-right: 0;
     padding: 8px 0;
+    padding: 8px 0;
     padding: .5rem 0; }
     .eureka .eureka__context-buttons > a.button, .eureka .eureka__context-buttons button {
+      font-size: 11px;
       font-size: 11px;
       font-size: .6875rem; }
   .eureka.eureka__view-mode__list .eureka__context-buttons {
     padding-top: 5.6px;
+    padding-top: 5.6px;
     padding-top: .35rem;
+    padding-bottom: 5.6px;
     padding-bottom: 5.6px;
     padding-bottom: .35rem; }
     .eureka.eureka__view-mode__list .eureka__context-buttons > a.button, .eureka.eureka__view-mode__list .eureka__context-buttons button {
+      font-size: 9.6px;
       font-size: 9.6px;
       font-size: .6rem; }
   .eureka .eureka__table {
     min-width: 100%; }
     .eureka .eureka__table tr[contextmenu] {
       padding-top: 8px;
+      padding-top: 8px;
       padding-top: .5rem;
+      padding-bottom: 8px;
       padding-bottom: 8px;
       padding-bottom: .5rem;
       /*&:first-child {
@@ -781,6 +842,7 @@ a[role="presentation"] {
   .eureka .eureka__stage {
     padding: 0;
     margin-bottom: 8px;
+    margin-bottom: 8px;
     margin-bottom: .5rem; }
     @media screen and (min-width: 641px) {
       .eureka .eureka__stage {
@@ -789,13 +851,16 @@ a[role="presentation"] {
       margin-top: 0; }
   .eureka .eureka__stage__filter-view {
     padding: 8px;
+    padding: 8px;
     padding: .5rem; }
     .eureka .eureka__stage__filter-view .eureka__search-bar {
       line-height: 2;
       font-size: 16px;
+      font-size: 16px;
       font-size: 1rem;
       display: -ms-flexbox;
       display: flex;
+      margin-bottom: 16px;
       margin-bottom: 16px;
       margin-bottom: 1rem; }
       @media screen and (min-width: 641px) {
@@ -806,6 +871,8 @@ a[role="presentation"] {
               flex: 1 0 auto;
           max-width: 28em; } }
       .eureka .eureka__stage__filter-view .eureka__search-bar label {
+        color: #556C88;
+        color: #556C88;
         color: var(--subtle, #556C88); }
       @media screen and (min-width: 641px) {
         .eureka .eureka__stage__filter-view .eureka__search-bar {
@@ -816,11 +883,13 @@ a[role="presentation"] {
         font-size: inherit; }
   .eureka .eureka__media-directory-selector {
     margin-bottom: 16px;
+    margin-bottom: 16px;
     margin-bottom: 1rem; }
     @media screen and (min-width: 641px) {
       .eureka .eureka__media-directory-selector {
         margin-right: auto; } }
     .eureka .eureka__media-directory-selector button[type="submit"] {
+      margin-left: 16px;
       margin-left: 16px;
       margin-left: 1rem; }
     .eureka .eureka__media-directory-selector form {
@@ -836,8 +905,14 @@ a[role="presentation"] {
         content:'.';
       }*/ }
     .eureka .eureka__media-directory-selector select {
+      background: white;
+      background: white;
       background: var(--button-bg, white);
+      box-shadow: 0 0 0 1px #E4E4E4;
+      box-shadow: 0 0 0 1px #E4E4E4;
       box-shadow: 0 0 0 1px var(--border-color, #E4E4E4);
+      color: #555555;
+      color: #555555;
       color: var(--button-color, #555555);
       border: 0;
       border-radius: 3px;
@@ -866,27 +941,38 @@ a[role="presentation"] {
           margin-top: .5em; } }
   .eureka .eureka__tree-bar {
     margin: 16px 0 0 0;
+    margin: 16px 0 0 0;
     margin: 1rem 0 0 0; }
     .eureka .eureka__tree-bar button {
+      font-size: 16px;
       font-size: 16px;
       font-size: 1rem;
       -ms-flex: 1 0 auto;
           flex: 1 0 auto; }
   .eureka .eureka__media-source-selector {
     margin-bottom: 16px;
+    margin-bottom: 16px;
     margin-bottom: 1rem; }
     .eureka .eureka__media-source-selector h2:first-child, .eureka .eureka__media-source-selector h3:first-child {
       margin-top: 0; }
   .eureka .eureka__upload-form {
     margin-bottom: 16px;
+    margin-bottom: 16px;
     margin-bottom: 1rem; }
     .eureka .eureka__upload-form label {
+      background: white;
+      background: white;
       background: var(--button-bg, white);
+      box-shadow: 0 0 0 1px #E4E4E4;
+      box-shadow: 0 0 0 1px #E4E4E4;
       box-shadow: 0 0 0 1px var(--border-color, #E4E4E4);
+      color: #555555;
+      color: #555555;
       color: var(--button-color, #555555);
       border: 0;
       border-radius: 3px;
       padding: .5em .5em;
+      font-size: 11px;
       font-size: 11px;
       font-size: .6875rem;
       text-align: center; }
@@ -906,17 +992,21 @@ a[role="presentation"] {
     }*/ }
     .eureka .eureka__choose-bar button {
       font-size: 16px;
+      font-size: 16px;
       font-size: 1rem; }
       @media screen and (min-width: 641px) {
         .eureka .eureka__choose-bar button {
           font-size: .8rem; } }
   .eureka .eureka__pathbrowser {
     margin-bottom: 8px;
+    margin-bottom: 8px;
     margin-bottom: .5rem; }
     @media screen and (min-width: 641px) {
       .eureka .eureka__pathbrowser {
         margin-bottom: 0; } }
     .eureka .eureka__pathbrowser nav {
+      color: #556C88;
+      color: #556C88;
       color: var(--subtle, #556C88); }
     .eureka .eureka__pathbrowser details > summary svg {
       transform: translateY(0.2em);
@@ -929,6 +1019,7 @@ a[role="presentation"] {
       display: none; }
   .eureka .eureka__pathbar {
     margin-bottom: 16px;
+    margin-bottom: 16px;
     margin-bottom: 1rem; }
     @media screen and (min-width: 641px) {
       .eureka .eureka__pathbar {
@@ -937,11 +1028,14 @@ a[role="presentation"] {
       word-wrap: break-word; }
     .eureka .eureka__pathbar details > div {
       padding-top: 16px;
+      padding-top: 16px;
       padding-top: 1rem; }
     .eureka .eureka__pathbar .eureka__context-buttons {
       background: none;
       border: none; }
   .eureka .eureka__layout-chooser {
+    color: #556C88;
+    color: #556C88;
     color: var(--subtle, #556C88); }
     .eureka .eureka__layout-chooser fieldset {
       margin: 0;
@@ -962,8 +1056,11 @@ a[role="presentation"] {
         -ms-flex-pack: center;
             justify-content: center; }
       .eureka .eureka__layout-chooser .eureka__icon-radio-btns input[type="radio"]:checked + label svg[class^="icon"], .eureka .eureka__layout-chooser .eureka__icon-radio-btns input[type="checkbox"]:checked + label svg[class^="icon"] {
+        fill: #3697cd;
+        fill: #3697cd;
         fill: var(--active, #3697cd); }
       .eureka .eureka__layout-chooser .eureka__icon-radio-btns label {
+        font-size: 22.4px;
         font-size: 22.4px;
         font-size: 1.4rem;
         display: -ms-flexbox;
@@ -992,8 +1089,11 @@ a[role="presentation"] {
   .eureka .eureka__drop-area-zone {
     width: 100%;
     padding: 8px;
+    padding: 8px;
     padding: .5rem;
     border-width: 2px;
+    border-color: #dddddd;
+    border-color: #dddddd;
     border-color: var(--very-subtle, #dddddd);
     border-style: dashed;
     border-radius: 5px;
@@ -1010,15 +1110,23 @@ a[role="presentation"] {
         display: flex; } }
     .eureka .eureka__drop-area-zone svg {
       font-size: 4em;
+      fill: #dddddd;
+      fill: #dddddd;
       fill: var(--very-subtle, #dddddd);
       transition: fill 240ms ease 160ms, opacity 240ms ease;
+      opacity: 0.42;
+      opacity: 0.42;
       opacity: var(--very-subtle-icon-opacity, 0.42);
       max-height: 100%; }
     .eureka .eureka__drop-area-zone.eureka__drop-area-zone-active {
       background-color: #d9ecf6;
+      border-color: #3697cd;
+      border-color: #3697cd;
       border-color: var(--active, #3697cd);
       transition: border-color 240ms ease 120ms, background-color 320ms ease 0; }
       .eureka .eureka__drop-area-zone.eureka__drop-area-zone-active svg {
+        fill: #3697cd;
+        fill: #3697cd;
         fill: var(--active, #3697cd);
         opacity: 1; }
   .eureka .eureka__modal {
@@ -1042,15 +1150,16 @@ a[role="presentation"] {
       .eureka .eureka__modal .eureka__modal-panel label {
         display: block;
         margin-bottom: 8px;
+        margin-bottom: 8px;
         margin-bottom: .5rem; }
       .eureka .eureka__modal .eureka__modal-panel input[type="text"] {
         width: 100%;
         font-size: 1.4em; }
       .eureka .eureka__modal .eureka__modal-panel .flex-bar {
         margin-top: 8px;
+        margin-top: 8px;
         margin-top: .5rem; }
         .eureka .eureka__modal .eureka__modal-panel .flex-bar > * {
           -ms-flex: 1 0 auto;
               flex: 1 0 auto; }
-
-/*# sourceMappingURL=main.css.map */
+/*# sourceMappingURL=eureka.0.0.67.css.map */
