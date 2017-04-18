@@ -36,7 +36,8 @@ it('choose button of Virtual DOM should be initially disabled if focused media i
 
   const props = {
     config: {
-      storagePrefix:'eureka__'
+      storagePrefix:'eureka__',
+      allowChoose: true
     },
     view: {
       focusedMediaItem: undefined
@@ -56,7 +57,8 @@ it('choose button of Virtual DOM should not be initially disabled if focused med
 
   const props = {
     config: {
-      storagePrefix:'eureka__'
+      storagePrefix:'eureka__',
+      allowChoose: true
     },
     view: {
       focusedMediaItem: {
@@ -64,7 +66,7 @@ it('choose button of Virtual DOM should not be initially disabled if focused med
       }
     }
   };
-
+ 
   ReactDOM.render(<IntlProvider><ChooseBarIntl {...props} /></IntlProvider>, div);
 
   if(div.querySelector(`#${props.config.storagePrefix}choose-button`).hasAttribute('disabled')) {
