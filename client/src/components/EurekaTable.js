@@ -52,30 +52,35 @@ class EurekaTable extends Component {
 
     const decoratedActions = this.decoratedActions;
 
-    const html5ContextMenus = (props.content.contents.length) ? props.content.contents.map((item, index) => (
-      <menu key={index} hidden="true" type="context" id={`context_menu__tbody-${index}`}>
-          <menuitem label={formatMessage(definedMessages.expandItem, {
-            filename: item.filename
-          })} onClick={(event) => {
-              document.getElementById(`expand__${utility.cssSafe(item.filename)}`).click();
-            }}></menuitem>
-          <menuitem label={formatMessage(definedMessages.chooseItem, {
-            filename: item.filename
-          })} onClick={(event) => {
-              document.getElementById(`choose__${utility.cssSafe(item.filename)}`).click();
-            }}></menuitem>
-          <menuitem label={formatMessage(definedMessages.renameItem, {
-            item: item.filename
-          })} onClick={(event) => {
-              document.getElementById(`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }rename__${utility.cssSafe(item.filename)}`).click()
-            }}></menuitem>
-          <menuitem label={formatMessage(definedMessages.deleteItem, {
-            filename: item.filename
-          })} onClick={(event) => {
-              store.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path, props.config.headers));
-            }}></menuitem>
-      </menu>
-    )) : undefined;
+    const html5ContextMenus = (props.content.contents.length) ? props.content.contents.map((item, index) => {
+      const chooseMenuItem = (props.config.allowChoose) ? (
+        <menuitem label={formatMessage(definedMessages.chooseItem, {
+          filename: item.filename
+        })} onClick={(event) => { // #janky
+            document.getElementById(`choose__${utility.cssSafe(item.filename)}`).click();
+          }}></menuitem>
+      ) : undefined;
+      return (
+        <menu key={index} hidden="true" type="context" id={`context_menu__tbody-${index}`}>
+            <menuitem label={formatMessage(definedMessages.expandItem, {
+              filename: item.filename
+            })} onClick={(event) => {
+                document.getElementById(`expand__${utility.cssSafe(item.filename)}`).click();
+              }}></menuitem>
+            {chooseMenuItem}
+            <menuitem label={formatMessage(definedMessages.renameItem, {
+              item: item.filename
+            })} onClick={(event) => {
+                document.getElementById(`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }rename__${utility.cssSafe(item.filename)}`).click()
+              }}></menuitem>
+            <menuitem label={formatMessage(definedMessages.deleteItem, {
+              filename: item.filename
+            })} onClick={(event) => {
+                store.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path, props.config.headers));
+              }}></menuitem>
+        </menu>
+      )
+    }) : undefined;
 
     const selectHead = utility.serverSideRendering ? <th scope="col" role="columnheader">Select</th> : undefined;
 

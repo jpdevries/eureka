@@ -9,6 +9,7 @@ import utility from '../utility/utility';
 
 const initialConfigState = {
   basePath:'/',
+  allowChoose:false,
   allowUploads:true,
   treeHidden:true,
   useLocalStorage:true,

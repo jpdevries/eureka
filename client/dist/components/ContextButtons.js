@@ -57,8 +57,28 @@ var ContextButtons = function ContextButtons(props) {
     filename: item.filename
   });
 
-
-  var renameBtn = props.config.allowRename ? _react2.default.createElement(
+  var chooseBtn = props.config.allowChoose ? _react2.default.createElement(
+    'button',
+    { role: 'option', id: 'choose__' + (0, _utility.cssSafe)(item.filename), title: chooseItemMessage, onClick: function onClick(event) {
+        if (!props.view.focusedMediaItem) return;
+        try {
+          props.config.callbacks.choose(item);
+        } catch (e) {
+          console.log(e);
+        }
+        /*document.dispatchEvent(new CustomEvent('EurekaFoundIt', {
+          detail: item
+        }));*/
+      } },
+    chooseMessage,
+    _react2.default.createElement(
+      'span',
+      { className: 'visually-hidden' },
+      ' ',
+      item.filename
+    )
+  ) : undefined,
+      renameBtn = props.config.allowRename ? _react2.default.createElement(
     'button',
     { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'rename__' + (0, _utility.cssSafe)(item.filename), role: 'option', title: renameItemMessage, onClick: props.onRenameItem ? props.onRenameItem.bind(null, item) : undefined },
     renameMessage,
@@ -103,21 +123,7 @@ var ContextButtons = function ContextButtons(props) {
           item.filename
         )
       ),
-      _react2.default.createElement(
-        'button',
-        { role: 'option', id: 'choose__' + (0, _utility.cssSafe)(item.filename), title: chooseItemMessage, onClick: function onClick(event) {
-            document.dispatchEvent(new CustomEvent('EurekaFoundIt', {
-              detail: item
-            }));
-          } },
-        chooseMessage,
-        _react2.default.createElement(
-          'span',
-          { className: 'visually-hidden' },
-          ' ',
-          item.filename
-        )
-      ),
+      chooseBtn,
       renameBtn,
       deleteBtn
     )

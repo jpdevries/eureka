@@ -1358,6 +1358,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var initialConfigState = {
 	  basePath: '/',
+	  allowChoose: false,
 	  allowUploads: true,
 	  treeHidden: true,
 	  useLocalStorage: true,
@@ -8451,7 +8452,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	      chooseMessage = formatMessage(_definedMessages2.default.choose),
 	      mediaItem = formatMessage(_definedMessages2.default.mediaItem),
 	      pluralItemPlaceholder = formatPlural(_definedMessages2.default.pluralItem),
-	      cancelMessage = formatMessage(_definedMessages2.default.cancel);
+	      cancelMessage = formatMessage(_definedMessages2.default.cancel),
+	      chooseBtn = props.config.allowChoose ? _react2.default.createElement(
+	    'button',
+	    { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'choose-button', className: 'eureka__primary', disabled: !props.view.focusedMediaItem && !_utility2.default.serverSideRendering, onClick: function onClick(event) {
+	        if (!props.view.focusedMediaItem) return;
+	        try {
+	          props.config.callbacks.choose(props.view.focusedMediaItem);
+	        } catch (e) {
+	          console.log(e);
+	        }
+	      } },
+	    chooseMessage,
+	    _react2.default.createElement(
+	      'span',
+	      { className: 'visually-hidden' },
+	      ' ',
+	      function () {
+	        try {
+	          return props.view.focusedMediaItem.filename || ' ' + pluralItemPlaceholder;
+	        } catch (e) {
+	          return ' ' + mediaItem;
+	        }
+	      }()
+	    )
+	  ) : undefined;
 
 
 	  return _react2.default.createElement(
@@ -8469,30 +8494,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        } },
 	      cancelMessage
 	    ),
-	    _react2.default.createElement(
-	      'button',
-	      { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'choose-button', className: 'eureka__primary', disabled: !props.view.focusedMediaItem && !_utility2.default.serverSideRendering, onClick: function onClick(event) {
-	          if (!props.view.focusedMediaItem) return;
-	          try {
-	            props.config.callbacks.choose(props.view.focusedMediaItem);
-	          } catch (e) {
-	            console.log(e);
-	          }
-	        } },
-	      chooseMessage,
-	      _react2.default.createElement(
-	        'span',
-	        { className: 'visually-hidden' },
-	        ' ',
-	        function () {
-	          try {
-	            return props.view.focusedMediaItem.filename || ' ' + pluralItemPlaceholder;
-	          } catch (e) {
-	            return ' ' + mediaItem;
-	          }
-	        }()
-	      )
-	    )
+	    chooseBtn
 	  );
 	};
 
@@ -9321,6 +9323,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var decoratedActions = this.decoratedActions;
 
 	      var html5ContextMenus = props.content.contents.length ? props.content.contents.map(function (item, index) {
+	        var chooseMenuItem = props.config.allowChoose ? _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.chooseItem, {
+	            filename: item.filename
+	          }), onClick: function onClick(event) {
+	            // #janky
+	            document.getElementById('choose__' + _utility2.default.cssSafe(item.filename)).click();
+	          } }) : undefined;
 	        return _react2.default.createElement(
 	          'menu',
 	          { key: index, hidden: 'true', type: 'context', id: 'context_menu__tbody-' + index },
@@ -9329,11 +9337,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }), onClick: function onClick(event) {
 	              document.getElementById('expand__' + _utility2.default.cssSafe(item.filename)).click();
 	            } }),
-	          _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.chooseItem, {
-	              filename: item.filename
-	            }), onClick: function onClick(event) {
-	              document.getElementById('choose__' + _utility2.default.cssSafe(item.filename)).click();
-	            } }),
+	          chooseMenuItem,
 	          _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.renameItem, {
 	              item: item.filename
 	            }), onClick: function onClick(event) {
@@ -10096,9 +10100,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _react2.default.createElement(
 	          'td',
 	          { role: 'gridcell', id: mediaId, title: ariaLabel, className: 'eureka__td-media', onDoubleClick: function onDoubleClick(event) {
-	              document.dispatchEvent(new CustomEvent('EurekaFoundIt', {
-	                detail: props.item
-	              }));
+	              if (!props.view.focusedMediaItem) return;
+
+	              props.config.callbacks.choose(props.item);
+
+	              /*document.dispatchEvent(new CustomEvent('EurekaFoundIt', {
+	              detail: props.item
+	              }));*/
 	            } },
 	          _react2.default.createElement(
 	            'span',
@@ -10268,8 +10276,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	    filename: item.filename
 	  });
 
-
-	  var renameBtn = props.config.allowRename ? _react2.default.createElement(
+	  var chooseBtn = props.config.allowChoose ? _react2.default.createElement(
+	    'button',
+	    { role: 'option', id: 'choose__' + (0, _utility.cssSafe)(item.filename), title: chooseItemMessage, onClick: function onClick(event) {
+	        if (!props.view.focusedMediaItem) return;
+	        try {
+	          props.config.callbacks.choose(item);
+	        } catch (e) {
+	          console.log(e);
+	        }
+	        /*document.dispatchEvent(new CustomEvent('EurekaFoundIt', {
+	          detail: item
+	        }));*/
+	      } },
+	    chooseMessage,
+	    _react2.default.createElement(
+	      'span',
+	      { className: 'visually-hidden' },
+	      ' ',
+	      item.filename
+	    )
+	  ) : undefined,
+	      renameBtn = props.config.allowRename ? _react2.default.createElement(
 	    'button',
 	    { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'rename__' + (0, _utility.cssSafe)(item.filename), role: 'option', title: renameItemMessage, onClick: props.onRenameItem ? props.onRenameItem.bind(null, item) : undefined },
 	    renameMessage,
@@ -10314,21 +10342,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          item.filename
 	        )
 	      ),
-	      _react2.default.createElement(
-	        'button',
-	        { role: 'option', id: 'choose__' + (0, _utility.cssSafe)(item.filename), title: chooseItemMessage, onClick: function onClick(event) {
-	            document.dispatchEvent(new CustomEvent('EurekaFoundIt', {
-	              detail: item
-	            }));
-	          } },
-	        chooseMessage,
-	        _react2.default.createElement(
-	          'span',
-	          { className: 'visually-hidden' },
-	          ' ',
-	          item.filename
-	        )
-	      ),
+	      chooseBtn,
 	      renameBtn,
 	      deleteBtn
 	    )

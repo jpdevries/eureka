@@ -14,7 +14,24 @@ const ChooseBar = (props) => {
   chooseMessage = formatMessage(definedMessages.choose),
   mediaItem = formatMessage(definedMessages.mediaItem),
   pluralItemPlaceholder = formatPlural(definedMessages.pluralItem),
-  cancelMessage = formatMessage(definedMessages.cancel);
+  cancelMessage = formatMessage(definedMessages.cancel),
+  chooseBtn = (props.config.allowChoose) ? (
+    <button id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }choose-button`} className="eureka__primary" disabled={!props.view.focusedMediaItem && !utility.serverSideRendering} onClick={(event) => {
+      if(!props.view.focusedMediaItem) return;
+      try {
+        props.config.callbacks.choose(props.view.focusedMediaItem)
+      } catch (e) {
+        console.log(e)
+      }
+    }}>{chooseMessage}<span className="visually-hidden"> {(() => {
+        try {
+          return props.view.focusedMediaItem.filename || ` ${pluralItemPlaceholder}`
+        } catch (e) {
+          return ` ${mediaItem}`;
+        }
+      })()}</span>
+    </button>
+  ) : undefined;
 
   return (
     <div aria-hidden={props.ariaHidden} className="eureka__button-bar eureka__choose-bar">
@@ -26,20 +43,7 @@ const ChooseBar = (props) => {
           console.log(e)
         }
       }}>{cancelMessage}</button>
-      <button id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }choose-button`} className="eureka__primary" disabled={!props.view.focusedMediaItem && !utility.serverSideRendering} onClick={(event) => {
-        if(!props.view.focusedMediaItem) return;
-        try {
-          props.config.callbacks.choose(props.view.focusedMediaItem)
-        } catch (e) {
-          console.log(e)
-        }
-      }}>{chooseMessage}<span className="visually-hidden"> {(() => {
-          try {
-            return props.view.focusedMediaItem.filename || ` ${pluralItemPlaceholder}`
-          } catch (e) {
-            return ` ${mediaItem}`;
-          }
-        })()}</span></button>
+    {chooseBtn}
     </div>
   );
 }

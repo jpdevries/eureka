@@ -1,4 +1,4 @@
-[class*="modal-section"] {
+[class*="modal-section"], [class*="eureka-wrapper"] {
   padding:0;
   @include media($gtMobile) {
     display: flex;

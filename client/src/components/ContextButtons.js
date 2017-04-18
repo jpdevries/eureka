@@ -36,8 +36,20 @@ const ContextButtons = (props) => {
   expandItemMessage = formatMessage(definedMessages.expandItem, {
     filename: item.filename
   });
-
-  const renameBtn = (props.config.allowRename) ? (<button id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }rename__${cssSafe(item.filename)}`} role="option" title={renameItemMessage} onClick={props.onRenameItem ? props.onRenameItem.bind(null, item) : undefined}>{renameMessage}<span className="visually-hidden"> {item.filename}</span></button>) : undefined,
+  const chooseBtn = (props.config.allowChoose) ? (
+    <button role="option" id={`choose__${cssSafe(item.filename)}`} title={chooseItemMessage} onClick={(event) => {
+      if(!props.view.focusedMediaItem) return;
+      try {
+        props.config.callbacks.choose(item);
+      } catch (e) {
+        console.log(e);
+      }
+      /*document.dispatchEvent(new CustomEvent('EurekaFoundIt', {
+        detail: item
+      }));*/
+    }}>{chooseMessage}<span className="visually-hidden"> {item.filename}</span></button>
+) : undefined,
+  renameBtn = (props.config.allowRename) ? (<button id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }rename__${cssSafe(item.filename)}`} role="option" title={renameItemMessage} onClick={props.onRenameItem ? props.onRenameItem.bind(null, item) : undefined}>{renameMessage}<span className="visually-hidden"> {item.filename}</span></button>) : undefined,
   deleteBtn = (props.config.allowDelete) ? (
     <button id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }delete__${cssSafe(item.filename)}`} role="option" onClick={(event) => {
         store.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path, props.config.headers)).then(() => {
@@ -54,11 +66,7 @@ const ContextButtons = (props) => {
   return ( // future-role="toolbar listbox"
     <div className="eureka__button-bar eureka__context-buttons" role="listbox"  aria-label={performContextualActionsMessage} tabIndex="0" aria-activedescendant={`expand__${cssSafe(item.filename)}`}>
       <a onBlur={props.onBlur} role="option" id={`expand__${cssSafe(item.filename)}`} href={item.absoluteURL} target={`_${encodeURI(item.absoluteURL)}`} className="button" title={expandItemMessage}>{expandMessage}<span className="visually-hidden"> {item.filename}</span></a>
-      <button role="option" id={`choose__${cssSafe(item.filename)}`} title={chooseItemMessage} onClick={(event) => {
-        document.dispatchEvent(new CustomEvent('EurekaFoundIt', {
-          detail: item
-        }));
-      }}>{chooseMessage}<span className="visually-hidden"> {item.filename}</span></button>
+      {chooseBtn}
     {renameBtn}
     {deleteBtn}
     </div>

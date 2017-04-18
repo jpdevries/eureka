@@ -19,6 +19,7 @@ var pkg = require("./../../package.json");
 
 var initialConfigState = {
   basePath: '/',
+  allowChoose: false,
   allowUploads: true,
   treeHidden: true,
   useLocalStorage: true,

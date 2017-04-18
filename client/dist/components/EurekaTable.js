@@ -108,6 +108,12 @@ var EurekaTable = function (_Component) {
       var decoratedActions = this.decoratedActions;
 
       var html5ContextMenus = props.content.contents.length ? props.content.contents.map(function (item, index) {
+        var chooseMenuItem = props.config.allowChoose ? _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.chooseItem, {
+            filename: item.filename
+          }), onClick: function onClick(event) {
+            // #janky
+            document.getElementById('choose__' + _utility2.default.cssSafe(item.filename)).click();
+          } }) : undefined;
         return _react2.default.createElement(
           'menu',
           { key: index, hidden: 'true', type: 'context', id: 'context_menu__tbody-' + index },
@@ -116,11 +122,7 @@ var EurekaTable = function (_Component) {
             }), onClick: function onClick(event) {
               document.getElementById('expand__' + _utility2.default.cssSafe(item.filename)).click();
             } }),
-          _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.chooseItem, {
-              filename: item.filename
-            }), onClick: function onClick(event) {
-              document.getElementById('choose__' + _utility2.default.cssSafe(item.filename)).click();
-            } }),
+          chooseMenuItem,
           _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.renameItem, {
               item: item.filename
             }), onClick: function onClick(event) {

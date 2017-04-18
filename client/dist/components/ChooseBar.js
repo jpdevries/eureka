@@ -31,7 +31,31 @@ var ChooseBar = function ChooseBar(props) {
       chooseMessage = formatMessage(_definedMessages2.default.choose),
       mediaItem = formatMessage(_definedMessages2.default.mediaItem),
       pluralItemPlaceholder = formatPlural(_definedMessages2.default.pluralItem),
-      cancelMessage = formatMessage(_definedMessages2.default.cancel);
+      cancelMessage = formatMessage(_definedMessages2.default.cancel),
+      chooseBtn = props.config.allowChoose ? _react2.default.createElement(
+    'button',
+    { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'choose-button', className: 'eureka__primary', disabled: !props.view.focusedMediaItem && !_utility2.default.serverSideRendering, onClick: function onClick(event) {
+        if (!props.view.focusedMediaItem) return;
+        try {
+          props.config.callbacks.choose(props.view.focusedMediaItem);
+        } catch (e) {
+          console.log(e);
+        }
+      } },
+    chooseMessage,
+    _react2.default.createElement(
+      'span',
+      { className: 'visually-hidden' },
+      ' ',
+      function () {
+        try {
+          return props.view.focusedMediaItem.filename || ' ' + pluralItemPlaceholder;
+        } catch (e) {
+          return ' ' + mediaItem;
+        }
+      }()
+    )
+  ) : undefined;
 
 
   return _react2.default.createElement(
@@ -49,30 +73,7 @@ var ChooseBar = function ChooseBar(props) {
         } },
       cancelMessage
     ),
-    _react2.default.createElement(
-      'button',
-      { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'choose-button', className: 'eureka__primary', disabled: !props.view.focusedMediaItem && !_utility2.default.serverSideRendering, onClick: function onClick(event) {
-          if (!props.view.focusedMediaItem) return;
-          try {
-            props.config.callbacks.choose(props.view.focusedMediaItem);
-          } catch (e) {
-            console.log(e);
-          }
-        } },
-      chooseMessage,
-      _react2.default.createElement(
-        'span',
-        { className: 'visually-hidden' },
-        ' ',
-        function () {
-          try {
-            return props.view.focusedMediaItem.filename || ' ' + pluralItemPlaceholder;
-          } catch (e) {
-            return ' ' + mediaItem;
-          }
-        }()
-      )
-    )
+    chooseBtn
   );
 };
 
