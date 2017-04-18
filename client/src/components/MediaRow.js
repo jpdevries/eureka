@@ -223,7 +223,9 @@ class MediaRow extends PureComponent {
       <tr role="row" className={classNames(className)} id={utility.cssSafe(props.item.filename)} aria-label={ariaLabel} role="row" tabIndex={tabIndex} onFocus={this.onFocus.bind(this)} onBlur={this.onBlur.bind(this)} contextMenu={`context_menu__tbody-${props.index}`}>
         {mediaSelect}
         <td role="gridcell" id={mediaId} title={ariaLabel} className="eureka__td-media" onDoubleClick={(event) => {
-            //console.log(event, props.item);
+          document.dispatchEvent(new CustomEvent('EurekaFoundIt', {
+            detail: props.item
+          }));
         }}>
           <span className="visually-hidden"><FormattedMessage id="media.contents" defaultMessage="Media Contents" /></span>
           {media}

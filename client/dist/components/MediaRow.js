@@ -298,7 +298,9 @@ var MediaRow = function (_PureComponent) {
         _react2.default.createElement(
           'td',
           { role: 'gridcell', id: mediaId, title: ariaLabel, className: 'eureka__td-media', onDoubleClick: function onDoubleClick(event) {
-              //console.log(event, props.item);
+              document.dispatchEvent(new CustomEvent('EurekaFoundIt', {
+                detail: props.item
+              }));
             } },
           _react2.default.createElement(
             'span',

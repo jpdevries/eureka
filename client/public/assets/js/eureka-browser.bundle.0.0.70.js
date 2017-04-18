@@ -26731,7 +26731,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.69",
+		"version": "0.0.70",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -33290,7 +33290,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _react2.default.createElement(
 	          'td',
 	          { role: 'gridcell', id: mediaId, title: ariaLabel, className: 'eureka__td-media', onDoubleClick: function onDoubleClick(event) {
-	              //console.log(event, props.item);
+	              document.dispatchEvent(new CustomEvent('EurekaFoundIt', {
+	                detail: props.item
+	              }));
 	            } },
 	          _react2.default.createElement(
 	            'span',
