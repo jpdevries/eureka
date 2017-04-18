@@ -1,7 +1,5 @@
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var _utility = require('../utility/utility');
 
 var _utility2 = _interopRequireDefault(_utility);
@@ -19,7 +17,7 @@ var pkg = require("./../../package.json");
 
 var initialConfigState = {
   basePath: '/',
-  allowChoose: false,
+  allowChoose: true,
   allowUploads: true,
   treeHidden: true,
   useLocalStorage: true,
@@ -156,110 +154,101 @@ var cd = '';
 var treeReducer = function treeReducer(state, action) {
   state = state || initialTreeReducer;
 
-  var _ret = function () {
-    switch (action.type) {
-      case actions.UPDATE_SOURCE_TREE_SUCCESS:
+  switch (action.type) {
+    case actions.UPDATE_SOURCE_TREE_SUCCESS:
 
-        var newState = state.slice(0);
+      var newState = state.slice(0);
 
-        var directoryInState = function directoryInState(directory) {
-          for (var i = 0; i < newState.length; i++) {
-            if (newState[i].cd === directory.cd) return true;
-          }
+      var directoryInState = function directoryInState(directory) {
+        for (var i = 0; i < newState.length; i++) {
+          if (newState[i].cd === directory.cd) return true;
+        }
 
-          return false;
+        return false;
+      };
+
+      var directoryOnServer = function directoryOnServer(directory) {
+        for (var i = 0; i < contents.length; i++) {
+          if (contents[i].cd === directory.cd) return true;
+        }
+        return false;
+      };
+
+      var contents = action.contents.map(function (file) {
+        return Object.assign({}, file, {
+          children: file.children ? file.children : []
+        });
+      });
+
+      // loop through top level directories returned from server add any we don't already have
+      contents.map(function (directory) {
+        if (!directoryInState(directory)) {
+          newState.push(directory);
+        }
+      });
+
+      // if any of the top-level directories in our local state are no longer on the store remove them
+      return newState.filter(function (directory) {
+        return directoryOnServer(directory);
+      });
+
+      break;
+
+    case actions.UPDATE_CONTENT:
+      if (action.content.cd) cd = action.content.cd;
+      break;
+
+    case actions.FETCH_DIRECTORY_CONTENTS_SUCCESS:
+      // loop over just the folders and create data objects for them
+      var foldersToAdd = action.contents.filter(function (file) {
+        return file.foldername;
+      }).map(function (file) {
+        return {
+          name: file.foldername,
+          cd: file.directory,
+          children: []
         };
+      });
 
-        var directoryOnServer = function directoryOnServer(directory) {
-          for (var i = 0; i < contents.length; i++) {
-            if (contents[i].cd === directory.cd) return true;
-          }
-          return false;
-        };
-
-        var contents = action.contents.map(function (file) {
-          return Object.assign({}, file, {
-            children: file.children ? file.children : []
+      var addChildrenToCurrentFolder = function addChildrenToCurrentFolder(children) {
+        return children.map(function (child) {
+          return Object.assign({}, child, {
+            children: child.cd === cd ? _utility2.default.removeDuplicates([].concat(_toConsumableArray(child.children), _toConsumableArray(foldersToAdd)), 'name') : addChildrenToCurrentFolder(child.children)
           });
         });
+      };
 
-        // loop through top level directories returned from server add any we don't already have
-        contents.map(function (directory) {
-          if (!directoryInState(directory)) {
-            newState.push(directory);
+      return addChildrenToCurrentFolder(state);
+
+      /*return state.map((file) => (
+        Object.assign({}, file, {
+          children:(file.children && file.cd !== cd) ? addChildrenToCurrentFolder(file.children) : foldersToAdd
+        })
+      ));*/
+
+      break;
+
+    case actions.DELETE_MEDIA_ITEM_SUCCESS:
+      var stillSearching = true;
+
+      var recursivelyRemoveDirectory = function recursivelyRemoveDirectory(children) {
+        return children.map(function (child) {
+          if (child.cd === action.path) {
+            stillSearching = false;
+            return undefined;
           }
-        });
-
-        // if any of the top-level directories in our local state are no longer on the store remove them
-        return {
-          v: newState.filter(function (directory) {
-            return directoryOnServer(directory);
-          })
-        };
-
-        break;
-
-      case actions.UPDATE_CONTENT:
-        if (action.content.cd) cd = action.content.cd;
-        break;
-
-      case actions.FETCH_DIRECTORY_CONTENTS_SUCCESS:
-        // loop over just the folders and create data objects for them
-        var foldersToAdd = action.contents.filter(function (file) {
-          return file.foldername;
-        }).map(function (file) {
-          return {
-            name: file.foldername,
-            cd: file.directory,
-            children: []
-          };
-        });
-
-        var addChildrenToCurrentFolder = function addChildrenToCurrentFolder(children) {
-          return children.map(function (child) {
-            return Object.assign({}, child, {
-              children: child.cd === cd ? _utility2.default.removeDuplicates([].concat(_toConsumableArray(child.children), _toConsumableArray(foldersToAdd)), 'name') : addChildrenToCurrentFolder(child.children)
-            });
+          return Object.assign({}, child, {
+            children: child.children && stillSearching ? recursivelyRemoveDirectory(child.children) : child.children
           });
-        };
+        }).filter(Boolean);
+      };
 
-        return {
-          v: addChildrenToCurrentFolder(state)
-        };
+      return recursivelyRemoveDirectory(state);
 
-        /*return state.map((file) => (
-          Object.assign({}, file, {
-            children:(file.children && file.cd !== cd) ? addChildrenToCurrentFolder(file.children) : foldersToAdd
-          })
-        ));*/
+      break;
 
-        break;
+  }
 
-      case actions.DELETE_MEDIA_ITEM_SUCCESS:
-        var stillSearching = true;
-
-        var recursivelyRemoveDirectory = function recursivelyRemoveDirectory(children) {
-          return children.map(function (child) {
-            if (child.cd === action.path) {
-              stillSearching = false;
-              return undefined;
-            }
-            return Object.assign({}, child, {
-              children: child.children && stillSearching ? recursivelyRemoveDirectory(child.children) : child.children
-            });
-          }).filter(Boolean);
-        };
-
-        return {
-          v: recursivelyRemoveDirectory(state)
-        };
-
-        break;
-
-    }
-  }();
-
-  if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
   return state;
 };
 
@@ -396,88 +385,79 @@ var directoryReducer = function directoryReducer(state, action) {
 
   var foldersToAdd = [];
 
-  var _ret2 = function () {
-    switch (action.type) {
-      case actions.UPDATE_SOURCE:
-        cs = action.source;
-        break;
+  switch (action.type) {
+    case actions.UPDATE_SOURCE:
+      cs = action.source;
+      break;
 
-      case actions.FETCH_MEDIA_SOURCES_SUCCESS:
-        if (cs === undefined) cs = action.sources[0].id;
-        return {
-          v: action.sources.map(function (source) {
-            return Object.assign({}, source, {
-              directories: []
+    case actions.FETCH_MEDIA_SOURCES_SUCCESS:
+      if (cs === undefined) cs = action.sources[0].id;
+      return action.sources.map(function (source) {
+        return Object.assign({}, source, {
+          directories: []
+        });
+      });
+      break;
+
+    case actions.UPDATE_SOURCE_TREE_SUCCESS:
+      foldersToAdd = action.contents.map(function (file) {
+        return Object.assign({}, file, {
+          children: file.children ? file.children : []
+        });
+      });
+
+      var recursivelyCrawlChildren = function recursivelyCrawlChildren(file) {
+        try {
+          file.children.map(function (child) {
+            foldersToAdd.push({
+              name: child.name,
+              cd: child.cd,
+              children: child.children || []
             });
-          })
-        };
-        break;
-
-      case actions.UPDATE_SOURCE_TREE_SUCCESS:
-        foldersToAdd = action.contents.map(function (file) {
-          return Object.assign({}, file, {
-            children: file.children ? file.children : []
+            if (child.children.length) recursivelyCrawlChildren(child);
           });
+        } catch (e) {}
+      };
+
+      action.contents.map(function (file) {
+        recursivelyCrawlChildren(file);
+      });
+
+      foldersToAdd = _utility2.default.removeDuplicates([].concat(_toConsumableArray(foldersToAdd)), 'cd');
+
+      return state.map(function (source) {
+        return Object.assign({}, source, {
+          directories: source.id == cs ? _utility2.default.removeDuplicates([].concat(_toConsumableArray(source.directories), _toConsumableArray(foldersToAdd)), 'cd') : source.directories
         });
+      });
 
-        var recursivelyCrawlChildren = function recursivelyCrawlChildren(file) {
-          try {
-            file.children.map(function (child) {
-              foldersToAdd.push({
-                name: child.name,
-                cd: child.cd,
-                children: child.children || []
-              });
-              if (child.children.length) recursivelyCrawlChildren(child);
-            });
-          } catch (e) {}
-        };
+      break;
 
-        action.contents.map(function (file) {
-          recursivelyCrawlChildren(file);
-        });
-
-        foldersToAdd = _utility2.default.removeDuplicates([].concat(_toConsumableArray(foldersToAdd)), 'cd');
-
+    case actions.FETCH_DIRECTORY_CONTENTS_SUCCESS:
+      // loop over just the folders and create data objects for them
+      foldersToAdd = action.contents.filter(function (file) {
+        return file.foldername;
+      }).map(function (file) {
         return {
-          v: state.map(function (source) {
-            return Object.assign({}, source, {
-              directories: source.id == cs ? _utility2.default.removeDuplicates([].concat(_toConsumableArray(source.directories), _toConsumableArray(foldersToAdd)), 'cd') : source.directories
-            });
-          })
+          name: file.foldername,
+          cd: file.directory
         };
+      });
 
-        break;
-
-      case actions.FETCH_DIRECTORY_CONTENTS_SUCCESS:
-        // loop over just the folders and create data objects for them
-        foldersToAdd = action.contents.filter(function (file) {
-          return file.foldername;
-        }).map(function (file) {
-          return {
-            name: file.foldername,
-            cd: file.directory
-          };
+      return state.map(function (source) {
+        return Object.assign({}, source, {
+          directories: source.id == cs ? _utility2.default.removeDuplicates([].concat(_toConsumableArray(source.directories), _toConsumableArray(foldersToAdd)), 'name') : source.directories
         });
+      });
 
-        return {
-          v: state.map(function (source) {
-            return Object.assign({}, source, {
-              directories: source.id == cs ? _utility2.default.removeDuplicates([].concat(_toConsumableArray(source.directories), _toConsumableArray(foldersToAdd)), 'name') : source.directories
-            });
-          })
-        };
+      break;
 
-        break;
+    case actions.UPDATE_SOURCE:
 
-      case actions.UPDATE_SOURCE:
+      break;
 
-        break;
+  }
 
-    }
-  }();
-
-  if ((typeof _ret2 === 'undefined' ? 'undefined' : _typeof(_ret2)) === "object") return _ret2.v;
   return state;
 };
 

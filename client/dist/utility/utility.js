@@ -22,23 +22,14 @@ function makeURL(str, params) {
     });
     return url;
   } catch (e) {
-    var url;
-
-    var _ret = function () {
-      console.log(e);
-      url = str.indexOf('?') > -1 ? str.substr(0, str.indexOf('?')) + '?' : str + '?';
-
-      var ps = [];
-      Object.keys(params).forEach(function (key) {
-        return ps.push(key + '=' + params[key]);
-      });
-      url += ps.join('&');
-      return {
-        v: url
-      };
-    }();
-
-    if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+    console.log(e);
+    var url = str.indexOf('?') > -1 ? str.substr(0, str.indexOf('?')) + '?' : str + '?';
+    var ps = [];
+    Object.keys(params).forEach(function (key) {
+      return ps.push(key + '=' + params[key]);
+    });
+    url += ps.join('&');
+    return url;
   }
 }
 
