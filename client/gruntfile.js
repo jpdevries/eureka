@@ -356,6 +356,9 @@ module.exports = function(grunt) {
       }
     },
     clean: {
+      buildcss: [
+        '<%= dirs.build %><%= dirs.assets %><%= dirs.css %>*'
+      ],
       buildjs: [
         '<%= dirs.build %><%= dirs.assets %><%= dirs.js %>*.js',
         '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>*.js'

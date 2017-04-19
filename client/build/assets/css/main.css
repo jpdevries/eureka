@@ -37,8 +37,6 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
     [class*="modal-section"], [class*="eureka-wrapper"] {
       display: -ms-flexbox;
       display: flex;
-      height: 100vh;
-      max-height: 100vh;
       overflow-y: hidden;
       -ms-flex-direction: column;
           flex-direction: column; } }
