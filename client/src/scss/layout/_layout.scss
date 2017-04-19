@@ -224,7 +224,7 @@
       > .eureka__browse-content {
         display: flex;
         flex: 1 1 100%;
-        margin-bottom: .5rem;
+        //margin-bottom: .5rem;
       }
       &.eureka__view-mode__table {
         /*@supports (display: grid) {
@@ -233,7 +233,7 @@
       > .eureka__browse-content {
         display:flex;
         flex:1 1 100%;
-        margin-bottom:0.5rem;
+        //margin-bottom:0.5rem;
         > .eureka__pathbrowser {
           flex:0 0 14rem;
           display:flex;
@@ -309,6 +309,7 @@
       }
       > .eureka__choose-bar {
         flex:0 0 auto;
+        margin-top: .5rem;
       }
     }
   }

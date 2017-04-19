@@ -193,8 +193,7 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
         display: -ms-flexbox;
         display: flex;
         -ms-flex: 1 1 100%;
-            flex: 1 1 100%;
-        margin-bottom: .5rem; }
+            flex: 1 1 100%; }
       .eureka-root .eureka.eureka__view-mode__table {
         /*@supports (display: grid) {
         }*/ }
@@ -202,8 +201,7 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
         display: -ms-flexbox;
         display: flex;
         -ms-flex: 1 1 100%;
-            flex: 1 1 100%;
-        margin-bottom: 0.5rem; }
+            flex: 1 1 100%; }
         .eureka-root .eureka > .eureka__browse-content > .eureka__pathbrowser {
           -ms-flex: 0 0 14rem;
               flex: 0 0 14rem;
@@ -301,7 +299,8 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
                 max-width: 100%; }
       .eureka-root .eureka > .eureka__choose-bar {
         -ms-flex: 0 0 auto;
-            flex: 0 0 auto; } }
+            flex: 0 0 auto;
+        margin-top: .5rem; } }
 
 .eureka-root thead {
   -ms-flex-preferred-size: auto;
