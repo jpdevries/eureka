@@ -56,7 +56,11 @@ class SearchBar extends Component {
     ];
 
     const placeholder = (() => {
-      if(!props.content.contents.length) return "";
+      try {
+        if(!props.content.contents.length) return "";
+      } catch (e) {
+        return "";
+      }
 
       const randomItem = props.content.contents[Math.round(Math.random() * (props.content.contents.length - 1))];
 
@@ -74,6 +78,8 @@ class SearchBar extends Component {
         return filesize(randomItem.fileSize, {round: 0});
       }
     })();
+
+    //console.log('props',props);
 
     const list = (
       <datalist id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }__datalist`}>

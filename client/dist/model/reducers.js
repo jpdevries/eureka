@@ -6,6 +6,10 @@ var _utility = require('../utility/utility');
 
 var _utility2 = _interopRequireDefault(_utility);
 
+var _filesize = require('filesize');
+
+var _filesize2 = _interopRequireDefault(_filesize);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -99,22 +103,26 @@ var contentReducer = function contentReducer(state, action) {
 
     case actions.UPDATE_CONTENT:
       //console.log('UPDATE_CONTENT', state, action.content);
-      return Object.assign({}, state, action.content);
+      var content = Object.assign({}, action.content, {
+        contents: processContentItems(action.content.contents)
+      });
+      return Object.assign({}, state, content);
       break;
 
     case actions.FETCH_DIRECTORY_CONTENTS_SUCCESS:
+      //console.log('FETCH_DIRECTORY_CONTENTS_SUCCESS', state, action.contents);
       return Object.assign({}, state, {
-        contents: action.contents.filter(function (file) {
+        contents: processContentItems(action.contents.filter(function (file) {
           return file.filename;
-        })
+        }))
       });
 
     case actions.UPLOAD_FILES_SUCCESS:
       //if(!Array.isArray(action.contents)) return state; // so the backed can just return res.json([true]) if it wants?
       return Object.assign({}, state, {
-        contents: action.contents.filter(function (file) {
+        contents: processContentItems(action.contents.filter(function (file) {
           return file.filename;
-        })
+        }))
       });
 
     case actions.DELETE_MEDIA_ITEM_SUCCESS:
@@ -131,6 +139,19 @@ var contentReducer = function contentReducer(state, action) {
   }
 
   return state;
+
+  function processContentItems(contents) {
+    return contents !== undefined ? contents.map(function (item) {
+      var editedOnDate = new Date(item.editedOn);
+      return Object.assign({}, item, {
+        localString: editedOnDate.toLocaleString(),
+        localStringVerbose: editedOnDate.toLocaleString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+        fileSizeHumanReadable: (0, _filesize2.default)(item.fileSize, { round: 0 }),
+        editedOnTwoDigit: new Date(item.editedOn).toLocaleString(undefined, { year: '2-digit', month: '2-digit', day: '2-digit' }),
+        editedOnLongTimeZone: new Date(item.editedOn).toLocaleString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' })
+      });
+    }) : [];
+  }
 };
 
 var initialTreeReducer = function () {
@@ -282,7 +303,7 @@ var initialViewState = Object.assign({}, {
 }, function () {
   try {
     var json = JSON.parse(localStorage.getItem('eureka__view'));
-    console.log('json', json);
+    //console.log('json',json);
     return json;
     /*return (
       Object.assign({}, json, {

@@ -62,7 +62,7 @@ var ViewChooser = function (_FullScreenPureCompon) {
     value: function render() {
       var _this2 = this;
 
-      console.log('ViewChooser', this.props);
+      //console.log('ViewChooser', this.props);
       var props = this.props,
           formatMessage = props.intl.formatMessage,
           tabularLayoutMessage = formatMessage(_definedMessages2.default.tabularLayoutDescription),

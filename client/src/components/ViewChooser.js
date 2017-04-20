@@ -16,7 +16,7 @@ import FullScreenPureComponent from './FullScreenPureComponent';
 
 class ViewChooser extends FullScreenPureComponent {
   render() {
-    console.log('ViewChooser', this.props);
+    //console.log('ViewChooser', this.props);
     const props = this.props,
     formatMessage = props.intl.formatMessage,
     tabularLayoutMessage = formatMessage(definedMessages.tabularLayoutDescription),

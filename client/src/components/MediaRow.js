@@ -32,10 +32,10 @@ class MediaRow extends PureComponent {
     //console.log('MediaRow shouldComponentUpdate', this.props, nextProps);
     if(this.props.item !== nextProps.item) return true;
     try {
-      console.log((nextProps.focusedMediaItem !== undefined));
+      //console.log((nextProps.focusedMediaItem !== undefined));
       return (nextProps.focusedMediaItem !== undefined);
     } catch(e) {}
-    console.log('MediaRow should not update');
+    //console.log('MediaRow should not update');
     return false;
   }
 
@@ -224,9 +224,9 @@ class MediaRow extends PureComponent {
         {mediaSelect}
         <td role="gridcell" id={mediaId} title={ariaLabel} className="eureka__td-media" onDoubleClick={(event) => {
           if(!props.view.focusedMediaItem) return;
-          
+
             props.config.callbacks.choose(props.item);
-            
+
               /*document.dispatchEvent(new CustomEvent('EurekaFoundIt', {
             detail: props.item
           }));*/
@@ -277,8 +277,8 @@ class MediaRow extends PureComponent {
         <td role="gridcell">
           {filesize(props.item.fileSize)}
         </td>
-        <td role="gridcell" title={new Date(props.item.editedOn).toLocaleString(props.view.locale, { weekday:'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' })}>
-          {new Date(props.item.editedOn).toLocaleString(props.view.locale, { year: '2-digit', month: '2-digit', day: '2-digit' })}
+        <td role="gridcell" title={props.item.editedOnLongTimeZone || new Date(props.item.editedOn).toLocaleString(props.view.locale, { weekday:'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' })}>
+          {props.item.editedOnTwoDigit || new Date(props.item.editedOn).toLocaleString(props.view.locale, { year: '2-digit', month: '2-digit', day: '2-digit' })}
         </td>
       </tr>
     );

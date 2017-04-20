@@ -112,12 +112,18 @@ class EurekaTableTbody extends PureComponent {
 
     if(props.filter) { // filter based on filename, dimensions, date
       const filter = props.view.filter.toLowerCase();
-      contents = contents.filter((value) => (
-        value.filename.toLowerCase().includes(filter) || value.dimensions.join('x').toLowerCase().includes(filter) || new Date(value.editedOn).toLocaleString().toLowerCase().includes(filter) || new Date(value.editedOn).toLocaleString(undefined,{ weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }).toLowerCase().includes(filter) || filesize(value.fileSize, {round: 0}).toLowerCase().includes(filter) || filesize(value.fileSize, {round: 0}).toLowerCase().replace(/ +?/g, '').includes(filter)
-      ));
+      contents = contents.filter((value) => {
+        const editedOnDate = new Date(value.editedOn);
+        //console.log('value', value);
+        //return value.filename.toLowerCase().includes(filter);
+        return (
+          value.filename.toLowerCase().includes(filter) || value.dimensions.join('x').toLowerCase().includes(filter) || value.localString.toLowerCase().includes(filter) || value.localStringVerbose.toLowerCase().includes(filter) || value.fileSizeHumanReadable.toLowerCase().includes(filter) || value.fileSizeHumanReadable.toLowerCase().replace(/ +?/g, '').includes(filter)
+        )
+      });
     }
 
-    contents = contents.sort((a,b) => {
+    const sortContents = true;
+    contents = (!sortContents) ? contents : contents.sort((a,b) => {
       if(a[props.sort.by] === b[props.sort.by]) return 0;
 
       let n;

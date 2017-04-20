@@ -84,7 +84,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Eureka2 = _interopRequireDefault(_Eureka);
 
-	var _reactIntl = __webpack_require__(22);
+	var _reactIntl = __webpack_require__(23);
 
 	var _utility = __webpack_require__(12);
 
@@ -108,7 +108,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-	var actions = __webpack_require__(13),
+	var actions = __webpack_require__(14),
 	    store = __webpack_require__(9);
 	//import localeData from './../i18n/locales/en.json';
 
@@ -245,7 +245,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    store.subscribe(function () {
 	      var state = store.getState();
-	      console.log(state);
+	      //console.log(state);
 
 	      // whenever the state changes we store pieces of the state locally so that next time Eureka fires up it can render the user interface without delay
 	      if (state.config.useLocalStorage) {
@@ -259,7 +259,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          //localStorage.setItem(`${state.config.storagePrefix}treeHidden`, !state.view.sourceTreeOpen);
 	          localStorage.setItem(state.config.storagePrefix + 'content', JSON.stringify(state.content));
 	          localStorage.setItem(state.config.storagePrefix + 'tree', JSON.stringify(state.tree));
-	          console.log('state.view', JSON.stringify(state.view));
+	          //console.log('state.view', JSON.stringify(state.view));
 	          localStorage.setItem(state.config.storagePrefix + 'view', JSON.stringify(state.view));
 	        } catch (e) {}
 	      }
@@ -818,23 +818,23 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _MediaSourceSelector2 = _interopRequireDefault(_MediaSourceSelector);
 
-	var _MediaDirectorySelector = __webpack_require__(45);
+	var _MediaDirectorySelector = __webpack_require__(46);
 
 	var _MediaDirectorySelector2 = _interopRequireDefault(_MediaDirectorySelector);
 
-	var _TreeBar = __webpack_require__(46);
+	var _TreeBar = __webpack_require__(47);
 
 	var _TreeBar2 = _interopRequireDefault(_TreeBar);
 
-	var _TreeToggle = __webpack_require__(49);
+	var _TreeToggle = __webpack_require__(50);
 
 	var _TreeToggle2 = _interopRequireDefault(_TreeToggle);
 
-	var _ChooseBar = __webpack_require__(50);
+	var _ChooseBar = __webpack_require__(51);
 
 	var _ChooseBar2 = _interopRequireDefault(_ChooseBar);
 
-	var _SearchBar = __webpack_require__(51);
+	var _SearchBar = __webpack_require__(52);
 
 	var _SearchBar2 = _interopRequireDefault(_SearchBar);
 
@@ -874,13 +874,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ModalRenameItemForm2 = _interopRequireDefault(_ModalRenameItemForm);
 
-	var _reactIntl = __webpack_require__(22);
+	var _reactIntl = __webpack_require__(23);
 
 	var _store = __webpack_require__(9);
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(13);
+	var _actions = __webpack_require__(14);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
@@ -888,7 +888,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utility2 = _interopRequireDefault(_utility);
 
-	var _definedMessages = __webpack_require__(48);
+	var _definedMessages = __webpack_require__(49);
 
 	var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
@@ -1236,11 +1236,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(13);
+	var _actions = __webpack_require__(14);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
-	var _reactIntl = __webpack_require__(22);
+	var _reactIntl = __webpack_require__(23);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1345,16 +1345,20 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utility2 = _interopRequireDefault(_utility);
 
+	var _filesize = __webpack_require__(13);
+
+	var _filesize2 = _interopRequireDefault(_filesize);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-	var actions = __webpack_require__(13),
+	var actions = __webpack_require__(14),
 	    combineReducers = __webpack_require__(5).combineReducers,
-	    update = __webpack_require__(16),
+	    update = __webpack_require__(17),
 	    path = __webpack_require__(3);
 
-	var pkg = __webpack_require__(21);
+	var pkg = __webpack_require__(22);
 
 	var initialConfigState = {
 	  basePath: '/',
@@ -1438,22 +1442,26 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    case actions.UPDATE_CONTENT:
 	      //console.log('UPDATE_CONTENT', state, action.content);
-	      return Object.assign({}, state, action.content);
+	      var content = Object.assign({}, action.content, {
+	        contents: processContentItems(action.content.contents)
+	      });
+	      return Object.assign({}, state, content);
 	      break;
 
 	    case actions.FETCH_DIRECTORY_CONTENTS_SUCCESS:
+	      //console.log('FETCH_DIRECTORY_CONTENTS_SUCCESS', state, action.contents);
 	      return Object.assign({}, state, {
-	        contents: action.contents.filter(function (file) {
+	        contents: processContentItems(action.contents.filter(function (file) {
 	          return file.filename;
-	        })
+	        }))
 	      });
 
 	    case actions.UPLOAD_FILES_SUCCESS:
 	      //if(!Array.isArray(action.contents)) return state; // so the backed can just return res.json([true]) if it wants?
 	      return Object.assign({}, state, {
-	        contents: action.contents.filter(function (file) {
+	        contents: processContentItems(action.contents.filter(function (file) {
 	          return file.filename;
-	        })
+	        }))
 	      });
 
 	    case actions.DELETE_MEDIA_ITEM_SUCCESS:
@@ -1470,6 +1478,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  return state;
+
+	  function processContentItems(contents) {
+	    return contents !== undefined ? contents.map(function (item) {
+	      var editedOnDate = new Date(item.editedOn);
+	      return Object.assign({}, item, {
+	        localString: editedOnDate.toLocaleString(),
+	        localStringVerbose: editedOnDate.toLocaleString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+	        fileSizeHumanReadable: (0, _filesize2.default)(item.fileSize, { round: 0 }),
+	        editedOnTwoDigit: new Date(item.editedOn).toLocaleString(undefined, { year: '2-digit', month: '2-digit', day: '2-digit' }),
+	        editedOnLongTimeZone: new Date(item.editedOn).toLocaleString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' })
+	      });
+	    }) : [];
+	  }
 	};
 
 	var initialTreeReducer = function () {
@@ -1621,7 +1642,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}, function () {
 	  try {
 	    var json = JSON.parse(localStorage.getItem('eureka__view'));
-	    console.log('json', json);
+	    //console.log('json',json);
 	    return json;
 	    /*return (
 	      Object.assign({}, json, {
@@ -2153,6 +2174,181 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/* WEBPACK VAR INJECTION */(function(global) {"use strict";
+
+	/**
+	 * filesize
+	 *
+	 * @copyright 2017 Jason Mulligan <jason.mulligan@avoidwork.com>
+	 * @license BSD-3-Clause
+	 * @version 3.5.4
+	 */
+	(function (global) {
+		var b = /^(b|B)$/,
+		    symbol = {
+			iec: {
+				bits: ["b", "Kib", "Mib", "Gib", "Tib", "Pib", "Eib", "Zib", "Yib"],
+				bytes: ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"]
+			},
+			jedec: {
+				bits: ["b", "Kb", "Mb", "Gb", "Tb", "Pb", "Eb", "Zb", "Yb"],
+				bytes: ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
+			}
+		},
+		    fullform = {
+			iec: ["", "kibi", "mebi", "gibi", "tebi", "pebi", "exbi", "zebi", "yobi"],
+			jedec: ["", "kilo", "mega", "giga", "tera", "peta", "exa", "zetta", "yotta"]
+		};
+
+		/**
+	  * filesize
+	  *
+	  * @method filesize
+	  * @param  {Mixed}   arg        String, Int or Float to transform
+	  * @param  {Object}  descriptor [Optional] Flags
+	  * @return {String}             Readable file size String
+	  */
+		function filesize(arg) {
+			var descriptor = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+			var result = [],
+			    val = 0,
+			    e = void 0,
+			    base = void 0,
+			    bits = void 0,
+			    ceil = void 0,
+			    full = void 0,
+			    fullforms = void 0,
+			    neg = void 0,
+			    num = void 0,
+			    output = void 0,
+			    round = void 0,
+			    unix = void 0,
+			    spacer = void 0,
+			    standard = void 0,
+			    symbols = void 0;
+
+			if (isNaN(arg)) {
+				throw new Error("Invalid arguments");
+			}
+
+			bits = descriptor.bits === true;
+			unix = descriptor.unix === true;
+			base = descriptor.base || 2;
+			round = descriptor.round !== undefined ? descriptor.round : unix ? 1 : 2;
+			spacer = descriptor.spacer !== undefined ? descriptor.spacer : unix ? "" : " ";
+			symbols = descriptor.symbols || descriptor.suffixes || {};
+			standard = base === 2 ? descriptor.standard || "jedec" : "jedec";
+			output = descriptor.output || "string";
+			full = descriptor.fullform === true;
+			fullforms = descriptor.fullforms instanceof Array ? descriptor.fullforms : [];
+			e = descriptor.exponent !== undefined ? descriptor.exponent : -1;
+			num = Number(arg);
+			neg = num < 0;
+			ceil = base > 2 ? 1000 : 1024;
+
+			// Flipping a negative number to determine the size
+			if (neg) {
+				num = -num;
+			}
+
+			// Zero is now a special case because bytes divide by 1
+			if (num === 0) {
+				e = 0;
+				result[0] = 0;
+				result[1] = unix ? "" : !bits ? "B" : "b";
+			} else {
+				// Determining the exponent
+				if (e === -1 || isNaN(e)) {
+					e = Math.floor(Math.log(num) / Math.log(ceil));
+
+					if (e < 0) {
+						e = 0;
+					}
+				}
+
+				// Exceeding supported length, time to reduce & multiply
+				if (e > 8) {
+					e = 8;
+				}
+
+				val = num / (base === 2 ? Math.pow(2, e * 10) : Math.pow(1000, e));
+
+				if (bits) {
+					val = val * 8;
+
+					if (val >= ceil && e < 8) {
+						val = val / ceil;
+						e++;
+					}
+				}
+
+				result[0] = Number(val.toFixed(e > 0 ? round : 0));
+				result[1] = base === 10 && e === 1 ? bits ? "kb" : "kB" : symbol[standard][bits ? "bits" : "bytes"][e];
+
+				if (unix) {
+					result[1] = standard === "jedec" ? result[1].charAt(0) : e > 0 ? result[1].replace(/B$/, "") : result[1];
+
+					if (b.test(result[1])) {
+						result[0] = Math.floor(result[0]);
+						result[1] = "";
+					}
+				}
+			}
+
+			// Decorating a 'diff'
+			if (neg) {
+				result[0] = -result[0];
+			}
+
+			// Applying custom symbol
+			result[1] = symbols[result[1]] || result[1];
+
+			// Returning Array, Object, or String (default)
+			if (output === "array") {
+				return result;
+			}
+
+			if (output === "exponent") {
+				return e;
+			}
+
+			if (output === "object") {
+				return { value: result[0], suffix: result[1], symbol: result[1] };
+			}
+
+			if (full) {
+				result[1] = fullforms[e] ? fullforms[e] : fullform[standard][e] + (bits ? "bit" : "byte") + (result[0] === 1 ? "" : "s");
+			}
+
+			return result.join(spacer);
+		}
+
+		// Partial application for functional programming
+		filesize.partial = function (opt) {
+			return function (arg) {
+				return filesize(arg, opt);
+			};
+		};
+
+		// CommonJS, AMD, script tag
+		if (true) {
+			module.exports = filesize;
+		} else if (typeof define === "function" && define.amd) {
+			define(function () {
+				return filesize;
+			});
+		} else {
+			global.filesize = filesize;
+		}
+	})(typeof window !== "undefined" ? window : global);
+
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 
 	var _utility = __webpack_require__(12);
@@ -2161,7 +2357,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	__webpack_require__(14);
+	__webpack_require__(15);
 
 	var ADD_ITEM_SUCCESS = 'add_item_success';
 	var ADD_ITEM_ERROR = 'add_item_error';
@@ -2675,19 +2871,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.renameItem = renameItem;
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// the whatwg-fetch polyfill installs the fetch() function
 	// on the global object (window or self)
 	//
 	// Return that as the export for use in Webpack, Browserify etc.
-	__webpack_require__(15);
+	__webpack_require__(16);
 	module.exports = self.fetch.bind(self);
 
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports) {
 
 	(function(self) {
@@ -3151,13 +3347,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(17);
+	module.exports = __webpack_require__(18);
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -3174,10 +3370,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _prodInvariant = __webpack_require__(18),
-	    _assign = __webpack_require__(19);
+	var _prodInvariant = __webpack_require__(19),
+	    _assign = __webpack_require__(20);
 
-	var invariant = __webpack_require__(20);
+	var invariant = __webpack_require__(21);
 	var hasOwnProperty = {}.hasOwnProperty;
 
 	function shallowCopy(x) {
@@ -3274,7 +3470,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports) {
 
 	/**
@@ -3317,7 +3513,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = reactProdInvariant;
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports) {
 
 	/*
@@ -3413,7 +3609,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -3474,13 +3670,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports) {
 
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.75",
+		"version": "0.0.76",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -3578,13 +3774,13 @@ return /******/ (function(modules) { // webpackBootstrap
 			"eject": "react-scripts eject",
 			"babel": "babel ./src -d ./dist",
 			"i18n": "cd ./i18n && node build.js && cd ../",
-			"pretag": "grunt clean:buildcss && yarn i18n && grunt bump && grunt buildcss && yarn build && rm -rf public/assets/css && grunt clean:buildjs && grunt build",
+			"pretag": "grunt bump && grunt clean:buildcss && grunt clean:themecss && yarn i18n && grunt buildcss && yarn build && rm -rf public/assets/css && grunt clean:buildjs && grunt build",
 			"pretagsay": "yarn pretag && say \"Eureka Prepared for Tagging\""
 		}
 	};
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/*
@@ -3599,13 +3795,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
-	var allLocaleData = _interopDefault(__webpack_require__(23));
-	var IntlMessageFormat = _interopDefault(__webpack_require__(24));
-	var IntlRelativeFormat = _interopDefault(__webpack_require__(34));
+	var allLocaleData = _interopDefault(__webpack_require__(24));
+	var IntlMessageFormat = _interopDefault(__webpack_require__(25));
+	var IntlRelativeFormat = _interopDefault(__webpack_require__(35));
 	var React = __webpack_require__(1);
 	var React__default = _interopDefault(React);
-	var invariant = _interopDefault(__webpack_require__(41));
-	var memoizeIntlConstructor = _interopDefault(__webpack_require__(42));
+	var invariant = _interopDefault(__webpack_require__(42));
+	var memoizeIntlConstructor = _interopDefault(__webpack_require__(43));
 
 	// GENERATED FILE
 	var defaultLocaleData = { "locale": "en", "pluralRuleFunction": function pluralRuleFunction(n, ord) {
@@ -5250,24 +5446,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports) {
 
 	/* (ignored) */
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* jshint node:true */
 
 	'use strict';
 
-	var IntlMessageFormat = __webpack_require__(25)['default'];
+	var IntlMessageFormat = __webpack_require__(26)['default'];
 
 	// Add all locale data to `IntlMessageFormat`. This module will be ignored when
 	// bundling for the browser with Browserify/Webpack.
-	__webpack_require__(33);
+	__webpack_require__(34);
 
 	// Re-export `IntlMessageFormat` as the CommonJS default exports with all the
 	// locale data registered, and with English set as the default locale. Define
@@ -5277,13 +5473,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* jslint esnext: true */
 
 	"use strict";
-	var src$core$$ = __webpack_require__(26), src$en$$ = __webpack_require__(32);
+	var src$core$$ = __webpack_require__(27), src$en$$ = __webpack_require__(33);
 
 	src$core$$["default"].__addLocaleData(src$en$$["default"]);
 	src$core$$["default"].defaultLocale = 'en';
@@ -5293,7 +5489,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=main.js.map
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -5305,7 +5501,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* jslint esnext: true */
 
 	"use strict";
-	var src$utils$$ = __webpack_require__(27), src$es5$$ = __webpack_require__(28), src$compiler$$ = __webpack_require__(29), intl$messageformat$parser$$ = __webpack_require__(30);
+	var src$utils$$ = __webpack_require__(28), src$es5$$ = __webpack_require__(29), src$compiler$$ = __webpack_require__(30), intl$messageformat$parser$$ = __webpack_require__(31);
 	exports["default"] = MessageFormat;
 
 	// -- MessageFormat --------------------------------------------------------
@@ -5562,7 +5758,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=core.js.map
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports) {
 
 	/*
@@ -5599,7 +5795,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=utils.js.map
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -5611,7 +5807,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* jslint esnext: true */
 
 	"use strict";
-	var src$utils$$ = __webpack_require__(27);
+	var src$utils$$ = __webpack_require__(28);
 
 	// Purposely using the same implementation as the Intl.js `Intl` polyfill.
 	// Copyright 2013 Andy Earnshaw, MIT License
@@ -5653,7 +5849,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=es5.js.map
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports) {
 
 	/*
@@ -5867,17 +6063,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=compiler.js.map
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	exports = module.exports = __webpack_require__(31)['default'];
+	exports = module.exports = __webpack_require__(32)['default'];
 	exports['default'] = exports;
 
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -7241,7 +7437,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=parser.js.map
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports) {
 
 	// GENERATED FILE
@@ -7251,24 +7447,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=en.js.map
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports) {
 
 	/* (ignored) */
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* jshint node:true */
 
 	'use strict';
 
-	var IntlRelativeFormat = __webpack_require__(35)['default'];
+	var IntlRelativeFormat = __webpack_require__(36)['default'];
 
 	// Add all locale data to `IntlRelativeFormat`. This module will be ignored when
 	// bundling for the browser with Browserify/Webpack.
-	__webpack_require__(40);
+	__webpack_require__(41);
 
 	// Re-export `IntlRelativeFormat` as the CommonJS default exports with all the
 	// locale data registered, and with English set as the default locale. Define
@@ -7278,13 +7474,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* jslint esnext: true */
 
 	"use strict";
-	var src$core$$ = __webpack_require__(36), src$en$$ = __webpack_require__(39);
+	var src$core$$ = __webpack_require__(37), src$en$$ = __webpack_require__(40);
 
 	src$core$$["default"].__addLocaleData(src$en$$["default"]);
 	src$core$$["default"].defaultLocale = 'en';
@@ -7294,7 +7490,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=main.js.map
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -7306,7 +7502,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* jslint esnext: true */
 
 	"use strict";
-	var intl$messageformat$$ = __webpack_require__(24), src$diff$$ = __webpack_require__(37), src$es5$$ = __webpack_require__(38);
+	var intl$messageformat$$ = __webpack_require__(25), src$diff$$ = __webpack_require__(38), src$es5$$ = __webpack_require__(39);
 	exports["default"] = RelativeFormat;
 
 	// -----------------------------------------------------------------------------
@@ -7596,7 +7792,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=core.js.map
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports) {
 
 	/*
@@ -7647,7 +7843,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=diff.js.map
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports) {
 
 	/*
@@ -7727,7 +7923,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=es5.js.map
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports) {
 
 	// GENERATED FILE
@@ -7737,13 +7933,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=en.js.map
 
 /***/ },
-/* 40 */
+/* 41 */
 /***/ function(module, exports) {
 
 	/* (ignored) */
 
 /***/ },
-/* 41 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -7801,21 +7997,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 42 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	exports = module.exports = __webpack_require__(43)['default'];
+	exports = module.exports = __webpack_require__(44)['default'];
 	exports['default'] = exports;
 
 
 /***/ },
-/* 43 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var src$es5$$ = __webpack_require__(44);
+	var src$es5$$ = __webpack_require__(45);
 	exports["default"] = createFormatCache;
 
 	// -----------------------------------------------------------------------------
@@ -7891,7 +8087,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=memoizer.js.map
 
 /***/ },
-/* 44 */
+/* 45 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -7975,7 +8171,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=es5.js.map
 
 /***/ },
-/* 45 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7994,7 +8190,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(13);
+	var _actions = __webpack_require__(14);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
@@ -8002,7 +8198,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utility2 = _interopRequireDefault(_utility);
 
-	var _reactIntl = __webpack_require__(22);
+	var _reactIntl = __webpack_require__(23);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -8097,7 +8293,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = MediaDirectorySelector;
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8112,13 +8308,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Icon = __webpack_require__(47);
+	var _Icon = __webpack_require__(48);
 
 	var _Icon2 = _interopRequireDefault(_Icon);
 
-	var _reactIntl = __webpack_require__(22);
+	var _reactIntl = __webpack_require__(23);
 
-	var _definedMessages = __webpack_require__(48);
+	var _definedMessages = __webpack_require__(49);
 
 	var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
@@ -8167,7 +8363,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = TreeBar;
 
 /***/ },
-/* 47 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8201,7 +8397,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = Icon;
 
 /***/ },
-/* 48 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8212,7 +8408,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _defineMessages;
 
-	var _reactIntl = __webpack_require__(22);
+	var _reactIntl = __webpack_require__(23);
 
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -8360,7 +8556,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}), _defineMessages));
 
 /***/ },
-/* 49 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8377,15 +8573,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(13);
+	var _actions = __webpack_require__(14);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
-	var _Icon = __webpack_require__(47);
+	var _Icon = __webpack_require__(48);
 
 	var _Icon2 = _interopRequireDefault(_Icon);
 
-	var _definedMessages = __webpack_require__(48);
+	var _definedMessages = __webpack_require__(49);
 
 	var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
@@ -8416,7 +8612,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = TreeToggle;
 
 /***/ },
-/* 50 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8433,9 +8629,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utility2 = _interopRequireDefault(_utility);
 
-	var _reactIntl = __webpack_require__(22);
+	var _reactIntl = __webpack_require__(23);
 
-	var _definedMessages = __webpack_require__(48);
+	var _definedMessages = __webpack_require__(49);
 
 	var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
@@ -8501,7 +8697,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = ChooseBar;
 
 /***/ },
-/* 51 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8520,7 +8716,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(13);
+	var _actions = __webpack_require__(14);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
@@ -8528,13 +8724,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utility2 = _interopRequireDefault(_utility);
 
-	var _filesize = __webpack_require__(52);
+	var _filesize = __webpack_require__(13);
 
 	var _filesize2 = _interopRequireDefault(_filesize);
 
-	var _reactIntl = __webpack_require__(22);
+	var _reactIntl = __webpack_require__(23);
 
-	var _definedMessages = __webpack_require__(48);
+	var _definedMessages = __webpack_require__(49);
 
 	var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
@@ -8604,7 +8800,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      )];
 
 	      var placeholder = function () {
-	        if (!props.content.contents.length) return "";
+	        try {
+	          if (!props.content.contents.length) return "";
+	        } catch (e) {
+	          return "";
+	        }
 
 	        var randomItem = props.content.contents[Math.round(Math.random() * (props.content.contents.length - 1))];
 
@@ -8622,6 +8822,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return (0, _filesize2.default)(randomItem.fileSize, { round: 0 });
 	        }
 	      }();
+
+	      //console.log('props',props);
 
 	      var list = _react2.default.createElement(
 	        'datalist',
@@ -8695,181 +8897,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = SearchBar;
 
 /***/ },
-/* 52 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {"use strict";
-
-	/**
-	 * filesize
-	 *
-	 * @copyright 2017 Jason Mulligan <jason.mulligan@avoidwork.com>
-	 * @license BSD-3-Clause
-	 * @version 3.5.4
-	 */
-	(function (global) {
-		var b = /^(b|B)$/,
-		    symbol = {
-			iec: {
-				bits: ["b", "Kib", "Mib", "Gib", "Tib", "Pib", "Eib", "Zib", "Yib"],
-				bytes: ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"]
-			},
-			jedec: {
-				bits: ["b", "Kb", "Mb", "Gb", "Tb", "Pb", "Eb", "Zb", "Yb"],
-				bytes: ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
-			}
-		},
-		    fullform = {
-			iec: ["", "kibi", "mebi", "gibi", "tebi", "pebi", "exbi", "zebi", "yobi"],
-			jedec: ["", "kilo", "mega", "giga", "tera", "peta", "exa", "zetta", "yotta"]
-		};
-
-		/**
-	  * filesize
-	  *
-	  * @method filesize
-	  * @param  {Mixed}   arg        String, Int or Float to transform
-	  * @param  {Object}  descriptor [Optional] Flags
-	  * @return {String}             Readable file size String
-	  */
-		function filesize(arg) {
-			var descriptor = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-			var result = [],
-			    val = 0,
-			    e = void 0,
-			    base = void 0,
-			    bits = void 0,
-			    ceil = void 0,
-			    full = void 0,
-			    fullforms = void 0,
-			    neg = void 0,
-			    num = void 0,
-			    output = void 0,
-			    round = void 0,
-			    unix = void 0,
-			    spacer = void 0,
-			    standard = void 0,
-			    symbols = void 0;
-
-			if (isNaN(arg)) {
-				throw new Error("Invalid arguments");
-			}
-
-			bits = descriptor.bits === true;
-			unix = descriptor.unix === true;
-			base = descriptor.base || 2;
-			round = descriptor.round !== undefined ? descriptor.round : unix ? 1 : 2;
-			spacer = descriptor.spacer !== undefined ? descriptor.spacer : unix ? "" : " ";
-			symbols = descriptor.symbols || descriptor.suffixes || {};
-			standard = base === 2 ? descriptor.standard || "jedec" : "jedec";
-			output = descriptor.output || "string";
-			full = descriptor.fullform === true;
-			fullforms = descriptor.fullforms instanceof Array ? descriptor.fullforms : [];
-			e = descriptor.exponent !== undefined ? descriptor.exponent : -1;
-			num = Number(arg);
-			neg = num < 0;
-			ceil = base > 2 ? 1000 : 1024;
-
-			// Flipping a negative number to determine the size
-			if (neg) {
-				num = -num;
-			}
-
-			// Zero is now a special case because bytes divide by 1
-			if (num === 0) {
-				e = 0;
-				result[0] = 0;
-				result[1] = unix ? "" : !bits ? "B" : "b";
-			} else {
-				// Determining the exponent
-				if (e === -1 || isNaN(e)) {
-					e = Math.floor(Math.log(num) / Math.log(ceil));
-
-					if (e < 0) {
-						e = 0;
-					}
-				}
-
-				// Exceeding supported length, time to reduce & multiply
-				if (e > 8) {
-					e = 8;
-				}
-
-				val = num / (base === 2 ? Math.pow(2, e * 10) : Math.pow(1000, e));
-
-				if (bits) {
-					val = val * 8;
-
-					if (val >= ceil && e < 8) {
-						val = val / ceil;
-						e++;
-					}
-				}
-
-				result[0] = Number(val.toFixed(e > 0 ? round : 0));
-				result[1] = base === 10 && e === 1 ? bits ? "kb" : "kB" : symbol[standard][bits ? "bits" : "bytes"][e];
-
-				if (unix) {
-					result[1] = standard === "jedec" ? result[1].charAt(0) : e > 0 ? result[1].replace(/B$/, "") : result[1];
-
-					if (b.test(result[1])) {
-						result[0] = Math.floor(result[0]);
-						result[1] = "";
-					}
-				}
-			}
-
-			// Decorating a 'diff'
-			if (neg) {
-				result[0] = -result[0];
-			}
-
-			// Applying custom symbol
-			result[1] = symbols[result[1]] || result[1];
-
-			// Returning Array, Object, or String (default)
-			if (output === "array") {
-				return result;
-			}
-
-			if (output === "exponent") {
-				return e;
-			}
-
-			if (output === "object") {
-				return { value: result[0], suffix: result[1], symbol: result[1] };
-			}
-
-			if (full) {
-				result[1] = fullforms[e] ? fullforms[e] : fullform[standard][e] + (bits ? "bit" : "byte") + (result[0] === 1 ? "" : "s");
-			}
-
-			return result.join(spacer);
-		}
-
-		// Partial application for functional programming
-		filesize.partial = function (opt) {
-			return function (arg) {
-				return filesize(arg, opt);
-			};
-		};
-
-		// CommonJS, AMD, script tag
-		if (true) {
-			module.exports = filesize;
-		} else if (typeof define === "function" && define.amd) {
-			define(function () {
-				return filesize;
-			});
-		} else {
-			global.filesize = filesize;
-		}
-	})(typeof window !== "undefined" ? window : global);
-
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
 /* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -8891,11 +8918,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(13);
+	var _actions = __webpack_require__(14);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
-	var _Icon = __webpack_require__(47);
+	var _Icon = __webpack_require__(48);
 
 	var _Icon2 = _interopRequireDefault(_Icon);
 
@@ -8905,9 +8932,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utility = __webpack_require__(12);
 
-	var _reactIntl = __webpack_require__(22);
+	var _reactIntl = __webpack_require__(23);
 
-	var _definedMessages = __webpack_require__(48);
+	var _definedMessages = __webpack_require__(49);
 
 	var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
@@ -8937,7 +8964,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function render() {
 	      var _this2 = this;
 
-	      console.log('ViewChooser', this.props);
+	      //console.log('ViewChooser', this.props);
 	      var props = this.props,
 	          formatMessage = props.intl.formatMessage,
 	          tabularLayoutMessage = formatMessage(_definedMessages2.default.tabularLayoutDescription),
@@ -9231,7 +9258,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(13);
+	var _actions = __webpack_require__(14);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
@@ -9247,7 +9274,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _reactDropzone2 = _interopRequireDefault(_reactDropzone);
 
-	var _Icon = __webpack_require__(47);
+	var _Icon = __webpack_require__(48);
 
 	var _Icon2 = _interopRequireDefault(_Icon);
 
@@ -9255,9 +9282,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utility2 = _interopRequireDefault(_utility);
 
-	var _reactIntl = __webpack_require__(22);
+	var _reactIntl = __webpack_require__(23);
 
-	var _definedMessages = __webpack_require__(48);
+	var _definedMessages = __webpack_require__(49);
 
 	var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
@@ -9503,11 +9530,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(13);
+	var _actions = __webpack_require__(14);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
-	var _filesize = __webpack_require__(52);
+	var _filesize = __webpack_require__(13);
 
 	var _filesize2 = _interopRequireDefault(_filesize);
 
@@ -9519,9 +9546,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utility2 = _interopRequireDefault(_utility);
 
-	var _reactIntl = __webpack_require__(22);
+	var _reactIntl = __webpack_require__(23);
 
-	var _definedMessages = __webpack_require__(48);
+	var _definedMessages = __webpack_require__(49);
 
 	var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
@@ -9650,12 +9677,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	          // filter based on filename, dimensions, date
 	          var filter = props.view.filter.toLowerCase();
 	          contents = contents.filter(function (value) {
-	            return value.filename.toLowerCase().includes(filter) || value.dimensions.join('x').toLowerCase().includes(filter) || new Date(value.editedOn).toLocaleString().toLowerCase().includes(filter) || new Date(value.editedOn).toLocaleString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }).toLowerCase().includes(filter) || (0, _filesize2.default)(value.fileSize, { round: 0 }).toLowerCase().includes(filter) || (0, _filesize2.default)(value.fileSize, { round: 0 }).toLowerCase().replace(/ +?/g, '').includes(filter);
+	            var editedOnDate = new Date(value.editedOn);
+	            //console.log('value', value);
+	            //return value.filename.toLowerCase().includes(filter);
+	            return value.filename.toLowerCase().includes(filter) || value.dimensions.join('x').toLowerCase().includes(filter) || value.localString.toLowerCase().includes(filter) || value.localStringVerbose.toLowerCase().includes(filter) || value.fileSizeHumanReadable.toLowerCase().includes(filter) || value.fileSizeHumanReadable.toLowerCase().replace(/ +?/g, '').includes(filter);
 	          });
 	        })();
 	      }
 
-	      contents = contents.sort(function (a, b) {
+	      var sortContents = true;
+	      contents = !sortContents ? contents : contents.sort(function (a, b) {
 	        if (a[props.sort.by] === b[props.sort.by]) return 0;
 
 	        var n = void 0;
@@ -9814,7 +9845,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _filesize = __webpack_require__(52);
+	var _filesize = __webpack_require__(13);
 
 	var _filesize2 = _interopRequireDefault(_filesize);
 
@@ -9834,13 +9865,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _Icon = __webpack_require__(47);
+	var _Icon = __webpack_require__(48);
 
 	var _Icon2 = _interopRequireDefault(_Icon);
 
-	var _reactIntl = __webpack_require__(22);
+	var _reactIntl = __webpack_require__(23);
 
-	var _definedMessages = __webpack_require__(48);
+	var _definedMessages = __webpack_require__(49);
 
 	var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
@@ -9876,10 +9907,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      //console.log('MediaRow shouldComponentUpdate', this.props, nextProps);
 	      if (this.props.item !== nextProps.item) return true;
 	      try {
-	        console.log(nextProps.focusedMediaItem !== undefined);
+	        //console.log((nextProps.focusedMediaItem !== undefined));
 	        return nextProps.focusedMediaItem !== undefined;
 	      } catch (e) {}
-	      console.log('MediaRow should not update');
+	      //console.log('MediaRow should not update');
 	      return false;
 	    }
 	  }, {
@@ -10160,8 +10191,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        ),
 	        _react2.default.createElement(
 	          'td',
-	          { role: 'gridcell', title: new Date(props.item.editedOn).toLocaleString(props.view.locale, { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' }) },
-	          new Date(props.item.editedOn).toLocaleString(props.view.locale, { year: '2-digit', month: '2-digit', day: '2-digit' })
+	          { role: 'gridcell', title: props.item.editedOnLongTimeZone || new Date(props.item.editedOn).toLocaleString(props.view.locale, { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' }) },
+	          props.item.editedOnTwoDigit || new Date(props.item.editedOn).toLocaleString(props.view.locale, { year: '2-digit', month: '2-digit', day: '2-digit' })
 	        )
 	      );
 	    }
@@ -10192,7 +10223,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(13);
+	var _actions = __webpack_require__(14);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
@@ -10231,7 +10262,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(13);
+	var _actions = __webpack_require__(14);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
@@ -10241,9 +10272,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _path2 = _interopRequireDefault(_path);
 
-	var _reactIntl = __webpack_require__(22);
+	var _reactIntl = __webpack_require__(23);
 
-	var _definedMessages = __webpack_require__(48);
+	var _definedMessages = __webpack_require__(49);
 
 	var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
@@ -10989,15 +11020,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(13);
+	var _actions = __webpack_require__(14);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
-	var _Icon = __webpack_require__(47);
+	var _Icon = __webpack_require__(48);
 
 	var _Icon2 = _interopRequireDefault(_Icon);
 
-	var _definedMessages = __webpack_require__(48);
+	var _definedMessages = __webpack_require__(49);
 
 	var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
@@ -11174,7 +11205,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(13);
+	var _actions = __webpack_require__(14);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
@@ -11182,9 +11213,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utility2 = _interopRequireDefault(_utility);
 
-	var _reactIntl = __webpack_require__(22);
+	var _reactIntl = __webpack_require__(23);
 
-	var _definedMessages = __webpack_require__(48);
+	var _definedMessages = __webpack_require__(49);
 
 	var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
@@ -11343,7 +11374,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Icon = __webpack_require__(47);
+	var _Icon = __webpack_require__(48);
 
 	var _Icon2 = _interopRequireDefault(_Icon);
 
@@ -11459,17 +11490,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(13);
+	var _actions = __webpack_require__(14);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
-	var _Icon = __webpack_require__(47);
+	var _Icon = __webpack_require__(48);
 
 	var _Icon2 = _interopRequireDefault(_Icon);
 
-	var _reactIntl = __webpack_require__(22);
+	var _reactIntl = __webpack_require__(23);
 
-	var _definedMessages = __webpack_require__(48);
+	var _definedMessages = __webpack_require__(49);
 
 	var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
@@ -11549,7 +11580,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactIntl = __webpack_require__(22);
+	var _reactIntl = __webpack_require__(23);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -11610,11 +11641,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _Icon = __webpack_require__(47);
+	var _Icon = __webpack_require__(48);
 
 	var _Icon2 = _interopRequireDefault(_Icon);
 
-	var _reactIntl = __webpack_require__(22);
+	var _reactIntl = __webpack_require__(23);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -11767,13 +11798,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _Icon = __webpack_require__(47);
+	var _Icon = __webpack_require__(48);
 
 	var _Icon2 = _interopRequireDefault(_Icon);
 
-	var _reactIntl = __webpack_require__(22);
+	var _reactIntl = __webpack_require__(23);
 
-	var _definedMessages = __webpack_require__(48);
+	var _definedMessages = __webpack_require__(49);
 
 	var _definedMessages2 = _interopRequireDefault(_definedMessages);
 

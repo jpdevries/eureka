@@ -84,7 +84,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Eureka2 = _interopRequireDefault(_Eureka);
 
-	var _reactIntl = __webpack_require__(229);
+	var _reactIntl = __webpack_require__(230);
 
 	var _utility = __webpack_require__(222);
 
@@ -108,7 +108,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-	var actions = __webpack_require__(223),
+	var actions = __webpack_require__(224),
 	    store = __webpack_require__(219);
 	//import localeData from './../i18n/locales/en.json';
 
@@ -245,7 +245,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    store.subscribe(function () {
 	      var state = store.getState();
-	      console.log(state);
+	      //console.log(state);
 
 	      // whenever the state changes we store pieces of the state locally so that next time Eureka fires up it can render the user interface without delay
 	      if (state.config.useLocalStorage) {
@@ -259,7 +259,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          //localStorage.setItem(`${state.config.storagePrefix}treeHidden`, !state.view.sourceTreeOpen);
 	          localStorage.setItem(state.config.storagePrefix + 'content', JSON.stringify(state.content));
 	          localStorage.setItem(state.config.storagePrefix + 'tree', JSON.stringify(state.tree));
-	          console.log('state.view', JSON.stringify(state.view));
+	          //console.log('state.view', JSON.stringify(state.view));
 	          localStorage.setItem(state.config.storagePrefix + 'view', JSON.stringify(state.view));
 	        } catch (e) {}
 	      }
@@ -24270,23 +24270,23 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _MediaSourceSelector2 = _interopRequireDefault(_MediaSourceSelector);
 
-	var _MediaDirectorySelector = __webpack_require__(251);
+	var _MediaDirectorySelector = __webpack_require__(252);
 
 	var _MediaDirectorySelector2 = _interopRequireDefault(_MediaDirectorySelector);
 
-	var _TreeBar = __webpack_require__(252);
+	var _TreeBar = __webpack_require__(253);
 
 	var _TreeBar2 = _interopRequireDefault(_TreeBar);
 
-	var _TreeToggle = __webpack_require__(255);
+	var _TreeToggle = __webpack_require__(256);
 
 	var _TreeToggle2 = _interopRequireDefault(_TreeToggle);
 
-	var _ChooseBar = __webpack_require__(256);
+	var _ChooseBar = __webpack_require__(257);
 
 	var _ChooseBar2 = _interopRequireDefault(_ChooseBar);
 
-	var _SearchBar = __webpack_require__(257);
+	var _SearchBar = __webpack_require__(258);
 
 	var _SearchBar2 = _interopRequireDefault(_SearchBar);
 
@@ -24326,13 +24326,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ModalRenameItemForm2 = _interopRequireDefault(_ModalRenameItemForm);
 
-	var _reactIntl = __webpack_require__(229);
+	var _reactIntl = __webpack_require__(230);
 
 	var _store = __webpack_require__(219);
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(223);
+	var _actions = __webpack_require__(224);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
@@ -24340,7 +24340,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utility2 = _interopRequireDefault(_utility);
 
-	var _definedMessages = __webpack_require__(254);
+	var _definedMessages = __webpack_require__(255);
 
 	var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
@@ -24688,11 +24688,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(223);
+	var _actions = __webpack_require__(224);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
-	var _reactIntl = __webpack_require__(229);
+	var _reactIntl = __webpack_require__(230);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -24797,16 +24797,20 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utility2 = _interopRequireDefault(_utility);
 
+	var _filesize = __webpack_require__(223);
+
+	var _filesize2 = _interopRequireDefault(_filesize);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-	var actions = __webpack_require__(223),
+	var actions = __webpack_require__(224),
 	    combineReducers = __webpack_require__(179).combineReducers,
-	    update = __webpack_require__(226),
+	    update = __webpack_require__(227),
 	    path = __webpack_require__(178);
 
-	var pkg = __webpack_require__(228);
+	var pkg = __webpack_require__(229);
 
 	var initialConfigState = {
 	  basePath: '/',
@@ -24890,22 +24894,26 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    case actions.UPDATE_CONTENT:
 	      //console.log('UPDATE_CONTENT', state, action.content);
-	      return Object.assign({}, state, action.content);
+	      var content = Object.assign({}, action.content, {
+	        contents: processContentItems(action.content.contents)
+	      });
+	      return Object.assign({}, state, content);
 	      break;
 
 	    case actions.FETCH_DIRECTORY_CONTENTS_SUCCESS:
+	      //console.log('FETCH_DIRECTORY_CONTENTS_SUCCESS', state, action.contents);
 	      return Object.assign({}, state, {
-	        contents: action.contents.filter(function (file) {
+	        contents: processContentItems(action.contents.filter(function (file) {
 	          return file.filename;
-	        })
+	        }))
 	      });
 
 	    case actions.UPLOAD_FILES_SUCCESS:
 	      //if(!Array.isArray(action.contents)) return state; // so the backed can just return res.json([true]) if it wants?
 	      return Object.assign({}, state, {
-	        contents: action.contents.filter(function (file) {
+	        contents: processContentItems(action.contents.filter(function (file) {
 	          return file.filename;
-	        })
+	        }))
 	      });
 
 	    case actions.DELETE_MEDIA_ITEM_SUCCESS:
@@ -24922,6 +24930,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  return state;
+
+	  function processContentItems(contents) {
+	    return contents !== undefined ? contents.map(function (item) {
+	      var editedOnDate = new Date(item.editedOn);
+	      return Object.assign({}, item, {
+	        localString: editedOnDate.toLocaleString(),
+	        localStringVerbose: editedOnDate.toLocaleString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+	        fileSizeHumanReadable: (0, _filesize2.default)(item.fileSize, { round: 0 }),
+	        editedOnTwoDigit: new Date(item.editedOn).toLocaleString(undefined, { year: '2-digit', month: '2-digit', day: '2-digit' }),
+	        editedOnLongTimeZone: new Date(item.editedOn).toLocaleString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' })
+	      });
+	    }) : [];
+	  }
 	};
 
 	var initialTreeReducer = function () {
@@ -25073,7 +25094,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}, function () {
 	  try {
 	    var json = JSON.parse(localStorage.getItem('eureka__view'));
-	    console.log('json', json);
+	    //console.log('json',json);
 	    return json;
 	    /*return (
 	      Object.assign({}, json, {
@@ -25605,6 +25626,181 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 223 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/* WEBPACK VAR INJECTION */(function(global) {"use strict";
+
+	/**
+	 * filesize
+	 *
+	 * @copyright 2017 Jason Mulligan <jason.mulligan@avoidwork.com>
+	 * @license BSD-3-Clause
+	 * @version 3.5.4
+	 */
+	(function (global) {
+		var b = /^(b|B)$/,
+		    symbol = {
+			iec: {
+				bits: ["b", "Kib", "Mib", "Gib", "Tib", "Pib", "Eib", "Zib", "Yib"],
+				bytes: ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"]
+			},
+			jedec: {
+				bits: ["b", "Kb", "Mb", "Gb", "Tb", "Pb", "Eb", "Zb", "Yb"],
+				bytes: ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
+			}
+		},
+		    fullform = {
+			iec: ["", "kibi", "mebi", "gibi", "tebi", "pebi", "exbi", "zebi", "yobi"],
+			jedec: ["", "kilo", "mega", "giga", "tera", "peta", "exa", "zetta", "yotta"]
+		};
+
+		/**
+	  * filesize
+	  *
+	  * @method filesize
+	  * @param  {Mixed}   arg        String, Int or Float to transform
+	  * @param  {Object}  descriptor [Optional] Flags
+	  * @return {String}             Readable file size String
+	  */
+		function filesize(arg) {
+			var descriptor = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+			var result = [],
+			    val = 0,
+			    e = void 0,
+			    base = void 0,
+			    bits = void 0,
+			    ceil = void 0,
+			    full = void 0,
+			    fullforms = void 0,
+			    neg = void 0,
+			    num = void 0,
+			    output = void 0,
+			    round = void 0,
+			    unix = void 0,
+			    spacer = void 0,
+			    standard = void 0,
+			    symbols = void 0;
+
+			if (isNaN(arg)) {
+				throw new Error("Invalid arguments");
+			}
+
+			bits = descriptor.bits === true;
+			unix = descriptor.unix === true;
+			base = descriptor.base || 2;
+			round = descriptor.round !== undefined ? descriptor.round : unix ? 1 : 2;
+			spacer = descriptor.spacer !== undefined ? descriptor.spacer : unix ? "" : " ";
+			symbols = descriptor.symbols || descriptor.suffixes || {};
+			standard = base === 2 ? descriptor.standard || "jedec" : "jedec";
+			output = descriptor.output || "string";
+			full = descriptor.fullform === true;
+			fullforms = descriptor.fullforms instanceof Array ? descriptor.fullforms : [];
+			e = descriptor.exponent !== undefined ? descriptor.exponent : -1;
+			num = Number(arg);
+			neg = num < 0;
+			ceil = base > 2 ? 1000 : 1024;
+
+			// Flipping a negative number to determine the size
+			if (neg) {
+				num = -num;
+			}
+
+			// Zero is now a special case because bytes divide by 1
+			if (num === 0) {
+				e = 0;
+				result[0] = 0;
+				result[1] = unix ? "" : !bits ? "B" : "b";
+			} else {
+				// Determining the exponent
+				if (e === -1 || isNaN(e)) {
+					e = Math.floor(Math.log(num) / Math.log(ceil));
+
+					if (e < 0) {
+						e = 0;
+					}
+				}
+
+				// Exceeding supported length, time to reduce & multiply
+				if (e > 8) {
+					e = 8;
+				}
+
+				val = num / (base === 2 ? Math.pow(2, e * 10) : Math.pow(1000, e));
+
+				if (bits) {
+					val = val * 8;
+
+					if (val >= ceil && e < 8) {
+						val = val / ceil;
+						e++;
+					}
+				}
+
+				result[0] = Number(val.toFixed(e > 0 ? round : 0));
+				result[1] = base === 10 && e === 1 ? bits ? "kb" : "kB" : symbol[standard][bits ? "bits" : "bytes"][e];
+
+				if (unix) {
+					result[1] = standard === "jedec" ? result[1].charAt(0) : e > 0 ? result[1].replace(/B$/, "") : result[1];
+
+					if (b.test(result[1])) {
+						result[0] = Math.floor(result[0]);
+						result[1] = "";
+					}
+				}
+			}
+
+			// Decorating a 'diff'
+			if (neg) {
+				result[0] = -result[0];
+			}
+
+			// Applying custom symbol
+			result[1] = symbols[result[1]] || result[1];
+
+			// Returning Array, Object, or String (default)
+			if (output === "array") {
+				return result;
+			}
+
+			if (output === "exponent") {
+				return e;
+			}
+
+			if (output === "object") {
+				return { value: result[0], suffix: result[1], symbol: result[1] };
+			}
+
+			if (full) {
+				result[1] = fullforms[e] ? fullforms[e] : fullform[standard][e] + (bits ? "bit" : "byte") + (result[0] === 1 ? "" : "s");
+			}
+
+			return result.join(spacer);
+		}
+
+		// Partial application for functional programming
+		filesize.partial = function (opt) {
+			return function (arg) {
+				return filesize(arg, opt);
+			};
+		};
+
+		// CommonJS, AMD, script tag
+		if (true) {
+			module.exports = filesize;
+		} else if (typeof define === "function" && define.amd) {
+			define(function () {
+				return filesize;
+			});
+		} else {
+			global.filesize = filesize;
+		}
+	})(typeof window !== "undefined" ? window : global);
+
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 224 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 
 	var _utility = __webpack_require__(222);
@@ -25613,7 +25809,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	__webpack_require__(224);
+	__webpack_require__(225);
 
 	var ADD_ITEM_SUCCESS = 'add_item_success';
 	var ADD_ITEM_ERROR = 'add_item_error';
@@ -26127,19 +26323,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.renameItem = renameItem;
 
 /***/ },
-/* 224 */
+/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// the whatwg-fetch polyfill installs the fetch() function
 	// on the global object (window or self)
 	//
 	// Return that as the export for use in Webpack, Browserify etc.
-	__webpack_require__(225);
+	__webpack_require__(226);
 	module.exports = self.fetch.bind(self);
 
 
 /***/ },
-/* 225 */
+/* 226 */
 /***/ function(module, exports) {
 
 	(function(self) {
@@ -26603,13 +26799,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 226 */
+/* 227 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(227);
+	module.exports = __webpack_require__(228);
 
 /***/ },
-/* 227 */
+/* 228 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26726,13 +26922,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 228 */
+/* 229 */
 /***/ function(module, exports) {
 
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.75",
+		"version": "0.0.76",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -26830,13 +27026,13 @@ return /******/ (function(modules) { // webpackBootstrap
 			"eject": "react-scripts eject",
 			"babel": "babel ./src -d ./dist",
 			"i18n": "cd ./i18n && node build.js && cd ../",
-			"pretag": "grunt clean:buildcss && yarn i18n && grunt bump && grunt buildcss && yarn build && rm -rf public/assets/css && grunt clean:buildjs && grunt build",
+			"pretag": "grunt bump && grunt clean:buildcss && grunt clean:themecss && yarn i18n && grunt buildcss && yarn build && rm -rf public/assets/css && grunt clean:buildjs && grunt build",
 			"pretagsay": "yarn pretag && say \"Eureka Prepared for Tagging\""
 		}
 	};
 
 /***/ },
-/* 229 */
+/* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/*
@@ -26851,13 +27047,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
-	var allLocaleData = _interopDefault(__webpack_require__(230));
-	var IntlMessageFormat = _interopDefault(__webpack_require__(231));
-	var IntlRelativeFormat = _interopDefault(__webpack_require__(241));
+	var allLocaleData = _interopDefault(__webpack_require__(231));
+	var IntlMessageFormat = _interopDefault(__webpack_require__(232));
+	var IntlRelativeFormat = _interopDefault(__webpack_require__(242));
 	var React = __webpack_require__(1);
 	var React__default = _interopDefault(React);
 	var invariant = _interopDefault(__webpack_require__(207));
-	var memoizeIntlConstructor = _interopDefault(__webpack_require__(248));
+	var memoizeIntlConstructor = _interopDefault(__webpack_require__(249));
 
 	// GENERATED FILE
 	var defaultLocaleData = { "locale": "en", "pluralRuleFunction": function pluralRuleFunction(n, ord) {
@@ -28502,24 +28698,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 230 */
+/* 231 */
 /***/ function(module, exports) {
 
 	/* (ignored) */
 
 /***/ },
-/* 231 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* jshint node:true */
 
 	'use strict';
 
-	var IntlMessageFormat = __webpack_require__(232)['default'];
+	var IntlMessageFormat = __webpack_require__(233)['default'];
 
 	// Add all locale data to `IntlMessageFormat`. This module will be ignored when
 	// bundling for the browser with Browserify/Webpack.
-	__webpack_require__(240);
+	__webpack_require__(241);
 
 	// Re-export `IntlMessageFormat` as the CommonJS default exports with all the
 	// locale data registered, and with English set as the default locale. Define
@@ -28529,13 +28725,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 232 */
+/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* jslint esnext: true */
 
 	"use strict";
-	var src$core$$ = __webpack_require__(233), src$en$$ = __webpack_require__(239);
+	var src$core$$ = __webpack_require__(234), src$en$$ = __webpack_require__(240);
 
 	src$core$$["default"].__addLocaleData(src$en$$["default"]);
 	src$core$$["default"].defaultLocale = 'en';
@@ -28545,7 +28741,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=main.js.map
 
 /***/ },
-/* 233 */
+/* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -28557,7 +28753,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* jslint esnext: true */
 
 	"use strict";
-	var src$utils$$ = __webpack_require__(234), src$es5$$ = __webpack_require__(235), src$compiler$$ = __webpack_require__(236), intl$messageformat$parser$$ = __webpack_require__(237);
+	var src$utils$$ = __webpack_require__(235), src$es5$$ = __webpack_require__(236), src$compiler$$ = __webpack_require__(237), intl$messageformat$parser$$ = __webpack_require__(238);
 	exports["default"] = MessageFormat;
 
 	// -- MessageFormat --------------------------------------------------------
@@ -28814,7 +29010,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=core.js.map
 
 /***/ },
-/* 234 */
+/* 235 */
 /***/ function(module, exports) {
 
 	/*
@@ -28851,7 +29047,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=utils.js.map
 
 /***/ },
-/* 235 */
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -28863,7 +29059,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* jslint esnext: true */
 
 	"use strict";
-	var src$utils$$ = __webpack_require__(234);
+	var src$utils$$ = __webpack_require__(235);
 
 	// Purposely using the same implementation as the Intl.js `Intl` polyfill.
 	// Copyright 2013 Andy Earnshaw, MIT License
@@ -28905,7 +29101,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=es5.js.map
 
 /***/ },
-/* 236 */
+/* 237 */
 /***/ function(module, exports) {
 
 	/*
@@ -29119,17 +29315,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=compiler.js.map
 
 /***/ },
-/* 237 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	exports = module.exports = __webpack_require__(238)['default'];
+	exports = module.exports = __webpack_require__(239)['default'];
 	exports['default'] = exports;
 
 
 /***/ },
-/* 238 */
+/* 239 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -30493,7 +30689,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=parser.js.map
 
 /***/ },
-/* 239 */
+/* 240 */
 /***/ function(module, exports) {
 
 	// GENERATED FILE
@@ -30503,24 +30699,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=en.js.map
 
 /***/ },
-/* 240 */
+/* 241 */
 /***/ function(module, exports) {
 
 	/* (ignored) */
 
 /***/ },
-/* 241 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* jshint node:true */
 
 	'use strict';
 
-	var IntlRelativeFormat = __webpack_require__(242)['default'];
+	var IntlRelativeFormat = __webpack_require__(243)['default'];
 
 	// Add all locale data to `IntlRelativeFormat`. This module will be ignored when
 	// bundling for the browser with Browserify/Webpack.
-	__webpack_require__(247);
+	__webpack_require__(248);
 
 	// Re-export `IntlRelativeFormat` as the CommonJS default exports with all the
 	// locale data registered, and with English set as the default locale. Define
@@ -30530,13 +30726,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 242 */
+/* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* jslint esnext: true */
 
 	"use strict";
-	var src$core$$ = __webpack_require__(243), src$en$$ = __webpack_require__(246);
+	var src$core$$ = __webpack_require__(244), src$en$$ = __webpack_require__(247);
 
 	src$core$$["default"].__addLocaleData(src$en$$["default"]);
 	src$core$$["default"].defaultLocale = 'en';
@@ -30546,7 +30742,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=main.js.map
 
 /***/ },
-/* 243 */
+/* 244 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -30558,7 +30754,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* jslint esnext: true */
 
 	"use strict";
-	var intl$messageformat$$ = __webpack_require__(231), src$diff$$ = __webpack_require__(244), src$es5$$ = __webpack_require__(245);
+	var intl$messageformat$$ = __webpack_require__(232), src$diff$$ = __webpack_require__(245), src$es5$$ = __webpack_require__(246);
 	exports["default"] = RelativeFormat;
 
 	// -----------------------------------------------------------------------------
@@ -30848,7 +31044,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=core.js.map
 
 /***/ },
-/* 244 */
+/* 245 */
 /***/ function(module, exports) {
 
 	/*
@@ -30899,7 +31095,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=diff.js.map
 
 /***/ },
-/* 245 */
+/* 246 */
 /***/ function(module, exports) {
 
 	/*
@@ -30979,7 +31175,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=es5.js.map
 
 /***/ },
-/* 246 */
+/* 247 */
 /***/ function(module, exports) {
 
 	// GENERATED FILE
@@ -30989,27 +31185,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=en.js.map
 
 /***/ },
-/* 247 */
+/* 248 */
 /***/ function(module, exports) {
 
 	/* (ignored) */
 
 /***/ },
-/* 248 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	exports = module.exports = __webpack_require__(249)['default'];
+	exports = module.exports = __webpack_require__(250)['default'];
 	exports['default'] = exports;
 
 
 /***/ },
-/* 249 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var src$es5$$ = __webpack_require__(250);
+	var src$es5$$ = __webpack_require__(251);
 	exports["default"] = createFormatCache;
 
 	// -----------------------------------------------------------------------------
@@ -31085,7 +31281,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=memoizer.js.map
 
 /***/ },
-/* 250 */
+/* 251 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -31169,7 +31365,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=es5.js.map
 
 /***/ },
-/* 251 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31188,7 +31384,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(223);
+	var _actions = __webpack_require__(224);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
@@ -31196,7 +31392,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utility2 = _interopRequireDefault(_utility);
 
-	var _reactIntl = __webpack_require__(229);
+	var _reactIntl = __webpack_require__(230);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -31291,7 +31487,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = MediaDirectorySelector;
 
 /***/ },
-/* 252 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31306,13 +31502,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Icon = __webpack_require__(253);
+	var _Icon = __webpack_require__(254);
 
 	var _Icon2 = _interopRequireDefault(_Icon);
 
-	var _reactIntl = __webpack_require__(229);
+	var _reactIntl = __webpack_require__(230);
 
-	var _definedMessages = __webpack_require__(254);
+	var _definedMessages = __webpack_require__(255);
 
 	var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
@@ -31361,7 +31557,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = TreeBar;
 
 /***/ },
-/* 253 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31395,7 +31591,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = Icon;
 
 /***/ },
-/* 254 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31406,7 +31602,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _defineMessages;
 
-	var _reactIntl = __webpack_require__(229);
+	var _reactIntl = __webpack_require__(230);
 
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -31554,7 +31750,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}), _defineMessages));
 
 /***/ },
-/* 255 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31571,15 +31767,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(223);
+	var _actions = __webpack_require__(224);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
-	var _Icon = __webpack_require__(253);
+	var _Icon = __webpack_require__(254);
 
 	var _Icon2 = _interopRequireDefault(_Icon);
 
-	var _definedMessages = __webpack_require__(254);
+	var _definedMessages = __webpack_require__(255);
 
 	var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
@@ -31610,7 +31806,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = TreeToggle;
 
 /***/ },
-/* 256 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31627,9 +31823,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utility2 = _interopRequireDefault(_utility);
 
-	var _reactIntl = __webpack_require__(229);
+	var _reactIntl = __webpack_require__(230);
 
-	var _definedMessages = __webpack_require__(254);
+	var _definedMessages = __webpack_require__(255);
 
 	var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
@@ -31695,7 +31891,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = ChooseBar;
 
 /***/ },
-/* 257 */
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31714,7 +31910,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(223);
+	var _actions = __webpack_require__(224);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
@@ -31722,13 +31918,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utility2 = _interopRequireDefault(_utility);
 
-	var _filesize = __webpack_require__(258);
+	var _filesize = __webpack_require__(223);
 
 	var _filesize2 = _interopRequireDefault(_filesize);
 
-	var _reactIntl = __webpack_require__(229);
+	var _reactIntl = __webpack_require__(230);
 
-	var _definedMessages = __webpack_require__(254);
+	var _definedMessages = __webpack_require__(255);
 
 	var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
@@ -31798,7 +31994,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      )];
 
 	      var placeholder = function () {
-	        if (!props.content.contents.length) return "";
+	        try {
+	          if (!props.content.contents.length) return "";
+	        } catch (e) {
+	          return "";
+	        }
 
 	        var randomItem = props.content.contents[Math.round(Math.random() * (props.content.contents.length - 1))];
 
@@ -31816,6 +32016,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return (0, _filesize2.default)(randomItem.fileSize, { round: 0 });
 	        }
 	      }();
+
+	      //console.log('props',props);
 
 	      var list = _react2.default.createElement(
 	        'datalist',
@@ -31889,181 +32091,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = SearchBar;
 
 /***/ },
-/* 258 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {"use strict";
-
-	/**
-	 * filesize
-	 *
-	 * @copyright 2017 Jason Mulligan <jason.mulligan@avoidwork.com>
-	 * @license BSD-3-Clause
-	 * @version 3.5.4
-	 */
-	(function (global) {
-		var b = /^(b|B)$/,
-		    symbol = {
-			iec: {
-				bits: ["b", "Kib", "Mib", "Gib", "Tib", "Pib", "Eib", "Zib", "Yib"],
-				bytes: ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"]
-			},
-			jedec: {
-				bits: ["b", "Kb", "Mb", "Gb", "Tb", "Pb", "Eb", "Zb", "Yb"],
-				bytes: ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
-			}
-		},
-		    fullform = {
-			iec: ["", "kibi", "mebi", "gibi", "tebi", "pebi", "exbi", "zebi", "yobi"],
-			jedec: ["", "kilo", "mega", "giga", "tera", "peta", "exa", "zetta", "yotta"]
-		};
-
-		/**
-	  * filesize
-	  *
-	  * @method filesize
-	  * @param  {Mixed}   arg        String, Int or Float to transform
-	  * @param  {Object}  descriptor [Optional] Flags
-	  * @return {String}             Readable file size String
-	  */
-		function filesize(arg) {
-			var descriptor = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-			var result = [],
-			    val = 0,
-			    e = void 0,
-			    base = void 0,
-			    bits = void 0,
-			    ceil = void 0,
-			    full = void 0,
-			    fullforms = void 0,
-			    neg = void 0,
-			    num = void 0,
-			    output = void 0,
-			    round = void 0,
-			    unix = void 0,
-			    spacer = void 0,
-			    standard = void 0,
-			    symbols = void 0;
-
-			if (isNaN(arg)) {
-				throw new Error("Invalid arguments");
-			}
-
-			bits = descriptor.bits === true;
-			unix = descriptor.unix === true;
-			base = descriptor.base || 2;
-			round = descriptor.round !== undefined ? descriptor.round : unix ? 1 : 2;
-			spacer = descriptor.spacer !== undefined ? descriptor.spacer : unix ? "" : " ";
-			symbols = descriptor.symbols || descriptor.suffixes || {};
-			standard = base === 2 ? descriptor.standard || "jedec" : "jedec";
-			output = descriptor.output || "string";
-			full = descriptor.fullform === true;
-			fullforms = descriptor.fullforms instanceof Array ? descriptor.fullforms : [];
-			e = descriptor.exponent !== undefined ? descriptor.exponent : -1;
-			num = Number(arg);
-			neg = num < 0;
-			ceil = base > 2 ? 1000 : 1024;
-
-			// Flipping a negative number to determine the size
-			if (neg) {
-				num = -num;
-			}
-
-			// Zero is now a special case because bytes divide by 1
-			if (num === 0) {
-				e = 0;
-				result[0] = 0;
-				result[1] = unix ? "" : !bits ? "B" : "b";
-			} else {
-				// Determining the exponent
-				if (e === -1 || isNaN(e)) {
-					e = Math.floor(Math.log(num) / Math.log(ceil));
-
-					if (e < 0) {
-						e = 0;
-					}
-				}
-
-				// Exceeding supported length, time to reduce & multiply
-				if (e > 8) {
-					e = 8;
-				}
-
-				val = num / (base === 2 ? Math.pow(2, e * 10) : Math.pow(1000, e));
-
-				if (bits) {
-					val = val * 8;
-
-					if (val >= ceil && e < 8) {
-						val = val / ceil;
-						e++;
-					}
-				}
-
-				result[0] = Number(val.toFixed(e > 0 ? round : 0));
-				result[1] = base === 10 && e === 1 ? bits ? "kb" : "kB" : symbol[standard][bits ? "bits" : "bytes"][e];
-
-				if (unix) {
-					result[1] = standard === "jedec" ? result[1].charAt(0) : e > 0 ? result[1].replace(/B$/, "") : result[1];
-
-					if (b.test(result[1])) {
-						result[0] = Math.floor(result[0]);
-						result[1] = "";
-					}
-				}
-			}
-
-			// Decorating a 'diff'
-			if (neg) {
-				result[0] = -result[0];
-			}
-
-			// Applying custom symbol
-			result[1] = symbols[result[1]] || result[1];
-
-			// Returning Array, Object, or String (default)
-			if (output === "array") {
-				return result;
-			}
-
-			if (output === "exponent") {
-				return e;
-			}
-
-			if (output === "object") {
-				return { value: result[0], suffix: result[1], symbol: result[1] };
-			}
-
-			if (full) {
-				result[1] = fullforms[e] ? fullforms[e] : fullform[standard][e] + (bits ? "bit" : "byte") + (result[0] === 1 ? "" : "s");
-			}
-
-			return result.join(spacer);
-		}
-
-		// Partial application for functional programming
-		filesize.partial = function (opt) {
-			return function (arg) {
-				return filesize(arg, opt);
-			};
-		};
-
-		// CommonJS, AMD, script tag
-		if (true) {
-			module.exports = filesize;
-		} else if (typeof define === "function" && define.amd) {
-			define(function () {
-				return filesize;
-			});
-		} else {
-			global.filesize = filesize;
-		}
-	})(typeof window !== "undefined" ? window : global);
-
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
 /* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -32085,11 +32112,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(223);
+	var _actions = __webpack_require__(224);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
-	var _Icon = __webpack_require__(253);
+	var _Icon = __webpack_require__(254);
 
 	var _Icon2 = _interopRequireDefault(_Icon);
 
@@ -32099,9 +32126,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utility = __webpack_require__(222);
 
-	var _reactIntl = __webpack_require__(229);
+	var _reactIntl = __webpack_require__(230);
 
-	var _definedMessages = __webpack_require__(254);
+	var _definedMessages = __webpack_require__(255);
 
 	var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
@@ -32131,7 +32158,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function render() {
 	      var _this2 = this;
 
-	      console.log('ViewChooser', this.props);
+	      //console.log('ViewChooser', this.props);
 	      var props = this.props,
 	          formatMessage = props.intl.formatMessage,
 	          tabularLayoutMessage = formatMessage(_definedMessages2.default.tabularLayoutDescription),
@@ -32425,7 +32452,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(223);
+	var _actions = __webpack_require__(224);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
@@ -32441,7 +32468,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _reactDropzone2 = _interopRequireDefault(_reactDropzone);
 
-	var _Icon = __webpack_require__(253);
+	var _Icon = __webpack_require__(254);
 
 	var _Icon2 = _interopRequireDefault(_Icon);
 
@@ -32449,9 +32476,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utility2 = _interopRequireDefault(_utility);
 
-	var _reactIntl = __webpack_require__(229);
+	var _reactIntl = __webpack_require__(230);
 
-	var _definedMessages = __webpack_require__(254);
+	var _definedMessages = __webpack_require__(255);
 
 	var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
@@ -32697,11 +32724,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(223);
+	var _actions = __webpack_require__(224);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
-	var _filesize = __webpack_require__(258);
+	var _filesize = __webpack_require__(223);
 
 	var _filesize2 = _interopRequireDefault(_filesize);
 
@@ -32713,9 +32740,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utility2 = _interopRequireDefault(_utility);
 
-	var _reactIntl = __webpack_require__(229);
+	var _reactIntl = __webpack_require__(230);
 
-	var _definedMessages = __webpack_require__(254);
+	var _definedMessages = __webpack_require__(255);
 
 	var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
@@ -32844,12 +32871,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	          // filter based on filename, dimensions, date
 	          var filter = props.view.filter.toLowerCase();
 	          contents = contents.filter(function (value) {
-	            return value.filename.toLowerCase().includes(filter) || value.dimensions.join('x').toLowerCase().includes(filter) || new Date(value.editedOn).toLocaleString().toLowerCase().includes(filter) || new Date(value.editedOn).toLocaleString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }).toLowerCase().includes(filter) || (0, _filesize2.default)(value.fileSize, { round: 0 }).toLowerCase().includes(filter) || (0, _filesize2.default)(value.fileSize, { round: 0 }).toLowerCase().replace(/ +?/g, '').includes(filter);
+	            var editedOnDate = new Date(value.editedOn);
+	            //console.log('value', value);
+	            //return value.filename.toLowerCase().includes(filter);
+	            return value.filename.toLowerCase().includes(filter) || value.dimensions.join('x').toLowerCase().includes(filter) || value.localString.toLowerCase().includes(filter) || value.localStringVerbose.toLowerCase().includes(filter) || value.fileSizeHumanReadable.toLowerCase().includes(filter) || value.fileSizeHumanReadable.toLowerCase().replace(/ +?/g, '').includes(filter);
 	          });
 	        })();
 	      }
 
-	      contents = contents.sort(function (a, b) {
+	      var sortContents = true;
+	      contents = !sortContents ? contents : contents.sort(function (a, b) {
 	        if (a[props.sort.by] === b[props.sort.by]) return 0;
 
 	        var n = void 0;
@@ -33008,7 +33039,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _filesize = __webpack_require__(258);
+	var _filesize = __webpack_require__(223);
 
 	var _filesize2 = _interopRequireDefault(_filesize);
 
@@ -33028,13 +33059,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _Icon = __webpack_require__(253);
+	var _Icon = __webpack_require__(254);
 
 	var _Icon2 = _interopRequireDefault(_Icon);
 
-	var _reactIntl = __webpack_require__(229);
+	var _reactIntl = __webpack_require__(230);
 
-	var _definedMessages = __webpack_require__(254);
+	var _definedMessages = __webpack_require__(255);
 
 	var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
@@ -33070,10 +33101,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      //console.log('MediaRow shouldComponentUpdate', this.props, nextProps);
 	      if (this.props.item !== nextProps.item) return true;
 	      try {
-	        console.log(nextProps.focusedMediaItem !== undefined);
+	        //console.log((nextProps.focusedMediaItem !== undefined));
 	        return nextProps.focusedMediaItem !== undefined;
 	      } catch (e) {}
-	      console.log('MediaRow should not update');
+	      //console.log('MediaRow should not update');
 	      return false;
 	    }
 	  }, {
@@ -33354,8 +33385,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        ),
 	        _react2.default.createElement(
 	          'td',
-	          { role: 'gridcell', title: new Date(props.item.editedOn).toLocaleString(props.view.locale, { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' }) },
-	          new Date(props.item.editedOn).toLocaleString(props.view.locale, { year: '2-digit', month: '2-digit', day: '2-digit' })
+	          { role: 'gridcell', title: props.item.editedOnLongTimeZone || new Date(props.item.editedOn).toLocaleString(props.view.locale, { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' }) },
+	          props.item.editedOnTwoDigit || new Date(props.item.editedOn).toLocaleString(props.view.locale, { year: '2-digit', month: '2-digit', day: '2-digit' })
 	        )
 	      );
 	    }
@@ -33386,7 +33417,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(223);
+	var _actions = __webpack_require__(224);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
@@ -33425,7 +33456,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(223);
+	var _actions = __webpack_require__(224);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
@@ -33435,9 +33466,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _path2 = _interopRequireDefault(_path);
 
-	var _reactIntl = __webpack_require__(229);
+	var _reactIntl = __webpack_require__(230);
 
-	var _definedMessages = __webpack_require__(254);
+	var _definedMessages = __webpack_require__(255);
 
 	var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
@@ -34183,15 +34214,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(223);
+	var _actions = __webpack_require__(224);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
-	var _Icon = __webpack_require__(253);
+	var _Icon = __webpack_require__(254);
 
 	var _Icon2 = _interopRequireDefault(_Icon);
 
-	var _definedMessages = __webpack_require__(254);
+	var _definedMessages = __webpack_require__(255);
 
 	var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
@@ -34368,7 +34399,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(223);
+	var _actions = __webpack_require__(224);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
@@ -34376,9 +34407,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utility2 = _interopRequireDefault(_utility);
 
-	var _reactIntl = __webpack_require__(229);
+	var _reactIntl = __webpack_require__(230);
 
-	var _definedMessages = __webpack_require__(254);
+	var _definedMessages = __webpack_require__(255);
 
 	var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
@@ -34537,7 +34568,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Icon = __webpack_require__(253);
+	var _Icon = __webpack_require__(254);
 
 	var _Icon2 = _interopRequireDefault(_Icon);
 
@@ -34653,17 +34684,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(223);
+	var _actions = __webpack_require__(224);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
-	var _Icon = __webpack_require__(253);
+	var _Icon = __webpack_require__(254);
 
 	var _Icon2 = _interopRequireDefault(_Icon);
 
-	var _reactIntl = __webpack_require__(229);
+	var _reactIntl = __webpack_require__(230);
 
-	var _definedMessages = __webpack_require__(254);
+	var _definedMessages = __webpack_require__(255);
 
 	var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
@@ -34743,7 +34774,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactIntl = __webpack_require__(229);
+	var _reactIntl = __webpack_require__(230);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -34804,11 +34835,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _Icon = __webpack_require__(253);
+	var _Icon = __webpack_require__(254);
 
 	var _Icon2 = _interopRequireDefault(_Icon);
 
-	var _reactIntl = __webpack_require__(229);
+	var _reactIntl = __webpack_require__(230);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -34961,13 +34992,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _Icon = __webpack_require__(253);
+	var _Icon = __webpack_require__(254);
 
 	var _Icon2 = _interopRequireDefault(_Icon);
 
-	var _reactIntl = __webpack_require__(229);
+	var _reactIntl = __webpack_require__(230);
 
-	var _definedMessages = __webpack_require__(254);
+	var _definedMessages = __webpack_require__(255);
 
 	var _definedMessages2 = _interopRequireDefault(_definedMessages);
 

@@ -98,7 +98,11 @@ var SearchBar = function (_Component) {
       )];
 
       var placeholder = function () {
-        if (!props.content.contents.length) return "";
+        try {
+          if (!props.content.contents.length) return "";
+        } catch (e) {
+          return "";
+        }
 
         var randomItem = props.content.contents[Math.round(Math.random() * (props.content.contents.length - 1))];
 
@@ -116,6 +120,8 @@ var SearchBar = function (_Component) {
             return (0, _filesize2.default)(randomItem.fileSize, { round: 0 });
         }
       }();
+
+      //console.log('props',props);
 
       var list = _react2.default.createElement(
         'datalist',

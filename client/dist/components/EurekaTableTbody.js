@@ -171,12 +171,16 @@ var EurekaTableTbody = function (_PureComponent) {
           // filter based on filename, dimensions, date
           var filter = props.view.filter.toLowerCase();
           contents = contents.filter(function (value) {
-            return value.filename.toLowerCase().includes(filter) || value.dimensions.join('x').toLowerCase().includes(filter) || new Date(value.editedOn).toLocaleString().toLowerCase().includes(filter) || new Date(value.editedOn).toLocaleString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }).toLowerCase().includes(filter) || (0, _filesize2.default)(value.fileSize, { round: 0 }).toLowerCase().includes(filter) || (0, _filesize2.default)(value.fileSize, { round: 0 }).toLowerCase().replace(/ +?/g, '').includes(filter);
+            var editedOnDate = new Date(value.editedOn);
+            //console.log('value', value);
+            //return value.filename.toLowerCase().includes(filter);
+            return value.filename.toLowerCase().includes(filter) || value.dimensions.join('x').toLowerCase().includes(filter) || value.localString.toLowerCase().includes(filter) || value.localStringVerbose.toLowerCase().includes(filter) || value.fileSizeHumanReadable.toLowerCase().includes(filter) || value.fileSizeHumanReadable.toLowerCase().replace(/ +?/g, '').includes(filter);
           });
         })();
       }
 
-      contents = contents.sort(function (a, b) {
+      var sortContents = true;
+      contents = !sortContents ? contents : contents.sort(function (a, b) {
         if (a[props.sort.by] === b[props.sort.by]) return 0;
 
         var n = void 0;

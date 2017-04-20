@@ -421,7 +421,7 @@ function getDirectoryListing(baseURL = '', dirPath = '', includeFiles = true, in
           directory:isFile ? dirPath.replace(baseURL, '') : path.join(dirPath,file).replace(baseURL, ''),
           path:path.join(dirPath,file),
           absoluteURL:path.join(dirPath,file).replace(__dirname, ''),
-          editedOn:mtime,
+          editedOn:new Date(mtime).getTime(),
           dimensions:[Math.round(Math.random()*420),Math.round(Math.random()*180)],
           fileSize:size
         });

@@ -953,11 +953,13 @@ a[role="presentation"] {
     .eureka .eureka__pathbrowser details[open] > summary > .icon-folder {
       display: none; }
   .eureka .eureka__pathbar {
-    margin-bottom: 16px;
-    margin-bottom: 1rem; }
+    margin-bottom: 8px;
+    margin-bottom: .5rem;
+    margin-top: 8px;
+    margin-top: .5rem; }
     @media screen and (min-width: 641px) {
       .eureka .eureka__pathbar {
-        margin-bottom: .5rem; } }
+        margin-bottom: 0; } }
     .eureka .eureka__pathbar summary {
       word-wrap: break-word; }
     .eureka .eureka__pathbar details > div {

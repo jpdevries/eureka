@@ -74,10 +74,10 @@ var MediaRow = function (_PureComponent) {
       //console.log('MediaRow shouldComponentUpdate', this.props, nextProps);
       if (this.props.item !== nextProps.item) return true;
       try {
-        console.log(nextProps.focusedMediaItem !== undefined);
+        //console.log((nextProps.focusedMediaItem !== undefined));
         return nextProps.focusedMediaItem !== undefined;
       } catch (e) {}
-      console.log('MediaRow should not update');
+      //console.log('MediaRow should not update');
       return false;
     }
   }, {
@@ -358,8 +358,8 @@ var MediaRow = function (_PureComponent) {
         ),
         _react2.default.createElement(
           'td',
-          { role: 'gridcell', title: new Date(props.item.editedOn).toLocaleString(props.view.locale, { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' }) },
-          new Date(props.item.editedOn).toLocaleString(props.view.locale, { year: '2-digit', month: '2-digit', day: '2-digit' })
+          { role: 'gridcell', title: props.item.editedOnLongTimeZone || new Date(props.item.editedOn).toLocaleString(props.view.locale, { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' }) },
+          props.item.editedOnTwoDigit || new Date(props.item.editedOn).toLocaleString(props.view.locale, { year: '2-digit', month: '2-digit', day: '2-digit' })
         )
       );
     }
