@@ -136,6 +136,8 @@ var MediaRow = function (_PureComponent) {
         // consider abstracting this to its own module
         //console.log(pathParse(props.item.filename).ext,'props.item',props.item);
 
+        var src = props.item.absolutePreviewURL || props.item.absoluteURL;
+
         switch (ext.toLowerCase()) {
           case '.jpg':
           case '.jpeg':
@@ -146,7 +148,7 @@ var MediaRow = function (_PureComponent) {
           case '.svg':
           case '.bmp':
           case '.tiff':
-            return _react2.default.createElement('img', { src: props.item.absoluteURL, alt: '' });
+            return _react2.default.createElement('img', { src: src, alt: '' });
             break;
 
           case '.mp4':
@@ -154,7 +156,7 @@ var MediaRow = function (_PureComponent) {
             return _react2.default.createElement(
               'video',
               { width: '320', height: '240', controls: props.view.mode !== 'list' },
-              _react2.default.createElement('source', { src: props.item.absoluteURL, type: 'video/mp4' }),
+              _react2.default.createElement('source', { src: src, type: 'video/mp4' }),
               _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noVideo', defaultMessage: 'Your browser does not support the video tag.' })
             );
             break;
@@ -163,7 +165,7 @@ var MediaRow = function (_PureComponent) {
             return _react2.default.createElement(
               'video',
               { width: '320', height: '240', controls: props.view.mode !== 'list' },
-              _react2.default.createElement('source', { src: props.item.absoluteURL, type: 'video/ogg' }),
+              _react2.default.createElement('source', { src: src, type: 'video/ogg' }),
               _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noVideo', defaultMessage: 'Your browser does not support the video tag.' })
             );
             break;
@@ -173,20 +175,20 @@ var MediaRow = function (_PureComponent) {
             return _react2.default.createElement(
               'video',
               { width: '320', height: '240', controls: props.view.mode !== 'list' },
-              _react2.default.createElement('source', { src: props.item.absoluteURL, type: 'video/webm' }),
+              _react2.default.createElement('source', { src: src, type: 'video/webm' }),
               _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noVideo', defaultMessage: 'Your browser does not support the video tag.' })
             );
             break;
 
           case '.pdf':
-            return _react2.default.createElement('embed', { src: props.item.absoluteURL, width: '320', height: '240' });
+            return _react2.default.createElement('embed', { src: src, width: '320', height: '240' });
             break;
 
           case '.ogg':
             return _react2.default.createElement(
               'audio',
               { controls: true },
-              _react2.default.createElement('source', { src: props.item.absoluteURL, type: 'audio/ogg' }),
+              _react2.default.createElement('source', { src: src, type: 'audio/ogg' }),
               _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support the audio tag.' })
             );
             break;
@@ -195,7 +197,7 @@ var MediaRow = function (_PureComponent) {
             return _react2.default.createElement(
               'audio',
               { controls: true },
-              _react2.default.createElement('source', { src: props.item.absoluteURL, type: 'audio/mpeg' }),
+              _react2.default.createElement('source', { src: src, type: 'audio/mpeg' }),
               _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support the audio tag.' })
             );
             break;
@@ -204,7 +206,7 @@ var MediaRow = function (_PureComponent) {
             return _react2.default.createElement(
               'audio',
               { controls: true },
-              _react2.default.createElement('source', { src: props.item.absoluteURL, type: 'audio/wav' }),
+              _react2.default.createElement('source', { src: src, type: 'audio/wav' }),
               _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support the audio tag.' })
             );
             break;
@@ -213,7 +215,7 @@ var MediaRow = function (_PureComponent) {
             return _react2.default.createElement(
               'audio',
               { controls: true },
-              _react2.default.createElement('source', { src: props.item.absoluteURL, type: 'audio/flac' }),
+              _react2.default.createElement('source', { src: src, type: 'audio/flac' }),
               _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support the audio tag.' })
             );
             break;

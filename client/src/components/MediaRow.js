@@ -86,6 +86,8 @@ class MediaRow extends PureComponent {
     let media = (function(ext){ // consider abstracting this to its own module
       //console.log(pathParse(props.item.filename).ext,'props.item',props.item);
 
+      const src = props.item.absolutePreviewURL || props.item.absoluteURL;
+
       switch(ext.toLowerCase()) {
         case '.jpg':
         case '.jpeg':
@@ -96,14 +98,14 @@ class MediaRow extends PureComponent {
         case '.svg':
         case '.bmp':
         case '.tiff':
-        return (<img src={props.item.absoluteURL}  alt="" />);
+        return (<img src={src}  alt="" />);
         break;
 
         case '.mp4':
         case '.mov':
         return (
           <video width="320" height="240" controls={props.view.mode !== 'list'}>
-            <source src={props.item.absoluteURL} type="video/mp4" />
+            <source src={src} type="video/mp4" />
             <FormattedMessage id="support.noVideo" defaultMessage="Your browser does not support the video tag." />
           </video>
         );
@@ -112,7 +114,7 @@ class MediaRow extends PureComponent {
         case '.ogv':
         return (
           <video width="320" height="240"  controls={props.view.mode !== 'list'}>
-            <source src={props.item.absoluteURL} type="video/ogg" />
+            <source src={src} type="video/ogg" />
             <FormattedMessage id="support.noVideo" defaultMessage="Your browser does not support the video tag." />
           </video>
         );
@@ -122,7 +124,7 @@ class MediaRow extends PureComponent {
         case '.wbm':
         return (
           <video width="320" height="240"  controls={props.view.mode !== 'list'}>
-            <source src={props.item.absoluteURL} type="video/webm" />
+            <source src={src} type="video/webm" />
             <FormattedMessage id="support.noVideo" defaultMessage="Your browser does not support the video tag." />
           </video>
         );
@@ -130,14 +132,14 @@ class MediaRow extends PureComponent {
 
         case '.pdf':
         return (
-          <embed src={props.item.absoluteURL} width="320" height="240" />
+          <embed src={src} width="320" height="240" />
         );
         break;
 
         case '.ogg':
         return (
           <audio controls>
-            <source src={props.item.absoluteURL} type="audio/ogg" />
+            <source src={src} type="audio/ogg" />
             <FormattedMessage id="support.noAudio" defaultMessage="Your browser does not support the audio tag." />
           </audio>
         );
@@ -146,7 +148,7 @@ class MediaRow extends PureComponent {
         case '.mp3':
         return (
           <audio controls>
-            <source src={props.item.absoluteURL} type="audio/mpeg" />
+            <source src={src} type="audio/mpeg" />
             <FormattedMessage id="support.noAudio" defaultMessage="Your browser does not support the audio tag." />
           </audio>
         );
@@ -155,7 +157,7 @@ class MediaRow extends PureComponent {
         case '.wav':
         return (
           <audio controls>
-            <source src={props.item.absoluteURL} type="audio/wav" />
+            <source src={src} type="audio/wav" />
             <FormattedMessage id="support.noAudio" defaultMessage="Your browser does not support the audio tag." />
           </audio>
         );
@@ -164,7 +166,7 @@ class MediaRow extends PureComponent {
         case '.flac':
         return (
           <audio controls>
-            <source src={props.item.absoluteURL} type="audio/flac" />
+            <source src={src} type="audio/flac" />
             <FormattedMessage id="support.noAudio" defaultMessage="Your browser does not support the audio tag." />
           </audio>
         );

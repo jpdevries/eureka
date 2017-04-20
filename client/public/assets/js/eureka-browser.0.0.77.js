@@ -245,7 +245,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    store.subscribe(function () {
 	      var state = store.getState();
-	      //console.log(state);
+	      console.log(state);
 
 	      // whenever the state changes we store pieces of the state locally so that next time Eureka fires up it can render the user interface without delay
 	      if (state.config.useLocalStorage) {
@@ -3676,7 +3676,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.76",
+		"version": "0.0.77",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -9969,6 +9969,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // consider abstracting this to its own module
 	        //console.log(pathParse(props.item.filename).ext,'props.item',props.item);
 
+	        var src = props.item.absolutePreviewURL || props.item.absoluteURL;
+
 	        switch (ext.toLowerCase()) {
 	          case '.jpg':
 	          case '.jpeg':
@@ -9979,7 +9981,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          case '.svg':
 	          case '.bmp':
 	          case '.tiff':
-	            return _react2.default.createElement('img', { src: props.item.absoluteURL, alt: '' });
+	            return _react2.default.createElement('img', { src: src, alt: '' });
 	            break;
 
 	          case '.mp4':
@@ -9987,7 +9989,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return _react2.default.createElement(
 	              'video',
 	              { width: '320', height: '240', controls: props.view.mode !== 'list' },
-	              _react2.default.createElement('source', { src: props.item.absoluteURL, type: 'video/mp4' }),
+	              _react2.default.createElement('source', { src: src, type: 'video/mp4' }),
 	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noVideo', defaultMessage: 'Your browser does not support the video tag.' })
 	            );
 	            break;
@@ -9996,7 +9998,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return _react2.default.createElement(
 	              'video',
 	              { width: '320', height: '240', controls: props.view.mode !== 'list' },
-	              _react2.default.createElement('source', { src: props.item.absoluteURL, type: 'video/ogg' }),
+	              _react2.default.createElement('source', { src: src, type: 'video/ogg' }),
 	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noVideo', defaultMessage: 'Your browser does not support the video tag.' })
 	            );
 	            break;
@@ -10006,20 +10008,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return _react2.default.createElement(
 	              'video',
 	              { width: '320', height: '240', controls: props.view.mode !== 'list' },
-	              _react2.default.createElement('source', { src: props.item.absoluteURL, type: 'video/webm' }),
+	              _react2.default.createElement('source', { src: src, type: 'video/webm' }),
 	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noVideo', defaultMessage: 'Your browser does not support the video tag.' })
 	            );
 	            break;
 
 	          case '.pdf':
-	            return _react2.default.createElement('embed', { src: props.item.absoluteURL, width: '320', height: '240' });
+	            return _react2.default.createElement('embed', { src: src, width: '320', height: '240' });
 	            break;
 
 	          case '.ogg':
 	            return _react2.default.createElement(
 	              'audio',
 	              { controls: true },
-	              _react2.default.createElement('source', { src: props.item.absoluteURL, type: 'audio/ogg' }),
+	              _react2.default.createElement('source', { src: src, type: 'audio/ogg' }),
 	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support the audio tag.' })
 	            );
 	            break;
@@ -10028,7 +10030,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return _react2.default.createElement(
 	              'audio',
 	              { controls: true },
-	              _react2.default.createElement('source', { src: props.item.absoluteURL, type: 'audio/mpeg' }),
+	              _react2.default.createElement('source', { src: src, type: 'audio/mpeg' }),
 	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support the audio tag.' })
 	            );
 	            break;
@@ -10037,7 +10039,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return _react2.default.createElement(
 	              'audio',
 	              { controls: true },
-	              _react2.default.createElement('source', { src: props.item.absoluteURL, type: 'audio/wav' }),
+	              _react2.default.createElement('source', { src: src, type: 'audio/wav' }),
 	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support the audio tag.' })
 	            );
 	            break;
@@ -10046,7 +10048,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return _react2.default.createElement(
 	              'audio',
 	              { controls: true },
-	              _react2.default.createElement('source', { src: props.item.absoluteURL, type: 'audio/flac' }),
+	              _react2.default.createElement('source', { src: src, type: 'audio/flac' }),
 	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support the audio tag.' })
 	            );
 	            break;
