@@ -64,10 +64,10 @@ class UploadForm extends PureComponent {
       </div>
     ) : (
       <form onSubmit={this.handleSubmit.bind(this)} encType="multipart/form-data" ref={(form) => { this.form = form; }}>
-          <input disabled={props.view.isUploading} id="eureka__upload-form" multiple="multiple" name="eureka__uploadFiles" type="file" onChange={(e) => {
+          <input hidden={props.view.isUploading} disabled={props.view.isUploading} id="eureka__upload-form" multiple="multiple" name="eureka__uploadFiles" type="file" onChange={(e) => {
               this.form.dispatchEvent(new Event("submit")); // so there is no click button they need to click
           }} />
-          <label onKeyPress={this.handleLabelKeyPress} tabIndex="0" role="menuitem" htmlFor="eureka__upload-form">{uploadFilesIcon}{uploadFilesMessage}<span className="visually-hidden"> <FormattedMessage id="grammar.to" defaultMessage="to" /> {props.content.cd}</span></label>
+          <label onKeyPress={(!props.view.isUploading) ? this.handleLabelKeyPress : undefined} tabIndex="0" role="menuitem" htmlFor={(!props.view.isUploading)? "eureka__upload-form" : undefined}>{uploadFilesIcon}{uploadFilesMessage}<span className="visually-hidden"> <FormattedMessage id="grammar.to" defaultMessage="to" /> {props.content.cd}</span></label>
       </form>
     );
 

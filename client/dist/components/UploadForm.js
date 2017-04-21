@@ -150,12 +150,12 @@ var UploadForm = function (_PureComponent) {
         { onSubmit: this.handleSubmit.bind(this), encType: 'multipart/form-data', ref: function ref(form) {
             _this2.form = form;
           } },
-        _react2.default.createElement('input', { disabled: props.view.isUploading, id: 'eureka__upload-form', multiple: 'multiple', name: 'eureka__uploadFiles', type: 'file', onChange: function onChange(e) {
+        _react2.default.createElement('input', { hidden: props.view.isUploading, disabled: props.view.isUploading, id: 'eureka__upload-form', multiple: 'multiple', name: 'eureka__uploadFiles', type: 'file', onChange: function onChange(e) {
             _this2.form.dispatchEvent(new Event("submit")); // so there is no click button they need to click
           } }),
         _react2.default.createElement(
           'label',
-          { onKeyPress: this.handleLabelKeyPress, tabIndex: '0', role: 'menuitem', htmlFor: 'eureka__upload-form' },
+          { onKeyPress: !props.view.isUploading ? this.handleLabelKeyPress : undefined, tabIndex: '0', role: 'menuitem', htmlFor: !props.view.isUploading ? "eureka__upload-form" : undefined },
           uploadFilesIcon,
           uploadFilesMessage,
           _react2.default.createElement(
