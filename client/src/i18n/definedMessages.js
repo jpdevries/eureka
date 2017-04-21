@@ -152,6 +152,13 @@ export default defineMessages({
     id: 'media.sourceTree',
     defaultMessage: 'Media Source Panel'
   },
+  dragFilesUploading: {
+    id: 'upload.dragFilesUploading',
+    defaultMessage: 'Uploading files…',
+    values: {
+      cd: './'
+    }
+  },
   dragFilesToBeUploadedTo: {
     id: 'upload.dragFilestoUpload',
     defaultMessage: 'Drag files here to be uploaded to {cd}',

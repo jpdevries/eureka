@@ -102,6 +102,8 @@ var path = require('path');
 
 var pathParse = require('path-parse');
 
+var classNames = require('classnames');
+
 var CREATE_DIRECTORY = 'create_directory';
 var RENAME_ITEM = 'rename_item';
 
@@ -352,7 +354,10 @@ var Eureka = function (_Component) {
       var serverSideClass = _utility2.default.serverSideRendering ? ' eureka__server-side' : '';
       var formDiv = _react2.default.createElement(
         'div',
-        { 'aria-hidden': state.modalOpen, className: 'eureka__browse-content' },
+        { 'aria-hidden': state.modalOpen, className: classNames({
+            "eureka__browse-content": true,
+            "eureka__uploading": props.view.isUploading
+          }) },
         pathbrowser,
         _react2.default.createElement(
           'div',

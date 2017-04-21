@@ -4,6 +4,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
@@ -21,6 +23,10 @@ var _actions2 = _interopRequireDefault(_actions);
 var _utility = require('./../utility/utility');
 
 var _utility2 = _interopRequireDefault(_utility);
+
+var _Icon = require('./Icon');
+
+var _Icon2 = _interopRequireDefault(_Icon);
 
 var _reactIntl = require('react-intl');
 
@@ -85,6 +91,9 @@ var UploadForm = function (_PureComponent) {
         }
       }
 
+      _store2.default.dispatch(_actions2.default.updateView({
+        isUploading: true
+      }));
       _store2.default.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData, props.config.headers));
     }
   }, {
@@ -108,7 +117,12 @@ var UploadForm = function (_PureComponent) {
       var _this2 = this;
 
       var props = this.props,
-          uploadFilesMessage = _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'upload.files', defaultMessage: 'Upload Files' }),
+          uploadFilesMessage = !props.view.isUploading ? _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'upload.files', defaultMessage: 'Upload files' }) : _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'upload.dragFilesUploading', defaultMessage: 'Uploading files\u2026' }),
+          uploadFilesIcon = !props.view.isUploading ? undefined : _react2.default.createElement(
+        'span',
+        { className: 'spinner' },
+        _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'circle-o-notch' }))
+      ),
           submit = _utility2.default.serverSideRendering ? _react2.default.createElement(
         'button',
         { type: 'submit', formmethod: 'post' },
@@ -136,9 +150,13 @@ var UploadForm = function (_PureComponent) {
         { onSubmit: this.handleSubmit.bind(this), encType: 'multipart/form-data', ref: function ref(form) {
             _this2.form = form;
           } },
+        _react2.default.createElement('input', { disabled: props.view.isUploading, id: 'eureka__upload-form', multiple: 'multiple', name: 'eureka__uploadFiles', type: 'file', onChange: function onChange(e) {
+            _this2.form.dispatchEvent(new Event("submit")); // so there is no click button they need to click
+          } }),
         _react2.default.createElement(
           'label',
           { onKeyPress: this.handleLabelKeyPress, tabIndex: '0', role: 'menuitem', htmlFor: 'eureka__upload-form' },
+          uploadFilesIcon,
           uploadFilesMessage,
           _react2.default.createElement(
             'span',
@@ -148,10 +166,7 @@ var UploadForm = function (_PureComponent) {
             ' ',
             props.content.cd
           )
-        ),
-        _react2.default.createElement('input', { id: 'eureka__upload-form', multiple: 'multiple', name: 'eureka__uploadFiles', type: 'file', onChange: function onChange(e) {
-            _this2.form.dispatchEvent(new Event("submit")); // so there is no click button they need to click
-          } })
+        )
       );
 
       return _react2.default.createElement(

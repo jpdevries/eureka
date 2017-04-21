@@ -580,6 +580,13 @@ a[role="presentation"] {
   color: currentColor !important;
   text-decoration: none !important; }
 
+@keyframes spinner {
+  to {
+    transform: rotate(360deg); } }
+
+.icon-circle-o-notch {
+  animation: spinner 1s linear infinite; }
+
 .eureka__table tr[tabindex].eureka__focused-media-item .eureka__td-filename {
   font-weight: bold; }
 
@@ -644,6 +651,28 @@ a[role="presentation"] {
       bottom:0;
     }
   }*/ }
+  .eureka .eureka__upload-form input[name*="uploadFiles"]:disabled + label {
+    cursor: default;
+    position: relative;
+    padding-left: 1.5em; }
+    .eureka .eureka__upload-form input[name*="uploadFiles"]:disabled + label .spinner {
+      position: absolute;
+      top: 0;
+      left: .275em;
+      bottom: 0;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-pack: center;
+          justify-content: center;
+      -ms-flex-align: center;
+          align-items: center; }
+    .eureka .eureka__upload-form input[name*="uploadFiles"]:disabled + label:hover {
+      background: white;
+      background: var(--button-bg, white);
+      color: #555555;
+      color: var(--button-color, #555555); }
+      .eureka .eureka__upload-form input[name*="uploadFiles"]:disabled + label:hover svg {
+        fill: currentColor; }
   .eureka a {
     color: #3697cd;
     color: var(--link-color, #3697cd); }

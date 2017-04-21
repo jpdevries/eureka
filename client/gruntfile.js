@@ -296,6 +296,15 @@ module.exports = function(grunt) {
       }
     },
     webpack: {
+      'worker-umd-bundle': Object.assign({}, webpackConfig, {
+        // webpack options
+        entry: "./src/worker.js",
+        output: {
+            path: "public/assets/js/",
+            filename: "worker.bundle.<%= pkg.version %>.js",
+            libraryTarget: 'umd'
+        }
+      }),
       'eureka-umd-bundle': Object.assign({}, webpackConfig, {
         // webpack options
         entry: "./src/EurekaMediaBrowser.js",

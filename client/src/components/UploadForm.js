@@ -5,6 +5,8 @@ import actions from '../model/actions';
 
 import utility from './../utility/utility';
 
+import Icon from './Icon';
+
 var classNames = require('classnames');
 
 import { FormattedMessage } from 'react-intl';
@@ -29,6 +31,9 @@ class UploadForm extends PureComponent {
     for(var pair of formData.entries()) {
        console.log(pair[0], pair[1]);
     }
+    store.dispatch(actions.updateView({
+       isUploading: true
+    }));
     store.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData, props.config.headers));
   }
 
@@ -48,7 +53,8 @@ class UploadForm extends PureComponent {
 
   render() {
     const props = this.props,
-    uploadFilesMessage = <FormattedMessage id="upload.files" defaultMessage="Upload Files" />,
+    uploadFilesMessage = (!props.view.isUploading) ? <FormattedMessage id="upload.files" defaultMessage="Upload files" /> : <FormattedMessage id="upload.dragFilesUploading" defaultMessage="Uploading files…" />,
+    uploadFilesIcon = (!props.view.isUploading) ? undefined : <span className="spinner"><Icon {...props} icon="circle-o-notch" /></span>,
     submit = utility.serverSideRendering ? <button type="submit" formmethod="post">{uploadFilesMessage}</button> : undefined,
     form = (utility.serverSideRendering) ? (
       <div>
@@ -58,10 +64,10 @@ class UploadForm extends PureComponent {
       </div>
     ) : (
       <form onSubmit={this.handleSubmit.bind(this)} encType="multipart/form-data" ref={(form) => { this.form = form; }}>
-          <label onKeyPress={this.handleLabelKeyPress} tabIndex="0" role="menuitem" htmlFor="eureka__upload-form">{uploadFilesMessage}<span className="visually-hidden"> <FormattedMessage id="grammar.to" defaultMessage="to" /> {props.content.cd}</span></label>
-          <input id="eureka__upload-form" multiple="multiple" name="eureka__uploadFiles" type="file" onChange={(e) => {
+          <input disabled={props.view.isUploading} id="eureka__upload-form" multiple="multiple" name="eureka__uploadFiles" type="file" onChange={(e) => {
               this.form.dispatchEvent(new Event("submit")); // so there is no click button they need to click
           }} />
+          <label onKeyPress={this.handleLabelKeyPress} tabIndex="0" role="menuitem" htmlFor="eureka__upload-form">{uploadFilesIcon}{uploadFilesMessage}<span className="visually-hidden"> <FormattedMessage id="grammar.to" defaultMessage="to" /> {props.content.cd}</span></label>
       </form>
     );
 

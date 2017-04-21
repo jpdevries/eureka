@@ -92,11 +92,8 @@ var contentReducer = function(state, action) {
     break;
 
     case actions.UPDATE_CONTENT:
-    //console.log('UPDATE_CONTENT', state, action.content);
-    const content = Object.assign({}, action.content, {
-      contents: processContentItems(action.content.contents)
-    })
-    return Object.assign({},state,content);
+    const content = processContentItems(action.content);
+    return Object.assign({}, state, content);
     break;
 
     case actions.FETCH_DIRECTORY_CONTENTS_SUCCESS:
@@ -131,18 +128,20 @@ var contentReducer = function(state, action) {
   return state;
 
   function processContentItems(contents) {
-    return (contents !== undefined) ? contents.map((item) => {
-      const editedOnDate = new Date(item.editedOn);
-      return (
-        Object.assign({}, item, {
-          localString: editedOnDate.toLocaleString(),
-          localStringVerbose: editedOnDate.toLocaleString(undefined,{ weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-          fileSizeHumanReadable: filesize(item.fileSize, {round: 0}),
-          editedOnTwoDigit: new Date(item.editedOn).toLocaleString(undefined, { year: '2-digit', month: '2-digit', day: '2-digit' }),
-          editedOnLongTimeZone: new Date(item.editedOn).toLocaleString(undefined, { weekday:'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' })
-        })
-      )
-    }) : [];
+    try {
+      return contents.map((item) => {
+        const editedOnDate = new Date(item.editedOn);
+        return (
+          Object.assign({}, item, {
+            localString: editedOnDate.toLocaleString(),
+            localStringVerbose: editedOnDate.toLocaleString(undefined,{ weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+            fileSizeHumanReadable: filesize(item.fileSize, {round: 0}),
+            editedOnTwoDigit: new Date(item.editedOn).toLocaleString(undefined, { year: '2-digit', month: '2-digit', day: '2-digit' }),
+            editedOnLongTimeZone: new Date(item.editedOn).toLocaleString(undefined, { weekday:'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' })
+          })
+        )
+      });
+    } catch(e) { return contents }
   }
 
 }
@@ -279,6 +278,7 @@ var initialViewState = Object.assign({}, {
   sort:'name',
   isTableScrolling:false,
   allowFullscreen: true,
+  isUploading: false,
   intervals: {
     searchBarPlaceholder: false,
     fetchDirectoryContents: false,
@@ -288,7 +288,10 @@ var initialViewState = Object.assign({}, {
   try {
     const json = JSON.parse(localStorage.getItem('eureka__view'));
     //console.log('json',json);
-    return json;
+    return Object.assign({}, json, {
+      isUploading: false,
+      isTableScrolling: false
+    });
     /*return (
       Object.assign({}, json, {
         sourceTreeOpen: json.treeHidden == 'false' || undefined
@@ -310,7 +313,19 @@ var viewReducer = function(state, action) {
   state = state || initialViewState;
 
   switch(action.type) {
+    case actions.FETCH_DIRECTORY_CONTENTS_SUCCESS:
+    case actions.FETCH_DIRECTORY_CONTENTS_ERROR:
+    /*return Object.assign({},state, {
+      isFetching: false
+    });*/
+    break;
 
+    case actions.UPLOAD_FILES_SUCCESS:
+    case actions.UPLOAD_FILES_ERROR:
+    return Object.assign({},state, {
+      isUploading: false
+    });
+    break;
 
     case actions.UPDATE_VIEW:
     return Object.assign({},state,action.view);

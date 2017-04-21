@@ -21,7 +21,7 @@ const path = require('path');
 
 const pathParse = require('path-parse');
 
-
+const classNames = require('classnames');
 
 import store from './model/store';
 import actions from './model/actions';
@@ -255,7 +255,10 @@ class Eureka extends Component {
     const searchBar = (!utility.serverSideRendering) ? <SearchBar {...props} /> : undefined;
     const serverSideClass = (utility.serverSideRendering) ? ' eureka__server-side' : '';
     const formDiv = (
-      <div aria-hidden={state.modalOpen} className="eureka__browse-content">
+      <div aria-hidden={state.modalOpen} className={classNames({
+        "eureka__browse-content": true,
+        "eureka__uploading": props.view.isUploading
+      })}>
         {pathbrowser}
         <div className="eureka__stage">
           <div className="eureka__stage__filter-view">

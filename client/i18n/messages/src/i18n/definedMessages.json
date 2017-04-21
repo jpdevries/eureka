@@ -144,6 +144,10 @@
     "defaultMessage": "Media Source Panel"
   },
   {
+    "id": "upload.dragFilesUploading",
+    "defaultMessage": "Uploading files…"
+  },
+  {
     "id": "upload.dragFilestoUpload",
     "defaultMessage": "Drag files here to be uploaded to {cd}"
   }

@@ -1,7 +1,11 @@
 [
   {
     "id": "upload.files",
-    "defaultMessage": "Upload Files"
+    "defaultMessage": "Upload files"
+  },
+  {
+    "id": "upload.dragFilesUploading",
+    "defaultMessage": "Uploading files…"
   },
   {
     "id": "grammar.to",

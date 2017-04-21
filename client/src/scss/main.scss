@@ -108,6 +108,14 @@ a[role="presentation"] {
 
 }
 
+@keyframes spinner {
+  to {transform: rotate(360deg)}
+}
+
+.icon-circle-o-notch {
+  animation: spinner 1s linear infinite;
+}
+
 .eureka__table tr[tabindex] {
   &.eureka__focused-media-item {
     .eureka__td-filename {
@@ -180,7 +188,29 @@ a[role="presentation"] {
 }
 
 .eureka {
-
+  .eureka__upload-form {
+    input[name*="uploadFiles"]:disabled + label {
+      cursor: default;
+      position:relative;
+      padding-left: 1.5em;
+      .spinner {
+        position:absolute;
+        top:0;
+        left:.275em;
+        bottom:0;
+        display:flex;
+        justify-content: center;
+        align-items: center;
+      }
+      &:hover {
+        background: var(--button-bg, white);
+        color: var(--button-color, #555555);
+        svg {
+          fill: currentColor;
+        }
+      }
+    }
+  }
   a {
     color:var(--link-color, $active);
   }

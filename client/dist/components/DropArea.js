@@ -67,7 +67,9 @@ var DropArea = function (_PureComponent) {
       files.forEach(function (file) {
         formData.append('eureka__uploadFiles', file, file.name);
       });
-
+      _store2.default.dispatch(_actions2.default.updateView({
+        isUploading: true
+      }));
       _store2.default.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData, props.config.headers));
     }
   }, {
@@ -75,7 +77,9 @@ var DropArea = function (_PureComponent) {
     value: function render() {
       var props = this.props,
           formatMessage = props.intl.formatMessage,
-          dragFilesToBeUploadedToMessage = formatMessage(_definedMessages2.default.dragFilesToBeUploadedTo, {
+          dragFilesToBeUploadedToMessage = props.view.isUploading ? formatMessage(_definedMessages2.default.dragFilesUploading, {
+        cd: props.content.cd
+      }) : formatMessage(_definedMessages2.default.dragFilesToBeUploadedTo, {
         cd: props.content.cd
       });
 
@@ -85,7 +89,7 @@ var DropArea = function (_PureComponent) {
         _react2.default.createElement(
           _reactDropzone2.default,
           { onDrop: this.onDrop.bind(this), className: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'drop-area-zone', activeClassName: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'drop-area-zone-active', style: {} },
-          _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'upload' }))
+          _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: props.view.isUploading ? 'circle-o-notch' : 'upload' }))
         )
       );
     }

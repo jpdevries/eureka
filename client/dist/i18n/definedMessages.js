@@ -148,6 +148,9 @@ exports.default = (0, _reactIntl.defineMessages)((_defineMessages = {
 }), _defineProperty(_defineMessages, 'mediaSourceTreeMessage', {
   'id': 'media.sourceTree',
   'defaultMessage': 'Media Source Panel'
+}), _defineProperty(_defineMessages, 'dragFilesUploading', {
+  'id': 'upload.dragFilesUploading',
+  'defaultMessage': 'Uploading files\u2026'
 }), _defineProperty(_defineMessages, 'dragFilesToBeUploadedTo', {
   'id': 'upload.dragFilestoUpload',
   'defaultMessage': 'Drag files here to be uploaded to {cd}'

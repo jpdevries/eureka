@@ -1,7 +1,7 @@
 {
   "name": "eureka-browser",
   "description": "Eureka is a progressively enhanced Media Browser Component.",
-  "version": "0.0.77",
+  "version": "0.0.78",
   "license": "BSD-3-Clause",
   "author": {
     "name": "JP de Vries",
@@ -89,6 +89,7 @@
     "react-dropzone": "^3.10.0",
     "react-intl": "^2.2.3",
     "react-redux": "^5.0.4",
+    "react-worker-dom": "^2.0.0-alpha.6",
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0"
   },

@@ -904,6 +904,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var pathParse = __webpack_require__(61);
 
+	var classNames = __webpack_require__(54);
+
 	var CREATE_DIRECTORY = 'create_directory';
 	var RENAME_ITEM = 'rename_item';
 
@@ -1154,7 +1156,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var serverSideClass = _utility2.default.serverSideRendering ? ' eureka__server-side' : '';
 	      var formDiv = _react2.default.createElement(
 	        'div',
-	        { 'aria-hidden': state.modalOpen, className: 'eureka__browse-content' },
+	        { 'aria-hidden': state.modalOpen, className: classNames({
+	            "eureka__browse-content": true,
+	            "eureka__uploading": props.view.isUploading
+	          }) },
 	        pathbrowser,
 	        _react2.default.createElement(
 	          'div',
@@ -1441,10 +1446,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      break;
 
 	    case actions.UPDATE_CONTENT:
-	      //console.log('UPDATE_CONTENT', state, action.content);
-	      var content = Object.assign({}, action.content, {
-	        contents: processContentItems(action.content.contents)
-	      });
+	      var content = processContentItems(action.content);
 	      return Object.assign({}, state, content);
 	      break;
 
@@ -1480,16 +1482,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return state;
 
 	  function processContentItems(contents) {
-	    return contents !== undefined ? contents.map(function (item) {
-	      var editedOnDate = new Date(item.editedOn);
-	      return Object.assign({}, item, {
-	        localString: editedOnDate.toLocaleString(),
-	        localStringVerbose: editedOnDate.toLocaleString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-	        fileSizeHumanReadable: (0, _filesize2.default)(item.fileSize, { round: 0 }),
-	        editedOnTwoDigit: new Date(item.editedOn).toLocaleString(undefined, { year: '2-digit', month: '2-digit', day: '2-digit' }),
-	        editedOnLongTimeZone: new Date(item.editedOn).toLocaleString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' })
+	    try {
+	      return contents.map(function (item) {
+	        var editedOnDate = new Date(item.editedOn);
+	        return Object.assign({}, item, {
+	          localString: editedOnDate.toLocaleString(),
+	          localStringVerbose: editedOnDate.toLocaleString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+	          fileSizeHumanReadable: (0, _filesize2.default)(item.fileSize, { round: 0 }),
+	          editedOnTwoDigit: new Date(item.editedOn).toLocaleString(undefined, { year: '2-digit', month: '2-digit', day: '2-digit' }),
+	          editedOnLongTimeZone: new Date(item.editedOn).toLocaleString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' })
+	        });
 	      });
-	    }) : [];
+	    } catch (e) {
+	      return contents;
+	    }
 	  }
 	};
 
@@ -1634,6 +1640,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  sort: 'name',
 	  isTableScrolling: false,
 	  allowFullscreen: true,
+	  isUploading: false,
 	  intervals: {
 	    searchBarPlaceholder: false,
 	    fetchDirectoryContents: false,
@@ -1643,7 +1650,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  try {
 	    var json = JSON.parse(localStorage.getItem('eureka__view'));
 	    //console.log('json',json);
-	    return json;
+	    return Object.assign({}, json, {
+	      isUploading: false,
+	      isTableScrolling: false
+	    });
 	    /*return (
 	      Object.assign({}, json, {
 	        sourceTreeOpen: json.treeHidden == 'false' || undefined
@@ -1665,6 +1675,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  state = state || initialViewState;
 
 	  switch (action.type) {
+	    case actions.FETCH_DIRECTORY_CONTENTS_SUCCESS:
+	    case actions.FETCH_DIRECTORY_CONTENTS_ERROR:
+	      /*return Object.assign({},state, {
+	        isFetching: false
+	      });*/
+	      break;
+
+	    case actions.UPLOAD_FILES_SUCCESS:
+	    case actions.UPLOAD_FILES_ERROR:
+	      return Object.assign({}, state, {
+	        isUploading: false
+	      });
+	      break;
 
 	    case actions.UPDATE_VIEW:
 	      return Object.assign({}, state, action.view);
@@ -3676,7 +3699,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.77",
+		"version": "0.0.78",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -3764,6 +3787,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			"react-dropzone": "^3.10.0",
 			"react-intl": "^2.2.3",
 			"react-redux": "^5.0.4",
+			"react-worker-dom": "^2.0.0-alpha.6",
 			"redux": "^3.6.0",
 			"redux-thunk": "^2.2.0"
 		},
@@ -8550,6 +8574,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	}), _defineProperty(_defineMessages, 'mediaSourceTreeMessage', {
 	  'id': 'media.sourceTree',
 	  'defaultMessage': 'Media Source Panel'
+	}), _defineProperty(_defineMessages, 'dragFilesUploading', {
+	  'id': 'upload.dragFilesUploading',
+	  'defaultMessage': 'Uploading files\u2026'
 	}), _defineProperty(_defineMessages, 'dragFilesToBeUploadedTo', {
 	  'id': 'upload.dragFilestoUpload',
 	  'defaultMessage': 'Drag files here to be uploaded to {cd}'
@@ -9330,6 +9357,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      files.forEach(function (file) {
 	        formData.append('eureka__uploadFiles', file, file.name);
 	      });
+
+	      _store2.default.dispatch(_actions2.default.updateView({
+	        isUploading: true
+	      }));
 
 	      _store2.default.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData, props.config.headers));
 	    }
@@ -11197,6 +11228,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(1);
@@ -11214,6 +11247,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _utility = __webpack_require__(12);
 
 	var _utility2 = _interopRequireDefault(_utility);
+
+	var _Icon = __webpack_require__(48);
+
+	var _Icon2 = _interopRequireDefault(_Icon);
 
 	var _reactIntl = __webpack_require__(23);
 
@@ -11278,6 +11315,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      }
 
+	      _store2.default.dispatch(_actions2.default.updateView({
+	        isUploading: true
+	      }));
 	      _store2.default.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData, props.config.headers));
 	    }
 	  }, {
@@ -11301,7 +11341,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var _this2 = this;
 
 	      var props = this.props,
-	          uploadFilesMessage = _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'upload.files', defaultMessage: 'Upload Files' }),
+	          uploadFilesMessage = !props.view.isUploading ? _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'upload.files', defaultMessage: 'Upload files' }) : _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'upload.dragFilesUploading', defaultMessage: 'Uploading files\u2026' }),
+	          uploadFilesIcon = !props.view.isUploading ? undefined : _react2.default.createElement(
+	        'span',
+	        { className: 'spinner' },
+	        _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'circle-o-notch' }))
+	      ),
 	          submit = _utility2.default.serverSideRendering ? _react2.default.createElement(
 	        'button',
 	        { type: 'submit', formmethod: 'post' },
@@ -11329,9 +11374,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        { onSubmit: this.handleSubmit.bind(this), encType: 'multipart/form-data', ref: function ref(form) {
 	            _this2.form = form;
 	          } },
+	        _react2.default.createElement('input', { disabled: props.view.isUploading, id: 'eureka__upload-form', multiple: 'multiple', name: 'eureka__uploadFiles', type: 'file', onChange: function onChange(e) {
+	            _this2.form.dispatchEvent(new Event("submit")); // so there is no click button they need to click
+	          } }),
 	        _react2.default.createElement(
 	          'label',
 	          { onKeyPress: this.handleLabelKeyPress, tabIndex: '0', role: 'menuitem', htmlFor: 'eureka__upload-form' },
+	          uploadFilesIcon,
 	          uploadFilesMessage,
 	          _react2.default.createElement(
 	            'span',
@@ -11341,10 +11390,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            ' ',
 	            props.content.cd
 	          )
-	        ),
-	        _react2.default.createElement('input', { id: 'eureka__upload-form', multiple: 'multiple', name: 'eureka__uploadFiles', type: 'file', onChange: function onChange(e) {
-	            _this2.form.dispatchEvent(new Event("submit")); // so there is no click button they need to click
-	          } })
+	        )
 	      );
 
 	      return _react2.default.createElement(
@@ -11539,7 +11585,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      files.forEach(function (file) {
 	        formData.append('eureka__uploadFiles', file, file.name);
 	      });
-
+	      _store2.default.dispatch(_actions2.default.updateView({
+	        isUploading: true
+	      }));
 	      _store2.default.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData, props.config.headers));
 	    }
 	  }, {
@@ -11547,7 +11595,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function render() {
 	      var props = this.props,
 	          formatMessage = props.intl.formatMessage,
-	          dragFilesToBeUploadedToMessage = formatMessage(_definedMessages2.default.dragFilesToBeUploadedTo, {
+	          dragFilesToBeUploadedToMessage = props.view.isUploading ? formatMessage(_definedMessages2.default.dragFilesUploading, {
+	        cd: props.content.cd
+	      }) : formatMessage(_definedMessages2.default.dragFilesToBeUploadedTo, {
 	        cd: props.content.cd
 	      });
 
@@ -11557,7 +11607,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _react2.default.createElement(
 	          _reactDropzone2.default,
 	          { onDrop: this.onDrop.bind(this), className: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'drop-area-zone', activeClassName: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'drop-area-zone-active', style: {} },
-	          _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'upload' }))
+	          _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: props.view.isUploading ? 'circle-o-notch' : 'upload' }))
 	        )
 	      );
 	    }

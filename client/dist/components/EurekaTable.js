@@ -89,6 +89,10 @@ var EurekaTable = function (_Component) {
         formData.append('eureka__uploadFiles', file, file.name);
       });
 
+      _store2.default.dispatch(_actions2.default.updateView({
+        isUploading: true
+      }));
+
       _store2.default.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData, props.config.headers));
     }
   }, {
