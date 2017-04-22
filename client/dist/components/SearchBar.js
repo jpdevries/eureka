@@ -57,6 +57,7 @@ var SearchBar = function (_Component) {
         _this.pickRandomField();
       }, _this.props.view.intervals.searchBarPlaceholder);
     }
+
     return _this;
   }
 

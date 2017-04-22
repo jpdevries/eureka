@@ -114,9 +114,7 @@ var ContextButtons = function ContextButtons(props) {
       downloadID = (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'download__' + (0, _utility.cssSafe)(item.filename),
       downloadBtn = props.config.allowDownload ? _react2.default.createElement(
     'a',
-    { download: item.filename, href: item.absoluteURL, id: downloadID, className: 'button', target: '_' + downloadID, onClick: function onClick(event) {
-        console.log('download', item);
-      }, title: downloadItemMessage },
+    { download: item.filename, href: item.absoluteURL, id: downloadID, className: 'button', target: '_' + downloadID, title: downloadItemMessage },
     downloadMessage,
     _react2.default.createElement(
       'span',

@@ -15,6 +15,8 @@ import Modal from './components/Modal';
 import ModalCreateDirectoryForm from './components/ModalCreateDirectoryForm';
 import ModalRenameItemForm from './components/ModalRenameItemForm';
 
+import Mousetrap from 'mousetrap';
+
 import {formatMessage} from 'react-intl';
 
 const path = require('path');
@@ -48,10 +50,148 @@ class Eureka extends Component {
       renamingItem:undefined
     };
     this.decoratedActions = props.decoratedActions ? Object.assign({}, actions, props.decoratedActions) : actions;
+
+    // there is a pattern to not have to do this, just can't remember it #janky
+    this.toggleSourceTreeOpen = this.toggleSourceTreeOpen.bind(this);
+    this.handleKeyboardChangeView = this.handleKeyboardChangeView.bind(this);
+    this.handleKeyboardChangeSource = this.handleKeyboardChangeSource.bind(this);
+    this.handleKeyboardUpload = this.handleKeyboardUpload.bind(this);
+    this.handleKeyboardCreateDirectory = this.handleKeyboardCreateDirectory.bind(this);
+    this.handleKeyboardCreateFile = this.handleKeyboardCreateFile.bind(this);
+    this.handleKeyboardFilter = this.handleKeyboardFilter.bind(this);
   }
+
+  componentWillUnmount() {
+    this.removeKeyboardListeners();
+  }
+
+  handleKeyboardFilter(event) {
+    console.log('handleKeyboardFilter', event);
+    const root = this.getEurekaRoot();
+    try {
+      root.querySelector('input[name="eureka__filter"]').focus();
+    } catch (e) { }
+  }
+
+  assignKeyboardListeners() {
+    Mousetrap.bind(['ctrl+;'], this.toggleSourceTreeOpen);
+    Mousetrap.bind(['ctrl+alt+1', 'ctrl+alt+2', 'ctrl+alt+3', 'ctrl+alt+4'], this.handleKeyboardChangeView);
+    Mousetrap.bind(['alt+0', 'alt+1', 'alt+2', 'alt+3', 'alt+4', 'alt+5', 'alt+6', 'alt+7', 'alt+8', 'alt+9'], this.handleKeyboardChangeSource);
+    Mousetrap.bind(['ctrl+u'], this.handleKeyboardUpload);
+    Mousetrap.bind(['ctrl+n'], this.handleKeyboardCreateDirectory);
+    Mousetrap.bind(['ctrl+f'], this.handleKeyboardFilter);
+
+    if(this.props.config.handlers && this.props.config.handlers.createFile) Mousetrap.bind(['ctrl+shift+n'], this.handleKeyboardCreateFile);
+  }
+
+  removeKeyboardListeners() {
+    Mousetrap.unbind(['ctrl+;'], this.toggleSourceTreeOpen);
+    Mousetrap.unbind(['ctrl+alt+1', 'ctrl+alt+2', 'ctrl+alt+3', 'ctrl+alt+4'], this.handleKeyboardChangeView);
+    Mousetrap.unbind(['alt+0', 'alt+1', 'alt+2', 'alt+3', 'alt+4', 'alt+5', 'alt+6', 'alt+7', 'alt+8', 'alt+9'], this.handleKeyboardChangeSource);
+    Mousetrap.unbind(['ctrl+u'], this.handleKeyboardUpload);
+    Mousetrap.unbind(['ctrl+n'], this.handleKeyboardCreateDirectory);
+    Mousetrap.unbind(['ctrl+f'], this.handleKeyboardFilter);
+
+    if(this.props.config.handlers && this.props.config.handlers.createFile) Mousetrap.unbind(['ctrl+shift+n'], this.handleKeyboardCreateFile);
+  }
+
+  toggleSourceTreeOpen() {
+    store.dispatch(this.decoratedActions.updateView({
+      sourceTreeOpen: !this.props.view.sourceTreeOpen
+    }));
+  }
+
+
+
+  handleKeyboardCreateDirectory(event) {
+    //console.log('handleKeyboardCreateDirectory', event);
+    this.onCreateDirectory();
+  }
+
+  handleKeyboardCreateFile(event) {
+    //console.log('handleKeyboardCreateFile', event);
+    try {
+      const createFileHander = this.props.config.handlers.createFile(this.props.source.currentSource, this.props.content.cd);
+      if(createFileHander.onClick) createFileHander.onClick(this.props.source.currentSource, this.props.content.cd);
+      else window.open(createFileHander.href);
+    } catch(e) { }
+  }
+
+  getEurekaRoot() {
+    try {
+      return event.target.closest('.eureka-root');
+    } catch(e) {
+      return document.querySelector('.eureka-root');
+    }
+  }
+
+  handleKeyboardUpload(event) {
+    //console.log('handleKeyboardUpload', event);
+    const root = this.getEurekaRoot();
+
+    try {
+      root.querySelector('.eureka__drop-area-zone').click();
+    } catch (e) {
+      root.querySelector('input[name="eureka__uploadFiles"]').click();
+    }
+  }
+
+  handleKeyboardChangeSource(event) {
+    //console.log('handleKeyboardChangeSource', event);
+    const props = this.props;
+    const state = store.getState();
+    const decoratedActions = this.decoratedActions;
+    const sources = state.source.sources;
+    console.log(sources);
+    let matchedSource;
+    sources.map((source) => {
+      if(`Digit${source.id}`.toLowerCase() == event.code.toLowerCase()) matchedSource = source;
+    });
+    if(matchedSource) {
+      props.dispatch(decoratedActions.updateSource(
+        matchedSource.id
+      ));
+      props.dispatch(decoratedActions.updateSourceTree(
+        matchedSource.id,
+        props.config.headers
+      ));
+    }
+  }
+
+  handleKeyboardChangeView(event) {
+    //console.log('handleKeyboardChangeView', event);
+    switch(event.key) {
+      case '1':
+      store.dispatch(this.decoratedActions.updateView({
+        mode: 'table'
+      }));
+      break;
+
+      case '2':
+      store.dispatch(this.decoratedActions.updateView({
+        mode: 'thumb'
+      }));
+      break;
+
+      case '3':
+      store.dispatch(this.decoratedActions.updateView({
+        mode: 'grid'
+      }));
+      break;
+
+      case '4':
+      store.dispatch(this.decoratedActions.updateView({
+        mode: 'list'
+      }));
+      break;
+    }
+  }
+
   componentDidMount() {
     const props = this.props,
     decoratedActions = this.decoratedActions;
+
+    this.assignKeyboardListeners();
 
     store.dispatch(decoratedActions.fetchMediaSources(props.config.headers)).then(() => { // hit the server and get the media sources
       store.dispatch(decoratedActions.updateSourceTree(this.props.source.sources[0].id), props.config.headers).then((content) => { // then hit server for the directory tree of the first (default) media source
@@ -102,7 +242,7 @@ class Eureka extends Component {
   }
 
   onCreateDirectory() {
-    console.log('onCreateDirectory');
+    //console.log('onCreateDirectory');
     this.setState({
       modalOpen:true,
       currentModal:CREATE_DIRECTORY
@@ -111,7 +251,7 @@ class Eureka extends Component {
 
   onModalCancel(event) {
     event.preventDefault();
-    console.log('onModalCancel');
+    //console.log('onModalCancel');
     this.setState({
       modalOpen:false,
       currentModal:undefined
@@ -122,7 +262,7 @@ class Eureka extends Component {
     const decoratedActions = this.decoratedActions;
     const props = this.props;
     //event.preventDefault();
-    console.log('onModalSubmit',createDirectory);
+    //console.log('onModalSubmit',createDirectory);
 
     switch(this.state.currentModal) {
       case CREATE_DIRECTORY:
@@ -175,9 +315,9 @@ class Eureka extends Component {
   onRenameItem(item) {
     //console.log('onRenameItem', item);
     this.setState({
-      renamingItem:item,
-      modalOpen:true,
-      currentModal:RENAME_ITEM
+      renamingItem: item,
+      modalOpen: true,
+      currentModal: RENAME_ITEM
     });
   }
 

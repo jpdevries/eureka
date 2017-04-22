@@ -16,6 +16,7 @@ class UploadForm extends PureComponent {
   constructor(props) {
     super(props);
     this.decoratedActions = props.decoratedActions ? Object.assign({}, actions, props.decoratedActions) : actions;
+    
   }
 
 

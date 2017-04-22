@@ -53,6 +53,7 @@ var UploadForm = function (_PureComponent) {
     var _this = _possibleConstructorReturn(this, (UploadForm.__proto__ || Object.getPrototypeOf(UploadForm)).call(this, props));
 
     _this.decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
+
     return _this;
   }
 

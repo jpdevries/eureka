@@ -4,6 +4,9 @@ import filesize from 'filesize';
 
 import ContextMenu from './ContextMenu';
 
+import store from '../model/store';
+import actions from '../model/actions';
+
 
 import utility from './../utility/utility';
 
@@ -18,6 +21,8 @@ import { FormattedMessage } from 'react-intl';
 
 import definedMessages from '../i18n/definedMessages';
 
+import Mousetrap from 'mousetrap';
+
 class MediaRow extends PureComponent {
   constructor(props) {
     super(props);
@@ -25,7 +30,14 @@ class MediaRow extends PureComponent {
     this.state = {
       focusWithin: false
     };
+
+    this.handleKeyboardBackspace = this.handleKeyboardBackspace.bind(this);
+    this.handleKeyboardChoose = this.handleKeyboardChoose.bind(this);
+    this.handleKeyboardExpand = this.handleKeyboardExpand.bind(this);
+    this.handleKeyboardRename = this.handleKeyboardRename.bind(this);
   }
+
+
 
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -39,8 +51,48 @@ class MediaRow extends PureComponent {
     return false;
   }
 
+  assignKeyboardListeners() {
+    Mousetrap.bind(['backspace'], this.handleKeyboardBackspace);
+    Mousetrap.bind(['enter'], this.handleKeyboardChoose);
+    Mousetrap.bind(['space'], this.handleKeyboardExpand);
+    Mousetrap.bind(['ctrl+r'], this.handleKeyboardRename);
+  }
+
   onBlur(event) {
     //console.log('onBlur');
+    this.removeKeyboardListeners();
+  }
+
+  componentWillUnmount() {
+    this.removeKeyboardListeners();
+  }
+
+  removeKeyboardListeners() {
+    Mousetrap.unbind(['backspace'], this.handleKeyboardBackspace);
+    Mousetrap.unbind(['enter'], this.handleKeyboardChoose);
+    Mousetrap.unbind(['space'], this.handleKeyboardExpand);
+    Mousetrap.unbind(['ctrl+r'], this.handleKeyboardRename);
+  }
+
+  handleKeyboardRename(event) {
+    //console.log('handleKeyboardRename', event);
+    try {
+      this.props.onRenameItem(this.props.item);
+    } catch (e) { }
+  }
+
+  handleKeyboardChoose(event) {
+    //console.log('handleKeyboardChoose', event);
+    //event.preventDefault();
+    try {
+      document.getElementById(`choose__${utility.cssSafe(this.props.item.filename)}`).click();
+    } catch (e) { }
+  }
+
+  handleKeyboardExpand(event) {
+    try {
+      document.getElementById(`expand__${utility.cssSafe(this.props.item.filename)}`).click();
+    } catch (e) { }
   }
 
   removeFocusedMediaItems(target) { // super #janky but haven't been able to optimize another way
@@ -57,11 +109,38 @@ class MediaRow extends PureComponent {
   onFocus(event) {
     if(!event.target.matches('tr')) return;
 
+    this.assignKeyboardListeners();
+
     this.removeFocusedMediaItems(event.target);
     event.target.classList.add('eureka__focused-media-item');
     event.target.querySelector('.eureka__context-row').removeAttribute('hidden');
     this.props.onFocus();
   }
+
+  handleKeyboardBackspace(event) {
+    const props = this.props;
+    const decoratedActions = (props.decoratedActions) ? Object.assign({}, actions, props.decoratedActions) : actions;
+    //console.log('handleKeyboardBackspace', event, props.item.path);
+    store.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, props.item.path, props.config.headers)).then(() => {
+      utility.notify(`Deleted item ${props.item.filename}`, {
+        badge: path.join(props.config.assetsBasePath, 'img/src/png/trash-o.png'),
+        silent: true
+      });
+    });
+  }
+
+
+
+  componentDidMount() {
+    this.assignKeyboardListeners();
+  }
+
+  //http://localhost:3000/assets/components/eureka/media/sources/1?path=%2FUsers%2FjP%2FSites%2Fstatic%2Feureka%2Fprod%2Fsources%2Ffilesystem%2Fassets%2Fimg%2Fredwoods%2F243823_842410181688_1308368_o.jpg
+  //http://localhost:3000/assets/components/eureka/media/sources/1?path=%2FUsers%2FjP%2FSites%2Fstatic%2Feureka%2Fprod%2Fsources%2Ffilesystem%2Fassets%2Fimg%2Fredwoods%2F243150_842410286478_7945184_o.jpg
+
+  /*componentWillUnmount() {
+    Mousetrap.unbind(['backspace'], this.handleKeyboardBackspace);
+  }*/
 
   render() {
     const props = this.props,

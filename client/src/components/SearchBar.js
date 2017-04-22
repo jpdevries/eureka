@@ -22,6 +22,7 @@ class SearchBar extends Component {
         this.pickRandomField();
       }, this.props.view.intervals.searchBarPlaceholder);
     }
+
   }
 
   componentDidMount() {
@@ -37,6 +38,8 @@ class SearchBar extends Component {
       })
     });*/
   }
+
+
 
   pickRandomField() {
     const random = Math.random();

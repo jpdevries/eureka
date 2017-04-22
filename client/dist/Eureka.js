@@ -72,6 +72,10 @@ var _ModalRenameItemForm = require('./components/ModalRenameItemForm');
 
 var _ModalRenameItemForm2 = _interopRequireDefault(_ModalRenameItemForm);
 
+var _mousetrap = require('mousetrap');
+
+var _mousetrap2 = _interopRequireDefault(_mousetrap);
+
 var _reactIntl = require('react-intl');
 
 var _store = require('./model/store');
@@ -125,16 +129,156 @@ var Eureka = function (_Component) {
       renamingItem: undefined
     };
     _this.decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
+
+    // there is a pattern to not have to do this, just can't remember it #janky
+    _this.toggleSourceTreeOpen = _this.toggleSourceTreeOpen.bind(_this);
+    _this.handleKeyboardChangeView = _this.handleKeyboardChangeView.bind(_this);
+    _this.handleKeyboardChangeSource = _this.handleKeyboardChangeSource.bind(_this);
+    _this.handleKeyboardUpload = _this.handleKeyboardUpload.bind(_this);
+    _this.handleKeyboardCreateDirectory = _this.handleKeyboardCreateDirectory.bind(_this);
+    _this.handleKeyboardCreateFile = _this.handleKeyboardCreateFile.bind(_this);
+    _this.handleKeyboardFilter = _this.handleKeyboardFilter.bind(_this);
     return _this;
   }
 
   _createClass(Eureka, [{
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      this.removeKeyboardListeners();
+    }
+  }, {
+    key: 'handleKeyboardFilter',
+    value: function handleKeyboardFilter(event) {
+      console.log('handleKeyboardFilter', event);
+      var root = this.getEurekaRoot();
+      try {
+        root.querySelector('input[name="eureka__filter"]').focus();
+      } catch (e) {}
+    }
+  }, {
+    key: 'assignKeyboardListeners',
+    value: function assignKeyboardListeners() {
+      _mousetrap2.default.bind(['ctrl+;'], this.toggleSourceTreeOpen);
+      _mousetrap2.default.bind(['ctrl+alt+1', 'ctrl+alt+2', 'ctrl+alt+3', 'ctrl+alt+4'], this.handleKeyboardChangeView);
+      _mousetrap2.default.bind(['alt+0', 'alt+1', 'alt+2', 'alt+3', 'alt+4', 'alt+5', 'alt+6', 'alt+7', 'alt+8', 'alt+9'], this.handleKeyboardChangeSource);
+      _mousetrap2.default.bind(['ctrl+u'], this.handleKeyboardUpload);
+      _mousetrap2.default.bind(['ctrl+n'], this.handleKeyboardCreateDirectory);
+      _mousetrap2.default.bind(['ctrl+f'], this.handleKeyboardFilter);
+
+      if (this.props.config.handlers && this.props.config.handlers.createFile) _mousetrap2.default.bind(['ctrl+shift+n'], this.handleKeyboardCreateFile);
+    }
+  }, {
+    key: 'removeKeyboardListeners',
+    value: function removeKeyboardListeners() {
+      _mousetrap2.default.unbind(['ctrl+;'], this.toggleSourceTreeOpen);
+      _mousetrap2.default.unbind(['ctrl+alt+1', 'ctrl+alt+2', 'ctrl+alt+3', 'ctrl+alt+4'], this.handleKeyboardChangeView);
+      _mousetrap2.default.unbind(['alt+0', 'alt+1', 'alt+2', 'alt+3', 'alt+4', 'alt+5', 'alt+6', 'alt+7', 'alt+8', 'alt+9'], this.handleKeyboardChangeSource);
+      _mousetrap2.default.unbind(['ctrl+u'], this.handleKeyboardUpload);
+      _mousetrap2.default.unbind(['ctrl+n'], this.handleKeyboardCreateDirectory);
+      _mousetrap2.default.unbind(['ctrl+f'], this.handleKeyboardFilter);
+
+      if (this.props.config.handlers && this.props.config.handlers.createFile) _mousetrap2.default.unbind(['ctrl+shift+n'], this.handleKeyboardCreateFile);
+    }
+  }, {
+    key: 'toggleSourceTreeOpen',
+    value: function toggleSourceTreeOpen() {
+      _store2.default.dispatch(this.decoratedActions.updateView({
+        sourceTreeOpen: !this.props.view.sourceTreeOpen
+      }));
+    }
+  }, {
+    key: 'handleKeyboardCreateDirectory',
+    value: function handleKeyboardCreateDirectory(event) {
+      //console.log('handleKeyboardCreateDirectory', event);
+      this.onCreateDirectory();
+    }
+  }, {
+    key: 'handleKeyboardCreateFile',
+    value: function handleKeyboardCreateFile(event) {
+      //console.log('handleKeyboardCreateFile', event);
+      try {
+        var createFileHander = this.props.config.handlers.createFile(this.props.source.currentSource, this.props.content.cd);
+        if (createFileHander.onClick) createFileHander.onClick(this.props.source.currentSource, this.props.content.cd);else window.open(createFileHander.href);
+      } catch (e) {}
+    }
+  }, {
+    key: 'getEurekaRoot',
+    value: function getEurekaRoot() {
+      try {
+        return event.target.closest('.eureka-root');
+      } catch (e) {
+        return document.querySelector('.eureka-root');
+      }
+    }
+  }, {
+    key: 'handleKeyboardUpload',
+    value: function handleKeyboardUpload(event) {
+      //console.log('handleKeyboardUpload', event);
+      var root = this.getEurekaRoot();
+
+      try {
+        root.querySelector('.eureka__drop-area-zone').click();
+      } catch (e) {
+        root.querySelector('input[name="eureka__uploadFiles"]').click();
+      }
+    }
+  }, {
+    key: 'handleKeyboardChangeSource',
+    value: function handleKeyboardChangeSource(event) {
+      //console.log('handleKeyboardChangeSource', event);
+      var props = this.props;
+      var state = _store2.default.getState();
+      var decoratedActions = this.decoratedActions;
+      var sources = state.source.sources;
+      console.log(sources);
+      var matchedSource = void 0;
+      sources.map(function (source) {
+        if (('Digit' + source.id).toLowerCase() == event.code.toLowerCase()) matchedSource = source;
+      });
+      if (matchedSource) {
+        props.dispatch(decoratedActions.updateSource(matchedSource.id));
+        props.dispatch(decoratedActions.updateSourceTree(matchedSource.id, props.config.headers));
+      }
+    }
+  }, {
+    key: 'handleKeyboardChangeView',
+    value: function handleKeyboardChangeView(event) {
+      //console.log('handleKeyboardChangeView', event);
+      switch (event.key) {
+        case '1':
+          _store2.default.dispatch(this.decoratedActions.updateView({
+            mode: 'table'
+          }));
+          break;
+
+        case '2':
+          _store2.default.dispatch(this.decoratedActions.updateView({
+            mode: 'thumb'
+          }));
+          break;
+
+        case '3':
+          _store2.default.dispatch(this.decoratedActions.updateView({
+            mode: 'grid'
+          }));
+          break;
+
+        case '4':
+          _store2.default.dispatch(this.decoratedActions.updateView({
+            mode: 'list'
+          }));
+          break;
+      }
+    }
+  }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
       var _this2 = this;
 
       var props = this.props,
           decoratedActions = this.decoratedActions;
+
+      this.assignKeyboardListeners();
 
       _store2.default.dispatch(decoratedActions.fetchMediaSources(props.config.headers)).then(function () {
         // hit the server and get the media sources
@@ -190,7 +334,7 @@ var Eureka = function (_Component) {
   }, {
     key: 'onCreateDirectory',
     value: function onCreateDirectory() {
-      console.log('onCreateDirectory');
+      //console.log('onCreateDirectory');
       this.setState({
         modalOpen: true,
         currentModal: CREATE_DIRECTORY
@@ -200,7 +344,7 @@ var Eureka = function (_Component) {
     key: 'onModalCancel',
     value: function onModalCancel(event) {
       event.preventDefault();
-      console.log('onModalCancel');
+      //console.log('onModalCancel');
       this.setState({
         modalOpen: false,
         currentModal: undefined
@@ -214,7 +358,7 @@ var Eureka = function (_Component) {
       var decoratedActions = this.decoratedActions;
       var props = this.props;
       //event.preventDefault();
-      console.log('onModalSubmit', createDirectory);
+      //console.log('onModalSubmit',createDirectory);
 
       switch (this.state.currentModal) {
         case CREATE_DIRECTORY:

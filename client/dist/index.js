@@ -62,7 +62,10 @@ function render() {
     createFile: function createFile(source, directory) {
       return {
         href: 'javascript:alert("create a directory in ' + directory + ' of media source ' + source + '")',
-        target: '_blank'
+        target: '_blank',
+        onClick: function onClick(source, directory) {
+          console.log('onClick', source, directory);
+        }
       };
     }
   }), _defineProperty(_React$createElement, 'endpoints', {

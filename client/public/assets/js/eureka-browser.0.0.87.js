@@ -90,11 +90,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utility2 = _interopRequireDefault(_utility);
 
-	var _en = __webpack_require__(70);
+	var _en = __webpack_require__(71);
 
 	var _en2 = _interopRequireDefault(_en);
 
-	var _i18n = __webpack_require__(71);
+	var _i18n = __webpack_require__(72);
 
 	var _i18n2 = _interopRequireDefault(_i18n);
 
@@ -846,33 +846,37 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _EurekaTable2 = _interopRequireDefault(_EurekaTable);
 
-	var _FileTree = __webpack_require__(63);
+	var _FileTree = __webpack_require__(64);
 
 	var _FileTree2 = _interopRequireDefault(_FileTree);
 
-	var _UploadForm = __webpack_require__(64);
+	var _UploadForm = __webpack_require__(65);
 
 	var _UploadForm2 = _interopRequireDefault(_UploadForm);
 
-	var _PathBar = __webpack_require__(65);
+	var _PathBar = __webpack_require__(66);
 
 	var _PathBar2 = _interopRequireDefault(_PathBar);
 
-	var _DropArea = __webpack_require__(66);
+	var _DropArea = __webpack_require__(67);
 
 	var _DropArea2 = _interopRequireDefault(_DropArea);
 
-	var _Modal = __webpack_require__(67);
+	var _Modal = __webpack_require__(68);
 
 	var _Modal2 = _interopRequireDefault(_Modal);
 
-	var _ModalCreateDirectoryForm = __webpack_require__(68);
+	var _ModalCreateDirectoryForm = __webpack_require__(69);
 
 	var _ModalCreateDirectoryForm2 = _interopRequireDefault(_ModalCreateDirectoryForm);
 
-	var _ModalRenameItemForm = __webpack_require__(69);
+	var _ModalRenameItemForm = __webpack_require__(70);
 
 	var _ModalRenameItemForm2 = _interopRequireDefault(_ModalRenameItemForm);
+
+	var _mousetrap = __webpack_require__(61);
+
+	var _mousetrap2 = _interopRequireDefault(_mousetrap);
 
 	var _reactIntl = __webpack_require__(23);
 
@@ -902,7 +906,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var path = __webpack_require__(3);
 
-	var pathParse = __webpack_require__(61);
+	var pathParse = __webpack_require__(62);
 
 	var classNames = __webpack_require__(54);
 
@@ -927,16 +931,156 @@ return /******/ (function(modules) { // webpackBootstrap
 	      renamingItem: undefined
 	    };
 	    _this.decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
+
+	    // there is a pattern to not have to do this, just can't remember it #janky
+	    _this.toggleSourceTreeOpen = _this.toggleSourceTreeOpen.bind(_this);
+	    _this.handleKeyboardChangeView = _this.handleKeyboardChangeView.bind(_this);
+	    _this.handleKeyboardChangeSource = _this.handleKeyboardChangeSource.bind(_this);
+	    _this.handleKeyboardUpload = _this.handleKeyboardUpload.bind(_this);
+	    _this.handleKeyboardCreateDirectory = _this.handleKeyboardCreateDirectory.bind(_this);
+	    _this.handleKeyboardCreateFile = _this.handleKeyboardCreateFile.bind(_this);
+	    _this.handleKeyboardFilter = _this.handleKeyboardFilter.bind(_this);
 	    return _this;
 	  }
 
 	  _createClass(Eureka, [{
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      this.removeKeyboardListeners();
+	    }
+	  }, {
+	    key: 'handleKeyboardFilter',
+	    value: function handleKeyboardFilter(event) {
+	      console.log('handleKeyboardFilter', event);
+	      var root = this.getEurekaRoot();
+	      try {
+	        root.querySelector('input[name="eureka__filter"]').focus();
+	      } catch (e) {}
+	    }
+	  }, {
+	    key: 'assignKeyboardListeners',
+	    value: function assignKeyboardListeners() {
+	      _mousetrap2.default.bind(['ctrl+;'], this.toggleSourceTreeOpen);
+	      _mousetrap2.default.bind(['ctrl+alt+1', 'ctrl+alt+2', 'ctrl+alt+3', 'ctrl+alt+4'], this.handleKeyboardChangeView);
+	      _mousetrap2.default.bind(['alt+0', 'alt+1', 'alt+2', 'alt+3', 'alt+4', 'alt+5', 'alt+6', 'alt+7', 'alt+8', 'alt+9'], this.handleKeyboardChangeSource);
+	      _mousetrap2.default.bind(['ctrl+u'], this.handleKeyboardUpload);
+	      _mousetrap2.default.bind(['ctrl+n'], this.handleKeyboardCreateDirectory);
+	      _mousetrap2.default.bind(['ctrl+f'], this.handleKeyboardFilter);
+
+	      if (this.props.config.handlers && this.props.config.handlers.createFile) _mousetrap2.default.bind(['ctrl+shift+n'], this.handleKeyboardCreateFile);
+	    }
+	  }, {
+	    key: 'removeKeyboardListeners',
+	    value: function removeKeyboardListeners() {
+	      _mousetrap2.default.unbind(['ctrl+;'], this.toggleSourceTreeOpen);
+	      _mousetrap2.default.unbind(['ctrl+alt+1', 'ctrl+alt+2', 'ctrl+alt+3', 'ctrl+alt+4'], this.handleKeyboardChangeView);
+	      _mousetrap2.default.unbind(['alt+0', 'alt+1', 'alt+2', 'alt+3', 'alt+4', 'alt+5', 'alt+6', 'alt+7', 'alt+8', 'alt+9'], this.handleKeyboardChangeSource);
+	      _mousetrap2.default.unbind(['ctrl+u'], this.handleKeyboardUpload);
+	      _mousetrap2.default.unbind(['ctrl+n'], this.handleKeyboardCreateDirectory);
+	      _mousetrap2.default.unbind(['ctrl+f'], this.handleKeyboardFilter);
+
+	      if (this.props.config.handlers && this.props.config.handlers.createFile) _mousetrap2.default.unbind(['ctrl+shift+n'], this.handleKeyboardCreateFile);
+	    }
+	  }, {
+	    key: 'toggleSourceTreeOpen',
+	    value: function toggleSourceTreeOpen() {
+	      _store2.default.dispatch(this.decoratedActions.updateView({
+	        sourceTreeOpen: !this.props.view.sourceTreeOpen
+	      }));
+	    }
+	  }, {
+	    key: 'handleKeyboardCreateDirectory',
+	    value: function handleKeyboardCreateDirectory(event) {
+	      //console.log('handleKeyboardCreateDirectory', event);
+	      this.onCreateDirectory();
+	    }
+	  }, {
+	    key: 'handleKeyboardCreateFile',
+	    value: function handleKeyboardCreateFile(event) {
+	      //console.log('handleKeyboardCreateFile', event);
+	      try {
+	        var createFileHander = this.props.config.handlers.createFile(this.props.source.currentSource, this.props.content.cd);
+	        if (createFileHander.onClick) createFileHander.onClick(this.props.source.currentSource, this.props.content.cd);else window.open(createFileHander.href);
+	      } catch (e) {}
+	    }
+	  }, {
+	    key: 'getEurekaRoot',
+	    value: function getEurekaRoot() {
+	      try {
+	        return event.target.closest('.eureka-root');
+	      } catch (e) {
+	        return document.querySelector('.eureka-root');
+	      }
+	    }
+	  }, {
+	    key: 'handleKeyboardUpload',
+	    value: function handleKeyboardUpload(event) {
+	      //console.log('handleKeyboardUpload', event);
+	      var root = this.getEurekaRoot();
+
+	      try {
+	        root.querySelector('.eureka__drop-area-zone').click();
+	      } catch (e) {
+	        root.querySelector('input[name="eureka__uploadFiles"]').click();
+	      }
+	    }
+	  }, {
+	    key: 'handleKeyboardChangeSource',
+	    value: function handleKeyboardChangeSource(event) {
+	      //console.log('handleKeyboardChangeSource', event);
+	      var props = this.props;
+	      var state = _store2.default.getState();
+	      var decoratedActions = this.decoratedActions;
+	      var sources = state.source.sources;
+	      console.log(sources);
+	      var matchedSource = void 0;
+	      sources.map(function (source) {
+	        if (('Digit' + source.id).toLowerCase() == event.code.toLowerCase()) matchedSource = source;
+	      });
+	      if (matchedSource) {
+	        props.dispatch(decoratedActions.updateSource(matchedSource.id));
+	        props.dispatch(decoratedActions.updateSourceTree(matchedSource.id, props.config.headers));
+	      }
+	    }
+	  }, {
+	    key: 'handleKeyboardChangeView',
+	    value: function handleKeyboardChangeView(event) {
+	      //console.log('handleKeyboardChangeView', event);
+	      switch (event.key) {
+	        case '1':
+	          _store2.default.dispatch(this.decoratedActions.updateView({
+	            mode: 'table'
+	          }));
+	          break;
+
+	        case '2':
+	          _store2.default.dispatch(this.decoratedActions.updateView({
+	            mode: 'thumb'
+	          }));
+	          break;
+
+	        case '3':
+	          _store2.default.dispatch(this.decoratedActions.updateView({
+	            mode: 'grid'
+	          }));
+	          break;
+
+	        case '4':
+	          _store2.default.dispatch(this.decoratedActions.updateView({
+	            mode: 'list'
+	          }));
+	          break;
+	      }
+	    }
+	  }, {
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      var _this2 = this;
 
 	      var props = this.props,
 	          decoratedActions = this.decoratedActions;
+
+	      this.assignKeyboardListeners();
 
 	      _store2.default.dispatch(decoratedActions.fetchMediaSources(props.config.headers)).then(function () {
 	        // hit the server and get the media sources
@@ -992,7 +1136,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'onCreateDirectory',
 	    value: function onCreateDirectory() {
-	      console.log('onCreateDirectory');
+	      //console.log('onCreateDirectory');
 	      this.setState({
 	        modalOpen: true,
 	        currentModal: CREATE_DIRECTORY
@@ -1002,7 +1146,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'onModalCancel',
 	    value: function onModalCancel(event) {
 	      event.preventDefault();
-	      console.log('onModalCancel');
+	      //console.log('onModalCancel');
 	      this.setState({
 	        modalOpen: false,
 	        currentModal: undefined
@@ -1016,7 +1160,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var decoratedActions = this.decoratedActions;
 	      var props = this.props;
 	      //event.preventDefault();
-	      console.log('onModalSubmit', createDirectory);
+	      //console.log('onModalSubmit',createDirectory);
 
 	      switch (this.state.currentModal) {
 	        case CREATE_DIRECTORY:
@@ -3703,7 +3847,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.85",
+		"version": "0.0.87",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -3783,6 +3927,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			"filesize": "^3.5.4",
 			"html-entities": "^1.2.0",
 			"isomorphic-fetch": "^2.2.1",
+			"mousetrap": "^1.6.1",
 			"path-parse": "^1.0.5",
 			"pixrem": "^3.0.2",
 			"react": "^15.5.0",
@@ -8816,6 +8961,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _this.pickRandomField();
 	      }, _this.props.view.intervals.searchBarPlaceholder);
 	    }
+
 	    return _this;
 	  }
 
@@ -9327,7 +9473,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _reactDropzone = __webpack_require__(62);
+	var _reactDropzone = __webpack_require__(63);
 
 	var _reactDropzone2 = _interopRequireDefault(_reactDropzone);
 
@@ -9493,7 +9639,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var a = document.createElement('a');
 	            a.setAttribute('download', item.filename);
 	            a.href = item.absoluteURL;
-	            a.innerHTML = 'YOLO';
 	            a.classList.add('visually-hidden');
 	            document.body.appendChild(a);
 	            a.click();
@@ -9993,6 +10138,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ContextMenu2 = _interopRequireDefault(_ContextMenu);
 
+	var _store = __webpack_require__(9);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	var _actions = __webpack_require__(14);
+
+	var _actions2 = _interopRequireDefault(_actions);
+
 	var _utility = __webpack_require__(12);
 
 	var _utility2 = _interopRequireDefault(_utility);
@@ -10015,6 +10168,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
+	var _mousetrap = __webpack_require__(61);
+
+	var _mousetrap2 = _interopRequireDefault(_mousetrap);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -10025,7 +10182,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var pathParse = __webpack_require__(61);
+	var pathParse = __webpack_require__(62);
 
 	var MediaRow = function (_PureComponent) {
 	  _inherits(MediaRow, _PureComponent);
@@ -10038,6 +10195,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _this.state = {
 	      focusWithin: false
 	    };
+
+	    _this.handleKeyboardBackspace = _this.handleKeyboardBackspace.bind(_this);
+	    _this.handleKeyboardChoose = _this.handleKeyboardChoose.bind(_this);
+	    _this.handleKeyboardExpand = _this.handleKeyboardExpand.bind(_this);
+	    _this.handleKeyboardRename = _this.handleKeyboardRename.bind(_this);
 	    return _this;
 	  }
 
@@ -10054,9 +10216,55 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return false;
 	    }
 	  }, {
+	    key: 'assignKeyboardListeners',
+	    value: function assignKeyboardListeners() {
+	      _mousetrap2.default.bind(['backspace'], this.handleKeyboardBackspace);
+	      _mousetrap2.default.bind(['enter'], this.handleKeyboardChoose);
+	      _mousetrap2.default.bind(['space'], this.handleKeyboardExpand);
+	      _mousetrap2.default.bind(['ctrl+r'], this.handleKeyboardRename);
+	    }
+	  }, {
 	    key: 'onBlur',
 	    value: function onBlur(event) {
 	      //console.log('onBlur');
+	      this.removeKeyboardListeners();
+	    }
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      this.removeKeyboardListeners();
+	    }
+	  }, {
+	    key: 'removeKeyboardListeners',
+	    value: function removeKeyboardListeners() {
+	      _mousetrap2.default.unbind(['backspace'], this.handleKeyboardBackspace);
+	      _mousetrap2.default.unbind(['enter'], this.handleKeyboardChoose);
+	      _mousetrap2.default.unbind(['space'], this.handleKeyboardExpand);
+	      _mousetrap2.default.unbind(['ctrl+r'], this.handleKeyboardRename);
+	    }
+	  }, {
+	    key: 'handleKeyboardRename',
+	    value: function handleKeyboardRename(event) {
+	      //console.log('handleKeyboardRename', event);
+	      try {
+	        this.props.onRenameItem(this.props.item);
+	      } catch (e) {}
+	    }
+	  }, {
+	    key: 'handleKeyboardChoose',
+	    value: function handleKeyboardChoose(event) {
+	      //console.log('handleKeyboardChoose', event);
+	      //event.preventDefault();
+	      try {
+	        document.getElementById('choose__' + _utility2.default.cssSafe(this.props.item.filename)).click();
+	      } catch (e) {}
+	    }
+	  }, {
+	    key: 'handleKeyboardExpand',
+	    value: function handleKeyboardExpand(event) {
+	      try {
+	        document.getElementById('expand__' + _utility2.default.cssSafe(this.props.item.filename)).click();
+	      } catch (e) {}
 	    }
 	  }, {
 	    key: 'removeFocusedMediaItems',
@@ -10076,11 +10284,39 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function onFocus(event) {
 	      if (!event.target.matches('tr')) return;
 
+	      this.assignKeyboardListeners();
+
 	      this.removeFocusedMediaItems(event.target);
 	      event.target.classList.add('eureka__focused-media-item');
 	      event.target.querySelector('.eureka__context-row').removeAttribute('hidden');
 	      this.props.onFocus();
 	    }
+	  }, {
+	    key: 'handleKeyboardBackspace',
+	    value: function handleKeyboardBackspace(event) {
+	      var props = this.props;
+	      var decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
+	      //console.log('handleKeyboardBackspace', event, props.item.path);
+	      _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, props.item.path, props.config.headers)).then(function () {
+	        _utility2.default.notify('Deleted item ' + props.item.filename, {
+	          badge: _path2.default.join(props.config.assetsBasePath, 'img/src/png/trash-o.png'),
+	          silent: true
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.assignKeyboardListeners();
+	    }
+
+	    //http://localhost:3000/assets/components/eureka/media/sources/1?path=%2FUsers%2FjP%2FSites%2Fstatic%2Feureka%2Fprod%2Fsources%2Ffilesystem%2Fassets%2Fimg%2Fredwoods%2F243823_842410181688_1308368_o.jpg
+	    //http://localhost:3000/assets/components/eureka/media/sources/1?path=%2FUsers%2FjP%2FSites%2Fstatic%2Feureka%2Fprod%2Fsources%2Ffilesystem%2Fassets%2Fimg%2Fredwoods%2F243150_842410286478_7945184_o.jpg
+
+	    /*componentWillUnmount() {
+	      Mousetrap.unbind(['backspace'], this.handleKeyboardBackspace);
+	    }*/
+
 	  }, {
 	    key: 'render',
 	    value: function render() {
@@ -10507,9 +10743,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      downloadID = (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'download__' + (0, _utility.cssSafe)(item.filename),
 	      downloadBtn = props.config.allowDownload ? _react2.default.createElement(
 	    'a',
-	    { download: item.filename, href: item.absoluteURL, id: downloadID, className: 'button', target: '_' + downloadID, onClick: function onClick(event) {
-	        console.log('download', item);
-	      }, title: downloadItemMessage },
+	    { download: item.filename, href: item.absoluteURL, id: downloadID, className: 'button', target: '_' + downloadID, title: downloadItemMessage },
 	    downloadMessage,
 	    _react2.default.createElement(
 	      'span',
@@ -10546,6 +10780,1056 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 61 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;/*global define:false */
+	/**
+	 * Copyright 2012-2017 Craig Campbell
+	 *
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 *
+	 * Mousetrap is a simple keyboard shortcut library for Javascript with
+	 * no external dependencies
+	 *
+	 * @version 1.6.1
+	 * @url craig.is/killing/mice
+	 */
+	(function(window, document, undefined) {
+
+	    // Check if mousetrap is used inside browser, if not, return
+	    if (!window) {
+	        return;
+	    }
+
+	    /**
+	     * mapping of special keycodes to their corresponding keys
+	     *
+	     * everything in this dictionary cannot use keypress events
+	     * so it has to be here to map to the correct keycodes for
+	     * keyup/keydown events
+	     *
+	     * @type {Object}
+	     */
+	    var _MAP = {
+	        8: 'backspace',
+	        9: 'tab',
+	        13: 'enter',
+	        16: 'shift',
+	        17: 'ctrl',
+	        18: 'alt',
+	        20: 'capslock',
+	        27: 'esc',
+	        32: 'space',
+	        33: 'pageup',
+	        34: 'pagedown',
+	        35: 'end',
+	        36: 'home',
+	        37: 'left',
+	        38: 'up',
+	        39: 'right',
+	        40: 'down',
+	        45: 'ins',
+	        46: 'del',
+	        91: 'meta',
+	        93: 'meta',
+	        224: 'meta'
+	    };
+
+	    /**
+	     * mapping for special characters so they can support
+	     *
+	     * this dictionary is only used incase you want to bind a
+	     * keyup or keydown event to one of these keys
+	     *
+	     * @type {Object}
+	     */
+	    var _KEYCODE_MAP = {
+	        106: '*',
+	        107: '+',
+	        109: '-',
+	        110: '.',
+	        111 : '/',
+	        186: ';',
+	        187: '=',
+	        188: ',',
+	        189: '-',
+	        190: '.',
+	        191: '/',
+	        192: '`',
+	        219: '[',
+	        220: '\\',
+	        221: ']',
+	        222: '\''
+	    };
+
+	    /**
+	     * this is a mapping of keys that require shift on a US keypad
+	     * back to the non shift equivelents
+	     *
+	     * this is so you can use keyup events with these keys
+	     *
+	     * note that this will only work reliably on US keyboards
+	     *
+	     * @type {Object}
+	     */
+	    var _SHIFT_MAP = {
+	        '~': '`',
+	        '!': '1',
+	        '@': '2',
+	        '#': '3',
+	        '$': '4',
+	        '%': '5',
+	        '^': '6',
+	        '&': '7',
+	        '*': '8',
+	        '(': '9',
+	        ')': '0',
+	        '_': '-',
+	        '+': '=',
+	        ':': ';',
+	        '\"': '\'',
+	        '<': ',',
+	        '>': '.',
+	        '?': '/',
+	        '|': '\\'
+	    };
+
+	    /**
+	     * this is a list of special strings you can use to map
+	     * to modifier keys when you specify your keyboard shortcuts
+	     *
+	     * @type {Object}
+	     */
+	    var _SPECIAL_ALIASES = {
+	        'option': 'alt',
+	        'command': 'meta',
+	        'return': 'enter',
+	        'escape': 'esc',
+	        'plus': '+',
+	        'mod': /Mac|iPod|iPhone|iPad/.test(navigator.platform) ? 'meta' : 'ctrl'
+	    };
+
+	    /**
+	     * variable to store the flipped version of _MAP from above
+	     * needed to check if we should use keypress or not when no action
+	     * is specified
+	     *
+	     * @type {Object|undefined}
+	     */
+	    var _REVERSE_MAP;
+
+	    /**
+	     * loop through the f keys, f1 to f19 and add them to the map
+	     * programatically
+	     */
+	    for (var i = 1; i < 20; ++i) {
+	        _MAP[111 + i] = 'f' + i;
+	    }
+
+	    /**
+	     * loop through to map numbers on the numeric keypad
+	     */
+	    for (i = 0; i <= 9; ++i) {
+
+	        // This needs to use a string cause otherwise since 0 is falsey
+	        // mousetrap will never fire for numpad 0 pressed as part of a keydown
+	        // event.
+	        //
+	        // @see https://github.com/ccampbell/mousetrap/pull/258
+	        _MAP[i + 96] = i.toString();
+	    }
+
+	    /**
+	     * cross browser add event method
+	     *
+	     * @param {Element|HTMLDocument} object
+	     * @param {string} type
+	     * @param {Function} callback
+	     * @returns void
+	     */
+	    function _addEvent(object, type, callback) {
+	        if (object.addEventListener) {
+	            object.addEventListener(type, callback, false);
+	            return;
+	        }
+
+	        object.attachEvent('on' + type, callback);
+	    }
+
+	    /**
+	     * takes the event and returns the key character
+	     *
+	     * @param {Event} e
+	     * @return {string}
+	     */
+	    function _characterFromEvent(e) {
+
+	        // for keypress events we should return the character as is
+	        if (e.type == 'keypress') {
+	            var character = String.fromCharCode(e.which);
+
+	            // if the shift key is not pressed then it is safe to assume
+	            // that we want the character to be lowercase.  this means if
+	            // you accidentally have caps lock on then your key bindings
+	            // will continue to work
+	            //
+	            // the only side effect that might not be desired is if you
+	            // bind something like 'A' cause you want to trigger an
+	            // event when capital A is pressed caps lock will no longer
+	            // trigger the event.  shift+a will though.
+	            if (!e.shiftKey) {
+	                character = character.toLowerCase();
+	            }
+
+	            return character;
+	        }
+
+	        // for non keypress events the special maps are needed
+	        if (_MAP[e.which]) {
+	            return _MAP[e.which];
+	        }
+
+	        if (_KEYCODE_MAP[e.which]) {
+	            return _KEYCODE_MAP[e.which];
+	        }
+
+	        // if it is not in the special map
+
+	        // with keydown and keyup events the character seems to always
+	        // come in as an uppercase character whether you are pressing shift
+	        // or not.  we should make sure it is always lowercase for comparisons
+	        return String.fromCharCode(e.which).toLowerCase();
+	    }
+
+	    /**
+	     * checks if two arrays are equal
+	     *
+	     * @param {Array} modifiers1
+	     * @param {Array} modifiers2
+	     * @returns {boolean}
+	     */
+	    function _modifiersMatch(modifiers1, modifiers2) {
+	        return modifiers1.sort().join(',') === modifiers2.sort().join(',');
+	    }
+
+	    /**
+	     * takes a key event and figures out what the modifiers are
+	     *
+	     * @param {Event} e
+	     * @returns {Array}
+	     */
+	    function _eventModifiers(e) {
+	        var modifiers = [];
+
+	        if (e.shiftKey) {
+	            modifiers.push('shift');
+	        }
+
+	        if (e.altKey) {
+	            modifiers.push('alt');
+	        }
+
+	        if (e.ctrlKey) {
+	            modifiers.push('ctrl');
+	        }
+
+	        if (e.metaKey) {
+	            modifiers.push('meta');
+	        }
+
+	        return modifiers;
+	    }
+
+	    /**
+	     * prevents default for this event
+	     *
+	     * @param {Event} e
+	     * @returns void
+	     */
+	    function _preventDefault(e) {
+	        if (e.preventDefault) {
+	            e.preventDefault();
+	            return;
+	        }
+
+	        e.returnValue = false;
+	    }
+
+	    /**
+	     * stops propogation for this event
+	     *
+	     * @param {Event} e
+	     * @returns void
+	     */
+	    function _stopPropagation(e) {
+	        if (e.stopPropagation) {
+	            e.stopPropagation();
+	            return;
+	        }
+
+	        e.cancelBubble = true;
+	    }
+
+	    /**
+	     * determines if the keycode specified is a modifier key or not
+	     *
+	     * @param {string} key
+	     * @returns {boolean}
+	     */
+	    function _isModifier(key) {
+	        return key == 'shift' || key == 'ctrl' || key == 'alt' || key == 'meta';
+	    }
+
+	    /**
+	     * reverses the map lookup so that we can look for specific keys
+	     * to see what can and can't use keypress
+	     *
+	     * @return {Object}
+	     */
+	    function _getReverseMap() {
+	        if (!_REVERSE_MAP) {
+	            _REVERSE_MAP = {};
+	            for (var key in _MAP) {
+
+	                // pull out the numeric keypad from here cause keypress should
+	                // be able to detect the keys from the character
+	                if (key > 95 && key < 112) {
+	                    continue;
+	                }
+
+	                if (_MAP.hasOwnProperty(key)) {
+	                    _REVERSE_MAP[_MAP[key]] = key;
+	                }
+	            }
+	        }
+	        return _REVERSE_MAP;
+	    }
+
+	    /**
+	     * picks the best action based on the key combination
+	     *
+	     * @param {string} key - character for key
+	     * @param {Array} modifiers
+	     * @param {string=} action passed in
+	     */
+	    function _pickBestAction(key, modifiers, action) {
+
+	        // if no action was picked in we should try to pick the one
+	        // that we think would work best for this key
+	        if (!action) {
+	            action = _getReverseMap()[key] ? 'keydown' : 'keypress';
+	        }
+
+	        // modifier keys don't work as expected with keypress,
+	        // switch to keydown
+	        if (action == 'keypress' && modifiers.length) {
+	            action = 'keydown';
+	        }
+
+	        return action;
+	    }
+
+	    /**
+	     * Converts from a string key combination to an array
+	     *
+	     * @param  {string} combination like "command+shift+l"
+	     * @return {Array}
+	     */
+	    function _keysFromString(combination) {
+	        if (combination === '+') {
+	            return ['+'];
+	        }
+
+	        combination = combination.replace(/\+{2}/g, '+plus');
+	        return combination.split('+');
+	    }
+
+	    /**
+	     * Gets info for a specific key combination
+	     *
+	     * @param  {string} combination key combination ("command+s" or "a" or "*")
+	     * @param  {string=} action
+	     * @returns {Object}
+	     */
+	    function _getKeyInfo(combination, action) {
+	        var keys;
+	        var key;
+	        var i;
+	        var modifiers = [];
+
+	        // take the keys from this pattern and figure out what the actual
+	        // pattern is all about
+	        keys = _keysFromString(combination);
+
+	        for (i = 0; i < keys.length; ++i) {
+	            key = keys[i];
+
+	            // normalize key names
+	            if (_SPECIAL_ALIASES[key]) {
+	                key = _SPECIAL_ALIASES[key];
+	            }
+
+	            // if this is not a keypress event then we should
+	            // be smart about using shift keys
+	            // this will only work for US keyboards however
+	            if (action && action != 'keypress' && _SHIFT_MAP[key]) {
+	                key = _SHIFT_MAP[key];
+	                modifiers.push('shift');
+	            }
+
+	            // if this key is a modifier then add it to the list of modifiers
+	            if (_isModifier(key)) {
+	                modifiers.push(key);
+	            }
+	        }
+
+	        // depending on what the key combination is
+	        // we will try to pick the best event for it
+	        action = _pickBestAction(key, modifiers, action);
+
+	        return {
+	            key: key,
+	            modifiers: modifiers,
+	            action: action
+	        };
+	    }
+
+	    function _belongsTo(element, ancestor) {
+	        if (element === null || element === document) {
+	            return false;
+	        }
+
+	        if (element === ancestor) {
+	            return true;
+	        }
+
+	        return _belongsTo(element.parentNode, ancestor);
+	    }
+
+	    function Mousetrap(targetElement) {
+	        var self = this;
+
+	        targetElement = targetElement || document;
+
+	        if (!(self instanceof Mousetrap)) {
+	            return new Mousetrap(targetElement);
+	        }
+
+	        /**
+	         * element to attach key events to
+	         *
+	         * @type {Element}
+	         */
+	        self.target = targetElement;
+
+	        /**
+	         * a list of all the callbacks setup via Mousetrap.bind()
+	         *
+	         * @type {Object}
+	         */
+	        self._callbacks = {};
+
+	        /**
+	         * direct map of string combinations to callbacks used for trigger()
+	         *
+	         * @type {Object}
+	         */
+	        self._directMap = {};
+
+	        /**
+	         * keeps track of what level each sequence is at since multiple
+	         * sequences can start out with the same sequence
+	         *
+	         * @type {Object}
+	         */
+	        var _sequenceLevels = {};
+
+	        /**
+	         * variable to store the setTimeout call
+	         *
+	         * @type {null|number}
+	         */
+	        var _resetTimer;
+
+	        /**
+	         * temporary state where we will ignore the next keyup
+	         *
+	         * @type {boolean|string}
+	         */
+	        var _ignoreNextKeyup = false;
+
+	        /**
+	         * temporary state where we will ignore the next keypress
+	         *
+	         * @type {boolean}
+	         */
+	        var _ignoreNextKeypress = false;
+
+	        /**
+	         * are we currently inside of a sequence?
+	         * type of action ("keyup" or "keydown" or "keypress") or false
+	         *
+	         * @type {boolean|string}
+	         */
+	        var _nextExpectedAction = false;
+
+	        /**
+	         * resets all sequence counters except for the ones passed in
+	         *
+	         * @param {Object} doNotReset
+	         * @returns void
+	         */
+	        function _resetSequences(doNotReset) {
+	            doNotReset = doNotReset || {};
+
+	            var activeSequences = false,
+	                key;
+
+	            for (key in _sequenceLevels) {
+	                if (doNotReset[key]) {
+	                    activeSequences = true;
+	                    continue;
+	                }
+	                _sequenceLevels[key] = 0;
+	            }
+
+	            if (!activeSequences) {
+	                _nextExpectedAction = false;
+	            }
+	        }
+
+	        /**
+	         * finds all callbacks that match based on the keycode, modifiers,
+	         * and action
+	         *
+	         * @param {string} character
+	         * @param {Array} modifiers
+	         * @param {Event|Object} e
+	         * @param {string=} sequenceName - name of the sequence we are looking for
+	         * @param {string=} combination
+	         * @param {number=} level
+	         * @returns {Array}
+	         */
+	        function _getMatches(character, modifiers, e, sequenceName, combination, level) {
+	            var i;
+	            var callback;
+	            var matches = [];
+	            var action = e.type;
+
+	            // if there are no events related to this keycode
+	            if (!self._callbacks[character]) {
+	                return [];
+	            }
+
+	            // if a modifier key is coming up on its own we should allow it
+	            if (action == 'keyup' && _isModifier(character)) {
+	                modifiers = [character];
+	            }
+
+	            // loop through all callbacks for the key that was pressed
+	            // and see if any of them match
+	            for (i = 0; i < self._callbacks[character].length; ++i) {
+	                callback = self._callbacks[character][i];
+
+	                // if a sequence name is not specified, but this is a sequence at
+	                // the wrong level then move onto the next match
+	                if (!sequenceName && callback.seq && _sequenceLevels[callback.seq] != callback.level) {
+	                    continue;
+	                }
+
+	                // if the action we are looking for doesn't match the action we got
+	                // then we should keep going
+	                if (action != callback.action) {
+	                    continue;
+	                }
+
+	                // if this is a keypress event and the meta key and control key
+	                // are not pressed that means that we need to only look at the
+	                // character, otherwise check the modifiers as well
+	                //
+	                // chrome will not fire a keypress if meta or control is down
+	                // safari will fire a keypress if meta or meta+shift is down
+	                // firefox will fire a keypress if meta or control is down
+	                if ((action == 'keypress' && !e.metaKey && !e.ctrlKey) || _modifiersMatch(modifiers, callback.modifiers)) {
+
+	                    // when you bind a combination or sequence a second time it
+	                    // should overwrite the first one.  if a sequenceName or
+	                    // combination is specified in this call it does just that
+	                    //
+	                    // @todo make deleting its own method?
+	                    var deleteCombo = !sequenceName && callback.combo == combination;
+	                    var deleteSequence = sequenceName && callback.seq == sequenceName && callback.level == level;
+	                    if (deleteCombo || deleteSequence) {
+	                        self._callbacks[character].splice(i, 1);
+	                    }
+
+	                    matches.push(callback);
+	                }
+	            }
+
+	            return matches;
+	        }
+
+	        /**
+	         * actually calls the callback function
+	         *
+	         * if your callback function returns false this will use the jquery
+	         * convention - prevent default and stop propogation on the event
+	         *
+	         * @param {Function} callback
+	         * @param {Event} e
+	         * @returns void
+	         */
+	        function _fireCallback(callback, e, combo, sequence) {
+
+	            // if this event should not happen stop here
+	            if (self.stopCallback(e, e.target || e.srcElement, combo, sequence)) {
+	                return;
+	            }
+
+	            if (callback(e, combo) === false) {
+	                _preventDefault(e);
+	                _stopPropagation(e);
+	            }
+	        }
+
+	        /**
+	         * handles a character key event
+	         *
+	         * @param {string} character
+	         * @param {Array} modifiers
+	         * @param {Event} e
+	         * @returns void
+	         */
+	        self._handleKey = function(character, modifiers, e) {
+	            var callbacks = _getMatches(character, modifiers, e);
+	            var i;
+	            var doNotReset = {};
+	            var maxLevel = 0;
+	            var processedSequenceCallback = false;
+
+	            // Calculate the maxLevel for sequences so we can only execute the longest callback sequence
+	            for (i = 0; i < callbacks.length; ++i) {
+	                if (callbacks[i].seq) {
+	                    maxLevel = Math.max(maxLevel, callbacks[i].level);
+	                }
+	            }
+
+	            // loop through matching callbacks for this key event
+	            for (i = 0; i < callbacks.length; ++i) {
+
+	                // fire for all sequence callbacks
+	                // this is because if for example you have multiple sequences
+	                // bound such as "g i" and "g t" they both need to fire the
+	                // callback for matching g cause otherwise you can only ever
+	                // match the first one
+	                if (callbacks[i].seq) {
+
+	                    // only fire callbacks for the maxLevel to prevent
+	                    // subsequences from also firing
+	                    //
+	                    // for example 'a option b' should not cause 'option b' to fire
+	                    // even though 'option b' is part of the other sequence
+	                    //
+	                    // any sequences that do not match here will be discarded
+	                    // below by the _resetSequences call
+	                    if (callbacks[i].level != maxLevel) {
+	                        continue;
+	                    }
+
+	                    processedSequenceCallback = true;
+
+	                    // keep a list of which sequences were matches for later
+	                    doNotReset[callbacks[i].seq] = 1;
+	                    _fireCallback(callbacks[i].callback, e, callbacks[i].combo, callbacks[i].seq);
+	                    continue;
+	                }
+
+	                // if there were no sequence matches but we are still here
+	                // that means this is a regular match so we should fire that
+	                if (!processedSequenceCallback) {
+	                    _fireCallback(callbacks[i].callback, e, callbacks[i].combo);
+	                }
+	            }
+
+	            // if the key you pressed matches the type of sequence without
+	            // being a modifier (ie "keyup" or "keypress") then we should
+	            // reset all sequences that were not matched by this event
+	            //
+	            // this is so, for example, if you have the sequence "h a t" and you
+	            // type "h e a r t" it does not match.  in this case the "e" will
+	            // cause the sequence to reset
+	            //
+	            // modifier keys are ignored because you can have a sequence
+	            // that contains modifiers such as "enter ctrl+space" and in most
+	            // cases the modifier key will be pressed before the next key
+	            //
+	            // also if you have a sequence such as "ctrl+b a" then pressing the
+	            // "b" key will trigger a "keypress" and a "keydown"
+	            //
+	            // the "keydown" is expected when there is a modifier, but the
+	            // "keypress" ends up matching the _nextExpectedAction since it occurs
+	            // after and that causes the sequence to reset
+	            //
+	            // we ignore keypresses in a sequence that directly follow a keydown
+	            // for the same character
+	            var ignoreThisKeypress = e.type == 'keypress' && _ignoreNextKeypress;
+	            if (e.type == _nextExpectedAction && !_isModifier(character) && !ignoreThisKeypress) {
+	                _resetSequences(doNotReset);
+	            }
+
+	            _ignoreNextKeypress = processedSequenceCallback && e.type == 'keydown';
+	        };
+
+	        /**
+	         * handles a keydown event
+	         *
+	         * @param {Event} e
+	         * @returns void
+	         */
+	        function _handleKeyEvent(e) {
+
+	            // normalize e.which for key events
+	            // @see http://stackoverflow.com/questions/4285627/javascript-keycode-vs-charcode-utter-confusion
+	            if (typeof e.which !== 'number') {
+	                e.which = e.keyCode;
+	            }
+
+	            var character = _characterFromEvent(e);
+
+	            // no character found then stop
+	            if (!character) {
+	                return;
+	            }
+
+	            // need to use === for the character check because the character can be 0
+	            if (e.type == 'keyup' && _ignoreNextKeyup === character) {
+	                _ignoreNextKeyup = false;
+	                return;
+	            }
+
+	            self.handleKey(character, _eventModifiers(e), e);
+	        }
+
+	        /**
+	         * called to set a 1 second timeout on the specified sequence
+	         *
+	         * this is so after each key press in the sequence you have 1 second
+	         * to press the next key before you have to start over
+	         *
+	         * @returns void
+	         */
+	        function _resetSequenceTimer() {
+	            clearTimeout(_resetTimer);
+	            _resetTimer = setTimeout(_resetSequences, 1000);
+	        }
+
+	        /**
+	         * binds a key sequence to an event
+	         *
+	         * @param {string} combo - combo specified in bind call
+	         * @param {Array} keys
+	         * @param {Function} callback
+	         * @param {string=} action
+	         * @returns void
+	         */
+	        function _bindSequence(combo, keys, callback, action) {
+
+	            // start off by adding a sequence level record for this combination
+	            // and setting the level to 0
+	            _sequenceLevels[combo] = 0;
+
+	            /**
+	             * callback to increase the sequence level for this sequence and reset
+	             * all other sequences that were active
+	             *
+	             * @param {string} nextAction
+	             * @returns {Function}
+	             */
+	            function _increaseSequence(nextAction) {
+	                return function() {
+	                    _nextExpectedAction = nextAction;
+	                    ++_sequenceLevels[combo];
+	                    _resetSequenceTimer();
+	                };
+	            }
+
+	            /**
+	             * wraps the specified callback inside of another function in order
+	             * to reset all sequence counters as soon as this sequence is done
+	             *
+	             * @param {Event} e
+	             * @returns void
+	             */
+	            function _callbackAndReset(e) {
+	                _fireCallback(callback, e, combo);
+
+	                // we should ignore the next key up if the action is key down
+	                // or keypress.  this is so if you finish a sequence and
+	                // release the key the final key will not trigger a keyup
+	                if (action !== 'keyup') {
+	                    _ignoreNextKeyup = _characterFromEvent(e);
+	                }
+
+	                // weird race condition if a sequence ends with the key
+	                // another sequence begins with
+	                setTimeout(_resetSequences, 10);
+	            }
+
+	            // loop through keys one at a time and bind the appropriate callback
+	            // function.  for any key leading up to the final one it should
+	            // increase the sequence. after the final, it should reset all sequences
+	            //
+	            // if an action is specified in the original bind call then that will
+	            // be used throughout.  otherwise we will pass the action that the
+	            // next key in the sequence should match.  this allows a sequence
+	            // to mix and match keypress and keydown events depending on which
+	            // ones are better suited to the key provided
+	            for (var i = 0; i < keys.length; ++i) {
+	                var isFinal = i + 1 === keys.length;
+	                var wrappedCallback = isFinal ? _callbackAndReset : _increaseSequence(action || _getKeyInfo(keys[i + 1]).action);
+	                _bindSingle(keys[i], wrappedCallback, action, combo, i);
+	            }
+	        }
+
+	        /**
+	         * binds a single keyboard combination
+	         *
+	         * @param {string} combination
+	         * @param {Function} callback
+	         * @param {string=} action
+	         * @param {string=} sequenceName - name of sequence if part of sequence
+	         * @param {number=} level - what part of the sequence the command is
+	         * @returns void
+	         */
+	        function _bindSingle(combination, callback, action, sequenceName, level) {
+
+	            // store a direct mapped reference for use with Mousetrap.trigger
+	            self._directMap[combination + ':' + action] = callback;
+
+	            // make sure multiple spaces in a row become a single space
+	            combination = combination.replace(/\s+/g, ' ');
+
+	            var sequence = combination.split(' ');
+	            var info;
+
+	            // if this pattern is a sequence of keys then run through this method
+	            // to reprocess each pattern one key at a time
+	            if (sequence.length > 1) {
+	                _bindSequence(combination, sequence, callback, action);
+	                return;
+	            }
+
+	            info = _getKeyInfo(combination, action);
+
+	            // make sure to initialize array if this is the first time
+	            // a callback is added for this key
+	            self._callbacks[info.key] = self._callbacks[info.key] || [];
+
+	            // remove an existing match if there is one
+	            _getMatches(info.key, info.modifiers, {type: info.action}, sequenceName, combination, level);
+
+	            // add this call back to the array
+	            // if it is a sequence put it at the beginning
+	            // if not put it at the end
+	            //
+	            // this is important because the way these are processed expects
+	            // the sequence ones to come first
+	            self._callbacks[info.key][sequenceName ? 'unshift' : 'push']({
+	                callback: callback,
+	                modifiers: info.modifiers,
+	                action: info.action,
+	                seq: sequenceName,
+	                level: level,
+	                combo: combination
+	            });
+	        }
+
+	        /**
+	         * binds multiple combinations to the same callback
+	         *
+	         * @param {Array} combinations
+	         * @param {Function} callback
+	         * @param {string|undefined} action
+	         * @returns void
+	         */
+	        self._bindMultiple = function(combinations, callback, action) {
+	            for (var i = 0; i < combinations.length; ++i) {
+	                _bindSingle(combinations[i], callback, action);
+	            }
+	        };
+
+	        // start!
+	        _addEvent(targetElement, 'keypress', _handleKeyEvent);
+	        _addEvent(targetElement, 'keydown', _handleKeyEvent);
+	        _addEvent(targetElement, 'keyup', _handleKeyEvent);
+	    }
+
+	    /**
+	     * binds an event to mousetrap
+	     *
+	     * can be a single key, a combination of keys separated with +,
+	     * an array of keys, or a sequence of keys separated by spaces
+	     *
+	     * be sure to list the modifier keys first to make sure that the
+	     * correct key ends up getting bound (the last key in the pattern)
+	     *
+	     * @param {string|Array} keys
+	     * @param {Function} callback
+	     * @param {string=} action - 'keypress', 'keydown', or 'keyup'
+	     * @returns void
+	     */
+	    Mousetrap.prototype.bind = function(keys, callback, action) {
+	        var self = this;
+	        keys = keys instanceof Array ? keys : [keys];
+	        self._bindMultiple.call(self, keys, callback, action);
+	        return self;
+	    };
+
+	    /**
+	     * unbinds an event to mousetrap
+	     *
+	     * the unbinding sets the callback function of the specified key combo
+	     * to an empty function and deletes the corresponding key in the
+	     * _directMap dict.
+	     *
+	     * TODO: actually remove this from the _callbacks dictionary instead
+	     * of binding an empty function
+	     *
+	     * the keycombo+action has to be exactly the same as
+	     * it was defined in the bind method
+	     *
+	     * @param {string|Array} keys
+	     * @param {string} action
+	     * @returns void
+	     */
+	    Mousetrap.prototype.unbind = function(keys, action) {
+	        var self = this;
+	        return self.bind.call(self, keys, function() {}, action);
+	    };
+
+	    /**
+	     * triggers an event that has already been bound
+	     *
+	     * @param {string} keys
+	     * @param {string=} action
+	     * @returns void
+	     */
+	    Mousetrap.prototype.trigger = function(keys, action) {
+	        var self = this;
+	        if (self._directMap[keys + ':' + action]) {
+	            self._directMap[keys + ':' + action]({}, keys);
+	        }
+	        return self;
+	    };
+
+	    /**
+	     * resets the library back to its initial state.  this is useful
+	     * if you want to clear out the current keyboard shortcuts and bind
+	     * new ones - for example if you switch to another page
+	     *
+	     * @returns void
+	     */
+	    Mousetrap.prototype.reset = function() {
+	        var self = this;
+	        self._callbacks = {};
+	        self._directMap = {};
+	        return self;
+	    };
+
+	    /**
+	     * should we stop this event before firing off callbacks
+	     *
+	     * @param {Event} e
+	     * @param {Element} element
+	     * @return {boolean}
+	     */
+	    Mousetrap.prototype.stopCallback = function(e, element) {
+	        var self = this;
+
+	        // if the element has the class "mousetrap" then no need to stop
+	        if ((' ' + element.className + ' ').indexOf(' mousetrap ') > -1) {
+	            return false;
+	        }
+
+	        if (_belongsTo(element, self.target)) {
+	            return false;
+	        }
+
+	        // stop for input, select, and textarea
+	        return element.tagName == 'INPUT' || element.tagName == 'SELECT' || element.tagName == 'TEXTAREA' || element.isContentEditable;
+	    };
+
+	    /**
+	     * exposes _handleKey publicly so it can be overwritten by extensions
+	     */
+	    Mousetrap.prototype.handleKey = function() {
+	        var self = this;
+	        return self._handleKey.apply(self, arguments);
+	    };
+
+	    /**
+	     * allow custom key mappings
+	     */
+	    Mousetrap.addKeycodes = function(object) {
+	        for (var key in object) {
+	            if (object.hasOwnProperty(key)) {
+	                _MAP[key] = object[key];
+	            }
+	        }
+	        _REVERSE_MAP = null;
+	    };
+
+	    /**
+	     * Init the global mousetrap functions
+	     *
+	     * This method is needed to allow the global mousetrap functions to work
+	     * now that mousetrap is a constructor function.
+	     */
+	    Mousetrap.init = function() {
+	        var documentMousetrap = Mousetrap(document);
+	        for (var method in documentMousetrap) {
+	            if (method.charAt(0) !== '_') {
+	                Mousetrap[method] = (function(method) {
+	                    return function() {
+	                        return documentMousetrap[method].apply(documentMousetrap, arguments);
+	                    };
+	                } (method));
+	            }
+	        }
+	    };
+
+	    Mousetrap.init();
+
+	    // expose mousetrap to the global object
+	    window.Mousetrap = Mousetrap;
+
+	    // expose as a common js module
+	    if (typeof module !== 'undefined' && module.exports) {
+	        module.exports = Mousetrap;
+	    }
+
+	    // expose mousetrap as an AMD module
+	    if (true) {
+	        !(__WEBPACK_AMD_DEFINE_RESULT__ = function() {
+	            return Mousetrap;
+	        }.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    }
+	}) (typeof window !== 'undefined' ? window : null, typeof  window !== 'undefined' ? document : null);
+
+
+/***/ },
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -10645,7 +11929,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 62 */
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function webpackUniversalModuleDefinition(root, factory) {
@@ -11161,7 +12445,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=index.js.map
 
 /***/ },
-/* 63 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11354,7 +12638,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = FileTree;
 
 /***/ },
-/* 64 */
+/* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11412,6 +12696,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var _this = _possibleConstructorReturn(this, (UploadForm.__proto__ || Object.getPrototypeOf(UploadForm)).call(this, props));
 
 	    _this.decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
+
 	    return _this;
 	  }
 
@@ -11542,7 +12827,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = UploadForm;
 
 /***/ },
-/* 65 */
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11575,7 +12860,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var pathParse = __webpack_require__(61);
+	var pathParse = __webpack_require__(62);
 
 	/*
 	Example of file
@@ -11648,7 +12933,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = PathBar;
 
 /***/ },
-/* 66 */
+/* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11665,7 +12950,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactDropzone = __webpack_require__(62);
+	var _reactDropzone = __webpack_require__(63);
 
 	var _reactDropzone2 = _interopRequireDefault(_reactDropzone);
 
@@ -11754,7 +13039,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = DropArea;
 
 /***/ },
-/* 67 */
+/* 68 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11803,7 +13088,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = Modal;
 
 /***/ },
-/* 68 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11960,7 +13245,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = ModalCreateDirectoryForm;
 
 /***/ },
-/* 69 */
+/* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12132,19 +13417,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = ModalRenameItemForm;
 
 /***/ },
-/* 70 */
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
 	!function(e,a){ true?module.exports=a():"function"==typeof define&&define.amd?define(a):(e.ReactIntlLocaleData=e.ReactIntlLocaleData||{},e.ReactIntlLocaleData.en=a())}(this,function(){"use strict";var e=[{locale:"en",pluralRuleFunction:function(e,a){var n=String(e).split("."),l=!n[1],o=Number(n[0])==e,t=o&&n[0].slice(-1),r=o&&n[0].slice(-2);return a?1==t&&11!=r?"one":2==t&&12!=r?"two":3==t&&13!=r?"few":"other":1==e&&l?"one":"other"},fields:{year:{displayName:"year",relative:{0:"this year",1:"next year","-1":"last year"},relativeTime:{future:{one:"in {0} year",other:"in {0} years"},past:{one:"{0} year ago",other:"{0} years ago"}}},month:{displayName:"month",relative:{0:"this month",1:"next month","-1":"last month"},relativeTime:{future:{one:"in {0} month",other:"in {0} months"},past:{one:"{0} month ago",other:"{0} months ago"}}},day:{displayName:"day",relative:{0:"today",1:"tomorrow","-1":"yesterday"},relativeTime:{future:{one:"in {0} day",other:"in {0} days"},past:{one:"{0} day ago",other:"{0} days ago"}}},hour:{displayName:"hour",relativeTime:{future:{one:"in {0} hour",other:"in {0} hours"},past:{one:"{0} hour ago",other:"{0} hours ago"}}},minute:{displayName:"minute",relativeTime:{future:{one:"in {0} minute",other:"in {0} minutes"},past:{one:"{0} minute ago",other:"{0} minutes ago"}}},second:{displayName:"second",relative:{0:"now"},relativeTime:{future:{one:"in {0} second",other:"in {0} seconds"},past:{one:"{0} second ago",other:"{0} seconds ago"}}}}},{locale:"en-001",parentLocale:"en"},{locale:"en-150",parentLocale:"en-001"},{locale:"en-AG",parentLocale:"en-001"},{locale:"en-AI",parentLocale:"en-001"},{locale:"en-AS",parentLocale:"en"},{locale:"en-AT",parentLocale:"en-150"},{locale:"en-AU",parentLocale:"en-001"},{locale:"en-BB",parentLocale:"en-001"},{locale:"en-BE",parentLocale:"en-001"},{locale:"en-BI",parentLocale:"en"},{locale:"en-BM",parentLocale:"en-001"},{locale:"en-BS",parentLocale:"en-001"},{locale:"en-BW",parentLocale:"en-001"},{locale:"en-BZ",parentLocale:"en-001"},{locale:"en-CA",parentLocale:"en-001"},{locale:"en-CC",parentLocale:"en-001"},{locale:"en-CH",parentLocale:"en-150"},{locale:"en-CK",parentLocale:"en-001"},{locale:"en-CM",parentLocale:"en-001"},{locale:"en-CX",parentLocale:"en-001"},{locale:"en-CY",parentLocale:"en-001"},{locale:"en-DE",parentLocale:"en-150"},{locale:"en-DG",parentLocale:"en-001"},{locale:"en-DK",parentLocale:"en-150"},{locale:"en-DM",parentLocale:"en-001"},{locale:"en-Dsrt",pluralRuleFunction:function(e,a){return"other"},fields:{year:{displayName:"Year",relative:{0:"this year",1:"next year","-1":"last year"},relativeTime:{future:{other:"+{0} y"},past:{other:"-{0} y"}}},month:{displayName:"Month",relative:{0:"this month",1:"next month","-1":"last month"},relativeTime:{future:{other:"+{0} m"},past:{other:"-{0} m"}}},day:{displayName:"Day",relative:{0:"today",1:"tomorrow","-1":"yesterday"},relativeTime:{future:{other:"+{0} d"},past:{other:"-{0} d"}}},hour:{displayName:"Hour",relativeTime:{future:{other:"+{0} h"},past:{other:"-{0} h"}}},minute:{displayName:"Minute",relativeTime:{future:{other:"+{0} min"},past:{other:"-{0} min"}}},second:{displayName:"Second",relative:{0:"now"},relativeTime:{future:{other:"+{0} s"},past:{other:"-{0} s"}}}}},{locale:"en-ER",parentLocale:"en-001"},{locale:"en-FI",parentLocale:"en-150"},{locale:"en-FJ",parentLocale:"en-001"},{locale:"en-FK",parentLocale:"en-001"},{locale:"en-FM",parentLocale:"en-001"},{locale:"en-GB",parentLocale:"en-001"},{locale:"en-GD",parentLocale:"en-001"},{locale:"en-GG",parentLocale:"en-001"},{locale:"en-GH",parentLocale:"en-001"},{locale:"en-GI",parentLocale:"en-001"},{locale:"en-GM",parentLocale:"en-001"},{locale:"en-GU",parentLocale:"en"},{locale:"en-GY",parentLocale:"en-001"},{locale:"en-HK",parentLocale:"en-001"},{locale:"en-IE",parentLocale:"en-001"},{locale:"en-IL",parentLocale:"en-001"},{locale:"en-IM",parentLocale:"en-001"},{locale:"en-IN",parentLocale:"en-001"},{locale:"en-IO",parentLocale:"en-001"},{locale:"en-JE",parentLocale:"en-001"},{locale:"en-JM",parentLocale:"en-001"},{locale:"en-KE",parentLocale:"en-001"},{locale:"en-KI",parentLocale:"en-001"},{locale:"en-KN",parentLocale:"en-001"},{locale:"en-KY",parentLocale:"en-001"},{locale:"en-LC",parentLocale:"en-001"},{locale:"en-LR",parentLocale:"en-001"},{locale:"en-LS",parentLocale:"en-001"},{locale:"en-MG",parentLocale:"en-001"},{locale:"en-MH",parentLocale:"en"},{locale:"en-MO",parentLocale:"en-001"},{locale:"en-MP",parentLocale:"en"},{locale:"en-MS",parentLocale:"en-001"},{locale:"en-MT",parentLocale:"en-001"},{locale:"en-MU",parentLocale:"en-001"},{locale:"en-MW",parentLocale:"en-001"},{locale:"en-MY",parentLocale:"en-001"},{locale:"en-NA",parentLocale:"en-001"},{locale:"en-NF",parentLocale:"en-001"},{locale:"en-NG",parentLocale:"en-001"},{locale:"en-NL",parentLocale:"en-150"},{locale:"en-NR",parentLocale:"en-001"},{locale:"en-NU",parentLocale:"en-001"},{locale:"en-NZ",parentLocale:"en-001"},{locale:"en-PG",parentLocale:"en-001"},{locale:"en-PH",parentLocale:"en-001"},{locale:"en-PK",parentLocale:"en-001"},{locale:"en-PN",parentLocale:"en-001"},{locale:"en-PR",parentLocale:"en"},{locale:"en-PW",parentLocale:"en-001"},{locale:"en-RW",parentLocale:"en-001"},{locale:"en-SB",parentLocale:"en-001"},{locale:"en-SC",parentLocale:"en-001"},{locale:"en-SD",parentLocale:"en-001"},{locale:"en-SE",parentLocale:"en-150"},{locale:"en-SG",parentLocale:"en-001"},{locale:"en-SH",parentLocale:"en-001"},{locale:"en-SI",parentLocale:"en-150"},{locale:"en-SL",parentLocale:"en-001"},{locale:"en-SS",parentLocale:"en-001"},{locale:"en-SX",parentLocale:"en-001"},{locale:"en-SZ",parentLocale:"en-001"},{locale:"en-Shaw",pluralRuleFunction:function(e,a){return"other"},fields:{year:{displayName:"Year",relative:{0:"this year",1:"next year","-1":"last year"},relativeTime:{future:{other:"+{0} y"},past:{other:"-{0} y"}}},month:{displayName:"Month",relative:{0:"this month",1:"next month","-1":"last month"},relativeTime:{future:{other:"+{0} m"},past:{other:"-{0} m"}}},day:{displayName:"Day",relative:{0:"today",1:"tomorrow","-1":"yesterday"},relativeTime:{future:{other:"+{0} d"},past:{other:"-{0} d"}}},hour:{displayName:"Hour",relativeTime:{future:{other:"+{0} h"},past:{other:"-{0} h"}}},minute:{displayName:"Minute",relativeTime:{future:{other:"+{0} min"},past:{other:"-{0} min"}}},second:{displayName:"Second",relative:{0:"now"},relativeTime:{future:{other:"+{0} s"},past:{other:"-{0} s"}}}}},{locale:"en-TC",parentLocale:"en-001"},{locale:"en-TK",parentLocale:"en-001"},{locale:"en-TO",parentLocale:"en-001"},{locale:"en-TT",parentLocale:"en-001"},{locale:"en-TV",parentLocale:"en-001"},{locale:"en-TZ",parentLocale:"en-001"},{locale:"en-UG",parentLocale:"en-001"},{locale:"en-UM",parentLocale:"en"},{locale:"en-US",parentLocale:"en"},{locale:"en-VC",parentLocale:"en-001"},{locale:"en-VG",parentLocale:"en-001"},{locale:"en-VI",parentLocale:"en"},{locale:"en-VU",parentLocale:"en-001"},{locale:"en-WS",parentLocale:"en-001"},{locale:"en-ZA",parentLocale:"en-001"},{locale:"en-ZM",parentLocale:"en-001"},{locale:"en-ZW",parentLocale:"en-001"}];return e});
 
 
 /***/ },
-/* 71 */
+/* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _en = __webpack_require__(72);
+	var _en = __webpack_require__(73);
 
 	var _en2 = _interopRequireDefault(_en);
 
@@ -12155,7 +13440,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 72 */
+/* 73 */
 /***/ function(module, exports) {
 
 	module.exports = {

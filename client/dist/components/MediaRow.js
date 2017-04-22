@@ -20,6 +20,14 @@ var _ContextMenu = require('./ContextMenu');
 
 var _ContextMenu2 = _interopRequireDefault(_ContextMenu);
 
+var _store = require('../model/store');
+
+var _store2 = _interopRequireDefault(_store);
+
+var _actions = require('../model/actions');
+
+var _actions2 = _interopRequireDefault(_actions);
+
 var _utility = require('./../utility/utility');
 
 var _utility2 = _interopRequireDefault(_utility);
@@ -41,6 +49,10 @@ var _reactIntl = require('react-intl');
 var _definedMessages = require('../i18n/definedMessages');
 
 var _definedMessages2 = _interopRequireDefault(_definedMessages);
+
+var _mousetrap = require('mousetrap');
+
+var _mousetrap2 = _interopRequireDefault(_mousetrap);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -65,6 +77,11 @@ var MediaRow = function (_PureComponent) {
     _this.state = {
       focusWithin: false
     };
+
+    _this.handleKeyboardBackspace = _this.handleKeyboardBackspace.bind(_this);
+    _this.handleKeyboardChoose = _this.handleKeyboardChoose.bind(_this);
+    _this.handleKeyboardExpand = _this.handleKeyboardExpand.bind(_this);
+    _this.handleKeyboardRename = _this.handleKeyboardRename.bind(_this);
     return _this;
   }
 
@@ -81,9 +98,55 @@ var MediaRow = function (_PureComponent) {
       return false;
     }
   }, {
+    key: 'assignKeyboardListeners',
+    value: function assignKeyboardListeners() {
+      _mousetrap2.default.bind(['backspace'], this.handleKeyboardBackspace);
+      _mousetrap2.default.bind(['enter'], this.handleKeyboardChoose);
+      _mousetrap2.default.bind(['space'], this.handleKeyboardExpand);
+      _mousetrap2.default.bind(['ctrl+r'], this.handleKeyboardRename);
+    }
+  }, {
     key: 'onBlur',
     value: function onBlur(event) {
       //console.log('onBlur');
+      this.removeKeyboardListeners();
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      this.removeKeyboardListeners();
+    }
+  }, {
+    key: 'removeKeyboardListeners',
+    value: function removeKeyboardListeners() {
+      _mousetrap2.default.unbind(['backspace'], this.handleKeyboardBackspace);
+      _mousetrap2.default.unbind(['enter'], this.handleKeyboardChoose);
+      _mousetrap2.default.unbind(['space'], this.handleKeyboardExpand);
+      _mousetrap2.default.unbind(['ctrl+r'], this.handleKeyboardRename);
+    }
+  }, {
+    key: 'handleKeyboardRename',
+    value: function handleKeyboardRename(event) {
+      //console.log('handleKeyboardRename', event);
+      try {
+        this.props.onRenameItem(this.props.item);
+      } catch (e) {}
+    }
+  }, {
+    key: 'handleKeyboardChoose',
+    value: function handleKeyboardChoose(event) {
+      //console.log('handleKeyboardChoose', event);
+      //event.preventDefault();
+      try {
+        document.getElementById('choose__' + _utility2.default.cssSafe(this.props.item.filename)).click();
+      } catch (e) {}
+    }
+  }, {
+    key: 'handleKeyboardExpand',
+    value: function handleKeyboardExpand(event) {
+      try {
+        document.getElementById('expand__' + _utility2.default.cssSafe(this.props.item.filename)).click();
+      } catch (e) {}
     }
   }, {
     key: 'removeFocusedMediaItems',
@@ -103,11 +166,39 @@ var MediaRow = function (_PureComponent) {
     value: function onFocus(event) {
       if (!event.target.matches('tr')) return;
 
+      this.assignKeyboardListeners();
+
       this.removeFocusedMediaItems(event.target);
       event.target.classList.add('eureka__focused-media-item');
       event.target.querySelector('.eureka__context-row').removeAttribute('hidden');
       this.props.onFocus();
     }
+  }, {
+    key: 'handleKeyboardBackspace',
+    value: function handleKeyboardBackspace(event) {
+      var props = this.props;
+      var decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
+      //console.log('handleKeyboardBackspace', event, props.item.path);
+      _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, props.item.path, props.config.headers)).then(function () {
+        _utility2.default.notify('Deleted item ' + props.item.filename, {
+          badge: _path2.default.join(props.config.assetsBasePath, 'img/src/png/trash-o.png'),
+          silent: true
+        });
+      });
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.assignKeyboardListeners();
+    }
+
+    //http://localhost:3000/assets/components/eureka/media/sources/1?path=%2FUsers%2FjP%2FSites%2Fstatic%2Feureka%2Fprod%2Fsources%2Ffilesystem%2Fassets%2Fimg%2Fredwoods%2F243823_842410181688_1308368_o.jpg
+    //http://localhost:3000/assets/components/eureka/media/sources/1?path=%2FUsers%2FjP%2FSites%2Fstatic%2Feureka%2Fprod%2Fsources%2Ffilesystem%2Fassets%2Fimg%2Fredwoods%2F243150_842410286478_7945184_o.jpg
+
+    /*componentWillUnmount() {
+      Mousetrap.unbind(['backspace'], this.handleKeyboardBackspace);
+    }*/
+
   }, {
     key: 'render',
     value: function render() {

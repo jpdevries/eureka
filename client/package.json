@@ -1,7 +1,7 @@
 {
   "name": "eureka-browser",
   "description": "Eureka is a progressively enhanced Media Browser Component.",
-  "version": "0.0.85",
+  "version": "0.0.87",
   "license": "BSD-3-Clause",
   "author": {
     "name": "JP de Vries",
@@ -81,6 +81,7 @@
     "filesize": "^3.5.4",
     "html-entities": "^1.2.0",
     "isomorphic-fetch": "^2.2.1",
+    "mousetrap": "^1.6.1",
     "path-parse": "^1.0.5",
     "pixrem": "^3.0.2",
     "react": "^15.5.0",

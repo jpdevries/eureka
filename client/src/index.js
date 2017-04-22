@@ -49,7 +49,10 @@ function render() {
         createFile: function(source, directory) {
           return {
             href: `javascript:alert("create a directory in ${directory} of media source ${source}")`,
-            target: '_blank'
+            target: '_blank',
+            onClick: function(source, directory) {
+              console.log('onClick', source, directory);
+            }
           }
         }
       }}

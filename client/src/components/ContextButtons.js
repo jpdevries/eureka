@@ -66,9 +66,7 @@ const ContextButtons = (props) => {
   ) : undefined,
   downloadID = `${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }download__${cssSafe(item.filename)}`,
   downloadBtn = (props.config.allowDownload) ? (
-    <a download={item.filename} href={item.absoluteURL} id={downloadID} className="button" target={`_${downloadID}`} onClick={(event) => {
-        console.log('download', item);
-      }} title={downloadItemMessage}>{downloadMessage}<span className="visually-hidden"> {item.filename}</span></a>
+    <a download={item.filename} href={item.absoluteURL} id={downloadID} className="button" target={`_${downloadID}`} title={downloadItemMessage}>{downloadMessage}<span className="visually-hidden"> {item.filename}</span></a>
   ) : undefined;
 
 

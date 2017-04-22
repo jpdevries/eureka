@@ -194,7 +194,6 @@ var EurekaTable = function (_Component) {
             var a = document.createElement('a');
             a.setAttribute('download', item.filename);
             a.href = item.absoluteURL;
-            a.innerHTML = 'YOLO';
             a.classList.add('visually-hidden');
             document.body.appendChild(a);
             a.click();
