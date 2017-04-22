@@ -63,6 +63,7 @@
   "expand.item": "Expand {filename}",
   "directory.refresh": "Refresh Directory",
   "upload.filesTo": "Upload File to {cd}",
+  "upload.createFileIn": "Create File in {cd}",
   "context.performActions": "Perform Actions such as Expand or Choose on {filename}",
   "directory.chmod": "chmod Directory",
   "layout.tabular": "Tabular Layout displays image thumbnails along with Name, Description, File Size and Edited On columns",

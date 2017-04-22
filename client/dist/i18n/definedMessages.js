@@ -115,6 +115,10 @@ exports.default = (0, _reactIntl.defineMessages)((_defineMessages = {
     'id': 'upload.filesTo',
     'defaultMessage': 'Upload File to {cd}'
   },
+  createFileInMessage: {
+    'id': 'upload.createFileIn',
+    'defaultMessage': 'Create File in {cd}'
+  },
   closeMediaBrowser: {
     'id': 'close.mediaBrowser',
     'defaultMessage': 'Close Media Browser'

@@ -43,6 +43,9 @@ function render() {
       callbacks={{
         choose: function(item) {
           alert(JSON.stringify(item))
+        },
+        createFile: function(source, directory) {
+          console.log('createFile', source, directory)
         }
       }}
       endpoints={{

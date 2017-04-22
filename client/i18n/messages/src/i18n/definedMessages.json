@@ -104,6 +104,10 @@
     "defaultMessage": "Upload File to {cd}"
   },
   {
+    "id": "upload.createFileIn",
+    "defaultMessage": "Create File in {cd}"
+  },
+  {
     "id": "close.mediaBrowser",
     "defaultMessage": "Close Media Browser"
   },

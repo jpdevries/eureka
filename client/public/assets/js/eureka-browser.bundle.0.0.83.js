@@ -24839,7 +24839,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  intervals: { searchBarPlaceholder: 60000, fetchDirectoryContents: 18000, updateSourceTree: false },
 	  callbacks: {
 	    close: undefined,
-	    choose: undefined
+	    choose: undefined,
+	    createFile: undefined
 	  }
 	};
 
@@ -26952,7 +26953,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.82",
+		"version": "0.0.83",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -31544,6 +31545,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      uploadFileToMessage = formatMessage(_definedMessages2.default.uploadFileTo, {
 	    cd: props.content.cd
 	  }),
+	      createFileInMessage = formatMessage(_definedMessages2.default.createFileInMessage, {
+	    cd: props.content.cd
+	  }),
 	      uploadBtn = props.config.allowUploads ? _react2.default.createElement(
 	    'button',
 	    { title: uploadFileToMessage, onClick: function onClick(event) {
@@ -31557,6 +31561,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	      uploadFileToMessage
 	    ),
 	    _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'upload' }))
+	  ) : undefined,
+	      createFileBtn = props.config.callbacks.createFile ? _react2.default.createElement(
+	    'button',
+	    { title: createFileInMessage, onClick: function onClick(event) {
+	        props.config.callbacks.createFile(props.source.currentSource, props.content.cd);
+	      } },
+	    _react2.default.createElement(
+	      'span',
+	      { className: 'visually-hidden' },
+	      createFileInMessage
+	    ),
+	    _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'file-text-o' }))
 	  ) : undefined,
 	      createDirectoryInMessage = formatMessage(_definedMessages2.default.createNewDirectoryIn, {
 	    cd: props.content.cd
@@ -31575,6 +31591,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      ),
 	      _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'plus-square' }))
 	    ),
+	    createFileBtn,
 	    uploadBtn
 	  );
 	};
@@ -31735,6 +31752,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  uploadFileTo: {
 	    'id': 'upload.filesTo',
 	    'defaultMessage': 'Upload File to {cd}'
+	  },
+	  createFileInMessage: {
+	    'id': 'upload.createFileIn',
+	    'defaultMessage': 'Create File in {cd}'
 	  },
 	  closeMediaBrowser: {
 	    'id': 'close.mediaBrowser',
@@ -35396,6 +35417,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		"expand.item": "Expand {filename}",
 		"directory.refresh": "Refresh Directory",
 		"upload.filesTo": "Upload File to {cd}",
+		"upload.createFileIn": "Create File in {cd}",
 		"context.performActions": "Perform Actions such as Expand or Choose on {filename}",
 		"directory.chmod": "chmod Directory",
 		"layout.tabular": "Tabular Layout displays image thumbnails along with Name, Description, File Size and Edited On columns",

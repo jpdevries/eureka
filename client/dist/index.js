@@ -57,6 +57,9 @@ function render() {
   }, _defineProperty(_React$createElement, 'lang', 'en-US'), _defineProperty(_React$createElement, 'callbacks', {
     choose: function choose(item) {
       alert(JSON.stringify(item));
+    },
+    createFile: function createFile(source, directory) {
+      console.log('createFile', source, directory);
     }
   }), _defineProperty(_React$createElement, 'endpoints', {
     i18n: './assets/js/i18n/locales/'

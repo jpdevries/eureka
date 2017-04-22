@@ -192,9 +192,8 @@ var EurekaTable = function (_Component) {
           }), onClick: function onClick(event) {
             // #janky
             var a = document.createElement('a');
-            a.setAttribute('download', 'yolo.txt');
+            a.setAttribute('download', item.filename);
             a.href = item.absoluteURL;
-            a.href = 'http://localhost:3000/yolo.txt';
             a.innerHTML = 'YOLO';
             a.classList.add('visually-hidden');
             document.body.appendChild(a);

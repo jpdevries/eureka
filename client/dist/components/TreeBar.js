@@ -27,6 +27,9 @@ var TreeBar = function TreeBar(props) {
       uploadFileToMessage = formatMessage(_definedMessages2.default.uploadFileTo, {
     cd: props.content.cd
   }),
+      createFileInMessage = formatMessage(_definedMessages2.default.createFileInMessage, {
+    cd: props.content.cd
+  }),
       uploadBtn = props.config.allowUploads ? _react2.default.createElement(
     'button',
     { title: uploadFileToMessage, onClick: function onClick(event) {
@@ -40,6 +43,18 @@ var TreeBar = function TreeBar(props) {
       uploadFileToMessage
     ),
     _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'upload' }))
+  ) : undefined,
+      createFileBtn = props.config.callbacks.createFile ? _react2.default.createElement(
+    'button',
+    { title: createFileInMessage, onClick: function onClick(event) {
+        props.config.callbacks.createFile(props.source.currentSource, props.content.cd);
+      } },
+    _react2.default.createElement(
+      'span',
+      { className: 'visually-hidden' },
+      createFileInMessage
+    ),
+    _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'file-text-o' }))
   ) : undefined,
       createDirectoryInMessage = formatMessage(_definedMessages2.default.createNewDirectoryIn, {
     cd: props.content.cd
@@ -58,6 +73,7 @@ var TreeBar = function TreeBar(props) {
       ),
       _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'plus-square' }))
     ),
+    createFileBtn,
     uploadBtn
   );
 };

@@ -105,6 +105,10 @@ export default defineMessages({
     id: 'upload.filesTo',
     defaultMessage: 'Upload File to {cd}'
   },
+  createFileInMessage: {
+    id: 'upload.createFileIn',
+    defaultMessage: 'Create File in {cd}'
+  },
   closeMediaBrowser: {
       id: 'close.mediaBrowser',
       defaultMessage: 'Close Media Browser'

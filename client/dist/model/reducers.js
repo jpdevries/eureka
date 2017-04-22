@@ -43,7 +43,8 @@ var initialConfigState = {
   intervals: { searchBarPlaceholder: 60000, fetchDirectoryContents: 18000, updateSourceTree: false },
   callbacks: {
     close: undefined,
-    choose: undefined
+    choose: undefined,
+    createFile: undefined
   }
 };
 
