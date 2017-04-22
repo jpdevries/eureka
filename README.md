@@ -259,6 +259,16 @@ The semantic HTML layer remains usable even absent of style as pure&nbsp;HTML.
       <td align="center"><span aria-label="supported">✅</span></td>
     </tr>
     <tr>
+      <td>Download Item</td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+    </tr>
+    <tr>
       <td>Local Storage</td>
       <td align="center"><span aria-label="not supported">❌</span></td>
       <td align="center"><span aria-label="not supported">❌</span></td>
@@ -291,7 +301,7 @@ The semantic HTML layer remains usable even absent of style as pure&nbsp;HTML.
     <tr>
       <td>Mobile First Layout</td>
       <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="partial supported">✳️</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
@@ -426,6 +436,7 @@ Configure the `EurekaMediaBrowser` via the optional attributes found in the defa
 | `storagePrefix` | `"eureka__"`      |    Prepended to `localStorage` keys |
 | `allowRename` | `true`      |    Whether or not to offer users the ability to rename directories and media items |
 | `allowDelete` | `true`      |    Whether or not to offer users the ability to delete directories and media items |
+| `allowDownload` | `false`      |    Whether or not to add a download button to media items |
 | `confirmBeforeDelete` | `false`      |    Whether or not to confirm intent before users delete directories and media items |
 | `locale` | `"en-US"`      |    The localization to use. See Lexicons. |
 | `mediaSource` | `undefined`      |    The default initial media source id to use |

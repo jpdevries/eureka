@@ -232,7 +232,8 @@ var MediaRow = function (_PureComponent) {
         }
       }(pathParse(props.item.filename).ext);
 
-      if (props.item == props.focusedMediaItem) console.log(props.item == props.focusedMediaItem, props.item, props.focusedMediaItem);
+      //if((props.item == props.focusedMediaItem)) console.log(props.item == props.focusedMediaItem, props.item, props.focusedMediaItem);
+
 
       var mediaId = (props.config.storagePrefix || 'eureka__') + '__media__' + _utility2.default.cssSafe(props.item.filename),
           mediaSelectId = (props.config.storagePrefix || 'eureka__') + '__radio_' + _utility2.default.cssSafe(props.item.filename),

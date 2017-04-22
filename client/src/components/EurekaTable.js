@@ -125,6 +125,20 @@ class EurekaTable extends Component {
         })} onClick={(event) => { // #janky
             document.getElementById(`choose__${utility.cssSafe(item.filename)}`).click();
           }}></menuitem>
+      ) : undefined,
+      downloadMenuItem = (props.config.allowDownload) ? (
+        <menuitem label={formatMessage(definedMessages.downloadItem, {
+          filename: item.filename
+        })} onClick={(event) => { // #janky
+            const a = document.createElement('a');
+            a.setAttribute('download', item.filename);
+            a.href = item.absoluteURL;
+            a.innerHTML = 'YOLO';
+            a.classList.add('visually-hidden');
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+          }}></menuitem>
       ) : undefined;
       return (
         <menu key={index} hidden="true" type="context" id={`context_menu__tbody-${index}`}>
@@ -144,6 +158,7 @@ class EurekaTable extends Component {
             })} onClick={(event) => {
                 store.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path, props.config.headers));
               }}></menuitem>
+            {downloadMenuItem}
         </menu>
       )
     }) : undefined;
@@ -221,7 +236,6 @@ class EurekaTable extends Component {
     ) : (
       <div>
         {table}
-        {html5ContextMenus}
       </div>
     );
   }

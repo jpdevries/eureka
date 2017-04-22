@@ -24821,6 +24821,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  basePath: '/',
 	  allowChoose: true,
 	  allowUploads: true,
+	  allowDownload: true,
 	  treeHidden: true,
 	  useLocalStorage: true,
 	  storagePrefix: "eureka__",
@@ -31711,6 +31712,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    'id': 'delete.item',
 	    'defaultMessage': 'Delete {filename}'
 	  },
+	  download: {
+	    'id': 'download',
+	    'defaultMessage': 'Download'
+	  },
+	  downloadItem: {
+	    'id': 'download.item',
+	    'defaultMessage': 'Download {filename}'
+	  },
 	  expandItem: {
 	    'id': 'expand.item',
 	    'defaultMessage': 'Expand {filename}'
@@ -32552,7 +32561,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var contents = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.state.contents;
 	      var state = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.state;
 
-	      console.log('sorting contents', state.sort);
+	      //console.log('sorting contents', state.sort);
 	      return contents.sort(function (a, b) {
 	        if (a[state.sort.by] === b[state.sort.by]) return 0;
 
@@ -32580,7 +32589,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
-	      console.log('EurekaTable componentDidMount');
+	      //console.log('EurekaTable componentDidMount');
 	      this.setState({
 	        contents: this.sortContents(this.props.content.contents)
 	      });
@@ -32598,10 +32607,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'componentWillUpdate',
 	    value: function componentWillUpdate(nextProps, nextState) {
-	      console.log('EurekaTable componentWillUpdate', this.state, nextState);
-	      console.log(this.props, this.state);
+	      //console.log(this.props, this.state);
 	      if (this.state.sort !== nextState.sort) {
-	        console.log('holy fuck we are sorting', this.state.contents[0], this.sortContents(nextProps.content.contents, nextState)[0]);
 	        this.setState({
 	          contents: this.sortContents(nextProps.content.contents, nextState)
 	        });
@@ -32651,6 +32658,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	          }), onClick: function onClick(event) {
 	            // #janky
 	            document.getElementById('choose__' + _utility2.default.cssSafe(item.filename)).click();
+	          } }) : undefined,
+	            downloadMenuItem = props.config.allowDownload ? _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.downloadItem, {
+	            filename: item.filename
+	          }), onClick: function onClick(event) {
+	            // #janky
+	            var a = document.createElement('a');
+	            a.setAttribute('download', item.filename);
+	            a.href = item.absoluteURL;
+	            a.innerHTML = 'YOLO';
+	            a.classList.add('visually-hidden');
+	            document.body.appendChild(a);
+	            a.click();
+	            a.remove();
 	          } }) : undefined;
 	        return _react2.default.createElement(
 	          'menu',
@@ -32670,7 +32690,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	              filename: item.filename
 	            }), onClick: function onClick(event) {
 	              _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path, props.config.headers));
-	            } })
+	            } }),
+	          downloadMenuItem
 	        );
 	      }) : undefined;
 
@@ -32699,11 +32720,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	              'th',
 	              (_React$createElement2 = { role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement2, 'role', 'columnheader'), _defineProperty(_React$createElement2, 'onClick', function onClick(event) {
 	                var dir = _this2.state.sort.dir;
-	                console.log("this.state.sort.by === 'filename'", _this2.state.sort.by === 'filename', dir);
+	                //console.log("this.state.sort.by === 'filename'", this.state.sort.by === 'filename', dir);
 	                if (_this2.state.sort.by === 'filename') {
 	                  dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
 	                }
-	                console.log('dir', dir);
+	                //console.log('dir',dir);
 	                _this2.setState({
 	                  sort: {
 	                    by: 'filename',
@@ -32787,8 +32808,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      ) : _react2.default.createElement(
 	        'div',
 	        null,
-	        table,
-	        html5ContextMenus
+	        table
 	      );
 	    }
 	  }]);
@@ -33358,7 +33378,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      }(pathParse(props.item.filename).ext);
 
-	      if (props.item == props.focusedMediaItem) console.log(props.item == props.focusedMediaItem, props.item, props.focusedMediaItem);
+	      //if((props.item == props.focusedMediaItem)) console.log(props.item == props.focusedMediaItem, props.item, props.focusedMediaItem);
+
 
 	      var mediaId = (props.config.storagePrefix || 'eureka__') + '__media__' + _utility2.default.cssSafe(props.item.filename),
 	          mediaSelectId = (props.config.storagePrefix || 'eureka__') + '__radio_' + _utility2.default.cssSafe(props.item.filename),
@@ -33600,6 +33621,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }),
 	      expandItemMessage = formatMessage(_definedMessages2.default.expandItem, {
 	    filename: item.filename
+	  }),
+	      downloadMessage = formatMessage(_definedMessages2.default.download),
+	      downloadItemMessage = formatMessage(_definedMessages2.default.downloadItem, {
+	    filename: item.filename
 	  });
 
 	  var chooseBtn = props.config.allowChoose ? _react2.default.createElement(
@@ -33651,6 +33676,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	      ' ',
 	      item.filename
 	    )
+	  ) : undefined,
+	      downloadID = (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'download__' + (0, _utility.cssSafe)(item.filename),
+	      downloadBtn = props.config.allowDownload ? _react2.default.createElement(
+	    'a',
+	    { download: item.filename, href: item.absoluteURL, id: downloadID, className: 'button', target: '_' + downloadID, onClick: function onClick(event) {
+	        console.log('download', item);
+	      }, title: downloadItemMessage },
+	    downloadMessage,
+	    _react2.default.createElement(
+	      'span',
+	      { className: 'visually-hidden' },
+	      ' ',
+	      item.filename
+	    )
 	  ) : undefined;
 
 	  return (// future-role="toolbar listbox"
@@ -33670,7 +33709,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      ),
 	      chooseBtn,
 	      renameBtn,
-	      deleteBtn
+	      deleteBtn,
+	      downloadBtn
 	    )
 	  );
 	};
@@ -35351,6 +35391,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		"choose.item": "Choose {filename}",
 		"directory.delete": "Delete Directory",
 		"delete.item": "Delete {filename}",
+		"download": "Download",
+		"download.item": "Download {filename}",
 		"expand.item": "Expand {filename}",
 		"directory.refresh": "Refresh Directory",
 		"upload.filesTo": "Upload File to {cd}",

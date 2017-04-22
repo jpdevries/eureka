@@ -91,6 +91,14 @@ exports.default = (0, _reactIntl.defineMessages)((_defineMessages = {
     'id': 'delete.item',
     'defaultMessage': 'Delete {filename}'
   },
+  download: {
+    'id': 'download',
+    'defaultMessage': 'Download'
+  },
+  downloadItem: {
+    'id': 'download.item',
+    'defaultMessage': 'Download {filename}'
+  },
   expandItem: {
     'id': 'expand.item',
     'defaultMessage': 'Expand {filename}'

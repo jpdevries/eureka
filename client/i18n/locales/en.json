@@ -58,6 +58,8 @@
   "choose.item": "Choose {filename}",
   "directory.delete": "Delete Directory",
   "delete.item": "Delete {filename}",
+  "download": "Download",
+  "download.item": "Download {filename}",
   "expand.item": "Expand {filename}",
   "directory.refresh": "Refresh Directory",
   "upload.filesTo": "Upload File to {cd}",

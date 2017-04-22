@@ -25,6 +25,7 @@ var initialConfigState = {
   basePath: '/',
   allowChoose: true,
   allowUploads: true,
+  allowDownload: true,
   treeHidden: true,
   useLocalStorage: true,
   storagePrefix: "eureka__",

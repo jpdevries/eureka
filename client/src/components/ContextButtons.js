@@ -35,6 +35,10 @@ const ContextButtons = (props) => {
   }),
   expandItemMessage = formatMessage(definedMessages.expandItem, {
     filename: item.filename
+  }),
+  downloadMessage = formatMessage(definedMessages.download),
+  downloadItemMessage = formatMessage(definedMessages.downloadItem, {
+    filename: item.filename
   });
   const chooseBtn = (props.config.allowChoose) ? (
     <button role="option" id={`choose__${cssSafe(item.filename)}`} title={chooseItemMessage} onClick={(event) => {
@@ -59,6 +63,12 @@ const ContextButtons = (props) => {
           });
         });
       }} title={deleteItemMessage} className="dangerous">{deleteMessage}<span className="visually-hidden"> {item.filename}</span></button>
+  ) : undefined,
+  downloadID = `${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }download__${cssSafe(item.filename)}`,
+  downloadBtn = (props.config.allowDownload) ? (
+    <a download={item.filename} href={item.absoluteURL} id={downloadID} className="button" target={`_${downloadID}`} onClick={(event) => {
+        console.log('download', item);
+      }} title={downloadItemMessage}>{downloadMessage}<span className="visually-hidden"> {item.filename}</span></a>
   ) : undefined;
 
 
@@ -69,6 +79,7 @@ const ContextButtons = (props) => {
       {chooseBtn}
     {renameBtn}
     {deleteBtn}
+    {downloadBtn}
     </div>
   );
 }

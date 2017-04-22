@@ -55,6 +55,10 @@ var ContextButtons = function ContextButtons(props) {
   }),
       expandItemMessage = formatMessage(_definedMessages2.default.expandItem, {
     filename: item.filename
+  }),
+      downloadMessage = formatMessage(_definedMessages2.default.download),
+      downloadItemMessage = formatMessage(_definedMessages2.default.downloadItem, {
+    filename: item.filename
   });
 
   var chooseBtn = props.config.allowChoose ? _react2.default.createElement(
@@ -106,6 +110,20 @@ var ContextButtons = function ContextButtons(props) {
       ' ',
       item.filename
     )
+  ) : undefined,
+      downloadID = (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'download__' + (0, _utility.cssSafe)(item.filename),
+      downloadBtn = props.config.allowDownload ? _react2.default.createElement(
+    'a',
+    { download: item.filename, href: item.absoluteURL, id: downloadID, className: 'button', target: '_' + downloadID, onClick: function onClick(event) {
+        console.log('download', item);
+      }, title: downloadItemMessage },
+    downloadMessage,
+    _react2.default.createElement(
+      'span',
+      { className: 'visually-hidden' },
+      ' ',
+      item.filename
+    )
   ) : undefined;
 
   return (// future-role="toolbar listbox"
@@ -125,7 +143,8 @@ var ContextButtons = function ContextButtons(props) {
       ),
       chooseBtn,
       renameBtn,
-      deleteBtn
+      deleteBtn,
+      downloadBtn
     )
   );
 };

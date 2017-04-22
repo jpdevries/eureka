@@ -89,7 +89,7 @@ var EurekaTable = function (_Component) {
       var contents = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.state.contents;
       var state = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.state;
 
-      console.log('sorting contents', state.sort);
+      //console.log('sorting contents', state.sort);
       return contents.sort(function (a, b) {
         if (a[state.sort.by] === b[state.sort.by]) return 0;
 
@@ -117,7 +117,7 @@ var EurekaTable = function (_Component) {
   }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
-      console.log('EurekaTable componentDidMount');
+      //console.log('EurekaTable componentDidMount');
       this.setState({
         contents: this.sortContents(this.props.content.contents)
       });
@@ -135,10 +135,8 @@ var EurekaTable = function (_Component) {
   }, {
     key: 'componentWillUpdate',
     value: function componentWillUpdate(nextProps, nextState) {
-      console.log('EurekaTable componentWillUpdate', this.state, nextState);
-      console.log(this.props, this.state);
+      //console.log(this.props, this.state);
       if (this.state.sort !== nextState.sort) {
-        console.log('holy fuck we are sorting', this.state.contents[0], this.sortContents(nextProps.content.contents, nextState)[0]);
         this.setState({
           contents: this.sortContents(nextProps.content.contents, nextState)
         });
@@ -188,6 +186,20 @@ var EurekaTable = function (_Component) {
           }), onClick: function onClick(event) {
             // #janky
             document.getElementById('choose__' + _utility2.default.cssSafe(item.filename)).click();
+          } }) : undefined,
+            downloadMenuItem = props.config.allowDownload ? _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.downloadItem, {
+            filename: item.filename
+          }), onClick: function onClick(event) {
+            // #janky
+            var a = document.createElement('a');
+            a.setAttribute('download', 'yolo.txt');
+            a.href = item.absoluteURL;
+            a.href = 'http://localhost:3000/yolo.txt';
+            a.innerHTML = 'YOLO';
+            a.classList.add('visually-hidden');
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
           } }) : undefined;
         return _react2.default.createElement(
           'menu',
@@ -207,7 +219,8 @@ var EurekaTable = function (_Component) {
               filename: item.filename
             }), onClick: function onClick(event) {
               _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path, props.config.headers));
-            } })
+            } }),
+          downloadMenuItem
         );
       }) : undefined;
 
@@ -236,11 +249,11 @@ var EurekaTable = function (_Component) {
               'th',
               (_React$createElement2 = { role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement2, 'role', 'columnheader'), _defineProperty(_React$createElement2, 'onClick', function onClick(event) {
                 var dir = _this2.state.sort.dir;
-                console.log("this.state.sort.by === 'filename'", _this2.state.sort.by === 'filename', dir);
+                //console.log("this.state.sort.by === 'filename'", this.state.sort.by === 'filename', dir);
                 if (_this2.state.sort.by === 'filename') {
                   dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
                 }
-                console.log('dir', dir);
+                //console.log('dir',dir);
                 _this2.setState({
                   sort: {
                     by: 'filename',
@@ -324,8 +337,7 @@ var EurekaTable = function (_Component) {
       ) : _react2.default.createElement(
         'div',
         null,
-        table,
-        html5ContextMenus
+        table
       );
     }
   }]);

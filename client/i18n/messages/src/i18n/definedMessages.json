@@ -80,6 +80,14 @@
     "defaultMessage": "Delete {filename}"
   },
   {
+    "id": "download",
+    "defaultMessage": "Download"
+  },
+  {
+    "id": "download.item",
+    "defaultMessage": "Download {filename}"
+  },
+  {
     "id": "expand.item",
     "defaultMessage": "Expand {filename}"
   },
