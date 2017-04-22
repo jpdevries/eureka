@@ -24468,12 +24468,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var decoratedActions = this.decoratedActions;
 	      var props = this.props;
 	      event.preventDefault();
-	      //console.log('onModalSubmit',createDirectory);
+	      console.log('onModalSubmit', createDirectory);
 
 	      switch (this.state.currentModal) {
 	        case CREATE_DIRECTORY:
 	          console.log(_store2.default.getState().content.cd, path.join(_store2.default.getState().content.cd, 'foo'));
-	          _store2.default.dispatch(decoratedActions.createDirectory(_store2.default.getState().source.currentSource, path.join(_store2.default.getState().content.cd, createDirectory, props.config.headers))).then(function () {
+	          _store2.default.dispatch(decoratedActions.createDirectory(_store2.default.getState().source.currentSource, path.join(_store2.default.getState().content.cd, createDirectory))).then(function () {
 	            _this3.setState({
 	              modalOpen: false,
 	              currentModal: undefined
@@ -26951,7 +26951,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.79",
+		"version": "0.0.81",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",

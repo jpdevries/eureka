@@ -5,6 +5,8 @@ import actions from '../model/actions';
 
 import Icon from './Icon';
 
+import path from 'path';
+
 import definedMessages from '../i18n/definedMessages';
 
 class FileTreeSpan extends PureComponent {
@@ -74,7 +76,7 @@ const FileTree = (props) => {
     function shouldBeOpen(item) {
       //console.log('shouldBeOpen', props.content.cd, item.cd, props.content.cd.indexOf(item.cd));
       try {
-        return (item.cd == './' || props.content.cd.indexOf(item.cd) === 0) ? true : undefined;
+        return (item.cd === './' || props.content.cd.indexOf(item.cd) === 0) ? true : undefined;
       } catch (e) {
         return undefined;
       }
@@ -94,8 +96,8 @@ const FileTree = (props) => {
 
           <menu hidden="true" type="context" id={`context_menu__${item.cd.replace(/^[^a-z]+|[^\w:.-]+/gi, "")}`}>
               <menuitem label="Create Directory Here" onClick={(event) => {
-
-                }}></menuitem>
+                props.onCreateDirectory();
+              }}></menuitem>
               <menuitem label={chmodDirectoryMessage}></menuitem>
               <menuitem label={renameMessage}></menuitem>
               <menuitem label={refreshDirectoryMessage}></menuitem>

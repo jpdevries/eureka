@@ -121,13 +121,13 @@ class Eureka extends Component {
   onModalSubmit(createDirectory) {
     const decoratedActions = this.decoratedActions;
     const props = this.props;
-    event.preventDefault();
-    //console.log('onModalSubmit',createDirectory);
+    //event.preventDefault();
+    console.log('onModalSubmit',createDirectory);
 
     switch(this.state.currentModal) {
       case CREATE_DIRECTORY:
       console.log(store.getState().content.cd, path.join(store.getState().content.cd, 'foo'));
-      store.dispatch(decoratedActions.createDirectory(store.getState().source.currentSource, path.join(store.getState().content.cd, createDirectory, props.config.headers))).then(() => {
+      store.dispatch(decoratedActions.createDirectory(store.getState().source.currentSource, path.join(store.getState().content.cd, createDirectory))).then(() => {
         this.setState({
           modalOpen:false,
           currentModal:undefined
@@ -224,7 +224,7 @@ class Eureka extends Component {
     const pathbrowser = (props.view.sourceTreeOpen && !utility.serverSideRendering) ? (
       <div id="eureka__pathbrowser" className="eureka__pathbrowser">
         <MediaSourceSelector {...props} />
-        <FileTree {...props} />
+        <FileTree {...props} onCreateDirectory={this.onCreateDirectory.bind(this)} />
         {dropArea}
         <TreeBar onCreateDirectory={this.onCreateDirectory.bind(this)} {...props} />
       </div>
