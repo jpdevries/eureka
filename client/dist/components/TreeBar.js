@@ -44,7 +44,7 @@ var TreeBar = function TreeBar(props) {
     ),
     _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'upload' }))
   ) : undefined,
-      createFileBtn = props.config.handlers.createFile ? _react2.default.createElement(
+      createFileBtn = props.config.handlers && props.config.handlers.createFile ? _react2.default.createElement(
     'a',
     _extends({}, props.config.handlers.createFile(props.source.currentSource, props.content.cd), { className: 'button', title: createFileInMessage }),
     _react2.default.createElement(

@@ -26955,7 +26955,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.84",
+		"version": "0.0.85",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -31564,7 +31564,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    ),
 	    _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'upload' }))
 	  ) : undefined,
-	      createFileBtn = props.config.handlers.createFile ? _react2.default.createElement(
+	      createFileBtn = props.config.handlers && props.config.handlers.createFile ? _react2.default.createElement(
 	    'a',
 	    _extends({}, props.config.handlers.createFile(props.source.currentSource, props.content.cd), { className: 'button', title: createFileInMessage }),
 	    _react2.default.createElement(

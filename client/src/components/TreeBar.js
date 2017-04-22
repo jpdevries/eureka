@@ -23,7 +23,7 @@ const TreeBar = (props) => {
       <Icon {...props} icon="upload" />
     </button>
   ) : undefined,
-  createFileBtn = (props.config.handlers.createFile) ? (
+  createFileBtn = (props.config.handlers && props.config.handlers.createFile) ? (
     <a {...props.config.handlers.createFile(props.source.currentSource, props.content.cd)} className="button" title={createFileInMessage}>
       <span className="visually-hidden">{createFileInMessage}</span>
       <Icon {...props} icon="file-text-o" />

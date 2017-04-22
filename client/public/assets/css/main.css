@@ -569,13 +569,13 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
   color: red;
   color: var(--dangerous, red); }
 
-.flex-bar, .eureka .eureka__button-bar, .eureka .eureka__tree-bar {
+.flex-bar, .eureka .eureka__button-bar {
   display: -ms-flexbox;
   display: flex; }
-  .flex-bar > *, .eureka .eureka__button-bar > *, .eureka .eureka__tree-bar > * {
+  .flex-bar > *, .eureka .eureka__button-bar > * {
     margin-right: 8px;
     margin-right: .5rem; }
-    .flex-bar > *:last-child, .eureka .eureka__button-bar > *:last-child, .eureka .eureka__tree-bar > *:last-child {
+    .flex-bar > *:last-child, .eureka .eureka__button-bar > *:last-child {
       margin-right: 0; }
 
 .eureka .eureka__button-bar, .eureka .eureka__notice {
@@ -927,6 +927,11 @@ a[role="presentation"] {
   .eureka .eureka__tree-bar {
     margin: 16px 0 0 0;
     margin: 1rem 0 0 0; }
+    .eureka .eureka__tree-bar > * {
+      margin: 0 8px 0 0;
+      margin: 0 .5rem 0 0; }
+      .eureka .eureka__tree-bar > *:last-child {
+        margin-right: 0; }
     .eureka .eureka__tree-bar button, .eureka .eureka__tree-bar .button {
       font-size: 16px;
       font-size: 1rem;
