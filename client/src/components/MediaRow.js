@@ -178,7 +178,7 @@ class MediaRow extends PureComponent {
       }
     })(pathParse(props.item.filename).ext);
 
-    if((props.item == props.focusedMediaItem)) console.log(props.item == props.focusedMediaItem, props.item, props.focusedMediaItem);
+    //if((props.item == props.focusedMediaItem)) console.log(props.item == props.focusedMediaItem, props.item, props.focusedMediaItem);
 
 
     const mediaId = `${props.config.storagePrefix || 'eureka__'}__media__${utility.cssSafe(props.item.filename)}`,

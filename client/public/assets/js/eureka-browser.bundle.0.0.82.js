@@ -24467,7 +24467,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      var decoratedActions = this.decoratedActions;
 	      var props = this.props;
-	      event.preventDefault();
+	      //event.preventDefault();
 	      console.log('onModalSubmit', createDirectory);
 
 	      switch (this.state.currentModal) {
@@ -24581,7 +24581,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        'div',
 	        { id: 'eureka__pathbrowser', className: 'eureka__pathbrowser' },
 	        _react2.default.createElement(_MediaSourceSelector2.default, props),
-	        _react2.default.createElement(_FileTree2.default, props),
+	        _react2.default.createElement(_FileTree2.default, _extends({}, props, { onCreateDirectory: this.onCreateDirectory.bind(this) })),
 	        dropArea,
 	        _react2.default.createElement(_TreeBar2.default, _extends({ onCreateDirectory: this.onCreateDirectory.bind(this) }, props))
 	      ) : undefined;
@@ -26951,7 +26951,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.81",
+		"version": "0.0.82",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -32528,6 +32528,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var _this = _possibleConstructorReturn(this, (EurekaTable.__proto__ || Object.getPrototypeOf(EurekaTable)).call(this, props));
 
 	    _this.state = {
+	      contents: [],
 	      sort: {
 	        by: 'filename',
 	        dir: _utility2.default.ASCENDING,
@@ -32538,7 +32539,77 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return _this;
 	  }
 
+	  /*componentShouldUpdate(nextProps, nextState) {
+	    if(this.state !== nextState) return true;
+	    if(this.props !== nextProps) return true;
+	    //console.log('EurekaTable should not update');
+	    return false;
+	  }*/
+
 	  _createClass(EurekaTable, [{
+	    key: 'sortContents',
+	    value: function sortContents() {
+	      var contents = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.state.contents;
+	      var state = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.state;
+
+	      console.log('sorting contents', state.sort);
+	      return contents.sort(function (a, b) {
+	        if (a[state.sort.by] === b[state.sort.by]) return 0;
+
+	        var n = void 0;
+
+	        //console.log('props.sort.by',props.sort.by,a,b);
+
+	        switch (state.sort.by) {
+	          case 'dimensions':
+	            n = a.dimensions[0] * a.dimensions[1] > b.dimensions[0] * b.dimensions[1] ? 1 : -1;
+	            break;
+
+	          case 'editedOn':
+	            n = new Date(a.editedOn).getTime() > new Date(b.editedOn).getTime() ? 1 : -1;
+	            break;
+
+	          default:
+	            n = a[state.sort.by] > b[state.sort.by] ? 1 : -1;
+	            break;
+	        }
+
+	        return state.sort.dir === _utility2.default.ASCENDING ? n : 0 - n;
+	      });
+	    }
+	  }, {
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      console.log('EurekaTable componentDidMount');
+	      this.setState({
+	        contents: this.sortContents(this.props.content.contents)
+	      });
+	    }
+	  }, {
+	    key: 'shouldComponentUpdate',
+	    value: function shouldComponentUpdate(nextProps, nextState) {
+	      if (nextProps.view.filter) return true;
+	      if (this.state.sort !== nextState.sort) return true;
+	      if (nextProps.content.contents !== this.state.contents) return true;
+	      if (this.state.contents.length !== nextState.contents.length || this.state.contents !== nextState.contents) return true;
+
+	      return false;
+	    }
+	  }, {
+	    key: 'componentWillUpdate',
+	    value: function componentWillUpdate(nextProps, nextState) {
+	      console.log('EurekaTable componentWillUpdate', this.state, nextState);
+	      console.log(this.props, this.state);
+	      if (this.state.sort !== nextState.sort) {
+	        console.log('holy fuck we are sorting', this.state.contents[0], this.sortContents(nextProps.content.contents, nextState)[0]);
+	        this.setState({
+	          contents: this.sortContents(nextProps.content.contents, nextState)
+	        });
+	      } else if (nextProps.content.contents !== this.state.contents) this.setState({
+	        contents: nextProps.content.contents
+	      });
+	    }
+	  }, {
 	    key: 'onDrop',
 	    value: function onDrop(files) {
 	      var props = this.props;
@@ -32628,9 +32699,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	              'th',
 	              (_React$createElement2 = { role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement2, 'role', 'columnheader'), _defineProperty(_React$createElement2, 'onClick', function onClick(event) {
 	                var dir = _this2.state.sort.dir;
+	                console.log("this.state.sort.by === 'filename'", _this2.state.sort.by === 'filename', dir);
 	                if (_this2.state.sort.by === 'filename') {
 	                  dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
 	                }
+	                console.log('dir', dir);
 	                _this2.setState({
 	                  sort: {
 	                    by: 'filename',
@@ -32703,7 +32776,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            )
 	          )
 	        ),
-	        _react2.default.createElement(_EurekaTableTbody2.default, _extends({}, props, { intl: props.intl, filter: props.view.filter, content: props.content, sort: this.state.sort }))
+	        _react2.default.createElement(_EurekaTableTbody2.default, _extends({}, props, { intl: props.intl, filter: props.view.filter, content: props.content, contents: state.contents, sort: this.state.sort }))
 	      );
 
 	      return props.config.allowUploads && !_utility2.default.serverSideRendering ? _react2.default.createElement(
@@ -32855,26 +32928,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function handleRenameStart(item) {
 	      console.log('handleRenameStart', item);
 	    }
-	  }, {
-	    key: 'handleScroll',
-	    value: function handleScroll(event) {
-	      var isScrollable = this.isScrollable(this.tbody);
-	      if (isScrollable === _store2.default.getState().view.isTableScrolling) return;
-	      _store2.default.dispatch(_actions2.default.updateView({
+
+	    /*handleScroll(event) {
+	      const isScrollable = this.isScrollable(this.tbody);
+	      if(isScrollable === store.getState().view.isTableScrolling) return;
+	      store.dispatch(actions.updateView({
 	        isTableScrolling: isScrollable
 	      }));
-	    }
-	  }, {
-	    key: 'shouldComponentUpdate',
-	    value: function shouldComponentUpdate(nextProps, nextState) {
-	      if (nextProps.view.filter || !nextProps.view.filter && this.props.view.filter) return true;
+	    }*/
+
+	    /*shouldComponentUpdate(nextProps, nextState) {
+	      return true;
+	      console.log('EurekaTableTbody shouldComponentUpdate');
+	      if(nextProps.view.filter || (!nextProps.view.filter && this.props.view.filter)) return true;
 	      try {
-	        console.log('shouldComponentUpdate', this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path, this.state.focusedMediaItem.path, nextProps.view.focusedMediaItem.path);
+	        console.log('shouldComponentUpdate', (this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path), this.state.focusedMediaItem.path, nextProps.view.focusedMediaItem.path);
 	        //if((this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path)) return true; // #janky SLOOOOW
 	      } catch (e) {}
-	      //console.log(!(this.props.content.contents === nextProps.content.contents));
-	      return !(this.props.content.contents === nextProps.content.contents);
-	    }
+	      console.log(this.props.contents[0], nextProps.contents[0]);
+	      return !(this.props.contents === nextProps.contents);
+	    }*/
+
 	  }, {
 	    key: 'render',
 	    value: function render() {
@@ -32895,7 +32969,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      }
 
-	      var contents = props.content.contents;
+	      var contents = props.contents;
 
 	      if (props.filter) {
 	        (function () {
@@ -32910,30 +32984,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	        })();
 	      }
 
-	      var sortContents = true;
-	      contents = !sortContents ? contents : contents.sort(function (a, b) {
-	        if (a[props.sort.by] === b[props.sort.by]) return 0;
-
-	        var n = void 0;
-
-	        //console.log('props.sort.by',props.sort.by,a,b);
-
-	        switch (props.sort.by) {
+	      /*const sortContents = false;
+	      contents = (!sortContents) ? contents : contents.sort((a,b) => {
+	        if(a[props.sort.by] === b[props.sort.by]) return 0;
+	         let n;
+	         //console.log('props.sort.by',props.sort.by,a,b);
+	         switch(props.sort.by) {
 	          case 'dimensions':
-	            n = a.dimensions[0] * a.dimensions[1] > b.dimensions[0] * b.dimensions[1] ? 1 : -1;
-	            break;
-
-	          case 'editedOn':
-	            n = new Date(a.editedOn).getTime() > new Date(b.editedOn).getTime() ? 1 : -1;
-	            break;
-
-	          default:
-	            n = a[props.sort.by] > b[props.sort.by] ? 1 : -1;
-	            break;
+	          n = a.dimensions[0] * a.dimensions[1] > b.dimensions[0] * b.dimensions[1] ? 1 : -1;
+	          break;
+	           case 'editedOn':
+	          n = new Date(a.editedOn).getTime() > new Date(b.editedOn).getTime() ? 1 : -1;
+	          break;
+	           default:
+	          n = (a[props.sort.by] > b[props.sort.by]) ? 1 : -1;
+	          break;
 	        }
-
-	        return props.sort.dir === _utility2.default.ASCENDING ? n : 0 - n;
-	      });
+	         return (props.sort.dir === utility.ASCENDING) ? n : 0-n;
+	      });*/
 
 	      var contentList = contents.length ? contents.map(function (item, index) {
 	        return [_react2.default.createElement(_MediaRow2.default, _extends({}, props, { intl: props.intl, focusedMediaItem: state.focusedMediaItem, renameStart: _this2.handleRenameStart, item: item, index: index, key: index, onFocus: function onFocus(event) {
@@ -34255,6 +34323,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Icon2 = _interopRequireDefault(_Icon);
 
+	var _path = __webpack_require__(178);
+
+	var _path2 = _interopRequireDefault(_path);
+
 	var _definedMessages = __webpack_require__(255);
 
 	var _definedMessages2 = _interopRequireDefault(_definedMessages);
@@ -34348,7 +34420,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function shouldBeOpen(item) {
 	      //console.log('shouldBeOpen', props.content.cd, item.cd, props.content.cd.indexOf(item.cd));
 	      try {
-	        return item.cd == './' || props.content.cd.indexOf(item.cd) === 0 ? true : undefined;
+	        return item.cd === './' || props.content.cd.indexOf(item.cd) === 0 ? true : undefined;
 	      } catch (e) {
 	        return undefined;
 	      }
@@ -34371,7 +34443,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	          _react2.default.createElement(
 	            'menu',
 	            { hidden: 'true', type: 'context', id: 'context_menu__' + item.cd.replace(/^[^a-z]+|[^\w:.-]+/gi, "") },
-	            _react2.default.createElement('menuitem', { label: 'Create Directory Here', onClick: function onClick(event) {} }),
+	            _react2.default.createElement('menuitem', { label: 'Create Directory Here', onClick: function onClick(event) {
+	                props.onCreateDirectory();
+	              } }),
 	            _react2.default.createElement('menuitem', { label: chmodDirectoryMessage }),
 	            _react2.default.createElement('menuitem', { label: renameMessage }),
 	            _react2.default.createElement('menuitem', { label: refreshDirectoryMessage }),

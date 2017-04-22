@@ -74,23 +74,25 @@ class EurekaTableTbody extends PureComponent {
     console.log('handleRenameStart', item);
   }
 
-  handleScroll(event) {
+  /*handleScroll(event) {
     const isScrollable = this.isScrollable(this.tbody);
     if(isScrollable === store.getState().view.isTableScrolling) return;
     store.dispatch(actions.updateView({
-      isTableScrolling:isScrollable
+      isTableScrolling: isScrollable
     }));
-  }
+  }*/
 
-  shouldComponentUpdate(nextProps, nextState) {
+  /*shouldComponentUpdate(nextProps, nextState) {
+    return true;
+    console.log('EurekaTableTbody shouldComponentUpdate');
     if(nextProps.view.filter || (!nextProps.view.filter && this.props.view.filter)) return true;
     try {
       console.log('shouldComponentUpdate', (this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path), this.state.focusedMediaItem.path, nextProps.view.focusedMediaItem.path);
       //if((this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path)) return true; // #janky SLOOOOW
     } catch (e) {}
-    //console.log(!(this.props.content.contents === nextProps.content.contents));
-    return !(this.props.content.contents === nextProps.content.contents);
-  }
+    console.log(this.props.contents[0], nextProps.contents[0]);
+    return !(this.props.contents === nextProps.contents);
+  }*/
 
   render () {
     //console.log('rendering EurekaTableTbody');
@@ -108,7 +110,7 @@ class EurekaTableTbody extends PureComponent {
       }
     }
 
-    let contents = props.content.contents;
+    let contents = props.contents;
 
     if(props.filter) { // filter based on filename, dimensions, date
       const filter = props.view.filter.toLowerCase();
@@ -122,7 +124,7 @@ class EurekaTableTbody extends PureComponent {
       });
     }
 
-    const sortContents = true;
+    /*const sortContents = false;
     contents = (!sortContents) ? contents : contents.sort((a,b) => {
       if(a[props.sort.by] === b[props.sort.by]) return 0;
 
@@ -145,7 +147,7 @@ class EurekaTableTbody extends PureComponent {
       }
 
       return (props.sort.dir === utility.ASCENDING) ? n : 0-n;
-    });
+    });*/
 
     const contentList = (contents.length) ? contents.map((item, index) => (
       [

@@ -24,6 +24,10 @@ var _Icon = require('./Icon');
 
 var _Icon2 = _interopRequireDefault(_Icon);
 
+var _path = require('path');
+
+var _path2 = _interopRequireDefault(_path);
+
 var _definedMessages = require('../i18n/definedMessages');
 
 var _definedMessages2 = _interopRequireDefault(_definedMessages);
@@ -117,7 +121,7 @@ var FileTree = function FileTree(props) {
     function shouldBeOpen(item) {
       //console.log('shouldBeOpen', props.content.cd, item.cd, props.content.cd.indexOf(item.cd));
       try {
-        return item.cd == './' || props.content.cd.indexOf(item.cd) === 0 ? true : undefined;
+        return item.cd === './' || props.content.cd.indexOf(item.cd) === 0 ? true : undefined;
       } catch (e) {
         return undefined;
       }
@@ -140,7 +144,9 @@ var FileTree = function FileTree(props) {
           _react2.default.createElement(
             'menu',
             { hidden: 'true', type: 'context', id: 'context_menu__' + item.cd.replace(/^[^a-z]+|[^\w:.-]+/gi, "") },
-            _react2.default.createElement('menuitem', { label: 'Create Directory Here', onClick: function onClick(event) {} }),
+            _react2.default.createElement('menuitem', { label: 'Create Directory Here', onClick: function onClick(event) {
+                props.onCreateDirectory();
+              } }),
             _react2.default.createElement('menuitem', { label: chmodDirectoryMessage }),
             _react2.default.createElement('menuitem', { label: renameMessage }),
             _react2.default.createElement('menuitem', { label: refreshDirectoryMessage }),

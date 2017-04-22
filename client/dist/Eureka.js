@@ -213,7 +213,7 @@ var Eureka = function (_Component) {
 
       var decoratedActions = this.decoratedActions;
       var props = this.props;
-      event.preventDefault();
+      //event.preventDefault();
       console.log('onModalSubmit', createDirectory);
 
       switch (this.state.currentModal) {
@@ -327,7 +327,7 @@ var Eureka = function (_Component) {
         'div',
         { id: 'eureka__pathbrowser', className: 'eureka__pathbrowser' },
         _react2.default.createElement(_MediaSourceSelector2.default, props),
-        _react2.default.createElement(_FileTree2.default, props),
+        _react2.default.createElement(_FileTree2.default, _extends({}, props, { onCreateDirectory: this.onCreateDirectory.bind(this) })),
         dropArea,
         _react2.default.createElement(_TreeBar2.default, _extends({ onCreateDirectory: this.onCreateDirectory.bind(this) }, props))
       ) : undefined;

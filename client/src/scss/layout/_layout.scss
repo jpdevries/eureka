@@ -24,7 +24,7 @@
   .eureka__view-mode__table, .eureka__view-mode__list { // this is pretty janky looking, but needed after optimizing React
     tbody:not(.empty) {
       > tr {
-        &.eureka__focused-media-item {
+        &.eureka__focused-media-item, &:focus {
           > td.eureka__context-row {
             display: block !important;
             &[hidden] {

@@ -124,26 +124,27 @@ var EurekaTableTbody = function (_PureComponent) {
     value: function handleRenameStart(item) {
       console.log('handleRenameStart', item);
     }
-  }, {
-    key: 'handleScroll',
-    value: function handleScroll(event) {
-      var isScrollable = this.isScrollable(this.tbody);
-      if (isScrollable === _store2.default.getState().view.isTableScrolling) return;
-      _store2.default.dispatch(_actions2.default.updateView({
+
+    /*handleScroll(event) {
+      const isScrollable = this.isScrollable(this.tbody);
+      if(isScrollable === store.getState().view.isTableScrolling) return;
+      store.dispatch(actions.updateView({
         isTableScrolling: isScrollable
       }));
-    }
-  }, {
-    key: 'shouldComponentUpdate',
-    value: function shouldComponentUpdate(nextProps, nextState) {
-      if (nextProps.view.filter || !nextProps.view.filter && this.props.view.filter) return true;
+    }*/
+
+    /*shouldComponentUpdate(nextProps, nextState) {
+      return true;
+      console.log('EurekaTableTbody shouldComponentUpdate');
+      if(nextProps.view.filter || (!nextProps.view.filter && this.props.view.filter)) return true;
       try {
-        console.log('shouldComponentUpdate', this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path, this.state.focusedMediaItem.path, nextProps.view.focusedMediaItem.path);
+        console.log('shouldComponentUpdate', (this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path), this.state.focusedMediaItem.path, nextProps.view.focusedMediaItem.path);
         //if((this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path)) return true; // #janky SLOOOOW
       } catch (e) {}
-      //console.log(!(this.props.content.contents === nextProps.content.contents));
-      return !(this.props.content.contents === nextProps.content.contents);
-    }
+      console.log(this.props.contents[0], nextProps.contents[0]);
+      return !(this.props.contents === nextProps.contents);
+    }*/
+
   }, {
     key: 'render',
     value: function render() {
@@ -164,7 +165,7 @@ var EurekaTableTbody = function (_PureComponent) {
         }
       }
 
-      var contents = props.content.contents;
+      var contents = props.contents;
 
       if (props.filter) {
         (function () {
@@ -179,30 +180,24 @@ var EurekaTableTbody = function (_PureComponent) {
         })();
       }
 
-      var sortContents = true;
-      contents = !sortContents ? contents : contents.sort(function (a, b) {
-        if (a[props.sort.by] === b[props.sort.by]) return 0;
-
-        var n = void 0;
-
-        //console.log('props.sort.by',props.sort.by,a,b);
-
-        switch (props.sort.by) {
+      /*const sortContents = false;
+      contents = (!sortContents) ? contents : contents.sort((a,b) => {
+        if(a[props.sort.by] === b[props.sort.by]) return 0;
+         let n;
+         //console.log('props.sort.by',props.sort.by,a,b);
+         switch(props.sort.by) {
           case 'dimensions':
-            n = a.dimensions[0] * a.dimensions[1] > b.dimensions[0] * b.dimensions[1] ? 1 : -1;
-            break;
-
-          case 'editedOn':
-            n = new Date(a.editedOn).getTime() > new Date(b.editedOn).getTime() ? 1 : -1;
-            break;
-
-          default:
-            n = a[props.sort.by] > b[props.sort.by] ? 1 : -1;
-            break;
+          n = a.dimensions[0] * a.dimensions[1] > b.dimensions[0] * b.dimensions[1] ? 1 : -1;
+          break;
+           case 'editedOn':
+          n = new Date(a.editedOn).getTime() > new Date(b.editedOn).getTime() ? 1 : -1;
+          break;
+           default:
+          n = (a[props.sort.by] > b[props.sort.by]) ? 1 : -1;
+          break;
         }
-
-        return props.sort.dir === _utility2.default.ASCENDING ? n : 0 - n;
-      });
+         return (props.sort.dir === utility.ASCENDING) ? n : 0-n;
+      });*/
 
       var contentList = contents.length ? contents.map(function (item, index) {
         return [_react2.default.createElement(_MediaRow2.default, _extends({}, props, { intl: props.intl, focusedMediaItem: state.focusedMediaItem, renameStart: _this2.handleRenameStart, item: item, index: index, key: index, onFocus: function onFocus(event) {

@@ -55,9 +55,9 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
   margin-left: 8px;
   margin-left: .5rem; }
 
-.eureka-root .eureka__view-mode__table tbody:not(.empty) > tr.eureka__focused-media-item > td.eureka__context-row, .eureka-root .eureka__view-mode__list tbody:not(.empty) > tr.eureka__focused-media-item > td.eureka__context-row {
+.eureka-root .eureka__view-mode__table tbody:not(.empty) > tr.eureka__focused-media-item > td.eureka__context-row, .eureka-root .eureka__view-mode__table tbody:not(.empty) > tr:focus > td.eureka__context-row, .eureka-root .eureka__view-mode__list tbody:not(.empty) > tr.eureka__focused-media-item > td.eureka__context-row, .eureka-root .eureka__view-mode__list tbody:not(.empty) > tr:focus > td.eureka__context-row {
   display: block !important; }
-  .eureka-root .eureka__view-mode__table tbody:not(.empty) > tr.eureka__focused-media-item > td.eureka__context-row[hidden], .eureka-root .eureka__view-mode__list tbody:not(.empty) > tr.eureka__focused-media-item > td.eureka__context-row[hidden] {
+  .eureka-root .eureka__view-mode__table tbody:not(.empty) > tr.eureka__focused-media-item > td.eureka__context-row[hidden], .eureka-root .eureka__view-mode__table tbody:not(.empty) > tr:focus > td.eureka__context-row[hidden], .eureka-root .eureka__view-mode__list tbody:not(.empty) > tr.eureka__focused-media-item > td.eureka__context-row[hidden], .eureka-root .eureka__view-mode__list tbody:not(.empty) > tr:focus > td.eureka__context-row[hidden] {
     display: block !important; }
 
 @media screen and (max-width: 640px) {

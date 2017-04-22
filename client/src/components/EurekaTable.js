@@ -21,6 +21,7 @@ class EurekaTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      contents: [],
       sort: {
         by: 'filename',
         dir: utility.ASCENDING,
@@ -28,6 +29,67 @@ class EurekaTable extends Component {
       }
     };
     this.decoratedActions = props.decoratedActions ? Object.assign({}, actions, props.decoratedActions) : actions;
+  }
+
+  /*componentShouldUpdate(nextProps, nextState) {
+    if(this.state !== nextState) return true;
+    if(this.props !== nextProps) return true;
+    //console.log('EurekaTable should not update');
+    return false;
+  }*/
+
+  sortContents(contents = this.state.contents, state = this.state) {
+    //console.log('sorting contents', state.sort);
+    return contents.sort((a,b) => {
+      if(a[state.sort.by] === b[state.sort.by]) return 0;
+
+      let n;
+
+      //console.log('props.sort.by',props.sort.by,a,b);
+
+      switch(state.sort.by) {
+        case 'dimensions':
+        n = a.dimensions[0] * a.dimensions[1] > b.dimensions[0] * b.dimensions[1] ? 1 : -1;
+        break;
+
+        case 'editedOn':
+        n = new Date(a.editedOn).getTime() > new Date(b.editedOn).getTime() ? 1 : -1;
+        break;
+
+        default:
+        n = (a[state.sort.by] > b[state.sort.by]) ? 1 : -1;
+        break;
+      }
+
+      return (state.sort.dir === utility.ASCENDING) ? n : 0-n;
+    });
+  }
+
+  componentDidMount() {
+    //console.log('EurekaTable componentDidMount');
+    this.setState({
+      contents: this.sortContents(this.props.content.contents)
+    })
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if(nextProps.view.filter) return true;
+    if(this.state.sort !== nextState.sort) return true;
+    if(nextProps.content.contents !== this.state.contents) return true;
+    if((this.state.contents.length !== nextState.contents.length) || (this.state.contents !== nextState.contents)) return true;
+
+    return false;
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    //console.log(this.props, this.state);
+    if(this.state.sort !== nextState.sort) {
+      this.setState({
+        contents: this.sortContents(nextProps.content.contents, nextState)
+      })
+    } else if(nextProps.content.contents !== this.state.contents) this.setState({
+      contents: nextProps.content.contents
+    })
   }
 
   onDrop(files) {
@@ -96,13 +158,15 @@ class EurekaTable extends Component {
             <th role="rowheader" scope="col" role="columnheader"><FormattedMessage id="media" defaultMessage="Media" /></th>
             <th role="rowheader" scope="col" role="columnheader" onClick={(event) => {
               let dir = this.state.sort.dir;
+              //console.log("this.state.sort.by === 'filename'", this.state.sort.by === 'filename', dir);
               if(this.state.sort.by === 'filename') {
                 dir = (dir === utility.ASCENDING) ? utility.DESCENDING : utility.ASCENDING
               }
+              //console.log('dir',dir);
               this.setState({
                 sort:{
                   by:'filename',
-                  dir:dir
+                  dir: dir
                 }
               });
             }}><FormattedMessage id="name" defaultMessage="Name" />&ensp;{(!utility.serverSideRendering) ? <Icon {...props}  icon="sort" /> : undefined}</th>
@@ -115,7 +179,7 @@ class EurekaTable extends Component {
               this.setState({
                 sort:{
                   by:'dimensions',
-                  dir:dir
+                  dir: dir
                 }
               });
             }}><FormattedMessage id="dimensions" defaultMessage="Dimensions" />&ensp;{(!utility.serverSideRendering) ? <Icon {...props} icon="sort" /> : undefined}</th>
@@ -145,7 +209,7 @@ class EurekaTable extends Component {
               }}><FormattedMessage id="editedOn" defaultMessage="Edited On" />&ensp;{(!utility.serverSideRendering) ? <Icon {...props} icon="sort" /> : undefined}</th>
           </tr>
         </thead>
-        <EurekaTableTbody {...props} intl={props.intl} filter={props.view.filter} content={props.content} sort={this.state.sort} />
+        <EurekaTableTbody {...props} intl={props.intl} filter={props.view.filter} content={props.content} contents={state.contents} sort={this.state.sort} />
       </table>
     );
 

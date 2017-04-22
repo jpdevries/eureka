@@ -65,6 +65,7 @@ var EurekaTable = function (_Component) {
     var _this = _possibleConstructorReturn(this, (EurekaTable.__proto__ || Object.getPrototypeOf(EurekaTable)).call(this, props));
 
     _this.state = {
+      contents: [],
       sort: {
         by: 'filename',
         dir: _utility2.default.ASCENDING,
@@ -75,7 +76,77 @@ var EurekaTable = function (_Component) {
     return _this;
   }
 
+  /*componentShouldUpdate(nextProps, nextState) {
+    if(this.state !== nextState) return true;
+    if(this.props !== nextProps) return true;
+    //console.log('EurekaTable should not update');
+    return false;
+  }*/
+
   _createClass(EurekaTable, [{
+    key: 'sortContents',
+    value: function sortContents() {
+      var contents = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.state.contents;
+      var state = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.state;
+
+      console.log('sorting contents', state.sort);
+      return contents.sort(function (a, b) {
+        if (a[state.sort.by] === b[state.sort.by]) return 0;
+
+        var n = void 0;
+
+        //console.log('props.sort.by',props.sort.by,a,b);
+
+        switch (state.sort.by) {
+          case 'dimensions':
+            n = a.dimensions[0] * a.dimensions[1] > b.dimensions[0] * b.dimensions[1] ? 1 : -1;
+            break;
+
+          case 'editedOn':
+            n = new Date(a.editedOn).getTime() > new Date(b.editedOn).getTime() ? 1 : -1;
+            break;
+
+          default:
+            n = a[state.sort.by] > b[state.sort.by] ? 1 : -1;
+            break;
+        }
+
+        return state.sort.dir === _utility2.default.ASCENDING ? n : 0 - n;
+      });
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      console.log('EurekaTable componentDidMount');
+      this.setState({
+        contents: this.sortContents(this.props.content.contents)
+      });
+    }
+  }, {
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps, nextState) {
+      if (nextProps.view.filter) return true;
+      if (this.state.sort !== nextState.sort) return true;
+      if (nextProps.content.contents !== this.state.contents) return true;
+      if (this.state.contents.length !== nextState.contents.length || this.state.contents !== nextState.contents) return true;
+
+      return false;
+    }
+  }, {
+    key: 'componentWillUpdate',
+    value: function componentWillUpdate(nextProps, nextState) {
+      console.log('EurekaTable componentWillUpdate', this.state, nextState);
+      console.log(this.props, this.state);
+      if (this.state.sort !== nextState.sort) {
+        console.log('holy fuck we are sorting', this.state.contents[0], this.sortContents(nextProps.content.contents, nextState)[0]);
+        this.setState({
+          contents: this.sortContents(nextProps.content.contents, nextState)
+        });
+      } else if (nextProps.content.contents !== this.state.contents) this.setState({
+        contents: nextProps.content.contents
+      });
+    }
+  }, {
     key: 'onDrop',
     value: function onDrop(files) {
       var props = this.props;
@@ -165,9 +236,11 @@ var EurekaTable = function (_Component) {
               'th',
               (_React$createElement2 = { role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement2, 'role', 'columnheader'), _defineProperty(_React$createElement2, 'onClick', function onClick(event) {
                 var dir = _this2.state.sort.dir;
+                console.log("this.state.sort.by === 'filename'", _this2.state.sort.by === 'filename', dir);
                 if (_this2.state.sort.by === 'filename') {
                   dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
                 }
+                console.log('dir', dir);
                 _this2.setState({
                   sort: {
                     by: 'filename',
@@ -240,7 +313,7 @@ var EurekaTable = function (_Component) {
             )
           )
         ),
-        _react2.default.createElement(_EurekaTableTbody2.default, _extends({}, props, { intl: props.intl, filter: props.view.filter, content: props.content, sort: this.state.sort }))
+        _react2.default.createElement(_EurekaTableTbody2.default, _extends({}, props, { intl: props.intl, filter: props.view.filter, content: props.content, contents: state.contents, sort: this.state.sort }))
       );
 
       return props.config.allowUploads && !_utility2.default.serverSideRendering ? _react2.default.createElement(
