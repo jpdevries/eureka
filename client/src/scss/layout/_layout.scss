@@ -592,10 +592,12 @@
   }
 
   .eureka__tree-bar {
+    text-align: center;
     @include media($gtMobile) {
       display:flex;
       > * {
         flex:1 0 auto;
+
       }
     }
   }

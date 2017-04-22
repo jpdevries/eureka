@@ -31,7 +31,9 @@ const initialConfigState = {
   intervals:{searchBarPlaceholder: 60000, fetchDirectoryContents: 18000, updateSourceTree: false},
   callbacks: {
     close: undefined,
-    choose: undefined,
+    choose: undefined
+  },
+  handlers: {
     createFile: undefined
   }
 };

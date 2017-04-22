@@ -107,7 +107,7 @@ $palettes: ( // http://erskinedesign.com/blog/friendlier-colour-names-sass-maps/
 
   > * {
     margin-right:.5rem;
-    &:last-of-type {
+    &:last-child {
       margin-right:0;
     }
   }
@@ -548,7 +548,7 @@ a[role="presentation"] {
   .eureka__tree-bar {
     @extend %flex-bar;
     margin:1rem 0 0 0;
-    button {
+    button, .button {
       font-size:1rem;
       flex:1 0 auto;
     }

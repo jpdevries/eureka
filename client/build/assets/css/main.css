@@ -508,13 +508,15 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
     .eureka .eureka__context-row .eureka__context-buttons {
       width: 100%; } }
 
-@media screen and (min-width: 641px) {
-  .eureka .eureka__tree-bar {
-    display: -ms-flexbox;
-    display: flex; }
-    .eureka .eureka__tree-bar > * {
-      -ms-flex: 1 0 auto;
-          flex: 1 0 auto; } }
+.eureka .eureka__tree-bar {
+  text-align: center; }
+  @media screen and (min-width: 641px) {
+    .eureka .eureka__tree-bar {
+      display: -ms-flexbox;
+      display: flex; }
+      .eureka .eureka__tree-bar > * {
+        -ms-flex: 1 0 auto;
+            flex: 1 0 auto; } }
 
 @media screen and (max-width: 640px) {
   .eureka.eureka__view-mode__list .eureka__table thead th:first-child {
@@ -573,7 +575,7 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
   .flex-bar > *, .eureka .eureka__button-bar > *, .eureka .eureka__tree-bar > * {
     margin-right: 8px;
     margin-right: .5rem; }
-    .flex-bar > *:last-of-type, .eureka .eureka__button-bar > *:last-of-type, .eureka .eureka__tree-bar > *:last-of-type {
+    .flex-bar > *:last-child, .eureka .eureka__button-bar > *:last-child, .eureka .eureka__tree-bar > *:last-child {
       margin-right: 0; }
 
 .eureka .eureka__button-bar, .eureka .eureka__notice {
@@ -925,7 +927,7 @@ a[role="presentation"] {
   .eureka .eureka__tree-bar {
     margin: 16px 0 0 0;
     margin: 1rem 0 0 0; }
-    .eureka .eureka__tree-bar button {
+    .eureka .eureka__tree-bar button, .eureka .eureka__tree-bar .button {
       font-size: 16px;
       font-size: 1rem;
       -ms-flex: 1 0 auto;

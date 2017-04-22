@@ -1387,7 +1387,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  intervals: { searchBarPlaceholder: 60000, fetchDirectoryContents: 18000, updateSourceTree: false },
 	  callbacks: {
 	    close: undefined,
-	    choose: undefined,
+	    choose: undefined
+	  },
+	  handlers: {
 	    createFile: undefined
 	  }
 	};
@@ -3701,7 +3703,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.83",
+		"version": "0.0.84",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -8368,11 +8370,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    ),
 	    _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'upload' }))
 	  ) : undefined,
-	      createFileBtn = props.config.callbacks.createFile ? _react2.default.createElement(
-	    'button',
-	    { title: createFileInMessage, onClick: function onClick(event) {
-	        props.config.callbacks.createFile(props.source.currentSource, props.content.cd);
-	      } },
+	      createFileBtn = props.config.handlers.createFile ? _react2.default.createElement(
+	    'a',
+	    _extends({}, props.config.handlers.createFile(props.source.currentSource, props.content.cd), { className: 'button', title: createFileInMessage }),
 	    _react2.default.createElement(
 	      'span',
 	      { className: 'visually-hidden' },

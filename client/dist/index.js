@@ -57,9 +57,13 @@ function render() {
   }, _defineProperty(_React$createElement, 'lang', 'en-US'), _defineProperty(_React$createElement, 'callbacks', {
     choose: function choose(item) {
       alert(JSON.stringify(item));
-    },
+    }
+  }), _defineProperty(_React$createElement, 'handlers', {
     createFile: function createFile(source, directory) {
-      console.log('createFile', source, directory);
+      return {
+        href: 'javascript:alert("create a directory in ' + directory + ' of media source ' + source + '")',
+        target: '_blank'
+      };
     }
   }), _defineProperty(_React$createElement, 'endpoints', {
     i18n: './assets/js/i18n/locales/'

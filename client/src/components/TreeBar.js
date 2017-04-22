@@ -23,13 +23,11 @@ const TreeBar = (props) => {
       <Icon {...props} icon="upload" />
     </button>
   ) : undefined,
-  createFileBtn = (props.config.callbacks.createFile) ? (
-    <button title={createFileInMessage} onClick={(event) => {
-        props.config.callbacks.createFile(props.source.currentSource, props.content.cd)
-      }}>
+  createFileBtn = (props.config.handlers.createFile) ? (
+    <a {...props.config.handlers.createFile(props.source.currentSource, props.content.cd)} className="button" title={createFileInMessage}>
       <span className="visually-hidden">{createFileInMessage}</span>
       <Icon {...props} icon="file-text-o" />
-    </button>
+    </a>
   ) : undefined,
   createDirectoryInMessage = formatMessage(definedMessages.createNewDirectoryIn, {
     cd: props.content.cd

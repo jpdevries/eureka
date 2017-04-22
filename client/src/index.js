@@ -43,9 +43,14 @@ function render() {
       callbacks={{
         choose: function(item) {
           alert(JSON.stringify(item))
-        },
+        }
+      }}
+      handlers={{
         createFile: function(source, directory) {
-          console.log('createFile', source, directory)
+          return {
+            href: `javascript:alert("create a directory in ${directory} of media source ${source}")`,
+            target: '_blank'
+          }
         }
       }}
       endpoints={{
