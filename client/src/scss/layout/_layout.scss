@@ -195,13 +195,22 @@
 
    &.eureka__view-mode__list {
      table { // .eureka__browse-content>.eureka__stage>.eureka__table-wrapper>div>
+       > thead > tr, > tbody > tr {
+         td, th {
+           &:first-child {
+             padding-left: .5rem;
+           }
+         }
+       }
        > tbody > tr {
          grid-template-areas: "name name name name name" "actions actions actions actions actions";
+         margin-bottom: .5rem;
          @include media($gtMobile) {
            grid-template-areas: "media name dimensions file-size edited-on" "actions actions actions actions actions";
          }
        }
      }
+
    }
 
 

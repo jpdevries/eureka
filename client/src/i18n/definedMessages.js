@@ -153,6 +153,10 @@ export default defineMessages({
     id: 'mediaItem',
     defaultMessage: 'media item'
   },
+  toggle: {
+    id: 'toggle',
+    defaultMessage: 'Toggle'
+  },
   pluralItem: {
     id: 'pluralItem',
     defaultMessage: 'a media item',

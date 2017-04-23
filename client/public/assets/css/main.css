@@ -167,8 +167,13 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
         grid-area: edited-on; } }
   .eureka-root .eureka.eureka__view-mode__table.eureka__server-side table > thead > tr > th:nth-of-type(1), .eureka-root .eureka.eureka__view-mode__list.eureka__server-side table > thead > tr > th:nth-of-type(1) {
     grid-area: none; }
+  .eureka-root .eureka.eureka__view-mode__list table > thead > tr td:first-child, .eureka-root .eureka.eureka__view-mode__list table > thead > tr th:first-child, .eureka-root .eureka.eureka__view-mode__list table > tbody > tr td:first-child, .eureka-root .eureka.eureka__view-mode__list table > tbody > tr th:first-child {
+    padding-left: 8px;
+    padding-left: .5rem; }
   .eureka-root .eureka.eureka__view-mode__list table > tbody > tr {
-    grid-template-areas: "name name name name name" "actions actions actions actions actions"; }
+    grid-template-areas: "name name name name name" "actions actions actions actions actions";
+    margin-bottom: 8px;
+    margin-bottom: .5rem; }
     @media screen and (min-width: 641px) {
       .eureka-root .eureka.eureka__view-mode__list table > tbody > tr {
         grid-template-areas: "media name dimensions file-size edited-on" "actions actions actions actions actions"; } }
@@ -729,7 +734,12 @@ a[role="presentation"] {
     background-image: url("../img/select-arrow.svg"); } }
   .eureka button[id^="eureka__tree-toggle__button"] {
     margin-bottom: 16px;
-    margin-bottom: 1rem; }
+    margin-bottom: 1rem;
+    box-shadow: 0 0 0 1px #E4E4E4, 0 0.25em 0 #c5c5c5;
+    box-shadow: 0 0 0 1px var(--border-color, #E4E4E4), 0 0.25em 0 var(--border-color, #c5c5c5); }
+    .eureka button[id^="eureka__tree-toggle__button"][aria-pressed="true"] {
+      box-shadow: 0 0 0 1px #E4E4E4, inset 0 0.175em 0 #c5c5c5;
+      box-shadow: 0 0 0 1px var(--border-shadow-color, #E4E4E4), inset 0 0.175em 0 var(--border-shadow-color, #c5c5c5); }
     @media screen and (max-width: 640px) {
       .eureka button[id^="eureka__tree-toggle__button"] {
         width: 100%;
