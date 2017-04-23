@@ -3847,7 +3847,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.88",
+		"version": "0.0.89",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -9996,11 +9996,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      });*/
 
 	      var contentList = contents.length ? contents.map(function (item, index) {
-	        return [_react2.default.createElement(_MediaRow2.default, _extends({}, props, { intl: props.intl, focusedMediaItem: state.focusedMediaItem, renameStart: _this2.handleRenameStart, item: item, index: index, key: index, onFocus: function onFocus(event) {
+	        return [_react2.default.createElement(_MediaRow2.default, _extends({}, props, { intl: props.intl, focusedMediaItem: props.view.focusedMediaItem, renameStart: _this2.handleRenameStart, item: item, index: index, key: index, onFocus: function onFocus(event) {
 
-	            _this2.setState({
+	            /*this.setState({
 	              focusedMediaItem: item
-	            });
+	            })*/
 	            _store2.default.dispatch(_actions2.default.updateView({
 	              focusedMediaItem: item
 	            }));

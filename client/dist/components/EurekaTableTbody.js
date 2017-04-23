@@ -200,11 +200,11 @@ var EurekaTableTbody = function (_PureComponent) {
       });*/
 
       var contentList = contents.length ? contents.map(function (item, index) {
-        return [_react2.default.createElement(_MediaRow2.default, _extends({}, props, { intl: props.intl, focusedMediaItem: state.focusedMediaItem, renameStart: _this2.handleRenameStart, item: item, index: index, key: index, onFocus: function onFocus(event) {
+        return [_react2.default.createElement(_MediaRow2.default, _extends({}, props, { intl: props.intl, focusedMediaItem: props.view.focusedMediaItem, renameStart: _this2.handleRenameStart, item: item, index: index, key: index, onFocus: function onFocus(event) {
 
-            _this2.setState({
+            /*this.setState({
               focusedMediaItem: item
-            });
+            })*/
             _store2.default.dispatch(_actions2.default.updateView({
               focusedMediaItem: item
             }));

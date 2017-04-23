@@ -151,11 +151,11 @@ class EurekaTableTbody extends PureComponent {
 
     const contentList = (contents.length) ? contents.map((item, index) => (
       [
-        <MediaRow {...props} intl={props.intl} focusedMediaItem={state.focusedMediaItem} renameStart={this.handleRenameStart} item={item} index={index} key={index} onFocus={(event) => {
+        <MediaRow {...props} intl={props.intl} focusedMediaItem={props.view.focusedMediaItem} renameStart={this.handleRenameStart} item={item} index={index} key={index} onFocus={(event) => {
 
-            this.setState({
+            /*this.setState({
               focusedMediaItem: item
-            })
+            })*/
             store.dispatch(actions.updateView({
               focusedMediaItem: item
             }));
