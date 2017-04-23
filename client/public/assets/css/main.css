@@ -4,7 +4,7 @@
 .eureka *, .eureka *::after, .eureka *::before {
   box-sizing: inherit; }
 
-.eureka .eureka__media-source-selector select {
+.eureka.eureka__view-mode__thumb img, .eureka.eureka__view-mode__grid img, .eureka .eureka__media-source-selector select {
   width: 100%; }
 
 .eureka select, .eureka button, .eureka a.button, .eureka .eureka__upload-form label, .eureka .eureka__layout-chooser .eureka__icon-radio-btns label {
@@ -517,6 +517,10 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
       .eureka .eureka__tree-bar > * {
         -ms-flex: 1 0 auto;
             flex: 1 0 auto; } }
+
+.eureka.eureka__view-mode__grid .eureka__td-media {
+  margin: 0 auto;
+  display: inline-block; }
 
 @media screen and (max-width: 640px) {
   .eureka.eureka__view-mode__list .eureka__table thead th:first-child {

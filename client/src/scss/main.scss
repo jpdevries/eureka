@@ -376,6 +376,12 @@ a[role="presentation"] {
     max-width:100%;
   }
 
+  &.eureka__view-mode__thumb, &.eureka__view-mode__grid {
+    img {
+      @extend %very-greedy;
+    }
+  }
+
   /*&.eureka__view-mode__table, &.eureka__view-mode__list {
     .eureka__pathbar {
       .eureka__context-buttons {

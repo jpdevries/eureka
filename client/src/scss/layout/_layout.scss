@@ -602,6 +602,13 @@
     }
   }
 
+  &.eureka__view-mode__grid {
+    .eureka__td-media {
+      margin: 0 auto;
+      display: inline-block;
+    }
+  }
+
   &.eureka__view-mode__list {
     .eureka__table {
       thead {
