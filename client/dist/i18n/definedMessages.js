@@ -154,6 +154,9 @@ exports.default = (0, _reactIntl.defineMessages)((_defineMessages = {
 }), _defineProperty(_defineMessages, 'mediaItem', {
   'id': 'mediaItem',
   'defaultMessage': 'media item'
+}), _defineProperty(_defineMessages, 'toggle', {
+  'id': 'toggle',
+  'defaultMessage': 'Toggle'
 }), _defineProperty(_defineMessages, 'pluralItem', {
   'id': 'pluralItem',
   'defaultMessage': 'a media item'

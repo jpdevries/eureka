@@ -148,6 +148,10 @@
     "defaultMessage": "media item"
   },
   {
+    "id": "toggle",
+    "defaultMessage": "Toggle"
+  },
+  {
     "id": "pluralItem",
     "defaultMessage": "a media item"
   },

@@ -3847,7 +3847,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.89",
+		"version": "0.0.90",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -8743,6 +8743,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	}), _defineProperty(_defineMessages, 'mediaItem', {
 	  'id': 'mediaItem',
 	  'defaultMessage': 'media item'
+	}), _defineProperty(_defineMessages, 'toggle', {
+	  'id': 'toggle',
+	  'defaultMessage': 'Toggle'
 	}), _defineProperty(_defineMessages, 'pluralItem', {
 	  'id': 'pluralItem',
 	  'defaultMessage': 'a media item'
@@ -8793,6 +8796,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var formatMessage = props.intl.formatMessage,
 	      closeMessage = formatMessage(_definedMessages2.default.close),
 	      openMessage = formatMessage(_definedMessages2.default.open),
+	      toggleMessage = formatMessage(_definedMessages2.default.toggle),
 	      mediaSourceTreeMessage = formatMessage(_definedMessages2.default.mediaSourceTreeMessage);
 	  //<Icon {...props} icon={`caret-square-o-${props.view.sourceTreeOpen ? 'left' : 'right'}`} />&ensp;
 	  return _react2.default.createElement(
@@ -8800,7 +8804,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    null,
 	    _react2.default.createElement(
 	      'button',
-	      { role: 'menuitem', id: 'eureka__tree-toggle__button', 'aria-controls': 'eureka__pathbrowser', 'aria-expanded': props.view.sourceTreeOpen, onClick: function onClick(event) {
+	      { role: 'menuitem', id: 'eureka__tree-toggle__button', 'aria-label': toggleMessage + ' ' + mediaSourceTreeMessage, 'aria-controls': 'eureka__pathbrowser', 'aria-pressed': props.view.sourceTreeOpen, 'aria-expanded': props.view.sourceTreeOpen, onClick: function onClick(event) {
 	          _store2.default.dispatch(_actions2.default.updateView({
 	            sourceTreeOpen: !props.view.sourceTreeOpen
 	          }));

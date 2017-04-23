@@ -69,6 +69,7 @@
   "layout.tabular": "Tabular Layout displays image thumbnails along with Name, Description, File Size and Edited On columns",
   "layout.thumbnail": "Thumbnail layout displays a grid of medium sized thumbnails",
   "file.openInNewTab": "Open {filename} in a new tab",
+  "toggle": "Toggle",
   "media.sourceTree": "Media Source Panel",
   "upload.dragFilestoUpload": "Drag files here to be uploaded to {cd}"
 }

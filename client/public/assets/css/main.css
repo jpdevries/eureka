@@ -578,6 +578,14 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
   color: red;
   color: var(--dangerous, red); }
 
+input:focus {
+  outline: 1px solid #3697cd;
+  outline: 1px solid var(--active, #3697cd); }
+
+tr[tabindex]:focus, tr.eureka__context-row:focus, [role="listbox"]:focus, summary:focus {
+  outline: 1px solid #3697cd;
+  outline: 1px solid var(--active, #3697cd); }
+
 .flex-bar, .eureka .eureka__button-bar {
   display: -ms-flexbox;
   display: flex; }
@@ -728,6 +736,12 @@ a[role="presentation"] {
       .eureka select {
         width: 100%;
         margin-top: .5em; } }
+    .eureka select:focus {
+      outline: none;
+      --border-color: #3697cd;
+      --border-color: var(--active, #3697cd);
+      --border-shadow-color: #3697cd;
+      --border-shadow-color: var(--active, #3697cd); }
 
 @-moz-document url-prefix() {
   .eureka select {
@@ -754,10 +768,13 @@ a[role="presentation"] {
     background-image: linear-gradient(#32AB9A, #00948E);
     box-shadow: none;
     color: white; }
-    .eureka .eureka__modal .eureka__modal-panel .flex-bar > :hover:last-child {
+    .eureka .eureka__modal .eureka__modal-panel .flex-bar > :hover:last-child, .eureka .eureka__modal .eureka__modal-panel .flex-bar > :focus:last-child {
+      --border-color: #007571;
       background-color: #2b9385;
       background-image: linear-gradient(#2b9385, #007571);
-      color: white; }
+      color: white;
+      box-shadow: 0 0 0 1px #E4E4E4;
+      box-shadow: 0 0 0 1px var(--border-color, #E4E4E4); }
     .eureka .eureka__modal .eureka__modal-panel .flex-bar > :disabled:last-child {
       filter: grayscale(100%); }
   .eureka a.button {
@@ -772,9 +789,19 @@ a[role="presentation"] {
     border: 0;
     border-radius: 3px;
     padding: .5em .5em; }
+    .eureka button:focus, .eureka a.button:focus {
+      outline: none;
+      --border-color: #3697cd;
+      --border-color: var(--active, #3697cd);
+      --border-shadow-color: #3697cd;
+      --border-shadow-color: var(--active, #3697cd); }
     .eureka button:hover, .eureka a.button:hover {
       background: #3697cd;
-      color: white; }
+      color: white;
+      --border-color: #297aa7;
+      --border-color: var(--active-darker, #297aa7);
+      --border-shadow-color: #297aa7;
+      --border-shadow-color: var(--active-darker, #297aa7); }
       .eureka button:hover svg, .eureka a.button:hover svg {
         fill: white; }
     .eureka button.eureka__primary, .eureka a.button.eureka__primary {
@@ -782,13 +809,18 @@ a[role="presentation"] {
       background-image: linear-gradient(#32AB9A, #00948E);
       box-shadow: none;
       color: white; }
-      .eureka button.eureka__primary:hover, .eureka a.button.eureka__primary:hover {
+      .eureka button.eureka__primary:hover, .eureka button.eureka__primary:focus, .eureka a.button.eureka__primary:hover, .eureka a.button.eureka__primary:focus {
+        --border-color: #007571;
         background-color: #2b9385;
         background-image: linear-gradient(#2b9385, #007571);
-        color: white; }
+        color: white;
+        box-shadow: 0 0 0 1px #E4E4E4;
+        box-shadow: 0 0 0 1px var(--border-color, #E4E4E4); }
       .eureka button.eureka__primary:disabled, .eureka a.button.eureka__primary:disabled {
         filter: grayscale(100%); }
     .eureka button.dangerous:hover, .eureka button.dangerous:active, .eureka button.dangerous:focus, .eureka button.dangerous:target, .eureka a.button.dangerous:hover, .eureka a.button.dangerous:active, .eureka a.button.dangerous:focus, .eureka a.button.dangerous:target {
+      --border-color: #b80000;
+      --border-color: var(--border-color-dangerous, #b80000);
       background-color: red;
       color: white;
       background-image: linear-gradient(red, #cc0000); }
@@ -834,8 +866,8 @@ a[role="presentation"] {
     border-color: #d6e9c6;
     color: #3c763d; }
   .eureka .eureka__tree {
-    margin-bottom: 16px;
-    margin-bottom: 1rem; }
+    margin-bottom: 8px;
+    margin-bottom: .5rem; }
     @media (pointer: coarse) {
       .eureka .eureka__tree {
         font-size: 1.4em;
@@ -880,6 +912,9 @@ a[role="presentation"] {
         padding-bottom: 0; }
     .eureka .eureka__table td.comfortable p[class^="alert"] {
       margin: 0; }
+  .eureka .eureka__td-media {
+    background: transparent;
+    background: var(--media-cell-background, transparent); }
   .eureka .eureka__stage {
     padding: 0;
     margin-bottom: 8px;
@@ -939,8 +974,8 @@ a[role="presentation"] {
         content:'.';
       }*/ }
   .eureka .eureka__tree-bar {
-    margin: 16px 0 0 0;
-    margin: 1rem 0 0 0; }
+    margin: 8px 0 0 0;
+    margin: .5rem 0 0 0; }
     .eureka .eureka__tree-bar > * {
       margin: 0 8px 0 0;
       margin: 0 .5rem 0 0; }
@@ -975,9 +1010,19 @@ a[role="presentation"] {
       @media screen and (max-width: 640px) {
         .eureka .eureka__upload-form label {
           display: block; } }
+      .eureka .eureka__upload-form label:focus {
+        outline: none;
+        --border-color: #3697cd;
+        --border-color: var(--active, #3697cd);
+        --border-shadow-color: #3697cd;
+        --border-shadow-color: var(--active, #3697cd); }
       .eureka .eureka__upload-form label:hover {
         background: #3697cd;
-        color: white; }
+        color: white;
+        --border-color: #297aa7;
+        --border-color: var(--active-darker, #297aa7);
+        --border-shadow-color: #297aa7;
+        --border-shadow-color: var(--active-darker, #297aa7); }
         .eureka .eureka__upload-form label:hover svg {
           fill: white; }
   .eureka .eureka__choose-bar {
@@ -1047,6 +1092,9 @@ a[role="presentation"] {
             align-items: center;
         -ms-flex-pack: center;
             justify-content: center; }
+      .eureka .eureka__layout-chooser .eureka__icon-radio-btns input[type="radio"]:focus + label, .eureka .eureka__layout-chooser .eureka__icon-radio-btns input[type="checkbox"]:focus + label {
+        outline: 1px solid #3697cd;
+        outline: 1px solid var(--active, #3697cd); }
       .eureka .eureka__layout-chooser .eureka__icon-radio-btns input[type="radio"]:checked + label svg[class^="icon"], .eureka .eureka__layout-chooser .eureka__icon-radio-btns input[type="checkbox"]:checked + label svg[class^="icon"] {
         fill: #3697cd;
         fill: var(--active, #3697cd); }

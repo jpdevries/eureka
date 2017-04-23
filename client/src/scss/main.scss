@@ -68,6 +68,8 @@ $palettes: ( // http://erskinedesign.com/blog/friendlier-colour-names-sass-maps/
     )
 );
 
+
+
 @mixin button($doHover: true) {
   background:var(--button-bg, white);
   box-shadow: 0 0 0 1px var(--border-color, #E4E4E4);
@@ -75,10 +77,17 @@ $palettes: ( // http://erskinedesign.com/blog/friendlier-colour-names-sass-maps/
   border: 0;
   border-radius: 3px;
   padding:.5em .5em;
+  &:focus { // eventually focus-ring
+    outline: none;
+    --border-color: var(--active, $active);
+    --border-shadow-color: var(--active, $active);
+  }
   @if $doHover {
     &:hover {
       background: $active;
       color: white;
+      --border-color: var(--active-darker, darken($active, 10%));
+      --border-shadow-color: var(--active-darker, darken($active, 10%));
       svg {
         fill: white;
       }
@@ -99,8 +108,17 @@ $palettes: ( // http://erskinedesign.com/blog/friendlier-colour-names-sass-maps/
 }
 
 
+input {
+  &:focus {
+    outline: 1px solid var(--active, $active);
+  }
+}
 
-
+tr[tabindex], tr.eureka__context-row, [role="listbox"], summary {
+  &:focus {
+    outline: 1px solid var(--active, $active);
+  }
+}
 
 %flex-bar {
   display:flex;
@@ -297,10 +315,12 @@ a[role="presentation"] {
     background-image: linear-gradient(#32AB9A, #00948E);
     box-shadow: none;
     color: white;
-    &:hover {
+    &:hover, &:focus {
+      --border-color: #007571;
       background-color: #2b9385;
       background-image: linear-gradient(#2b9385, #007571);
       color: white;
+      box-shadow: 0 0 0 1px var(--border-color, #E4E4E4);
     }
     &:disabled {
       filter: grayscale(100%);
@@ -328,6 +348,7 @@ a[role="presentation"] {
     }
     &.dangerous {
       &:hover, &:active, &:focus, &:target {
+        --border-color: var(--border-color-dangerous, darken($dangerous,14%));
         background-color: $dangerous;
         color:white;
         background-image: linear-gradient($dangerous, darken($dangerous,10%));
@@ -427,7 +448,7 @@ a[role="presentation"] {
   }
 
   .eureka__tree {
-    margin-bottom:1rem;
+    margin-bottom:.5rem;
     @media (pointer: coarse) { // make the tree for fat finger friendly
       font-size:1.4em;
       line-height:1.8;
@@ -486,6 +507,10 @@ a[role="presentation"] {
         margin:0;
       }
     }
+  }
+
+  .eureka__td-media {
+    background: var(--media-cell-background, transparent);
   }
 
   .eureka__stage {
@@ -562,7 +587,7 @@ a[role="presentation"] {
         margin-right:0;
       }
     }
-    margin:1rem 0 0 0;
+    margin:.5rem 0 0 0;
     button, .button {
       font-size:1rem;
       flex:1 0 auto;
@@ -695,6 +720,13 @@ a[role="presentation"] {
 
       input[type="radio"], input[type="checkbox"] {
         @extend %visually-hidden;
+        &:focus {
+          + {
+            label {
+              outline: 1px solid var(--active, $active);
+            }
+          }
+        }
         &:checked {
           + {
             label {
