@@ -114,9 +114,17 @@ input {
   }
 }
 
-tr[tabindex], tr.eureka__context-row, [role="listbox"], summary {
+tr[tabindex], tr.eureka__context-row, [role="listbox"] {
   &:focus {
     outline: 1px solid var(--active, $active);
+  }
+}
+
+summary {
+  &:focus {
+    outline: none;
+    font-weight: bold;
+    color: var(--active, $active);
   }
 }
 
@@ -208,6 +216,7 @@ a[role="presentation"] {
 
 %padded {
   padding:1rem;
+  //padding:.5rem;
   @include media($gtMobile) {
     padding:.5rem;
   }
@@ -442,6 +451,11 @@ a[role="presentation"] {
   .eureka__button-bar {
     @extend %balanced;
     @extend %flex-bar;
+    @include media($mobile) {
+      > * {
+        margin-right: 0;
+      }
+    }
     @include media($gtMobile) {
 
     }
@@ -449,9 +463,10 @@ a[role="presentation"] {
 
   .eureka__tree {
     margin-bottom:.5rem;
+    line-height: var(--tree-line-height, 1.6);
     @media (pointer: coarse) { // make the tree for fat finger friendly
       font-size:1.4em;
-      line-height:1.8;
+      line-height: var(--tree-course-line-height, 1.8);
     }
   }
 
@@ -677,6 +692,7 @@ a[role="presentation"] {
 
   .eureka__pathbar {
     @extend %panel;
+    padding: .5rem;
     margin-bottom:.5rem;
     margin-top:.5rem;
     @include media($gtMobile) {
@@ -720,13 +736,13 @@ a[role="presentation"] {
 
       input[type="radio"], input[type="checkbox"] {
         @extend %visually-hidden;
-        &:focus {
+        /*&:focus {
           + {
             label {
               outline: 1px solid var(--active, $active);
             }
           }
-        }
+        }*/
         &:checked {
           + {
             label {
