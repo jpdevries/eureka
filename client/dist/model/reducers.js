@@ -297,7 +297,10 @@ var initialViewState = Object.assign({}, {
   sourceTreeOpen: false,
   enlargeFocusedRows: false,
   locale: "en-US",
-  sort: 'name',
+  sort: {
+    by: 'filename',
+    dir: _utility2.default.ASCENDING
+  },
   isTableScrolling: false,
   allowFullscreen: true,
   isUploading: false,

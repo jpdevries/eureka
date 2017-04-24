@@ -67,7 +67,7 @@ var EurekaTableTbody = function (_PureComponent) {
       filter: undefined
     };
 
-    _this.handleResize = _this.handleResizeEvent.bind(_this);
+    //this.handleResize = this.handleResizeEvent.bind(this);
     return _this;
   }
 
@@ -85,40 +85,37 @@ var EurekaTableTbody = function (_PureComponent) {
         window.removeEventListener("resize", this.handleResize, false);
       } catch (e) {}
     }
-  }, {
-    key: 'componentDidMount',
-    value: function componentDidMount() {
+
+    /*componentDidMount() {
       //console.log('EurekaTableTbody componentDidMount');
-      _store2.default.dispatch(_actions2.default.updateView({
+      store.dispatch(actions.updateView({
         isTableScrolling: this.isScrollable(this.tbody)
       }));
-    }
-  }, {
-    key: 'isScrollable',
-    value: function isScrollable(el) {
-      var y1 = el.scrollTop;
-      el.scrollTop += 1;
-      var y2 = el.scrollTop;
-      el.scrollTop -= 1;
-      var y3 = el.scrollTop;
+    }*/
+
+    /*isScrollable(el) {
+      const y1 = el.scrollTop;
+      el.scrollTop+=1;
+      const y2 = el.scrollTop;
+      el.scrollTop-=1;
+      const y3 = el.scrollTop;
       el.scrollTop = y1;
-      var x1 = el.scrollLeft;
-      el.scrollTop += 1;
-      var x2 = el.scrollLeft;
-      el.scrollTop -= 1;
-      var x3 = el.scrollLeft;
+      const x1 = el.scrollLeft;
+      el.scrollTop+=1;
+      const x2 = el.scrollLeft;
+      el.scrollTop-=1;
+      const x3 = el.scrollLeft;
       el.scrollLeft = x1;
       return !(y1 === y2 && y2 === y3 && x1 === x2 && x2 === x3);
     }
-  }, {
-    key: 'handleResizeEvent',
-    value: function handleResizeEvent(event) {
-      var isScrollable = this.isScrollable(this.tbody);
-      if (isScrollable === _store2.default.getState().view.isTableScrolling) return;
-      _store2.default.dispatch(_actions2.default.updateView({
-        isTableScrolling: isScrollable
+     handleResizeEvent(event) {
+      const isScrollable = this.isScrollable(this.tbody);
+      if(isScrollable === store.getState().view.isTableScrolling) return;
+      store.dispatch(actions.updateView({
+        isTableScrolling:isScrollable
       }));
-    }
+    }*/
+
   }, {
     key: 'handleRenameStart',
     value: function handleRenameStart(item) {
@@ -180,8 +177,8 @@ var EurekaTableTbody = function (_PureComponent) {
         })();
       }
 
-      /*const sortContents = false;
-      contents = (!sortContents) ? contents : contents.sort((a,b) => {
+      /*const sortContents = true;
+      contents = contents.sort((a,b) => {
         if(a[props.sort.by] === b[props.sort.by]) return 0;
          let n;
          //console.log('props.sort.by',props.sort.by,a,b);

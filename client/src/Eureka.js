@@ -14,6 +14,7 @@ import DropArea from './components/DropArea';
 import Modal from './components/Modal';
 import ModalCreateDirectoryForm from './components/ModalCreateDirectoryForm';
 import ModalRenameItemForm from './components/ModalRenameItemForm';
+import SortContents from './components/SortContents';
 
 import Mousetrap from 'mousetrap';
 
@@ -44,28 +45,21 @@ class Eureka extends Component {
 
   constructor(props) {
     super(props);
+
     this.state = {
       modalOpen:false,
       currentModal:undefined,
       renamingItem:undefined
     };
-    this.decoratedActions = props.decoratedActions ? Object.assign({}, actions, props.decoratedActions) : actions;
 
-    // there is a pattern to not have to do this, just can't remember it #janky
-    this.toggleSourceTreeOpen = this.toggleSourceTreeOpen.bind(this);
-    this.handleKeyboardChangeView = this.handleKeyboardChangeView.bind(this);
-    this.handleKeyboardChangeSource = this.handleKeyboardChangeSource.bind(this);
-    this.handleKeyboardUpload = this.handleKeyboardUpload.bind(this);
-    this.handleKeyboardCreateDirectory = this.handleKeyboardCreateDirectory.bind(this);
-    this.handleKeyboardCreateFile = this.handleKeyboardCreateFile.bind(this);
-    this.handleKeyboardFilter = this.handleKeyboardFilter.bind(this);
+    this.decoratedActions = props.decoratedActions ? Object.assign({}, actions, props.decoratedActions) : actions;
   }
 
   componentWillUnmount() {
     this.removeKeyboardListeners();
   }
 
-  handleKeyboardFilter(event) {
+  handleKeyboardFilter = (event) => {
     console.log('handleKeyboardFilter', event);
     const root = this.getEurekaRoot();
     try {
@@ -95,7 +89,7 @@ class Eureka extends Component {
     if(this.props.config.handlers && this.props.config.handlers.createFile) Mousetrap.unbind(['ctrl+shift+n'], this.handleKeyboardCreateFile);
   }
 
-  toggleSourceTreeOpen() {
+  toggleSourceTreeOpen = (event) => {
     store.dispatch(this.decoratedActions.updateView({
       sourceTreeOpen: !this.props.view.sourceTreeOpen
     }));
@@ -103,12 +97,12 @@ class Eureka extends Component {
 
 
 
-  handleKeyboardCreateDirectory(event) {
+  handleKeyboardCreateDirectory = (event) => {
     //console.log('handleKeyboardCreateDirectory', event);
     this.onCreateDirectory();
   }
 
-  handleKeyboardCreateFile(event) {
+  handleKeyboardCreateFile = (event) => {
     //console.log('handleKeyboardCreateFile', event);
     try {
       const createFileHander = this.props.config.handlers.createFile(this.props.source.currentSource, this.props.content.cd);
@@ -125,7 +119,7 @@ class Eureka extends Component {
     }
   }
 
-  handleKeyboardUpload(event) {
+  handleKeyboardUpload = (event) => {
     //console.log('handleKeyboardUpload', event);
     const root = this.getEurekaRoot();
 
@@ -136,7 +130,7 @@ class Eureka extends Component {
     }
   }
 
-  handleKeyboardChangeSource(event) {
+  handleKeyboardChangeSource = (event) => {
     //console.log('handleKeyboardChangeSource', event);
     const props = this.props;
     const state = store.getState();
@@ -158,7 +152,7 @@ class Eureka extends Component {
     }
   }
 
-  handleKeyboardChangeView(event) {
+  handleKeyboardChangeView = (event) => {
     //console.log('handleKeyboardChangeView', event);
     switch(event.key) {
       case '1':
@@ -361,8 +355,8 @@ class Eureka extends Component {
 
     const dropArea = (props.config.allowUploads) ? <DropArea {...props} /> : undefined;
 
-    const pathbrowser = (props.view.sourceTreeOpen && !utility.serverSideRendering) ? (
-      <div id="eureka__pathbrowser" className="eureka__pathbrowser">
+    const pathbrowser = (!utility.serverSideRendering) ? (
+      <div hidden={!props.view.sourceTreeOpen} aria-hidden={!props.view.sourceTreeOpen} id="eureka__pathbrowser" className="eureka__pathbrowser">
         <MediaSourceSelector {...props} />
         <FileTree {...props} onCreateDirectory={this.onCreateDirectory.bind(this)} />
         {dropArea}
@@ -394,6 +388,9 @@ class Eureka extends Component {
     const enlargeFocusedRows = (props.view.enlargeFocusedRows) ? ' eureka__enlarge-focused-rows' : '';
     const searchBar = (!utility.serverSideRendering) ? <SearchBar {...props} /> : undefined;
     const serverSideClass = (utility.serverSideRendering) ? ' eureka__server-side' : '';
+    const sortContentsSelector = (!utility.serverSideRendering) ? (
+      <SortContents {...props} sort={props.view.sort} />
+    ) : undefined;
     const formDiv = (
       <div aria-hidden={state.modalOpen} className={classNames({
         "eureka__browse-content": true,
@@ -411,6 +408,7 @@ class Eureka extends Component {
             <div role="menubar" className="eureka__tree-toggle">
               {treeToggle}
                 {mediaDirectorySelector}
+                {sortContentsSelector}
                 {uploadForm}
               {viewChooser}
             </div>

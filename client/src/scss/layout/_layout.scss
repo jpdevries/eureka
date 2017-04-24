@@ -250,6 +250,9 @@
           flex-shrink:0;
           flex-grow:0;
           margin-right:.5rem;
+          &[hidden], &[aria-hidden="true"] {
+            display: none;
+          }
         }
         > .eureka__stage {
           //flex:0 1 auto;
@@ -405,6 +408,7 @@
 
 .eureka__media-directory-selector {
   @include media($gtMobile) {
+
     form {
       display:inline-block;
     }
@@ -415,10 +419,30 @@
   }
 }
 
+.eureka__sort-select {
+  select {
+    margin-bottom: 1rem;
+  }
+  @include media($gtMobile) {
+    margin-left: auto;
+    margin-right: auto;
+    label {
+      margin-right: .5rem;
+    }
+    select {
+      margin-right: 1rem;
+      margin-bottom: 0;
+    }
+  }
+
+}
+
 .eureka__tree-toggle {
   @include media($gtMobile) {
-    display:flex;
+    display: flex;
     justify-content: flex-end;
+    flex-wrap: wrap;
+    padding-bottom: .5rem; // incase wrapping happens
     > * {
       &:first-child {
         margin-right:auto;
@@ -426,6 +450,19 @@
     }
     .eureka__upload-form {
       margin-right:auto;
+      @include media($gtMobile) { // this is kinda weird
+        //display:flex;
+        form {
+          display:flex;
+        }
+        .eureka & {
+          label[for*="upload-form"] {
+            padding-top: 0;
+            padding-bottom: 0;
+            line-height: 2.2;
+          }
+        }
+      }
       .eureka__server-side & {
         margin-right:0;
       }
@@ -601,14 +638,9 @@
   }
 
   .eureka__tree-bar {
+    @extend %flex-bar;
     text-align: center;
-    @include media($gtMobile) {
-      display:flex;
-      > * {
-        flex:1 0 auto;
 
-      }
-    }
   }
 
   &.eureka__view-mode__grid {

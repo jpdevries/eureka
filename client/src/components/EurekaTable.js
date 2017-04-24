@@ -21,14 +21,20 @@ class EurekaTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      contents: [],
-      sort: {
+      contents: (() => {
+        try {
+          return this.sortContents(props.content.contents, props.view)
+        } catch(e) {}
+        return []
+      })(),
+      sort: Object.assign({}, {
         by: 'filename',
         dir: utility.ASCENDING,
         renamingItem: undefined
-      }
+      }, props.sort)
     };
     this.decoratedActions = props.decoratedActions ? Object.assign({}, actions, props.decoratedActions) : actions;
+    //console.log('EurekaTable constructor', props, this.state);
   }
 
   /*componentShouldUpdate(nextProps, nextState) {
@@ -38,8 +44,9 @@ class EurekaTable extends Component {
     return false;
   }*/
 
-  sortContents(contents = this.state.contents, state = this.state) {
-    //console.log('sorting contents', state.sort);
+  sortContents(contents = this.state.contents, state = this.props.view) {
+    //console.log('sorting contents', contents, state.sort);
+    //return contents;
     return contents.sort((a,b) => {
       if(a[state.sort.by] === b[state.sort.by]) return 0;
 
@@ -56,12 +63,17 @@ class EurekaTable extends Component {
         n = new Date(a.editedOn).getTime() > new Date(b.editedOn).getTime() ? 1 : -1;
         break;
 
+        case 'fileSize':
+        n = (a.fileSize < b.fileSize) ? 1 : -1;
+        break;
+
         default:
-        n = (a[state.sort.by] > b[state.sort.by]) ? 1 : -1;
+        //console.log(a[state.sort.by], b[state.sort.by], a[state.sort.by] > b[state.sort.by]);
+        n = (a[state.sort.by] < b[state.sort.by]) ? 1 : -1;
         break;
       }
 
-      return (state.sort.dir === utility.ASCENDING) ? n : 0-n;
+      return (state.sort.dir === utility.DESCENDING) ? n : 0-n;
     });
   }
 
@@ -78,18 +90,39 @@ class EurekaTable extends Component {
     if(nextProps.content.contents !== this.state.contents) return true;
     if((this.state.contents.length !== nextState.contents.length) || (this.state.contents !== nextState.contents)) return true;
 
+    if(nextProps.view.sort !== this.props.view.sort) return true;
+    //return true;
+    //console.log('EurekaTable should not update');
     return false;
   }
 
   componentWillUpdate(nextProps, nextState) {
-    //console.log(this.props, this.state);
-    if(this.state.sort !== nextState.sort) {
+    //console.log('EurekaTable componentWillUpdate');
+    //console.log('nextProps.sort', nextProps.sort);
+    //console.log('nextState.sort', nextState.sort);
+    //console.log('this.props.sort', this.props.sort);
+    //console.log('nextState.sort', nextState.sort);
+
+    /*if(nextProps.sort !== nextState.sort) {
+      console.log('nextProps.sort !== nextState.sort');
       this.setState({
-        contents: this.sortContents(nextProps.content.contents, nextState)
+        sort: nextProps.sort,
+        //contents: this.sortContents(nextProps.content.contents, nextState)
+      });
+      return;
+    }*/
+
+    if(this.props.view.sort !== nextProps.view.sort || this.props.content.cd !== nextProps.content.cd) {
+      //console.log('this.props.view.sort !== nextProps.view.sort || this.props.content.cd !== nextProps.content.cd');
+      this.setState({
+        contents: this.sortContents(nextProps.content.contents, nextProps.view)
       })
-    } else if(nextProps.content.contents !== this.state.contents) this.setState({
-      contents: nextProps.content.contents
-    })
+    } else if(nextProps.content.contents !== this.props.content.contents) {
+      //console.log('nextProps.content.contents !== this.state.contents');
+      this.setState({
+        contents: (nextProps.view.filter) ? nextProps.content.contents : this.sortContents(nextProps.content.contents, nextProps.view)
+      })
+    }
   }
 
   onDrop(files) {
@@ -170,60 +203,100 @@ class EurekaTable extends Component {
           <tr>
             {selectHead}
             <th role="rowheader" scope="col" role="columnheader"><FormattedMessage id="media" defaultMessage="Media" /></th>
-            <th role="rowheader" scope="col" role="columnheader" onClick={(event) => {
-              let dir = this.state.sort.dir;
+            <th className="sortable" role="rowheader" scope="col" role="columnheader" onClick={(event) => {
+              let dir = this.props.view.sort.dir;
               //console.log("this.state.sort.by === 'filename'", this.state.sort.by === 'filename', dir);
-              if(this.state.sort.by === 'filename') {
+              if(this.props.view.sort.by === 'filename') {
                 dir = (dir === utility.ASCENDING) ? utility.DESCENDING : utility.ASCENDING
               }
               //console.log('dir',dir);
-              this.setState({
+              store.dispatch(actions.updateView({
+                sort: {
+                  by: 'filename',
+                  dir: dir
+                }
+              }));
+              /*this.setState({
                 sort:{
                   by:'filename',
                   dir: dir
                 }
               });
+              this.props.handleSort({
+                by: 'filename',
+                dir: dir
+              });*/
             }}><FormattedMessage id="name" defaultMessage="Name" />&ensp;{(!utility.serverSideRendering) ? <Icon {...props}  icon="sort" /> : undefined}</th>
             <th role="rowheader" scope="col" role="columnheader" className="visually-hidden">Actions</th>
-            <th role="rowheader" scope="col" role="columnheader" onClick={(event) => {
+            <th className="sortable" role="rowheader" scope="col" role="columnheader" onClick={(event) => {
               let dir = this.state.sort.dir;
-              if(this.state.sort.by === 'dimensions') {
+              if(this.props.view.sort.by === 'dimensions') {
                 dir = (dir === utility.ASCENDING) ? utility.DESCENDING : utility.ASCENDING
               }
-              this.setState({
+              store.dispatch(actions.updateView({
+                sort:{
+                  by:'dimensions',
+                  dir: dir
+                }
+              }));
+              /*this.setState({
                 sort:{
                   by:'dimensions',
                   dir: dir
                 }
               });
+              this.props.handleSort({
+                by: 'dimensions',
+                dir: dir
+              });*/
             }}><FormattedMessage id="dimensions" defaultMessage="Dimensions" />&ensp;{(!utility.serverSideRendering) ? <Icon {...props} icon="sort" /> : undefined}</th>
-            <th role="rowheader" scope="col" role="columnheader" onClick={(event) => {
+            <th className="sortable" role="rowheader" scope="col" role="columnheader" onClick={(event) => {
               let dir = this.state.sort.dir;
-              if(this.state.sort.by === 'fileSize') {
+              if(this.props.view.sort.by === 'fileSize') {
                 dir = (dir === utility.ASCENDING) ? utility.DESCENDING : utility.ASCENDING
               }
-              this.setState({
+              store.dispatch(actions.updateView({
+                sort:{
+                  by:'fileSize',
+                  dir: dir
+                }
+              }));
+              /*this.setState({
                 sort:{
                   by:'fileSize',
                   dir:dir
                 }
               });
+              this.props.handleSort({
+                by: 'fileSize',
+                dir: dir
+              });*/
             }}><FormattedMessage id="fileSize" defaultMessage="File Size" />&ensp;{(!utility.serverSideRendering) ? <Icon {...props} icon="sort" /> : undefined}</th>
-            <th role="rowheader" scope="col" role="columnheader" onClick={(event) => {
+            <th className="sortable" role="rowheader" scope="col" role="columnheader" onClick={(event) => {
                 let dir = this.state.sort.dir;
-                if(this.state.sort.by === 'editedOn') {
+                if(this.props.view.sort.by === 'editedOn') {
                   dir = (dir === utility.ASCENDING) ? utility.DESCENDING : utility.ASCENDING
                 }
-                this.setState({
+                store.dispatch(actions.updateView({
+                  sort:{
+                    by:'editedOn',
+                    dir: dir
+                  }
+                }));
+                /*this.setState({
                   sort:{
                     by:'editedOn',
                     dir:dir
                   }
                 });
+                this.props.handleSort({
+                  by: 'editedOn',
+                  dir: dir
+                });*/
               }}><FormattedMessage id="editedOn" defaultMessage="Edited On" />&ensp;{(!utility.serverSideRendering) ? <Icon {...props} icon="sort" /> : undefined}</th>
           </tr>
         </thead>
-        <EurekaTableTbody {...props} intl={props.intl} filter={props.view.filter} content={props.content} contents={state.contents} sort={this.state.sort} />
+        <EurekaTableTbody {...props} intl={props.intl} filter={props.view.filter} content={props.content} contents={state.contents} sort={this.props.sort} />
       </table>
     );
 

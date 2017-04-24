@@ -189,7 +189,7 @@ var EurekaMediaBrowser = function (_PureComponent) {
 
     store.subscribe(function () {
       var state = store.getState();
-      console.log(state);
+      //console.log(state);
 
       // whenever the state changes we store pieces of the state locally so that next time Eureka fires up it can render the user interface without delay
       if (state.config.useLocalStorage) {

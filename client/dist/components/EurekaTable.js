@@ -65,14 +65,20 @@ var EurekaTable = function (_Component) {
     var _this = _possibleConstructorReturn(this, (EurekaTable.__proto__ || Object.getPrototypeOf(EurekaTable)).call(this, props));
 
     _this.state = {
-      contents: [],
-      sort: {
+      contents: function () {
+        try {
+          return _this.sortContents(props.content.contents, props.view);
+        } catch (e) {}
+        return [];
+      }(),
+      sort: Object.assign({}, {
         by: 'filename',
         dir: _utility2.default.ASCENDING,
         renamingItem: undefined
-      }
+      }, props.sort)
     };
     _this.decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
+    //console.log('EurekaTable constructor', props, this.state);
     return _this;
   }
 
@@ -87,9 +93,10 @@ var EurekaTable = function (_Component) {
     key: 'sortContents',
     value: function sortContents() {
       var contents = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.state.contents;
-      var state = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.state;
+      var state = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.props.view;
 
-      //console.log('sorting contents', state.sort);
+      //console.log('sorting contents', contents, state.sort);
+      //return contents;
       return contents.sort(function (a, b) {
         if (a[state.sort.by] === b[state.sort.by]) return 0;
 
@@ -106,12 +113,17 @@ var EurekaTable = function (_Component) {
             n = new Date(a.editedOn).getTime() > new Date(b.editedOn).getTime() ? 1 : -1;
             break;
 
+          case 'fileSize':
+            n = a.fileSize < b.fileSize ? 1 : -1;
+            break;
+
           default:
-            n = a[state.sort.by] > b[state.sort.by] ? 1 : -1;
+            //console.log(a[state.sort.by], b[state.sort.by], a[state.sort.by] > b[state.sort.by]);
+            n = a[state.sort.by] < b[state.sort.by] ? 1 : -1;
             break;
         }
 
-        return state.sort.dir === _utility2.default.ASCENDING ? n : 0 - n;
+        return state.sort.dir === _utility2.default.DESCENDING ? n : 0 - n;
       });
     }
   }, {
@@ -130,19 +142,40 @@ var EurekaTable = function (_Component) {
       if (nextProps.content.contents !== this.state.contents) return true;
       if (this.state.contents.length !== nextState.contents.length || this.state.contents !== nextState.contents) return true;
 
+      if (nextProps.view.sort !== this.props.view.sort) return true;
+      //return true;
+      //console.log('EurekaTable should not update');
       return false;
     }
   }, {
     key: 'componentWillUpdate',
     value: function componentWillUpdate(nextProps, nextState) {
-      //console.log(this.props, this.state);
-      if (this.state.sort !== nextState.sort) {
+      //console.log('EurekaTable componentWillUpdate');
+      //console.log('nextProps.sort', nextProps.sort);
+      //console.log('nextState.sort', nextState.sort);
+      //console.log('this.props.sort', this.props.sort);
+      //console.log('nextState.sort', nextState.sort);
+
+      /*if(nextProps.sort !== nextState.sort) {
+        console.log('nextProps.sort !== nextState.sort');
         this.setState({
-          contents: this.sortContents(nextProps.content.contents, nextState)
+          sort: nextProps.sort,
+          //contents: this.sortContents(nextProps.content.contents, nextState)
         });
-      } else if (nextProps.content.contents !== this.state.contents) this.setState({
-        contents: nextProps.content.contents
-      });
+        return;
+      }*/
+
+      if (this.props.view.sort !== nextProps.view.sort || this.props.content.cd !== nextProps.content.cd) {
+        //console.log('this.props.view.sort !== nextProps.view.sort || this.props.content.cd !== nextProps.content.cd');
+        this.setState({
+          contents: this.sortContents(nextProps.content.contents, nextProps.view)
+        });
+      } else if (nextProps.content.contents !== this.props.content.contents) {
+        //console.log('nextProps.content.contents !== this.state.contents');
+        this.setState({
+          contents: nextProps.view.filter ? nextProps.content.contents : this.sortContents(nextProps.content.contents, nextProps.view)
+        });
+      }
     }
   }, {
     key: 'onDrop',
@@ -245,19 +278,29 @@ var EurekaTable = function (_Component) {
             ),
             _react2.default.createElement(
               'th',
-              (_React$createElement2 = { role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement2, 'role', 'columnheader'), _defineProperty(_React$createElement2, 'onClick', function onClick(event) {
-                var dir = _this2.state.sort.dir;
+              (_React$createElement2 = { className: 'sortable', role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement2, 'role', 'columnheader'), _defineProperty(_React$createElement2, 'onClick', function onClick(event) {
+                var dir = _this2.props.view.sort.dir;
                 //console.log("this.state.sort.by === 'filename'", this.state.sort.by === 'filename', dir);
-                if (_this2.state.sort.by === 'filename') {
+                if (_this2.props.view.sort.by === 'filename') {
                   dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
                 }
                 //console.log('dir',dir);
-                _this2.setState({
+                _store2.default.dispatch(_actions2.default.updateView({
                   sort: {
                     by: 'filename',
                     dir: dir
                   }
+                }));
+                /*this.setState({
+                  sort:{
+                    by:'filename',
+                    dir: dir
+                  }
                 });
+                this.props.handleSort({
+                  by: 'filename',
+                  dir: dir
+                });*/
               }), _React$createElement2),
               _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'name', defaultMessage: 'Name' }),
               '\u2002',
@@ -270,17 +313,27 @@ var EurekaTable = function (_Component) {
             ),
             _react2.default.createElement(
               'th',
-              (_React$createElement4 = { role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement4, 'role', 'columnheader'), _defineProperty(_React$createElement4, 'onClick', function onClick(event) {
+              (_React$createElement4 = { className: 'sortable', role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement4, 'role', 'columnheader'), _defineProperty(_React$createElement4, 'onClick', function onClick(event) {
                 var dir = _this2.state.sort.dir;
-                if (_this2.state.sort.by === 'dimensions') {
+                if (_this2.props.view.sort.by === 'dimensions') {
                   dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
                 }
-                _this2.setState({
+                _store2.default.dispatch(_actions2.default.updateView({
                   sort: {
                     by: 'dimensions',
                     dir: dir
                   }
+                }));
+                /*this.setState({
+                  sort:{
+                    by:'dimensions',
+                    dir: dir
+                  }
                 });
+                this.props.handleSort({
+                  by: 'dimensions',
+                  dir: dir
+                });*/
               }), _React$createElement4),
               _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'dimensions', defaultMessage: 'Dimensions' }),
               '\u2002',
@@ -288,17 +341,27 @@ var EurekaTable = function (_Component) {
             ),
             _react2.default.createElement(
               'th',
-              (_React$createElement5 = { role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement5, 'role', 'columnheader'), _defineProperty(_React$createElement5, 'onClick', function onClick(event) {
+              (_React$createElement5 = { className: 'sortable', role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement5, 'role', 'columnheader'), _defineProperty(_React$createElement5, 'onClick', function onClick(event) {
                 var dir = _this2.state.sort.dir;
-                if (_this2.state.sort.by === 'fileSize') {
+                if (_this2.props.view.sort.by === 'fileSize') {
                   dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
                 }
-                _this2.setState({
+                _store2.default.dispatch(_actions2.default.updateView({
                   sort: {
                     by: 'fileSize',
                     dir: dir
                   }
+                }));
+                /*this.setState({
+                  sort:{
+                    by:'fileSize',
+                    dir:dir
+                  }
                 });
+                this.props.handleSort({
+                  by: 'fileSize',
+                  dir: dir
+                });*/
               }), _React$createElement5),
               _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'fileSize', defaultMessage: 'File Size' }),
               '\u2002',
@@ -306,17 +369,27 @@ var EurekaTable = function (_Component) {
             ),
             _react2.default.createElement(
               'th',
-              (_React$createElement6 = { role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement6, 'role', 'columnheader'), _defineProperty(_React$createElement6, 'onClick', function onClick(event) {
+              (_React$createElement6 = { className: 'sortable', role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement6, 'role', 'columnheader'), _defineProperty(_React$createElement6, 'onClick', function onClick(event) {
                 var dir = _this2.state.sort.dir;
-                if (_this2.state.sort.by === 'editedOn') {
+                if (_this2.props.view.sort.by === 'editedOn') {
                   dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
                 }
-                _this2.setState({
+                _store2.default.dispatch(_actions2.default.updateView({
                   sort: {
                     by: 'editedOn',
                     dir: dir
                   }
+                }));
+                /*this.setState({
+                  sort:{
+                    by:'editedOn',
+                    dir:dir
+                  }
                 });
+                this.props.handleSort({
+                  by: 'editedOn',
+                  dir: dir
+                });*/
               }), _React$createElement6),
               _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'editedOn', defaultMessage: 'Edited On' }),
               '\u2002',
@@ -324,7 +397,7 @@ var EurekaTable = function (_Component) {
             )
           )
         ),
-        _react2.default.createElement(_EurekaTableTbody2.default, _extends({}, props, { intl: props.intl, filter: props.view.filter, content: props.content, contents: state.contents, sort: this.state.sort }))
+        _react2.default.createElement(_EurekaTableTbody2.default, _extends({}, props, { intl: props.intl, filter: props.view.filter, content: props.content, contents: state.contents, sort: this.props.sort }))
       );
 
       return props.config.allowUploads && !_utility2.default.serverSideRendering ? _react2.default.createElement(

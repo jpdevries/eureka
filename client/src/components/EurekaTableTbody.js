@@ -24,7 +24,7 @@ class EurekaTableTbody extends PureComponent {
       filter: undefined
     };
 
-    this.handleResize = this.handleResizeEvent.bind(this);
+    //this.handleResize = this.handleResizeEvent.bind(this);
   }
 
   componentWillMount() {
@@ -39,14 +39,14 @@ class EurekaTableTbody extends PureComponent {
     } catch (e) { }
   }
 
-  componentDidMount() {
+  /*componentDidMount() {
     //console.log('EurekaTableTbody componentDidMount');
     store.dispatch(actions.updateView({
       isTableScrolling: this.isScrollable(this.tbody)
     }));
-  }
+  }*/
 
-  isScrollable(el) {
+  /*isScrollable(el) {
     const y1 = el.scrollTop;
     el.scrollTop+=1;
     const y2 = el.scrollTop;
@@ -60,7 +60,7 @@ class EurekaTableTbody extends PureComponent {
     const x3 = el.scrollLeft;
     el.scrollLeft = x1;
     return !(y1 === y2 && y2 === y3 && x1 === x2 && x2 === x3);
-}
+  }
 
   handleResizeEvent(event) {
     const isScrollable = this.isScrollable(this.tbody);
@@ -68,7 +68,7 @@ class EurekaTableTbody extends PureComponent {
     store.dispatch(actions.updateView({
       isTableScrolling:isScrollable
     }));
-  }
+  }*/
 
   handleRenameStart(item) {
     console.log('handleRenameStart', item);
@@ -124,8 +124,8 @@ class EurekaTableTbody extends PureComponent {
       });
     }
 
-    /*const sortContents = false;
-    contents = (!sortContents) ? contents : contents.sort((a,b) => {
+    /*const sortContents = true;
+    contents = contents.sort((a,b) => {
       if(a[props.sort.by] === b[props.sort.by]) return 0;
 
       let n;

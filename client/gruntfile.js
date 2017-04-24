@@ -1,3 +1,5 @@
+var Visualizer = require('webpack-visualizer-plugin');
+
 module.exports = function(grunt) {
   const pkg = grunt.file.readJSON('package.json');
   const webpackConfig = {
@@ -14,6 +16,8 @@ module.exports = function(grunt) {
 
     progress: false, // Don't show progress
     // Defaults to true
+
+    plugins: [new Visualizer()],
 
     failOnError: false, // don't report error to grunt if webpack find errors
     // Use this if webpack errors are tolerable and grunt should continue

@@ -28,22 +28,23 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var TreeToggle = function TreeToggle(props) {
   var formatMessage = props.intl.formatMessage,
-      closeMessage = formatMessage(_definedMessages2.default.close),
-      openMessage = formatMessage(_definedMessages2.default.open),
-      toggleMessage = formatMessage(_definedMessages2.default.toggle),
-      mediaSourceTreeMessage = formatMessage(_definedMessages2.default.mediaSourceTreeMessage);
+
+  //closeMessage = formatMessage(definedMessages.close),
+  //openMessage = formatMessage(definedMessages.open),
+  //toggleMessage = formatMessage(definedMessages.toggle),
+  mediaSourceTreeMessage = formatMessage(_definedMessages2.default.mediaSourceTreeMessage);
   //<Icon {...props} icon={`caret-square-o-${props.view.sourceTreeOpen ? 'left' : 'right'}`} />&ensp;
   return _react2.default.createElement(
     'div',
     null,
     _react2.default.createElement(
       'button',
-      { role: 'menuitem', id: 'eureka__tree-toggle__button', 'aria-label': toggleMessage + ' ' + mediaSourceTreeMessage, 'aria-controls': 'eureka__pathbrowser', 'aria-pressed': props.view.sourceTreeOpen, 'aria-expanded': props.view.sourceTreeOpen, onClick: function onClick(event) {
+      { role: 'menuitem', id: 'eureka__tree-toggle__button', 'aria-controls': 'eureka__pathbrowser', 'aria-pressed': props.view.sourceTreeOpen, 'aria-expanded': props.view.sourceTreeOpen, onClick: function onClick(event) {
           _store2.default.dispatch(_actions2.default.updateView({
             sourceTreeOpen: !props.view.sourceTreeOpen
           }));
         } },
-      (props.view.sourceTreeOpen ? closeMessage : openMessage) + ' ' + mediaSourceTreeMessage
+      '' + mediaSourceTreeMessage
     )
   );
 };

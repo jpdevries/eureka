@@ -10,6 +10,7 @@ bower_components
 # production
 #/build
 
+sort.html
 
 # misc
 .DS_Store

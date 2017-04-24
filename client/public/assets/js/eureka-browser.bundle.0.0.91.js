@@ -90,11 +90,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utility2 = _interopRequireDefault(_utility);
 
-	var _en = __webpack_require__(277);
+	var _en = __webpack_require__(278);
 
 	var _en2 = _interopRequireDefault(_en);
 
-	var _i18n = __webpack_require__(278);
+	var _i18n = __webpack_require__(279);
 
 	var _i18n2 = _interopRequireDefault(_i18n);
 
@@ -245,7 +245,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    store.subscribe(function () {
 	      var state = store.getState();
-	      console.log(state);
+	      //console.log(state);
 
 	      // whenever the state changes we store pieces of the state locally so that next time Eureka fires up it can render the user interface without delay
 	      if (state.config.useLocalStorage) {
@@ -24326,6 +24326,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ModalRenameItemForm2 = _interopRequireDefault(_ModalRenameItemForm);
 
+	var _SortContents = __webpack_require__(277);
+
+	var _SortContents2 = _interopRequireDefault(_SortContents);
+
 	var _mousetrap = __webpack_require__(267);
 
 	var _mousetrap2 = _interopRequireDefault(_mousetrap);
@@ -24377,21 +24381,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    var _this = _possibleConstructorReturn(this, (Eureka.__proto__ || Object.getPrototypeOf(Eureka)).call(this, props));
 
+	    _initialiseProps.call(_this);
+
 	    _this.state = {
 	      modalOpen: false,
 	      currentModal: undefined,
 	      renamingItem: undefined
 	    };
-	    _this.decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
 
-	    // there is a pattern to not have to do this, just can't remember it #janky
-	    _this.toggleSourceTreeOpen = _this.toggleSourceTreeOpen.bind(_this);
-	    _this.handleKeyboardChangeView = _this.handleKeyboardChangeView.bind(_this);
-	    _this.handleKeyboardChangeSource = _this.handleKeyboardChangeSource.bind(_this);
-	    _this.handleKeyboardUpload = _this.handleKeyboardUpload.bind(_this);
-	    _this.handleKeyboardCreateDirectory = _this.handleKeyboardCreateDirectory.bind(_this);
-	    _this.handleKeyboardCreateFile = _this.handleKeyboardCreateFile.bind(_this);
-	    _this.handleKeyboardFilter = _this.handleKeyboardFilter.bind(_this);
+	    _this.decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
 	    return _this;
 	  }
 
@@ -24399,15 +24397,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'componentWillUnmount',
 	    value: function componentWillUnmount() {
 	      this.removeKeyboardListeners();
-	    }
-	  }, {
-	    key: 'handleKeyboardFilter',
-	    value: function handleKeyboardFilter(event) {
-	      console.log('handleKeyboardFilter', event);
-	      var root = this.getEurekaRoot();
-	      try {
-	        root.querySelector('input[name="eureka__filter"]').focus();
-	      } catch (e) {}
 	    }
 	  }, {
 	    key: 'assignKeyboardListeners',
@@ -24434,94 +24423,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (this.props.config.handlers && this.props.config.handlers.createFile) _mousetrap2.default.unbind(['ctrl+shift+n'], this.handleKeyboardCreateFile);
 	    }
 	  }, {
-	    key: 'toggleSourceTreeOpen',
-	    value: function toggleSourceTreeOpen() {
-	      _store2.default.dispatch(this.decoratedActions.updateView({
-	        sourceTreeOpen: !this.props.view.sourceTreeOpen
-	      }));
-	    }
-	  }, {
-	    key: 'handleKeyboardCreateDirectory',
-	    value: function handleKeyboardCreateDirectory(event) {
-	      //console.log('handleKeyboardCreateDirectory', event);
-	      this.onCreateDirectory();
-	    }
-	  }, {
-	    key: 'handleKeyboardCreateFile',
-	    value: function handleKeyboardCreateFile(event) {
-	      //console.log('handleKeyboardCreateFile', event);
-	      try {
-	        var createFileHander = this.props.config.handlers.createFile(this.props.source.currentSource, this.props.content.cd);
-	        if (createFileHander.onClick) createFileHander.onClick(this.props.source.currentSource, this.props.content.cd);else window.open(createFileHander.href);
-	      } catch (e) {}
-	    }
-	  }, {
 	    key: 'getEurekaRoot',
 	    value: function getEurekaRoot() {
 	      try {
 	        return event.target.closest('.eureka-root');
 	      } catch (e) {
 	        return document.querySelector('.eureka-root');
-	      }
-	    }
-	  }, {
-	    key: 'handleKeyboardUpload',
-	    value: function handleKeyboardUpload(event) {
-	      //console.log('handleKeyboardUpload', event);
-	      var root = this.getEurekaRoot();
-
-	      try {
-	        root.querySelector('.eureka__drop-area-zone').click();
-	      } catch (e) {
-	        root.querySelector('input[name="eureka__uploadFiles"]').click();
-	      }
-	    }
-	  }, {
-	    key: 'handleKeyboardChangeSource',
-	    value: function handleKeyboardChangeSource(event) {
-	      //console.log('handleKeyboardChangeSource', event);
-	      var props = this.props;
-	      var state = _store2.default.getState();
-	      var decoratedActions = this.decoratedActions;
-	      var sources = state.source.sources;
-	      console.log(sources);
-	      var matchedSource = void 0;
-	      sources.map(function (source) {
-	        if (('Digit' + source.id).toLowerCase() == event.code.toLowerCase()) matchedSource = source;
-	      });
-	      if (matchedSource) {
-	        props.dispatch(decoratedActions.updateSource(matchedSource.id));
-	        props.dispatch(decoratedActions.updateSourceTree(matchedSource.id, props.config.headers));
-	      }
-	    }
-	  }, {
-	    key: 'handleKeyboardChangeView',
-	    value: function handleKeyboardChangeView(event) {
-	      //console.log('handleKeyboardChangeView', event);
-	      switch (event.key) {
-	        case '1':
-	          _store2.default.dispatch(this.decoratedActions.updateView({
-	            mode: 'table'
-	          }));
-	          break;
-
-	        case '2':
-	          _store2.default.dispatch(this.decoratedActions.updateView({
-	            mode: 'thumb'
-	          }));
-	          break;
-
-	        case '3':
-	          _store2.default.dispatch(this.decoratedActions.updateView({
-	            mode: 'grid'
-	          }));
-	          break;
-
-	        case '4':
-	          _store2.default.dispatch(this.decoratedActions.updateView({
-	            mode: 'list'
-	          }));
-	          break;
 	      }
 	    }
 	  }, {
@@ -24721,9 +24628,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      var dropArea = props.config.allowUploads ? _react2.default.createElement(_DropArea2.default, props) : undefined;
 
-	      var pathbrowser = props.view.sourceTreeOpen && !_utility2.default.serverSideRendering ? _react2.default.createElement(
+	      var pathbrowser = !_utility2.default.serverSideRendering ? _react2.default.createElement(
 	        'div',
-	        { id: 'eureka__pathbrowser', className: 'eureka__pathbrowser' },
+	        { hidden: !props.view.sourceTreeOpen, 'aria-hidden': !props.view.sourceTreeOpen, id: 'eureka__pathbrowser', className: 'eureka__pathbrowser' },
 	        _react2.default.createElement(_MediaSourceSelector2.default, props),
 	        _react2.default.createElement(_FileTree2.default, _extends({}, props, { onCreateDirectory: this.onCreateDirectory.bind(this) })),
 	        dropArea,
@@ -24750,6 +24657,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var enlargeFocusedRows = props.view.enlargeFocusedRows ? ' eureka__enlarge-focused-rows' : '';
 	      var searchBar = !_utility2.default.serverSideRendering ? _react2.default.createElement(_SearchBar2.default, props) : undefined;
 	      var serverSideClass = _utility2.default.serverSideRendering ? ' eureka__server-side' : '';
+	      var sortContentsSelector = !_utility2.default.serverSideRendering ? _react2.default.createElement(_SortContents2.default, _extends({}, props, { sort: props.view.sort })) : undefined;
 	      var formDiv = _react2.default.createElement(
 	        'div',
 	        { 'aria-hidden': state.modalOpen, className: classNames({
@@ -24784,6 +24692,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	              { role: 'menubar', className: 'eureka__tree-toggle' },
 	              treeToggle,
 	              mediaDirectorySelector,
+	              sortContentsSelector,
 	              uploadForm,
 	              viewChooser
 	            )
@@ -24816,6 +24725,94 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  return Eureka;
 	}(_react.Component);
+
+	var _initialiseProps = function _initialiseProps() {
+	  var _this6 = this;
+
+	  this.handleKeyboardFilter = function (event) {
+	    console.log('handleKeyboardFilter', event);
+	    var root = _this6.getEurekaRoot();
+	    try {
+	      root.querySelector('input[name="eureka__filter"]').focus();
+	    } catch (e) {}
+	  };
+
+	  this.toggleSourceTreeOpen = function (event) {
+	    _store2.default.dispatch(_this6.decoratedActions.updateView({
+	      sourceTreeOpen: !_this6.props.view.sourceTreeOpen
+	    }));
+	  };
+
+	  this.handleKeyboardCreateDirectory = function (event) {
+	    //console.log('handleKeyboardCreateDirectory', event);
+	    _this6.onCreateDirectory();
+	  };
+
+	  this.handleKeyboardCreateFile = function (event) {
+	    //console.log('handleKeyboardCreateFile', event);
+	    try {
+	      var createFileHander = _this6.props.config.handlers.createFile(_this6.props.source.currentSource, _this6.props.content.cd);
+	      if (createFileHander.onClick) createFileHander.onClick(_this6.props.source.currentSource, _this6.props.content.cd);else window.open(createFileHander.href);
+	    } catch (e) {}
+	  };
+
+	  this.handleKeyboardUpload = function (event) {
+	    //console.log('handleKeyboardUpload', event);
+	    var root = _this6.getEurekaRoot();
+
+	    try {
+	      root.querySelector('.eureka__drop-area-zone').click();
+	    } catch (e) {
+	      root.querySelector('input[name="eureka__uploadFiles"]').click();
+	    }
+	  };
+
+	  this.handleKeyboardChangeSource = function (event) {
+	    //console.log('handleKeyboardChangeSource', event);
+	    var props = _this6.props;
+	    var state = _store2.default.getState();
+	    var decoratedActions = _this6.decoratedActions;
+	    var sources = state.source.sources;
+	    console.log(sources);
+	    var matchedSource = void 0;
+	    sources.map(function (source) {
+	      if (('Digit' + source.id).toLowerCase() == event.code.toLowerCase()) matchedSource = source;
+	    });
+	    if (matchedSource) {
+	      props.dispatch(decoratedActions.updateSource(matchedSource.id));
+	      props.dispatch(decoratedActions.updateSourceTree(matchedSource.id, props.config.headers));
+	    }
+	  };
+
+	  this.handleKeyboardChangeView = function (event) {
+	    //console.log('handleKeyboardChangeView', event);
+	    switch (event.key) {
+	      case '1':
+	        _store2.default.dispatch(_this6.decoratedActions.updateView({
+	          mode: 'table'
+	        }));
+	        break;
+
+	      case '2':
+	        _store2.default.dispatch(_this6.decoratedActions.updateView({
+	          mode: 'thumb'
+	        }));
+	        break;
+
+	      case '3':
+	        _store2.default.dispatch(_this6.decoratedActions.updateView({
+	          mode: 'grid'
+	        }));
+	        break;
+
+	      case '4':
+	        _store2.default.dispatch(_this6.decoratedActions.updateView({
+	          mode: 'list'
+	        }));
+	        break;
+	    }
+	  };
+	};
 
 	exports.default = Eureka;
 
@@ -25237,7 +25234,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  sourceTreeOpen: false,
 	  enlargeFocusedRows: false,
 	  locale: "en-US",
-	  sort: 'name',
+	  sort: {
+	    by: 'filename',
+	    dir: _utility2.default.ASCENDING
+	  },
 	  isTableScrolling: false,
 	  allowFullscreen: true,
 	  isUploading: false,
@@ -27099,7 +27099,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.90",
+		"version": "0.0.91",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -31988,22 +31988,23 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var TreeToggle = function TreeToggle(props) {
 	  var formatMessage = props.intl.formatMessage,
-	      closeMessage = formatMessage(_definedMessages2.default.close),
-	      openMessage = formatMessage(_definedMessages2.default.open),
-	      toggleMessage = formatMessage(_definedMessages2.default.toggle),
-	      mediaSourceTreeMessage = formatMessage(_definedMessages2.default.mediaSourceTreeMessage);
+
+	  //closeMessage = formatMessage(definedMessages.close),
+	  //openMessage = formatMessage(definedMessages.open),
+	  //toggleMessage = formatMessage(definedMessages.toggle),
+	  mediaSourceTreeMessage = formatMessage(_definedMessages2.default.mediaSourceTreeMessage);
 	  //<Icon {...props} icon={`caret-square-o-${props.view.sourceTreeOpen ? 'left' : 'right'}`} />&ensp;
 	  return _react2.default.createElement(
 	    'div',
 	    null,
 	    _react2.default.createElement(
 	      'button',
-	      { role: 'menuitem', id: 'eureka__tree-toggle__button', 'aria-label': toggleMessage + ' ' + mediaSourceTreeMessage, 'aria-controls': 'eureka__pathbrowser', 'aria-pressed': props.view.sourceTreeOpen, 'aria-expanded': props.view.sourceTreeOpen, onClick: function onClick(event) {
+	      { role: 'menuitem', id: 'eureka__tree-toggle__button', 'aria-controls': 'eureka__pathbrowser', 'aria-pressed': props.view.sourceTreeOpen, 'aria-expanded': props.view.sourceTreeOpen, onClick: function onClick(event) {
 	          _store2.default.dispatch(_actions2.default.updateView({
 	            sourceTreeOpen: !props.view.sourceTreeOpen
 	          }));
 	        } },
-	      (props.view.sourceTreeOpen ? closeMessage : openMessage) + ' ' + mediaSourceTreeMessage
+	      '' + mediaSourceTreeMessage
 	    )
 	  );
 	};
@@ -32708,14 +32709,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var _this = _possibleConstructorReturn(this, (EurekaTable.__proto__ || Object.getPrototypeOf(EurekaTable)).call(this, props));
 
 	    _this.state = {
-	      contents: [],
-	      sort: {
+	      contents: function () {
+	        try {
+	          return _this.sortContents(props.content.contents, props.view);
+	        } catch (e) {}
+	        return [];
+	      }(),
+	      sort: Object.assign({}, {
 	        by: 'filename',
 	        dir: _utility2.default.ASCENDING,
 	        renamingItem: undefined
-	      }
+	      }, props.sort)
 	    };
 	    _this.decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
+	    //console.log('EurekaTable constructor', props, this.state);
 	    return _this;
 	  }
 
@@ -32730,9 +32737,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'sortContents',
 	    value: function sortContents() {
 	      var contents = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.state.contents;
-	      var state = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.state;
+	      var state = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.props.view;
 
-	      //console.log('sorting contents', state.sort);
+	      //console.log('sorting contents', contents, state.sort);
+	      //return contents;
 	      return contents.sort(function (a, b) {
 	        if (a[state.sort.by] === b[state.sort.by]) return 0;
 
@@ -32749,12 +32757,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	            n = new Date(a.editedOn).getTime() > new Date(b.editedOn).getTime() ? 1 : -1;
 	            break;
 
+	          case 'fileSize':
+	            n = a.fileSize < b.fileSize ? 1 : -1;
+	            break;
+
 	          default:
-	            n = a[state.sort.by] > b[state.sort.by] ? 1 : -1;
+	            //console.log(a[state.sort.by], b[state.sort.by], a[state.sort.by] > b[state.sort.by]);
+	            n = a[state.sort.by] < b[state.sort.by] ? 1 : -1;
 	            break;
 	        }
 
-	        return state.sort.dir === _utility2.default.ASCENDING ? n : 0 - n;
+	        return state.sort.dir === _utility2.default.DESCENDING ? n : 0 - n;
 	      });
 	    }
 	  }, {
@@ -32773,19 +32786,40 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (nextProps.content.contents !== this.state.contents) return true;
 	      if (this.state.contents.length !== nextState.contents.length || this.state.contents !== nextState.contents) return true;
 
+	      if (nextProps.view.sort !== this.props.view.sort) return true;
+	      //return true;
+	      //console.log('EurekaTable should not update');
 	      return false;
 	    }
 	  }, {
 	    key: 'componentWillUpdate',
 	    value: function componentWillUpdate(nextProps, nextState) {
-	      //console.log(this.props, this.state);
-	      if (this.state.sort !== nextState.sort) {
+	      //console.log('EurekaTable componentWillUpdate');
+	      //console.log('nextProps.sort', nextProps.sort);
+	      //console.log('nextState.sort', nextState.sort);
+	      //console.log('this.props.sort', this.props.sort);
+	      //console.log('nextState.sort', nextState.sort);
+
+	      /*if(nextProps.sort !== nextState.sort) {
+	        console.log('nextProps.sort !== nextState.sort');
 	        this.setState({
-	          contents: this.sortContents(nextProps.content.contents, nextState)
+	          sort: nextProps.sort,
+	          //contents: this.sortContents(nextProps.content.contents, nextState)
 	        });
-	      } else if (nextProps.content.contents !== this.state.contents) this.setState({
-	        contents: nextProps.content.contents
-	      });
+	        return;
+	      }*/
+
+	      if (this.props.view.sort !== nextProps.view.sort || this.props.content.cd !== nextProps.content.cd) {
+	        //console.log('this.props.view.sort !== nextProps.view.sort || this.props.content.cd !== nextProps.content.cd');
+	        this.setState({
+	          contents: this.sortContents(nextProps.content.contents, nextProps.view)
+	        });
+	      } else if (nextProps.content.contents !== this.props.content.contents) {
+	        //console.log('nextProps.content.contents !== this.state.contents');
+	        this.setState({
+	          contents: nextProps.view.filter ? nextProps.content.contents : this.sortContents(nextProps.content.contents, nextProps.view)
+	        });
+	      }
 	    }
 	  }, {
 	    key: 'onDrop',
@@ -32888,19 +32922,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	            ),
 	            _react2.default.createElement(
 	              'th',
-	              (_React$createElement2 = { role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement2, 'role', 'columnheader'), _defineProperty(_React$createElement2, 'onClick', function onClick(event) {
-	                var dir = _this2.state.sort.dir;
+	              (_React$createElement2 = { className: 'sortable', role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement2, 'role', 'columnheader'), _defineProperty(_React$createElement2, 'onClick', function onClick(event) {
+	                var dir = _this2.props.view.sort.dir;
 	                //console.log("this.state.sort.by === 'filename'", this.state.sort.by === 'filename', dir);
-	                if (_this2.state.sort.by === 'filename') {
+	                if (_this2.props.view.sort.by === 'filename') {
 	                  dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
 	                }
 	                //console.log('dir',dir);
-	                _this2.setState({
+	                _store2.default.dispatch(_actions2.default.updateView({
 	                  sort: {
 	                    by: 'filename',
 	                    dir: dir
 	                  }
+	                }));
+	                /*this.setState({
+	                  sort:{
+	                    by:'filename',
+	                    dir: dir
+	                  }
 	                });
+	                this.props.handleSort({
+	                  by: 'filename',
+	                  dir: dir
+	                });*/
 	              }), _React$createElement2),
 	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'name', defaultMessage: 'Name' }),
 	              '\u2002',
@@ -32913,17 +32957,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	            ),
 	            _react2.default.createElement(
 	              'th',
-	              (_React$createElement4 = { role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement4, 'role', 'columnheader'), _defineProperty(_React$createElement4, 'onClick', function onClick(event) {
+	              (_React$createElement4 = { className: 'sortable', role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement4, 'role', 'columnheader'), _defineProperty(_React$createElement4, 'onClick', function onClick(event) {
 	                var dir = _this2.state.sort.dir;
-	                if (_this2.state.sort.by === 'dimensions') {
+	                if (_this2.props.view.sort.by === 'dimensions') {
 	                  dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
 	                }
-	                _this2.setState({
+	                _store2.default.dispatch(_actions2.default.updateView({
 	                  sort: {
 	                    by: 'dimensions',
 	                    dir: dir
 	                  }
+	                }));
+	                /*this.setState({
+	                  sort:{
+	                    by:'dimensions',
+	                    dir: dir
+	                  }
 	                });
+	                this.props.handleSort({
+	                  by: 'dimensions',
+	                  dir: dir
+	                });*/
 	              }), _React$createElement4),
 	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'dimensions', defaultMessage: 'Dimensions' }),
 	              '\u2002',
@@ -32931,17 +32985,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	            ),
 	            _react2.default.createElement(
 	              'th',
-	              (_React$createElement5 = { role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement5, 'role', 'columnheader'), _defineProperty(_React$createElement5, 'onClick', function onClick(event) {
+	              (_React$createElement5 = { className: 'sortable', role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement5, 'role', 'columnheader'), _defineProperty(_React$createElement5, 'onClick', function onClick(event) {
 	                var dir = _this2.state.sort.dir;
-	                if (_this2.state.sort.by === 'fileSize') {
+	                if (_this2.props.view.sort.by === 'fileSize') {
 	                  dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
 	                }
-	                _this2.setState({
+	                _store2.default.dispatch(_actions2.default.updateView({
 	                  sort: {
 	                    by: 'fileSize',
 	                    dir: dir
 	                  }
+	                }));
+	                /*this.setState({
+	                  sort:{
+	                    by:'fileSize',
+	                    dir:dir
+	                  }
 	                });
+	                this.props.handleSort({
+	                  by: 'fileSize',
+	                  dir: dir
+	                });*/
 	              }), _React$createElement5),
 	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'fileSize', defaultMessage: 'File Size' }),
 	              '\u2002',
@@ -32949,17 +33013,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	            ),
 	            _react2.default.createElement(
 	              'th',
-	              (_React$createElement6 = { role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement6, 'role', 'columnheader'), _defineProperty(_React$createElement6, 'onClick', function onClick(event) {
+	              (_React$createElement6 = { className: 'sortable', role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement6, 'role', 'columnheader'), _defineProperty(_React$createElement6, 'onClick', function onClick(event) {
 	                var dir = _this2.state.sort.dir;
-	                if (_this2.state.sort.by === 'editedOn') {
+	                if (_this2.props.view.sort.by === 'editedOn') {
 	                  dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
 	                }
-	                _this2.setState({
+	                _store2.default.dispatch(_actions2.default.updateView({
 	                  sort: {
 	                    by: 'editedOn',
 	                    dir: dir
 	                  }
+	                }));
+	                /*this.setState({
+	                  sort:{
+	                    by:'editedOn',
+	                    dir:dir
+	                  }
 	                });
+	                this.props.handleSort({
+	                  by: 'editedOn',
+	                  dir: dir
+	                });*/
 	              }), _React$createElement6),
 	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'editedOn', defaultMessage: 'Edited On' }),
 	              '\u2002',
@@ -32967,7 +33041,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            )
 	          )
 	        ),
-	        _react2.default.createElement(_EurekaTableTbody2.default, _extends({}, props, { intl: props.intl, filter: props.view.filter, content: props.content, contents: state.contents, sort: this.state.sort }))
+	        _react2.default.createElement(_EurekaTableTbody2.default, _extends({}, props, { intl: props.intl, filter: props.view.filter, content: props.content, contents: state.contents, sort: this.props.sort }))
 	      );
 
 	      return props.config.allowUploads && !_utility2.default.serverSideRendering ? _react2.default.createElement(
@@ -33061,7 +33135,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      filter: undefined
 	    };
 
-	    _this.handleResize = _this.handleResizeEvent.bind(_this);
+	    //this.handleResize = this.handleResizeEvent.bind(this);
 	    return _this;
 	  }
 
@@ -33079,40 +33153,37 @@ return /******/ (function(modules) { // webpackBootstrap
 	        window.removeEventListener("resize", this.handleResize, false);
 	      } catch (e) {}
 	    }
-	  }, {
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
+
+	    /*componentDidMount() {
 	      //console.log('EurekaTableTbody componentDidMount');
-	      _store2.default.dispatch(_actions2.default.updateView({
+	      store.dispatch(actions.updateView({
 	        isTableScrolling: this.isScrollable(this.tbody)
 	      }));
-	    }
-	  }, {
-	    key: 'isScrollable',
-	    value: function isScrollable(el) {
-	      var y1 = el.scrollTop;
-	      el.scrollTop += 1;
-	      var y2 = el.scrollTop;
-	      el.scrollTop -= 1;
-	      var y3 = el.scrollTop;
+	    }*/
+
+	    /*isScrollable(el) {
+	      const y1 = el.scrollTop;
+	      el.scrollTop+=1;
+	      const y2 = el.scrollTop;
+	      el.scrollTop-=1;
+	      const y3 = el.scrollTop;
 	      el.scrollTop = y1;
-	      var x1 = el.scrollLeft;
-	      el.scrollTop += 1;
-	      var x2 = el.scrollLeft;
-	      el.scrollTop -= 1;
-	      var x3 = el.scrollLeft;
+	      const x1 = el.scrollLeft;
+	      el.scrollTop+=1;
+	      const x2 = el.scrollLeft;
+	      el.scrollTop-=1;
+	      const x3 = el.scrollLeft;
 	      el.scrollLeft = x1;
 	      return !(y1 === y2 && y2 === y3 && x1 === x2 && x2 === x3);
 	    }
-	  }, {
-	    key: 'handleResizeEvent',
-	    value: function handleResizeEvent(event) {
-	      var isScrollable = this.isScrollable(this.tbody);
-	      if (isScrollable === _store2.default.getState().view.isTableScrolling) return;
-	      _store2.default.dispatch(_actions2.default.updateView({
-	        isTableScrolling: isScrollable
+	     handleResizeEvent(event) {
+	      const isScrollable = this.isScrollable(this.tbody);
+	      if(isScrollable === store.getState().view.isTableScrolling) return;
+	      store.dispatch(actions.updateView({
+	        isTableScrolling:isScrollable
 	      }));
-	    }
+	    }*/
+
 	  }, {
 	    key: 'handleRenameStart',
 	    value: function handleRenameStart(item) {
@@ -33174,8 +33245,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        })();
 	      }
 
-	      /*const sortContents = false;
-	      contents = (!sortContents) ? contents : contents.sort((a,b) => {
+	      /*const sortContents = true;
+	      contents = contents.sort((a,b) => {
 	        if(a[props.sort.by] === b[props.sort.by]) return 0;
 	         let n;
 	         //console.log('props.sort.by',props.sort.by,a,b);
@@ -36618,16 +36689,136 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 277 */
 /***/ function(module, exports, __webpack_require__) {
 
-	!function(e,a){ true?module.exports=a():"function"==typeof define&&define.amd?define(a):(e.ReactIntlLocaleData=e.ReactIntlLocaleData||{},e.ReactIntlLocaleData.en=a())}(this,function(){"use strict";var e=[{locale:"en",pluralRuleFunction:function(e,a){var n=String(e).split("."),l=!n[1],o=Number(n[0])==e,t=o&&n[0].slice(-1),r=o&&n[0].slice(-2);return a?1==t&&11!=r?"one":2==t&&12!=r?"two":3==t&&13!=r?"few":"other":1==e&&l?"one":"other"},fields:{year:{displayName:"year",relative:{0:"this year",1:"next year","-1":"last year"},relativeTime:{future:{one:"in {0} year",other:"in {0} years"},past:{one:"{0} year ago",other:"{0} years ago"}}},month:{displayName:"month",relative:{0:"this month",1:"next month","-1":"last month"},relativeTime:{future:{one:"in {0} month",other:"in {0} months"},past:{one:"{0} month ago",other:"{0} months ago"}}},day:{displayName:"day",relative:{0:"today",1:"tomorrow","-1":"yesterday"},relativeTime:{future:{one:"in {0} day",other:"in {0} days"},past:{one:"{0} day ago",other:"{0} days ago"}}},hour:{displayName:"hour",relativeTime:{future:{one:"in {0} hour",other:"in {0} hours"},past:{one:"{0} hour ago",other:"{0} hours ago"}}},minute:{displayName:"minute",relativeTime:{future:{one:"in {0} minute",other:"in {0} minutes"},past:{one:"{0} minute ago",other:"{0} minutes ago"}}},second:{displayName:"second",relative:{0:"now"},relativeTime:{future:{one:"in {0} second",other:"in {0} seconds"},past:{one:"{0} second ago",other:"{0} seconds ago"}}}}},{locale:"en-001",parentLocale:"en"},{locale:"en-150",parentLocale:"en-001"},{locale:"en-AG",parentLocale:"en-001"},{locale:"en-AI",parentLocale:"en-001"},{locale:"en-AS",parentLocale:"en"},{locale:"en-AT",parentLocale:"en-150"},{locale:"en-AU",parentLocale:"en-001"},{locale:"en-BB",parentLocale:"en-001"},{locale:"en-BE",parentLocale:"en-001"},{locale:"en-BI",parentLocale:"en"},{locale:"en-BM",parentLocale:"en-001"},{locale:"en-BS",parentLocale:"en-001"},{locale:"en-BW",parentLocale:"en-001"},{locale:"en-BZ",parentLocale:"en-001"},{locale:"en-CA",parentLocale:"en-001"},{locale:"en-CC",parentLocale:"en-001"},{locale:"en-CH",parentLocale:"en-150"},{locale:"en-CK",parentLocale:"en-001"},{locale:"en-CM",parentLocale:"en-001"},{locale:"en-CX",parentLocale:"en-001"},{locale:"en-CY",parentLocale:"en-001"},{locale:"en-DE",parentLocale:"en-150"},{locale:"en-DG",parentLocale:"en-001"},{locale:"en-DK",parentLocale:"en-150"},{locale:"en-DM",parentLocale:"en-001"},{locale:"en-Dsrt",pluralRuleFunction:function(e,a){return"other"},fields:{year:{displayName:"Year",relative:{0:"this year",1:"next year","-1":"last year"},relativeTime:{future:{other:"+{0} y"},past:{other:"-{0} y"}}},month:{displayName:"Month",relative:{0:"this month",1:"next month","-1":"last month"},relativeTime:{future:{other:"+{0} m"},past:{other:"-{0} m"}}},day:{displayName:"Day",relative:{0:"today",1:"tomorrow","-1":"yesterday"},relativeTime:{future:{other:"+{0} d"},past:{other:"-{0} d"}}},hour:{displayName:"Hour",relativeTime:{future:{other:"+{0} h"},past:{other:"-{0} h"}}},minute:{displayName:"Minute",relativeTime:{future:{other:"+{0} min"},past:{other:"-{0} min"}}},second:{displayName:"Second",relative:{0:"now"},relativeTime:{future:{other:"+{0} s"},past:{other:"-{0} s"}}}}},{locale:"en-ER",parentLocale:"en-001"},{locale:"en-FI",parentLocale:"en-150"},{locale:"en-FJ",parentLocale:"en-001"},{locale:"en-FK",parentLocale:"en-001"},{locale:"en-FM",parentLocale:"en-001"},{locale:"en-GB",parentLocale:"en-001"},{locale:"en-GD",parentLocale:"en-001"},{locale:"en-GG",parentLocale:"en-001"},{locale:"en-GH",parentLocale:"en-001"},{locale:"en-GI",parentLocale:"en-001"},{locale:"en-GM",parentLocale:"en-001"},{locale:"en-GU",parentLocale:"en"},{locale:"en-GY",parentLocale:"en-001"},{locale:"en-HK",parentLocale:"en-001"},{locale:"en-IE",parentLocale:"en-001"},{locale:"en-IL",parentLocale:"en-001"},{locale:"en-IM",parentLocale:"en-001"},{locale:"en-IN",parentLocale:"en-001"},{locale:"en-IO",parentLocale:"en-001"},{locale:"en-JE",parentLocale:"en-001"},{locale:"en-JM",parentLocale:"en-001"},{locale:"en-KE",parentLocale:"en-001"},{locale:"en-KI",parentLocale:"en-001"},{locale:"en-KN",parentLocale:"en-001"},{locale:"en-KY",parentLocale:"en-001"},{locale:"en-LC",parentLocale:"en-001"},{locale:"en-LR",parentLocale:"en-001"},{locale:"en-LS",parentLocale:"en-001"},{locale:"en-MG",parentLocale:"en-001"},{locale:"en-MH",parentLocale:"en"},{locale:"en-MO",parentLocale:"en-001"},{locale:"en-MP",parentLocale:"en"},{locale:"en-MS",parentLocale:"en-001"},{locale:"en-MT",parentLocale:"en-001"},{locale:"en-MU",parentLocale:"en-001"},{locale:"en-MW",parentLocale:"en-001"},{locale:"en-MY",parentLocale:"en-001"},{locale:"en-NA",parentLocale:"en-001"},{locale:"en-NF",parentLocale:"en-001"},{locale:"en-NG",parentLocale:"en-001"},{locale:"en-NL",parentLocale:"en-150"},{locale:"en-NR",parentLocale:"en-001"},{locale:"en-NU",parentLocale:"en-001"},{locale:"en-NZ",parentLocale:"en-001"},{locale:"en-PG",parentLocale:"en-001"},{locale:"en-PH",parentLocale:"en-001"},{locale:"en-PK",parentLocale:"en-001"},{locale:"en-PN",parentLocale:"en-001"},{locale:"en-PR",parentLocale:"en"},{locale:"en-PW",parentLocale:"en-001"},{locale:"en-RW",parentLocale:"en-001"},{locale:"en-SB",parentLocale:"en-001"},{locale:"en-SC",parentLocale:"en-001"},{locale:"en-SD",parentLocale:"en-001"},{locale:"en-SE",parentLocale:"en-150"},{locale:"en-SG",parentLocale:"en-001"},{locale:"en-SH",parentLocale:"en-001"},{locale:"en-SI",parentLocale:"en-150"},{locale:"en-SL",parentLocale:"en-001"},{locale:"en-SS",parentLocale:"en-001"},{locale:"en-SX",parentLocale:"en-001"},{locale:"en-SZ",parentLocale:"en-001"},{locale:"en-Shaw",pluralRuleFunction:function(e,a){return"other"},fields:{year:{displayName:"Year",relative:{0:"this year",1:"next year","-1":"last year"},relativeTime:{future:{other:"+{0} y"},past:{other:"-{0} y"}}},month:{displayName:"Month",relative:{0:"this month",1:"next month","-1":"last month"},relativeTime:{future:{other:"+{0} m"},past:{other:"-{0} m"}}},day:{displayName:"Day",relative:{0:"today",1:"tomorrow","-1":"yesterday"},relativeTime:{future:{other:"+{0} d"},past:{other:"-{0} d"}}},hour:{displayName:"Hour",relativeTime:{future:{other:"+{0} h"},past:{other:"-{0} h"}}},minute:{displayName:"Minute",relativeTime:{future:{other:"+{0} min"},past:{other:"-{0} min"}}},second:{displayName:"Second",relative:{0:"now"},relativeTime:{future:{other:"+{0} s"},past:{other:"-{0} s"}}}}},{locale:"en-TC",parentLocale:"en-001"},{locale:"en-TK",parentLocale:"en-001"},{locale:"en-TO",parentLocale:"en-001"},{locale:"en-TT",parentLocale:"en-001"},{locale:"en-TV",parentLocale:"en-001"},{locale:"en-TZ",parentLocale:"en-001"},{locale:"en-UG",parentLocale:"en-001"},{locale:"en-UM",parentLocale:"en"},{locale:"en-US",parentLocale:"en"},{locale:"en-VC",parentLocale:"en-001"},{locale:"en-VG",parentLocale:"en-001"},{locale:"en-VI",parentLocale:"en"},{locale:"en-VU",parentLocale:"en-001"},{locale:"en-WS",parentLocale:"en-001"},{locale:"en-ZA",parentLocale:"en-001"},{locale:"en-ZM",parentLocale:"en-001"},{locale:"en-ZW",parentLocale:"en-001"}];return e});
+	'use strict';
 
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _path = __webpack_require__(178);
+
+	var _path2 = _interopRequireDefault(_path);
+
+	var _reactIntl = __webpack_require__(230);
+
+	var _definedMessages = __webpack_require__(255);
+
+	var _definedMessages2 = _interopRequireDefault(_definedMessages);
+
+	var _utility = __webpack_require__(222);
+
+	var _utility2 = _interopRequireDefault(_utility);
+
+	var _store = __webpack_require__(219);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	var _actions = __webpack_require__(224);
+
+	var _actions2 = _interopRequireDefault(_actions);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var SortContents = function SortContents(props) {
+	  var _props$intl = props.intl,
+	      formatMessage = _props$intl.formatMessage,
+	      formatDate = _props$intl.formatDate;
+
+	  var optionNameMessage = 'Name',
+	      optionDimensionsMessage = 'Dimensions',
+	      optionFilesizeMessage = 'File Size',
+	      optionEditedOnMessage = 'Edited On';
+
+	  //console.log('props.sort', props.sort);
+
+
+	  return _react2.default.createElement(
+	    'form',
+	    { className: 'eureka__sort-select' },
+	    _react2.default.createElement(
+	      'label',
+	      { htmlFor: 'eureka__sort-select' },
+	      _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'sortBy', defaultMessage: 'Sort by' }),
+	      ':'
+	    ),
+	    _react2.default.createElement(
+	      'select',
+	      { value: props.sort.by, name: 'eureka__sort-select', id: 'eureka__sort-select', onChange: function onChange(event) {
+	          _store2.default.dispatch(_actions2.default.updateView({
+	            sort: Object.assign({}, props.view.sort, {
+	              by: event.target.value
+	            })
+	          }));
+	        } },
+	      _react2.default.createElement(
+	        'option',
+	        { value: 'filename' },
+	        optionNameMessage
+	      ),
+	      _react2.default.createElement(
+	        'option',
+	        { value: 'dimensions' },
+	        optionDimensionsMessage
+	      ),
+	      _react2.default.createElement(
+	        'option',
+	        { value: 'fileSize' },
+	        optionFilesizeMessage
+	      ),
+	      _react2.default.createElement(
+	        'option',
+	        { value: 'editedOn' },
+	        optionEditedOnMessage
+	      )
+	    ),
+	    _react2.default.createElement(
+	      'label',
+	      { htmlFor: 'eureka__sort-direction' },
+	      'Sort Direction:'
+	    ),
+	    _react2.default.createElement(
+	      'select',
+	      { value: props.sort.dir, name: 'eureka__sort-direction', id: 'eureka__sort-direction', onChange: function onChange(event) {
+	          _store2.default.dispatch(_actions2.default.updateView({
+	            sort: Object.assign({}, props.view.sort, {
+	              dir: event.target.value
+	            })
+	          }));
+	        } },
+	      _react2.default.createElement(
+	        'option',
+	        { checked: props.sort.dir == _utility2.default.ASCENDING, value: _utility2.default.ASCENDING },
+	        'Ascending'
+	      ),
+	      _react2.default.createElement(
+	        'option',
+	        { checked: props.sort.dir == _utility2.default.DESCENDING, value: _utility2.default.DESCENDING },
+	        'Descending'
+	      )
+	    )
+	  );
+	};
+
+	exports.default = SortContents;
 
 /***/ },
 /* 278 */
 /***/ function(module, exports, __webpack_require__) {
 
+	!function(e,a){ true?module.exports=a():"function"==typeof define&&define.amd?define(a):(e.ReactIntlLocaleData=e.ReactIntlLocaleData||{},e.ReactIntlLocaleData.en=a())}(this,function(){"use strict";var e=[{locale:"en",pluralRuleFunction:function(e,a){var n=String(e).split("."),l=!n[1],o=Number(n[0])==e,t=o&&n[0].slice(-1),r=o&&n[0].slice(-2);return a?1==t&&11!=r?"one":2==t&&12!=r?"two":3==t&&13!=r?"few":"other":1==e&&l?"one":"other"},fields:{year:{displayName:"year",relative:{0:"this year",1:"next year","-1":"last year"},relativeTime:{future:{one:"in {0} year",other:"in {0} years"},past:{one:"{0} year ago",other:"{0} years ago"}}},month:{displayName:"month",relative:{0:"this month",1:"next month","-1":"last month"},relativeTime:{future:{one:"in {0} month",other:"in {0} months"},past:{one:"{0} month ago",other:"{0} months ago"}}},day:{displayName:"day",relative:{0:"today",1:"tomorrow","-1":"yesterday"},relativeTime:{future:{one:"in {0} day",other:"in {0} days"},past:{one:"{0} day ago",other:"{0} days ago"}}},hour:{displayName:"hour",relativeTime:{future:{one:"in {0} hour",other:"in {0} hours"},past:{one:"{0} hour ago",other:"{0} hours ago"}}},minute:{displayName:"minute",relativeTime:{future:{one:"in {0} minute",other:"in {0} minutes"},past:{one:"{0} minute ago",other:"{0} minutes ago"}}},second:{displayName:"second",relative:{0:"now"},relativeTime:{future:{one:"in {0} second",other:"in {0} seconds"},past:{one:"{0} second ago",other:"{0} seconds ago"}}}}},{locale:"en-001",parentLocale:"en"},{locale:"en-150",parentLocale:"en-001"},{locale:"en-AG",parentLocale:"en-001"},{locale:"en-AI",parentLocale:"en-001"},{locale:"en-AS",parentLocale:"en"},{locale:"en-AT",parentLocale:"en-150"},{locale:"en-AU",parentLocale:"en-001"},{locale:"en-BB",parentLocale:"en-001"},{locale:"en-BE",parentLocale:"en-001"},{locale:"en-BI",parentLocale:"en"},{locale:"en-BM",parentLocale:"en-001"},{locale:"en-BS",parentLocale:"en-001"},{locale:"en-BW",parentLocale:"en-001"},{locale:"en-BZ",parentLocale:"en-001"},{locale:"en-CA",parentLocale:"en-001"},{locale:"en-CC",parentLocale:"en-001"},{locale:"en-CH",parentLocale:"en-150"},{locale:"en-CK",parentLocale:"en-001"},{locale:"en-CM",parentLocale:"en-001"},{locale:"en-CX",parentLocale:"en-001"},{locale:"en-CY",parentLocale:"en-001"},{locale:"en-DE",parentLocale:"en-150"},{locale:"en-DG",parentLocale:"en-001"},{locale:"en-DK",parentLocale:"en-150"},{locale:"en-DM",parentLocale:"en-001"},{locale:"en-Dsrt",pluralRuleFunction:function(e,a){return"other"},fields:{year:{displayName:"Year",relative:{0:"this year",1:"next year","-1":"last year"},relativeTime:{future:{other:"+{0} y"},past:{other:"-{0} y"}}},month:{displayName:"Month",relative:{0:"this month",1:"next month","-1":"last month"},relativeTime:{future:{other:"+{0} m"},past:{other:"-{0} m"}}},day:{displayName:"Day",relative:{0:"today",1:"tomorrow","-1":"yesterday"},relativeTime:{future:{other:"+{0} d"},past:{other:"-{0} d"}}},hour:{displayName:"Hour",relativeTime:{future:{other:"+{0} h"},past:{other:"-{0} h"}}},minute:{displayName:"Minute",relativeTime:{future:{other:"+{0} min"},past:{other:"-{0} min"}}},second:{displayName:"Second",relative:{0:"now"},relativeTime:{future:{other:"+{0} s"},past:{other:"-{0} s"}}}}},{locale:"en-ER",parentLocale:"en-001"},{locale:"en-FI",parentLocale:"en-150"},{locale:"en-FJ",parentLocale:"en-001"},{locale:"en-FK",parentLocale:"en-001"},{locale:"en-FM",parentLocale:"en-001"},{locale:"en-GB",parentLocale:"en-001"},{locale:"en-GD",parentLocale:"en-001"},{locale:"en-GG",parentLocale:"en-001"},{locale:"en-GH",parentLocale:"en-001"},{locale:"en-GI",parentLocale:"en-001"},{locale:"en-GM",parentLocale:"en-001"},{locale:"en-GU",parentLocale:"en"},{locale:"en-GY",parentLocale:"en-001"},{locale:"en-HK",parentLocale:"en-001"},{locale:"en-IE",parentLocale:"en-001"},{locale:"en-IL",parentLocale:"en-001"},{locale:"en-IM",parentLocale:"en-001"},{locale:"en-IN",parentLocale:"en-001"},{locale:"en-IO",parentLocale:"en-001"},{locale:"en-JE",parentLocale:"en-001"},{locale:"en-JM",parentLocale:"en-001"},{locale:"en-KE",parentLocale:"en-001"},{locale:"en-KI",parentLocale:"en-001"},{locale:"en-KN",parentLocale:"en-001"},{locale:"en-KY",parentLocale:"en-001"},{locale:"en-LC",parentLocale:"en-001"},{locale:"en-LR",parentLocale:"en-001"},{locale:"en-LS",parentLocale:"en-001"},{locale:"en-MG",parentLocale:"en-001"},{locale:"en-MH",parentLocale:"en"},{locale:"en-MO",parentLocale:"en-001"},{locale:"en-MP",parentLocale:"en"},{locale:"en-MS",parentLocale:"en-001"},{locale:"en-MT",parentLocale:"en-001"},{locale:"en-MU",parentLocale:"en-001"},{locale:"en-MW",parentLocale:"en-001"},{locale:"en-MY",parentLocale:"en-001"},{locale:"en-NA",parentLocale:"en-001"},{locale:"en-NF",parentLocale:"en-001"},{locale:"en-NG",parentLocale:"en-001"},{locale:"en-NL",parentLocale:"en-150"},{locale:"en-NR",parentLocale:"en-001"},{locale:"en-NU",parentLocale:"en-001"},{locale:"en-NZ",parentLocale:"en-001"},{locale:"en-PG",parentLocale:"en-001"},{locale:"en-PH",parentLocale:"en-001"},{locale:"en-PK",parentLocale:"en-001"},{locale:"en-PN",parentLocale:"en-001"},{locale:"en-PR",parentLocale:"en"},{locale:"en-PW",parentLocale:"en-001"},{locale:"en-RW",parentLocale:"en-001"},{locale:"en-SB",parentLocale:"en-001"},{locale:"en-SC",parentLocale:"en-001"},{locale:"en-SD",parentLocale:"en-001"},{locale:"en-SE",parentLocale:"en-150"},{locale:"en-SG",parentLocale:"en-001"},{locale:"en-SH",parentLocale:"en-001"},{locale:"en-SI",parentLocale:"en-150"},{locale:"en-SL",parentLocale:"en-001"},{locale:"en-SS",parentLocale:"en-001"},{locale:"en-SX",parentLocale:"en-001"},{locale:"en-SZ",parentLocale:"en-001"},{locale:"en-Shaw",pluralRuleFunction:function(e,a){return"other"},fields:{year:{displayName:"Year",relative:{0:"this year",1:"next year","-1":"last year"},relativeTime:{future:{other:"+{0} y"},past:{other:"-{0} y"}}},month:{displayName:"Month",relative:{0:"this month",1:"next month","-1":"last month"},relativeTime:{future:{other:"+{0} m"},past:{other:"-{0} m"}}},day:{displayName:"Day",relative:{0:"today",1:"tomorrow","-1":"yesterday"},relativeTime:{future:{other:"+{0} d"},past:{other:"-{0} d"}}},hour:{displayName:"Hour",relativeTime:{future:{other:"+{0} h"},past:{other:"-{0} h"}}},minute:{displayName:"Minute",relativeTime:{future:{other:"+{0} min"},past:{other:"-{0} min"}}},second:{displayName:"Second",relative:{0:"now"},relativeTime:{future:{other:"+{0} s"},past:{other:"-{0} s"}}}}},{locale:"en-TC",parentLocale:"en-001"},{locale:"en-TK",parentLocale:"en-001"},{locale:"en-TO",parentLocale:"en-001"},{locale:"en-TT",parentLocale:"en-001"},{locale:"en-TV",parentLocale:"en-001"},{locale:"en-TZ",parentLocale:"en-001"},{locale:"en-UG",parentLocale:"en-001"},{locale:"en-UM",parentLocale:"en"},{locale:"en-US",parentLocale:"en"},{locale:"en-VC",parentLocale:"en-001"},{locale:"en-VG",parentLocale:"en-001"},{locale:"en-VI",parentLocale:"en"},{locale:"en-VU",parentLocale:"en-001"},{locale:"en-WS",parentLocale:"en-001"},{locale:"en-ZA",parentLocale:"en-001"},{locale:"en-ZM",parentLocale:"en-001"},{locale:"en-ZW",parentLocale:"en-001"}];return e});
+
+
+/***/ },
+/* 279 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 
-	var _en = __webpack_require__(279);
+	var _en = __webpack_require__(280);
 
 	var _en2 = _interopRequireDefault(_en);
 
@@ -36638,7 +36829,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 279 */
+/* 280 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -36676,6 +36867,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		"directory": "directory",
 		"renamingItem": "renaming item {filename}",
 		"filter": "Filter",
+		"sortBy": "Sort by",
 		"upload.files": "Upload files",
 		"upload.dragFilesUploading": "Uploading files…",
 		"layout.fullscreenMode": "Fullscreen Mode",
@@ -36712,6 +36904,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		"layout.tabular": "Tabular Layout displays image thumbnails along with Name, Description, File Size and Edited On columns",
 		"layout.thumbnail": "Thumbnail layout displays a grid of medium sized thumbnails",
 		"file.openInNewTab": "Open {filename} in a new tab",
+		"toggle": "Toggle",
 		"media.sourceTree": "Media Source Panel",
 		"upload.dragFilestoUpload": "Drag files here to be uploaded to {cd}"
 	};

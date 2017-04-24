@@ -237,7 +237,6 @@ a[role="presentation"] {
 }
 
 .eureka {
-
   .eureka__upload-form {
     input[name*="uploadFiles"]:disabled + label {
       cursor: default;
@@ -271,6 +270,10 @@ a[role="presentation"] {
 
   h1,h2,h3,h4,h5,h6, thead {
     color:var(--subtle, palette(heading, dark));
+  }
+
+  th.sortable {
+    @extend %clickable;
   }
 
   select {
@@ -309,6 +312,9 @@ a[role="presentation"] {
     box-shadow: 0 0 0 1px var(--border-color, #E4E4E4), 0 0.25em 0 var(--border-color, darken(#E4E4E4, 12%));
     &[aria-pressed="true"] {
       box-shadow: 0 0 0 1px var(--border-shadow-color, #E4E4E4), inset 0 0.175em 0 var(--border-shadow-color, darken(#E4E4E4, 12%));
+    }
+    &:focus {
+      --button-color: var(--active, $active);
     }
     @include media($mobile) {
       width: 100%;
@@ -572,10 +578,11 @@ a[role="presentation"] {
   }
 
   .eureka__media-directory-selector {
-    margin-bottom:1rem;
 
+    margin-bottom:1rem;
     @include media($gtMobile) {
       margin-right:auto;
+      margin-bottom: 0.5rem;
     }
     button[type="submit"] {
       margin-left:1rem;
@@ -622,7 +629,9 @@ a[role="presentation"] {
   }
 
   .eureka__upload-form {
-    margin-bottom: 1rem;
+    @include media($mobile) {
+      margin-bottom: 1rem;
+    }
     label {
       @include media($mobile) {
         display: block;

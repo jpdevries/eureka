@@ -33,6 +33,7 @@
   "directory": "directory",
   "renamingItem": "renaming item {filename}",
   "filter": "Filter",
+  "sortBy": "Sort by",
   "upload.files": "Upload files",
   "upload.dragFilesUploading": "Uploading files…",
   "layout.fullscreenMode": "Fullscreen Mode",

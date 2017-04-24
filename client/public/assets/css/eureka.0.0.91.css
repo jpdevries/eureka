@@ -7,7 +7,7 @@
 .eureka.eureka__view-mode__thumb img, .eureka.eureka__view-mode__grid img, .eureka .eureka__media-source-selector select {
   width: 100%; }
 
-.eureka select, .eureka button, .eureka a.button, .eureka .eureka__upload-form label, .eureka .eureka__layout-chooser .eureka__icon-radio-btns label {
+.eureka th.sortable, .eureka select, .eureka button, .eureka a.button, .eureka .eureka__upload-form label, .eureka .eureka__layout-chooser .eureka__icon-radio-btns label {
   cursor: pointer; }
 
 .eureka .eureka__modal, .eureka .eureka__modal .eureka__modal-scrim {
@@ -222,6 +222,8 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
           -ms-flex-positive: 0;
               flex-grow: 0;
           margin-right: .5rem; }
+          .eureka-root .eureka > .eureka__browse-content > .eureka__pathbrowser[hidden], .eureka-root .eureka > .eureka__browse-content > .eureka__pathbrowser[aria-hidden="true"] {
+            display: none; }
         .eureka-root .eureka > .eureka__browse-content > .eureka__stage {
           -ms-flex: 1 1 100%;
               flex: 1 1 100%;
@@ -390,16 +392,43 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
     display: inline-block;
     margin-left: .5em; } }
 
+.eureka__sort-select select {
+  margin-bottom: 16px;
+  margin-bottom: 1rem; }
+
+@media screen and (min-width: 641px) {
+  .eureka__sort-select {
+    margin-left: auto;
+    margin-right: auto; }
+    .eureka__sort-select label {
+      margin-right: .5rem; }
+    .eureka__sort-select select {
+      margin-right: 1rem;
+      margin-bottom: 0; } }
+
 @media screen and (min-width: 641px) {
   .eureka__tree-toggle {
     display: -ms-flexbox;
     display: flex;
     -ms-flex-pack: end;
-        justify-content: flex-end; }
+        justify-content: flex-end;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    padding-bottom: .5rem; }
     .eureka__tree-toggle > *:first-child {
       margin-right: auto; }
     .eureka__tree-toggle .eureka__upload-form {
-      margin-right: auto; }
+      margin-right: auto; } }
+    @media screen and (min-width: 641px) and (min-width: 641px) {
+      .eureka__tree-toggle .eureka__upload-form form {
+        display: -ms-flexbox;
+        display: flex; }
+      .eureka .eureka__tree-toggle .eureka__upload-form label[for*="upload-form"] {
+        padding-top: 0;
+        padding-bottom: 0;
+        line-height: 2.2; } }
+
+@media screen and (min-width: 641px) {
       .eureka__server-side .eureka__tree-toggle .eureka__upload-form {
         margin-right: 0; } }
 
@@ -515,13 +544,6 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
 
 .eureka .eureka__tree-bar {
   text-align: center; }
-  @media screen and (min-width: 641px) {
-    .eureka .eureka__tree-bar {
-      display: -ms-flexbox;
-      display: flex; }
-      .eureka .eureka__tree-bar > * {
-        -ms-flex: 1 0 auto;
-            flex: 1 0 auto; } }
 
 .eureka.eureka__view-mode__grid .eureka__td-media {
   margin: 0 auto;
@@ -592,13 +614,13 @@ summary:focus {
   color: #3697cd;
   color: var(--active, #3697cd); }
 
-.flex-bar, .eureka .eureka__button-bar {
+.eureka .eureka__tree-bar, .flex-bar, .eureka .eureka__button-bar {
   display: -ms-flexbox;
   display: flex; }
-  .flex-bar > *, .eureka .eureka__button-bar > * {
+  .eureka .eureka__tree-bar > *, .flex-bar > *, .eureka .eureka__button-bar > * {
     margin-right: 8px;
     margin-right: .5rem; }
-    .flex-bar > *:last-child, .eureka .eureka__button-bar > *:last-child {
+    .eureka .eureka__tree-bar > *:last-child, .flex-bar > *:last-child, .eureka .eureka__button-bar > *:last-child {
       margin-right: 0; }
 
 .eureka .eureka__button-bar, .eureka .eureka__notice {
@@ -760,6 +782,9 @@ a[role="presentation"] {
     .eureka button[id^="eureka__tree-toggle__button"][aria-pressed="true"] {
       box-shadow: 0 0 0 1px #E4E4E4, inset 0 0.175em 0 #c5c5c5;
       box-shadow: 0 0 0 1px var(--border-shadow-color, #E4E4E4), inset 0 0.175em 0 var(--border-shadow-color, #c5c5c5); }
+    .eureka button[id^="eureka__tree-toggle__button"]:focus {
+      --button-color: #3697cd;
+      --button-color: var(--active, #3697cd); }
     @media screen and (max-width: 640px) {
       .eureka button[id^="eureka__tree-toggle__button"] {
         width: 100%;
@@ -969,7 +994,8 @@ a[role="presentation"] {
     margin-bottom: 1rem; }
     @media screen and (min-width: 641px) {
       .eureka .eureka__media-directory-selector {
-        margin-right: auto; } }
+        margin-right: auto;
+        margin-bottom: 0.5rem; } }
     .eureka .eureka__media-directory-selector button[type="submit"] {
       margin-left: 16px;
       margin-left: 1rem; }
@@ -1003,40 +1029,40 @@ a[role="presentation"] {
     margin-bottom: 1rem; }
     .eureka .eureka__media-source-selector h2:first-child, .eureka .eureka__media-source-selector h3:first-child {
       margin-top: 0; }
-  .eureka .eureka__upload-form {
-    margin-bottom: 16px;
-    margin-bottom: 1rem; }
-    .eureka .eureka__upload-form label {
-      background: white;
-      background: var(--button-bg, white);
-      box-shadow: 0 0 0 1px #E4E4E4;
-      box-shadow: 0 0 0 1px var(--border-color, #E4E4E4);
-      color: #555555;
-      color: var(--button-color, #555555);
-      border: 0;
-      border-radius: 3px;
-      padding: .5em .5em;
-      font-size: 11px;
-      font-size: .6875rem;
-      text-align: center; }
-      @media screen and (max-width: 640px) {
-        .eureka .eureka__upload-form label {
-          display: block; } }
-      .eureka .eureka__upload-form label:focus {
-        outline: none;
-        --border-color: #3697cd;
-        --border-color: var(--active, #3697cd);
-        --border-shadow-color: #3697cd;
-        --border-shadow-color: var(--active, #3697cd); }
-      .eureka .eureka__upload-form label:hover {
-        background: #3697cd;
-        color: white;
-        --border-color: #297aa7;
-        --border-color: var(--active-darker, #297aa7);
-        --border-shadow-color: #297aa7;
-        --border-shadow-color: var(--active-darker, #297aa7); }
-        .eureka .eureka__upload-form label:hover svg {
-          fill: white; }
+  @media screen and (max-width: 640px) {
+    .eureka .eureka__upload-form {
+      margin-bottom: 1rem; } }
+  .eureka .eureka__upload-form label {
+    background: white;
+    background: var(--button-bg, white);
+    box-shadow: 0 0 0 1px #E4E4E4;
+    box-shadow: 0 0 0 1px var(--border-color, #E4E4E4);
+    color: #555555;
+    color: var(--button-color, #555555);
+    border: 0;
+    border-radius: 3px;
+    padding: .5em .5em;
+    font-size: 11px;
+    font-size: .6875rem;
+    text-align: center; }
+    @media screen and (max-width: 640px) {
+      .eureka .eureka__upload-form label {
+        display: block; } }
+    .eureka .eureka__upload-form label:focus {
+      outline: none;
+      --border-color: #3697cd;
+      --border-color: var(--active, #3697cd);
+      --border-shadow-color: #3697cd;
+      --border-shadow-color: var(--active, #3697cd); }
+    .eureka .eureka__upload-form label:hover {
+      background: #3697cd;
+      color: white;
+      --border-color: #297aa7;
+      --border-color: var(--active-darker, #297aa7);
+      --border-shadow-color: #297aa7;
+      --border-shadow-color: var(--active-darker, #297aa7); }
+      .eureka .eureka__upload-form label:hover svg {
+        fill: white; }
   .eureka .eureka__choose-bar {
     -ms-flex-pack: end;
         justify-content: flex-end;
