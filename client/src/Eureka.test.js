@@ -152,7 +152,7 @@ it('should hide media source panel if treeHidden is set to true', () => {
   const Provider = getEurekaProvider();
   ReactDOM.render(Provider, div);
 
-  if(div.querySelector('#eureka__pathbrowser')) {
+  if(!div.querySelector('#eureka__pathbrowser').hasAttribute('hidden')) {
     const err = `$eureka__pathbrowser should not be present in the DOM if treeHidden is set to true`;
     console.log(err);
     throw new Error(err);

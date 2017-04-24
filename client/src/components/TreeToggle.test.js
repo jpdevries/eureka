@@ -27,7 +27,7 @@ it('should prompt user to open the tree when the tree is closed', () => {
     sourceTreeOpen:false
   }} /></IntlProvider>, div);
 
-  if(!div.innerHTML.includes('Open ')) {
+  if(div.querySelector('#eureka__tree-toggle__button').getAttribute('aria-expanded') !== 'false') {
     const err = `Tree toggle button should prompt users to open the three when the tree is closed`;
     console.log(err);
     throw new Error(err);
@@ -41,7 +41,7 @@ it('should prompt user to close the tree when the tree is open', () => {
     sourceTreeOpen:true
   }} /></IntlProvider>, div);
 
-  if(!div.innerHTML.includes('Close ')) {
+  if(div.querySelector('#eureka__tree-toggle__button').getAttribute('aria-expanded') !== 'true') {
     const err = `Tree toggle button should prompt users to close the three when the tree is open`;
     console.log(err);
     throw new Error(err);
