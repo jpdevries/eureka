@@ -24769,11 +24769,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  this.handleKeyboardChangeSource = function (event) {
 	    //console.log('handleKeyboardChangeSource', event);
-	    var props = _this6.props;
-	    var state = _store2.default.getState();
-	    var decoratedActions = _this6.decoratedActions;
-	    var sources = state.source.sources;
-	    console.log(sources);
+	    var props = _this6.props,
+	        state = _store2.default.getState(),
+	        decoratedActions = _this6.decoratedActions,
+	        sources = state.source.sources;
+
 	    var matchedSource = void 0;
 	    sources.map(function (source) {
 	      if (('Digit' + source.id).toLowerCase() == event.code.toLowerCase()) matchedSource = source;
@@ -27099,7 +27099,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.92",
+		"version": "0.0.93",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -33490,7 +33490,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function assignKeyboardListeners() {
 	      _mousetrap2.default.bind(['backspace'], this.handleKeyboardBackspace);
 	      _mousetrap2.default.bind(['enter'], this.handleKeyboardChoose);
-	      _mousetrap2.default.bind(['space'], this.handleKeyboardExpand);
+	      _mousetrap2.default.bind(['alt+space'], this.handleKeyboardExpand);
 	      _mousetrap2.default.bind(['ctrl+r'], this.handleKeyboardRename);
 	    }
 	  }, {
@@ -33509,7 +33509,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function removeKeyboardListeners() {
 	      _mousetrap2.default.unbind(['backspace'], this.handleKeyboardBackspace);
 	      _mousetrap2.default.unbind(['enter'], this.handleKeyboardChoose);
-	      _mousetrap2.default.unbind(['space'], this.handleKeyboardExpand);
+	      _mousetrap2.default.unbind(['alt+space'], this.handleKeyboardExpand);
 	      _mousetrap2.default.unbind(['ctrl+r'], this.handleKeyboardRename);
 	    }
 	  }, {
@@ -33523,7 +33523,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'handleKeyboardChoose',
 	    value: function handleKeyboardChoose(event) {
-	      //console.log('handleKeyboardChoose', event);
+	      if (!event.target.matches('.eureka__focused-media-item')) return;
 	      //event.preventDefault();
 	      try {
 	        document.getElementById('choose__' + _utility2.default.cssSafe(this.props.item.filename)).click();
@@ -33532,6 +33532,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'handleKeyboardExpand',
 	    value: function handleKeyboardExpand(event) {
+	      if (!event.target.matches('.eureka__focused-media-item')) return;
 	      try {
 	        document.getElementById('expand__' + _utility2.default.cssSafe(this.props.item.filename)).click();
 	      } catch (e) {}

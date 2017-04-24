@@ -54,7 +54,7 @@ class MediaRow extends PureComponent {
   assignKeyboardListeners() {
     Mousetrap.bind(['backspace'], this.handleKeyboardBackspace);
     Mousetrap.bind(['enter'], this.handleKeyboardChoose);
-    Mousetrap.bind(['space'], this.handleKeyboardExpand);
+    Mousetrap.bind(['alt+space'], this.handleKeyboardExpand);
     Mousetrap.bind(['ctrl+r'], this.handleKeyboardRename);
   }
 
@@ -70,7 +70,7 @@ class MediaRow extends PureComponent {
   removeKeyboardListeners() {
     Mousetrap.unbind(['backspace'], this.handleKeyboardBackspace);
     Mousetrap.unbind(['enter'], this.handleKeyboardChoose);
-    Mousetrap.unbind(['space'], this.handleKeyboardExpand);
+    Mousetrap.unbind(['alt+space'], this.handleKeyboardExpand);
     Mousetrap.unbind(['ctrl+r'], this.handleKeyboardRename);
   }
 
@@ -82,7 +82,7 @@ class MediaRow extends PureComponent {
   }
 
   handleKeyboardChoose(event) {
-    //console.log('handleKeyboardChoose', event);
+    if(!event.target.matches('.eureka__focused-media-item')) return;
     //event.preventDefault();
     try {
       document.getElementById(`choose__${utility.cssSafe(this.props.item.filename)}`).click();
@@ -90,6 +90,7 @@ class MediaRow extends PureComponent {
   }
 
   handleKeyboardExpand(event) {
+    if(!event.target.matches('.eureka__focused-media-item')) return;
     try {
       document.getElementById(`expand__${utility.cssSafe(this.props.item.filename)}`).click();
     } catch (e) { }

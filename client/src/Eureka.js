@@ -95,8 +95,6 @@ class Eureka extends Component {
     }));
   }
 
-
-
   handleKeyboardCreateDirectory = (event) => {
     //console.log('handleKeyboardCreateDirectory', event);
     this.onCreateDirectory();
@@ -132,11 +130,11 @@ class Eureka extends Component {
 
   handleKeyboardChangeSource = (event) => {
     //console.log('handleKeyboardChangeSource', event);
-    const props = this.props;
-    const state = store.getState();
-    const decoratedActions = this.decoratedActions;
-    const sources = state.source.sources;
-    console.log(sources);
+    const props = this.props,
+    state = store.getState(),
+    decoratedActions = this.decoratedActions,
+    sources = state.source.sources;
+
     let matchedSource;
     sources.map((source) => {
       if(`Digit${source.id}`.toLowerCase() == event.code.toLowerCase()) matchedSource = source;

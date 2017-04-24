@@ -515,11 +515,11 @@ var _initialiseProps = function _initialiseProps() {
 
   this.handleKeyboardChangeSource = function (event) {
     //console.log('handleKeyboardChangeSource', event);
-    var props = _this6.props;
-    var state = _store2.default.getState();
-    var decoratedActions = _this6.decoratedActions;
-    var sources = state.source.sources;
-    console.log(sources);
+    var props = _this6.props,
+        state = _store2.default.getState(),
+        decoratedActions = _this6.decoratedActions,
+        sources = state.source.sources;
+
     var matchedSource = void 0;
     sources.map(function (source) {
       if (('Digit' + source.id).toLowerCase() == event.code.toLowerCase()) matchedSource = source;

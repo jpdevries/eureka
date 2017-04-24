@@ -102,7 +102,7 @@ var MediaRow = function (_PureComponent) {
     value: function assignKeyboardListeners() {
       _mousetrap2.default.bind(['backspace'], this.handleKeyboardBackspace);
       _mousetrap2.default.bind(['enter'], this.handleKeyboardChoose);
-      _mousetrap2.default.bind(['space'], this.handleKeyboardExpand);
+      _mousetrap2.default.bind(['alt+space'], this.handleKeyboardExpand);
       _mousetrap2.default.bind(['ctrl+r'], this.handleKeyboardRename);
     }
   }, {
@@ -121,7 +121,7 @@ var MediaRow = function (_PureComponent) {
     value: function removeKeyboardListeners() {
       _mousetrap2.default.unbind(['backspace'], this.handleKeyboardBackspace);
       _mousetrap2.default.unbind(['enter'], this.handleKeyboardChoose);
-      _mousetrap2.default.unbind(['space'], this.handleKeyboardExpand);
+      _mousetrap2.default.unbind(['alt+space'], this.handleKeyboardExpand);
       _mousetrap2.default.unbind(['ctrl+r'], this.handleKeyboardRename);
     }
   }, {
@@ -135,7 +135,7 @@ var MediaRow = function (_PureComponent) {
   }, {
     key: 'handleKeyboardChoose',
     value: function handleKeyboardChoose(event) {
-      //console.log('handleKeyboardChoose', event);
+      if (!event.target.matches('.eureka__focused-media-item')) return;
       //event.preventDefault();
       try {
         document.getElementById('choose__' + _utility2.default.cssSafe(this.props.item.filename)).click();
@@ -144,6 +144,7 @@ var MediaRow = function (_PureComponent) {
   }, {
     key: 'handleKeyboardExpand',
     value: function handleKeyboardExpand(event) {
+      if (!event.target.matches('.eureka__focused-media-item')) return;
       try {
         document.getElementById('expand__' + _utility2.default.cssSafe(this.props.item.filename)).click();
       } catch (e) {}
