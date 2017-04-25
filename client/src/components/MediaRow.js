@@ -300,6 +300,9 @@ class MediaRow extends PureComponent {
       //fileName = <a href={`#${mediaSelectId}`} role="presentation" tabIndex="-1" id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }filename__${utility.cssSafe(props.item.filename)}`}>{fileName}</a>
       fileName = (<label htmlFor={mediaSelectId}>{fileName}</label>);
     }
+
+    const contextMenu = (utility.serverSideRendering) ? undefined : <ContextMenu className="eureka__context-row" {...props} item={item}  hidden={shouldHide(item)} key={`cm__${index}`} />;
+
     return (
 
       <tr role="row" className={classNames(className)} id={utility.cssSafe(props.item.filename)} aria-label={ariaLabel} role="row" tabIndex={tabIndex} onFocus={this.onFocus.bind(this)} onBlur={this.onBlur.bind(this)} contextMenu={`context_menu__tbody-${props.index}`}>
@@ -352,7 +355,7 @@ class MediaRow extends PureComponent {
            >
           {fileName}
         </td>
-        <ContextMenu className="eureka__context-row" {...props} item={item}  hidden={shouldHide(item)} key={`cm__${index}`} />
+        {contextMenu}
         <td role="gridcell">
           {`${props.item.dimensions[0]}x${props.item.dimensions[1]}`}
         </td>

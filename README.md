@@ -573,6 +573,15 @@ Request additional theming options and share your themes by [opening an issue](h
 | `--very-subtle` | Very subtle color, used for drop zone area |
 | `--very-subtle-icon-opacity` | Opacity for very subtle icons |
 
+## 📣 Audible Interface
+Eureka uses a combination of ARIA attributes and `.visually-hidden` text to offer an experience that is as accessible visually as it is&nbsp;audibly.
+
+![The Eureka Browser interface without as seen by a screen reader includes  descriptive text for an accessible experience](http://j4p.us/3h1e2G0B0b0q/Screen%20Shot%202017-04-25%20at%205.25.24%20PM.png)
+
+There is one Achilles heel here. Depending on your media source API, you might not be able to provide alternative text for images and media items. In the event that no alt text is provided, Eureka will to the best it can. For example:
+
+> schildpad.jpg displays at 336x125, weighs 37 KB, and was edited on Sunday, April 02, 2017, Central European Summer Time
+
 
 ## 👀 Accessible Themes
 Eureka is empowered by themes which make it more accessible to users with particular physical or contextual disabilities or preferences.

@@ -108,7 +108,7 @@ $palettes: ( // http://erskinedesign.com/blog/friendlier-colour-names-sass-maps/
 }
 
 
-input {
+input:not([type="checkbox"]) {
   &:focus {
     outline: 1px solid var(--active, $active);
   }
@@ -637,12 +637,19 @@ a[role="presentation"] {
         display: block;
       }
       @extend %clickable;
-      @include button();
-      font-size: .6875rem;
-      text-align: center;
     }
-    input[type="file"] {
-      @extend %visually-hidden;
+  }
+
+  &:not(.eureka__server-side) {
+    .eureka__upload-form {
+      label {
+        @include button();
+        font-size: .6875rem;
+        text-align: center;
+      }
+      input[type="file"] {
+        @extend %visually-hidden;
+      }
     }
   }
 

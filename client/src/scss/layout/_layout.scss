@@ -113,6 +113,55 @@
  }
 }
 
+.eureka-root .eureka.eureka__view-mode__table.eureka__server-side {
+  table.eureka__table > thead > tr {
+    grid-template-columns: 2rem 16% 40% 8% auto auto !important;
+    grid-template-areas: "radio name media dimensions file-size edited-on" !important;
+    th {
+      &:nth-of-type(3) {
+        text-align: left !important;
+      }
+    }
+  }
+  table.eureka__table > tbody { // .eureka>.eureka__browse-content>.eureka__stage>.eureka__table-wrapper>div>table>
+   &:not(.empty) {
+     > tr:not(.empty) {
+       grid-template-columns: 2rem 16% 40% 8% auto auto !important;
+       grid-template-areas: "radio name media dimensions file-size edited-on" !important;
+       @supports (display:grid) {
+         > td {
+           /*&:nth-of-type(1) {
+             grid-area:media;
+           }
+           &:nth-of-type(2) {
+             grid-area:name;
+           }
+           &:nth-of-type(3) {
+             grid-area:actions;
+           }*/
+           &.eureka__td-filename {
+             text-align: left !important;
+           }
+           &:nth-of-type(4) {
+             grid-area:dimensions !important;
+           }
+           &:nth-of-type(5) {
+             grid-area:file-size !important;
+           }
+           &:nth-of-type(6) {
+             grid-area:edited-on !important;
+           }
+         }
+       }
+     }
+   }
+  }
+}
+
+
+
+
+
 .eureka-root {
  padding:.5rem;
  .eureka {
@@ -152,6 +201,10 @@
        }
      }
      &.eureka__server-side {
+       .eureka__tree-toggle .eureka__upload-form label[for*="upload-form"] {
+         padding: 0.5em;
+         margin-right: 1rem;
+       }
        table { // .eureka__browse-content>.eureka__stage>.eureka__table-wrapper>div>
          > thead > tr, > tbody:not(.empty) > tr:not(.empty) {
            @include media($gtMobile) {
