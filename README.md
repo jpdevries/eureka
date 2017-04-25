@@ -118,16 +118,6 @@ The semantic HTML layer remains usable even absent of style as pure&nbsp;HTML.
       <td align="center"><span aria-label="supported">✅</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
     </tr>
-        <tr>
-      <td>Keyboard Shortcuts</td>
-      <td align="center"><span aria-label="not supported">❌</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-    </tr>
     <tr>
       <td>ARIA Support</td>
       <td align="center"><span aria-label="supported">✅</span></td>
@@ -151,6 +141,16 @@ The semantic HTML layer remains usable even absent of style as pure&nbsp;HTML.
     <tr>
       <td>Internationalization</td>
       <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+    </tr>
+        <tr>
+      <td>Keyboard Shortcuts</td>
+      <td align="center"><span aria-label="not supported">❌</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
@@ -592,6 +592,13 @@ There is one Achilles heel here. Depending on your media source API, you might n
 
 > schildpad.jpg displays at 336x125, weighs 37 KB, and was edited on Sunday, April 02, 2017, Central European Summer Time
 
+## 📺 Fullscreen Mode
+To maximize usability Eureka leverages the Fullscreen&nbsp;API.
+
+<details>
+<summary>See the Fullscreen Mode in action</summary>
+<img src="http://j4p.us/1h2w3E1d2h2a/fs.gif">
+</details>
 
 ## 👀 Accessible Themes
 Eureka is empowered by themes which make it more accessible to users with particular physical or contextual disabilities or preferences.
