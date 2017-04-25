@@ -153,6 +153,13 @@ var Eureka = function (_Component) {
       _mousetrap2.default.bind(['ctrl+u'], this.handleKeyboardUpload);
       _mousetrap2.default.bind(['ctrl+n'], this.handleKeyboardCreateDirectory);
       _mousetrap2.default.bind(['ctrl+f'], this.handleKeyboardFilter);
+      _mousetrap2.default.bind(['alt+up'], this.handleKeyboardSortAscending);
+      _mousetrap2.default.bind(['alt+down'], this.handleKeyboardSortDescending);
+
+      _mousetrap2.default.bind(['alt+n'], this.handleKeyboardSortName);
+      _mousetrap2.default.bind(['alt+d'], this.handleKeyboardSortDimensions);
+      _mousetrap2.default.bind(['alt+f'], this.handleKeyboardSortFileSize);
+      _mousetrap2.default.bind(['alt+e'], this.handleKeyboardSortEditedOn);
 
       if (this.props.config.handlers && this.props.config.handlers.createFile) _mousetrap2.default.bind(['ctrl+shift+n'], this.handleKeyboardCreateFile);
     }
@@ -165,6 +172,13 @@ var Eureka = function (_Component) {
       _mousetrap2.default.unbind(['ctrl+u'], this.handleKeyboardUpload);
       _mousetrap2.default.unbind(['ctrl+n'], this.handleKeyboardCreateDirectory);
       _mousetrap2.default.unbind(['ctrl+f'], this.handleKeyboardFilter);
+      _mousetrap2.default.unbind(['alt+up'], this.handleKeyboardSortAscending);
+      _mousetrap2.default.unbind(['alt+down'], this.handleKeyboardSortDescending);
+
+      _mousetrap2.default.unbind(['alt+n'], this.handleKeyboardSortName);
+      _mousetrap2.default.unbind(['alt+d'], this.handleKeyboardSortDimensions);
+      _mousetrap2.default.unbind(['alt+f'], this.handleKeyboardSortFileSize);
+      _mousetrap2.default.unbind(['alt+e'], this.handleKeyboardSortEditedOn);
 
       if (this.props.config.handlers && this.props.config.handlers.createFile) _mousetrap2.default.unbind(['ctrl+shift+n'], this.handleKeyboardCreateFile);
     }
@@ -481,6 +495,56 @@ var _initialiseProps = function _initialiseProps() {
     try {
       root.querySelector('input[name="eureka__filter"]').focus();
     } catch (e) {}
+  };
+
+  this.handleKeyboardSortAscending = function (event) {
+    event.preventDefault();
+    _store2.default.dispatch(_actions2.default.updateView({
+      sort: {
+        dir: _utility2.default.ASCENDING
+      }
+    }));
+  };
+
+  this.handleKeyboardSortDescending = function (event) {
+    event.preventDefault();
+    _store2.default.dispatch(_actions2.default.updateView({
+      sort: {
+        dir: _utility2.default.DESCENDING
+      }
+    }));
+  };
+
+  this.handleKeyboardSortName = function (event) {
+    _store2.default.dispatch(_actions2.default.updateView({
+      sort: {
+        by: 'filename'
+      }
+    }));
+  };
+
+  this.handleKeyboardSortDimensions = function (event) {
+    _store2.default.dispatch(_actions2.default.updateView({
+      sort: {
+        by: 'dimensions'
+      }
+    }));
+  };
+
+  this.handleKeyboardSortFileSize = function (event) {
+    _store2.default.dispatch(_actions2.default.updateView({
+      sort: {
+        by: 'fileSize'
+      }
+    }));
+  };
+
+  this.handleKeyboardSortEditedOn = function (event) {
+    _store2.default.dispatch(_actions2.default.updateView({
+      sort: {
+        by: 'editedOn'
+      }
+    }));
   };
 
   this.toggleSourceTreeOpen = function (event) {

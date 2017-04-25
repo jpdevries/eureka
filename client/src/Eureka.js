@@ -67,6 +67,56 @@ class Eureka extends Component {
     } catch (e) { }
   }
 
+  handleKeyboardSortAscending = (event) => {
+    event.preventDefault();
+    store.dispatch(actions.updateView({
+      sort: {
+        dir: utility.ASCENDING
+      }
+    }))
+  }
+
+  handleKeyboardSortDescending = (event) => {
+    event.preventDefault();
+    store.dispatch(actions.updateView({
+      sort: {
+        dir: utility.DESCENDING
+      }
+    }))
+  }
+
+  handleKeyboardSortName = (event) => {
+    store.dispatch(actions.updateView({
+      sort: {
+        by: 'filename'
+      }
+    }))
+  }
+
+  handleKeyboardSortDimensions = (event) => {
+    store.dispatch(actions.updateView({
+      sort: {
+        by: 'dimensions'
+      }
+    }))
+  }
+
+  handleKeyboardSortFileSize = (event) => {
+    store.dispatch(actions.updateView({
+      sort: {
+        by: 'fileSize'
+      }
+    }))
+  }
+
+  handleKeyboardSortEditedOn = (event) => {
+    store.dispatch(actions.updateView({
+      sort: {
+        by: 'editedOn'
+      }
+    }))
+  }
+
   assignKeyboardListeners() {
     Mousetrap.bind(['ctrl+;'], this.toggleSourceTreeOpen);
     Mousetrap.bind(['ctrl+alt+1', 'ctrl+alt+2', 'ctrl+alt+3', 'ctrl+alt+4'], this.handleKeyboardChangeView);
@@ -74,6 +124,14 @@ class Eureka extends Component {
     Mousetrap.bind(['ctrl+u'], this.handleKeyboardUpload);
     Mousetrap.bind(['ctrl+n'], this.handleKeyboardCreateDirectory);
     Mousetrap.bind(['ctrl+f'], this.handleKeyboardFilter);
+    Mousetrap.bind(['alt+up'], this.handleKeyboardSortAscending);
+    Mousetrap.bind(['alt+down'], this.handleKeyboardSortDescending);
+
+    Mousetrap.bind(['alt+n'], this.handleKeyboardSortName);
+    Mousetrap.bind(['alt+d'], this.handleKeyboardSortDimensions);
+    Mousetrap.bind(['alt+f'], this.handleKeyboardSortFileSize);
+    Mousetrap.bind(['alt+e'], this.handleKeyboardSortEditedOn);
+
 
     if(this.props.config.handlers && this.props.config.handlers.createFile) Mousetrap.bind(['ctrl+shift+n'], this.handleKeyboardCreateFile);
   }
@@ -85,6 +143,13 @@ class Eureka extends Component {
     Mousetrap.unbind(['ctrl+u'], this.handleKeyboardUpload);
     Mousetrap.unbind(['ctrl+n'], this.handleKeyboardCreateDirectory);
     Mousetrap.unbind(['ctrl+f'], this.handleKeyboardFilter);
+    Mousetrap.unbind(['alt+up'], this.handleKeyboardSortAscending);
+    Mousetrap.unbind(['alt+down'], this.handleKeyboardSortDescending);
+
+    Mousetrap.unbind(['alt+n'], this.handleKeyboardSortName);
+    Mousetrap.unbind(['alt+d'], this.handleKeyboardSortDimensions);
+    Mousetrap.unbind(['alt+f'], this.handleKeyboardSortFileSize);
+    Mousetrap.unbind(['alt+e'], this.handleKeyboardSortEditedOn);
 
     if(this.props.config.handlers && this.props.config.handlers.createFile) Mousetrap.unbind(['ctrl+shift+n'], this.handleKeyboardCreateFile);
   }

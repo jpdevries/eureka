@@ -529,6 +529,29 @@ Eureka is progressively enhanced with React to be asynchronous and a richer expe
 
 Reference the [Server Side Rendering Wiki page](https://github.com/jpdevries/eureka/wiki/Server-Side-Rendering) for documentations and examples on achieving world wide&nbsp;support.
 
+### ⌨️ Keyboard Shortcuts
+Eureka uses JavaScript events to enrich the user experience of keyboard&nbsp;users.
+
+| Shortcut        | Command              |
+| --------------- |:-------------:       |
+| Toggle Sidebar      | ctrl+;           |
+| Change View      | ctrl+alt+(1-5)      |
+| Change Media Source | alt+(1-9)        |
+| Delete Item | backspace                |
+| Expand Item | spacebar                 |
+| Choose Item | return                   |
+| Create Directory | ctrl+n              |
+| Create file | ctrl+shift+n              |
+| Upload Files | ctrl+u                  |
+| Rename Item | ctrl+r                   |
+| Filter Items | ctrl+f                  |
+| Sort Ascending | alt+up                  |
+| Sort Descending | alt+down                  |
+| Sort by filename | alt+n                  |
+| Sort by dimensions | alt+d                  |
+| Sort by file size | alt+f                  |
+| Sort by edited on | alt+e                  |
+
 
 ## 🎨 Theming
 Request additional theming options and share your themes by [opening an issue](https://github.com/jpdevries/eureka/issues/new) or [joining the discussion on&nbsp;Gitter](https://gitter.im/jpdevries/eureka?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge).
