@@ -3,8 +3,8 @@
 
 Eureka is a progressively enhanced flexible media browser. Connected to your media sources through a REST API, this accessible web component allows users to browse media sources, upload files, and choose media items.
 
-[Try the demo](https://reacteureka.herokuapp.com/) by waking the heroku dino.
-As to be found in [Redactor 3.0](https://www.modmore.com/extras/redactor) by modmore. Contributions&nbsp;welcomed.
+[🤗 Try the demo](https://eureka.markup.tips/).
+As to be found in [Redactor 3.0 for MODX](https://www.modmore.com/extras/redactor/?via=2) by modmore. Contributions&nbsp;welcomed.
 
 > With `eureka.js` users will be saying "I found it!" in no time.
 &emsp;&emsp;&mdash; [@mrktps](https://twitter.com/mrktps)
