@@ -23,6 +23,9 @@ import definedMessages from '../i18n/definedMessages';
 
 import Mousetrap from 'mousetrap';
 
+import injectTapEventPlugin from "react-tap-event-plugin"
+injectTapEventPlugin();
+
 class MediaRow extends PureComponent {
   constructor(props) {
     super(props);
@@ -307,7 +310,13 @@ class MediaRow extends PureComponent {
 
       <tr role="row" className={classNames(className)} id={utility.cssSafe(props.item.filename)} aria-label={ariaLabel} role="row" tabIndex={tabIndex} onFocus={this.onFocus.bind(this)} onBlur={this.onBlur.bind(this)} contextMenu={`context_menu__tbody-${props.index}`}>
         {mediaSelect}
-        <td role="gridcell" id={mediaId} title={ariaLabel} className="eureka__td-media" onDoubleClick={(event) => {
+        <td role="gridcell" id={mediaId} title={ariaLabel} className="eureka__td-media" onTouchTap={ (e) => {
+    if (utility.isDblTouchTap(e)) {
+      if(!props.view.focusedMediaItem) return;
+
+      props.config.callbacks.choose(props.item);
+    }
+  } } onDoubleClick={(event) => {
           if(!props.view.focusedMediaItem) return;
 
             props.config.callbacks.choose(props.item);

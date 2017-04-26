@@ -54,6 +54,10 @@ var _mousetrap = require('mousetrap');
 
 var _mousetrap2 = _interopRequireDefault(_mousetrap);
 
+var _reactTapEventPlugin = require('react-tap-event-plugin');
+
+var _reactTapEventPlugin2 = _interopRequireDefault(_reactTapEventPlugin);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -65,6 +69,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var pathParse = require('path-parse');
+
+(0, _reactTapEventPlugin2.default)();
 
 var MediaRow = function (_PureComponent) {
   _inherits(MediaRow, _PureComponent);
@@ -395,7 +401,13 @@ var MediaRow = function (_PureComponent) {
         mediaSelect,
         _react2.default.createElement(
           'td',
-          { role: 'gridcell', id: mediaId, title: ariaLabel, className: 'eureka__td-media', onDoubleClick: function onDoubleClick(event) {
+          { role: 'gridcell', id: mediaId, title: ariaLabel, className: 'eureka__td-media', onTouchTap: function onTouchTap(e) {
+              if (_utility2.default.isDblTouchTap(e)) {
+                if (!props.view.focusedMediaItem) return;
+
+                props.config.callbacks.choose(props.item);
+              }
+            }, onDoubleClick: function onDoubleClick(event) {
               if (!props.view.focusedMediaItem) return;
 
               props.config.callbacks.choose(props.item);

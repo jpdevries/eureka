@@ -42,6 +42,22 @@ function makeURL(str, params) {
   }
 }
 
+var dblTouchTapMaxDelay = 300;
+var latestTouchTap = {
+  time: 0,
+  target: null
+};
+
+function isDblTouchTap(event) {
+  var touchTap = {
+    time: new Date().getTime(),
+    target: event.currentTarget
+  };
+  var isFastDblTouchTap = touchTap.target === latestTouchTap.target && touchTap.time - latestTouchTap.time < dblTouchTapMaxDelay;
+  latestTouchTap = touchTap;
+  return isFastDblTouchTap;
+}
+
 function removeDuplicates(myArr, prop) {
   return myArr.filter(function (obj, pos, arr) {
     return arr.map(function (mapObj) {
@@ -275,6 +291,8 @@ exports.ASCENDING = ASCENDING;
 exports.DESCENDING = DESCENDING;
 
 exports.cssSafe = cssSafe;
+
+exports.isDblTouchTap = isDblTouchTap;
 
 exports.wordBreaksEvery = wordBreaksEvery;
 
