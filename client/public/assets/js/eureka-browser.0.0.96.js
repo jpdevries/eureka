@@ -211,6 +211,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        localStorage.getItem(`${props.storagePrefix}source`),
 	        localStorage.getItem(`${props.storagePrefix}treeHidden`)
 	      );*/
+	      window.addEventListener('touchstart', function () {
+	        store.dispatch(actions.upateView({ isTouch: true }));
+	      });
 	    }
 
 	    //console.log('bolo', languageWithoutRegionCode);
@@ -1855,6 +1858,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  isTableScrolling: false,
 	  allowFullscreen: true,
 	  isUploading: false,
+	  isTouch: false,
 	  intervals: {
 	    searchBarPlaceholder: false,
 	    fetchDirectoryContents: false,
@@ -3931,7 +3935,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.95",
+		"version": "0.0.96",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -10680,13 +10684,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        mediaSelect,
 	        _react2.default.createElement(
 	          'td',
-	          { role: 'gridcell', id: mediaId, title: ariaLabel, className: 'eureka__td-media', onTouchTap: function onTouchTap(e) {
+	          { role: 'gridcell', id: mediaId, title: ariaLabel, className: 'eureka__td-media', onTouchTap: !props.view.isTouch ? undefined : function (e) {
 	              if (_utility2.default.isDblTouchTap(e)) {
 	                if (!props.view.focusedMediaItem) return;
 
 	                props.config.callbacks.choose(props.item);
 	              }
-	            }, onDoubleClick: function onDoubleClick(event) {
+	            }, onDoubleClick: props.view.isTouch ? undefined : function (event) {
 	              if (!props.view.focusedMediaItem) return;
 
 	              props.config.callbacks.choose(props.item);

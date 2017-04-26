@@ -310,13 +310,13 @@ class MediaRow extends PureComponent {
 
       <tr role="row" className={classNames(className)} id={utility.cssSafe(props.item.filename)} aria-label={ariaLabel} role="row" tabIndex={tabIndex} onFocus={this.onFocus.bind(this)} onBlur={this.onBlur.bind(this)} contextMenu={`context_menu__tbody-${props.index}`}>
         {mediaSelect}
-        <td role="gridcell" id={mediaId} title={ariaLabel} className="eureka__td-media" onTouchTap={ (e) => {
+        <td role="gridcell" id={mediaId} title={ariaLabel} className="eureka__td-media" onTouchTap={ (!props.view.isTouch) ? undefined : (e) => {
     if (utility.isDblTouchTap(e)) {
       if(!props.view.focusedMediaItem) return;
 
       props.config.callbacks.choose(props.item);
     }
-  } } onDoubleClick={(event) => {
+  } } onDoubleClick={(props.view.isTouch) ? undefined : (event) => {
           if(!props.view.focusedMediaItem) return;
 
             props.config.callbacks.choose(props.item);

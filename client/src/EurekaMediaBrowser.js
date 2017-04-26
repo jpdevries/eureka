@@ -106,6 +106,9 @@ class EurekaMediaBrowser extends PureComponent {
         localStorage.getItem(`${props.storagePrefix}source`),
         localStorage.getItem(`${props.storagePrefix}treeHidden`)
       );*/
+      window.addEventListener('touchstart', function() {
+        store.dispatch(actions.upateView({isTouch: true}));
+      });
     }
 
 

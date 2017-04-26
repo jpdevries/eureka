@@ -287,6 +287,7 @@ var initialViewState = Object.assign({}, {
   isTableScrolling:false,
   allowFullscreen: true,
   isUploading: false,
+  isTouch: false,
   intervals: {
     searchBarPlaceholder: false,
     fetchDirectoryContents: false,

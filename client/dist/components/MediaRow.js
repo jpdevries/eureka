@@ -401,13 +401,13 @@ var MediaRow = function (_PureComponent) {
         mediaSelect,
         _react2.default.createElement(
           'td',
-          { role: 'gridcell', id: mediaId, title: ariaLabel, className: 'eureka__td-media', onTouchTap: function onTouchTap(e) {
+          { role: 'gridcell', id: mediaId, title: ariaLabel, className: 'eureka__td-media', onTouchTap: !props.view.isTouch ? undefined : function (e) {
               if (_utility2.default.isDblTouchTap(e)) {
                 if (!props.view.focusedMediaItem) return;
 
                 props.config.callbacks.choose(props.item);
               }
-            }, onDoubleClick: function onDoubleClick(event) {
+            }, onDoubleClick: props.view.isTouch ? undefined : function (event) {
               if (!props.view.focusedMediaItem) return;
 
               props.config.callbacks.choose(props.item);
