@@ -82,11 +82,6 @@ var ContextButtons = function ContextButtons(props) {
       item.filename
     )
   ) : undefined,
-      manageBtn = true ? _react2.default.createElement(
-    'a',
-    { href: '', className: 'button' },
-    'Manage'
-  ) : undefined,
       renameBtn = props.config.allowRename ? _react2.default.createElement(
     'button',
     { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'rename__' + (0, _utility.cssSafe)(item.filename), role: 'option', title: renameItemMessage, onClick: props.onRenameItem ? props.onRenameItem.bind(null, item) : undefined },
@@ -145,7 +140,6 @@ var ContextButtons = function ContextButtons(props) {
         )
       ),
       chooseBtn,
-      manageBtn,
       renameBtn,
       deleteBtn,
       downloadBtn

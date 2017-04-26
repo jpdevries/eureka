@@ -27187,7 +27187,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.96",
+		"version": "0.0.97",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -33547,7 +33547,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var pathParse = __webpack_require__(274);
 
-	(0, _reactTapEventPlugin2.default)();
+	try {
+	  (0, _reactTapEventPlugin2.default)();
+	} catch (e) {}
 
 	var MediaRow = function (_PureComponent) {
 	  _inherits(MediaRow, _PureComponent);
@@ -34086,11 +34088,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      item.filename
 	    )
 	  ) : undefined,
-	      manageBtn = true ? _react2.default.createElement(
-	    'a',
-	    { href: '', className: 'button' },
-	    'Manage'
-	  ) : undefined,
 	      renameBtn = props.config.allowRename ? _react2.default.createElement(
 	    'button',
 	    { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'rename__' + (0, _utility.cssSafe)(item.filename), role: 'option', title: renameItemMessage, onClick: props.onRenameItem ? props.onRenameItem.bind(null, item) : undefined },
@@ -34149,7 +34146,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        )
 	      ),
 	      chooseBtn,
-	      manageBtn,
 	      renameBtn,
 	      deleteBtn,
 	      downloadBtn

@@ -23,8 +23,12 @@ import definedMessages from '../i18n/definedMessages';
 
 import Mousetrap from 'mousetrap';
 
-import injectTapEventPlugin from "react-tap-event-plugin"
-injectTapEventPlugin();
+import injectTapEventPlugin from "react-tap-event-plugin";
+try {
+  injectTapEventPlugin();
+} catch (e) {
+
+} 
 
 class MediaRow extends PureComponent {
   constructor(props) {

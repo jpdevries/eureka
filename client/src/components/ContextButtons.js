@@ -53,9 +53,6 @@ const ContextButtons = (props) => {
       }));*/
     }}>{chooseMessage}<span className="visually-hidden"> {item.filename}</span></button>
 ) : undefined,
-  manageBtn = (true) ? (
-    <a href="" className="button">Manage</a>
-  ) : undefined,
   renameBtn = (props.config.allowRename) ? (<button id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }rename__${cssSafe(item.filename)}`} role="option" title={renameItemMessage} onClick={props.onRenameItem ? props.onRenameItem.bind(null, item) : undefined}>{renameMessage}<span className="visually-hidden"> {item.filename}</span></button>) : undefined,
   deleteBtn = (props.config.allowDelete) ? (
     <button id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }delete__${cssSafe(item.filename)}`} role="option" onClick={(event) => {
@@ -78,7 +75,6 @@ const ContextButtons = (props) => {
     <div className="eureka__button-bar eureka__context-buttons" role="listbox"  aria-label={performContextualActionsMessage} tabIndex="0" aria-activedescendant={`expand__${cssSafe(item.filename)}`}>
       <a onBlur={props.onBlur} role="option" id={`expand__${cssSafe(item.filename)}`} href={item.absoluteURL} target={`_${encodeURI(item.absoluteURL)}`} className="button" title={expandItemMessage}>{expandMessage}<span className="visually-hidden"> {item.filename}</span></a>
       {chooseBtn}
-      {manageBtn}
     {renameBtn}
     {deleteBtn}
     {downloadBtn}

@@ -70,7 +70,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var pathParse = require('path-parse');
 
-(0, _reactTapEventPlugin2.default)();
+try {
+  (0, _reactTapEventPlugin2.default)();
+} catch (e) {}
 
 var MediaRow = function (_PureComponent) {
   _inherits(MediaRow, _PureComponent);
