@@ -147,6 +147,14 @@ var EurekaMediaBrowser = function (_PureComponent) {
         store.dispatch(actions.updateContent(localContent));
       }
 
+      if (!_utility2.default.serverSideRendering) {
+        try {
+          window.addEventListener('touchstart', function () {
+            store.dispatch(actions.upateView({ isTouch: true }));
+          });
+        } catch (e) {}
+      }
+
       /*console.log(
         config,
         localStorage.getItem(`${props.storagePrefix}currentDirectory`),
@@ -155,9 +163,6 @@ var EurekaMediaBrowser = function (_PureComponent) {
         localStorage.getItem(`${props.storagePrefix}source`),
         localStorage.getItem(`${props.storagePrefix}treeHidden`)
       );*/
-      window.addEventListener('touchstart', function () {
-        store.dispatch(actions.upateView({ isTouch: true }));
-      });
     }
 
     //console.log('bolo', languageWithoutRegionCode);

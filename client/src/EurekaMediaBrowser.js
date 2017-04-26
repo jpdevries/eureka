@@ -98,6 +98,14 @@ class EurekaMediaBrowser extends PureComponent {
         store.dispatch(actions.updateContent(localContent));
       }
 
+      if(!utility.serverSideRendering) {
+        try {
+          window.addEventListener('touchstart', function() {
+            store.dispatch(actions.upateView({isTouch: true}));
+          });
+        } catch (e) { } 
+      }
+
       /*console.log(
         config,
         localStorage.getItem(`${props.storagePrefix}currentDirectory`),
@@ -106,9 +114,7 @@ class EurekaMediaBrowser extends PureComponent {
         localStorage.getItem(`${props.storagePrefix}source`),
         localStorage.getItem(`${props.storagePrefix}treeHidden`)
       );*/
-      window.addEventListener('touchstart', function() {
-        store.dispatch(actions.upateView({isTouch: true}));
-      });
+
     }
 
 

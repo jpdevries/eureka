@@ -203,6 +203,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        store.dispatch(actions.updateContent(localContent));
 	      }
 
+	      if (!_utility2.default.serverSideRendering) {
+	        try {
+	          window.addEventListener('touchstart', function () {
+	            store.dispatch(actions.upateView({ isTouch: true }));
+	          });
+	        } catch (e) {}
+	      }
+
 	      /*console.log(
 	        config,
 	        localStorage.getItem(`${props.storagePrefix}currentDirectory`),
@@ -211,9 +219,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        localStorage.getItem(`${props.storagePrefix}source`),
 	        localStorage.getItem(`${props.storagePrefix}treeHidden`)
 	      );*/
-	      window.addEventListener('touchstart', function () {
-	        store.dispatch(actions.upateView({ isTouch: true }));
-	      });
 	    }
 
 	    //console.log('bolo', languageWithoutRegionCode);
@@ -3935,7 +3940,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.97",
+		"version": "0.0.98",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
