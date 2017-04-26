@@ -3,6 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.TreeToggle = undefined;
 
 var _react = require('react');
 
@@ -26,7 +27,7 @@ var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var TreeToggle = function TreeToggle(props) {
+var TreeToggle = exports.TreeToggle = function TreeToggle(props) {
   var formatMessage = props.intl.formatMessage,
 
   //closeMessage = formatMessage(definedMessages.close),

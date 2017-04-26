@@ -255,6 +255,16 @@ const deleteMediaItem = (source, path, customHeaders = {}) => (
 );
 
 
+const NOTIFICATION = 'notification';
+const notify = function(message) {
+  return {
+    type: NOTIFICATION,
+    message: message
+  }
+}
+
+exports.NOTIFICATION = NOTIFICATION;
+exports.notify = notify; 
 
 
 const UPLOAD_FILES_SUCCESS = 'upload_files_success';

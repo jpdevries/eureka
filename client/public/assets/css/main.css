@@ -691,21 +691,47 @@ a[role="presentation"] {
   padding:0.5rem;
 }*/
 /* end leave out */
-.eureka .eureka__stage, .eureka *[class^="alert"], .eureka .eureka__pathbrowser, .eureka .eureka__pathbar, .eureka .eureka__modal .eureka__modal-panel, .eureka .eureka__context-buttons {
+.eureka .eureka__stage, .eureka *[class^="alert"], .eureka .eureka__pathbrowser, .eureka .eureka__pathbar, .eureka .eureka__modal .eureka__modal-panel, .eureka-root .eureka__notification-wrapper > *, .eureka .eureka__context-buttons {
   border: 1px solid #dddddd;
   border: var(--border-width, 1px) var(--border-style, solid) var(--panel-border-color, #dddddd); }
 
-.eureka .eureka__stage, .eureka *[class^="alert"], .eureka .eureka__pathbrowser, .eureka .eureka__pathbar, .eureka .eureka__modal .eureka__modal-panel, .eureka .eureka__table td.comfortable {
+.eureka .eureka__stage, .eureka *[class^="alert"], .eureka .eureka__pathbrowser, .eureka .eureka__pathbar, .eureka .eureka__modal .eureka__modal-panel, .eureka-root .eureka__notification-wrapper > *, .eureka .eureka__table td.comfortable {
   padding: 16px;
   padding: 1rem; }
   @media screen and (min-width: 641px) {
-    .eureka .eureka__stage, .eureka *[class^="alert"], .eureka .eureka__pathbrowser, .eureka .eureka__pathbar, .eureka .eureka__modal .eureka__modal-panel, .eureka .eureka__table td.comfortable {
+    .eureka .eureka__stage, .eureka *[class^="alert"], .eureka .eureka__pathbrowser, .eureka .eureka__pathbar, .eureka .eureka__modal .eureka__modal-panel, .eureka-root .eureka__notification-wrapper > *, .eureka .eureka__table td.comfortable {
       padding: .5rem; } }
 
 .eureka .eureka__stage, .eureka *[class^="alert"], .eureka .eureka__pathbrowser, .eureka .eureka__pathbar, .eureka .eureka__modal .eureka__modal-panel {
   border-radius: 0.25rem;
   background: white;
   background: var(--light-bg, white); }
+
+.eureka-root .eureka__notification-wrapper > * {
+  border-radius: 0.25rem;
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+  background: #d9edf7;
+  background: var(--notification-background, #d9edf7);
+  color: #309dd4;
+  color: var(--notification-color, #309dd4);
+  border: 1px solid #309dd4;
+  border: 1px solid var(--notification-border-color, var(--notification-color, #309dd4)); }
+  .eureka-root .eureka__notification-wrapper > * button {
+    position: absolute;
+    top: 4px;
+    top: .25rem;
+    right: 4px;
+    right: .25rem;
+    color: currentColor;
+    transition: color 240ms ease; }
+    .eureka-root .eureka__notification-wrapper > * button:focus, .eureka-root .eureka__notification-wrapper > * button:hover {
+      color: #247fad !important;
+      color: var(--notification-focus-color, #247fad) !important;
+      border: none;
+      box-shadow: none; }
+      .eureka-root .eureka__notification-wrapper > * button:focus svg, .eureka-root .eureka__notification-wrapper > * button:hover svg {
+        fill: currentColor !important; }
 
 .eureka {
   /* styling of blink/webkit marker */
@@ -736,6 +762,27 @@ a[role="presentation"] {
       bottom:0;
     }
   }*/ }
+  .eureka .eureka__notification-wrapper {
+    transition: opacity 240ms ease 90ms, top 240ms ease;
+    transition: top 240ms ease 90ms, opacity 240ms ease;
+    opacity: 1;
+    top: 0;
+    text-align: center; }
+    .eureka .eureka__notification-wrapper > * {
+      position: relative; }
+    .eureka .eureka__notification-wrapper[aria-hidden="true"] {
+      opacity: 0.5;
+      top: -5em;
+      display: block;
+      transition: opacity 340ms ease-out 90ms, top 420ms ease-out; }
+    @media screen and (min-width: 641px) {
+      .eureka .eureka__notification-wrapper {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: .25rem; } }
+    .eureka .eureka__notification-wrapper p[aria-live] {
+      margin: 0; }
   .eureka .eureka__upload-form input[name*="uploadFiles"]:disabled + label {
     cursor: default;
     position: relative;
@@ -1272,5 +1319,36 @@ a[role="presentation"] {
         .eureka .eureka__modal .eureka__modal-panel .flex-bar > * {
           -ms-flex: 1 0 auto;
               flex: 1 0 auto; }
+
+.eureka-root .eureka__notification-wrapper {
+  margin-bottom: 8px;
+  margin-bottom: .5rem;
+  z-index: 99999; }
+  @media screen and (max-width: 640px) {
+    .eureka-root .eureka__notification-wrapper {
+      position: -webkit-sticky;
+      position: sticky;
+      left: 0.5rem;
+      right: 0.5rem; } }
+  @media screen and (min-width: 641px) {
+    .eureka-root .eureka__notification-wrapper {
+      margin-bottom: 0; } }
+  .eureka-root .eureka__notification-wrapper button {
+    display: inline;
+    background: transparent;
+    border: none;
+    padding: 0; }
+    .eureka-root .eureka__notification-wrapper button:hover, .eureka-root .eureka__notification-wrapper button:focus {
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important; }
+
+.eureka-root .eureka__notification-wrapper > * {
+  display: block;
+  margin-left: auto;
+  margin-right: auto; }
+  @media screen and (min-width: 641px) {
+    .eureka-root .eureka__notification-wrapper > * {
+      display: inline-block; } }
 
 /*# sourceMappingURL=main.css.map */

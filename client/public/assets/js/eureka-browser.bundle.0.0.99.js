@@ -24377,8 +24377,102 @@ return /******/ (function(modules) { // webpackBootstrap
 	var CREATE_DIRECTORY = 'create_directory';
 	var RENAME_ITEM = 'rename_item';
 
-	var Eureka = function (_Component) {
-	  _inherits(Eureka, _Component);
+	var Notification = function (_Component) {
+	  _inherits(Notification, _Component);
+
+	  function Notification(props) {
+	    _classCallCheck(this, Notification);
+
+	    console.log('Notification');
+
+	    var _this = _possibleConstructorReturn(this, (Notification.__proto__ || Object.getPrototypeOf(Notification)).call(this, props));
+
+	    _this.state = { hidden: true };
+	    return _this;
+	  }
+
+	  _createClass(Notification, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this2 = this;
+
+	      setTimeout(function () {
+	        _this2.setState({ hidden: false });
+	      }, 42);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      console.log('render Notification', this.state);
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'eureka__notification-wrapper', 'aria-live': 'polite', 'aria-hidden': this.state.hidden },
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            'p',
+	            { 'aria-live': 'polite' },
+	            'Something happened'
+	          ),
+	          _react2.default.createElement(
+	            'button',
+	            null,
+	            'Dismiss'
+	          )
+	        )
+	      );
+	    }
+	  }]);
+
+	  return Notification;
+	}(_react.Component);
+
+	//Notification.propTypes = { initialCount: React.PropTypes.number };
+	//Notification.defaultProps = { initialCount: 0 };
+
+	/*
+	class Notification extends Component {
+
+	  constructor(props) {
+	    super(props);
+	    this.setState = {
+	      hidden: false
+	    };
+	  }
+
+	  componentDidMount() {
+	    console.log('Notifcation did mount', this.state)
+	    setTimeout((event) => {
+	      console.log('do it', this.state);
+	      this.setState({
+	        hidden: true
+	      })
+	    }, 3000);
+	  }
+
+	  render() {
+	    console.log('state', this.state);
+	    const hidden = (() => {
+	      try {
+	        console.log(this.state);
+	        return this.state.hidden
+	      } catch (e) {
+	        return true
+	      }
+	    })();
+	    console.log('hidden', hidden);
+	    return (
+	      <div className="eureka__notification-wrapper" aria-live="polite" aria-hidden={hidden}>
+	        <p aria-live="polite">Something happened</p>
+	      </div>
+	    );
+	  }
+	}
+	*/
+
+	var Eureka = function (_Component2) {
+	  _inherits(Eureka, _Component2);
 
 	  /*static propTypes = {
 	    intl: PropTypes.object.isRequired,
@@ -24387,18 +24481,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Eureka(props) {
 	    _classCallCheck(this, Eureka);
 
-	    var _this = _possibleConstructorReturn(this, (Eureka.__proto__ || Object.getPrototypeOf(Eureka)).call(this, props));
+	    var _this3 = _possibleConstructorReturn(this, (Eureka.__proto__ || Object.getPrototypeOf(Eureka)).call(this, props));
 
-	    _initialiseProps.call(_this);
+	    _initialiseProps.call(_this3);
 
-	    _this.state = {
+	    _this3.state = {
 	      modalOpen: false,
 	      currentModal: undefined,
 	      renamingItem: undefined
 	    };
 
-	    _this.decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
-	    return _this;
+	    _this3.decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
+	    return _this3;
 	  }
 
 	  _createClass(Eureka, [{
@@ -24456,7 +24550,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
-	      var _this2 = this;
+	      var _this4 = this;
 
 	      var props = this.props,
 	          decoratedActions = this.decoratedActions;
@@ -24465,9 +24559,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      _store2.default.dispatch(decoratedActions.fetchMediaSources(props.config.headers)).then(function () {
 	        // hit the server and get the media sources
-	        _store2.default.dispatch(decoratedActions.updateSourceTree(_this2.props.source.sources[0].id), props.config.headers).then(function (content) {
+	        _store2.default.dispatch(decoratedActions.updateSourceTree(_this4.props.source.sources[0].id), props.config.headers).then(function (content) {
 	          // then hit server for the directory tree of the first (default) media source
-	          var props = _this2.props;
+	          var props = _this4.props;
 
 	          _store2.default.dispatch(decoratedActions.updateContent({ // updates the "current directory" of the view right away
 	            cd: props.content.cd
@@ -24480,7 +24574,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            setInterval(function () {
 	              // every so often hit the server and update the displayed contents of the current directory
 	              var state = _store2.default.getState();
-	              var props = _this2.props;
+	              var props = _this4.props;
 
 	              _store2.default.dispatch(decoratedActions.updateContent({ // updates the "current directory" of the view right away
 	                cd: props.content.cd
@@ -24506,7 +24600,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        switch (key) {
 	          case 27:
 	            // Escape
-	            _this2.setState({
+	            _this4.setState({
 	              modalOpen: false,
 	              currentModal: undefined
 	            });
@@ -24536,7 +24630,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'onModalSubmit',
 	    value: function onModalSubmit(createDirectory) {
-	      var _this3 = this;
+	      var _this5 = this;
 
 	      var decoratedActions = this.decoratedActions;
 	      var props = this.props;
@@ -24547,7 +24641,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        case CREATE_DIRECTORY:
 	          console.log(_store2.default.getState().content.cd, path.join(_store2.default.getState().content.cd, 'foo'));
 	          _store2.default.dispatch(decoratedActions.createDirectory(_store2.default.getState().source.currentSource, path.join(_store2.default.getState().content.cd, createDirectory))).then(function () {
-	            _this3.setState({
+	            _this5.setState({
 	              modalOpen: false,
 	              currentModal: undefined
 	            });
@@ -24566,7 +24660,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'onRenameItemModalSubmit',
 	    value: function onRenameItemModalSubmit(newName, item) {
-	      var _this4 = this;
+	      var _this6 = this;
 
 	      //console.log('onRenameItemModalSubmit!!!', newName, item);
 	      //console.log(item.path);
@@ -24587,7 +24681,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _store2.default.dispatch(decoratedActions.updateContent({ contents: results.contents.filter(function (file) {
 	            return file.filename;
 	          }) }));
-	        _this4.setState({
+	        _this6.setState({
 	          renamingItem: undefined,
 	          modalOpen: false,
 	          currentModal: undefined
@@ -24607,7 +24701,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this5 = this;
+	      var _this7 = this;
 
 	      var props = this.props,
 	          state = this.state,
@@ -24627,7 +24721,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            case CREATE_DIRECTORY:
 	              return _react2.default.createElement(
 	                _Modal2.default,
-	                _extends({ onCancel: _this5.onModalCancel.bind(_this5), onSubmit: _this5.onModalSubmit.bind(_this5), title: createDirectoryMessage }, props),
+	                _extends({ onCancel: _this7.onModalCancel.bind(_this7), onSubmit: _this7.onModalSubmit.bind(_this7), title: createDirectoryMessage }, props),
 	                _react2.default.createElement(_ModalCreateDirectoryForm2.default, props)
 	              );
 	              break;
@@ -24635,7 +24729,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            case RENAME_ITEM:
 	              return _react2.default.createElement(
 	                _Modal2.default,
-	                _extends({ onCancel: _this5.onModalCancel.bind(_this5), onSubmit: _this5.onRenameItemModalSubmit.bind(_this5), title: renameItemMessage }, props),
+	                _extends({ onCancel: _this7.onModalCancel.bind(_this7), onSubmit: _this7.onRenameItemModalSubmit.bind(_this7), title: renameItemMessage }, props),
 	                _react2.default.createElement(_ModalRenameItemForm2.default, _extends({}, props, { item: state.renamingItem }))
 	              );
 	              break;
@@ -24664,6 +24758,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var uploadForm = !props.view.sourceTreeOpen && props.config.allowUploads ? _react2.default.createElement(_UploadForm2.default, props) : undefined;
 
 	      var pathBar = props.view.focusedMediaItem ? _react2.default.createElement(_PathBar2.default, props) : undefined;
+
+	      var notification = _react2.default.createElement(Notification, null);
 
 	      var shouldDisplayChooseBar = function () {
 	        try {
@@ -24737,6 +24833,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      ) : _react2.default.createElement(
 	        'div',
 	        { role: 'widget', lang: props.lang || undefined, className: 'eureka eureka__view-mode__' + props.view.mode + enlargeFocusedRows + serverSideClass },
+	        notification,
 	        formDiv,
 	        pathBar,
 	        chooseBar,
@@ -24749,11 +24846,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_react.Component);
 
 	var _initialiseProps = function _initialiseProps() {
-	  var _this6 = this;
+	  var _this8 = this;
 
 	  this.handleKeyboardFilter = function (event) {
 	    console.log('handleKeyboardFilter', event);
-	    var root = _this6.getEurekaRoot();
+	    var root = _this8.getEurekaRoot();
 	    try {
 	      root.querySelector('input[name="eureka__filter"]').focus();
 	    } catch (e) {}
@@ -24810,27 +24907,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 
 	  this.toggleSourceTreeOpen = function (event) {
-	    _store2.default.dispatch(_this6.decoratedActions.updateView({
-	      sourceTreeOpen: !_this6.props.view.sourceTreeOpen
+	    _store2.default.dispatch(_this8.decoratedActions.updateView({
+	      sourceTreeOpen: !_this8.props.view.sourceTreeOpen
 	    }));
 	  };
 
 	  this.handleKeyboardCreateDirectory = function (event) {
 	    //console.log('handleKeyboardCreateDirectory', event);
-	    _this6.onCreateDirectory();
+	    _this8.onCreateDirectory();
 	  };
 
 	  this.handleKeyboardCreateFile = function (event) {
 	    //console.log('handleKeyboardCreateFile', event);
 	    try {
-	      var createFileHander = _this6.props.config.handlers.createFile(_this6.props.source.currentSource, _this6.props.content.cd);
-	      if (createFileHander.onClick) createFileHander.onClick(_this6.props.source.currentSource, _this6.props.content.cd);else window.open(createFileHander.href);
+	      var createFileHander = _this8.props.config.handlers.createFile(_this8.props.source.currentSource, _this8.props.content.cd);
+	      if (createFileHander.onClick) createFileHander.onClick(_this8.props.source.currentSource, _this8.props.content.cd);else window.open(createFileHander.href);
 	    } catch (e) {}
 	  };
 
 	  this.handleKeyboardUpload = function (event) {
 	    //console.log('handleKeyboardUpload', event);
-	    var root = _this6.getEurekaRoot();
+	    var root = _this8.getEurekaRoot();
 
 	    try {
 	      root.querySelector('.eureka__drop-area-zone').click();
@@ -24841,9 +24938,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  this.handleKeyboardChangeSource = function (event) {
 	    //console.log('handleKeyboardChangeSource', event);
-	    var props = _this6.props,
+	    var props = _this8.props,
 	        state = _store2.default.getState(),
-	        decoratedActions = _this6.decoratedActions,
+	        decoratedActions = _this8.decoratedActions,
 	        sources = state.source.sources;
 
 	    var matchedSource = void 0;
@@ -24860,25 +24957,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	    //console.log('handleKeyboardChangeView', event);
 	    switch (event.key) {
 	      case '1':
-	        _store2.default.dispatch(_this6.decoratedActions.updateView({
+	        _store2.default.dispatch(_this8.decoratedActions.updateView({
 	          mode: 'table'
 	        }));
 	        break;
 
 	      case '2':
-	        _store2.default.dispatch(_this6.decoratedActions.updateView({
+	        _store2.default.dispatch(_this8.decoratedActions.updateView({
 	          mode: 'thumb'
 	        }));
 	        break;
 
 	      case '3':
-	        _store2.default.dispatch(_this6.decoratedActions.updateView({
+	        _store2.default.dispatch(_this8.decoratedActions.updateView({
 	          mode: 'grid'
 	        }));
 	        break;
 
 	      case '4':
-	        _store2.default.dispatch(_this6.decoratedActions.updateView({
+	        _store2.default.dispatch(_this8.decoratedActions.updateView({
 	          mode: 'list'
 	        }));
 	        break;

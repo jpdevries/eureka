@@ -533,6 +533,21 @@ var fetchedReducer = function(state, action) {
   return state;
 }
 
+var initialNotifcationsState = [];
+
+var notificationsReducer = function(state, action) {
+  console.log('notificationsReducer', action.type, actions.NOTIFICATION);
+  state = state || initialNotifcationsState;
+
+  switch(action.type) {
+    case actions.NOTIFICATION:
+    console.log('NOTIFICATION!!!!');
+    break;
+  }
+
+  return state;
+}
+
 var EurekaReducer = combineReducers({
   content: contentReducer,
   view: viewReducer,
@@ -540,7 +555,8 @@ var EurekaReducer = combineReducers({
   source: sourceReducer,
   directory: directoryReducer,
   fetched: fetchedReducer,
-  config: configReducer
+  config: configReducer,
+  notifications: notificationsReducer
 });
 
 exports.EurekaReducer = EurekaReducer;

@@ -8,7 +8,7 @@ import Icon from './Icon';
 //import { FormattedMessage } from 'react-intl';
 import definedMessages from '../i18n/definedMessages';
 
-const TreeToggle = (props) => {
+export const TreeToggle = (props) => {
   const formatMessage = props.intl.formatMessage,
   //closeMessage = formatMessage(definedMessages.close),
   //openMessage = formatMessage(definedMessages.open),

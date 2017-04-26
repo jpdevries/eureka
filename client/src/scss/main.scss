@@ -38,6 +38,8 @@ $gtMobilePH: min-height 480px 4 !default;
   }
 }
 
+
+
 %visually-hidden { /*https://developer.yahoo.com/blogs/ydn/clip-hidden-content-better-accessibility-53456.html*/
   @include visually-hidden;
 }
@@ -98,6 +100,8 @@ $palettes: ( // http://erskinedesign.com/blog/friendlier-colour-names-sass-maps/
 %button {
   @include button();
 }
+
+
 
 .dangerous {
   color:var(--dangerous, $dangerous);
@@ -222,13 +226,44 @@ a[role="presentation"] {
   }
 }
 
-%panel {
+@mixin panel($doBackground: true) {
   @extend %bordered;
   @extend %padded;
   border-radius:0.25rem;
 
-  background:var(--light-bg, white);
+  @if $doBackground {
+    background:var(--light-bg, white);
+  }
 }
+
+%panel {
+  @include panel();
+}
+
+  %notification {
+    @include panel(false);
+    padding-left: 1.5em;
+    padding-right: 1.5em;
+
+    background: var(--notification-background, #d9edf7);
+    color: var(--notification-color, darken(#d9edf7, 40%));
+    border: 1px solid var(--notification-border-color, var(--notification-color, darken(#d9edf7, 40%)));
+    button {
+      position: absolute;
+      top: .25rem;
+      right: .25rem;
+      color: currentColor;
+      transition: color 240ms ease;
+      &:focus, &:hover {
+        color: var(--notification-focus-color, darken(#d9edf7, 50%)) !important;
+        border: none;
+        box-shadow: none;
+        svg {
+          fill: currentColor !important;
+        }
+      }
+    }
+  }
 
 %horizontally-padded {
   @extend %padded;
@@ -237,6 +272,35 @@ a[role="presentation"] {
 }
 
 .eureka {
+  .eureka__notification-wrapper {
+    > * {
+      position: relative;
+    }
+    transition: opacity 240ms ease 90ms, top 240ms ease;
+    transition: top 240ms ease 90ms, opacity 240ms ease;
+    opacity: 1;
+    top: 0;
+    &[aria-hidden="true"] { // , &[hidden]
+      //@extend %visually-hidden;
+      opacity: 0.5;
+      top: -5em;
+      display: block;
+      transition: opacity 340ms ease-out 90ms, top 420ms ease-out;
+    }
+    @include media($gtMobile) {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: .25rem;
+    }
+    text-align: center;
+
+
+    p[aria-live] {
+      margin: 0;
+
+    }
+  }
   .eureka__upload-form {
     input[name*="uploadFiles"]:disabled + label {
       cursor: default;
@@ -475,6 +539,10 @@ a[role="presentation"] {
       line-height: var(--tree-course-line-height, 1.8);
     }
   }
+
+
+
+
 
   .eureka__tree-toggle {
     margin-bottom:1rem;
@@ -905,3 +973,39 @@ a[role="presentation"] {
   }*/
 
 } // end .eureka
+
+.eureka-root {
+  .eureka__notification-wrapper {
+    margin-bottom: .5rem;
+    z-index: $topMost;
+    @include media($mobile) {
+      position: sticky;
+      left: 0.5rem;
+      right: 0.5rem;
+    }
+    @include media($gtMobile) {
+      margin-bottom: 0;
+    }
+    button {
+      display: inline;
+      background: transparent;
+      border: none;
+      padding: 0;
+      &:hover, &:focus {
+        background: transparent !important;
+        border: none !important;
+        //color: currentColor !important;
+        box-shadow: none !important;
+      }
+    }
+  }
+  .eureka__notification-wrapper > * {
+    @extend %notification;
+    display: block;
+    @include media($gtMobile) {
+      display: inline-block;
+    }
+    margin-left: auto;
+    margin-right: auto;
+  }
+ }

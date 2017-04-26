@@ -29,7 +29,7 @@ addLocaleData([...en]);
 
 const defaultLang = 'en';
 
-class EurekaMediaBrowser extends PureComponent {
+export class EurekaMediaBrowser extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -103,7 +103,7 @@ class EurekaMediaBrowser extends PureComponent {
           window.addEventListener('touchstart', function() {
             store.dispatch(actions.upateView({isTouch: true}));
           });
-        } catch (e) { } 
+        } catch (e) { }
       }
 
       /*console.log(
@@ -192,7 +192,8 @@ class EurekaMediaBrowser extends PureComponent {
           source: state.source,
           directory: state.directory,
           fetched: state.fetched,
-          config: state.config
+          config: state.config,
+          notifications: state.notifications
         }
     })(injectIntl(Eureka)); // shoot it up with some i18n
   }

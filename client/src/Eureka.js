@@ -15,6 +15,8 @@ import Modal from './components/Modal';
 import ModalCreateDirectoryForm from './components/ModalCreateDirectoryForm';
 import ModalRenameItemForm from './components/ModalRenameItemForm';
 import SortContents from './components/SortContents';
+import Icon from './components/Icon';
+import Notification from './components/Notification';
 
 import Mousetrap from 'mousetrap';
 
@@ -38,6 +40,49 @@ const RENAME_ITEM = 'rename_item';
 
 
 
+//Notification.propTypes = { initialCount: React.PropTypes.number };
+//Notification.defaultProps = { initialCount: 0 };
+
+/*
+class Notification extends Component {
+
+  constructor(props) {
+    super(props);
+    this.setState = {
+      hidden: false
+    };
+  }
+
+  componentDidMount() {
+    console.log('Notifcation did mount', this.state)
+    setTimeout((event) => {
+      console.log('do it', this.state);
+      this.setState({
+        hidden: true
+      })
+    }, 3000);
+  }
+
+  render() {
+    console.log('state', this.state);
+    const hidden = (() => {
+      try {
+        console.log(this.state);
+        return this.state.hidden
+      } catch (e) {
+        return true
+      }
+    })();
+    console.log('hidden', hidden);
+    return (
+      <div className="eureka__notification-wrapper" aria-live="polite" aria-hidden={hidden}>
+        <p aria-live="polite">Something happened</p>
+      </div>
+    );
+  }
+}
+*/
+
 class Eureka extends Component {
   /*static propTypes = {
     intl: PropTypes.object.isRequired,
@@ -49,7 +94,8 @@ class Eureka extends Component {
     this.state = {
       modalOpen:false,
       currentModal:undefined,
-      renamingItem:undefined
+      renamingItem:undefined,
+      notifications: []
     };
 
     this.decoratedActions = props.decoratedActions ? Object.assign({}, actions, props.decoratedActions) : actions;
@@ -58,6 +104,16 @@ class Eureka extends Component {
   componentWillUnmount() {
     this.removeKeyboardListeners();
   }
+
+  /*notificationsTick = () => {
+
+    console.log('notificationsTick!');
+    try {
+      this.setState({
+        notifications: this.state.notifications.shift()
+      })
+    } catch(e) {}
+  }*/
 
   handleKeyboardFilter = (event) => {
     console.log('handleKeyboardFilter', event);
@@ -115,6 +171,11 @@ class Eureka extends Component {
         by: 'editedOn'
       }
     }))
+  }
+
+  notify(message = "") {
+    console.log('notify');
+    store.dispatch(actions.notify('YOLO'))
   }
 
   assignKeyboardListeners() {
@@ -282,6 +343,10 @@ class Eureka extends Component {
           }, props.view.intervals.updateSourceTree);
         }
       });
+
+      setTimeout(() => {
+        this.notify();
+      }, 3000);
     });
 
     document.body.addEventListener('keyup', (event) => {
@@ -388,6 +453,7 @@ class Eureka extends Component {
       item:(state.renamingItem) ? ` ${state.renamingItem.filename}` : ''
     });
 
+    //console.log('state.notifications', state.notifications);
 
     const modal = (() => {
       if(state.modalOpen) {
@@ -438,6 +504,20 @@ class Eureka extends Component {
     const pathBar = (props.view.focusedMediaItem) ? (
       <PathBar {...props} />
     ) : undefined;
+
+    const notification = (
+      () => {
+        try {
+          return (
+            this.state.notifications[0]
+          )
+        } catch(e) {
+          return undefined;
+        }
+      }
+    )();
+
+    //console.log('notification', notification, this.state);
 
     const shouldDisplayChooseBar = (() => {
       try {
@@ -492,6 +572,7 @@ class Eureka extends Component {
       </form>
     ) : (
       <div role="widget" lang={props.lang || undefined} className={`eureka eureka__view-mode__${props.view.mode}${enlargeFocusedRows}${serverSideClass}`}>
+        {notification}
         {formDiv}
         {pathBar}
         {chooseBar}
