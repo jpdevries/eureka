@@ -462,6 +462,9 @@ Configure the `EurekaMediaBrowser` via the optional attributes found in the defa
 | `sort` | `"name"`      |    Initial column to sort media items on |
 | `allowFullscreen` | `true`      |    Whether or not the interface should offer a fullscreen button |
 | `emphasisFocusedMediaItem` | `true`      |    Whether or not to emphasis selected media items (defaults to emphasizing the filename, only applies to table and list view modes) |
+| `doDragNDrop` | `true`      |    Whether or not to enable drag 'n drop features |
+
+
 
 *Please take note that when `useLocalStorage` is `true` any options manually passed in as props will take&nbsp;precedent.*
 

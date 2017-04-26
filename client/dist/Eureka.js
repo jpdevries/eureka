@@ -386,7 +386,7 @@ var Eureka = function (_Component) {
         //(state.modalOpen) ? <Modal onCancel={this.onModalCancel.bind(this)} onSubmit={this.onModalSubmit.bind(this)} title="Create Directory" {...props}><ModalCreateDirectoryForm {...props} /></Modal> : undefined
       }();
 
-      var dropArea = props.config.allowUploads ? _react2.default.createElement(_DropArea2.default, props) : undefined;
+      var dropArea = props.config.allowUploads && props.config.doDragNDrop ? _react2.default.createElement(_DropArea2.default, props) : undefined;
 
       var pathbrowser = !_utility2.default.serverSideRendering ? _react2.default.createElement(
         'div',

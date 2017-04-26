@@ -38,6 +38,7 @@ var initialConfigState = {
   uid: "0",
   iconSVG: './img/icons.' + pkg.version + '.min.svg',
   assetsBasePath: './assets/',
+  doDragNDrop: true,
   emphasisFocusedMediaItem: true,
   headers: { 'Powered-By': 'Eureka by Markup.tips' },
   intervals: { searchBarPlaceholder: 60000, fetchDirectoryContents: 18000, updateSourceTree: false },
@@ -186,7 +187,7 @@ var treeReducer = function treeReducer(state, action) {
   var _ret = function () {
     switch (action.type) {
       case actions.UPDATE_SOURCE_TREE_SUCCESS:
-        console.log('UPDATE_SOURCE_TREE_SUCCESS');
+        //console.log('UPDATE_SOURCE_TREE_SUCCESS');
         var newState = gotTreeDataFromServer ? state.slice(0) : [];
 
         var directoryInState = function directoryInState(directory) {

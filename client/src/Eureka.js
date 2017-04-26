@@ -416,7 +416,7 @@ class Eureka extends Component {
       //(state.modalOpen) ? <Modal onCancel={this.onModalCancel.bind(this)} onSubmit={this.onModalSubmit.bind(this)} title="Create Directory" {...props}><ModalCreateDirectoryForm {...props} /></Modal> : undefined
     })();
 
-    const dropArea = (props.config.allowUploads) ? <DropArea {...props} /> : undefined;
+    const dropArea = (props.config.allowUploads && props.config.doDragNDrop) ? <DropArea {...props} /> : undefined;
 
     const pathbrowser = (!utility.serverSideRendering) ? (
       <div hidden={!props.view.sourceTreeOpen} aria-hidden={!props.view.sourceTreeOpen} id="eureka__pathbrowser" className="eureka__pathbrowser">

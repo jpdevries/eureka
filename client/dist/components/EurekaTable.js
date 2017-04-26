@@ -143,7 +143,7 @@ var EurekaTable = function (_Component) {
       if (this.state.contents.length !== nextState.contents.length || this.state.contents !== nextState.contents) return true;
 
       if (nextProps.view.sort !== this.props.view.sort) return true;
-      //return true;
+      return true;
       //console.log('EurekaTable should not update');
       return false;
     }
@@ -400,12 +400,19 @@ var EurekaTable = function (_Component) {
         _react2.default.createElement(_EurekaTableTbody2.default, _extends({}, props, { intl: props.intl, filter: props.view.filter, content: props.content, contents: state.contents, sort: this.props.sort }))
       );
 
-      return props.config.allowUploads && !_utility2.default.serverSideRendering ? _react2.default.createElement(
+      var dz = props.config.doDragNDrop ? _react2.default.createElement(
         _reactDropzone2.default,
         { onDrop: this.onDrop.bind(this), disableClick: true, style: {} },
         table,
         html5ContextMenus
       ) : _react2.default.createElement(
+        'div',
+        null,
+        table,
+        html5ContextMenus
+      );
+
+      return props.config.allowUploads && !_utility2.default.serverSideRendering ? dz : _react2.default.createElement(
         'div',
         null,
         table

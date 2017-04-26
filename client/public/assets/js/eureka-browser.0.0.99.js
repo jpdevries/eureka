@@ -1196,7 +1196,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        //(state.modalOpen) ? <Modal onCancel={this.onModalCancel.bind(this)} onSubmit={this.onModalSubmit.bind(this)} title="Create Directory" {...props}><ModalCreateDirectoryForm {...props} /></Modal> : undefined
 	      }();
 
-	      var dropArea = props.config.allowUploads ? _react2.default.createElement(_DropArea2.default, props) : undefined;
+	      var dropArea = props.config.allowUploads && props.config.doDragNDrop ? _react2.default.createElement(_DropArea2.default, props) : undefined;
 
 	      var pathbrowser = !_utility2.default.serverSideRendering ? _react2.default.createElement(
 	        'div',
@@ -1595,6 +1595,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  uid: "0",
 	  iconSVG: './img/icons.' + pkg.version + '.min.svg',
 	  assetsBasePath: './assets/',
+	  doDragNDrop: true,
 	  emphasisFocusedMediaItem: true,
 	  headers: { 'Powered-By': 'Eureka by Markup.tips' },
 	  intervals: { searchBarPlaceholder: 60000, fetchDirectoryContents: 18000, updateSourceTree: false },
@@ -1743,7 +1744,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var _ret = function () {
 	    switch (action.type) {
 	      case actions.UPDATE_SOURCE_TREE_SUCCESS:
-	        console.log('UPDATE_SOURCE_TREE_SUCCESS');
+	        //console.log('UPDATE_SOURCE_TREE_SUCCESS');
 	        var newState = gotTreeDataFromServer ? state.slice(0) : [];
 
 	        var directoryInState = function directoryInState(directory) {
@@ -3940,7 +3941,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.98",
+		"version": "0.0.99",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -9688,7 +9689,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (this.state.contents.length !== nextState.contents.length || this.state.contents !== nextState.contents) return true;
 
 	      if (nextProps.view.sort !== this.props.view.sort) return true;
-	      //return true;
+	      return true;
 	      //console.log('EurekaTable should not update');
 	      return false;
 	    }
@@ -9945,12 +9946,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _react2.default.createElement(_EurekaTableTbody2.default, _extends({}, props, { intl: props.intl, filter: props.view.filter, content: props.content, contents: state.contents, sort: this.props.sort }))
 	      );
 
-	      return props.config.allowUploads && !_utility2.default.serverSideRendering ? _react2.default.createElement(
+	      var dz = props.config.doDragNDrop ? _react2.default.createElement(
 	        _reactDropzone2.default,
 	        { onDrop: this.onDrop.bind(this), disableClick: true, style: {} },
 	        table,
 	        html5ContextMenus
 	      ) : _react2.default.createElement(
+	        'div',
+	        null,
+	        table,
+	        html5ContextMenus
+	      );
+
+	      return props.config.allowUploads && !_utility2.default.serverSideRendering ? dz : _react2.default.createElement(
 	        'div',
 	        null,
 	        table

@@ -45,6 +45,7 @@ function render() {
   _reactDom2.default.render(_react2.default.createElement(_EurekaMediaBrowser2.default, (_React$createElement = {
     basePath: '/assets/components/eureka/',
     allowUploads: true,
+    doDragNDrop: false,
     lang: languageKey,
     useLocalStorage: true,
     allowRename: true,

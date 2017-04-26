@@ -91,7 +91,7 @@ class EurekaTable extends Component {
     if((this.state.contents.length !== nextState.contents.length) || (this.state.contents !== nextState.contents)) return true;
 
     if(nextProps.view.sort !== this.props.view.sort) return true;
-    //return true;
+    return true;
     //console.log('EurekaTable should not update');
     return false;
   }
@@ -300,11 +300,20 @@ class EurekaTable extends Component {
       </table>
     );
 
-    return props.config.allowUploads && !utility.serverSideRendering ? (
+    const dz = (props.config.doDragNDrop) ? (
       <Dropzone onDrop={this.onDrop.bind(this)} disableClick={true} style={{}}>
         {table}
         {html5ContextMenus}
       </Dropzone>
+    ) : (
+      <div>
+        {table}
+        {html5ContextMenus}
+      </div>
+    );
+
+    return props.config.allowUploads && !utility.serverSideRendering ? (
+      dz
     ) : (
       <div>
         {table}
