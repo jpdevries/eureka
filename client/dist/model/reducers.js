@@ -179,14 +179,15 @@ var initialTreeReducer = function () {
 }();
 
 var cd = '';
+var gotTreeDataFromServer = false;
 var treeReducer = function treeReducer(state, action) {
   state = state || initialTreeReducer;
 
   var _ret = function () {
     switch (action.type) {
       case actions.UPDATE_SOURCE_TREE_SUCCESS:
-
-        var newState = state.slice(0);
+        console.log('UPDATE_SOURCE_TREE_SUCCESS');
+        var newState = gotTreeDataFromServer ? state.slice(0) : [];
 
         var directoryInState = function directoryInState(directory) {
           for (var i = 0; i < newState.length; i++) {
@@ -216,6 +217,7 @@ var treeReducer = function treeReducer(state, action) {
           }
         });
 
+        gotTreeDataFromServer = true;
         // if any of the top-level directories in our local state are no longer on the store remove them
         return {
           v: newState.filter(function (directory) {

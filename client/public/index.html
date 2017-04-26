@@ -151,7 +151,11 @@
     <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Intl.~locale.en"></script>
 
     <script>
-      if(true) document.write('<script src="assets/js/vendor/url-search-params/url-search-params.js"><\/script>');
+      try {
+        new URLSearchParams()
+      } catch (e) {
+        document.write('<script src="assets/js/vendor/url-search-params/url-search-params.js"><\/script>')
+      }
     </script>
 
     <!--

@@ -172,13 +172,14 @@ var initialTreeReducer = (() => {
 })();
 
 let cd = '';
+let gotTreeDataFromServer = false;
 var treeReducer = function(state, action) {
   state = state || initialTreeReducer;
 
   switch(action.type) {
     case actions.UPDATE_SOURCE_TREE_SUCCESS:
-
-    let newState = state.slice(0);
+    console.log('UPDATE_SOURCE_TREE_SUCCESS');
+    let newState = (gotTreeDataFromServer) ? state.slice(0) : [];
 
     function directoryInState(directory) {
       for(let i = 0; i < newState.length; i++) {
@@ -210,7 +211,7 @@ var treeReducer = function(state, action) {
     });
 
 
-
+    gotTreeDataFromServer = true;
     // if any of the top-level directories in our local state are no longer on the store remove them
     return newState.filter((directory) => (
       directoryOnServer(directory)

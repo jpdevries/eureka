@@ -61,7 +61,7 @@ function render() {
   }), _defineProperty(_React$createElement, 'handlers', {
     createFile: function createFile(source, directory) {
       return {
-        href: 'javascript:alert("create a directory in ' + directory + ' of media source ' + source + '")',
+        href: 'javascript:alert("create a file in ' + directory + ' of media source ' + source + '")',
         target: '_blank',
         onClick: function onClick(source, directory) {
           console.log('onClick', source, directory);
