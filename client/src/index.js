@@ -30,7 +30,7 @@ function render() {
     <EurekaMediaBrowser
       basePath="/assets/components/eureka/"
       allowUploads={true}
-      doDragNDrop={false}
+      doDragNDrop={true}
       lang={languageKey}
       useLocalStorage={true}
       allowRename={true}

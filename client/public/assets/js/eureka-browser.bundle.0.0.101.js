@@ -24654,7 +24654,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }();
 
 	      _store2.default.dispatch(decoratedActions.renameItem(this.props.source.currentSource, item.path, newName, this.props.config.headers)).then(function (results) {
-	        //console.log('results!!!', results);
 	        _store2.default.dispatch(decoratedActions.updateContent({ contents: results.contents.filter(function (file) {
 	            return file.filename;
 	          }) }));
@@ -24749,7 +24748,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      }();
 
-	      console.log('notificationMessage', notificationMessage);
 	      var notification = notificationMessage ? _react2.default.createElement(_Notification2.default, _extends({ key: notificationMessage.id, onDismiss: this.handleNotificationDismissed }, notificationMessage, props)) : undefined;
 
 	      var shouldDisplayChooseBar = function () {
@@ -25212,7 +25210,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var contentReducer = function contentReducer(state, action) {
 	  state = state || initialContentState;
-	  console.log('contentReducer', action.type);
+	  //console.log('contentReducer', action.type);
 	  switch (action.type) {
 	    case actions.UPDATE_CONFIG:
 	      //console.log('UPDATE_CONFIG!!!', state, action.config);
@@ -25690,7 +25688,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  switch (action.type) {
 	    case actions.NOTIFICATION:
-	      console.log('NOTIFICATION!!!!', action);
+	      //console.log('NOTIFICATION!!!!', action);
 	      return (0, _reactAddonsUpdate2.default)(state, { $push: [{
 	          message: action.message,
 	          id: action.id,
@@ -25702,17 +25700,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	      break;
 
 	    case actions.NOTIFICATION_DELETED:
-	      console.log('NOTIFICATION_DELETED!!!!');
+	      //console.log('NOTIFICATION_DELETED!!!!');
 	      return state.filter(function (notification) {
 	        return notification.id !== action.id;
 	      });
 	      break;
 
 	    case actions.NOTIFICATION_ARCHIVED:
-	      var newState = (0, _reactAddonsUpdate2.default)(state, _defineProperty({}, index, { $apply: function $apply(notification) {
+	      return (0, _reactAddonsUpdate2.default)(state, _defineProperty({}, index, { $apply: function $apply(notification) {
 	          return (0, _reactAddonsUpdate2.default)(notification, { $merge: { archived: true } });
 	        } }));
-	      return newState;
 	      break;
 	  }
 
@@ -27384,7 +27381,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.100",
+		"version": "0.0.101",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -33155,6 +33152,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	          state = this.state,
 	          formatMessage = props.intl.formatMessage;
 
+	      console.log('render EurekaTable');
+
 	      var decoratedActions = this.decoratedActions;
 
 	      var html5ContextMenus = props.content.contents.length ? props.content.contents.map(function (item, index) {
@@ -33509,18 +33508,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }));
 	    }*/
 
-	    /*shouldComponentUpdate(nextProps, nextState) {
-	      return true;
-	      console.log('EurekaTableTbody shouldComponentUpdate');
-	      if(nextProps.view.filter || (!nextProps.view.filter && this.props.view.filter)) return true;
+	  }, {
+	    key: 'shouldComponentUpdate',
+	    value: function shouldComponentUpdate(nextProps, nextState) {
+	      //return true;
+	      //console.log('EurekaTableTbody shouldComponentUpdate');
+	      if (nextProps.view.filter || !nextProps.view.filter && this.props.view.filter) return true;
 	      try {
-	        console.log('shouldComponentUpdate', (this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path), this.state.focusedMediaItem.path, nextProps.view.focusedMediaItem.path);
+	        //console.log('shouldComponentUpdate', (this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path), this.state.focusedMediaItem.path, nextProps.view.focusedMediaItem.path);
 	        //if((this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path)) return true; // #janky SLOOOOW
 	      } catch (e) {}
-	      console.log(this.props.contents[0], nextProps.contents[0]);
+	      //console.log(this.props.contents[0], nextProps.contents[0]);
 	      return !(this.props.contents === nextProps.contents);
-	    }*/
-
+	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
@@ -33529,6 +33529,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      //console.log('rendering EurekaTableTbody');
 	      var props = this.props,
 	          state = this.state;
+
+	      console.log('render EurekaTableTbody');
 
 	      function shouldHide(item) {
 
@@ -37789,6 +37791,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		"create": "Create",
 		"directory": "directory",
 		"renamingItem": "renaming item {filename}",
+		"welcome.learnMore": "Learn more",
 		"filter": "Filter",
 		"sortBy": "Sort by",
 		"upload.files": "Upload files",
@@ -37819,7 +37822,6 @@ return /******/ (function(modules) { // webpackBootstrap
 		"deleted.item": "Deleted {filename}",
 		"download": "Download",
 		"download.item": "Download {filename}",
-		"welcome.learnMore": "Learn more",
 		"expand.item": "Expand {filename}",
 		"directory.refresh": "Refresh Directory",
 		"upload.filesTo": "Upload File to {cd}",

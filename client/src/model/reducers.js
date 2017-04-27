@@ -90,7 +90,7 @@ const initialContentState = Object.assign({}, {
 
 var contentReducer = function(state, action) {
   state = state || initialContentState;
-  console.log('contentReducer', action.type);
+  //console.log('contentReducer', action.type);
   switch(action.type) {
     case actions.UPDATE_CONFIG:
     //console.log('UPDATE_CONFIG!!!', state, action.config);
@@ -545,13 +545,13 @@ var notificationsReducer = function(state, action) {
   state = state || initialNotifcationsState;
 
   let index = 0;
-  state.map((notification,i) => {
+  state.map((notification, i) => {
       if(notification.id == action.id) index = i;
   });
 
   switch(action.type) {
     case actions.NOTIFICATION:
-    console.log('NOTIFICATION!!!!', action);
+    //console.log('NOTIFICATION!!!!', action);
     return update(state, {$push: [{
       message: action.message,
       id: action.id,
@@ -563,17 +563,16 @@ var notificationsReducer = function(state, action) {
     break;
 
     case actions.NOTIFICATION_DELETED:
-    console.log('NOTIFICATION_DELETED!!!!');
+    //console.log('NOTIFICATION_DELETED!!!!');
     return state.filter((notification) => (
       notification.id !== action.id
     ))
     break;
 
     case actions.NOTIFICATION_ARCHIVED:
-    var newState =  update(state, {[index]: {$apply: (notification) => {
+    return update(state, {[index]: {$apply: (notification) => {
       return update(notification,{ $merge:{ archived: true } })
     }} });
-    return newState;
     break;
   }
 

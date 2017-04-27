@@ -149,6 +149,8 @@ class EurekaTable extends Component {
     state = this.state,
     formatMessage = props.intl.formatMessage;
 
+    console.log('render EurekaTable');
+
     const decoratedActions = this.decoratedActions;
 
     const html5ContextMenus = (props.content.contents.length) ? props.content.contents.map((item, index) => {

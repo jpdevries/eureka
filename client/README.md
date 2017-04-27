@@ -434,6 +434,9 @@ Configure the `EurekaMediaBrowser` via the optional attributes found in the defa
 | `sort` | `"name"`      |    Initial column to sort media items on |
 | `allowFullscreen` | `true`      |    Whether or not the interface should offer a fullscreen button |
 | `emphasisFocusedMediaItem` | `true`      |    Whether or not to emphasis selected media items (defaults to emphasizing the filename, only applies to table and list view modes) |
+| `welcome` | `true`      |    Whether or not to welcome users on their first Eureka experience |
+| `alwaysWelcome` | `true`      |    Whether or not to always welcome users |
+| `learnMore` | `https://github.com/jpdevries/eureka`      | Learn more link to use in the welcome message. Set to `undefined` to omit |
 
 ## 🗄 REST API
 Eureka is hungry. It needs a REST API to feed it JSON data.  

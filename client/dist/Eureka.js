@@ -390,7 +390,6 @@ var Eureka = function (_Component) {
       }();
 
       _store2.default.dispatch(decoratedActions.renameItem(this.props.source.currentSource, item.path, newName, this.props.config.headers)).then(function (results) {
-        //console.log('results!!!', results);
         _store2.default.dispatch(decoratedActions.updateContent({ contents: results.contents.filter(function (file) {
             return file.filename;
           }) }));
@@ -485,7 +484,6 @@ var Eureka = function (_Component) {
         }
       }();
 
-      console.log('notificationMessage', notificationMessage);
       var notification = notificationMessage ? _react2.default.createElement(_Notification2.default, _extends({ key: notificationMessage.id, onDismiss: this.handleNotificationDismissed }, notificationMessage, props)) : undefined;
 
       var shouldDisplayChooseBar = function () {

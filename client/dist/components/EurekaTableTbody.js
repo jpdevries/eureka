@@ -134,18 +134,19 @@ var EurekaTableTbody = function (_PureComponent) {
       }));
     }*/
 
-    /*shouldComponentUpdate(nextProps, nextState) {
-      return true;
-      console.log('EurekaTableTbody shouldComponentUpdate');
-      if(nextProps.view.filter || (!nextProps.view.filter && this.props.view.filter)) return true;
+  }, {
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps, nextState) {
+      //return true;
+      //console.log('EurekaTableTbody shouldComponentUpdate');
+      if (nextProps.view.filter || !nextProps.view.filter && this.props.view.filter) return true;
       try {
-        console.log('shouldComponentUpdate', (this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path), this.state.focusedMediaItem.path, nextProps.view.focusedMediaItem.path);
+        //console.log('shouldComponentUpdate', (this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path), this.state.focusedMediaItem.path, nextProps.view.focusedMediaItem.path);
         //if((this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path)) return true; // #janky SLOOOOW
       } catch (e) {}
-      console.log(this.props.contents[0], nextProps.contents[0]);
+      //console.log(this.props.contents[0], nextProps.contents[0]);
       return !(this.props.contents === nextProps.contents);
-    }*/
-
+    }
   }, {
     key: 'render',
     value: function render() {
@@ -154,6 +155,8 @@ var EurekaTableTbody = function (_PureComponent) {
       //console.log('rendering EurekaTableTbody');
       var props = this.props,
           state = this.state;
+
+      console.log('render EurekaTableTbody');
 
       function shouldHide(item) {
 

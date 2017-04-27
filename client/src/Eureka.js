@@ -426,7 +426,6 @@ class Eureka extends Component {
     })();
 
     store.dispatch(decoratedActions.renameItem(this.props.source.currentSource, item.path, newName, this.props.config.headers)).then((results) => {
-      //console.log('results!!!', results);
       store.dispatch(decoratedActions.updateContent({contents:results.contents.filter((file) => (
         file.filename
       ))}));
@@ -525,7 +524,6 @@ class Eureka extends Component {
       }
     )();
 
-    console.log('notificationMessage', notificationMessage)
     const notification = (notificationMessage) ? <Notification key={notificationMessage.id} onDismiss={this.handleNotificationDismissed} {...notificationMessage} {...props}  /> : undefined;
 
     const shouldDisplayChooseBar = (() => {

@@ -106,7 +106,7 @@ var initialContentState = Object.assign({}, {
 
 var contentReducer = function contentReducer(state, action) {
   state = state || initialContentState;
-  console.log('contentReducer', action.type);
+  //console.log('contentReducer', action.type);
   switch (action.type) {
     case actions.UPDATE_CONFIG:
       //console.log('UPDATE_CONFIG!!!', state, action.config);
@@ -584,7 +584,7 @@ var notificationsReducer = function notificationsReducer(state, action) {
 
   switch (action.type) {
     case actions.NOTIFICATION:
-      console.log('NOTIFICATION!!!!', action);
+      //console.log('NOTIFICATION!!!!', action);
       return (0, _reactAddonsUpdate2.default)(state, { $push: [{
           message: action.message,
           id: action.id,
@@ -596,17 +596,16 @@ var notificationsReducer = function notificationsReducer(state, action) {
       break;
 
     case actions.NOTIFICATION_DELETED:
-      console.log('NOTIFICATION_DELETED!!!!');
+      //console.log('NOTIFICATION_DELETED!!!!');
       return state.filter(function (notification) {
         return notification.id !== action.id;
       });
       break;
 
     case actions.NOTIFICATION_ARCHIVED:
-      var newState = (0, _reactAddonsUpdate2.default)(state, _defineProperty({}, index, { $apply: function $apply(notification) {
+      return (0, _reactAddonsUpdate2.default)(state, _defineProperty({}, index, { $apply: function $apply(notification) {
           return (0, _reactAddonsUpdate2.default)(notification, { $merge: { archived: true } });
         } }));
-      return newState;
       break;
   }
 
