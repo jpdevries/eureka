@@ -17,18 +17,17 @@ var pathParse = require('path-parse');
 import classNames from 'classnames';
 import Icon from './Icon';
 
-import { FormattedMessage } from 'react-intl';
-
-import definedMessages from '../i18n/definedMessages';
-
 import Mousetrap from 'mousetrap';
+
+import { FormattedMessage, FormattedPlural, FormattedNumber, FormattedRelative, defineMessages } from 'react-intl';
+import definedMessages from '../i18n/definedMessages';
 
 import injectTapEventPlugin from "react-tap-event-plugin";
 try {
   injectTapEventPlugin();
 } catch (e) {
 
-} 
+}
 
 class MediaRow extends PureComponent {
   constructor(props) {
@@ -126,14 +125,19 @@ class MediaRow extends PureComponent {
   }
 
   handleKeyboardBackspace(event) {
-    const props = this.props;
-    const decoratedActions = (props.decoratedActions) ? Object.assign({}, actions, props.decoratedActions) : actions;
+    const props = this.props,
+    { formatMessage } = props.intl,
+    decoratedActions = (props.decoratedActions) ? Object.assign({}, actions, props.decoratedActions) : actions,
+    deletedItemMessage = formatMessage(definedMessages.deletedItem, {
+      filename: props.item.filename
+    });
     //console.log('handleKeyboardBackspace', event, props.item.path);
     store.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, props.item.path, props.config.headers)).then(() => {
-      utility.notify(`Deleted item ${props.item.filename}`, {
+      /*utility.notify(`Deleted item ${props.item.filename}`, {
         badge: path.join(props.config.assetsBasePath, 'img/src/png/trash-o.png'),
         silent: true
-      });
+      });*/
+      store.dispatch(actions.notify(deletedItemMessage, utility.DANGEROUS));
     });
   }
 

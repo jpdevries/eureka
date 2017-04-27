@@ -80,6 +80,10 @@ var _Icon = require('./components/Icon');
 
 var _Icon2 = _interopRequireDefault(_Icon);
 
+var _Notification = require('./components/Notification');
+
+var _Notification2 = _interopRequireDefault(_Notification);
+
 var _mousetrap = require('mousetrap');
 
 var _mousetrap2 = _interopRequireDefault(_mousetrap);
@@ -118,61 +122,6 @@ var classNames = require('classnames');
 
 var CREATE_DIRECTORY = 'create_directory';
 var RENAME_ITEM = 'rename_item';
-
-var Notification = function (_Component) {
-  _inherits(Notification, _Component);
-
-  function Notification(props) {
-    _classCallCheck(this, Notification);
-
-    console.log('Notification');
-
-    var _this = _possibleConstructorReturn(this, (Notification.__proto__ || Object.getPrototypeOf(Notification)).call(this, props));
-
-    _this.state = { hidden: true };
-    return _this;
-  }
-
-  _createClass(Notification, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      this.setState({ hidden: false });
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var _this2 = this;
-
-      var props = this.props;
-
-      console.log('render Notification', this.state);
-      return _react2.default.createElement(
-        'div',
-        { className: 'eureka__notification-wrapper', 'aria-live': 'polite', 'aria-atomic': 'true', 'aria-hidden': this.state.hidden },
-        _react2.default.createElement(
-          'div',
-          null,
-          _react2.default.createElement(
-            'p',
-            { 'aria-live': 'polite' },
-            'Something happened  '
-          ),
-          _react2.default.createElement(
-            'button',
-            { 'aria-label': 'Dismiss Notification', onClick: function onClick(event) {
-                _this2.setState({
-                  hidden: true
-                });
-              } },
-            _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'times', 'aria-label': 'Dismiss Notification', ariaHidden: false }))
-          )
-        )
-      );
-    }
-  }]);
-
-  return Notification;
-}(_react.Component);
 
 //Notification.propTypes = { initialCount: React.PropTypes.number };
 //Notification.defaultProps = { initialCount: 0 };
@@ -217,8 +166,8 @@ class Notification extends Component {
 }
 */
 
-var Eureka = function (_Component2) {
-  _inherits(Eureka, _Component2);
+var Eureka = function (_Component) {
+  _inherits(Eureka, _Component);
 
   /*static propTypes = {
     intl: PropTypes.object.isRequired,
@@ -227,19 +176,19 @@ var Eureka = function (_Component2) {
   function Eureka(props) {
     _classCallCheck(this, Eureka);
 
-    var _this3 = _possibleConstructorReturn(this, (Eureka.__proto__ || Object.getPrototypeOf(Eureka)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (Eureka.__proto__ || Object.getPrototypeOf(Eureka)).call(this, props));
 
-    _initialiseProps.call(_this3);
+    _initialiseProps.call(_this);
 
-    _this3.state = {
+    _this.state = {
       modalOpen: false,
       currentModal: undefined,
       renamingItem: undefined,
       notifications: []
     };
 
-    _this3.decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
-    return _this3;
+    _this.decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
+    return _this;
   }
 
   _createClass(Eureka, [{
@@ -257,15 +206,6 @@ var Eureka = function (_Component2) {
       } catch(e) {}
     }*/
 
-  }, {
-    key: 'notify',
-    value: function notify() {
-      var message = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
-
-      this.setState({
-        notifications: [_react2.default.createElement(Notification, _extends({}, this.props, { message: message }))]
-      });
-    }
   }, {
     key: 'assignKeyboardListeners',
     value: function assignKeyboardListeners() {
@@ -316,7 +256,7 @@ var Eureka = function (_Component2) {
   }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
-      var _this4 = this;
+      var _this2 = this;
 
       var props = this.props,
           decoratedActions = this.decoratedActions;
@@ -325,9 +265,9 @@ var Eureka = function (_Component2) {
 
       _store2.default.dispatch(decoratedActions.fetchMediaSources(props.config.headers)).then(function () {
         // hit the server and get the media sources
-        _store2.default.dispatch(decoratedActions.updateSourceTree(_this4.props.source.sources[0].id), props.config.headers).then(function (content) {
+        _store2.default.dispatch(decoratedActions.updateSourceTree(_this2.props.source.sources[0].id), props.config.headers).then(function (content) {
           // then hit server for the directory tree of the first (default) media source
-          var props = _this4.props;
+          var props = _this2.props;
 
           _store2.default.dispatch(decoratedActions.updateContent({ // updates the "current directory" of the view right away
             cd: props.content.cd
@@ -340,7 +280,7 @@ var Eureka = function (_Component2) {
             setInterval(function () {
               // every so often hit the server and update the displayed contents of the current directory
               var state = _store2.default.getState();
-              var props = _this4.props;
+              var props = _this2.props;
 
               _store2.default.dispatch(decoratedActions.updateContent({ // updates the "current directory" of the view right away
                 cd: props.content.cd
@@ -358,6 +298,13 @@ var Eureka = function (_Component2) {
             }, props.view.intervals.updateSourceTree);
           }
         });
+
+        if (props.config.alwaysWelcome || props.config.welcome && localStorage.getItem(props.storagePrefix + 'welcome') !== 'false') {
+          setTimeout(function () {
+            _store2.default.dispatch(_actions2.default.notify('Welcome to Eureka. You found it.', undefined, props.config.learnMore, 26000));
+            localStorage.setItem(props.storagePrefix + 'welcome', 'false');
+          }, 2400);
+        }
       });
 
       document.body.addEventListener('keyup', function (event) {
@@ -366,7 +313,7 @@ var Eureka = function (_Component2) {
         switch (key) {
           case 27:
             // Escape
-            _this4.setState({
+            _this2.setState({
               modalOpen: false,
               currentModal: undefined
             });
@@ -396,7 +343,7 @@ var Eureka = function (_Component2) {
   }, {
     key: 'onModalSubmit',
     value: function onModalSubmit(createDirectory) {
-      var _this5 = this;
+      var _this3 = this;
 
       var decoratedActions = this.decoratedActions;
       var props = this.props;
@@ -407,7 +354,7 @@ var Eureka = function (_Component2) {
         case CREATE_DIRECTORY:
           console.log(_store2.default.getState().content.cd, path.join(_store2.default.getState().content.cd, 'foo'));
           _store2.default.dispatch(decoratedActions.createDirectory(_store2.default.getState().source.currentSource, path.join(_store2.default.getState().content.cd, createDirectory))).then(function () {
-            _this5.setState({
+            _this3.setState({
               modalOpen: false,
               currentModal: undefined
             });
@@ -426,7 +373,7 @@ var Eureka = function (_Component2) {
   }, {
     key: 'onRenameItemModalSubmit',
     value: function onRenameItemModalSubmit(newName, item) {
-      var _this6 = this;
+      var _this4 = this;
 
       //console.log('onRenameItemModalSubmit!!!', newName, item);
       //console.log(item.path);
@@ -447,7 +394,7 @@ var Eureka = function (_Component2) {
         _store2.default.dispatch(decoratedActions.updateContent({ contents: results.contents.filter(function (file) {
             return file.filename;
           }) }));
-        _this6.setState({
+        _this4.setState({
           renamingItem: undefined,
           modalOpen: false,
           currentModal: undefined
@@ -467,7 +414,7 @@ var Eureka = function (_Component2) {
   }, {
     key: 'render',
     value: function render() {
-      var _this7 = this;
+      var _this5 = this;
 
       var props = this.props,
           state = this.state,
@@ -480,8 +427,7 @@ var Eureka = function (_Component2) {
         item: state.renamingItem ? ' ' + state.renamingItem.filename : ''
       });
 
-
-      console.log('state.notifications', state.notifications);
+      //console.log('state.notifications', state.notifications);
 
       var modal = function () {
         if (state.modalOpen) {
@@ -489,7 +435,7 @@ var Eureka = function (_Component2) {
             case CREATE_DIRECTORY:
               return _react2.default.createElement(
                 _Modal2.default,
-                _extends({ onCancel: _this7.onModalCancel.bind(_this7), onSubmit: _this7.onModalSubmit.bind(_this7), title: createDirectoryMessage }, props),
+                _extends({ onCancel: _this5.onModalCancel.bind(_this5), onSubmit: _this5.onModalSubmit.bind(_this5), title: createDirectoryMessage }, props),
                 _react2.default.createElement(_ModalCreateDirectoryForm2.default, props)
               );
               break;
@@ -497,7 +443,7 @@ var Eureka = function (_Component2) {
             case RENAME_ITEM:
               return _react2.default.createElement(
                 _Modal2.default,
-                _extends({ onCancel: _this7.onModalCancel.bind(_this7), onSubmit: _this7.onRenameItemModalSubmit.bind(_this7), title: renameItemMessage }, props),
+                _extends({ onCancel: _this5.onModalCancel.bind(_this5), onSubmit: _this5.onRenameItemModalSubmit.bind(_this5), title: renameItemMessage }, props),
                 _react2.default.createElement(_ModalRenameItemForm2.default, _extends({}, props, { item: state.renamingItem }))
               );
               break;
@@ -527,15 +473,20 @@ var Eureka = function (_Component2) {
 
       var pathBar = props.view.focusedMediaItem ? _react2.default.createElement(_PathBar2.default, props) : undefined;
 
-      var notification = function () {
+      var unarchivedNotifications = this.props.notifications ? this.props.notifications.filter(function (notification) {
+        return !notification.archived;
+      }) : [];
+
+      var notificationMessage = function () {
         try {
-          return _this7.state.notifications[0];
+          return unarchivedNotifications[0];
         } catch (e) {
           return undefined;
         }
       }();
 
-      console.log('notification', notification, this.state);
+      console.log('notificationMessage', notificationMessage);
+      var notification = notificationMessage ? _react2.default.createElement(_Notification2.default, _extends({ key: notificationMessage.id, onDismiss: this.handleNotificationDismissed }, notificationMessage, props)) : undefined;
 
       var shouldDisplayChooseBar = function () {
         try {
@@ -571,7 +522,6 @@ var Eureka = function (_Component2) {
               _react2.default.createElement(
                 'h2',
                 null,
-                _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'folder-open', ariaHidde: false })),
                 _react2.default.createElement(
                   'span',
                   { className: 'visually-hidden' },
@@ -610,7 +560,11 @@ var Eureka = function (_Component2) {
       ) : _react2.default.createElement(
         'div',
         { role: 'widget', lang: props.lang || undefined, className: 'eureka eureka__view-mode__' + props.view.mode + enlargeFocusedRows + serverSideClass },
-        notification,
+        _react2.default.createElement(
+          'div',
+          { className: 'eureka__sticky-bar', 'aria-live': 'polite', 'aria-atomic': 'true' },
+          notification
+        ),
         formDiv,
         pathBar,
         chooseBar,
@@ -623,11 +577,11 @@ var Eureka = function (_Component2) {
 }(_react.Component);
 
 var _initialiseProps = function _initialiseProps() {
-  var _this8 = this;
+  var _this6 = this;
 
   this.handleKeyboardFilter = function (event) {
     console.log('handleKeyboardFilter', event);
-    var root = _this8.getEurekaRoot();
+    var root = _this6.getEurekaRoot();
     try {
       root.querySelector('input[name="eureka__filter"]').focus();
     } catch (e) {}
@@ -640,6 +594,11 @@ var _initialiseProps = function _initialiseProps() {
         dir: _utility2.default.ASCENDING
       }
     }));
+  };
+
+  this.handleNotificationDismissed = function (id) {
+    //console.log(`notification ${id} dismiessed`)
+    _store2.default.dispatch(_actions2.default.archiveNotification(id));
   };
 
   this.handleKeyboardSortDescending = function (event) {
@@ -684,27 +643,27 @@ var _initialiseProps = function _initialiseProps() {
   };
 
   this.toggleSourceTreeOpen = function (event) {
-    _store2.default.dispatch(_this8.decoratedActions.updateView({
-      sourceTreeOpen: !_this8.props.view.sourceTreeOpen
+    _store2.default.dispatch(_this6.decoratedActions.updateView({
+      sourceTreeOpen: !_this6.props.view.sourceTreeOpen
     }));
   };
 
   this.handleKeyboardCreateDirectory = function (event) {
     //console.log('handleKeyboardCreateDirectory', event);
-    _this8.onCreateDirectory();
+    _this6.onCreateDirectory();
   };
 
   this.handleKeyboardCreateFile = function (event) {
     //console.log('handleKeyboardCreateFile', event);
     try {
-      var createFileHander = _this8.props.config.handlers.createFile(_this8.props.source.currentSource, _this8.props.content.cd);
-      if (createFileHander.onClick) createFileHander.onClick(_this8.props.source.currentSource, _this8.props.content.cd);else window.open(createFileHander.href);
+      var createFileHander = _this6.props.config.handlers.createFile(_this6.props.source.currentSource, _this6.props.content.cd);
+      if (createFileHander.onClick) createFileHander.onClick(_this6.props.source.currentSource, _this6.props.content.cd);else window.open(createFileHander.href);
     } catch (e) {}
   };
 
   this.handleKeyboardUpload = function (event) {
     //console.log('handleKeyboardUpload', event);
-    var root = _this8.getEurekaRoot();
+    var root = _this6.getEurekaRoot();
 
     try {
       root.querySelector('.eureka__drop-area-zone').click();
@@ -715,9 +674,9 @@ var _initialiseProps = function _initialiseProps() {
 
   this.handleKeyboardChangeSource = function (event) {
     //console.log('handleKeyboardChangeSource', event);
-    var props = _this8.props,
+    var props = _this6.props,
         state = _store2.default.getState(),
-        decoratedActions = _this8.decoratedActions,
+        decoratedActions = _this6.decoratedActions,
         sources = state.source.sources;
 
     var matchedSource = void 0;
@@ -734,25 +693,25 @@ var _initialiseProps = function _initialiseProps() {
     //console.log('handleKeyboardChangeView', event);
     switch (event.key) {
       case '1':
-        _store2.default.dispatch(_this8.decoratedActions.updateView({
+        _store2.default.dispatch(_this6.decoratedActions.updateView({
           mode: 'table'
         }));
         break;
 
       case '2':
-        _store2.default.dispatch(_this8.decoratedActions.updateView({
+        _store2.default.dispatch(_this6.decoratedActions.updateView({
           mode: 'thumb'
         }));
         break;
 
       case '3':
-        _store2.default.dispatch(_this8.decoratedActions.updateView({
+        _store2.default.dispatch(_this6.decoratedActions.updateView({
           mode: 'grid'
         }));
         break;
 
       case '4':
-        _store2.default.dispatch(_this8.decoratedActions.updateView({
+        _store2.default.dispatch(_this6.decoratedActions.updateView({
           mode: 'list'
         }));
         break;

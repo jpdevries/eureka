@@ -53,6 +53,9 @@ var ContextButtons = function ContextButtons(props) {
       deleteItemMessage = formatMessage(_definedMessages2.default.deleteItem, {
     filename: item.filename
   }),
+      deletedItemMessage = formatMessage(_definedMessages2.default.deletedItem, {
+    filename: item.filename
+  }),
       expandItemMessage = formatMessage(_definedMessages2.default.expandItem, {
     filename: item.filename
   }),
@@ -97,10 +100,11 @@ var ContextButtons = function ContextButtons(props) {
     'button',
     { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'delete__' + (0, _utility.cssSafe)(item.filename), role: 'option', onClick: function onClick(event) {
         _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path, props.config.headers)).then(function () {
-          (0, _utility.notify)('Deleted item ' + item.filename, {
-            badge: _path2.default.join(props.config.assetsBasePath, 'img/src/png/trash-o.png'),
+          /*notify(`Deleted item ${item.filename}`, {
+            badge: path.join(props.config.assetsBasePath, 'img/src/png/trash-o.png'),
             silent: true
-          });
+          });*/
+          _store2.default.dispatch(_actions2.default.notify(deletedItemMessage, _utility.DANGEROUS));
         });
       }, title: deleteItemMessage, className: 'dangerous' },
     deleteMessage,

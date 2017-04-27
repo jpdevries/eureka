@@ -44,15 +44,15 @@ var _Icon = require('./Icon');
 
 var _Icon2 = _interopRequireDefault(_Icon);
 
+var _mousetrap = require('mousetrap');
+
+var _mousetrap2 = _interopRequireDefault(_mousetrap);
+
 var _reactIntl = require('react-intl');
 
 var _definedMessages = require('../i18n/definedMessages');
 
 var _definedMessages2 = _interopRequireDefault(_definedMessages);
-
-var _mousetrap = require('mousetrap');
-
-var _mousetrap2 = _interopRequireDefault(_mousetrap);
 
 var _reactTapEventPlugin = require('react-tap-event-plugin');
 
@@ -185,14 +185,19 @@ var MediaRow = function (_PureComponent) {
   }, {
     key: 'handleKeyboardBackspace',
     value: function handleKeyboardBackspace(event) {
-      var props = this.props;
-      var decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
+      var props = this.props,
+          formatMessage = props.intl.formatMessage,
+          decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default,
+          deletedItemMessage = formatMessage(_definedMessages2.default.deletedItem, {
+        filename: props.item.filename
+      });
       //console.log('handleKeyboardBackspace', event, props.item.path);
       _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, props.item.path, props.config.headers)).then(function () {
-        _utility2.default.notify('Deleted item ' + props.item.filename, {
-          badge: _path2.default.join(props.config.assetsBasePath, 'img/src/png/trash-o.png'),
+        /*utility.notify(`Deleted item ${props.item.filename}`, {
+          badge: path.join(props.config.assetsBasePath, 'img/src/png/trash-o.png'),
           silent: true
-        });
+        });*/
+        _store2.default.dispatch(_actions2.default.notify(deletedItemMessage, _utility2.default.DANGEROUS));
       });
     }
   }, {
@@ -236,7 +241,8 @@ var MediaRow = function (_PureComponent) {
         // consider abstracting this to its own module
         //console.log(pathParse(props.item.filename).ext,'props.item',props.item);
 
-        var src = props.item.absolutePreviewURL || props.item.absoluteURL;
+        var src = props.item.absolutePreviewURL || props.item.absoluteURL,
+            alt = props.item.alt || '';
 
         switch (ext.toLowerCase()) {
           case '.jpg':
@@ -248,7 +254,7 @@ var MediaRow = function (_PureComponent) {
           case '.svg':
           case '.bmp':
           case '.tiff':
-            return _react2.default.createElement('img', { src: src, alt: '' });
+            return _react2.default.createElement('img', { src: src, alt: alt });
             break;
 
           case '.mp4':

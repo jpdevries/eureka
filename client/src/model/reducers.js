@@ -1,6 +1,7 @@
+import update from 'react-addons-update'; // ES6
+
 const actions = require('./actions'),
 combineReducers = require('redux').combineReducers,
-update = require('react-addons-update'),
 path = require('path');
 
 const pkg = require("./../../package.json");
@@ -23,6 +24,9 @@ const initialConfigState = {
   locales:"en-US",
   mediaSource:"0",
   currentDirectory:"/",
+  welcome: true,
+  alwaysWelcome: false,
+  learnMore: 'https://github.com/jpdevries/eureka',
   uid:"0",
   iconSVG:`./img/icons.${pkg.version}.min.svg`,
   assetsBasePath:'./assets/',
@@ -86,7 +90,7 @@ const initialContentState = Object.assign({}, {
 
 var contentReducer = function(state, action) {
   state = state || initialContentState;
-
+  console.log('contentReducer', action.type);
   switch(action.type) {
     case actions.UPDATE_CONFIG:
     //console.log('UPDATE_CONFIG!!!', state, action.config);
@@ -289,6 +293,7 @@ var initialViewState = Object.assign({}, {
   allowFullscreen: true,
   isUploading: false,
   isTouch: false,
+  fetchingContents: false,
   intervals: {
     searchBarPlaceholder: false,
     fetchDirectoryContents: false,
@@ -325,9 +330,9 @@ var viewReducer = function(state, action) {
   switch(action.type) {
     case actions.FETCH_DIRECTORY_CONTENTS_SUCCESS:
     case actions.FETCH_DIRECTORY_CONTENTS_ERROR:
-    /*return Object.assign({},state, {
-      isFetching: false
-    });*/
+    return Object.assign({},state, {
+      fetchingContents: false
+    });
     break;
 
     case actions.UPLOAD_FILES_SUCCESS:
@@ -536,12 +541,39 @@ var fetchedReducer = function(state, action) {
 var initialNotifcationsState = [];
 
 var notificationsReducer = function(state, action) {
-  console.log('notificationsReducer', action.type, actions.NOTIFICATION);
+  //console.log('notificationsReducer', action.type, actions.NOTIFICATION);
   state = state || initialNotifcationsState;
+
+  let index = 0;
+  state.map((notification,i) => {
+      if(notification.id == action.id) index = i;
+  });
 
   switch(action.type) {
     case actions.NOTIFICATION:
-    console.log('NOTIFICATION!!!!');
+    console.log('NOTIFICATION!!!!', action);
+    return update(state, {$push: [{
+      message: action.message,
+      id: action.id,
+      archived: action.archived,
+      type: action.notificationType,
+      learnMore: action.learnMore,
+      dismissAfter: action.dismissAfter
+    }]});
+    break;
+
+    case actions.NOTIFICATION_DELETED:
+    console.log('NOTIFICATION_DELETED!!!!');
+    return state.filter((notification) => (
+      notification.id !== action.id
+    ))
+    break;
+
+    case actions.NOTIFICATION_ARCHIVED:
+    var newState =  update(state, {[index]: {$apply: (notification) => {
+      return update(notification,{ $merge:{ archived: true } })
+    }} });
+    return newState;
     break;
   }
 

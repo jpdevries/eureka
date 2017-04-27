@@ -59,6 +59,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.EurekaMediaBrowser = undefined;
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -86,15 +87,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _reactIntl = __webpack_require__(230);
 
-	var _utility = __webpack_require__(222);
+	var _utility = __webpack_require__(224);
 
 	var _utility2 = _interopRequireDefault(_utility);
 
-	var _en = __webpack_require__(284);
+	var _en = __webpack_require__(285);
 
 	var _en2 = _interopRequireDefault(_en);
 
-	var _i18n = __webpack_require__(285);
+	var _i18n = __webpack_require__(286);
 
 	var _i18n2 = _interopRequireDefault(_i18n);
 
@@ -108,7 +109,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-	var actions = __webpack_require__(224),
+	var actions = __webpack_require__(226),
 	    store = __webpack_require__(219);
 	//import localeData from './../i18n/locales/en.json';
 
@@ -119,7 +120,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var defaultLang = 'en';
 
-	var EurekaMediaBrowser = function (_PureComponent) {
+	var EurekaMediaBrowser = exports.EurekaMediaBrowser = function (_PureComponent) {
 	  _inherits(EurekaMediaBrowser, _PureComponent);
 
 	  function EurekaMediaBrowser(props) {
@@ -297,7 +298,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	          source: state.source,
 	          directory: state.directory,
 	          fetched: state.fetched,
-	          config: state.config
+	          config: state.config,
+	          notifications: state.notifications
 	        };
 	      })((0, _reactIntl.injectIntl)(_Eureka2.default)); // shoot it up with some i18n
 	    }
@@ -24338,6 +24340,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _SortContents2 = _interopRequireDefault(_SortContents);
 
+	var _Icon = __webpack_require__(254);
+
+	var _Icon2 = _interopRequireDefault(_Icon);
+
+	var _Notification = __webpack_require__(284);
+
+	var _Notification2 = _interopRequireDefault(_Notification);
+
 	var _mousetrap = __webpack_require__(267);
 
 	var _mousetrap2 = _interopRequireDefault(_mousetrap);
@@ -24348,11 +24358,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(224);
+	var _actions = __webpack_require__(226);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
-	var _utility = __webpack_require__(222);
+	var _utility = __webpack_require__(224);
 
 	var _utility2 = _interopRequireDefault(_utility);
 
@@ -24376,57 +24386,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var CREATE_DIRECTORY = 'create_directory';
 	var RENAME_ITEM = 'rename_item';
-
-	var Notification = function (_Component) {
-	  _inherits(Notification, _Component);
-
-	  function Notification(props) {
-	    _classCallCheck(this, Notification);
-
-	    console.log('Notification');
-
-	    var _this = _possibleConstructorReturn(this, (Notification.__proto__ || Object.getPrototypeOf(Notification)).call(this, props));
-
-	    _this.state = { hidden: true };
-	    return _this;
-	  }
-
-	  _createClass(Notification, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      var _this2 = this;
-
-	      setTimeout(function () {
-	        _this2.setState({ hidden: false });
-	      }, 42);
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      console.log('render Notification', this.state);
-	      return _react2.default.createElement(
-	        'div',
-	        { className: 'eureka__notification-wrapper', 'aria-live': 'polite', 'aria-hidden': this.state.hidden },
-	        _react2.default.createElement(
-	          'div',
-	          null,
-	          _react2.default.createElement(
-	            'p',
-	            { 'aria-live': 'polite' },
-	            'Something happened'
-	          ),
-	          _react2.default.createElement(
-	            'button',
-	            null,
-	            'Dismiss'
-	          )
-	        )
-	      );
-	    }
-	  }]);
-
-	  return Notification;
-	}(_react.Component);
 
 	//Notification.propTypes = { initialCount: React.PropTypes.number };
 	//Notification.defaultProps = { initialCount: 0 };
@@ -24471,8 +24430,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	*/
 
-	var Eureka = function (_Component2) {
-	  _inherits(Eureka, _Component2);
+	var Eureka = function (_Component) {
+	  _inherits(Eureka, _Component);
 
 	  /*static propTypes = {
 	    intl: PropTypes.object.isRequired,
@@ -24481,18 +24440,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Eureka(props) {
 	    _classCallCheck(this, Eureka);
 
-	    var _this3 = _possibleConstructorReturn(this, (Eureka.__proto__ || Object.getPrototypeOf(Eureka)).call(this, props));
+	    var _this = _possibleConstructorReturn(this, (Eureka.__proto__ || Object.getPrototypeOf(Eureka)).call(this, props));
 
-	    _initialiseProps.call(_this3);
+	    _initialiseProps.call(_this);
 
-	    _this3.state = {
+	    _this.state = {
 	      modalOpen: false,
 	      currentModal: undefined,
-	      renamingItem: undefined
+	      renamingItem: undefined,
+	      notifications: []
 	    };
 
-	    _this3.decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
-	    return _this3;
+	    _this.decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
+	    return _this;
 	  }
 
 	  _createClass(Eureka, [{
@@ -24500,6 +24460,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function componentWillUnmount() {
 	      this.removeKeyboardListeners();
 	    }
+
+	    /*notificationsTick = () => {
+	       console.log('notificationsTick!');
+	      try {
+	        this.setState({
+	          notifications: this.state.notifications.shift()
+	        })
+	      } catch(e) {}
+	    }*/
+
 	  }, {
 	    key: 'assignKeyboardListeners',
 	    value: function assignKeyboardListeners() {
@@ -24550,7 +24520,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
-	      var _this4 = this;
+	      var _this2 = this;
 
 	      var props = this.props,
 	          decoratedActions = this.decoratedActions;
@@ -24559,9 +24529,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      _store2.default.dispatch(decoratedActions.fetchMediaSources(props.config.headers)).then(function () {
 	        // hit the server and get the media sources
-	        _store2.default.dispatch(decoratedActions.updateSourceTree(_this4.props.source.sources[0].id), props.config.headers).then(function (content) {
+	        _store2.default.dispatch(decoratedActions.updateSourceTree(_this2.props.source.sources[0].id), props.config.headers).then(function (content) {
 	          // then hit server for the directory tree of the first (default) media source
-	          var props = _this4.props;
+	          var props = _this2.props;
 
 	          _store2.default.dispatch(decoratedActions.updateContent({ // updates the "current directory" of the view right away
 	            cd: props.content.cd
@@ -24574,7 +24544,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            setInterval(function () {
 	              // every so often hit the server and update the displayed contents of the current directory
 	              var state = _store2.default.getState();
-	              var props = _this4.props;
+	              var props = _this2.props;
 
 	              _store2.default.dispatch(decoratedActions.updateContent({ // updates the "current directory" of the view right away
 	                cd: props.content.cd
@@ -24592,6 +24562,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }, props.view.intervals.updateSourceTree);
 	          }
 	        });
+
+	        if (props.config.alwaysWelcome || props.config.welcome && localStorage.getItem(props.storagePrefix + 'welcome') !== 'false') {
+	          setTimeout(function () {
+	            _store2.default.dispatch(_actions2.default.notify('Welcome to Eureka. You found it.', undefined, props.config.learnMore, 26000));
+	            localStorage.setItem(props.storagePrefix + 'welcome', 'false');
+	          }, 2400);
+	        }
 	      });
 
 	      document.body.addEventListener('keyup', function (event) {
@@ -24600,7 +24577,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        switch (key) {
 	          case 27:
 	            // Escape
-	            _this4.setState({
+	            _this2.setState({
 	              modalOpen: false,
 	              currentModal: undefined
 	            });
@@ -24630,7 +24607,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'onModalSubmit',
 	    value: function onModalSubmit(createDirectory) {
-	      var _this5 = this;
+	      var _this3 = this;
 
 	      var decoratedActions = this.decoratedActions;
 	      var props = this.props;
@@ -24641,7 +24618,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        case CREATE_DIRECTORY:
 	          console.log(_store2.default.getState().content.cd, path.join(_store2.default.getState().content.cd, 'foo'));
 	          _store2.default.dispatch(decoratedActions.createDirectory(_store2.default.getState().source.currentSource, path.join(_store2.default.getState().content.cd, createDirectory))).then(function () {
-	            _this5.setState({
+	            _this3.setState({
 	              modalOpen: false,
 	              currentModal: undefined
 	            });
@@ -24660,7 +24637,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'onRenameItemModalSubmit',
 	    value: function onRenameItemModalSubmit(newName, item) {
-	      var _this6 = this;
+	      var _this4 = this;
 
 	      //console.log('onRenameItemModalSubmit!!!', newName, item);
 	      //console.log(item.path);
@@ -24681,7 +24658,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _store2.default.dispatch(decoratedActions.updateContent({ contents: results.contents.filter(function (file) {
 	            return file.filename;
 	          }) }));
-	        _this6.setState({
+	        _this4.setState({
 	          renamingItem: undefined,
 	          modalOpen: false,
 	          currentModal: undefined
@@ -24701,7 +24678,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this7 = this;
+	      var _this5 = this;
 
 	      var props = this.props,
 	          state = this.state,
@@ -24714,6 +24691,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        item: state.renamingItem ? ' ' + state.renamingItem.filename : ''
 	      });
 
+	      //console.log('state.notifications', state.notifications);
 
 	      var modal = function () {
 	        if (state.modalOpen) {
@@ -24721,7 +24699,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            case CREATE_DIRECTORY:
 	              return _react2.default.createElement(
 	                _Modal2.default,
-	                _extends({ onCancel: _this7.onModalCancel.bind(_this7), onSubmit: _this7.onModalSubmit.bind(_this7), title: createDirectoryMessage }, props),
+	                _extends({ onCancel: _this5.onModalCancel.bind(_this5), onSubmit: _this5.onModalSubmit.bind(_this5), title: createDirectoryMessage }, props),
 	                _react2.default.createElement(_ModalCreateDirectoryForm2.default, props)
 	              );
 	              break;
@@ -24729,7 +24707,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            case RENAME_ITEM:
 	              return _react2.default.createElement(
 	                _Modal2.default,
-	                _extends({ onCancel: _this7.onModalCancel.bind(_this7), onSubmit: _this7.onRenameItemModalSubmit.bind(_this7), title: renameItemMessage }, props),
+	                _extends({ onCancel: _this5.onModalCancel.bind(_this5), onSubmit: _this5.onRenameItemModalSubmit.bind(_this5), title: renameItemMessage }, props),
 	                _react2.default.createElement(_ModalRenameItemForm2.default, _extends({}, props, { item: state.renamingItem }))
 	              );
 	              break;
@@ -24759,7 +24737,20 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      var pathBar = props.view.focusedMediaItem ? _react2.default.createElement(_PathBar2.default, props) : undefined;
 
-	      var notification = _react2.default.createElement(Notification, null);
+	      var unarchivedNotifications = this.props.notifications ? this.props.notifications.filter(function (notification) {
+	        return !notification.archived;
+	      }) : [];
+
+	      var notificationMessage = function () {
+	        try {
+	          return unarchivedNotifications[0];
+	        } catch (e) {
+	          return undefined;
+	        }
+	      }();
+
+	      console.log('notificationMessage', notificationMessage);
+	      var notification = notificationMessage ? _react2.default.createElement(_Notification2.default, _extends({ key: notificationMessage.id, onDismiss: this.handleNotificationDismissed }, notificationMessage, props)) : undefined;
 
 	      var shouldDisplayChooseBar = function () {
 	        try {
@@ -24833,7 +24824,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      ) : _react2.default.createElement(
 	        'div',
 	        { role: 'widget', lang: props.lang || undefined, className: 'eureka eureka__view-mode__' + props.view.mode + enlargeFocusedRows + serverSideClass },
-	        notification,
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'eureka__sticky-bar', 'aria-live': 'polite', 'aria-atomic': 'true' },
+	          notification
+	        ),
 	        formDiv,
 	        pathBar,
 	        chooseBar,
@@ -24846,11 +24841,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_react.Component);
 
 	var _initialiseProps = function _initialiseProps() {
-	  var _this8 = this;
+	  var _this6 = this;
 
 	  this.handleKeyboardFilter = function (event) {
 	    console.log('handleKeyboardFilter', event);
-	    var root = _this8.getEurekaRoot();
+	    var root = _this6.getEurekaRoot();
 	    try {
 	      root.querySelector('input[name="eureka__filter"]').focus();
 	    } catch (e) {}
@@ -24863,6 +24858,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        dir: _utility2.default.ASCENDING
 	      }
 	    }));
+	  };
+
+	  this.handleNotificationDismissed = function (id) {
+	    //console.log(`notification ${id} dismiessed`)
+	    _store2.default.dispatch(_actions2.default.archiveNotification(id));
 	  };
 
 	  this.handleKeyboardSortDescending = function (event) {
@@ -24907,27 +24907,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 
 	  this.toggleSourceTreeOpen = function (event) {
-	    _store2.default.dispatch(_this8.decoratedActions.updateView({
-	      sourceTreeOpen: !_this8.props.view.sourceTreeOpen
+	    _store2.default.dispatch(_this6.decoratedActions.updateView({
+	      sourceTreeOpen: !_this6.props.view.sourceTreeOpen
 	    }));
 	  };
 
 	  this.handleKeyboardCreateDirectory = function (event) {
 	    //console.log('handleKeyboardCreateDirectory', event);
-	    _this8.onCreateDirectory();
+	    _this6.onCreateDirectory();
 	  };
 
 	  this.handleKeyboardCreateFile = function (event) {
 	    //console.log('handleKeyboardCreateFile', event);
 	    try {
-	      var createFileHander = _this8.props.config.handlers.createFile(_this8.props.source.currentSource, _this8.props.content.cd);
-	      if (createFileHander.onClick) createFileHander.onClick(_this8.props.source.currentSource, _this8.props.content.cd);else window.open(createFileHander.href);
+	      var createFileHander = _this6.props.config.handlers.createFile(_this6.props.source.currentSource, _this6.props.content.cd);
+	      if (createFileHander.onClick) createFileHander.onClick(_this6.props.source.currentSource, _this6.props.content.cd);else window.open(createFileHander.href);
 	    } catch (e) {}
 	  };
 
 	  this.handleKeyboardUpload = function (event) {
 	    //console.log('handleKeyboardUpload', event);
-	    var root = _this8.getEurekaRoot();
+	    var root = _this6.getEurekaRoot();
 
 	    try {
 	      root.querySelector('.eureka__drop-area-zone').click();
@@ -24938,9 +24938,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  this.handleKeyboardChangeSource = function (event) {
 	    //console.log('handleKeyboardChangeSource', event);
-	    var props = _this8.props,
+	    var props = _this6.props,
 	        state = _store2.default.getState(),
-	        decoratedActions = _this8.decoratedActions,
+	        decoratedActions = _this6.decoratedActions,
 	        sources = state.source.sources;
 
 	    var matchedSource = void 0;
@@ -24957,25 +24957,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	    //console.log('handleKeyboardChangeView', event);
 	    switch (event.key) {
 	      case '1':
-	        _store2.default.dispatch(_this8.decoratedActions.updateView({
+	        _store2.default.dispatch(_this6.decoratedActions.updateView({
 	          mode: 'table'
 	        }));
 	        break;
 
 	      case '2':
-	        _store2.default.dispatch(_this8.decoratedActions.updateView({
+	        _store2.default.dispatch(_this6.decoratedActions.updateView({
 	          mode: 'thumb'
 	        }));
 	        break;
 
 	      case '3':
-	        _store2.default.dispatch(_this8.decoratedActions.updateView({
+	        _store2.default.dispatch(_this6.decoratedActions.updateView({
 	          mode: 'grid'
 	        }));
 	        break;
 
 	      case '4':
-	        _store2.default.dispatch(_this8.decoratedActions.updateView({
+	        _store2.default.dispatch(_this6.decoratedActions.updateView({
 	          mode: 'list'
 	        }));
 	        break;
@@ -25003,7 +25003,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(224);
+	var _actions = __webpack_require__(226);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
@@ -25108,21 +25108,28 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-	var _utility = __webpack_require__(222);
+	var _reactAddonsUpdate = __webpack_require__(222);
+
+	var _reactAddonsUpdate2 = _interopRequireDefault(_reactAddonsUpdate);
+
+	var _utility = __webpack_require__(224);
 
 	var _utility2 = _interopRequireDefault(_utility);
 
-	var _filesize = __webpack_require__(223);
+	var _filesize = __webpack_require__(225);
 
 	var _filesize2 = _interopRequireDefault(_filesize);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-	var actions = __webpack_require__(224),
+	// ES6
+
+	var actions = __webpack_require__(226),
 	    combineReducers = __webpack_require__(179).combineReducers,
-	    update = __webpack_require__(227),
 	    path = __webpack_require__(178);
 
 	var pkg = __webpack_require__(229);
@@ -25141,6 +25148,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  locales: "en-US",
 	  mediaSource: "0",
 	  currentDirectory: "/",
+	  welcome: true,
+	  alwaysWelcome: false,
+	  learnMore: 'https://github.com/jpdevries/eureka',
 	  uid: "0",
 	  iconSVG: './img/icons.' + pkg.version + '.min.svg',
 	  assetsBasePath: './assets/',
@@ -25202,7 +25212,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var contentReducer = function contentReducer(state, action) {
 	  state = state || initialContentState;
-
+	  console.log('contentReducer', action.type);
 	  switch (action.type) {
 	    case actions.UPDATE_CONFIG:
 	      //console.log('UPDATE_CONFIG!!!', state, action.config);
@@ -25414,6 +25424,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  allowFullscreen: true,
 	  isUploading: false,
 	  isTouch: false,
+	  fetchingContents: false,
 	  intervals: {
 	    searchBarPlaceholder: false,
 	    fetchDirectoryContents: false,
@@ -25450,9 +25461,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  switch (action.type) {
 	    case actions.FETCH_DIRECTORY_CONTENTS_SUCCESS:
 	    case actions.FETCH_DIRECTORY_CONTENTS_ERROR:
-	      /*return Object.assign({},state, {
-	        isFetching: false
-	      });*/
+	      return Object.assign({}, state, {
+	        fetchingContents: false
+	      });
 	      break;
 
 	    case actions.UPLOAD_FILES_SUCCESS:
@@ -25666,6 +25677,48 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return state;
 	};
 
+	var initialNotifcationsState = [];
+
+	var notificationsReducer = function notificationsReducer(state, action) {
+	  //console.log('notificationsReducer', action.type, actions.NOTIFICATION);
+	  state = state || initialNotifcationsState;
+
+	  var index = 0;
+	  state.map(function (notification, i) {
+	    if (notification.id == action.id) index = i;
+	  });
+
+	  switch (action.type) {
+	    case actions.NOTIFICATION:
+	      console.log('NOTIFICATION!!!!', action);
+	      return (0, _reactAddonsUpdate2.default)(state, { $push: [{
+	          message: action.message,
+	          id: action.id,
+	          archived: action.archived,
+	          type: action.notificationType,
+	          learnMore: action.learnMore,
+	          dismissAfter: action.dismissAfter
+	        }] });
+	      break;
+
+	    case actions.NOTIFICATION_DELETED:
+	      console.log('NOTIFICATION_DELETED!!!!');
+	      return state.filter(function (notification) {
+	        return notification.id !== action.id;
+	      });
+	      break;
+
+	    case actions.NOTIFICATION_ARCHIVED:
+	      var newState = (0, _reactAddonsUpdate2.default)(state, _defineProperty({}, index, { $apply: function $apply(notification) {
+	          return (0, _reactAddonsUpdate2.default)(notification, { $merge: { archived: true } });
+	        } }));
+	      return newState;
+	      break;
+	  }
+
+	  return state;
+	};
+
 	var EurekaReducer = combineReducers({
 	  content: contentReducer,
 	  view: viewReducer,
@@ -25673,13 +25726,137 @@ return /******/ (function(modules) { // webpackBootstrap
 	  source: sourceReducer,
 	  directory: directoryReducer,
 	  fetched: fetchedReducer,
-	  config: configReducer
+	  config: configReducer,
+	  notifications: notificationsReducer
 	});
 
 	exports.EurekaReducer = EurekaReducer;
 
 /***/ },
 /* 222 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(223);
+
+/***/ },
+/* 223 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 */
+
+	/* global hasOwnProperty:true */
+
+	'use strict';
+
+	var _prodInvariant = __webpack_require__(7),
+	    _assign = __webpack_require__(4);
+
+	var invariant = __webpack_require__(8);
+	var hasOwnProperty = {}.hasOwnProperty;
+
+	function shallowCopy(x) {
+	  if (Array.isArray(x)) {
+	    return x.concat();
+	  } else if (x && typeof x === 'object') {
+	    return _assign(new x.constructor(), x);
+	  } else {
+	    return x;
+	  }
+	}
+
+	var COMMAND_PUSH = '$push';
+	var COMMAND_UNSHIFT = '$unshift';
+	var COMMAND_SPLICE = '$splice';
+	var COMMAND_SET = '$set';
+	var COMMAND_MERGE = '$merge';
+	var COMMAND_APPLY = '$apply';
+
+	var ALL_COMMANDS_LIST = [COMMAND_PUSH, COMMAND_UNSHIFT, COMMAND_SPLICE, COMMAND_SET, COMMAND_MERGE, COMMAND_APPLY];
+
+	var ALL_COMMANDS_SET = {};
+
+	ALL_COMMANDS_LIST.forEach(function (command) {
+	  ALL_COMMANDS_SET[command] = true;
+	});
+
+	function invariantArrayCase(value, spec, command) {
+	  !Array.isArray(value) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'update(): expected target of %s to be an array; got %s.', command, value) : _prodInvariant('1', command, value) : void 0;
+	  var specValue = spec[command];
+	  !Array.isArray(specValue) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'update(): expected spec of %s to be an array; got %s. Did you forget to wrap your parameter in an array?', command, specValue) : _prodInvariant('2', command, specValue) : void 0;
+	}
+
+	/**
+	 * Returns a updated shallow copy of an object without mutating the original.
+	 * See https://facebook.github.io/react/docs/update.html for details.
+	 */
+	function update(value, spec) {
+	  !(typeof spec === 'object') ? process.env.NODE_ENV !== 'production' ? invariant(false, 'update(): You provided a key path to update() that did not contain one of %s. Did you forget to include {%s: ...}?', ALL_COMMANDS_LIST.join(', '), COMMAND_SET) : _prodInvariant('3', ALL_COMMANDS_LIST.join(', '), COMMAND_SET) : void 0;
+
+	  if (hasOwnProperty.call(spec, COMMAND_SET)) {
+	    !(Object.keys(spec).length === 1) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Cannot have more than one key in an object with %s', COMMAND_SET) : _prodInvariant('4', COMMAND_SET) : void 0;
+
+	    return spec[COMMAND_SET];
+	  }
+
+	  var nextValue = shallowCopy(value);
+
+	  if (hasOwnProperty.call(spec, COMMAND_MERGE)) {
+	    var mergeObj = spec[COMMAND_MERGE];
+	    !(mergeObj && typeof mergeObj === 'object') ? process.env.NODE_ENV !== 'production' ? invariant(false, 'update(): %s expects a spec of type \'object\'; got %s', COMMAND_MERGE, mergeObj) : _prodInvariant('5', COMMAND_MERGE, mergeObj) : void 0;
+	    !(nextValue && typeof nextValue === 'object') ? process.env.NODE_ENV !== 'production' ? invariant(false, 'update(): %s expects a target of type \'object\'; got %s', COMMAND_MERGE, nextValue) : _prodInvariant('6', COMMAND_MERGE, nextValue) : void 0;
+	    _assign(nextValue, spec[COMMAND_MERGE]);
+	  }
+
+	  if (hasOwnProperty.call(spec, COMMAND_PUSH)) {
+	    invariantArrayCase(value, spec, COMMAND_PUSH);
+	    spec[COMMAND_PUSH].forEach(function (item) {
+	      nextValue.push(item);
+	    });
+	  }
+
+	  if (hasOwnProperty.call(spec, COMMAND_UNSHIFT)) {
+	    invariantArrayCase(value, spec, COMMAND_UNSHIFT);
+	    spec[COMMAND_UNSHIFT].forEach(function (item) {
+	      nextValue.unshift(item);
+	    });
+	  }
+
+	  if (hasOwnProperty.call(spec, COMMAND_SPLICE)) {
+	    !Array.isArray(value) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Expected %s target to be an array; got %s', COMMAND_SPLICE, value) : _prodInvariant('7', COMMAND_SPLICE, value) : void 0;
+	    !Array.isArray(spec[COMMAND_SPLICE]) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'update(): expected spec of %s to be an array of arrays; got %s. Did you forget to wrap your parameters in an array?', COMMAND_SPLICE, spec[COMMAND_SPLICE]) : _prodInvariant('8', COMMAND_SPLICE, spec[COMMAND_SPLICE]) : void 0;
+	    spec[COMMAND_SPLICE].forEach(function (args) {
+	      !Array.isArray(args) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'update(): expected spec of %s to be an array of arrays; got %s. Did you forget to wrap your parameters in an array?', COMMAND_SPLICE, spec[COMMAND_SPLICE]) : _prodInvariant('8', COMMAND_SPLICE, spec[COMMAND_SPLICE]) : void 0;
+	      nextValue.splice.apply(nextValue, args);
+	    });
+	  }
+
+	  if (hasOwnProperty.call(spec, COMMAND_APPLY)) {
+	    !(typeof spec[COMMAND_APPLY] === 'function') ? process.env.NODE_ENV !== 'production' ? invariant(false, 'update(): expected spec of %s to be a function; got %s.', COMMAND_APPLY, spec[COMMAND_APPLY]) : _prodInvariant('9', COMMAND_APPLY, spec[COMMAND_APPLY]) : void 0;
+	    nextValue = spec[COMMAND_APPLY](nextValue);
+	  }
+
+	  for (var k in spec) {
+	    if (!(ALL_COMMANDS_SET.hasOwnProperty(k) && ALL_COMMANDS_SET[k])) {
+	      nextValue[k] = update(value[k], spec[k]);
+	    }
+	  }
+
+	  return nextValue;
+	}
+
+	module.exports = update;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+
+/***/ },
+/* 224 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25911,37 +26088,35 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	}();
 
-	function notify(message) {
-	  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
-	    //icon: 'http://localhost:3000/assets/img/src/png/trash-o.png'
-	  };
-
+	/*function notify(message, options = {
+	  //icon: 'http://localhost:3000/assets/img/src/png/trash-o.png'
+	}) {
 	  // Let's check if the browser supports notifications
-	  if (!("Notification" in window)) {}
-	  //alert(message);
-
+	  if (!("Notification" in window)) {
+	    //alert(message);
+	  }
 
 	  // Let's check whether notification permissions have already been granted
 	  else if (Notification.permission === "granted") {
-	      // If it's okay let's create a notification
-	      var notification = new Notification(message, options);
-	    }
+	    // If it's okay let's create a notification
+	    var notification = new Notification(message, options);
+	  }
 
-	    // Otherwise, we need to ask the user for permission
-	    else if (Notification.permission !== "denied") {
-	        Notification.requestPermission(function (permission) {
-	          // If the user accepts, let's create a notification
-	          if (permission === "granted") {
-	            var notification = new Notification(message, options);
-	          } else {
-	            alert(message);
-	          }
-	        });
+	  // Otherwise, we need to ask the user for permission
+	  else if (Notification.permission !== "denied") {
+	    Notification.requestPermission(function (permission) {
+	      // If the user accepts, let's create a notification
+	      if (permission === "granted") {
+	        var notification = new Notification(message, options);
+	      } else {
+	        alert(message);
 	      }
+	    });
+	  }
 
 	  // At last, if the user has denied notifications, and you
 	  // want to be respectful there is no need to bother them any more.
-	}
+	}*/
 
 	function runPrefixMethod(obj, method) {
 	  console.log('runPrefixMethod');
@@ -25980,12 +26155,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.wordBreaksEvery = wordBreaksEvery;
 
-	exports.notify = notify;
+	//exports.notify = notify;
 
 	exports.runPrefixMethod = runPrefixMethod;
 
+	exports.DANGEROUS = 'dangerous';
+
 /***/ },
-/* 223 */
+/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {"use strict";
@@ -26160,18 +26337,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 224 */
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _utility = __webpack_require__(222);
+	var _utility = __webpack_require__(224);
 
 	var _utility2 = _interopRequireDefault(_utility);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	__webpack_require__(225);
+	__webpack_require__(227);
 
 	var ADD_ITEM_SUCCESS = 'add_item_success';
 	var ADD_ITEM_ERROR = 'add_item_error';
@@ -26411,6 +26588,46 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 	  };
 	};
+
+	var NOTIFICATION = 'notification';
+	var notify = function notify(message, notificationType, learnMore, dismissAfter) {
+	  var archived = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
+
+	  return {
+	    type: NOTIFICATION,
+	    message: message,
+	    id: new Date().getTime(),
+	    archived: archived,
+	    notificationType: notificationType,
+	    learnMore: learnMore,
+	    dismissAfter: dismissAfter
+	  };
+	};
+
+	exports.NOTIFICATION = NOTIFICATION;
+	exports.notify = notify;
+
+	var NOTIFICATION_DELETED = 'notification_dismissed';
+	var deleteNotification = function deleteNotification(id) {
+	  return {
+	    type: NOTIFICATION_DELETED,
+	    id: id
+	  };
+	};
+
+	exports.NOTIFICATION_DELETED = NOTIFICATION_DELETED;
+	exports.deleteNotification = deleteNotification;
+
+	var NOTIFICATION_ARCHIVED = 'notification_archived';
+	var archiveNotification = function archiveNotification(id) {
+	  return {
+	    type: NOTIFICATION_ARCHIVED,
+	    id: id
+	  };
+	};
+
+	exports.NOTIFICATION_ARCHIVED = NOTIFICATION_ARCHIVED;
+	exports.archiveNotification = archiveNotification;
 
 	var UPLOAD_FILES_SUCCESS = 'upload_files_success';
 	var uploadFilesSuccess = function uploadFilesSuccess(contents) {
@@ -26685,19 +26902,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.renameItem = renameItem;
 
 /***/ },
-/* 225 */
+/* 227 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// the whatwg-fetch polyfill installs the fetch() function
 	// on the global object (window or self)
 	//
 	// Return that as the export for use in Webpack, Browserify etc.
-	__webpack_require__(226);
+	__webpack_require__(228);
 	module.exports = self.fetch.bind(self);
 
 
 /***/ },
-/* 226 */
+/* 228 */
 /***/ function(module, exports) {
 
 	(function(self) {
@@ -27161,136 +27378,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 227 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __webpack_require__(228);
-
-/***/ },
-/* 228 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright 2013-present, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 */
-
-	/* global hasOwnProperty:true */
-
-	'use strict';
-
-	var _prodInvariant = __webpack_require__(7),
-	    _assign = __webpack_require__(4);
-
-	var invariant = __webpack_require__(8);
-	var hasOwnProperty = {}.hasOwnProperty;
-
-	function shallowCopy(x) {
-	  if (Array.isArray(x)) {
-	    return x.concat();
-	  } else if (x && typeof x === 'object') {
-	    return _assign(new x.constructor(), x);
-	  } else {
-	    return x;
-	  }
-	}
-
-	var COMMAND_PUSH = '$push';
-	var COMMAND_UNSHIFT = '$unshift';
-	var COMMAND_SPLICE = '$splice';
-	var COMMAND_SET = '$set';
-	var COMMAND_MERGE = '$merge';
-	var COMMAND_APPLY = '$apply';
-
-	var ALL_COMMANDS_LIST = [COMMAND_PUSH, COMMAND_UNSHIFT, COMMAND_SPLICE, COMMAND_SET, COMMAND_MERGE, COMMAND_APPLY];
-
-	var ALL_COMMANDS_SET = {};
-
-	ALL_COMMANDS_LIST.forEach(function (command) {
-	  ALL_COMMANDS_SET[command] = true;
-	});
-
-	function invariantArrayCase(value, spec, command) {
-	  !Array.isArray(value) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'update(): expected target of %s to be an array; got %s.', command, value) : _prodInvariant('1', command, value) : void 0;
-	  var specValue = spec[command];
-	  !Array.isArray(specValue) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'update(): expected spec of %s to be an array; got %s. Did you forget to wrap your parameter in an array?', command, specValue) : _prodInvariant('2', command, specValue) : void 0;
-	}
-
-	/**
-	 * Returns a updated shallow copy of an object without mutating the original.
-	 * See https://facebook.github.io/react/docs/update.html for details.
-	 */
-	function update(value, spec) {
-	  !(typeof spec === 'object') ? process.env.NODE_ENV !== 'production' ? invariant(false, 'update(): You provided a key path to update() that did not contain one of %s. Did you forget to include {%s: ...}?', ALL_COMMANDS_LIST.join(', '), COMMAND_SET) : _prodInvariant('3', ALL_COMMANDS_LIST.join(', '), COMMAND_SET) : void 0;
-
-	  if (hasOwnProperty.call(spec, COMMAND_SET)) {
-	    !(Object.keys(spec).length === 1) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Cannot have more than one key in an object with %s', COMMAND_SET) : _prodInvariant('4', COMMAND_SET) : void 0;
-
-	    return spec[COMMAND_SET];
-	  }
-
-	  var nextValue = shallowCopy(value);
-
-	  if (hasOwnProperty.call(spec, COMMAND_MERGE)) {
-	    var mergeObj = spec[COMMAND_MERGE];
-	    !(mergeObj && typeof mergeObj === 'object') ? process.env.NODE_ENV !== 'production' ? invariant(false, 'update(): %s expects a spec of type \'object\'; got %s', COMMAND_MERGE, mergeObj) : _prodInvariant('5', COMMAND_MERGE, mergeObj) : void 0;
-	    !(nextValue && typeof nextValue === 'object') ? process.env.NODE_ENV !== 'production' ? invariant(false, 'update(): %s expects a target of type \'object\'; got %s', COMMAND_MERGE, nextValue) : _prodInvariant('6', COMMAND_MERGE, nextValue) : void 0;
-	    _assign(nextValue, spec[COMMAND_MERGE]);
-	  }
-
-	  if (hasOwnProperty.call(spec, COMMAND_PUSH)) {
-	    invariantArrayCase(value, spec, COMMAND_PUSH);
-	    spec[COMMAND_PUSH].forEach(function (item) {
-	      nextValue.push(item);
-	    });
-	  }
-
-	  if (hasOwnProperty.call(spec, COMMAND_UNSHIFT)) {
-	    invariantArrayCase(value, spec, COMMAND_UNSHIFT);
-	    spec[COMMAND_UNSHIFT].forEach(function (item) {
-	      nextValue.unshift(item);
-	    });
-	  }
-
-	  if (hasOwnProperty.call(spec, COMMAND_SPLICE)) {
-	    !Array.isArray(value) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Expected %s target to be an array; got %s', COMMAND_SPLICE, value) : _prodInvariant('7', COMMAND_SPLICE, value) : void 0;
-	    !Array.isArray(spec[COMMAND_SPLICE]) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'update(): expected spec of %s to be an array of arrays; got %s. Did you forget to wrap your parameters in an array?', COMMAND_SPLICE, spec[COMMAND_SPLICE]) : _prodInvariant('8', COMMAND_SPLICE, spec[COMMAND_SPLICE]) : void 0;
-	    spec[COMMAND_SPLICE].forEach(function (args) {
-	      !Array.isArray(args) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'update(): expected spec of %s to be an array of arrays; got %s. Did you forget to wrap your parameters in an array?', COMMAND_SPLICE, spec[COMMAND_SPLICE]) : _prodInvariant('8', COMMAND_SPLICE, spec[COMMAND_SPLICE]) : void 0;
-	      nextValue.splice.apply(nextValue, args);
-	    });
-	  }
-
-	  if (hasOwnProperty.call(spec, COMMAND_APPLY)) {
-	    !(typeof spec[COMMAND_APPLY] === 'function') ? process.env.NODE_ENV !== 'production' ? invariant(false, 'update(): expected spec of %s to be a function; got %s.', COMMAND_APPLY, spec[COMMAND_APPLY]) : _prodInvariant('9', COMMAND_APPLY, spec[COMMAND_APPLY]) : void 0;
-	    nextValue = spec[COMMAND_APPLY](nextValue);
-	  }
-
-	  for (var k in spec) {
-	    if (!(ALL_COMMANDS_SET.hasOwnProperty(k) && ALL_COMMANDS_SET[k])) {
-	      nextValue[k] = update(value[k], spec[k]);
-	    }
-	  }
-
-	  return nextValue;
-	}
-
-	module.exports = update;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
-
-/***/ },
 /* 229 */
 /***/ function(module, exports) {
 
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.99",
+		"version": "0.0.100",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -31750,11 +31844,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(224);
+	var _actions = __webpack_require__(226);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
-	var _utility = __webpack_require__(222);
+	var _utility = __webpack_require__(224);
 
 	var _utility2 = _interopRequireDefault(_utility);
 
@@ -31811,8 +31905,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 	        _store2.default.dispatch(decoratedActions.updateSource(cs));
+	        _store2.default.dispatch(decoratedActions.updateView({
+	          fetchingContents: true
+	        }));
 	        _store2.default.dispatch(decoratedActions.updateContent({ // updates the "current directory" of the view right away
-	          cd: cd
+	          cd: cd,
+	          contents: []
 	        }));
 	        _store2.default.dispatch(decoratedActions.fetchDirectoryContents(cs, { // asyncronously fetches the directory contents from the API
 	          path: cd
@@ -32063,9 +32161,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    'id': 'directory.delete',
 	    'defaultMessage': 'Delete Directory'
 	  },
+	  fetchingContents: {
+	    'id': 'contents.fetchingContents',
+	    'defaultMessage': 'Hold tight while we fetch {cd}'
+	  },
 	  deleteItem: {
 	    'id': 'delete.item',
 	    'defaultMessage': 'Delete {filename}'
+	  },
+	  deletedItem: {
+	    'id': 'deleted.item',
+	    'defaultMessage': 'Deleted {filename}'
 	  },
 	  download: {
 	    'id': 'download',
@@ -32156,6 +32262,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.TreeToggle = undefined;
 
 	var _react = __webpack_require__(1);
 
@@ -32165,7 +32272,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(224);
+	var _actions = __webpack_require__(226);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
@@ -32179,7 +32286,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var TreeToggle = function TreeToggle(props) {
+	var TreeToggle = exports.TreeToggle = function TreeToggle(props) {
 	  var formatMessage = props.intl.formatMessage,
 
 	  //closeMessage = formatMessage(definedMessages.close),
@@ -32219,7 +32326,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _utility = __webpack_require__(222);
+	var _utility = __webpack_require__(224);
 
 	var _utility2 = _interopRequireDefault(_utility);
 
@@ -32310,15 +32417,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(224);
+	var _actions = __webpack_require__(226);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
-	var _utility = __webpack_require__(222);
+	var _utility = __webpack_require__(224);
 
 	var _utility2 = _interopRequireDefault(_utility);
 
-	var _filesize = __webpack_require__(223);
+	var _filesize = __webpack_require__(225);
 
 	var _filesize2 = _interopRequireDefault(_filesize);
 
@@ -32513,7 +32620,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(224);
+	var _actions = __webpack_require__(226);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
@@ -32525,7 +32632,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _utility = __webpack_require__(222);
+	var _utility = __webpack_require__(224);
 
 	var _reactIntl = __webpack_require__(230);
 
@@ -32853,7 +32960,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(224);
+	var _actions = __webpack_require__(226);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
@@ -32873,7 +32980,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Icon2 = _interopRequireDefault(_Icon);
 
-	var _utility = __webpack_require__(222);
+	var _utility = __webpack_require__(224);
 
 	var _utility2 = _interopRequireDefault(_utility);
 
@@ -33292,11 +33399,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(224);
+	var _actions = __webpack_require__(226);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
-	var _filesize = __webpack_require__(223);
+	var _filesize = __webpack_require__(225);
 
 	var _filesize2 = _interopRequireDefault(_filesize);
 
@@ -33304,9 +33411,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _utility = __webpack_require__(222);
+	var _utility = __webpack_require__(224);
 
 	var _utility2 = _interopRequireDefault(_utility);
+
+	var _Icon = __webpack_require__(254);
+
+	var _Icon2 = _interopRequireDefault(_Icon);
 
 	var _reactIntl = __webpack_require__(230);
 
@@ -33497,6 +33608,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	function NoResults(props) {
 	  var searchTryAnother = _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'search.tryAnother', defaultMessage: 'Try another search' });
 
+	  if (props.view.fetchingContents) {
+	    return _react2.default.createElement(
+	      'tr',
+	      { role: 'row' },
+	      _react2.default.createElement(
+	        'td',
+	        { role: 'presentation', colSpan: '5', className: 'comfortable' },
+	        _react2.default.createElement(
+	          'p',
+	          { className: 'alert-info eureka__notice', 'aria-live': 'assertive' },
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'spinner' },
+	            _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'circle-o-notch' }))
+	          ),
+	          _react2.default.createElement('br', null),
+	          _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'contents.fetchingContents', defaultMessage: 'Hold tight while we fetch {cd}', values: {
+	              cd: props.content.cd
+	            } })
+	        )
+	      )
+	    );
+	  }
+
 	  return props.view.filter ? _react2.default.createElement(
 	    'tr',
 	    { role: 'row' },
@@ -33537,7 +33672,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    )
 	  ) : _react2.default.createElement(
 	    'tr',
-	    null,
+	    { role: 'row' },
 	    _react2.default.createElement(
 	      'td',
 	      { role: 'presentation', colSpan: '5', className: 'comfortable' },
@@ -33599,7 +33734,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _filesize = __webpack_require__(223);
+	var _filesize = __webpack_require__(225);
 
 	var _filesize2 = _interopRequireDefault(_filesize);
 
@@ -33611,11 +33746,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(224);
+	var _actions = __webpack_require__(226);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
-	var _utility = __webpack_require__(222);
+	var _utility = __webpack_require__(224);
 
 	var _utility2 = _interopRequireDefault(_utility);
 
@@ -33631,15 +33766,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Icon2 = _interopRequireDefault(_Icon);
 
+	var _mousetrap = __webpack_require__(267);
+
+	var _mousetrap2 = _interopRequireDefault(_mousetrap);
+
 	var _reactIntl = __webpack_require__(230);
 
 	var _definedMessages = __webpack_require__(255);
 
 	var _definedMessages2 = _interopRequireDefault(_definedMessages);
-
-	var _mousetrap = __webpack_require__(267);
-
-	var _mousetrap2 = _interopRequireDefault(_mousetrap);
 
 	var _reactTapEventPlugin = __webpack_require__(268);
 
@@ -33772,14 +33907,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'handleKeyboardBackspace',
 	    value: function handleKeyboardBackspace(event) {
-	      var props = this.props;
-	      var decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
+	      var props = this.props,
+	          formatMessage = props.intl.formatMessage,
+	          decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default,
+	          deletedItemMessage = formatMessage(_definedMessages2.default.deletedItem, {
+	        filename: props.item.filename
+	      });
 	      //console.log('handleKeyboardBackspace', event, props.item.path);
 	      _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, props.item.path, props.config.headers)).then(function () {
-	        _utility2.default.notify('Deleted item ' + props.item.filename, {
-	          badge: _path2.default.join(props.config.assetsBasePath, 'img/src/png/trash-o.png'),
+	        /*utility.notify(`Deleted item ${props.item.filename}`, {
+	          badge: path.join(props.config.assetsBasePath, 'img/src/png/trash-o.png'),
 	          silent: true
-	        });
+	        });*/
+	        _store2.default.dispatch(_actions2.default.notify(deletedItemMessage, _utility2.default.DANGEROUS));
 	      });
 	    }
 	  }, {
@@ -33823,7 +33963,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // consider abstracting this to its own module
 	        //console.log(pathParse(props.item.filename).ext,'props.item',props.item);
 
-	        var src = props.item.absolutePreviewURL || props.item.absoluteURL;
+	        var src = props.item.absolutePreviewURL || props.item.absoluteURL,
+	            alt = props.item.alt || '';
 
 	        switch (ext.toLowerCase()) {
 	          case '.jpg':
@@ -33835,7 +33976,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          case '.svg':
 	          case '.bmp':
 	          case '.tiff':
-	            return _react2.default.createElement('img', { src: src, alt: '' });
+	            return _react2.default.createElement('img', { src: src, alt: alt });
 	            break;
 
 	          case '.mp4':
@@ -34089,7 +34230,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(224);
+	var _actions = __webpack_require__(226);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
@@ -34128,11 +34269,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(224);
+	var _actions = __webpack_require__(226);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
-	var _utility = __webpack_require__(222);
+	var _utility = __webpack_require__(224);
 
 	var _path = __webpack_require__(178);
 
@@ -34167,6 +34308,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      chooseMessage = formatMessage(_definedMessages2.default.choose),
 	      deleteMessage = formatMessage(_definedMessages2.default.delete),
 	      deleteItemMessage = formatMessage(_definedMessages2.default.deleteItem, {
+	    filename: item.filename
+	  }),
+	      deletedItemMessage = formatMessage(_definedMessages2.default.deletedItem, {
 	    filename: item.filename
 	  }),
 	      expandItemMessage = formatMessage(_definedMessages2.default.expandItem, {
@@ -34213,10 +34357,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    'button',
 	    { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'delete__' + (0, _utility.cssSafe)(item.filename), role: 'option', onClick: function onClick(event) {
 	        _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path, props.config.headers)).then(function () {
-	          (0, _utility.notify)('Deleted item ' + item.filename, {
-	            badge: _path2.default.join(props.config.assetsBasePath, 'img/src/png/trash-o.png'),
+	          /*notify(`Deleted item ${item.filename}`, {
+	            badge: path.join(props.config.assetsBasePath, 'img/src/png/trash-o.png'),
 	            silent: true
-	          });
+	          });*/
+	          _store2.default.dispatch(_actions2.default.notify(deletedItemMessage, _utility.DANGEROUS));
 	        });
 	      }, title: deleteItemMessage, className: 'dangerous' },
 	    deleteMessage,
@@ -36357,7 +36502,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(224);
+	var _actions = __webpack_require__(226);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
@@ -36550,11 +36695,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(224);
+	var _actions = __webpack_require__(226);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
-	var _utility = __webpack_require__(222);
+	var _utility = __webpack_require__(224);
 
 	var _utility2 = _interopRequireDefault(_utility);
 
@@ -36745,7 +36890,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _path2 = _interopRequireDefault(_path);
 
-	var _utility = __webpack_require__(222);
+	var _utility = __webpack_require__(224);
 
 	var _utility2 = _interopRequireDefault(_utility);
 
@@ -36849,7 +36994,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(224);
+	var _actions = __webpack_require__(226);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
@@ -37331,7 +37476,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
-	var _utility = __webpack_require__(222);
+	var _utility = __webpack_require__(224);
 
 	var _utility2 = _interopRequireDefault(_utility);
 
@@ -37339,7 +37484,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _actions = __webpack_require__(224);
+	var _actions = __webpack_require__(226);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
@@ -37431,16 +37576,171 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 284 */
 /***/ function(module, exports, __webpack_require__) {
 
-	!function(e,a){ true?module.exports=a():"function"==typeof define&&define.amd?define(a):(e.ReactIntlLocaleData=e.ReactIntlLocaleData||{},e.ReactIntlLocaleData.en=a())}(this,function(){"use strict";var e=[{locale:"en",pluralRuleFunction:function(e,a){var n=String(e).split("."),l=!n[1],o=Number(n[0])==e,t=o&&n[0].slice(-1),r=o&&n[0].slice(-2);return a?1==t&&11!=r?"one":2==t&&12!=r?"two":3==t&&13!=r?"few":"other":1==e&&l?"one":"other"},fields:{year:{displayName:"year",relative:{0:"this year",1:"next year","-1":"last year"},relativeTime:{future:{one:"in {0} year",other:"in {0} years"},past:{one:"{0} year ago",other:"{0} years ago"}}},month:{displayName:"month",relative:{0:"this month",1:"next month","-1":"last month"},relativeTime:{future:{one:"in {0} month",other:"in {0} months"},past:{one:"{0} month ago",other:"{0} months ago"}}},day:{displayName:"day",relative:{0:"today",1:"tomorrow","-1":"yesterday"},relativeTime:{future:{one:"in {0} day",other:"in {0} days"},past:{one:"{0} day ago",other:"{0} days ago"}}},hour:{displayName:"hour",relativeTime:{future:{one:"in {0} hour",other:"in {0} hours"},past:{one:"{0} hour ago",other:"{0} hours ago"}}},minute:{displayName:"minute",relativeTime:{future:{one:"in {0} minute",other:"in {0} minutes"},past:{one:"{0} minute ago",other:"{0} minutes ago"}}},second:{displayName:"second",relative:{0:"now"},relativeTime:{future:{one:"in {0} second",other:"in {0} seconds"},past:{one:"{0} second ago",other:"{0} seconds ago"}}}}},{locale:"en-001",parentLocale:"en"},{locale:"en-150",parentLocale:"en-001"},{locale:"en-AG",parentLocale:"en-001"},{locale:"en-AI",parentLocale:"en-001"},{locale:"en-AS",parentLocale:"en"},{locale:"en-AT",parentLocale:"en-150"},{locale:"en-AU",parentLocale:"en-001"},{locale:"en-BB",parentLocale:"en-001"},{locale:"en-BE",parentLocale:"en-001"},{locale:"en-BI",parentLocale:"en"},{locale:"en-BM",parentLocale:"en-001"},{locale:"en-BS",parentLocale:"en-001"},{locale:"en-BW",parentLocale:"en-001"},{locale:"en-BZ",parentLocale:"en-001"},{locale:"en-CA",parentLocale:"en-001"},{locale:"en-CC",parentLocale:"en-001"},{locale:"en-CH",parentLocale:"en-150"},{locale:"en-CK",parentLocale:"en-001"},{locale:"en-CM",parentLocale:"en-001"},{locale:"en-CX",parentLocale:"en-001"},{locale:"en-CY",parentLocale:"en-001"},{locale:"en-DE",parentLocale:"en-150"},{locale:"en-DG",parentLocale:"en-001"},{locale:"en-DK",parentLocale:"en-150"},{locale:"en-DM",parentLocale:"en-001"},{locale:"en-Dsrt",pluralRuleFunction:function(e,a){return"other"},fields:{year:{displayName:"Year",relative:{0:"this year",1:"next year","-1":"last year"},relativeTime:{future:{other:"+{0} y"},past:{other:"-{0} y"}}},month:{displayName:"Month",relative:{0:"this month",1:"next month","-1":"last month"},relativeTime:{future:{other:"+{0} m"},past:{other:"-{0} m"}}},day:{displayName:"Day",relative:{0:"today",1:"tomorrow","-1":"yesterday"},relativeTime:{future:{other:"+{0} d"},past:{other:"-{0} d"}}},hour:{displayName:"Hour",relativeTime:{future:{other:"+{0} h"},past:{other:"-{0} h"}}},minute:{displayName:"Minute",relativeTime:{future:{other:"+{0} min"},past:{other:"-{0} min"}}},second:{displayName:"Second",relative:{0:"now"},relativeTime:{future:{other:"+{0} s"},past:{other:"-{0} s"}}}}},{locale:"en-ER",parentLocale:"en-001"},{locale:"en-FI",parentLocale:"en-150"},{locale:"en-FJ",parentLocale:"en-001"},{locale:"en-FK",parentLocale:"en-001"},{locale:"en-FM",parentLocale:"en-001"},{locale:"en-GB",parentLocale:"en-001"},{locale:"en-GD",parentLocale:"en-001"},{locale:"en-GG",parentLocale:"en-001"},{locale:"en-GH",parentLocale:"en-001"},{locale:"en-GI",parentLocale:"en-001"},{locale:"en-GM",parentLocale:"en-001"},{locale:"en-GU",parentLocale:"en"},{locale:"en-GY",parentLocale:"en-001"},{locale:"en-HK",parentLocale:"en-001"},{locale:"en-IE",parentLocale:"en-001"},{locale:"en-IL",parentLocale:"en-001"},{locale:"en-IM",parentLocale:"en-001"},{locale:"en-IN",parentLocale:"en-001"},{locale:"en-IO",parentLocale:"en-001"},{locale:"en-JE",parentLocale:"en-001"},{locale:"en-JM",parentLocale:"en-001"},{locale:"en-KE",parentLocale:"en-001"},{locale:"en-KI",parentLocale:"en-001"},{locale:"en-KN",parentLocale:"en-001"},{locale:"en-KY",parentLocale:"en-001"},{locale:"en-LC",parentLocale:"en-001"},{locale:"en-LR",parentLocale:"en-001"},{locale:"en-LS",parentLocale:"en-001"},{locale:"en-MG",parentLocale:"en-001"},{locale:"en-MH",parentLocale:"en"},{locale:"en-MO",parentLocale:"en-001"},{locale:"en-MP",parentLocale:"en"},{locale:"en-MS",parentLocale:"en-001"},{locale:"en-MT",parentLocale:"en-001"},{locale:"en-MU",parentLocale:"en-001"},{locale:"en-MW",parentLocale:"en-001"},{locale:"en-MY",parentLocale:"en-001"},{locale:"en-NA",parentLocale:"en-001"},{locale:"en-NF",parentLocale:"en-001"},{locale:"en-NG",parentLocale:"en-001"},{locale:"en-NL",parentLocale:"en-150"},{locale:"en-NR",parentLocale:"en-001"},{locale:"en-NU",parentLocale:"en-001"},{locale:"en-NZ",parentLocale:"en-001"},{locale:"en-PG",parentLocale:"en-001"},{locale:"en-PH",parentLocale:"en-001"},{locale:"en-PK",parentLocale:"en-001"},{locale:"en-PN",parentLocale:"en-001"},{locale:"en-PR",parentLocale:"en"},{locale:"en-PW",parentLocale:"en-001"},{locale:"en-RW",parentLocale:"en-001"},{locale:"en-SB",parentLocale:"en-001"},{locale:"en-SC",parentLocale:"en-001"},{locale:"en-SD",parentLocale:"en-001"},{locale:"en-SE",parentLocale:"en-150"},{locale:"en-SG",parentLocale:"en-001"},{locale:"en-SH",parentLocale:"en-001"},{locale:"en-SI",parentLocale:"en-150"},{locale:"en-SL",parentLocale:"en-001"},{locale:"en-SS",parentLocale:"en-001"},{locale:"en-SX",parentLocale:"en-001"},{locale:"en-SZ",parentLocale:"en-001"},{locale:"en-Shaw",pluralRuleFunction:function(e,a){return"other"},fields:{year:{displayName:"Year",relative:{0:"this year",1:"next year","-1":"last year"},relativeTime:{future:{other:"+{0} y"},past:{other:"-{0} y"}}},month:{displayName:"Month",relative:{0:"this month",1:"next month","-1":"last month"},relativeTime:{future:{other:"+{0} m"},past:{other:"-{0} m"}}},day:{displayName:"Day",relative:{0:"today",1:"tomorrow","-1":"yesterday"},relativeTime:{future:{other:"+{0} d"},past:{other:"-{0} d"}}},hour:{displayName:"Hour",relativeTime:{future:{other:"+{0} h"},past:{other:"-{0} h"}}},minute:{displayName:"Minute",relativeTime:{future:{other:"+{0} min"},past:{other:"-{0} min"}}},second:{displayName:"Second",relative:{0:"now"},relativeTime:{future:{other:"+{0} s"},past:{other:"-{0} s"}}}}},{locale:"en-TC",parentLocale:"en-001"},{locale:"en-TK",parentLocale:"en-001"},{locale:"en-TO",parentLocale:"en-001"},{locale:"en-TT",parentLocale:"en-001"},{locale:"en-TV",parentLocale:"en-001"},{locale:"en-TZ",parentLocale:"en-001"},{locale:"en-UG",parentLocale:"en-001"},{locale:"en-UM",parentLocale:"en"},{locale:"en-US",parentLocale:"en"},{locale:"en-VC",parentLocale:"en-001"},{locale:"en-VG",parentLocale:"en-001"},{locale:"en-VI",parentLocale:"en"},{locale:"en-VU",parentLocale:"en-001"},{locale:"en-WS",parentLocale:"en-001"},{locale:"en-ZA",parentLocale:"en-001"},{locale:"en-ZM",parentLocale:"en-001"},{locale:"en-ZW",parentLocale:"en-001"}];return e});
+	'use strict';
 
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.Notification = undefined;
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Icon = __webpack_require__(254);
+
+	var _Icon2 = _interopRequireDefault(_Icon);
+
+	var _reactIntl = __webpack_require__(230);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Notification = exports.Notification = function (_Component) {
+	  _inherits(Notification, _Component);
+
+	  function Notification(props) {
+	    _classCallCheck(this, Notification);
+
+	    console.log('Notification created!!!', props);
+
+	    var _this = _possibleConstructorReturn(this, (Notification.__proto__ || Object.getPrototypeOf(Notification)).call(this, props));
+
+	    _initialiseProps.call(_this);
+
+	    _this.state = { hidden: true, dismissed: false };
+	    return _this;
+	  }
+
+	  _createClass(Notification, [{
+	    key: 'slideInOut',
+	    value: function slideInOut() {
+	      setTimeout(this.show, 60);
+	      if (this.props.dismissAfter) setTimeout(this.dismiss, this.props.dismissAfter);
+	    }
+	  }, {
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.slideInOut();
+	    }
+	  }, {
+	    key: 'componentWillUpdate',
+	    value: function componentWillUpdate(nextProps, nextState) {
+	      // incase they aren't using a unique key in user land
+	      if (this.props.id !== nextProps.id) {
+	        this.setState({ hidden: true, dismissed: false });
+	        this.slideInOut();
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+
+	      var props = this.props;
+	      var className = 'eureka__notification-wrapper ';
+	      var notificationClass = '';
+	      var lb = props.learnMore ? _react2.default.createElement('br', null) : undefined;
+	      var learnMore = props.learnMore ? _react2.default.createElement(
+	        'a',
+	        { href: props.learnMore, target: '_blank' },
+	        _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'welcome.learnMore', defaultMessage: 'Learn more' })
+	      ) : undefined;
+
+	      var icon = function () {
+	        switch (props.type) {
+	          case 'dangerous':
+	            notificationClass = 'eureka__dangerous';
+	            return _react2.default.createElement(_Icon2.default, _extends({}, props, { 'aria-hidden': 'true', icon: 'exclamation-triangle' }));
+	            break;
+
+	          default:
+	            return _react2.default.createElement(_Icon2.default, _extends({}, props, { 'aria-hidden': 'true', icon: 'info-circle' }));
+	        }
+	      }();
+
+	      return _react2.default.createElement(
+	        'div',
+	        { className: className, 'aria-hidden': this.state.hidden },
+	        _react2.default.createElement(
+	          'div',
+	          { className: notificationClass },
+	          _react2.default.createElement(
+	            'p',
+	            null,
+	            icon,
+	            '\u2002',
+	            props.message,
+	            lb,
+	            learnMore
+	          ),
+	          _react2.default.createElement(
+	            'button',
+	            { 'aria-hidden': 'true', 'aria-label': 'Dismiss Notification', onClick: this.state.dismissed ? undefined : function (event) {
+	                // hiding because it isn't very necessary for screen readers given notifications auto-dismiss after ~3 seconds
+	                _this2.dismiss();
+	              } },
+	            _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'times' }))
+	          )
+	        )
+	      );
+	    }
+	  }]);
+
+	  return Notification;
+	}(_react.Component);
+
+	var _initialiseProps = function _initialiseProps() {
+	  var _this3 = this;
+
+	  this.show = function () {
+	    _this3.setState({ hidden: false });
+	  };
+
+	  this.dismiss = function () {
+	    var props = _this3.props;
+
+	    _this3.setState({
+	      dismissed: true,
+	      hidden: true
+	    });
+	    if (props.onDismiss) {
+	      setTimeout(function () {
+	        props.onDismiss(props.id);
+	      }, 420);
+	    }
+	  };
+	};
+
+	Notification.defaultProps = {
+	  dismissAfter: 4200
+	};
+
+	exports.default = Notification;
 
 /***/ },
 /* 285 */
 /***/ function(module, exports, __webpack_require__) {
 
+	!function(e,a){ true?module.exports=a():"function"==typeof define&&define.amd?define(a):(e.ReactIntlLocaleData=e.ReactIntlLocaleData||{},e.ReactIntlLocaleData.en=a())}(this,function(){"use strict";var e=[{locale:"en",pluralRuleFunction:function(e,a){var n=String(e).split("."),l=!n[1],o=Number(n[0])==e,t=o&&n[0].slice(-1),r=o&&n[0].slice(-2);return a?1==t&&11!=r?"one":2==t&&12!=r?"two":3==t&&13!=r?"few":"other":1==e&&l?"one":"other"},fields:{year:{displayName:"year",relative:{0:"this year",1:"next year","-1":"last year"},relativeTime:{future:{one:"in {0} year",other:"in {0} years"},past:{one:"{0} year ago",other:"{0} years ago"}}},month:{displayName:"month",relative:{0:"this month",1:"next month","-1":"last month"},relativeTime:{future:{one:"in {0} month",other:"in {0} months"},past:{one:"{0} month ago",other:"{0} months ago"}}},day:{displayName:"day",relative:{0:"today",1:"tomorrow","-1":"yesterday"},relativeTime:{future:{one:"in {0} day",other:"in {0} days"},past:{one:"{0} day ago",other:"{0} days ago"}}},hour:{displayName:"hour",relativeTime:{future:{one:"in {0} hour",other:"in {0} hours"},past:{one:"{0} hour ago",other:"{0} hours ago"}}},minute:{displayName:"minute",relativeTime:{future:{one:"in {0} minute",other:"in {0} minutes"},past:{one:"{0} minute ago",other:"{0} minutes ago"}}},second:{displayName:"second",relative:{0:"now"},relativeTime:{future:{one:"in {0} second",other:"in {0} seconds"},past:{one:"{0} second ago",other:"{0} seconds ago"}}}}},{locale:"en-001",parentLocale:"en"},{locale:"en-150",parentLocale:"en-001"},{locale:"en-AG",parentLocale:"en-001"},{locale:"en-AI",parentLocale:"en-001"},{locale:"en-AS",parentLocale:"en"},{locale:"en-AT",parentLocale:"en-150"},{locale:"en-AU",parentLocale:"en-001"},{locale:"en-BB",parentLocale:"en-001"},{locale:"en-BE",parentLocale:"en-001"},{locale:"en-BI",parentLocale:"en"},{locale:"en-BM",parentLocale:"en-001"},{locale:"en-BS",parentLocale:"en-001"},{locale:"en-BW",parentLocale:"en-001"},{locale:"en-BZ",parentLocale:"en-001"},{locale:"en-CA",parentLocale:"en-001"},{locale:"en-CC",parentLocale:"en-001"},{locale:"en-CH",parentLocale:"en-150"},{locale:"en-CK",parentLocale:"en-001"},{locale:"en-CM",parentLocale:"en-001"},{locale:"en-CX",parentLocale:"en-001"},{locale:"en-CY",parentLocale:"en-001"},{locale:"en-DE",parentLocale:"en-150"},{locale:"en-DG",parentLocale:"en-001"},{locale:"en-DK",parentLocale:"en-150"},{locale:"en-DM",parentLocale:"en-001"},{locale:"en-Dsrt",pluralRuleFunction:function(e,a){return"other"},fields:{year:{displayName:"Year",relative:{0:"this year",1:"next year","-1":"last year"},relativeTime:{future:{other:"+{0} y"},past:{other:"-{0} y"}}},month:{displayName:"Month",relative:{0:"this month",1:"next month","-1":"last month"},relativeTime:{future:{other:"+{0} m"},past:{other:"-{0} m"}}},day:{displayName:"Day",relative:{0:"today",1:"tomorrow","-1":"yesterday"},relativeTime:{future:{other:"+{0} d"},past:{other:"-{0} d"}}},hour:{displayName:"Hour",relativeTime:{future:{other:"+{0} h"},past:{other:"-{0} h"}}},minute:{displayName:"Minute",relativeTime:{future:{other:"+{0} min"},past:{other:"-{0} min"}}},second:{displayName:"Second",relative:{0:"now"},relativeTime:{future:{other:"+{0} s"},past:{other:"-{0} s"}}}}},{locale:"en-ER",parentLocale:"en-001"},{locale:"en-FI",parentLocale:"en-150"},{locale:"en-FJ",parentLocale:"en-001"},{locale:"en-FK",parentLocale:"en-001"},{locale:"en-FM",parentLocale:"en-001"},{locale:"en-GB",parentLocale:"en-001"},{locale:"en-GD",parentLocale:"en-001"},{locale:"en-GG",parentLocale:"en-001"},{locale:"en-GH",parentLocale:"en-001"},{locale:"en-GI",parentLocale:"en-001"},{locale:"en-GM",parentLocale:"en-001"},{locale:"en-GU",parentLocale:"en"},{locale:"en-GY",parentLocale:"en-001"},{locale:"en-HK",parentLocale:"en-001"},{locale:"en-IE",parentLocale:"en-001"},{locale:"en-IL",parentLocale:"en-001"},{locale:"en-IM",parentLocale:"en-001"},{locale:"en-IN",parentLocale:"en-001"},{locale:"en-IO",parentLocale:"en-001"},{locale:"en-JE",parentLocale:"en-001"},{locale:"en-JM",parentLocale:"en-001"},{locale:"en-KE",parentLocale:"en-001"},{locale:"en-KI",parentLocale:"en-001"},{locale:"en-KN",parentLocale:"en-001"},{locale:"en-KY",parentLocale:"en-001"},{locale:"en-LC",parentLocale:"en-001"},{locale:"en-LR",parentLocale:"en-001"},{locale:"en-LS",parentLocale:"en-001"},{locale:"en-MG",parentLocale:"en-001"},{locale:"en-MH",parentLocale:"en"},{locale:"en-MO",parentLocale:"en-001"},{locale:"en-MP",parentLocale:"en"},{locale:"en-MS",parentLocale:"en-001"},{locale:"en-MT",parentLocale:"en-001"},{locale:"en-MU",parentLocale:"en-001"},{locale:"en-MW",parentLocale:"en-001"},{locale:"en-MY",parentLocale:"en-001"},{locale:"en-NA",parentLocale:"en-001"},{locale:"en-NF",parentLocale:"en-001"},{locale:"en-NG",parentLocale:"en-001"},{locale:"en-NL",parentLocale:"en-150"},{locale:"en-NR",parentLocale:"en-001"},{locale:"en-NU",parentLocale:"en-001"},{locale:"en-NZ",parentLocale:"en-001"},{locale:"en-PG",parentLocale:"en-001"},{locale:"en-PH",parentLocale:"en-001"},{locale:"en-PK",parentLocale:"en-001"},{locale:"en-PN",parentLocale:"en-001"},{locale:"en-PR",parentLocale:"en"},{locale:"en-PW",parentLocale:"en-001"},{locale:"en-RW",parentLocale:"en-001"},{locale:"en-SB",parentLocale:"en-001"},{locale:"en-SC",parentLocale:"en-001"},{locale:"en-SD",parentLocale:"en-001"},{locale:"en-SE",parentLocale:"en-150"},{locale:"en-SG",parentLocale:"en-001"},{locale:"en-SH",parentLocale:"en-001"},{locale:"en-SI",parentLocale:"en-150"},{locale:"en-SL",parentLocale:"en-001"},{locale:"en-SS",parentLocale:"en-001"},{locale:"en-SX",parentLocale:"en-001"},{locale:"en-SZ",parentLocale:"en-001"},{locale:"en-Shaw",pluralRuleFunction:function(e,a){return"other"},fields:{year:{displayName:"Year",relative:{0:"this year",1:"next year","-1":"last year"},relativeTime:{future:{other:"+{0} y"},past:{other:"-{0} y"}}},month:{displayName:"Month",relative:{0:"this month",1:"next month","-1":"last month"},relativeTime:{future:{other:"+{0} m"},past:{other:"-{0} m"}}},day:{displayName:"Day",relative:{0:"today",1:"tomorrow","-1":"yesterday"},relativeTime:{future:{other:"+{0} d"},past:{other:"-{0} d"}}},hour:{displayName:"Hour",relativeTime:{future:{other:"+{0} h"},past:{other:"-{0} h"}}},minute:{displayName:"Minute",relativeTime:{future:{other:"+{0} min"},past:{other:"-{0} min"}}},second:{displayName:"Second",relative:{0:"now"},relativeTime:{future:{other:"+{0} s"},past:{other:"-{0} s"}}}}},{locale:"en-TC",parentLocale:"en-001"},{locale:"en-TK",parentLocale:"en-001"},{locale:"en-TO",parentLocale:"en-001"},{locale:"en-TT",parentLocale:"en-001"},{locale:"en-TV",parentLocale:"en-001"},{locale:"en-TZ",parentLocale:"en-001"},{locale:"en-UG",parentLocale:"en-001"},{locale:"en-UM",parentLocale:"en"},{locale:"en-US",parentLocale:"en"},{locale:"en-VC",parentLocale:"en-001"},{locale:"en-VG",parentLocale:"en-001"},{locale:"en-VI",parentLocale:"en"},{locale:"en-VU",parentLocale:"en-001"},{locale:"en-WS",parentLocale:"en-001"},{locale:"en-ZA",parentLocale:"en-001"},{locale:"en-ZM",parentLocale:"en-001"},{locale:"en-ZW",parentLocale:"en-001"}];return e});
+
+
+/***/ },
+/* 286 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 
-	var _en = __webpack_require__(286);
+	var _en = __webpack_require__(287);
 
 	var _en2 = _interopRequireDefault(_en);
 
@@ -37451,7 +37751,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 286 */
+/* 287 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -37467,6 +37767,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		"fileSize": "File Size",
 		"editedOn": "Edited On",
 		"search.tryAnother": "Try another search",
+		"contents.fetchingContents": "Hold tight while we fetch {cd}",
 		"search.noResults": "Uh oh. No results found for \"{filter}\"",
 		"grammar.or": "or",
 		"search.clearFilter": "clear the search filter",
@@ -37515,8 +37816,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		"choose.item": "Choose {filename}",
 		"directory.delete": "Delete Directory",
 		"delete.item": "Delete {filename}",
+		"deleted.item": "Deleted {filename}",
 		"download": "Download",
 		"download.item": "Download {filename}",
+		"welcome.learnMore": "Learn more",
 		"expand.item": "Expand {filename}",
 		"directory.refresh": "Refresh Directory",
 		"upload.filesTo": "Upload File to {cd}",

@@ -132,6 +132,11 @@ class Eureka extends Component {
     }))
   }
 
+  handleNotificationDismissed = (id) => {
+    //console.log(`notification ${id} dismiessed`)
+    store.dispatch(actions.archiveNotification(id))
+  }
+
   handleKeyboardSortDescending = (event) => {
     event.preventDefault();
     store.dispatch(actions.updateView({
@@ -171,11 +176,6 @@ class Eureka extends Component {
         by: 'editedOn'
       }
     }))
-  }
-
-  notify(message = "") {
-    console.log('notify');
-    store.dispatch(actions.notify('YOLO'))
   }
 
   assignKeyboardListeners() {
@@ -344,9 +344,13 @@ class Eureka extends Component {
         }
       });
 
-      setTimeout(() => {
-        this.notify();
-      }, 3000);
+      if(props.config.alwaysWelcome || (props.config.welcome && localStorage.getItem(`${props.storagePrefix}welcome`) !== 'false')) {
+        setTimeout(() => {
+          store.dispatch(actions.notify('Welcome to Eureka. You found it.', undefined, props.config.learnMore, 26000));
+          localStorage.setItem(`${props.storagePrefix}welcome`, 'false');
+        }, 2400);
+      }
+
     });
 
     document.body.addEventListener('keyup', (event) => {
@@ -505,11 +509,15 @@ class Eureka extends Component {
       <PathBar {...props} />
     ) : undefined;
 
-    const notification = (
+    const unarchivedNotifications = (this.props.notifications) ? this.props.notifications.filter((notification) => (
+      !notification.archived
+    )) : [];
+
+    const notificationMessage = (
       () => {
         try {
           return (
-            this.state.notifications[0]
+            unarchivedNotifications[0]
           )
         } catch(e) {
           return undefined;
@@ -517,7 +525,8 @@ class Eureka extends Component {
       }
     )();
 
-    //console.log('notification', notification, this.state);
+    console.log('notificationMessage', notificationMessage)
+    const notification = (notificationMessage) ? <Notification key={notificationMessage.id} onDismiss={this.handleNotificationDismissed} {...notificationMessage} {...props}  /> : undefined;
 
     const shouldDisplayChooseBar = (() => {
       try {
@@ -572,7 +581,7 @@ class Eureka extends Component {
       </form>
     ) : (
       <div role="widget" lang={props.lang || undefined} className={`eureka eureka__view-mode__${props.view.mode}${enlargeFocusedRows}${serverSideClass}`}>
-        {notification}
+        <div className="eureka__sticky-bar" aria-live="polite" aria-atomic="true">{notification}</div>
         {formDiv}
         {pathBar}
         {chooseBar}

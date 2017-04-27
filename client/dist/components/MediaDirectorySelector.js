@@ -75,8 +75,12 @@ var MediaDirectorySelector = function MediaDirectorySelector(props) {
 
 
         _store2.default.dispatch(decoratedActions.updateSource(cs));
+        _store2.default.dispatch(decoratedActions.updateView({
+          fetchingContents: true
+        }));
         _store2.default.dispatch(decoratedActions.updateContent({ // updates the "current directory" of the view right away
-          cd: cd
+          cd: cd,
+          contents: []
         }));
         _store2.default.dispatch(decoratedActions.fetchDirectoryContents(cs, { // asyncronously fetches the directory contents from the API
           path: cd

@@ -240,30 +240,37 @@ a[role="presentation"] {
   @include panel();
 }
 
-  %notification {
-    @include panel(false);
-    padding-left: 1.5em;
-    padding-right: 1.5em;
+%notification {
+  @include panel(false);
+  padding-left: 1.5em;
+  padding-right: 1.5em;
 
-    background: var(--notification-background, #d9edf7);
-    color: var(--notification-color, darken(#d9edf7, 40%));
-    border: 1px solid var(--notification-border-color, var(--notification-color, darken(#d9edf7, 40%)));
-    button {
-      position: absolute;
-      top: .25rem;
-      right: .25rem;
-      color: currentColor;
-      transition: color 240ms ease;
-      &:focus, &:hover {
-        color: var(--notification-focus-color, darken(#d9edf7, 50%)) !important;
-        border: none;
-        box-shadow: none;
-        svg {
-          fill: currentColor !important;
-        }
+  background: var(--notification-background, #d9edf7);
+  color: var(--notification-color, darken(#d9edf7, 40%));
+  border: 1px solid var(--notification-border-color, var(--notification-color, darken(#d9edf7, 40%)));
+  button {
+    position: absolute;
+    top: .25rem;
+    right: .25rem;
+    color: currentColor;
+    transition: color 240ms ease;
+    box-shadow: none;
+    &:focus, &:hover {
+      color: var(--notification-focus-color, darken(#d9edf7, 50%)) !important;
+      border: none;
+      box-shadow: none;
+      svg {
+        fill: currentColor !important;
       }
     }
   }
+  &.eureka__dangerous {
+    --notification-background: #f7a2a2;
+    --notification-color: darken(#e67a7a, 30%);
+    --notification-border-color: var(--notification-color, darken(#e67a7a, 30%));
+    --notification-focus-color: darken(#e67a7a, 35%);
+  }
+}
 
 %horizontally-padded {
   @extend %padded;
@@ -276,16 +283,28 @@ a[role="presentation"] {
     > * {
       position: relative;
     }
-    transition: opacity 240ms ease 90ms, top 240ms ease;
+    //transition: opacity 240ms ease 90ms, top 240ms ease;
     transition: top 240ms ease 90ms, opacity 240ms ease;
+    @include media($mobile) {
+      //opacity: 1;
+      //transition: top 240ms ease;
+      transition: opacity 240ms ease;
+      left:0;
+      right:0;
+    }
     opacity: 1;
     top: 0;
     &[aria-hidden="true"] { // , &[hidden]
       //@extend %visually-hidden;
-      opacity: 0.5;
+      opacity: 0;
       top: -5em;
       display: block;
       transition: opacity 340ms ease-out 90ms, top 420ms ease-out;
+      @include media($mobile) {
+        //opacity: 1;
+        //transition: top 240ms ease;
+        //transition: none;
+      }
     }
     @include media($gtMobile) {
       position: absolute;
@@ -296,9 +315,11 @@ a[role="presentation"] {
     text-align: center;
 
 
-    p[aria-live] {
+    p {
       margin: 0;
-
+    }
+    .icon {
+      transform: translateY(.125em);
     }
   }
   .eureka__upload-form {
@@ -461,6 +482,7 @@ a[role="presentation"] {
       border-width:var(--border-width, 1px);
       border-style:var(--border-style, solid);
       border-color:var(--border-color, #E4E4E4);
+      border-radius:var(--border-color, .25rem);
     }
   }
 
@@ -975,14 +997,25 @@ a[role="presentation"] {
 } // end .eureka
 
 .eureka-root {
-  .eureka__notification-wrapper {
-    margin-bottom: .5rem;
-    z-index: $topMost;
+  .eureka__sticky-bar {
     @include media($mobile) {
+      z-index: $topMost;
       position: sticky;
       left: 0.5rem;
       right: 0.5rem;
+      top: 0;
+      .eureka__notification-wrapper {
+        //position: absolute;
+        //top: -5em;
+        /*transform: translateY(-5em);
+        &[aria-hidden="false"] {
+          transform: translateY(0);
+        }*/
+      }
     }
+  }
+  .eureka__notification-wrapper {
+    margin-bottom: .5rem;
     @include media($gtMobile) {
       margin-bottom: 0;
     }

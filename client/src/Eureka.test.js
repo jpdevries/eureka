@@ -33,7 +33,8 @@ function getEurekaProvider() {
       source: state.source,
       directory: state.directory,
       fetched: state.fetched,
-      config: state.config
+      config: state.config,
+      notifications: state.notifications
     }
   })(EurekaIntl);
 

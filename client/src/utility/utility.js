@@ -199,7 +199,7 @@ exports.serverSideRendering = (function(){
   }
 })();
 
-function notify(message, options = {
+/*function notify(message, options = {
   //icon: 'http://localhost:3000/assets/img/src/png/trash-o.png'
 }) {
   // Let's check if the browser supports notifications
@@ -227,7 +227,7 @@ function notify(message, options = {
 
   // At last, if the user has denied notifications, and you
   // want to be respectful there is no need to bother them any more.
-}
+}*/
 
 function runPrefixMethod(obj, method) {
     console.log('runPrefixMethod');
@@ -264,6 +264,8 @@ exports.isDblTouchTap = isDblTouchTap;
 
 exports.wordBreaksEvery = wordBreaksEvery;
 
-exports.notify = notify;
+//exports.notify = notify;
 
 exports.runPrefixMethod = runPrefixMethod;
+
+exports.DANGEROUS = 'dangerous';

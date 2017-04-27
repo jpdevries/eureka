@@ -76,8 +76,16 @@
     "defaultMessage": "Delete Directory"
   },
   {
+    "id": "contents.fetchingContents",
+    "defaultMessage": "Hold tight while we fetch {cd}"
+  },
+  {
     "id": "delete.item",
     "defaultMessage": "Delete {filename}"
+  },
+  {
+    "id": "deleted.item",
+    "defaultMessage": "Deleted {filename}"
   },
   {
     "id": "download",

@@ -247,6 +247,46 @@ var deleteMediaItem = function deleteMediaItem(source, path) {
   };
 };
 
+var NOTIFICATION = 'notification';
+var notify = function notify(message, notificationType, learnMore, dismissAfter) {
+  var archived = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
+
+  return {
+    type: NOTIFICATION,
+    message: message,
+    id: new Date().getTime(),
+    archived: archived,
+    notificationType: notificationType,
+    learnMore: learnMore,
+    dismissAfter: dismissAfter
+  };
+};
+
+exports.NOTIFICATION = NOTIFICATION;
+exports.notify = notify;
+
+var NOTIFICATION_DELETED = 'notification_dismissed';
+var deleteNotification = function deleteNotification(id) {
+  return {
+    type: NOTIFICATION_DELETED,
+    id: id
+  };
+};
+
+exports.NOTIFICATION_DELETED = NOTIFICATION_DELETED;
+exports.deleteNotification = deleteNotification;
+
+var NOTIFICATION_ARCHIVED = 'notification_archived';
+var archiveNotification = function archiveNotification(id) {
+  return {
+    type: NOTIFICATION_ARCHIVED,
+    id: id
+  };
+};
+
+exports.NOTIFICATION_ARCHIVED = NOTIFICATION_ARCHIVED;
+exports.archiveNotification = archiveNotification;
+
 var UPLOAD_FILES_SUCCESS = 'upload_files_success';
 var uploadFilesSuccess = function uploadFilesSuccess(contents) {
   return {

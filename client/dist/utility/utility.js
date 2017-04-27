@@ -227,37 +227,35 @@ exports.serverSideRendering = function () {
   }
 }();
 
-function notify(message) {
-  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
-    //icon: 'http://localhost:3000/assets/img/src/png/trash-o.png'
-  };
-
+/*function notify(message, options = {
+  //icon: 'http://localhost:3000/assets/img/src/png/trash-o.png'
+}) {
   // Let's check if the browser supports notifications
-  if (!("Notification" in window)) {}
-  //alert(message);
-
+  if (!("Notification" in window)) {
+    //alert(message);
+  }
 
   // Let's check whether notification permissions have already been granted
   else if (Notification.permission === "granted") {
-      // If it's okay let's create a notification
-      var notification = new Notification(message, options);
-    }
+    // If it's okay let's create a notification
+    var notification = new Notification(message, options);
+  }
 
-    // Otherwise, we need to ask the user for permission
-    else if (Notification.permission !== "denied") {
-        Notification.requestPermission(function (permission) {
-          // If the user accepts, let's create a notification
-          if (permission === "granted") {
-            var notification = new Notification(message, options);
-          } else {
-            alert(message);
-          }
-        });
+  // Otherwise, we need to ask the user for permission
+  else if (Notification.permission !== "denied") {
+    Notification.requestPermission(function (permission) {
+      // If the user accepts, let's create a notification
+      if (permission === "granted") {
+        var notification = new Notification(message, options);
+      } else {
+        alert(message);
       }
+    });
+  }
 
   // At last, if the user has denied notifications, and you
   // want to be respectful there is no need to bother them any more.
-}
+}*/
 
 function runPrefixMethod(obj, method) {
   console.log('runPrefixMethod');
@@ -296,6 +294,8 @@ exports.isDblTouchTap = isDblTouchTap;
 
 exports.wordBreaksEvery = wordBreaksEvery;
 
-exports.notify = notify;
+//exports.notify = notify;
 
 exports.runPrefixMethod = runPrefixMethod;
+
+exports.DANGEROUS = 'dangerous';

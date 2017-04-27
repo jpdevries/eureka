@@ -12,6 +12,8 @@ import classNames from 'classnames';
 
 import utility from '../utility/utility';
 
+import Icon from './Icon';
+
 import { FormattedMessage } from 'react-intl';
 import definedMessages from '../i18n/definedMessages';
 
@@ -183,6 +185,21 @@ function NoResults(props) {
     <FormattedMessage id="search.tryAnother" defaultMessage="Try another search" />
   );
 
+  if(props.view.fetchingContents) {
+    return (
+      <tr role="row">
+        <td role="presentation" colSpan="5" className="comfortable">
+          <p className="alert-info eureka__notice" aria-live="assertive">
+            <span className="spinner"><Icon {...props} icon="circle-o-notch" /></span><br />
+            <FormattedMessage id="contents.fetchingContents" defaultMessage="Hold tight while we fetch {cd}" values={{
+              cd: props.content.cd
+            }} />
+          </p>
+        </td>
+      </tr>
+    );
+  }
+
   return (props.view.filter) ? (
     <tr role="row">
       <td role="presentation" colSpan="5" className="comfortable">
@@ -203,7 +220,7 @@ function NoResults(props) {
       </td>
     </tr>
   ) : (
-    <tr>
+    <tr role="row">
       <td role="presentation" colSpan="5" className="comfortable">
         <p className="alert-info eureka__notice" aria-live="assertive">
           <FormattedMessage id="directory.appearsToBeEmpty" defaultMessage='Directory "{cd}" appears to be empty.' values={{

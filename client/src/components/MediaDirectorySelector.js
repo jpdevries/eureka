@@ -33,9 +33,13 @@ const MediaDirectorySelector = (props) => {
     <select role="navigation" aria-live="polite" value={`${props.source.currentSource}||${props.content.cd}`} name="eureka__media-browser_0__browsing" id="eureka__media-browser_0__browsing" onChange={(event) => {
         const [cs, cd] = utility.parseMediaSourceOutOfCombinedPath(event.target.value, '||'); // option values are like 0||assets/img/redwoods where 0 is the media source id and assets/img/redwoods is the directory
         //console.log('YOLO',cs,cd);
-        store.dispatch(decoratedActions.updateSource(cs))
+        store.dispatch(decoratedActions.updateSource(cs));
+        store.dispatch(decoratedActions.updateView({
+          fetchingContents: true
+        }));
         store.dispatch(decoratedActions.updateContent({ // updates the "current directory" of the view right away
-          cd: cd
+          cd: cd,
+          contents: []
         }));
         store.dispatch(decoratedActions.fetchDirectoryContents(cs, { // asyncronously fetches the directory contents from the API
           path: cd

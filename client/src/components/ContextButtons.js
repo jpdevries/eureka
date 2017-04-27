@@ -3,7 +3,7 @@ import React from 'react';
 import store from '../model/store';
 import actions from '../model/actions';
 
-import { cssSafe, notify } from '../utility/utility';
+import { cssSafe, notify, DANGEROUS } from '../utility/utility';
 
 import path from 'path';
 
@@ -33,6 +33,9 @@ const ContextButtons = (props) => {
   deleteItemMessage = formatMessage(definedMessages.deleteItem, {
     filename: item.filename
   }),
+  deletedItemMessage = formatMessage(definedMessages.deletedItem, {
+    filename: item.filename
+  }),
   expandItemMessage = formatMessage(definedMessages.expandItem, {
     filename: item.filename
   }),
@@ -57,10 +60,11 @@ const ContextButtons = (props) => {
   deleteBtn = (props.config.allowDelete) ? (
     <button id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }delete__${cssSafe(item.filename)}`} role="option" onClick={(event) => {
         store.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path, props.config.headers)).then(() => {
-          notify(`Deleted item ${item.filename}`, {
+          /*notify(`Deleted item ${item.filename}`, {
             badge: path.join(props.config.assetsBasePath, 'img/src/png/trash-o.png'),
             silent: true
-          });
+          });*/
+          store.dispatch(actions.notify(deletedItemMessage, DANGEROUS));
         });
       }} title={deleteItemMessage} className="dangerous">{deleteMessage}<span className="visually-hidden"> {item.filename}</span></button>
   ) : undefined,

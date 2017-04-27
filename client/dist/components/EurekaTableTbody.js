@@ -40,6 +40,10 @@ var _utility = require('../utility/utility');
 
 var _utility2 = _interopRequireDefault(_utility);
 
+var _Icon = require('./Icon');
+
+var _Icon2 = _interopRequireDefault(_Icon);
+
 var _reactIntl = require('react-intl');
 
 var _definedMessages = require('../i18n/definedMessages');
@@ -229,6 +233,30 @@ var EurekaTableTbody = function (_PureComponent) {
 function NoResults(props) {
   var searchTryAnother = _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'search.tryAnother', defaultMessage: 'Try another search' });
 
+  if (props.view.fetchingContents) {
+    return _react2.default.createElement(
+      'tr',
+      { role: 'row' },
+      _react2.default.createElement(
+        'td',
+        { role: 'presentation', colSpan: '5', className: 'comfortable' },
+        _react2.default.createElement(
+          'p',
+          { className: 'alert-info eureka__notice', 'aria-live': 'assertive' },
+          _react2.default.createElement(
+            'span',
+            { className: 'spinner' },
+            _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'circle-o-notch' }))
+          ),
+          _react2.default.createElement('br', null),
+          _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'contents.fetchingContents', defaultMessage: 'Hold tight while we fetch {cd}', values: {
+              cd: props.content.cd
+            } })
+        )
+      )
+    );
+  }
+
   return props.view.filter ? _react2.default.createElement(
     'tr',
     { role: 'row' },
@@ -269,7 +297,7 @@ function NoResults(props) {
     )
   ) : _react2.default.createElement(
     'tr',
-    null,
+    { role: 'row' },
     _react2.default.createElement(
       'td',
       { role: 'presentation', colSpan: '5', className: 'comfortable' },

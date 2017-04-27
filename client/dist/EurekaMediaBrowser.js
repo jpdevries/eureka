@@ -242,7 +242,8 @@ var EurekaMediaBrowser = exports.EurekaMediaBrowser = function (_PureComponent) 
           source: state.source,
           directory: state.directory,
           fetched: state.fetched,
-          config: state.config
+          config: state.config,
+          notifications: state.notifications
         };
       })((0, _reactIntl.injectIntl)(_Eureka2.default)); // shoot it up with some i18n
     }

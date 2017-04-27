@@ -77,9 +77,17 @@ export default defineMessages({
     id: 'directory.delete',
     defaultMessage: 'Delete Directory'
   },
+  fetchingContents: {
+    id: 'contents.fetchingContents',
+    defaultMessage: 'Hold tight while we fetch {cd}'
+  },
   deleteItem: {
     id: 'delete.item',
     defaultMessage: 'Delete {filename}'
+  },
+  deletedItem: {
+    id: 'deleted.item',
+    defaultMessage: 'Deleted {filename}'
   },
   download: {
     id: 'download',

@@ -256,15 +256,45 @@ const deleteMediaItem = (source, path, customHeaders = {}) => (
 
 
 const NOTIFICATION = 'notification';
-const notify = function(message) {
+const notify = function(message, notificationType, learnMore, dismissAfter, archived = false) {
   return {
     type: NOTIFICATION,
-    message: message
+    message: message,
+    id: new Date().getTime(),
+    archived: archived,
+    notificationType: notificationType,
+    learnMore: learnMore,
+    dismissAfter: dismissAfter
   }
 }
 
 exports.NOTIFICATION = NOTIFICATION;
-exports.notify = notify; 
+exports.notify = notify;
+
+const NOTIFICATION_DELETED = 'notification_dismissed';
+const deleteNotification = function(id) {
+  return {
+    type: NOTIFICATION_DELETED,
+    id: id
+  }
+}
+
+exports.NOTIFICATION_DELETED = NOTIFICATION_DELETED;
+exports.deleteNotification = deleteNotification;
+
+
+
+const NOTIFICATION_ARCHIVED = 'notification_archived';
+const archiveNotification = function(id) {
+  return {
+    type: NOTIFICATION_ARCHIVED,
+    id: id
+  }
+}
+
+exports.NOTIFICATION_ARCHIVED = NOTIFICATION_ARCHIVED;
+exports.archiveNotification = archiveNotification;
+
 
 
 const UPLOAD_FILES_SUCCESS = 'upload_files_success';

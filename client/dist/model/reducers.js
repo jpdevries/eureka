@@ -2,6 +2,10 @@
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
+var _reactAddonsUpdate = require('react-addons-update');
+
+var _reactAddonsUpdate2 = _interopRequireDefault(_reactAddonsUpdate);
+
 var _utility = require('../utility/utility');
 
 var _utility2 = _interopRequireDefault(_utility);
@@ -12,11 +16,14 @@ var _filesize2 = _interopRequireDefault(_filesize);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+// ES6
 
 var actions = require('./actions'),
     combineReducers = require('redux').combineReducers,
-    update = require('react-addons-update'),
     path = require('path');
 
 var pkg = require("./../../package.json");
@@ -35,6 +42,9 @@ var initialConfigState = {
   locales: "en-US",
   mediaSource: "0",
   currentDirectory: "/",
+  welcome: true,
+  alwaysWelcome: false,
+  learnMore: 'https://github.com/jpdevries/eureka',
   uid: "0",
   iconSVG: './img/icons.' + pkg.version + '.min.svg',
   assetsBasePath: './assets/',
@@ -96,7 +106,7 @@ var initialContentState = Object.assign({}, {
 
 var contentReducer = function contentReducer(state, action) {
   state = state || initialContentState;
-
+  console.log('contentReducer', action.type);
   switch (action.type) {
     case actions.UPDATE_CONFIG:
       //console.log('UPDATE_CONFIG!!!', state, action.config);
@@ -308,6 +318,7 @@ var initialViewState = Object.assign({}, {
   allowFullscreen: true,
   isUploading: false,
   isTouch: false,
+  fetchingContents: false,
   intervals: {
     searchBarPlaceholder: false,
     fetchDirectoryContents: false,
@@ -344,9 +355,9 @@ var viewReducer = function viewReducer(state, action) {
   switch (action.type) {
     case actions.FETCH_DIRECTORY_CONTENTS_SUCCESS:
     case actions.FETCH_DIRECTORY_CONTENTS_ERROR:
-      /*return Object.assign({},state, {
-        isFetching: false
-      });*/
+      return Object.assign({}, state, {
+        fetchingContents: false
+      });
       break;
 
     case actions.UPLOAD_FILES_SUCCESS:
@@ -560,6 +571,48 @@ var fetchedReducer = function fetchedReducer(state, action) {
   return state;
 };
 
+var initialNotifcationsState = [];
+
+var notificationsReducer = function notificationsReducer(state, action) {
+  //console.log('notificationsReducer', action.type, actions.NOTIFICATION);
+  state = state || initialNotifcationsState;
+
+  var index = 0;
+  state.map(function (notification, i) {
+    if (notification.id == action.id) index = i;
+  });
+
+  switch (action.type) {
+    case actions.NOTIFICATION:
+      console.log('NOTIFICATION!!!!', action);
+      return (0, _reactAddonsUpdate2.default)(state, { $push: [{
+          message: action.message,
+          id: action.id,
+          archived: action.archived,
+          type: action.notificationType,
+          learnMore: action.learnMore,
+          dismissAfter: action.dismissAfter
+        }] });
+      break;
+
+    case actions.NOTIFICATION_DELETED:
+      console.log('NOTIFICATION_DELETED!!!!');
+      return state.filter(function (notification) {
+        return notification.id !== action.id;
+      });
+      break;
+
+    case actions.NOTIFICATION_ARCHIVED:
+      var newState = (0, _reactAddonsUpdate2.default)(state, _defineProperty({}, index, { $apply: function $apply(notification) {
+          return (0, _reactAddonsUpdate2.default)(notification, { $merge: { archived: true } });
+        } }));
+      return newState;
+      break;
+  }
+
+  return state;
+};
+
 var EurekaReducer = combineReducers({
   content: contentReducer,
   view: viewReducer,
@@ -567,7 +620,8 @@ var EurekaReducer = combineReducers({
   source: sourceReducer,
   directory: directoryReducer,
   fetched: fetchedReducer,
-  config: configReducer
+  config: configReducer,
+  notifications: notificationsReducer
 });
 
 exports.EurekaReducer = EurekaReducer;

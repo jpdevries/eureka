@@ -4,6 +4,10 @@
     "defaultMessage": "Try another search"
   },
   {
+    "id": "contents.fetchingContents",
+    "defaultMessage": "Hold tight while we fetch {cd}"
+  },
+  {
     "id": "search.noResults",
     "defaultMessage": "Uh oh. No results found for \"{filter}\""
   },
