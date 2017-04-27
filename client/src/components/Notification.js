@@ -5,6 +5,8 @@ import { IntlProvider, addLocaleData } from 'react-intl';
 
 import { FormattedMessage, FormattedPlural, FormattedNumber, FormattedRelative, injectIntl } from 'react-intl';
 
+import Mousetrap from 'mousetrap';
+
 export class Notification extends Component {
   constructor(props) {
     console.log('Notification created!!!', props);
@@ -23,6 +25,19 @@ export class Notification extends Component {
 
   componentDidMount() {
     this.slideInOut();
+    this.assignKeyboardListeners();
+  }
+
+  componentWillUnmount() {
+    this.removeKeyboardListeners();
+  }
+
+  assignKeyboardListeners() {
+    Mousetrap.bind(['esc'], this.dismiss);
+  }
+
+  removeKeyboardListeners() {
+    Mousetrap.unbind(['esc'], this.dismiss);
   }
 
   componentWillUpdate(nextProps, nextState) { // incase they aren't using a unique key in user land

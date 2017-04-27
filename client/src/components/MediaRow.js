@@ -57,6 +57,10 @@ class MediaRow extends PureComponent {
     return false;
   }
 
+  componentDidMount() {
+    this.assignKeyboardListeners();
+  }
+
   assignKeyboardListeners() {
     Mousetrap.bind(['backspace'], this.handleKeyboardBackspace);
     Mousetrap.bind(['enter'], this.handleKeyboardChoose);
@@ -143,9 +147,7 @@ class MediaRow extends PureComponent {
 
 
 
-  componentDidMount() {
-    this.assignKeyboardListeners();
-  }
+
 
   //http://localhost:3000/assets/components/eureka/media/sources/1?path=%2FUsers%2FjP%2FSites%2Fstatic%2Feureka%2Fprod%2Fsources%2Ffilesystem%2Fassets%2Fimg%2Fredwoods%2F243823_842410181688_1308368_o.jpg
   //http://localhost:3000/assets/components/eureka/media/sources/1?path=%2FUsers%2FjP%2FSites%2Fstatic%2Feureka%2Fprod%2Fsources%2Ffilesystem%2Fassets%2Fimg%2Fredwoods%2F243150_842410286478_7945184_o.jpg
