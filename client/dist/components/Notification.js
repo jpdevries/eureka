@@ -19,6 +19,10 @@ var _Icon2 = _interopRequireDefault(_Icon);
 
 var _reactIntl = require('react-intl');
 
+var _mousetrap = require('mousetrap');
+
+var _mousetrap2 = _interopRequireDefault(_mousetrap);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -53,6 +57,22 @@ var Notification = exports.Notification = function (_Component) {
     key: 'componentDidMount',
     value: function componentDidMount() {
       this.slideInOut();
+      this.assignKeyboardListeners();
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      this.removeKeyboardListeners();
+    }
+  }, {
+    key: 'assignKeyboardListeners',
+    value: function assignKeyboardListeners() {
+      _mousetrap2.default.bind(['esc'], this.dismiss);
+    }
+  }, {
+    key: 'removeKeyboardListeners',
+    value: function removeKeyboardListeners() {
+      _mousetrap2.default.unbind(['esc'], this.dismiss);
     }
   }, {
     key: 'componentWillUpdate',

@@ -106,6 +106,11 @@ var MediaRow = function (_PureComponent) {
       return false;
     }
   }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.assignKeyboardListeners();
+    }
+  }, {
     key: 'assignKeyboardListeners',
     value: function assignKeyboardListeners() {
       _mousetrap2.default.bind(['backspace'], this.handleKeyboardBackspace);
@@ -199,11 +204,6 @@ var MediaRow = function (_PureComponent) {
         });*/
         _store2.default.dispatch(_actions2.default.notify(deletedItemMessage, _utility2.default.DANGEROUS));
       });
-    }
-  }, {
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      this.assignKeyboardListeners();
     }
 
     //http://localhost:3000/assets/components/eureka/media/sources/1?path=%2FUsers%2FjP%2FSites%2Fstatic%2Feureka%2Fprod%2Fsources%2Ffilesystem%2Fassets%2Fimg%2Fredwoods%2F243823_842410181688_1308368_o.jpg

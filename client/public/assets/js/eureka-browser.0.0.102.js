@@ -4119,7 +4119,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.101",
+		"version": "0.0.102",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -10626,6 +10626,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return false;
 	    }
 	  }, {
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.assignKeyboardListeners();
+	    }
+	  }, {
 	    key: 'assignKeyboardListeners',
 	    value: function assignKeyboardListeners() {
 	      _mousetrap2.default.bind(['backspace'], this.handleKeyboardBackspace);
@@ -10719,11 +10724,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        });*/
 	        _store2.default.dispatch(_actions2.default.notify(deletedItemMessage, _utility2.default.DANGEROUS));
 	      });
-	    }
-	  }, {
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      this.assignKeyboardListeners();
 	    }
 
 	    //http://localhost:3000/assets/components/eureka/media/sources/1?path=%2FUsers%2FjP%2FSites%2Fstatic%2Feureka%2Fprod%2Fsources%2Ffilesystem%2Fassets%2Fimg%2Fredwoods%2F243823_842410181688_1308368_o.jpg
@@ -16169,6 +16169,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _reactIntl = __webpack_require__(23);
 
+	var _mousetrap = __webpack_require__(61);
+
+	var _mousetrap2 = _interopRequireDefault(_mousetrap);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -16203,6 +16207,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      this.slideInOut();
+	      this.assignKeyboardListeners();
+	    }
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      this.removeKeyboardListeners();
+	    }
+	  }, {
+	    key: 'assignKeyboardListeners',
+	    value: function assignKeyboardListeners() {
+	      _mousetrap2.default.bind(['esc'], this.dismiss);
+	    }
+	  }, {
+	    key: 'removeKeyboardListeners',
+	    value: function removeKeyboardListeners() {
+	      _mousetrap2.default.unbind(['esc'], this.dismiss);
 	    }
 	  }, {
 	    key: 'componentWillUpdate',
