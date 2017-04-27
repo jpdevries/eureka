@@ -43,45 +43,6 @@ const RENAME_ITEM = 'rename_item';
 //Notification.propTypes = { initialCount: React.PropTypes.number };
 //Notification.defaultProps = { initialCount: 0 };
 
-/*
-class Notification extends Component {
-
-  constructor(props) {
-    super(props);
-    this.setState = {
-      hidden: false
-    };
-  }
-
-  componentDidMount() {
-    console.log('Notifcation did mount', this.state)
-    setTimeout((event) => {
-      console.log('do it', this.state);
-      this.setState({
-        hidden: true
-      })
-    }, 3000);
-  }
-
-  render() {
-    console.log('state', this.state);
-    const hidden = (() => {
-      try {
-        console.log(this.state);
-        return this.state.hidden
-      } catch (e) {
-        return true
-      }
-    })();
-    console.log('hidden', hidden);
-    return (
-      <div className="eureka__notification-wrapper" aria-live="polite" aria-hidden={hidden}>
-        <p aria-live="polite">Something happened</p>
-      </div>
-    );
-  }
-}
-*/
 
 class Eureka extends Component {
   /*static propTypes = {
@@ -95,7 +56,8 @@ class Eureka extends Component {
       modalOpen:false,
       currentModal:undefined,
       renamingItem:undefined,
-      notifications: []
+      notifications: [],
+      stickyNotifications: true
     };
 
     this.decoratedActions = props.decoratedActions ? Object.assign({}, actions, props.decoratedActions) : actions;
@@ -103,6 +65,23 @@ class Eureka extends Component {
 
   componentWillUnmount() {
     this.removeKeyboardListeners();
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    try {
+      //console.log('nextProps.notifications', nextProps.notifications);
+      const unarchivedNotifications = nextProps.notifications.filter((notification) => (
+        !notification.archived
+      ));
+      //console.log('unarchivedNotifications', unarchivedNotifications);
+      //console.log('nextProps.notifications[0].sticky', unarchivedNotifications[0].sticky);
+      //console.log('does it', this.state.stickyNotifications === unarchivedNotifications[0].sticky, this.state.stickyNotifications, unarchivedNotifications[0].sticky);
+      if(this.state.stickyNotifications === unarchivedNotifications[0].sticky) return;
+
+      this.setState({
+        stickyNotifications: unarchivedNotifications[0].sticky
+      })
+    } catch(e) { }
   }
 
   /*notificationsTick = () => {
@@ -116,7 +95,7 @@ class Eureka extends Component {
   }*/
 
   handleKeyboardFilter = (event) => {
-    console.log('handleKeyboardFilter', event);
+    //console.log('handleKeyboardFilter', event);
     const root = this.getEurekaRoot();
     try {
       root.querySelector('input[name="eureka__filter"]').focus();
@@ -346,9 +325,10 @@ class Eureka extends Component {
 
       if(props.config.alwaysWelcome || (props.config.welcome && localStorage.getItem(`${props.storagePrefix}welcome`) !== 'false')) {
         setTimeout(() => {
-          store.dispatch(actions.notify('Welcome to Eureka. You found it.', undefined, props.config.learnMore, 26000));
+          //message, notificationType, learnMore, dismissAfter, sticky = true
+          store.dispatch(actions.notify('Welcome to Eureka. You found it.', undefined, props.config.learnMore, false, false));
           localStorage.setItem(`${props.storagePrefix}welcome`, 'false');
-        }, 2400);
+        }, 420);
       }
 
     });
@@ -579,7 +559,9 @@ class Eureka extends Component {
       </form>
     ) : (
       <div role="widget" lang={props.lang || undefined} className={`eureka eureka__view-mode__${props.view.mode}${enlargeFocusedRows}${serverSideClass}`}>
-        <div className="eureka__sticky-bar" aria-live="polite" aria-atomic="true">{notification}</div>
+        <div className={classNames({
+          "eureka__sticky-bar": this.state.stickyNotifications
+        })} aria-live="polite" aria-atomic="true">{notification}</div>
         {formDiv}
         {pathBar}
         {chooseBar}

@@ -149,7 +149,7 @@ class EurekaTable extends Component {
     state = this.state,
     formatMessage = props.intl.formatMessage;
 
-    console.log('render EurekaTable');
+    //console.log('render EurekaTable');
 
     const decoratedActions = this.decoratedActions;
 

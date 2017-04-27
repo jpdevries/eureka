@@ -62,6 +62,10 @@ var Notification = exports.Notification = function (_Component) {
         this.setState({ hidden: true, dismissed: false });
         this.slideInOut();
       }
+      if (this.props.dismissAfter !== nextProps.dismissAfter) {
+        console.log('updating dismissAfter');
+        if (nextProps.dismissAfter) setTimeout(this.dismiss, this.props.dismissAfter);
+      }
     }
   }, {
     key: 'render',
@@ -102,6 +106,7 @@ var Notification = exports.Notification = function (_Component) {
             icon,
             '\u2002',
             props.message,
+            ' ',
             lb,
             learnMore
           ),
@@ -130,6 +135,7 @@ var _initialiseProps = function _initialiseProps() {
 
   this.dismiss = function () {
     var props = _this3.props;
+    //console.log('dismiss');
 
     _this3.setState({
       dismissed: true,

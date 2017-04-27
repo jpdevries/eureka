@@ -249,7 +249,8 @@ var deleteMediaItem = function deleteMediaItem(source, path) {
 
 var NOTIFICATION = 'notification';
 var notify = function notify(message, notificationType, learnMore, dismissAfter) {
-  var archived = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
+  var sticky = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : true;
+  var archived = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : false;
 
   return {
     type: NOTIFICATION,
@@ -258,7 +259,8 @@ var notify = function notify(message, notificationType, learnMore, dismissAfter)
     archived: archived,
     notificationType: notificationType,
     learnMore: learnMore,
-    dismissAfter: dismissAfter
+    dismissAfter: dismissAfter,
+    sticky: sticky
   };
 };
 

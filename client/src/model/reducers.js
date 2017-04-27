@@ -551,15 +551,22 @@ var notificationsReducer = function(state, action) {
 
   switch(action.type) {
     case actions.NOTIFICATION:
+    let newState = state;
     //console.log('NOTIFICATION!!!!', action);
-    return update(state, {$push: [{
-      message: action.message,
-      id: action.id,
-      archived: action.archived,
-      type: action.notificationType,
-      learnMore: action.learnMore,
-      dismissAfter: action.dismissAfter
-    }]});
+
+    try {
+      newState = update(state, {[0]: {$apply: (notification) => {
+        return update(notification,{ $merge:{ dismissAfter: undefined, archived: true } })
+      }} });
+    } catch (e) {
+
+    }
+
+    console.log('newState', newState);
+
+    return update(newState, {$push: [Object.assign({}, action, {
+      type: action.notificationType
+    })]});
     break;
 
     case actions.NOTIFICATION_DELETED:

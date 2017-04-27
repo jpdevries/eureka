@@ -30,14 +30,19 @@ export class Notification extends Component {
       this.setState({hidden: true, dismissed:false});
       this.slideInOut();
     }
+    if(this.props.dismissAfter !== nextProps.dismissAfter) {
+      console.log('updating dismissAfter');
+      if(nextProps.dismissAfter) setTimeout(this.dismiss, this.props.dismissAfter);
+    }
   }
 
   dismiss = () => {
     const props = this.props;
+    //console.log('dismiss');
 
     this.setState({
       dismissed: true,
-      hidden: true
+      hidden: true,
     });
     if(props.onDismiss) {
       setTimeout(() => {
@@ -72,7 +77,7 @@ export class Notification extends Component {
     return (
       <div className={className} aria-hidden={this.state.hidden}>
         <div className={notificationClass}>
-        <p>{icon}&ensp;{props.message}{lb}{learnMore}</p>
+        <p>{icon}&ensp;{props.message} {lb}{learnMore}</p>
         <button aria-hidden="true" aria-label="Dismiss Notification" onClick={(this.state.dismissed ? undefined : (event) => { // hiding because it isn't very necessary for screen readers given notifications auto-dismiss after ~3 seconds
           this.dismiss();
         })}>

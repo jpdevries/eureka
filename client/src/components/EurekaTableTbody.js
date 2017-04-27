@@ -101,7 +101,7 @@ class EurekaTableTbody extends PureComponent {
     const props = this.props,
     state = this.state;
 
-    console.log('render EurekaTableTbody');
+    //console.log('render EurekaTableTbody');
 
     function shouldHide(item) {
 

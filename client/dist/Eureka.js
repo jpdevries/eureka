@@ -126,45 +126,6 @@ var RENAME_ITEM = 'rename_item';
 //Notification.propTypes = { initialCount: React.PropTypes.number };
 //Notification.defaultProps = { initialCount: 0 };
 
-/*
-class Notification extends Component {
-
-  constructor(props) {
-    super(props);
-    this.setState = {
-      hidden: false
-    };
-  }
-
-  componentDidMount() {
-    console.log('Notifcation did mount', this.state)
-    setTimeout((event) => {
-      console.log('do it', this.state);
-      this.setState({
-        hidden: true
-      })
-    }, 3000);
-  }
-
-  render() {
-    console.log('state', this.state);
-    const hidden = (() => {
-      try {
-        console.log(this.state);
-        return this.state.hidden
-      } catch (e) {
-        return true
-      }
-    })();
-    console.log('hidden', hidden);
-    return (
-      <div className="eureka__notification-wrapper" aria-live="polite" aria-hidden={hidden}>
-        <p aria-live="polite">Something happened</p>
-      </div>
-    );
-  }
-}
-*/
 
 var Eureka = function (_Component) {
   _inherits(Eureka, _Component);
@@ -184,7 +145,8 @@ var Eureka = function (_Component) {
       modalOpen: false,
       currentModal: undefined,
       renamingItem: undefined,
-      notifications: []
+      notifications: [],
+      stickyNotifications: true
     };
 
     _this.decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
@@ -195,6 +157,24 @@ var Eureka = function (_Component) {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
       this.removeKeyboardListeners();
+    }
+  }, {
+    key: 'componentWillUpdate',
+    value: function componentWillUpdate(nextProps, nextState) {
+      try {
+        //console.log('nextProps.notifications', nextProps.notifications);
+        var unarchivedNotifications = nextProps.notifications.filter(function (notification) {
+          return !notification.archived;
+        });
+        //console.log('unarchivedNotifications', unarchivedNotifications);
+        //console.log('nextProps.notifications[0].sticky', unarchivedNotifications[0].sticky);
+        //console.log('does it', this.state.stickyNotifications === unarchivedNotifications[0].sticky, this.state.stickyNotifications, unarchivedNotifications[0].sticky);
+        if (this.state.stickyNotifications === unarchivedNotifications[0].sticky) return;
+
+        this.setState({
+          stickyNotifications: unarchivedNotifications[0].sticky
+        });
+      } catch (e) {}
     }
 
     /*notificationsTick = () => {
@@ -301,9 +281,10 @@ var Eureka = function (_Component) {
 
         if (props.config.alwaysWelcome || props.config.welcome && localStorage.getItem(props.storagePrefix + 'welcome') !== 'false') {
           setTimeout(function () {
-            _store2.default.dispatch(_actions2.default.notify('Welcome to Eureka. You found it.', undefined, props.config.learnMore, 26000));
+            //message, notificationType, learnMore, dismissAfter, sticky = true
+            _store2.default.dispatch(_actions2.default.notify('Welcome to Eureka. You found it.', undefined, props.config.learnMore, false, false));
             localStorage.setItem(props.storagePrefix + 'welcome', 'false');
-          }, 2400);
+          }, 420);
         }
       });
 
@@ -560,7 +541,9 @@ var Eureka = function (_Component) {
         { role: 'widget', lang: props.lang || undefined, className: 'eureka eureka__view-mode__' + props.view.mode + enlargeFocusedRows + serverSideClass },
         _react2.default.createElement(
           'div',
-          { className: 'eureka__sticky-bar', 'aria-live': 'polite', 'aria-atomic': 'true' },
+          { className: classNames({
+              "eureka__sticky-bar": this.state.stickyNotifications
+            }), 'aria-live': 'polite', 'aria-atomic': 'true' },
           notification
         ),
         formDiv,
@@ -578,7 +561,7 @@ var _initialiseProps = function _initialiseProps() {
   var _this6 = this;
 
   this.handleKeyboardFilter = function (event) {
-    console.log('handleKeyboardFilter', event);
+    //console.log('handleKeyboardFilter', event);
     var root = _this6.getEurekaRoot();
     try {
       root.querySelector('input[name="eureka__filter"]').focus();

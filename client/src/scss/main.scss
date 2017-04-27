@@ -248,6 +248,13 @@ a[role="presentation"] {
   background: var(--notification-background, #d9edf7);
   color: var(--notification-color, darken(#d9edf7, 40%));
   border: 1px solid var(--notification-border-color, var(--notification-color, darken(#d9edf7, 40%)));
+
+  @include media($gtMobile) {
+    br {
+      display: none;
+    }
+  }
+
   button {
     position: absolute;
     top: .25rem;

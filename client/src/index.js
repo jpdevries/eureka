@@ -36,6 +36,7 @@ function render() {
       allowRename={true}
       allowDelete={true}
       confirmBeforeDelete={true}
+      alwaysWelcome={true}
       allowFullscreen={true}
       enlargeFocusedRows={false}
       emphasisFocusedMediaItem={true}

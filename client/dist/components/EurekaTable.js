@@ -211,7 +211,7 @@ var EurekaTable = function (_Component) {
           state = this.state,
           formatMessage = props.intl.formatMessage;
 
-      console.log('render EurekaTable');
+      //console.log('render EurekaTable');
 
       var decoratedActions = this.decoratedActions;
 

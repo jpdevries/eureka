@@ -717,6 +717,9 @@ a[role="presentation"] {
   color: var(--notification-color, #309dd4);
   border: 1px solid #309dd4;
   border: 1px solid var(--notification-border-color, var(--notification-color, #309dd4)); }
+  @media screen and (min-width: 641px) {
+    .eureka-root .eureka__notification-wrapper > * br {
+      display: none; } }
   .eureka-root .eureka__notification-wrapper > * button {
     position: absolute;
     top: 4px;

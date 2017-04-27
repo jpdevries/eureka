@@ -256,7 +256,7 @@ const deleteMediaItem = (source, path, customHeaders = {}) => (
 
 
 const NOTIFICATION = 'notification';
-const notify = function(message, notificationType, learnMore, dismissAfter, archived = false) {
+const notify = function(message, notificationType, learnMore, dismissAfter, sticky = true, archived = false) {
   return {
     type: NOTIFICATION,
     message: message,
@@ -264,7 +264,8 @@ const notify = function(message, notificationType, learnMore, dismissAfter, arch
     archived: archived,
     notificationType: notificationType,
     learnMore: learnMore,
-    dismissAfter: dismissAfter
+    dismissAfter: dismissAfter,
+    sticky: sticky
   }
 }
 

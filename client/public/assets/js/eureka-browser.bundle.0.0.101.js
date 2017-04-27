@@ -24390,45 +24390,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	//Notification.propTypes = { initialCount: React.PropTypes.number };
 	//Notification.defaultProps = { initialCount: 0 };
 
-	/*
-	class Notification extends Component {
-
-	  constructor(props) {
-	    super(props);
-	    this.setState = {
-	      hidden: false
-	    };
-	  }
-
-	  componentDidMount() {
-	    console.log('Notifcation did mount', this.state)
-	    setTimeout((event) => {
-	      console.log('do it', this.state);
-	      this.setState({
-	        hidden: true
-	      })
-	    }, 3000);
-	  }
-
-	  render() {
-	    console.log('state', this.state);
-	    const hidden = (() => {
-	      try {
-	        console.log(this.state);
-	        return this.state.hidden
-	      } catch (e) {
-	        return true
-	      }
-	    })();
-	    console.log('hidden', hidden);
-	    return (
-	      <div className="eureka__notification-wrapper" aria-live="polite" aria-hidden={hidden}>
-	        <p aria-live="polite">Something happened</p>
-	      </div>
-	    );
-	  }
-	}
-	*/
 
 	var Eureka = function (_Component) {
 	  _inherits(Eureka, _Component);
@@ -24448,7 +24409,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      modalOpen: false,
 	      currentModal: undefined,
 	      renamingItem: undefined,
-	      notifications: []
+	      notifications: [],
+	      stickyNotifications: true
 	    };
 
 	    _this.decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
@@ -24459,6 +24421,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'componentWillUnmount',
 	    value: function componentWillUnmount() {
 	      this.removeKeyboardListeners();
+	    }
+	  }, {
+	    key: 'componentWillUpdate',
+	    value: function componentWillUpdate(nextProps, nextState) {
+	      try {
+	        //console.log('nextProps.notifications', nextProps.notifications);
+	        var unarchivedNotifications = nextProps.notifications.filter(function (notification) {
+	          return !notification.archived;
+	        });
+	        //console.log('unarchivedNotifications', unarchivedNotifications);
+	        //console.log('nextProps.notifications[0].sticky', unarchivedNotifications[0].sticky);
+	        //console.log('does it', this.state.stickyNotifications === unarchivedNotifications[0].sticky, this.state.stickyNotifications, unarchivedNotifications[0].sticky);
+	        if (this.state.stickyNotifications === unarchivedNotifications[0].sticky) return;
+
+	        this.setState({
+	          stickyNotifications: unarchivedNotifications[0].sticky
+	        });
+	      } catch (e) {}
 	    }
 
 	    /*notificationsTick = () => {
@@ -24565,9 +24545,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        if (props.config.alwaysWelcome || props.config.welcome && localStorage.getItem(props.storagePrefix + 'welcome') !== 'false') {
 	          setTimeout(function () {
-	            _store2.default.dispatch(_actions2.default.notify('Welcome to Eureka. You found it.', undefined, props.config.learnMore, 26000));
+	            //message, notificationType, learnMore, dismissAfter, sticky = true
+	            _store2.default.dispatch(_actions2.default.notify('Welcome to Eureka. You found it.', undefined, props.config.learnMore, false, false));
 	            localStorage.setItem(props.storagePrefix + 'welcome', 'false');
-	          }, 2400);
+	          }, 420);
 	        }
 	      });
 
@@ -24824,7 +24805,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        { role: 'widget', lang: props.lang || undefined, className: 'eureka eureka__view-mode__' + props.view.mode + enlargeFocusedRows + serverSideClass },
 	        _react2.default.createElement(
 	          'div',
-	          { className: 'eureka__sticky-bar', 'aria-live': 'polite', 'aria-atomic': 'true' },
+	          { className: classNames({
+	              "eureka__sticky-bar": this.state.stickyNotifications
+	            }), 'aria-live': 'polite', 'aria-atomic': 'true' },
 	          notification
 	        ),
 	        formDiv,
@@ -24842,7 +24825,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var _this6 = this;
 
 	  this.handleKeyboardFilter = function (event) {
-	    console.log('handleKeyboardFilter', event);
+	    //console.log('handleKeyboardFilter', event);
 	    var root = _this6.getEurekaRoot();
 	    try {
 	      root.querySelector('input[name="eureka__filter"]').focus();
@@ -25688,15 +25671,20 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  switch (action.type) {
 	    case actions.NOTIFICATION:
+	      var newState = state;
 	      //console.log('NOTIFICATION!!!!', action);
-	      return (0, _reactAddonsUpdate2.default)(state, { $push: [{
-	          message: action.message,
-	          id: action.id,
-	          archived: action.archived,
-	          type: action.notificationType,
-	          learnMore: action.learnMore,
-	          dismissAfter: action.dismissAfter
-	        }] });
+
+	      try {
+	        newState = (0, _reactAddonsUpdate2.default)(state, _defineProperty({}, 0, { $apply: function $apply(notification) {
+	            return (0, _reactAddonsUpdate2.default)(notification, { $merge: { dismissAfter: undefined, archived: true } });
+	          } }));
+	      } catch (e) {}
+
+	      console.log('newState', newState);
+
+	      return (0, _reactAddonsUpdate2.default)(newState, { $push: [Object.assign({}, action, {
+	          type: action.notificationType
+	        })] });
 	      break;
 
 	    case actions.NOTIFICATION_DELETED:
@@ -26588,7 +26576,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var NOTIFICATION = 'notification';
 	var notify = function notify(message, notificationType, learnMore, dismissAfter) {
-	  var archived = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
+	  var sticky = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : true;
+	  var archived = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : false;
 
 	  return {
 	    type: NOTIFICATION,
@@ -26597,7 +26586,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    archived: archived,
 	    notificationType: notificationType,
 	    learnMore: learnMore,
-	    dismissAfter: dismissAfter
+	    dismissAfter: dismissAfter,
+	    sticky: sticky
 	  };
 	};
 
@@ -33152,7 +33142,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          state = this.state,
 	          formatMessage = props.intl.formatMessage;
 
-	      console.log('render EurekaTable');
+	      //console.log('render EurekaTable');
 
 	      var decoratedActions = this.decoratedActions;
 
@@ -33530,7 +33520,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var props = this.props,
 	          state = this.state;
 
-	      console.log('render EurekaTableTbody');
+	      //console.log('render EurekaTableTbody');
 
 	      function shouldHide(item) {
 
@@ -37642,6 +37632,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.setState({ hidden: true, dismissed: false });
 	        this.slideInOut();
 	      }
+	      if (this.props.dismissAfter !== nextProps.dismissAfter) {
+	        console.log('updating dismissAfter');
+	        if (nextProps.dismissAfter) setTimeout(this.dismiss, this.props.dismissAfter);
+	      }
 	    }
 	  }, {
 	    key: 'render',
@@ -37682,6 +37676,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            icon,
 	            '\u2002',
 	            props.message,
+	            ' ',
 	            lb,
 	            learnMore
 	          ),
@@ -37710,6 +37705,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  this.dismiss = function () {
 	    var props = _this3.props;
+	    //console.log('dismiss');
 
 	    _this3.setState({
 	      dismissed: true,
