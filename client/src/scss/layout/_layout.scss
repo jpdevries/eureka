@@ -380,6 +380,15 @@
   }
 }
 
+.eureka-root .eureka > .eureka__choose-bar > * {
+  @include media($mobile) {
+    margin-right: .5rem;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
 .eureka-root {
   thead {
     flex-basis:auto;

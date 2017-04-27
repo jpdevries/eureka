@@ -347,6 +347,12 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
             flex: 0 0 auto;
         margin-top: .5rem; } }
 
+@media screen and (max-width: 640px) {
+  .eureka-root .eureka > .eureka__choose-bar > * {
+    margin-right: .5rem; }
+    .eureka-root .eureka > .eureka__choose-bar > *:last-child {
+      margin-right: 0; } }
+
 .eureka-root thead {
   -ms-flex-preferred-size: auto;
       flex-basis: auto;
@@ -764,6 +770,15 @@ a[role="presentation"] {
   &.eureka__view-mode__list {
 
   }*/
+  /*.eureka__tree-toggle {
+    //margin-bottom:1rem;
+    @include media($gtMobile) {
+      //margin-bottom:0;
+      button {
+        //@include button-reset;
+      }
+    }
+  }*/
   /*#eureka__tree-toggle__button {
     position:relative;
     svg {
@@ -1009,12 +1024,6 @@ a[role="presentation"] {
         font-size: 1.4em;
         line-height: 1.8;
         line-height: var(--tree-course-line-height, 1.8); } }
-  .eureka .eureka__tree-toggle {
-    margin-bottom: 16px;
-    margin-bottom: 1rem; }
-    @media screen and (min-width: 641px) {
-      .eureka .eureka__tree-toggle {
-        margin-bottom: 0; } }
   .eureka .eureka__context-buttons {
     -ms-flex-pack: distribute;
         justify-content: space-around;
@@ -1064,6 +1073,9 @@ a[role="presentation"] {
   .eureka .eureka__stage__filter-view {
     padding: 8px;
     padding: .5rem; }
+    @media screen and (max-width: 640px) {
+      .eureka .eureka__stage__filter-view {
+        padding-bottom: 0; } }
     .eureka .eureka__stage__filter-view .eureka__search-bar {
       line-height: 2;
       font-size: 16px;

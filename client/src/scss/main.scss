@@ -573,15 +573,15 @@ a[role="presentation"] {
 
 
 
-  .eureka__tree-toggle {
-    margin-bottom:1rem;
+  /*.eureka__tree-toggle {
+    //margin-bottom:1rem;
     @include media($gtMobile) {
-      margin-bottom:0;
+      //margin-bottom:0;
       button {
         //@include button-reset;
       }
     }
-  }
+  }*/
 
   .eureka__context-buttons {
     @extend %bordered;
@@ -648,6 +648,9 @@ a[role="presentation"] {
   .eureka__stage__filter-view {
     //@extend %padded;
     padding:.5rem;
+    @include media($mobile) {
+      padding-bottom: 0;
+    }
     .eureka__search-bar {
       line-height:2;
       @include media($gtMobile) {
