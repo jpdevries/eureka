@@ -173,7 +173,8 @@ class MediaRow extends PureComponent {
     let media = (function(ext){ // consider abstracting this to its own module
       //console.log(pathParse(props.item.filename).ext,'props.item',props.item);
 
-      const src = props.item.absolutePreviewURL || props.item.absoluteURL;
+      const src = props.item.absolutePreviewURL || props.item.absoluteURL,
+      alt = props.item.alt || '';
 
       switch(ext.toLowerCase()) {
         case '.jpg':
@@ -185,7 +186,7 @@ class MediaRow extends PureComponent {
         case '.svg':
         case '.bmp':
         case '.tiff':
-        return (<img src={src}  alt="" />);
+        return (<img src={src}  alt={alt} />);
         break;
 
         case '.mp4':
