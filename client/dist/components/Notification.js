@@ -37,9 +37,9 @@ var Notification = exports.Notification = function (_Component) {
   function Notification(props) {
     _classCallCheck(this, Notification);
 
-    console.log('Notification created!!!', props);
-
     var _this = _possibleConstructorReturn(this, (Notification.__proto__ || Object.getPrototypeOf(Notification)).call(this, props));
+    //console.log('Notification created!!!', props);
+
 
     _initialiseProps.call(_this);
 
@@ -83,7 +83,7 @@ var Notification = exports.Notification = function (_Component) {
         this.slideInOut();
       }
       if (this.props.dismissAfter !== nextProps.dismissAfter) {
-        console.log('updating dismissAfter');
+        //console.log('updating dismissAfter');
         if (nextProps.dismissAfter) setTimeout(this.dismiss, this.props.dismissAfter);
       }
     }
