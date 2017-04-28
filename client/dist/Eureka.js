@@ -239,7 +239,11 @@ var Eureka = function (_Component) {
       var _this2 = this;
 
       var props = this.props,
-          decoratedActions = this.decoratedActions;
+          decoratedActions = this.decoratedActions,
+          _props$intl = props.intl,
+          formatMessage = _props$intl.formatMessage,
+          formatPlural = _props$intl.formatPlural;
+
 
       this.assignKeyboardListeners();
 
@@ -280,11 +284,14 @@ var Eureka = function (_Component) {
         });
 
         if (props.config.alwaysWelcome || props.config.welcome && localStorage.getItem(props.storagePrefix + 'welcome') !== 'false') {
-          setTimeout(function () {
-            //message, notificationType, learnMore, dismissAfter, sticky = true
-            _store2.default.dispatch(_actions2.default.notify('Welcome to Eureka. You found it.', undefined, props.config.learnMore, false, false));
-            localStorage.setItem(props.storagePrefix + 'welcome', 'false');
-          }, 420);
+          (function () {
+            var wecomeToEurekaMessage = formatMessage(_definedMessages2.default.welcomeToEureka);
+            setTimeout(function () {
+              //message, notificationType, learnMore, dismissAfter, sticky = true
+              _store2.default.dispatch(_actions2.default.notify(wecomeToEurekaMessage, undefined, props.config.learnMore, false, false));
+              localStorage.setItem(props.storagePrefix + 'welcome', 'false');
+            }, 420);
+          })();
         }
       });
 
@@ -399,9 +406,9 @@ var Eureka = function (_Component) {
       var props = this.props,
           state = this.state,
           modalOpen = false,
-          _props$intl = this.props.intl,
-          formatMessage = _props$intl.formatMessage,
-          formatDate = _props$intl.formatDate,
+          _props$intl2 = this.props.intl,
+          formatMessage = _props$intl2.formatMessage,
+          formatDate = _props$intl2.formatDate,
           createDirectoryMessage = formatMessage(_definedMessages2.default.directory),
           renameItemMessage = formatMessage(_definedMessages2.default.rename, {
         item: state.renamingItem ? ' ' + state.renamingItem.filename : ''

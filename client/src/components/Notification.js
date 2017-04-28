@@ -9,7 +9,7 @@ import Mousetrap from 'mousetrap';
 
 export class Notification extends Component {
   constructor(props) {
-    console.log('Notification created!!!', props);
+    //console.log('Notification created!!!', props);
     super(props);
     this.state = {hidden: true, dismissed:false};
   }
@@ -46,7 +46,7 @@ export class Notification extends Component {
       this.slideInOut();
     }
     if(this.props.dismissAfter !== nextProps.dismissAfter) {
-      console.log('updating dismissAfter');
+      //console.log('updating dismissAfter');
       if(nextProps.dismissAfter) setTimeout(this.dismiss, this.props.dismissAfter);
     }
   }

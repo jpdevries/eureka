@@ -138,8 +138,9 @@ var EurekaTableTbody = function (_PureComponent) {
     key: 'shouldComponentUpdate',
     value: function shouldComponentUpdate(nextProps, nextState) {
       //return true;
-      //console.log('EurekaTableTbody shouldComponentUpdate');
+      console.log(this.props, this.state);
       if (nextProps.view.filter || !nextProps.view.filter && this.props.view.filter) return true;
+      if (nextProps.view.sort !== this.props.view.sort) return true;
       try {
         //console.log('shouldComponentUpdate', (this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path), this.state.focusedMediaItem.path, nextProps.view.focusedMediaItem.path);
         //if((this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path)) return true; // #janky SLOOOOW

@@ -561,8 +561,11 @@ a[role="presentation"] {
   }
 
   .eureka__tree {
-    margin-bottom:.5rem;
+    margin-bottom:1rem;
     line-height: var(--tree-line-height, 1.6);
+    @include media($gtMobile) {
+      margin-bottom:.5rem;
+    }
     @media (pointer: coarse) { // make the tree for fat finger friendly
       font-size:1.4em;
       line-height: var(--tree-course-line-height, 1.8);
@@ -710,6 +713,9 @@ a[role="presentation"] {
       }
     }
     margin:.5rem 0 0 0;
+    @include media($mobile) {
+      margin-top: 1rem;
+    }
     button, .button {
       font-size:1rem;
       flex:1 0 auto;

@@ -43,6 +43,10 @@ exports.default = (0, _reactIntl.defineMessages)((_defineMessages = {
     'id': 'rename',
     'defaultMessage': 'Rename'
   },
+  welcomeToEureka: {
+    'id': 'welcomeToEureka',
+    'defaultMessage': 'Welcome to Eureka. You found it.'
+  },
   delete: {
     'id': 'delete',
     'defaultMessage': 'Delete'

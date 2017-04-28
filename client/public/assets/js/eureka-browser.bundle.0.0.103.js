@@ -24503,7 +24503,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var _this2 = this;
 
 	      var props = this.props,
-	          decoratedActions = this.decoratedActions;
+	          decoratedActions = this.decoratedActions,
+	          _props$intl = props.intl,
+	          formatMessage = _props$intl.formatMessage,
+	          formatPlural = _props$intl.formatPlural;
+
 
 	      this.assignKeyboardListeners();
 
@@ -24544,11 +24548,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        });
 
 	        if (props.config.alwaysWelcome || props.config.welcome && localStorage.getItem(props.storagePrefix + 'welcome') !== 'false') {
-	          setTimeout(function () {
-	            //message, notificationType, learnMore, dismissAfter, sticky = true
-	            _store2.default.dispatch(_actions2.default.notify('Welcome to Eureka. You found it.', undefined, props.config.learnMore, false, false));
-	            localStorage.setItem(props.storagePrefix + 'welcome', 'false');
-	          }, 420);
+	          (function () {
+	            var wecomeToEurekaMessage = formatMessage(_definedMessages2.default.welcomeToEureka);
+	            setTimeout(function () {
+	              //message, notificationType, learnMore, dismissAfter, sticky = true
+	              _store2.default.dispatch(_actions2.default.notify(wecomeToEurekaMessage, undefined, props.config.learnMore, false, false));
+	              localStorage.setItem(props.storagePrefix + 'welcome', 'false');
+	            }, 420);
+	          })();
 	        }
 	      });
 
@@ -24663,9 +24670,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var props = this.props,
 	          state = this.state,
 	          modalOpen = false,
-	          _props$intl = this.props.intl,
-	          formatMessage = _props$intl.formatMessage,
-	          formatDate = _props$intl.formatDate,
+	          _props$intl2 = this.props.intl,
+	          formatMessage = _props$intl2.formatMessage,
+	          formatDate = _props$intl2.formatDate,
 	          createDirectoryMessage = formatMessage(_definedMessages2.default.directory),
 	          renameItemMessage = formatMessage(_definedMessages2.default.rename, {
 	        item: state.renamingItem ? ' ' + state.renamingItem.filename : ''
@@ -32104,6 +32111,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    'id': 'rename',
 	    'defaultMessage': 'Rename'
 	  },
+	  welcomeToEureka: {
+	    'id': 'welcomeToEureka',
+	    'defaultMessage': 'Welcome to Eureka. You found it.'
+	  },
 	  delete: {
 	    'id': 'delete',
 	    'defaultMessage': 'Delete'
@@ -33502,8 +33513,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'shouldComponentUpdate',
 	    value: function shouldComponentUpdate(nextProps, nextState) {
 	      //return true;
-	      //console.log('EurekaTableTbody shouldComponentUpdate');
+	      console.log(this.props, this.state);
 	      if (nextProps.view.filter || !nextProps.view.filter && this.props.view.filter) return true;
+	      if (nextProps.view.sort !== this.props.view.sort) return true;
 	      try {
 	        //console.log('shouldComponentUpdate', (this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path), this.state.focusedMediaItem.path, nextProps.view.focusedMediaItem.path);
 	        //if((this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path)) return true; // #janky SLOOOOW
@@ -37607,9 +37619,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Notification(props) {
 	    _classCallCheck(this, Notification);
 
-	    console.log('Notification created!!!', props);
-
 	    var _this = _possibleConstructorReturn(this, (Notification.__proto__ || Object.getPrototypeOf(Notification)).call(this, props));
+	    //console.log('Notification created!!!', props);
+
 
 	    _initialiseProps.call(_this);
 
@@ -37653,7 +37665,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.slideInOut();
 	      }
 	      if (this.props.dismissAfter !== nextProps.dismissAfter) {
-	        console.log('updating dismissAfter');
+	        //console.log('updating dismissAfter');
 	        if (nextProps.dismissAfter) setTimeout(this.dismiss, this.props.dismissAfter);
 	      }
 	    }
@@ -37824,6 +37836,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		"close": "Close",
 		"open": "Open",
 		"rename": "Rename",
+		"welcomeToEureka": "Welcome to Eureka. You found it.",
 		"delete": "Delete",
 		"in": "in",
 		"file.create": "Create File",

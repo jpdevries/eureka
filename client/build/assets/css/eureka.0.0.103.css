@@ -1015,10 +1015,13 @@ a[role="presentation"] {
     .eureka .eureka__button-bar > * {
       margin-right: 0; } }
   .eureka .eureka__tree {
-    margin-bottom: 8px;
-    margin-bottom: .5rem;
+    margin-bottom: 16px;
+    margin-bottom: 1rem;
     line-height: 1.6;
     line-height: var(--tree-line-height, 1.6); }
+    @media screen and (min-width: 641px) {
+      .eureka .eureka__tree {
+        margin-bottom: .5rem; } }
     @media (pointer: coarse) {
       .eureka .eureka__tree {
         font-size: 1.4em;
@@ -1131,6 +1134,9 @@ a[role="presentation"] {
       margin: 0 .5rem 0 0; }
       .eureka .eureka__tree-bar > *:last-child {
         margin-right: 0; }
+    @media screen and (max-width: 640px) {
+      .eureka .eureka__tree-bar {
+        margin-top: 1rem; } }
     .eureka .eureka__tree-bar button, .eureka .eureka__tree-bar .button {
       font-size: 16px;
       font-size: 1rem;

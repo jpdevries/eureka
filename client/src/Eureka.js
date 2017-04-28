@@ -286,7 +286,8 @@ class Eureka extends Component {
 
   componentDidMount() {
     const props = this.props,
-    decoratedActions = this.decoratedActions;
+    decoratedActions = this.decoratedActions,
+    { formatMessage, formatPlural } = props.intl;
 
     this.assignKeyboardListeners();
 
@@ -323,10 +324,13 @@ class Eureka extends Component {
         }
       });
 
+
+
       if(props.config.alwaysWelcome || (props.config.welcome && localStorage.getItem(`${props.storagePrefix}welcome`) !== 'false')) {
+        const wecomeToEurekaMessage = formatMessage(definedMessages.welcomeToEureka);
         setTimeout(() => {
           //message, notificationType, learnMore, dismissAfter, sticky = true
-          store.dispatch(actions.notify('Welcome to Eureka. You found it.', undefined, props.config.learnMore, false, false));
+          store.dispatch(actions.notify(wecomeToEurekaMessage, undefined, props.config.learnMore, false, false));
           localStorage.setItem(`${props.storagePrefix}welcome`, 'false');
         }, 420);
       }
