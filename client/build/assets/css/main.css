@@ -213,6 +213,9 @@ http://www.phase2technology.com/blog/exploring-maps-in-sass-3-3/
       .eureka-root .eureka.eureka__view-mode__list table > tbody > tr {
         grid-template-areas: "media name dimensions file-size edited-on" "actions actions actions actions actions"; } }
 
+.eureka-root .eureka__table img, .eureka-root .eureka__table embed, .eureka-root .eureka__table object, .eureka-root .eureka__table video {
+  object-fit: contain; }
+
 @media screen and (min-width: 641px) {
   .eureka-root {
     /*display:grid;

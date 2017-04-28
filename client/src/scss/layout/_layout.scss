@@ -271,6 +271,13 @@
 }
 
 .eureka-root {
+
+  .eureka__table {
+    img, embed, object, video, {
+      object-fit: contain;
+    }
+  }
+
   @include media($gtMobile) {
     /*display:grid;
     grid-gap:0;
