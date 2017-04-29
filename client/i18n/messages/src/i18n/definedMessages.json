@@ -168,6 +168,14 @@
     "defaultMessage": "a media item"
   },
   {
+    "id": "pluralChoose",
+    "defaultMessage": "item"
+  },
+  {
+    "id": "copyListofSelectedFiles",
+    "defaultMessage": "Copy list of selected files"
+  },
+  {
     "id": "media.sourceTree",
     "defaultMessage": "Media Source Panel"
   },

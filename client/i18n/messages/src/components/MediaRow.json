@@ -10,9 +10,5 @@
   {
     "id": "select",
     "defaultMessage": "Select"
-  },
-  {
-    "id": "media.contents",
-    "defaultMessage": "Media Contents"
   }
 ]

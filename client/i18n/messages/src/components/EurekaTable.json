@@ -1,5 +1,9 @@
 [
   {
+    "id": "choose",
+    "defaultMessage": "Choose"
+  },
+  {
     "id": "media",
     "defaultMessage": "Media"
   },

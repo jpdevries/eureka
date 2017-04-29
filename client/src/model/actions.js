@@ -26,11 +26,46 @@ const updateView = function(view) {
   }
 }
 
+const DESELECT_ALL = 'deselect_all';
+const deselectAll = function() {
+  return {
+    type:DESELECT_ALL
+  }
+}
+
+
+
+const INVERT_SELECTION = 'invert_selection';
+const invertSelection = function() {
+  return {
+    type: INVERT_SELECTION
+  }
+}
+
 const UPDATE_SOURCE = 'update_source';
 const updateSource = function(source) {
   return {
     type:UPDATE_SOURCE,
     source:source,
+  }
+}
+
+
+const ADD_MEDIA_ITEM_TO_CHOSEN_ITEMS = 'add_media_item_to_chosen_items';
+const addMediaItemToChosenItems = function(item, inverted = false) {
+  return {
+    type: ADD_MEDIA_ITEM_TO_CHOSEN_ITEMS,
+    item: item,
+    inverted: inverted
+  }
+}
+
+const REMOVE_MEDIA_ITEM_FROM_CHOSEN_ITEMS = 'remove_media_item_from_chosen_items';
+const removeMediaItemFromChosenItems = function(item, inverted = false) {
+  return {
+    type: REMOVE_MEDIA_ITEM_FROM_CHOSEN_ITEMS,
+    item: item,
+    inverted: inverted
   }
 }
 
@@ -253,6 +288,112 @@ const deleteMediaItem = (source, path, customHeaders = {}) => (
     ))
   )
 );
+
+
+
+
+const DELETE_MEDIA_ITEMS_SUCCESS = 'delete_media_items_success';
+const deleteMediaItemsSuccess = function(contents, formData) {
+  //console.log('DELETE_MEDIA_ITEM_SUCCESS', source, path);
+  return {
+    type:DELETE_MEDIA_ITEMS_SUCCESS,
+    contents: contents,
+    formData: formData
+  }
+}
+
+exports.DELETE_MEDIA_ITEMS_SUCCESS = DELETE_MEDIA_ITEMS_SUCCESS;
+exports.deleteMediaItemsSuccess = deleteMediaItemsSuccess;
+
+
+
+const DELETE_MEDIA_ITEMS_ERROR = 'delete_media_items_error';
+const deleteMediaItemsError = function(source, path) {
+  //console.log('DELETE_MEDIA_ITEM_SUCCESS', source, path);
+  return {
+    type:DELETE_MEDIA_ITEMS_ERROR,
+    source: source,
+    path: path
+  }
+}
+
+exports.DELETE_MEDIA_ITEMS_ERROR = DELETE_MEDIA_ITEMS_ERROR;
+exports.deleteMediaItemsError = deleteMediaItemsError;
+
+
+const deleteMediaItems = (source, formData, customHeaders = {}) => {
+  console.log('deleteMediaItems');
+  for(var pair of formData.entries()) {
+     console.log(pair[0]+ ', '+ pair[1]);
+  }
+  return (dispatch) => (
+    fetch(`/assets/components/eureka/media/sources/${source}`, {
+      method: 'DELETE',
+      body: formData,
+      headers: Object.assign({}, {
+        'Accept': 'application/json',
+        //'Content-Type': 'multipart/form-data'
+      }, customHeaders)
+    }).then((response) => {
+      if(response.state < 200 || response.state >= 300) {
+        var error = new Error(response.statusText)
+        error.response = response
+        throw error;
+      }
+      return response;
+    }).then((response) => (
+      response.json()
+    )).then((contents) => {
+      //if(contents === false) throw new Error(`Unable to delete directory ${path}`)
+      return contents;
+    }).then((contents) => (
+      dispatch(
+        deleteMediaItemsSuccess(contents, formData)
+      )
+    )).catch((error) => (
+      dispatch(
+        deleteMediaItemsError(error)
+      )
+    ))
+  )
+}
+
+//http://localhost:3001/assets/components/eureka/media/sources/0
+
+/*const deleteMediaItems = (source, formData, customHeaders = {}) => (
+  (dispatch) => (
+    fetch(`/assets/components/eureka/media/sources/${source}`), {
+      method: 'DELETE',
+      body: formData,
+      headers: Object.assign({}, {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }, customHeaders)
+    }).then((response) => {
+      if(response.state < 200 || response.state >= 300) {
+        var error = new Error(response.statusText)
+        error.response = response
+        throw error;
+      }
+      return response;
+    }).then((response) => (
+      response.json()
+    )).then((contents) => {
+      if(contents === false) throw new Error(`Unable to delete items`)
+      return contents;
+    }).then((contents) => (
+      dispatch(
+        deleteMediaItemsSuccess(source, formData)
+      )
+    )).catch((error) => (
+      dispatch(
+        deleteMediaItemError(error)
+      )
+    )
+  )
+);*/
+
+exports.deleteMediaItems = deleteMediaItems;
 
 
 const NOTIFICATION = 'notification';
@@ -613,3 +754,15 @@ exports.RENAME_ITEM_ERROR = RENAME_ITEM_ERROR;
 exports.renameItemError = renameItemError;
 
 exports.renameItem = renameItem;
+
+exports.addMediaItemToChosenItems = addMediaItemToChosenItems;
+exports.ADD_MEDIA_ITEM_TO_CHOSEN_ITEMS = ADD_MEDIA_ITEM_TO_CHOSEN_ITEMS;
+
+exports.removeMediaItemFromChosenItems = removeMediaItemFromChosenItems;
+exports.REMOVE_MEDIA_ITEM_FROM_CHOSEN_ITEMS = REMOVE_MEDIA_ITEM_FROM_CHOSEN_ITEMS;
+
+exports.invertSelection = invertSelection;
+exports.INVERT_SELECTION = INVERT_SELECTION;
+
+exports.deselectAll = deselectAll;
+exports.DESELECT_ALL = DESELECT_ALL;

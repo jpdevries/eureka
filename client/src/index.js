@@ -45,6 +45,7 @@ function render() {
       callbacks={{
         choose: function(item) {
           alert(JSON.stringify(item))
+          console.log(item);
         }
       }}
       handlers={{
@@ -65,7 +66,8 @@ function render() {
         foo: 'bar'
       }}
       intervals={{
-        searchBarPlaceholder: 60000
+        searchBarPlaceholder: 60000,
+        fetchDirectoryContents: false
       }}
     />,
     document.getElementById('root')

@@ -9,6 +9,8 @@ compression = require('compression'),
 minifyHTML = require('express-minify-html'),
 isProd = (process.env.NODE_ENV == 'production') ? true : false;
 
+const multiparty = require('multiparty');
+
 import React from 'react';
 import ReactDOM from 'react-dom/server';
 
@@ -523,28 +525,84 @@ app.post('/assets/components/eureka/media/sources/:source', (req, res) => {
 });
 
 /*
+Delete multiple files
+`DELETE /sources/:id/?dir=foo`
+*/
+
+/*
 Delete a directory
 `DELETE /sources/:id/?dir=foo`
 */
 
 app.delete('/assets/components/eureka/media/sources/:source', (req, res) => {
-  const path = req.query.path,
-  source = req.params.source;
+  const source = req.params.source;
 
-  // this is kinda #janky but whatever
-  let deletePath = path.includes(__dirname) ? path :  path.join(path.join(__dirname, 'sources/filesystem'), path);
+  const dir = req.query.dir
+  if(dir) {
 
-  console.log(`delete ${path} source ${source}`);
+    // this is kinda #janky but whatever
+    let deletePath = dir.includes(__dirname) ? dir :  path.join(path.join(__dirname, 'sources/filesystem'), dir);
 
-  rmdir(deletePath, function (err, dirs, files) {
-    if(err) {
-      console.log(err);
-      res.json(false);
-    }
-    else res.json(true);
-  });
+    console.log(`delete ${path} source ${source}`);
+
+    rmdir(deletePath, function (err, dirs, files) {
+      if(err) {
+        console.log(err);
+        res.json(false);
+      }
+      else res.json(true);
+    });
+  } else {
+    console.log('deleting files not the whole folder');
+
+    const form = new multiparty.Form(); // formidable doesn't support multiple input names https://github.com/felixge/node-formidable/issues/33
+    //form.multiples = true;
+
+    form.parse(req, function(err, fields, files) {
+      if(err) {
+        console.log(err);
+        res.json(err);
+        return;
+      }
+      console.log('fields', fields);
+      const dir = Array.isArray(fields.cd) ? fields.cd[0] : fields[cd];
+      console.log(dir);
+      let deletePath = dir.includes(__dirname) ? dir :  path.join(path.join(__dirname, 'sources/filesystem'), dir);
+      //console.log('fields', fields);
+      //console.log(req.body, JSON.stringify(req.body));
+      const promises = fields['delete_file[]'].map((file) => (
+        deleteDirectory(path.join(deletePath, file))
+      ));
 
 
+      Promise.all(promises).then(() => {
+        console.log('deleted files');
+        getDirectoryListing(`${__dirname}/sources/filesystem/`, dir, true, true).then((results) => (
+          res.json(results)
+        )).catch((err) => {
+          res.json(err);
+        });
+      }).catch((err) => {
+        res.json(err);
+      });
+
+
+
+      function deleteDirectory(directory) {
+        console.log('promising to delete', directory);
+        return new Promise((resolve, reject) => {
+          rmdir(directory, function (err, dirs, files) {
+            console.log(`deleted ${directory}`);
+            if(err) {
+              reject(err);
+            } else resolve(directory);
+            console.log('directory', directory);
+          });
+        });
+      }
+    });
+
+  }
 
   /*try {
     fs.unlinkSync(deletePath);

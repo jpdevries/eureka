@@ -59,6 +59,7 @@ function render() {
   }, _defineProperty(_React$createElement, 'lang', 'en-US'), _defineProperty(_React$createElement, 'callbacks', {
     choose: function choose(item) {
       alert(JSON.stringify(item));
+      console.log(item);
     }
   }), _defineProperty(_React$createElement, 'handlers', {
     createFile: function createFile(source, directory) {
@@ -75,6 +76,7 @@ function render() {
   }), _defineProperty(_React$createElement, 'headers', {
     foo: 'bar'
   }), _defineProperty(_React$createElement, 'intervals', {
-    searchBarPlaceholder: 60000
+    searchBarPlaceholder: 60000,
+    fetchDirectoryContents: false
   }), _React$createElement)), document.getElementById('root'));
 }

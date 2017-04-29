@@ -176,6 +176,19 @@ export default defineMessages({
     one: 'a media item',
     other: 'media items'
   },
+  pluralChoose: {
+    id: 'pluralChoose',
+    defaultMessage: 'item',
+    one: 'item',
+    other: 'items',
+    few: 'items',
+    many: 'items',
+    zero: ''
+  },
+  copyListofSelectedFiles: {
+    id: 'copyListofSelectedFiles',
+    defaultMessage: 'Copy list of selected files'
+  },
   mediaSourceTreeMessage: {
     id: 'media.sourceTree',
     defaultMessage: 'Media Source Panel'

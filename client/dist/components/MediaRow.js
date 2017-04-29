@@ -83,7 +83,8 @@ var MediaRow = function (_PureComponent) {
     var _this = _possibleConstructorReturn(this, (MediaRow.__proto__ || Object.getPrototypeOf(MediaRow)).call(this, props));
 
     _this.state = {
-      focusWithin: false
+      focusWithin: false,
+      chooseChecked: false
     };
 
     _this.handleKeyboardBackspace = _this.handleKeyboardBackspace.bind(_this);
@@ -94,10 +95,41 @@ var MediaRow = function (_PureComponent) {
   }
 
   _createClass(MediaRow, [{
+    key: 'componentWillUpdate',
+    value: function componentWillUpdate(nextProps, nextState) {
+      //return;
+      //console.log('MediaRow componentWillUpdate');
+      if (this.props.view.selectionInverted !== nextProps.view.selectionInverted) {
+        this.setState({
+          chooseChecked: !this.state.chooseChecked
+        });
+        return;
+      }
+
+      //const c = (nextProps.view.sele)
+      if (nextProps.view.selectionInverted) {
+        if (this.props.content.chosenMediaItemsInverted.length > 1 && nextProps.content.chosenMediaItemsInverted.length < 1) {
+          this.setState({
+            chooseChecked: false
+          });
+        }
+      } else {
+        if (this.props.content.chosenMediaItems.length > 1 && nextProps.content.chosenMediaItems.length < 1) {
+          this.setState({
+            chooseChecked: false
+          });
+        }
+      }
+    }
+  }, {
     key: 'shouldComponentUpdate',
     value: function shouldComponentUpdate(nextProps, nextState) {
-      //console.log('MediaRow shouldComponentUpdate', this.props, nextProps);
+      //console.log('MediaRow shouldComponentUpdate', this.props, nextProps, this.state, nextState);
+      //return true;
+
       if (this.props.item !== nextProps.item) return true;
+      if (this.state.chooseChecked !== nextState.chooseChecked) return true;
+      if (this.props.content.chosenMediaItems.length !== nextProps.content.chosenMediaItems.length || this.props.content.chosenMediaItemsInverted.length !== nextProps.content.chosenMediaItemsInverted.length) return true;
       try {
         //console.log((nextProps.focusedMediaItem !== undefined));
         return nextProps.focusedMediaItem !== undefined;
@@ -109,7 +141,26 @@ var MediaRow = function (_PureComponent) {
     key: 'componentDidMount',
     value: function componentDidMount() {
       this.assignKeyboardListeners();
+      //Mousetrap(document.querySelector('.eureka')).bind(['alt+z'], this.handleKeyboardDeselect);
+
+      /*store.subscribe(() => {
+        const state = store.getState();
+        //console.log(state);
+         if(!state.content.chosenMediaItemsInverted.length) {
+          this.setState({
+            chooseChecked: false
+          })
+        }
+       });*/
     }
+
+    /*handleKeyboardDeselect = (event) => {
+      console.log('handleKeyboardDeselect');
+      this.setState({
+        chooseChecked: false
+      })
+    }*/
+
   }, {
     key: 'assignKeyboardListeners',
     value: function assignKeyboardListeners() {
@@ -128,6 +179,7 @@ var MediaRow = function (_PureComponent) {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
       this.removeKeyboardListeners();
+      //Mousetrap(document.querySelector('.eureka')).unbind(['alt+z'], this.handleKeyboardDeselect);
     }
   }, {
     key: 'removeKeyboardListeners',
@@ -216,7 +268,9 @@ var MediaRow = function (_PureComponent) {
   }, {
     key: 'render',
     value: function render() {
-      var _React$createElement, _React$createElement2;
+      var _this2 = this,
+          _React$createElement,
+          _React$createElement2;
 
       var props = this.props,
           item = props.item,
@@ -236,6 +290,11 @@ var MediaRow = function (_PureComponent) {
       }
 
       var contentEditable = false;
+      var checkboxId = 'eureka__choose_multiple_' + _utility2.default.cssSafe(props.item.filename);
+      var onMediaClick = props.view.chooseMultiple ? function (event) {
+        // #janky way to simulate <label>, <label> messes up styling for the default view
+        event.target.closest('.eureka').querySelector('#' + checkboxId).click();
+      } : undefined;
 
       var media = function (ext) {
         // consider abstracting this to its own module
@@ -254,7 +313,7 @@ var MediaRow = function (_PureComponent) {
           case '.svg':
           case '.bmp':
           case '.tiff':
-            return _react2.default.createElement('img', { src: src, alt: alt });
+            return _react2.default.createElement('img', { src: src, alt: alt, onClick: onMediaClick });
             break;
 
           case '.mp4':
@@ -330,7 +389,7 @@ var MediaRow = function (_PureComponent) {
             var icon = _utility2.default.getIconByExtension(pathParse(props.item.filename).ext);
             return _react2.default.createElement(
               'p',
-              null,
+              { onClick: onMediaClick },
               _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: icon })),
               '\u2002',
               props.item.absoluteURL
@@ -378,6 +437,33 @@ var MediaRow = function (_PureComponent) {
         }
       }(ext);
 
+      //console.log('this.state.chooseChecked', this.state.chooseChecked);
+      var checkboxAriaLabel = formatMessage(_definedMessages2.default.chooseItem, {
+        filename: item.filename
+      });
+
+      var checkbox = props.view.chooseMultiple ? _react2.default.createElement(
+        'td',
+        { className: 'eureka__choose' },
+        _react2.default.createElement('input', { 'aria-label': 'Choose ' + item.filename, type: 'checkbox', name: 'eureka__chose_multiple', id: checkboxId, key: 'eureka__choose_multiple_' + _utility2.default.cssSafe(props.item.filename) + '__' + (this.state.chooseChecked ? 'checked' : ''), checked: this.state.chooseChecked, onChange: function onChange(event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            //console.log('event.target.checked', event.target.checked);
+
+            _this2.setState({
+              chooseChecked: event.target.checked
+            });
+
+            if (props.view.selectionInverted ? !event.target.checked : event.target.checked) {
+              _store2.default.dispatch(_actions2.default.addMediaItemToChosenItems(props.item, props.view.selectionInverted));
+            } else {
+              _store2.default.dispatch(_actions2.default.removeMediaItemFromChosenItems(props.item, props.view.selectionInverted));
+            }
+            //console.log('event.target.checked', event.target.checked);
+          } })
+      ) : undefined;
+
       var openInANewTabMessage = formatMessage(_definedMessages2.default.openFileInNewTab, {
         filename: props.item.fileName
       });
@@ -389,6 +475,10 @@ var MediaRow = function (_PureComponent) {
           { href: props.item.absoluteURL, target: '_' + mediaSelectId, 'aria-label': openInANewTabMessage, role: 'presentation' },
           media
         );
+      }
+
+      if (props.view.chooseMultiple) {
+        //media = <label htmlFor={checkboxId}>{media}</label>
       }
 
       var fileName = _utility2.default.wordBreaksEvery(props.item.filename);
@@ -403,9 +493,11 @@ var MediaRow = function (_PureComponent) {
 
       var contextMenu = _utility2.default.serverSideRendering ? undefined : _react2.default.createElement(_ContextMenu2.default, _extends({ className: 'eureka__context-row' }, props, { item: item, hidden: shouldHide(item), key: 'cm__' + index }));
 
+      //<span className="visually-hidden"><FormattedMessage id="media.contents" defaultMessage="Media Contents" /></span>
       return _react2.default.createElement(
         'tr',
         (_React$createElement2 = { role: 'row', className: (0, _classnames2.default)(className), id: _utility2.default.cssSafe(props.item.filename), 'aria-label': ariaLabel }, _defineProperty(_React$createElement2, 'role', 'row'), _defineProperty(_React$createElement2, 'tabIndex', tabIndex), _defineProperty(_React$createElement2, 'onFocus', this.onFocus.bind(this)), _defineProperty(_React$createElement2, 'onBlur', this.onBlur.bind(this)), _defineProperty(_React$createElement2, 'contextMenu', 'context_menu__tbody-' + props.index), _React$createElement2),
+        checkbox,
         mediaSelect,
         _react2.default.createElement(
           'td',
@@ -424,11 +516,6 @@ var MediaRow = function (_PureComponent) {
               detail: props.item
               }));*/
             } },
-          _react2.default.createElement(
-            'span',
-            { className: 'visually-hidden' },
-            _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'media.contents', defaultMessage: 'Media Contents' })
-          ),
           media
         ),
         _react2.default.createElement(
@@ -466,17 +553,17 @@ var MediaRow = function (_PureComponent) {
         contextMenu,
         _react2.default.createElement(
           'td',
-          { role: 'gridcell' },
+          { className: 'eureka__dimensions', role: 'gridcell' },
           props.item.dimensions[0] + 'x' + props.item.dimensions[1]
         ),
         _react2.default.createElement(
           'td',
-          { role: 'gridcell' },
+          { className: 'eureka__file-size', role: 'gridcell' },
           (0, _filesize2.default)(props.item.fileSize)
         ),
         _react2.default.createElement(
           'td',
-          { role: 'gridcell', title: props.item.editedOnLongTimeZone || new Date(props.item.editedOn).toLocaleString(props.view.locale, { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' }) },
+          { className: 'eureka__edited-on', role: 'gridcell', title: props.item.editedOnLongTimeZone || new Date(props.item.editedOn).toLocaleString(props.view.locale, { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' }) },
           props.item.editedOnTwoDigit || new Date(props.item.editedOn).toLocaleString(props.view.locale, { year: '2-digit', month: '2-digit', day: '2-digit' })
         )
       );

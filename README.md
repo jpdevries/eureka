@@ -19,7 +19,7 @@ Don't forget to [browse the Wiki](https://github.com/jpdevries/eureka/wiki) for 
 
 ## 🍻 Support
 The Eureka Media Browser and supporting resources are provided free as in&nbsp;beer.  
-[Gratuities are accepted through Square&nbsp;Cash](https://cash.me/$MarkupTips).
+[Gratuities are accepted through Square&nbsp;Cash](https://cash.me/$devriesdev).
 
 ## 🏋️‍♀️ Weigh In
 The Eureka Media Browser is pretty lightweight all things&nbsp;considered.
@@ -564,6 +564,9 @@ Eureka uses JavaScript events to enrich the user experience of keyboard&nbsp;use
 | Sort by dimensions | alt+d                  |
 | Sort by file size | alt+f                  |
 | Sort by edited on | alt+e                  |
+| Set Choose Mode to Single | alt+s                  |
+| Set Choose Mode to Multiple | alt+m                  |
+| Invert Selection | alt+i                  |
 
 
 ## 🎨 Theming

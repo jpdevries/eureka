@@ -112,7 +112,7 @@ $palettes: ( // http://erskinedesign.com/blog/friendlier-colour-names-sass-maps/
 }
 
 
-input:not([type="checkbox"]) {
+input:not([type="checkbox"]):not([type="radio"]) {
   &:focus {
     outline: 1px solid var(--active, $active);
   }
@@ -364,7 +364,7 @@ a[role="presentation"] {
     color:var(--subtle, palette(heading, dark));
   }
 
-  th.sortable {
+  th[aria-sort] {
     @extend %clickable;
   }
 
@@ -657,10 +657,11 @@ a[role="presentation"] {
     .eureka__search-bar {
       line-height:2;
       @include media($gtMobile) {
-        margin-left:auto;
+        //margin-left:auto;
         font-size:0.8rem;
         flex:1 0 auto;
-        max-width:28em;
+        //max-width:28em;
+        max-width: 22em;
         //margin-left:2rem;
       }
       label {
@@ -1056,5 +1057,11 @@ a[role="presentation"] {
     }
     margin-left: auto;
     margin-right: auto;
+  }
+  .eureka__choose-radio {
+    margin-bottom: 1rem;
+    fieldset {
+      border: none;
+    }
   }
  }

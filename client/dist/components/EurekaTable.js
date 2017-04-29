@@ -141,6 +141,7 @@ var EurekaTable = function (_Component) {
       if (this.state.sort !== nextState.sort) return true;
       if (nextProps.content.contents !== this.state.contents) return true;
       if (this.state.contents.length !== nextState.contents.length || this.state.contents !== nextState.contents) return true;
+      if (nextProps.view.chooseMultiple !== this.props.view.chooseMultiple) return true;
 
       if (nextProps.view.sort !== this.props.view.sort) return true;
       return true;
@@ -200,7 +201,8 @@ var EurekaTable = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _this2 = this,
+      var _React$createElement,
+          _this2 = this,
           _React$createElement2,
           _React$createElement3,
           _React$createElement4,
@@ -262,6 +264,15 @@ var EurekaTable = function (_Component) {
         { scope: 'col', role: 'columnheader' },
         'Select'
       ) : undefined;
+      var checkboxHead = !_utility2.default.serverSideRendering && props.view.chooseMultiple ? _react2.default.createElement(
+        'th',
+        { scope: 'col', role: 'columnheader', className: 'eureka__choose' },
+        _react2.default.createElement(
+          'span',
+          { className: 'visually-hidden' },
+          _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'choose', defaultMessage: 'Choose' })
+        )
+      ) : undefined;
 
       var table = _react2.default.createElement(
         'table',
@@ -273,14 +284,15 @@ var EurekaTable = function (_Component) {
             'tr',
             null,
             selectHead,
+            checkboxHead,
             _react2.default.createElement(
               'th',
-              _defineProperty({ role: 'rowheader', scope: 'col' }, 'role', 'columnheader'),
+              (_React$createElement = { role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement, 'role', 'columnheader'), _defineProperty(_React$createElement, 'className', 'eureka__th-media'), _React$createElement),
               _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'media', defaultMessage: 'Media' })
             ),
             _react2.default.createElement(
               'th',
-              (_React$createElement2 = { className: 'sortable', role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement2, 'role', 'columnheader'), _defineProperty(_React$createElement2, 'onClick', function onClick(event) {
+              (_React$createElement2 = { className: 'eureka__th-filename', 'aria-sort': props.view.sort.by === 'filename' ? props.view.sort.dir : undefined, role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement2, 'role', 'columnheader'), _defineProperty(_React$createElement2, 'onClick', function onClick(event) {
                 var dir = _this2.props.view.sort.dir;
                 //console.log("this.state.sort.by === 'filename'", this.state.sort.by === 'filename', dir);
                 if (_this2.props.view.sort.by === 'filename') {
@@ -310,12 +322,12 @@ var EurekaTable = function (_Component) {
             ),
             _react2.default.createElement(
               'th',
-              (_React$createElement3 = { role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement3, 'role', 'columnheader'), _defineProperty(_React$createElement3, 'className', 'visually-hidden'), _React$createElement3),
+              (_React$createElement3 = { role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement3, 'role', 'columnheader'), _defineProperty(_React$createElement3, 'className', 'visually-hidden eureka__th-actions'), _React$createElement3),
               'Actions'
             ),
             _react2.default.createElement(
               'th',
-              (_React$createElement4 = { className: 'sortable', role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement4, 'role', 'columnheader'), _defineProperty(_React$createElement4, 'onClick', function onClick(event) {
+              (_React$createElement4 = { className: 'eureka__th-dimensions', 'aria-sort': props.view.sort.by === 'dimensions' ? props.view.sort.dir : undefined, role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement4, 'role', 'columnheader'), _defineProperty(_React$createElement4, 'onClick', function onClick(event) {
                 var dir = _this2.state.sort.dir;
                 if (_this2.props.view.sort.by === 'dimensions') {
                   dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
@@ -343,7 +355,7 @@ var EurekaTable = function (_Component) {
             ),
             _react2.default.createElement(
               'th',
-              (_React$createElement5 = { className: 'sortable', role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement5, 'role', 'columnheader'), _defineProperty(_React$createElement5, 'onClick', function onClick(event) {
+              (_React$createElement5 = { className: 'eureka__th-file-size', 'aria-sort': props.view.sort.by === 'fileSize' ? props.view.sort.dir : undefined, role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement5, 'role', 'columnheader'), _defineProperty(_React$createElement5, 'onClick', function onClick(event) {
                 var dir = _this2.state.sort.dir;
                 if (_this2.props.view.sort.by === 'fileSize') {
                   dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
@@ -371,7 +383,7 @@ var EurekaTable = function (_Component) {
             ),
             _react2.default.createElement(
               'th',
-              (_React$createElement6 = { className: 'sortable', role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement6, 'role', 'columnheader'), _defineProperty(_React$createElement6, 'onClick', function onClick(event) {
+              (_React$createElement6 = { className: 'eureka__th-edited-on', 'aria-sort': props.view.sort.by === 'editedOn' ? props.view.sort.dir : undefined, role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement6, 'role', 'columnheader'), _defineProperty(_React$createElement6, 'onClick', function onClick(event) {
                 var dir = _this2.state.sort.dir;
                 if (_this2.props.view.sort.by === 'editedOn') {
                   dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;

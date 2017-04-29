@@ -85,10 +85,11 @@ class EurekaTableTbody extends PureComponent {
   }*/
 
   shouldComponentUpdate(nextProps, nextState) {
-    //return true;
+    return true;
     console.log(this.props, this.state);
     if(nextProps.view.filter || (!nextProps.view.filter && this.props.view.filter)) return true;
     if(nextProps.view.sort !== this.props.view.sort) return true;
+    if(nextProps.view.chooseMultiple !== this.props.view.chooseMultiple) return true;
     try {
       //console.log('shouldComponentUpdate', (this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path), this.state.focusedMediaItem.path, nextProps.view.focusedMediaItem.path);
       //if((this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path)) return true; // #janky SLOOOOW
@@ -156,7 +157,7 @@ class EurekaTableTbody extends PureComponent {
 
     const contentList = (contents.length) ? contents.map((item, index) => (
       [
-        <MediaRow {...props} intl={props.intl} focusedMediaItem={props.view.focusedMediaItem} renameStart={this.handleRenameStart} item={item} index={index} key={index} onFocus={(event) => {
+        <MediaRow key={utility.cssSafe(item.filename)} {...props} intl={props.intl} focusedMediaItem={props.view.focusedMediaItem} renameStart={this.handleRenameStart} item={item} index={index} onFocus={(event) => {
 
             /*this.setState({
               focusedMediaItem: item

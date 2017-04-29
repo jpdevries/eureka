@@ -166,10 +166,14 @@ export class EurekaMediaBrowser extends PureComponent {
           //localStorage.setItem(`${state.config.storagePrefix}mode`, state.view.mode);
           //localStorage.setItem(`${state.config.storagePrefix}sort`, state.view.sort);
           //localStorage.setItem(`${state.config.storagePrefix}treeHidden`, !state.view.sourceTreeOpen);
-          localStorage.setItem(`${state.config.storagePrefix}content`, JSON.stringify(state.content));
+          localStorage.setItem(`${state.config.storagePrefix}content`, JSON.stringify(Object.assign({}, (state.content), {
+            chosenMediaItemsInverted: undefined
+          })));
           localStorage.setItem(`${state.config.storagePrefix}tree`, JSON.stringify(state.tree));
           //console.log('state.view', JSON.stringify(state.view));
-          localStorage.setItem(`${state.config.storagePrefix}view`, JSON.stringify(state.view));
+          localStorage.setItem(`${state.config.storagePrefix}view`, JSON.stringify(Object.assign({}, state.view, {
+            selectionInverted: false
+          })));
         } catch (e) { }
       }
 

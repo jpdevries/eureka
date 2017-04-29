@@ -17,6 +17,7 @@ import ModalRenameItemForm from './components/ModalRenameItemForm';
 import SortContents from './components/SortContents';
 import Icon from './components/Icon';
 import Notification from './components/Notification';
+import ChooseRadio from './components/ChooseRadio';
 
 import Mousetrap from 'mousetrap';
 
@@ -157,6 +158,45 @@ class Eureka extends Component {
     }))
   }
 
+  handleKeyboardChooseSingle = (event) => {
+    store.dispatch(actions.updateView({
+      chooseMultiple: false
+    }))
+  }
+
+  handleKeyboardChooseMultiple = (event) => {
+    store.dispatch(actions.updateView({
+      chooseMultiple: true
+    }))
+  }
+
+  handleKeyboardToggleInvertSelection = (event) => {
+    if(!this.props.view.chooseMultiple) return;
+    store.dispatch(actions.updateView({
+      selectionInverted: !this.props.view.selectionInverted
+    }))
+  }
+
+  handleKeyboardDeselect = (event) => {
+    console.log('handleKeyboardDeselect');
+
+    store.dispatch(actions.deselectAll());
+  }
+
+  /*handleKeyboardDeselect = (event) => {
+    console.log('handleKeyboardDeselect');
+    const toUncheck = this.getEurekaRoot().querySelectorAll('.eureka__td-media input[type="checkbox"]:checked');
+    console.log('toUncheck', toUncheck);
+    for(let i = 0; i < toUncheck.length; i++) {
+      toUncheck[i].click();
+    }
+
+    store.dispatch(actions.updateContent({
+      chosenMediaItems: [],
+      chosenMediaItemsInverted: []
+    }));
+  }*/
+
   assignKeyboardListeners() {
     Mousetrap.bind(['ctrl+;'], this.toggleSourceTreeOpen);
     Mousetrap.bind(['ctrl+alt+1', 'ctrl+alt+2', 'ctrl+alt+3', 'ctrl+alt+4'], this.handleKeyboardChangeView);
@@ -171,6 +211,11 @@ class Eureka extends Component {
     Mousetrap.bind(['alt+d'], this.handleKeyboardSortDimensions);
     Mousetrap.bind(['alt+f'], this.handleKeyboardSortFileSize);
     Mousetrap.bind(['alt+e'], this.handleKeyboardSortEditedOn);
+
+    Mousetrap.bind(['alt+s'], this.handleKeyboardChooseSingle);
+    Mousetrap.bind(['alt+m'], this.handleKeyboardChooseMultiple);
+    Mousetrap.bind(['alt+i'], this.handleKeyboardToggleInvertSelection);
+    Mousetrap.bind(['alt+z'], this.handleKeyboardDeselect);
 
 
     if(this.props.config.handlers && this.props.config.handlers.createFile) Mousetrap.bind(['ctrl+shift+n'], this.handleKeyboardCreateFile);
@@ -190,6 +235,11 @@ class Eureka extends Component {
     Mousetrap.unbind(['alt+d'], this.handleKeyboardSortDimensions);
     Mousetrap.unbind(['alt+f'], this.handleKeyboardSortFileSize);
     Mousetrap.unbind(['alt+e'], this.handleKeyboardSortEditedOn);
+
+    Mousetrap.unbind(['alt+s'], this.handleKeyboardChooseSingle);
+    Mousetrap.unbind(['alt+m'], this.handleKeyboardChooseMultiple);
+    Mousetrap.unbind(['alt+i'], this.handleKeyboardToggleInvertSelection);
+    Mousetrap.unbind(['alt+z'], this.handleKeyboardDeselect);
 
     if(this.props.config.handlers && this.props.config.handlers.createFile) Mousetrap.unbind(['ctrl+shift+n'], this.handleKeyboardCreateFile);
   }
@@ -520,8 +570,10 @@ class Eureka extends Component {
     const viewChooser = (!utility.serverSideRendering) ? <ViewChooser {...props} /> : undefined;
     const chooseBar = (shouldDisplayChooseBar) ? <ChooseBar ariaHidden={state.modalOpen} {...props} /> : undefined;
     const enlargeFocusedRows = (props.view.enlargeFocusedRows) ? ' eureka__enlarge-focused-rows' : '';
+    const chooseMultipleClass = (props.view.chooseMultiple) ? ' eureka__choose-multiple' : '';
     const searchBar = (!utility.serverSideRendering) ? <SearchBar {...props} /> : undefined;
     const serverSideClass = (utility.serverSideRendering) ? ' eureka__server-side' : '';
+    const chooseRadio = (props.config.allowChooseMultiple) ? <ChooseRadio view={props.view} content={props.content} storagePrefix={props.storagePrefix} /> : undefined;
     const sortContentsSelector = (!utility.serverSideRendering) ? (
       <SortContents {...props} sort={props.view.sort} />
     ) : undefined;
@@ -537,6 +589,7 @@ class Eureka extends Component {
               <h2>
                 <span className="visually-hidden"><FormattedMessage id="media.browse" defaultMessage="Browse" /> </span><FormattedMessage id="media.contents" defaultMessage="Media Content" />
               </h2>
+              {chooseRadio}
               {searchBar}
             </header>
             <div role="menubar" className="eureka__tree-toggle">
@@ -562,10 +615,10 @@ class Eureka extends Component {
         {modal}
       </form>
     ) : (
-      <div role="widget" lang={props.lang || undefined} className={`eureka eureka__view-mode__${props.view.mode}${enlargeFocusedRows}${serverSideClass}`}>
+      <div role="widget" lang={props.lang || undefined} className={`eureka eureka__view-mode__${props.view.mode}${chooseMultipleClass}${enlargeFocusedRows}${serverSideClass}`}>
         <div className={classNames({
           "eureka__sticky-bar": this.state.stickyNotifications
-        })} aria-live="polite" aria-atomic="true">{notification}</div>
+        })} aria-live="assertive" aria-relevant="additions" aria-atomic="true">{notification}</div>
         {formDiv}
         {pathBar}
         {chooseBar}
@@ -574,5 +627,7 @@ class Eureka extends Component {
     );
   }
 }
+
+
 
 export default Eureka;

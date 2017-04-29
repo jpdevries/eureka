@@ -8,6 +8,8 @@ import path from 'path';
 
 import utility from './../utility/utility';
 
+import definedMessages from './../i18n/definedMessages';
+
 var pathParse = require('path-parse');
 
 /*
@@ -32,13 +34,46 @@ Example of file-zip-o
 */
 
 const PathBar = (props) => {
+  const formatMessage = props.intl.formatMessage;
   const contextBtns = props.view.focusedMediaItem ? (
     <ContextButtons {...props} item={props.view.focusedMediaItem} />
   ) : undefined;
 
-
+  const copyListofSelectedFiles = formatMessage(definedMessages.copyListofSelectedFiles);
 
   const icon = utility.getIconByExtension(pathParse(props.view.focusedMediaItem.filename).ext);
+  const p = (props.view.chooseMultiple && props.content.chosenMediaItems.length > 1) ? props.view.focusedMediaItem.directory : path.join(props.view.focusedMediaItem.directory, props.view.focusedMediaItem.filename);
+  const fileNames = props.content.chosenMediaItemsInverted.map((item) => (
+    item.filename
+  ));
+  //console.log('props.content.chosenMediaItems', props.content.chosenMediaItems);
+  //console.log('fileNames', fileNames);
+  const len = (props.view.selectionInverted) ? props.content.contents.length - props.content.chosenMediaItems.length : props.content.chosenMediaItems.length;
+  const fileNamesIf = (len > 1 && props.view.chooseMultiple) ? <textarea aria-readonly="true" aria-label={copyListofSelectedFiles} rows="10" cols="50" onClick={(event) => {
+    event.target.focus();
+    event.target.select();
+  }}  style={{
+    margin: '0'
+  }} readOnly="readonly" value={fileNames.join(', ')}></textarea> : undefined,
+  a = (len < 2) ? (
+    <a id={`${props.config.storagePrefix}selected_file_names`} role="presentation" href={props.view.focusedMediaItem.absoluteURL} target={`_${encodeURI(props.view.focusedMediaItem.absoluteURL)}`}>
+      <Icon {...props} icon={icon} />&ensp;
+      {p}{fileNamesIf}
+    </a>
+  ) : (
+    <div id={`${props.config.storagePrefix}selected_file_names`}>
+      <Icon {...props} icon={icon} />&ensp;
+      {p}{fileNamesIf}
+    </div>
+  );
+
+  let selectedPaths = (len > 12) ? (
+    <details open>
+      <summary>Selected Paths</summary>
+      {fileNamesIf}
+    </details>
+  ) : fileNamesIf;
+
 
   return (
     <div className="eureka__pathbar">
@@ -46,8 +81,9 @@ const PathBar = (props) => {
         <details>
           <summary>
             <Icon {...props} icon={icon} />&ensp;
-            {`${props.view.focusedMediaItem.directory}${props.view.focusedMediaItem.filename}`}
+            {(props.view.chooseMultiple ? `${props.view.focusedMediaItem.directory}` : `${props.view.focusedMediaItem.directory}${props.view.focusedMediaItem.filename}`)}
           </summary>
+          {selectedPaths}
           <div>
             <div>
               <img src={props.view.focusedMediaItem.absoluteURL} alt="" />
@@ -57,10 +93,7 @@ const PathBar = (props) => {
         </details>
       </div>
       <div role="status" className="eureka__show-for-mobile-up">
-        <a role="presentation" href={props.view.focusedMediaItem.absoluteURL} target={`_${encodeURI(props.view.focusedMediaItem.absoluteURL)}`}>
-          <Icon {...props} icon={icon} />&ensp;
-          {path.join(props.view.focusedMediaItem.directory, props.view.focusedMediaItem.filename)}
-        </a>
+        {a}
       </div>
     </div>
   )

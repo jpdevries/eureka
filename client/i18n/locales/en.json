@@ -24,7 +24,6 @@
   "support.noVideo": "Your browser does not support the video tag.",
   "support.noAudio": "Your browser does not support the audio tag.",
   "select": "Select",
-  "media.contents": "Media Contents",
   "grammar.a": "a",
   "media.source": "Media Source",
   "modal.closeWindow": "Close {title} Modal Window",
@@ -44,6 +43,7 @@
   "layout.grid": "Grid Layout",
   "layout.list": "List Layout",
   "media.browse": "Browse",
+  "media.contents": "Media Content",
   "directory.create": "Create a Directory",
   "directory.createNewIn": "Create a new Directory in {cd}",
   "mediaSourceTree": "Media Source Panel",
@@ -75,6 +75,8 @@
   "layout.thumbnail": "Thumbnail layout displays a grid of medium sized thumbnails",
   "file.openInNewTab": "Open {filename} in a new tab",
   "toggle": "Toggle",
+  "pluralChoose": "item",
+  "copyListofSelectedFiles": "Copy list of selected files",
   "media.sourceTree": "Media Source Panel",
   "upload.dragFilestoUpload": "Drag files here to be uploaded to {cd}"
 }

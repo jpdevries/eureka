@@ -26,6 +26,10 @@ var _utility = require('./../utility/utility');
 
 var _utility2 = _interopRequireDefault(_utility);
 
+var _definedMessages = require('./../i18n/definedMessages');
+
+var _definedMessages2 = _interopRequireDefault(_definedMessages);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var pathParse = require('path-parse');
@@ -52,9 +56,51 @@ Example of file-zip-o
 */
 
 var PathBar = function PathBar(props) {
+  var formatMessage = props.intl.formatMessage;
   var contextBtns = props.view.focusedMediaItem ? _react2.default.createElement(_ContextButtons2.default, _extends({}, props, { item: props.view.focusedMediaItem })) : undefined;
 
+  var copyListofSelectedFiles = formatMessage(_definedMessages2.default.copyListofSelectedFiles);
+
   var icon = _utility2.default.getIconByExtension(pathParse(props.view.focusedMediaItem.filename).ext);
+  var p = props.view.chooseMultiple && props.content.chosenMediaItems.length > 1 ? props.view.focusedMediaItem.directory : _path2.default.join(props.view.focusedMediaItem.directory, props.view.focusedMediaItem.filename);
+  var fileNames = props.content.chosenMediaItemsInverted.map(function (item) {
+    return item.filename;
+  });
+  //console.log('props.content.chosenMediaItems', props.content.chosenMediaItems);
+  //console.log('fileNames', fileNames);
+  var len = props.view.selectionInverted ? props.content.contents.length - props.content.chosenMediaItems.length : props.content.chosenMediaItems.length;
+  var fileNamesIf = len > 1 && props.view.chooseMultiple ? _react2.default.createElement('textarea', { 'aria-readonly': 'true', 'aria-label': copyListofSelectedFiles, rows: '10', cols: '50', onClick: function onClick(event) {
+      event.target.focus();
+      event.target.select();
+    }, style: {
+      margin: '0'
+    }, readOnly: 'readonly', value: fileNames.join(', ') }) : undefined,
+      a = len < 2 ? _react2.default.createElement(
+    'a',
+    { id: props.config.storagePrefix + 'selected_file_names', role: 'presentation', href: props.view.focusedMediaItem.absoluteURL, target: '_' + encodeURI(props.view.focusedMediaItem.absoluteURL) },
+    _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: icon })),
+    '\u2002',
+    p,
+    fileNamesIf
+  ) : _react2.default.createElement(
+    'div',
+    { id: props.config.storagePrefix + 'selected_file_names' },
+    _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: icon })),
+    '\u2002',
+    p,
+    fileNamesIf
+  );
+
+  var selectedPaths = len > 12 ? _react2.default.createElement(
+    'details',
+    { open: true },
+    _react2.default.createElement(
+      'summary',
+      null,
+      'Selected Paths'
+    ),
+    fileNamesIf
+  ) : fileNamesIf;
 
   return _react2.default.createElement(
     'div',
@@ -70,8 +116,9 @@ var PathBar = function PathBar(props) {
           null,
           _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: icon })),
           '\u2002',
-          '' + props.view.focusedMediaItem.directory + props.view.focusedMediaItem.filename
+          props.view.chooseMultiple ? '' + props.view.focusedMediaItem.directory : '' + props.view.focusedMediaItem.directory + props.view.focusedMediaItem.filename
         ),
+        selectedPaths,
         _react2.default.createElement(
           'div',
           null,
@@ -87,13 +134,7 @@ var PathBar = function PathBar(props) {
     _react2.default.createElement(
       'div',
       { role: 'status', className: 'eureka__show-for-mobile-up' },
-      _react2.default.createElement(
-        'a',
-        { role: 'presentation', href: props.view.focusedMediaItem.absoluteURL, target: '_' + encodeURI(props.view.focusedMediaItem.absoluteURL) },
-        _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: icon })),
-        '\u2002',
-        _path2.default.join(props.view.focusedMediaItem.directory, props.view.focusedMediaItem.filename)
-      )
+      a
     )
   );
 };

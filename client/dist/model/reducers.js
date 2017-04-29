@@ -40,6 +40,7 @@ var initialConfigState = {
   allowDelete: true,
   confirmBeforeDelete: false,
   locales: "en-US",
+  allowChooseMultiple: true,
   mediaSource: "0",
   currentDirectory: "/",
   welcome: true,
@@ -74,8 +75,12 @@ var configReducer = function configReducer(state, action) {
   return state;
 };
 
+var selectionInverted = false;
+
 var initialContentState = Object.assign({}, {
   cd: '/',
+  chosenMediaItems: [],
+  chosenMediaItemsInverted: [],
   contents: [
     /*{
       filename:'foo.jpg',
@@ -98,58 +103,207 @@ var initialContentState = Object.assign({}, {
   ]
 }, function () {
   try {
-    return JSON.parse(localStorage.getItem('eureka__content'));
+    return Object.assign({}, JSON.parse(localStorage.getItem('eureka__content')), {
+      chosenMediaItems: []
+    });
   } catch (e) {
     return {};
   }
 }());
 
+function getInvertedChosenItems() {
+  var contents = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+  var chosenMediaItems = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+  var selectionInverted = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+
+  if (!selectionInverted) return chosenMediaItems;
+  return contents.filter(function (item) {
+    return !chosenMediaItems.includes(item);
+  });
+}
+
 var contentReducer = function contentReducer(state, action) {
   state = state || initialContentState;
+  var newState = state;
   //console.log('contentReducer', action.type);
-  switch (action.type) {
-    case actions.UPDATE_CONFIG:
-      //console.log('UPDATE_CONFIG!!!', state, action.config);
-      if (action.config.currentDirectory) return Object.assign({}, state, {
-        cd: action.config.currentDirectory
-      });
 
-      break;
+  var newChosenMediaItems = void 0;
 
-    case actions.UPDATE_CONTENT:
-      var content = processContentItems(action.content);
-      return Object.assign({}, state, content);
-      break;
+  var pair;
 
-    case actions.FETCH_DIRECTORY_CONTENTS_SUCCESS:
-      //console.log('FETCH_DIRECTORY_CONTENTS_SUCCESS', state, action.contents);
-      return Object.assign({}, state, {
-        contents: processContentItems(action.contents.filter(function (file) {
+  var _ret = function () {
+    switch (action.type) {
+      case actions.UPDATE_CONFIG:
+        //console.log('UPDATE_CONFIG!!!', state, action.config);
+        if (action.config.currentDirectory) return {
+            v: Object.assign({}, state, {
+              cd: action.config.currentDirectory
+            })
+          };
+
+        break;
+
+      case actions.UPDATE_VIEW:
+        //console.log('UPDATE_CONFIG!!!', state, action.config);
+        //console.log(' update view mo fo', selectionInverted, action.view.selectionInverted);
+        try {
+          if (selectionInverted !== action.view.selectionInverted || state.contents.chosenMediaItems.length !== state.contents.chosenMediaItemsInverted.length) {
+            newState = (0, _reactAddonsUpdate2.default)(state, { $merge: { chosenMediaItemsInverted: getInvertedChosenItems(state.contents, state.chosenMediaItems, action.view.selectionInverted) } });
+          }
+        } catch (e) {
+          console.log(e);
+        }
+
+        selectionInverted = action.view.selectionInverted;
+        return {
+          v: newState
+        };
+        break;
+
+      case actions.INVERT_SELECTION:
+        return {
+          v: newState
+        };
+        break;
+
+      case actions.ADD_MEDIA_ITEM_TO_CHOSEN_ITEMS:
+        if (state.chosenMediaItems.includes(action.item)) return {
+            v: newState
+          };
+        newChosenMediaItems = (0, _reactAddonsUpdate2.default)(newState.chosenMediaItems, { $push: [action.item] });
+        return {
+          v: (0, _reactAddonsUpdate2.default)(newState, { $merge: {
+              chosenMediaItems: newChosenMediaItems,
+              chosenMediaItemsInverted: getInvertedChosenItems(newState.contents, (0, _reactAddonsUpdate2.default)(newState.chosenMediaItems, { $push: [action.item] }), action.inverted)
+            } })
+        };
+        break;
+
+      case actions.REMOVE_MEDIA_ITEM_FROM_CHOSEN_ITEMS:
+        if (!state.chosenMediaItems.includes(action.item)) return {
+            v: newState
+          };
+
+        newChosenMediaItems = newState.chosenMediaItems.filter(function (item) {
+          return item !== action.item;
+        });
+
+        return {
+          v: (0, _reactAddonsUpdate2.default)(newState, { $merge: {
+              chosenMediaItems: newChosenMediaItems,
+              chosenMediaItemsInverted: getInvertedChosenItems(newState.contents, newChosenMediaItems, action.inverted)
+            } })
+        };
+        break;
+
+      case actions.DESELECT_ALL:
+        return {
+          v: (0, _reactAddonsUpdate2.default)(newState, { $merge: {
+              chosenMediaItems: [],
+              chosenMediaItemsInverted: []
+            } })
+        };
+        break;
+
+      case actions.UPDATE_CONTENT:
+        var content = processContentItems(action.content);
+        newState = Object.assign({}, state, content);
+        if (action.content.cd) newState = Object.assign({}, newState, { // if updating the current directory clear the chosen media items
+          chosenMediaItems: [],
+          chosenMediaItemsInverted: []
+        });
+        if (action.content.chosenMediaItems && state.view !== undefined) {
+          newState = (0, _reactAddonsUpdate2.default)(state, { $merge: { chosenMediaItemsInverted: getInvertedChosenItems(state.contents, state.chosenMediaItems, state.view.selectionInverted) } });
+        }
+        return {
+          v: newState
+        };
+        break;
+
+      case actions.FETCH_DIRECTORY_CONTENTS_SUCCESS:
+        //console.log('FETCH_DIRECTORY_CONTENTS_SUCCESS', state, action.contents);
+        return {
+          v: Object.assign({}, newState, {
+            contents: processContentItems(action.contents.filter(function (file) {
+              return file.filename;
+            }))
+          })
+        };
+
+      case actions.DELETE_MEDIA_ITEMS_SUCCESS:
+        console.log(actions.DELETE_MEDIA_ITEMS_SUCCESS);
+        var formData = action.formData;
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+          for (var _iterator = formData.entries()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            pair = _step.value;
+
+            console.log(pair[0] + ', ' + pair[1]);
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+              _iterator.return();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
+            }
+          }
+        }
+
+        var deletedFileNames = formData.getAll('delete_file[]');
+        //if(!Array.isArray(action.contents)) return state; // so the backed can just return res.json([true]) if it wants?
+        var newContents = processContentItems(action.contents.filter(function (file) {
           return file.filename;
-        }))
-      });
+        }));
+        newChosenMediaItems = newState.chosenMediaItems.filter(function (file) {
+          return !deletedFileNames.includes(file.filename);
+        });
+        var newChosenMediaItemsInverted = newState.chosenMediaItemsInverted.filter(function (file) {
+          return !deletedFileNames.includes(file.filename);
+        });
+        return {
+          v: Object.assign({}, newState, {
+            contents: newContents,
+            chosenMediaItems: newChosenMediaItems,
+            chosenMediaItemsInverted: newChosenMediaItemsInverted
+          })
+        };
 
-    case actions.UPLOAD_FILES_SUCCESS:
-      //if(!Array.isArray(action.contents)) return state; // so the backed can just return res.json([true]) if it wants?
-      return Object.assign({}, state, {
-        contents: processContentItems(action.contents.filter(function (file) {
-          return file.filename;
-        }))
-      });
+      case actions.UPLOAD_FILES_SUCCESS:
+        //if(!Array.isArray(action.contents)) return state; // so the backed can just return res.json([true]) if it wants?
+        return {
+          v: Object.assign({}, newState, {
+            contents: processContentItems(action.contents.filter(function (file) {
+              return file.filename;
+            }))
+          })
+        };
 
-    case actions.DELETE_MEDIA_ITEM_SUCCESS:
-      //console.log(actions.DELETE_MEDIA_ITEM_SUCCESS, action.source, action.path, state);
+      case actions.DELETE_MEDIA_ITEM_SUCCESS:
+        //console.log(actions.DELETE_MEDIA_ITEM_SUCCESS, action.source, action.path, state);
 
 
-      return Object.assign({}, state, {
-        cd: state.cd === action.path ? path.join(state.cd, '..') : state.cd,
-        contents: state.contents.filter(function (file) {
-          return file.path !== action.path;
-        })
-      });
-      break;
-  }
+        return {
+          v: Object.assign({}, newState, {
+            cd: state.cd === action.path ? path.join(state.cd, '..') : state.cd,
+            contents: state.contents.filter(function (file) {
+              return file.path !== action.path;
+            })
+          })
+        };
+        break;
+    }
+  }();
 
+  if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
   return state;
 
   function processContentItems(contents) {
@@ -194,7 +348,7 @@ var gotTreeDataFromServer = false;
 var treeReducer = function treeReducer(state, action) {
   state = state || initialTreeReducer;
 
-  var _ret = function () {
+  var _ret2 = function () {
     switch (action.type) {
       case actions.UPDATE_SOURCE_TREE_SUCCESS:
         //console.log('UPDATE_SOURCE_TREE_SUCCESS');
@@ -298,7 +452,7 @@ var treeReducer = function treeReducer(state, action) {
     }
   }();
 
-  if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+  if ((typeof _ret2 === 'undefined' ? 'undefined' : _typeof(_ret2)) === "object") return _ret2.v;
   return state;
 };
 
@@ -310,11 +464,13 @@ var initialViewState = Object.assign({}, {
   sourceTreeOpen: false,
   enlargeFocusedRows: false,
   locale: "en-US",
+  chooseMultiple: true,
   sort: {
     by: 'filename',
     dir: _utility2.default.ASCENDING
   },
   isTableScrolling: false,
+  selectionInverted: selectionInverted,
   allowFullscreen: true,
   isUploading: false,
   isTouch: false,
@@ -369,6 +525,14 @@ var viewReducer = function viewReducer(state, action) {
 
     case actions.UPDATE_VIEW:
       return Object.assign({}, state, action.view);
+
+    case actions.UPDATE_CONTENT:
+      if (action.content.cd) {
+        return Object.assign({}, state, {
+          selectionInverted: false
+        });
+      }
+      return state;
 
     case actions.UPDATE_CONFIG:
       var o = {};
@@ -457,7 +621,7 @@ var directoryReducer = function directoryReducer(state, action) {
 
   var foldersToAdd = [];
 
-  var _ret2 = function () {
+  var _ret3 = function () {
     switch (action.type) {
       case actions.UPDATE_SOURCE:
         cs = action.source;
@@ -538,7 +702,7 @@ var directoryReducer = function directoryReducer(state, action) {
     }
   }();
 
-  if ((typeof _ret2 === 'undefined' ? 'undefined' : _typeof(_ret2)) === "object") return _ret2.v;
+  if ((typeof _ret3 === 'undefined' ? 'undefined' : _typeof(_ret3)) === "object") return _ret3.v;
   return state;
 };
 

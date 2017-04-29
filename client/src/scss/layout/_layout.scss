@@ -79,28 +79,28 @@
          //grid-template-areas:"media name dimensions file-size edited-on" "actions actions actions actions actions";
 
          > td {
-           &:nth-of-type(1) {
+           .eureka__td-media {
              grid-area:media;
            }
-           &:nth-of-type(2) {
+           .eureka__td-filename {
              grid-area:name;
            }
-           &:nth-of-type(3) {
+           &.eureka__context-row {
              grid-area:actions;
            }
-           &:nth-of-type(4) {
+           &.eureka__dimensions {
              grid-area:dimensions;
              @include media($mobile) {
                display: none;
              }
            }
-           &:nth-of-type(5) {
+           &.eureka__file-size {
              grid-area:file-size;
              @include media($mobile) {
                display: none;
              }
            }
-           &:nth-of-type(6) {
+           &.eureka__edited-on {
              grid-area:edited-on;
              @include media($mobile) {
                display: none;
@@ -111,6 +111,104 @@
      }
    }
  }
+
+  /*.eureka {
+    tbody {
+      &:not(.empty) {
+        > tr:not(.empty) {
+          @supports (display:grid) {
+            grid-template-areas:"media name dimensions file-size edited-on" "actions actions actions actions actions";
+            grid-template-columns: auto 24% 12% 12% 12%;
+          }
+        }
+      }
+    }
+  }*/
+
+  .eureka {
+   tbody { // .eureka>.eureka__browse-content>.eureka__stage>.eureka__table-wrapper>div>table>
+     &:not(.empty) {
+       > tr:not(.empty) {
+         @supports (display:grid) {
+           //display:grid;
+           //grid-gap:0;
+           //grid-template-columns:40% 15% 15% 15% 15%;
+           @include media($gtMobile) {
+             //grid-template-areas:"choose media name dimensions file-size edited-on" "actions actions actions actions actions actions";
+             //grid-template-columns: 2rem auto 24% 12% 12% 12%;
+           }
+
+           > td {
+             &.eureka__choose {
+               grid-area:choose;
+             }
+             &.eureka__td-media {
+               grid-area:media;
+             }
+             &.eureka__td-filename {
+               grid-area:name;
+             }
+             &.eureka__context-row {
+               grid-area:actions;
+             }
+             &.eureka__dimensions {
+               grid-area:dimensions;
+               @include media($mobile) {
+                 display: none;
+               }
+             }
+             &.eureka__file-size {
+               grid-area:file-size;
+               @include media($mobile) {
+                 display: none;
+               }
+             }
+             &.eureka__edited-on {
+               grid-area:edited-on;
+               @include media($mobile) {
+                 display: none;
+               }
+             }
+           }
+         }
+       }
+     }
+   }
+  }
+
+ .eureka.eureka__choose-multiple.eureka__view-mode__table, .eureka.eureka__choose-multiple.eureka__view-mode__list {
+  tbody { // .eureka>.eureka__browse-content>.eureka__stage>.eureka__table-wrapper>div>table>
+    &:not(.empty) {
+      > tr:not(.empty) {
+        @supports (display:grid) {
+          //display:grid;
+          //grid-gap:0;
+          //grid-template-columns:40% 15% 15% 15% 15%;
+          @include media($gtMobile) {
+            grid-template-areas:"choose media name dimensions file-size edited-on" "actions actions actions actions actions actions";
+            grid-template-columns: 2rem auto 24% 12% 12% 12%;
+          }
+        }
+      }
+    }
+  }
+ }
+}
+
+.eureka {
+  .eureka__choose-radio {
+    display: flex;
+    fieldset {
+      margin: 0;
+      padding: 0;
+    }
+    .eureka__fieldset {
+      display: flex;
+      > * {
+        flex: 0 0 auto;
+      }
+    }
+  }
 }
 
 .eureka-root .eureka.eureka__view-mode__table.eureka__server-side {
@@ -177,14 +275,40 @@
        }
      }
    }
+   &.eureka__choose-multiple {
+     &.eureka__view-mode__table, &.eureka__view-mode__list {
+       table {
+         > thead> tr, > tbody > tr {
+           grid-template-areas: "choose choose choose choose choose choose" "media media media media media media" "name name name name name name" "actions actions actions actions actions actions";
+           @include media($gtMobile) {
+             grid-template-areas: "choose media name dimensions file-size edited-on";
+             grid-template-columns: 2rem auto 24% 12% 12% 12%;
+           }
+         }
+       }
+     }
+     &.eureka__view-mode__thumb, &.eureka__view-mode__grid {
+       table {
+         > thead> tr, > tbody > tr {
+           grid-template-areas: "choose choose choose choose choose choose" "media media media media media media";
+           @include media($gtMobile) {
+             //grid-template-areas: "choose media name dimensions file-size edited-on";
+             //grid-template-columns: 2rem auto 24% 12% 12% 12%;
+           }
+         }
+       }
+     }
+   }
    &.eureka__view-mode__table, &.eureka__view-mode__list {
      table { // .eureka__browse-content>.eureka__stage>.eureka__table-wrapper>div>
        > thead > tr, > tbody > tr {
          display:grid;
 
          grid-gap:0;
-         grid-template-areas: "media name dimensions file-size edited-on";
-         grid-template-columns:40% 24% 12% 12% 12%;
+         @include media($gtMobile) {
+           grid-template-areas: "media name dimensions file-size edited-on";
+           grid-template-columns:40% 24% 12% 12% 12%;
+         }
 
        }
        /*> thead > tr {
@@ -258,6 +382,11 @@
        > tbody > tr {
          grid-template-areas: "name name name name name" "actions actions actions actions actions";
          margin-bottom: .5rem;
+         > td {
+           &.eureka__choose {
+             text-align: center;
+           }
+         }
          @include media($gtMobile) {
            grid-template-areas: "media name dimensions file-size edited-on" "actions actions actions actions actions";
          }
@@ -334,6 +463,7 @@
               margin-bottom:.5rem;
               > h2 {
                 margin-bottom:0;
+                margin-right: auto;
                 form {
                   float:right;
                 }
@@ -424,22 +554,25 @@
         @supports (display: flex) and ( not (display: grid) ) {
 
         }
-        &:nth-of-type(1) {
+        &.eureka__choose {
+          grid-area:choose;
+        }
+        &.eureka__th-media {
           grid-area:media;
         }
-        &:nth-of-type(2) {
+        &.eureka__th-filename {
           grid-area:name;
         }
-        &:nth-of-type(3) {
+        &.eureka__th-actions {
           grid-area:none;
         }
-        &:nth-of-type(4) {
+        &.eureka__th-dimensions {
           grid-area:dimensions;
         }
-        &:nth-of-type(5) {
+        &.eureka__th-file-size {
           grid-area:file-size;
         }
-        &:nth-of-type(6) {
+        &.eureka__th-edited-on {
           grid-area:edited-on;
         }
       }
@@ -472,6 +605,12 @@
     flex-shrink:1;
     flex-grow:1;
     max-width:100%;
+  }
+}
+
+.eureka.eureka__choose-multiple:not(.eureka__view-mode__grid) {
+  .eureka__th-media, .eureka__td-media {
+    padding-left: 1rem;
   }
 }
 
@@ -553,6 +692,11 @@
           max-height:20vh;
         }
       }
+      label {
+        @include media($gtMobile) {
+
+        }
+      }
       thead {
         th {
           &:first-child {
@@ -578,8 +722,11 @@
           text-align:center;
           @include media($gtMobile) {
             text-align:right;
+            &.eureka__th-media {
+              text-align: left;
+            }
           }
-          &:nth-of-type(1) {
+          &.eureka__th-media {
             text-align:left;
           }
         }
@@ -610,7 +757,7 @@
         display:none !important;
       }
       td {
-        &:not(.eureka__td-media) {
+        &:not(.eureka__td-media):not(.eureka__choose) {
           //@extend %visually-hidden;
           display:none;
         }
@@ -627,6 +774,9 @@
         tr[tabindex] {
           @include media($gtMobile) {
             display:inline-block;
+          }
+          td {
+            display: block;
           }
           margin:0 .5rem .5rem 0;
           flex-basis:42vw;
@@ -743,7 +893,7 @@
       thead,tr[contextmenu] {
         td,th {
           text-align:right;
-          &:nth-of-type(1) {
+          &.eureka__td-media, &.eureka__th-media {
             text-align:left;
             @supports(display:grid) {
               display: block;
@@ -752,7 +902,7 @@
               display:none;
             }
           }
-          &:nth-of-type(2) {
+          &.eureka__td-filename {
             @include media($mobile) {
               text-align:center;
               padding-top:.5rem;
@@ -786,6 +936,28 @@
           }
         }
       }
+    }
+  }
+}
+
+.eureka {
+  .eureka__td-media {
+    display: flex;
+    align-items: center;
+  }
+  .eureka__show-for-mobile-up {
+    p, textarea {
+      @include media($gtMobile) {
+        max-height: 3em;
+        overflow-y: auto;
+        display: block;
+        width: 100%;
+      }
+    }
+  }
+  .eureka__pathbar {
+    textarea {
+      resize: none;
     }
   }
 }

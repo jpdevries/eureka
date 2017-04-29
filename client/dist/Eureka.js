@@ -84,6 +84,10 @@ var _Notification = require('./components/Notification');
 
 var _Notification2 = _interopRequireDefault(_Notification);
 
+var _ChooseRadio = require('./components/ChooseRadio');
+
+var _ChooseRadio2 = _interopRequireDefault(_ChooseRadio);
+
 var _mousetrap = require('mousetrap');
 
 var _mousetrap2 = _interopRequireDefault(_mousetrap);
@@ -188,6 +192,21 @@ var Eureka = function (_Component) {
 
   }, {
     key: 'assignKeyboardListeners',
+
+
+    /*handleKeyboardDeselect = (event) => {
+      console.log('handleKeyboardDeselect');
+      const toUncheck = this.getEurekaRoot().querySelectorAll('.eureka__td-media input[type="checkbox"]:checked');
+      console.log('toUncheck', toUncheck);
+      for(let i = 0; i < toUncheck.length; i++) {
+        toUncheck[i].click();
+      }
+       store.dispatch(actions.updateContent({
+        chosenMediaItems: [],
+        chosenMediaItemsInverted: []
+      }));
+    }*/
+
     value: function assignKeyboardListeners() {
       _mousetrap2.default.bind(['ctrl+;'], this.toggleSourceTreeOpen);
       _mousetrap2.default.bind(['ctrl+alt+1', 'ctrl+alt+2', 'ctrl+alt+3', 'ctrl+alt+4'], this.handleKeyboardChangeView);
@@ -202,6 +221,11 @@ var Eureka = function (_Component) {
       _mousetrap2.default.bind(['alt+d'], this.handleKeyboardSortDimensions);
       _mousetrap2.default.bind(['alt+f'], this.handleKeyboardSortFileSize);
       _mousetrap2.default.bind(['alt+e'], this.handleKeyboardSortEditedOn);
+
+      _mousetrap2.default.bind(['alt+s'], this.handleKeyboardChooseSingle);
+      _mousetrap2.default.bind(['alt+m'], this.handleKeyboardChooseMultiple);
+      _mousetrap2.default.bind(['alt+i'], this.handleKeyboardToggleInvertSelection);
+      _mousetrap2.default.bind(['alt+z'], this.handleKeyboardDeselect);
 
       if (this.props.config.handlers && this.props.config.handlers.createFile) _mousetrap2.default.bind(['ctrl+shift+n'], this.handleKeyboardCreateFile);
     }
@@ -221,6 +245,11 @@ var Eureka = function (_Component) {
       _mousetrap2.default.unbind(['alt+d'], this.handleKeyboardSortDimensions);
       _mousetrap2.default.unbind(['alt+f'], this.handleKeyboardSortFileSize);
       _mousetrap2.default.unbind(['alt+e'], this.handleKeyboardSortEditedOn);
+
+      _mousetrap2.default.unbind(['alt+s'], this.handleKeyboardChooseSingle);
+      _mousetrap2.default.unbind(['alt+m'], this.handleKeyboardChooseMultiple);
+      _mousetrap2.default.unbind(['alt+i'], this.handleKeyboardToggleInvertSelection);
+      _mousetrap2.default.unbind(['alt+z'], this.handleKeyboardDeselect);
 
       if (this.props.config.handlers && this.props.config.handlers.createFile) _mousetrap2.default.unbind(['ctrl+shift+n'], this.handleKeyboardCreateFile);
     }
@@ -486,8 +515,10 @@ var Eureka = function (_Component) {
       var viewChooser = !_utility2.default.serverSideRendering ? _react2.default.createElement(_ViewChooser2.default, props) : undefined;
       var chooseBar = shouldDisplayChooseBar ? _react2.default.createElement(_ChooseBar2.default, _extends({ ariaHidden: state.modalOpen }, props)) : undefined;
       var enlargeFocusedRows = props.view.enlargeFocusedRows ? ' eureka__enlarge-focused-rows' : '';
+      var chooseMultipleClass = props.view.chooseMultiple ? ' eureka__choose-multiple' : '';
       var searchBar = !_utility2.default.serverSideRendering ? _react2.default.createElement(_SearchBar2.default, props) : undefined;
       var serverSideClass = _utility2.default.serverSideRendering ? ' eureka__server-side' : '';
+      var chooseRadio = props.config.allowChooseMultiple ? _react2.default.createElement(_ChooseRadio2.default, { view: props.view, content: props.content, storagePrefix: props.storagePrefix }) : undefined;
       var sortContentsSelector = !_utility2.default.serverSideRendering ? _react2.default.createElement(_SortContents2.default, _extends({}, props, { sort: props.view.sort })) : undefined;
       var formDiv = _react2.default.createElement(
         'div',
@@ -516,6 +547,7 @@ var Eureka = function (_Component) {
                 ),
                 _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'media.contents', defaultMessage: 'Media Content' })
               ),
+              chooseRadio,
               searchBar
             ),
             _react2.default.createElement(
@@ -545,12 +577,12 @@ var Eureka = function (_Component) {
         modal
       ) : _react2.default.createElement(
         'div',
-        { role: 'widget', lang: props.lang || undefined, className: 'eureka eureka__view-mode__' + props.view.mode + enlargeFocusedRows + serverSideClass },
+        { role: 'widget', lang: props.lang || undefined, className: 'eureka eureka__view-mode__' + props.view.mode + chooseMultipleClass + enlargeFocusedRows + serverSideClass },
         _react2.default.createElement(
           'div',
           { className: classNames({
               "eureka__sticky-bar": this.state.stickyNotifications
-            }), 'aria-live': 'polite', 'aria-atomic': 'true' },
+            }), 'aria-live': 'assertive', 'aria-relevant': 'additions', 'aria-atomic': 'true' },
           notification
         ),
         formDiv,
@@ -628,6 +660,31 @@ var _initialiseProps = function _initialiseProps() {
         by: 'editedOn'
       }
     }));
+  };
+
+  this.handleKeyboardChooseSingle = function (event) {
+    _store2.default.dispatch(_actions2.default.updateView({
+      chooseMultiple: false
+    }));
+  };
+
+  this.handleKeyboardChooseMultiple = function (event) {
+    _store2.default.dispatch(_actions2.default.updateView({
+      chooseMultiple: true
+    }));
+  };
+
+  this.handleKeyboardToggleInvertSelection = function (event) {
+    if (!_this6.props.view.chooseMultiple) return;
+    _store2.default.dispatch(_actions2.default.updateView({
+      selectionInverted: !_this6.props.view.selectionInverted
+    }));
+  };
+
+  this.handleKeyboardDeselect = function (event) {
+    console.log('handleKeyboardDeselect');
+
+    _store2.default.dispatch(_actions2.default.deselectAll());
   };
 
   this.toggleSourceTreeOpen = function (event) {

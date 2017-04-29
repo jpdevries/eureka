@@ -208,7 +208,8 @@ module.exports = function(grunt) {
 				options: {
 					style: 'expanded',
 					compass: false,
-          sourcemap: false
+          sourcemap: true,
+          sourceMapEmbed: true
 				},
 				files: {
 					'<%= dirs.theme %><%= dirs.assets %><%= dirs.css %>main.css': '<%= dirs.scss %>main.scss'
@@ -221,7 +222,7 @@ module.exports = function(grunt) {
 
         // or
         map: {
-            inline: false, // save all sourcemaps as separate files...
+            //inline: false, // save all sourcemaps as separate files...
             //annotation: 'dist/css/maps/' // ...to the specified directory
         },
 
@@ -411,6 +412,13 @@ module.exports = function(grunt) {
           },
           files: '<%= dirs.scss %>**/*.scss',
           tasks: ['sass:dev', 'postcss', 'cssmin', 'copy:css', 'growl:sass']
+      },
+      scssdev: {
+          options: {
+              livereload: true
+          },
+          files: '<%= dirs.scss %>**/*.scss',
+          tasks: ['sass:dev', 'copy:css', 'growl:sass']
       }
     },
   });
@@ -432,7 +440,7 @@ module.exports = function(grunt) {
 
   grunt.renameTask('string-replace','bump');
 
-  grunt.registerTask('default', ['growl:watch', 'watch']);
+  grunt.registerTask('default', ['growl:watch', 'watch:scssdev']);
   grunt.registerTask('build',['bower','copy:bower','modernizr','sass','copy:css','postcss','cssmin','copy:css','webpack','uglify','clean:buildimg','svgstore','svgo','copy:img','growl:build']);
   grunt.registerTask('buildcss',['sass','copy:css','postcss','cssmin','copy:css','growl:sass']);
 };

@@ -89,6 +89,7 @@ class EurekaTable extends Component {
     if(this.state.sort !== nextState.sort) return true;
     if(nextProps.content.contents !== this.state.contents) return true;
     if((this.state.contents.length !== nextState.contents.length) || (this.state.contents !== nextState.contents)) return true;
+    if(nextProps.view.chooseMultiple !== this.props.view.chooseMultiple) return true;
 
     if(nextProps.view.sort !== this.props.view.sort) return true;
     return true;
@@ -197,15 +198,17 @@ class EurekaTable extends Component {
       )
     }) : undefined;
 
-    const selectHead = utility.serverSideRendering ? <th scope="col" role="columnheader">Select</th> : undefined;
+    const selectHead = (utility.serverSideRendering) ? <th scope="col" role="columnheader">Select</th> : undefined;
+    const checkboxHead = (!utility.serverSideRendering && props.view.chooseMultiple) ? <th scope="col" role="columnheader" className="eureka__choose"><span className="visually-hidden"><FormattedMessage id="choose" defaultMessage="Choose" /></span></th> : undefined;
 
     const table = (
       <table className="eureka__table" cellSpacing="0" cellPadding="0" role="grid">
         <thead hidden={!props.content.contents.length} className={classNames((store.getState().view.isTableScrolling) ? 'eureka__tbody-scrolling' : undefined)}>
           <tr>
             {selectHead}
-            <th role="rowheader" scope="col" role="columnheader"><FormattedMessage id="media" defaultMessage="Media" /></th>
-            <th className="sortable" role="rowheader" scope="col" role="columnheader" onClick={(event) => {
+            {checkboxHead}
+            <th role="rowheader" scope="col" role="columnheader" className="eureka__th-media"><FormattedMessage id="media" defaultMessage="Media" /></th>
+            <th className="eureka__th-filename" aria-sort={props.view.sort.by === 'filename' ? props.view.sort.dir : undefined} role="rowheader" scope="col" role="columnheader" onClick={(event) => {
               let dir = this.props.view.sort.dir;
               //console.log("this.state.sort.by === 'filename'", this.state.sort.by === 'filename', dir);
               if(this.props.view.sort.by === 'filename') {
@@ -229,8 +232,8 @@ class EurekaTable extends Component {
                 dir: dir
               });*/
             }}><FormattedMessage id="name" defaultMessage="Name" />&ensp;{(!utility.serverSideRendering) ? <Icon {...props}  icon="sort" /> : undefined}</th>
-            <th role="rowheader" scope="col" role="columnheader" className="visually-hidden">Actions</th>
-            <th className="sortable" role="rowheader" scope="col" role="columnheader" onClick={(event) => {
+            <th role="rowheader" scope="col" role="columnheader" className="visually-hidden eureka__th-actions">Actions</th>
+            <th className="eureka__th-dimensions" aria-sort={props.view.sort.by === 'dimensions' ? props.view.sort.dir : undefined} role="rowheader" scope="col" role="columnheader" onClick={(event) => {
               let dir = this.state.sort.dir;
               if(this.props.view.sort.by === 'dimensions') {
                 dir = (dir === utility.ASCENDING) ? utility.DESCENDING : utility.ASCENDING
@@ -252,7 +255,7 @@ class EurekaTable extends Component {
                 dir: dir
               });*/
             }}><FormattedMessage id="dimensions" defaultMessage="Dimensions" />&ensp;{(!utility.serverSideRendering) ? <Icon {...props} icon="sort" /> : undefined}</th>
-            <th className="sortable" role="rowheader" scope="col" role="columnheader" onClick={(event) => {
+            <th className="eureka__th-file-size" aria-sort={props.view.sort.by === 'fileSize' ? props.view.sort.dir : undefined} role="rowheader" scope="col" role="columnheader" onClick={(event) => {
               let dir = this.state.sort.dir;
               if(this.props.view.sort.by === 'fileSize') {
                 dir = (dir === utility.ASCENDING) ? utility.DESCENDING : utility.ASCENDING
@@ -274,7 +277,7 @@ class EurekaTable extends Component {
                 dir: dir
               });*/
             }}><FormattedMessage id="fileSize" defaultMessage="File Size" />&ensp;{(!utility.serverSideRendering) ? <Icon {...props} icon="sort" /> : undefined}</th>
-            <th className="sortable" role="rowheader" scope="col" role="columnheader" onClick={(event) => {
+            <th className="eureka__th-edited-on" aria-sort={props.view.sort.by === 'editedOn' ? props.view.sort.dir : undefined} role="rowheader" scope="col" role="columnheader" onClick={(event) => {
                 let dir = this.state.sort.dir;
                 if(this.props.view.sort.by === 'editedOn') {
                   dir = (dir === utility.ASCENDING) ? utility.DESCENDING : utility.ASCENDING

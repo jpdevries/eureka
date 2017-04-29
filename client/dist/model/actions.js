@@ -32,11 +32,47 @@ var updateView = function updateView(view) {
   };
 };
 
+var DESELECT_ALL = 'deselect_all';
+var deselectAll = function deselectAll() {
+  return {
+    type: DESELECT_ALL
+  };
+};
+
+var INVERT_SELECTION = 'invert_selection';
+var invertSelection = function invertSelection() {
+  return {
+    type: INVERT_SELECTION
+  };
+};
+
 var UPDATE_SOURCE = 'update_source';
 var updateSource = function updateSource(source) {
   return {
     type: UPDATE_SOURCE,
     source: source
+  };
+};
+
+var ADD_MEDIA_ITEM_TO_CHOSEN_ITEMS = 'add_media_item_to_chosen_items';
+var addMediaItemToChosenItems = function addMediaItemToChosenItems(item) {
+  var inverted = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+  return {
+    type: ADD_MEDIA_ITEM_TO_CHOSEN_ITEMS,
+    item: item,
+    inverted: inverted
+  };
+};
+
+var REMOVE_MEDIA_ITEM_FROM_CHOSEN_ITEMS = 'remove_media_item_from_chosen_items';
+var removeMediaItemFromChosenItems = function removeMediaItemFromChosenItems(item) {
+  var inverted = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+  return {
+    type: REMOVE_MEDIA_ITEM_FROM_CHOSEN_ITEMS,
+    item: item,
+    inverted: inverted
   };
 };
 
@@ -246,6 +282,125 @@ var deleteMediaItem = function deleteMediaItem(source, path) {
     });
   };
 };
+
+var DELETE_MEDIA_ITEMS_SUCCESS = 'delete_media_items_success';
+var deleteMediaItemsSuccess = function deleteMediaItemsSuccess(contents, formData) {
+  //console.log('DELETE_MEDIA_ITEM_SUCCESS', source, path);
+  return {
+    type: DELETE_MEDIA_ITEMS_SUCCESS,
+    contents: contents,
+    formData: formData
+  };
+};
+
+exports.DELETE_MEDIA_ITEMS_SUCCESS = DELETE_MEDIA_ITEMS_SUCCESS;
+exports.deleteMediaItemsSuccess = deleteMediaItemsSuccess;
+
+var DELETE_MEDIA_ITEMS_ERROR = 'delete_media_items_error';
+var deleteMediaItemsError = function deleteMediaItemsError(source, path) {
+  //console.log('DELETE_MEDIA_ITEM_SUCCESS', source, path);
+  return {
+    type: DELETE_MEDIA_ITEMS_ERROR,
+    source: source,
+    path: path
+  };
+};
+
+exports.DELETE_MEDIA_ITEMS_ERROR = DELETE_MEDIA_ITEMS_ERROR;
+exports.deleteMediaItemsError = deleteMediaItemsError;
+
+var deleteMediaItems = function deleteMediaItems(source, formData) {
+  var customHeaders = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+  console.log('deleteMediaItems');
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = formData.entries()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var pair = _step.value;
+
+      console.log(pair[0] + ', ' + pair[1]);
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return) {
+        _iterator.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+
+  return function (dispatch) {
+    return fetch('/assets/components/eureka/media/sources/' + source, {
+      method: 'DELETE',
+      body: formData,
+      headers: Object.assign({}, {
+        'Accept': 'application/json'
+      }, customHeaders)
+    }).then(function (response) {
+      if (response.state < 200 || response.state >= 300) {
+        var error = new Error(response.statusText);
+        error.response = response;
+        throw error;
+      }
+      return response;
+    }).then(function (response) {
+      return response.json();
+    }).then(function (contents) {
+      //if(contents === false) throw new Error(`Unable to delete directory ${path}`)
+      return contents;
+    }).then(function (contents) {
+      return dispatch(deleteMediaItemsSuccess(contents, formData));
+    }).catch(function (error) {
+      return dispatch(deleteMediaItemsError(error));
+    });
+  };
+};
+
+//http://localhost:3001/assets/components/eureka/media/sources/0
+
+/*const deleteMediaItems = (source, formData, customHeaders = {}) => (
+  (dispatch) => (
+    fetch(`/assets/components/eureka/media/sources/${source}`), {
+      method: 'DELETE',
+      body: formData,
+      headers: Object.assign({}, {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }, customHeaders)
+    }).then((response) => {
+      if(response.state < 200 || response.state >= 300) {
+        var error = new Error(response.statusText)
+        error.response = response
+        throw error;
+      }
+      return response;
+    }).then((response) => (
+      response.json()
+    )).then((contents) => {
+      if(contents === false) throw new Error(`Unable to delete items`)
+      return contents;
+    }).then((contents) => (
+      dispatch(
+        deleteMediaItemsSuccess(source, formData)
+      )
+    )).catch((error) => (
+      dispatch(
+        deleteMediaItemError(error)
+      )
+    )
+  )
+);*/
+
+exports.deleteMediaItems = deleteMediaItems;
 
 var NOTIFICATION = 'notification';
 var notify = function notify(message, notificationType, learnMore, dismissAfter) {
@@ -560,3 +715,15 @@ exports.RENAME_ITEM_ERROR = RENAME_ITEM_ERROR;
 exports.renameItemError = renameItemError;
 
 exports.renameItem = renameItem;
+
+exports.addMediaItemToChosenItems = addMediaItemToChosenItems;
+exports.ADD_MEDIA_ITEM_TO_CHOSEN_ITEMS = ADD_MEDIA_ITEM_TO_CHOSEN_ITEMS;
+
+exports.removeMediaItemFromChosenItems = removeMediaItemFromChosenItems;
+exports.REMOVE_MEDIA_ITEM_FROM_CHOSEN_ITEMS = REMOVE_MEDIA_ITEM_FROM_CHOSEN_ITEMS;
+
+exports.invertSelection = invertSelection;
+exports.INVERT_SELECTION = INVERT_SELECTION;
+
+exports.deselectAll = deselectAll;
+exports.DESELECT_ALL = DESELECT_ALL;

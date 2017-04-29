@@ -172,6 +172,12 @@ exports.default = (0, _reactIntl.defineMessages)((_defineMessages = {
 }), _defineProperty(_defineMessages, 'pluralItem', {
   'id': 'pluralItem',
   'defaultMessage': 'a media item'
+}), _defineProperty(_defineMessages, 'pluralChoose', {
+  'id': 'pluralChoose',
+  'defaultMessage': 'item'
+}), _defineProperty(_defineMessages, 'copyListofSelectedFiles', {
+  'id': 'copyListofSelectedFiles',
+  'defaultMessage': 'Copy list of selected files'
 }), _defineProperty(_defineMessages, 'mediaSourceTreeMessage', {
   'id': 'media.sourceTree',
   'defaultMessage': 'Media Source Panel'

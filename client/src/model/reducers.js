@@ -22,6 +22,7 @@ const initialConfigState = {
   allowDelete:true,
   confirmBeforeDelete:false,
   locales:"en-US",
+  allowChooseMultiple:true,
   mediaSource:"0",
   currentDirectory:"/",
   welcome: true,
@@ -57,8 +58,12 @@ var configReducer = function(state, action) {
   return state;
 }
 
+let selectionInverted = false;
+
 const initialContentState = Object.assign({}, {
   cd: '/',
+  chosenMediaItems:[],
+  chosenMediaItemsInverted:[],
   contents:[
     /*{
       filename:'foo.jpg',
@@ -81,41 +86,129 @@ const initialContentState = Object.assign({}, {
   ]
 }, (() => {
   try {
-    return (JSON.parse(localStorage.getItem('eureka__content')))
+    return (Object.assign({}, JSON.parse(localStorage.getItem('eureka__content')), {
+      chosenMediaItems: []
+    }))
   } catch(e) {
     return {};
   }
 })());
 
 
+function getInvertedChosenItems(contents = [], chosenMediaItems = [], selectionInverted = true) {
+  if(!selectionInverted) return chosenMediaItems;
+  return contents.filter((item) => (
+    !chosenMediaItems.includes(item)
+  ));
+}
+
 var contentReducer = function(state, action) {
   state = state || initialContentState;
+  let newState = state;
   //console.log('contentReducer', action.type);
+
+  let newChosenMediaItems;
+
   switch(action.type) {
     case actions.UPDATE_CONFIG:
     //console.log('UPDATE_CONFIG!!!', state, action.config);
-    if(action.config.currentDirectory) return Object.assign({},state,{
+    if(action.config.currentDirectory) return Object.assign({}, state, {
       cd:action.config.currentDirectory
     })
 
     break;
 
+    case actions.UPDATE_VIEW:
+    //console.log('UPDATE_CONFIG!!!', state, action.config);
+    //console.log(' update view mo fo', selectionInverted, action.view.selectionInverted);
+    try {
+      if(selectionInverted !== action.view.selectionInverted || state.contents.chosenMediaItems.length !== state.contents.chosenMediaItemsInverted.length) {
+        newState = update(state, {$merge: {chosenMediaItemsInverted: getInvertedChosenItems(state.contents, state.chosenMediaItems, action.view.selectionInverted)}});
+      }
+    } catch(e) { console.log(e) }
+
+    selectionInverted = action.view.selectionInverted;
+    return newState;
+    break;
+
+    case actions.INVERT_SELECTION:
+    return newState;
+    break;
+
+    case actions.ADD_MEDIA_ITEM_TO_CHOSEN_ITEMS:
+    if(state.chosenMediaItems.includes(action.item)) return newState;
+    newChosenMediaItems = update(newState.chosenMediaItems, {$push: [action.item]});
+    return update(newState, {$merge: {
+      chosenMediaItems: newChosenMediaItems,
+      chosenMediaItemsInverted: getInvertedChosenItems(newState.contents, update(newState.chosenMediaItems, {$push: [action.item]}), action.inverted)
+    }});
+    break;
+
+    case actions.REMOVE_MEDIA_ITEM_FROM_CHOSEN_ITEMS:
+    if(!state.chosenMediaItems.includes(action.item)) return newState;
+
+    newChosenMediaItems = newState.chosenMediaItems.filter((item) => (item !== action.item));
+
+    return update(newState, {$merge: {
+      chosenMediaItems: newChosenMediaItems,
+      chosenMediaItemsInverted: getInvertedChosenItems(newState.contents, newChosenMediaItems, action.inverted)
+    }});
+    break;
+
+    case actions.DESELECT_ALL:
+    return update(newState, {$merge: {
+      chosenMediaItems: [],
+      chosenMediaItemsInverted: []
+    }});
+    break;
+
     case actions.UPDATE_CONTENT:
     const content = processContentItems(action.content);
-    return Object.assign({}, state, content);
+    newState = Object.assign({}, state, content);
+    if(action.content.cd) newState = Object.assign({}, newState, { // if updating the current directory clear the chosen media items
+      chosenMediaItems: [],
+      chosenMediaItemsInverted: []
+    });
+    if(action.content.chosenMediaItems && state.view !== undefined) {
+      newState = update(state, {$merge: {chosenMediaItemsInverted: getInvertedChosenItems(state.contents, state.chosenMediaItems, state.view.selectionInverted)}});
+    }
+    return newState;
     break;
 
     case actions.FETCH_DIRECTORY_CONTENTS_SUCCESS:
     //console.log('FETCH_DIRECTORY_CONTENTS_SUCCESS', state, action.contents);
-    return Object.assign({},state,{
+    return Object.assign({},newState,{
       contents: processContentItems(action.contents.filter((file) => (
         file.filename
       )))
     });
 
+    case actions.DELETE_MEDIA_ITEMS_SUCCESS:
+    console.log(actions.DELETE_MEDIA_ITEMS_SUCCESS);
+    const formData = action.formData;
+    for(var pair of formData.entries()) {
+      console.log(pair[0]+ ', '+ pair[1]);
+    }
+    const deletedFileNames = formData.getAll('delete_file[]');
+    //if(!Array.isArray(action.contents)) return state; // so the backed can just return res.json([true]) if it wants?
+    const newContents = processContentItems(action.contents.filter((file) => (
+      file.filename
+    )));
+    newChosenMediaItems = newState.chosenMediaItems.filter((file) => (
+      !deletedFileNames.includes(file.filename)
+    ));
+    let newChosenMediaItemsInverted = newState.chosenMediaItemsInverted.filter((file) => (
+      !deletedFileNames.includes(file.filename)
+    ));
+    return Object.assign({}, newState, {
+      contents: newContents,
+      chosenMediaItems: newChosenMediaItems,
+      chosenMediaItemsInverted: newChosenMediaItemsInverted
+    });
+
     case actions.UPLOAD_FILES_SUCCESS:
     //if(!Array.isArray(action.contents)) return state; // so the backed can just return res.json([true]) if it wants?
-    return Object.assign({},state,{
+    return Object.assign({},newState,{
       contents: processContentItems(action.contents.filter((file) => (
         file.filename
       )))
@@ -125,7 +218,7 @@ var contentReducer = function(state, action) {
     //console.log(actions.DELETE_MEDIA_ITEM_SUCCESS, action.source, action.path, state);
 
 
-    return Object.assign({},state,{
+    return Object.assign({},newState,{
       cd: (state.cd === action.path) ? path.join(state.cd, '..') : state.cd,
       contents: state.contents.filter((file) => (
         file.path !== action.path
@@ -277,6 +370,7 @@ var treeReducer = function(state, action) {
   return state;
 }
 
+
 var initialViewState = Object.assign({}, {
   focusedMediaItem: undefined,
   filter: undefined,
@@ -285,11 +379,13 @@ var initialViewState = Object.assign({}, {
   sourceTreeOpen: false,
   enlargeFocusedRows: false,
   locale:"en-US",
+  chooseMultiple:true,
   sort:{
     by: 'filename',
     dir: utility.ASCENDING
   },
   isTableScrolling:false,
+  selectionInverted: selectionInverted,
   allowFullscreen: true,
   isUploading: false,
   isTouch: false,
@@ -344,6 +440,14 @@ var viewReducer = function(state, action) {
 
     case actions.UPDATE_VIEW:
     return Object.assign({},state,action.view);
+
+    case actions.UPDATE_CONTENT:
+    if(action.content.cd) {
+      return Object.assign({}, state, {
+        selectionInverted: false
+      });
+    }
+    return state;
 
     case actions.UPDATE_CONFIG:
     let o = {};

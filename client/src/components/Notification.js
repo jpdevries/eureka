@@ -105,7 +105,7 @@ export class Notification extends Component {
 }
 
 Notification.defaultProps = {
-  dismissAfter: 4200
+  dismissAfter: 6000
 }
 
 export default Notification;

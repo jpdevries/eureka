@@ -170,7 +170,7 @@ var _initialiseProps = function _initialiseProps() {
 };
 
 Notification.defaultProps = {
-  dismissAfter: 4200
+  dismissAfter: 6000
 };
 
 exports.default = Notification;

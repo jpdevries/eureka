@@ -34,7 +34,8 @@ class MediaRow extends PureComponent {
     super(props);
 
     this.state = {
-      focusWithin: false
+      focusWithin: false,
+      chooseChecked: false
     };
 
     this.handleKeyboardBackspace = this.handleKeyboardBackspace.bind(this);
@@ -43,12 +44,45 @@ class MediaRow extends PureComponent {
     this.handleKeyboardRename = this.handleKeyboardRename.bind(this);
   }
 
+  componentWillUpdate(nextProps, nextState) {
+    //return;
+    //console.log('MediaRow componentWillUpdate');
+    if(this.props.view.selectionInverted !== nextProps.view.selectionInverted) {
+      this.setState({
+        chooseChecked: !this.state.chooseChecked
+      });
+      return;
+    }
 
+
+
+    //const c = (nextProps.view.sele)
+    if(nextProps.view.selectionInverted) {
+      if(this.props.content.chosenMediaItemsInverted.length > 1 && nextProps.content.chosenMediaItemsInverted.length < 1) {
+        this.setState({
+          chooseChecked: false
+        })
+      }
+    } else {
+      if(this.props.content.chosenMediaItems.length > 1 && nextProps.content.chosenMediaItems.length < 1) {
+        this.setState({
+          chooseChecked: false
+        })
+      }
+    }
+
+
+
+  }
 
 
   shouldComponentUpdate(nextProps, nextState) {
-    //console.log('MediaRow shouldComponentUpdate', this.props, nextProps);
+    //console.log('MediaRow shouldComponentUpdate', this.props, nextProps, this.state, nextState);
+    //return true;
+
     if(this.props.item !== nextProps.item) return true;
+    if(this.state.chooseChecked !== nextState.chooseChecked) return true;
+    if(this.props.content.chosenMediaItems.length !== nextProps.content.chosenMediaItems.length || this.props.content.chosenMediaItemsInverted.length !== nextProps.content.chosenMediaItemsInverted.length) return true;
     try {
       //console.log((nextProps.focusedMediaItem !== undefined));
       return (nextProps.focusedMediaItem !== undefined);
@@ -59,13 +93,37 @@ class MediaRow extends PureComponent {
 
   componentDidMount() {
     this.assignKeyboardListeners();
+    //Mousetrap(document.querySelector('.eureka')).bind(['alt+z'], this.handleKeyboardDeselect);
+
+    /*store.subscribe(() => {
+      const state = store.getState();
+      //console.log(state);
+
+      if(!state.content.chosenMediaItemsInverted.length) {
+        this.setState({
+          chooseChecked: false
+        })
+      }
+
+    });*/
+
   }
+
+  /*handleKeyboardDeselect = (event) => {
+    console.log('handleKeyboardDeselect');
+    this.setState({
+      chooseChecked: false
+    })
+  }*/
 
   assignKeyboardListeners() {
     Mousetrap.bind(['backspace'], this.handleKeyboardBackspace);
     Mousetrap.bind(['enter'], this.handleKeyboardChoose);
     Mousetrap.bind(['alt+space'], this.handleKeyboardExpand);
     Mousetrap.bind(['ctrl+r'], this.handleKeyboardRename);
+
+
+
   }
 
   onBlur(event) {
@@ -75,6 +133,7 @@ class MediaRow extends PureComponent {
 
   componentWillUnmount() {
     this.removeKeyboardListeners();
+    //Mousetrap(document.querySelector('.eureka')).unbind(['alt+z'], this.handleKeyboardDeselect);
   }
 
   removeKeyboardListeners() {
@@ -82,6 +141,8 @@ class MediaRow extends PureComponent {
     Mousetrap.unbind(['enter'], this.handleKeyboardChoose);
     Mousetrap.unbind(['alt+space'], this.handleKeyboardExpand);
     Mousetrap.unbind(['ctrl+r'], this.handleKeyboardRename);
+
+
   }
 
   handleKeyboardRename(event) {
@@ -175,6 +236,10 @@ class MediaRow extends PureComponent {
     }
 
     const contentEditable = false;
+    const checkboxId = `eureka__choose_multiple_${utility.cssSafe(props.item.filename)}`;
+    const onMediaClick = (props.view.chooseMultiple) ? (event) => { // #janky way to simulate <label>, <label> messes up styling for the default view
+      event.target.closest('.eureka').querySelector(`#${checkboxId}`).click();
+    } : undefined;
 
     let media = (function(ext){ // consider abstracting this to its own module
       //console.log(pathParse(props.item.filename).ext,'props.item',props.item);
@@ -192,7 +257,7 @@ class MediaRow extends PureComponent {
         case '.svg':
         case '.bmp':
         case '.tiff':
-        return (<img src={src}  alt={alt} />);
+        return (<img src={src}  alt={alt} onClick={onMediaClick} />);
         break;
 
         case '.mp4':
@@ -268,7 +333,7 @@ class MediaRow extends PureComponent {
 
         default:
         const icon = utility.getIconByExtension(pathParse(props.item.filename).ext);
-        return (<p><Icon {...props} icon={icon} />&ensp;{props.item.absoluteURL}</p>);
+        return (<p onClick={onMediaClick}><Icon {...props} icon={icon} />&ensp;{props.item.absoluteURL}</p>);
       }
     })(pathParse(props.item.filename).ext);
 
@@ -300,6 +365,34 @@ class MediaRow extends PureComponent {
       }
     })(ext);
 
+    //console.log('this.state.chooseChecked', this.state.chooseChecked);
+    const checkboxAriaLabel = formatMessage(definedMessages.chooseItem, {
+      filename: item.filename
+    });
+
+
+    const checkbox = (props.view.chooseMultiple) ? (
+      <td className="eureka__choose">
+        <input aria-label={`Choose ${item.filename}`} type="checkbox" name="eureka__chose_multiple" id={checkboxId} key={`eureka__choose_multiple_${utility.cssSafe(props.item.filename)}__${this.state.chooseChecked ? 'checked' : ''}`} checked={this.state.chooseChecked} onChange={(event) => {
+          event.preventDefault();
+          event.stopPropagation();
+
+          //console.log('event.target.checked', event.target.checked);
+
+          this.setState({
+            chooseChecked: event.target.checked
+          });
+
+          if(props.view.selectionInverted ? !event.target.checked : event.target.checked) {
+            store.dispatch(actions.addMediaItemToChosenItems(props.item, props.view.selectionInverted));
+          } else {
+            store.dispatch(actions.removeMediaItemFromChosenItems(props.item, props.view.selectionInverted));
+          }
+          //console.log('event.target.checked', event.target.checked);
+        }} />
+      </td>
+    ) : undefined;
+
     const openInANewTabMessage = formatMessage(definedMessages.openFileInNewTab, {
       filename: props.item.fileName
     });
@@ -307,6 +400,10 @@ class MediaRow extends PureComponent {
     if(utility.serverSideRendering && isLinkableFileType) {
       //media = <label style={{display:'block'}} htmlFor={mediaSelectId} aria-labelledby={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }filename__${utility.cssSafe(props.item.filename)}`}>{media}</label>;
       media = <a href={props.item.absoluteURL} target={`_${mediaSelectId}`} aria-label={openInANewTabMessage} role="presentation">{media}</a>;
+    }
+
+    if(props.view.chooseMultiple) {
+      //media = <label htmlFor={checkboxId}>{media}</label>
     }
 
     let fileName = utility.wordBreaksEvery(props.item.filename);
@@ -317,9 +414,11 @@ class MediaRow extends PureComponent {
 
     const contextMenu = (utility.serverSideRendering) ? undefined : <ContextMenu className="eureka__context-row" {...props} item={item}  hidden={shouldHide(item)} key={`cm__${index}`} />;
 
+    //<span className="visually-hidden"><FormattedMessage id="media.contents" defaultMessage="Media Contents" /></span>
     return (
 
       <tr role="row" className={classNames(className)} id={utility.cssSafe(props.item.filename)} aria-label={ariaLabel} role="row" tabIndex={tabIndex} onFocus={this.onFocus.bind(this)} onBlur={this.onBlur.bind(this)} contextMenu={`context_menu__tbody-${props.index}`}>
+        {checkbox}
         {mediaSelect}
         <td role="gridcell" id={mediaId} title={ariaLabel} className="eureka__td-media" onTouchTap={ (!props.view.isTouch) ? undefined : (e) => {
     if (utility.isDblTouchTap(e)) {
@@ -336,7 +435,6 @@ class MediaRow extends PureComponent {
             detail: props.item
           }));*/
         }}>
-          <span className="visually-hidden"><FormattedMessage id="media.contents" defaultMessage="Media Contents" /></span>
           {media}
         </td>
         <td role="gridcell" id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }filename__${utility.cssSafe(props.item.filename)}`} role="gridcell" className="eureka__td-filename" contentEditable={contentEditable} onBlur={(event) => {
@@ -376,13 +474,13 @@ class MediaRow extends PureComponent {
           {fileName}
         </td>
         {contextMenu}
-        <td role="gridcell">
+        <td className="eureka__dimensions" role="gridcell">
           {`${props.item.dimensions[0]}x${props.item.dimensions[1]}`}
         </td>
-        <td role="gridcell">
+        <td className="eureka__file-size" role="gridcell">
           {filesize(props.item.fileSize)}
         </td>
-        <td role="gridcell" title={props.item.editedOnLongTimeZone || new Date(props.item.editedOn).toLocaleString(props.view.locale, { weekday:'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' })}>
+        <td className="eureka__edited-on" role="gridcell" title={props.item.editedOnLongTimeZone || new Date(props.item.editedOn).toLocaleString(props.view.locale, { weekday:'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' })}>
           {props.item.editedOnTwoDigit || new Date(props.item.editedOn).toLocaleString(props.view.locale, { year: '2-digit', month: '2-digit', day: '2-digit' })}
         </td>
       </tr>

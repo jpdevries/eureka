@@ -91,11 +91,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utility2 = _interopRequireDefault(_utility);
 
-	var _en = __webpack_require__(285);
+	var _en = __webpack_require__(286);
 
 	var _en2 = _interopRequireDefault(_en);
 
-	var _i18n = __webpack_require__(286);
+	var _i18n = __webpack_require__(287);
 
 	var _i18n2 = _interopRequireDefault(_i18n);
 
@@ -266,10 +266,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	          //localStorage.setItem(`${state.config.storagePrefix}mode`, state.view.mode);
 	          //localStorage.setItem(`${state.config.storagePrefix}sort`, state.view.sort);
 	          //localStorage.setItem(`${state.config.storagePrefix}treeHidden`, !state.view.sourceTreeOpen);
-	          localStorage.setItem(state.config.storagePrefix + 'content', JSON.stringify(state.content));
+	          localStorage.setItem(state.config.storagePrefix + 'content', JSON.stringify(Object.assign({}, state.content, {
+	            chosenMediaItemsInverted: undefined
+	          })));
 	          localStorage.setItem(state.config.storagePrefix + 'tree', JSON.stringify(state.tree));
 	          //console.log('state.view', JSON.stringify(state.view));
-	          localStorage.setItem(state.config.storagePrefix + 'view', JSON.stringify(state.view));
+	          localStorage.setItem(state.config.storagePrefix + 'view', JSON.stringify(Object.assign({}, state.view, {
+	            selectionInverted: false
+	          })));
 	        } catch (e) {}
 	      }
 	    });
@@ -24348,6 +24352,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Notification2 = _interopRequireDefault(_Notification);
 
+	var _ChooseRadio = __webpack_require__(285);
+
+	var _ChooseRadio2 = _interopRequireDefault(_ChooseRadio);
+
 	var _mousetrap = __webpack_require__(267);
 
 	var _mousetrap2 = _interopRequireDefault(_mousetrap);
@@ -24452,6 +24460,21 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  }, {
 	    key: 'assignKeyboardListeners',
+
+
+	    /*handleKeyboardDeselect = (event) => {
+	      console.log('handleKeyboardDeselect');
+	      const toUncheck = this.getEurekaRoot().querySelectorAll('.eureka__td-media input[type="checkbox"]:checked');
+	      console.log('toUncheck', toUncheck);
+	      for(let i = 0; i < toUncheck.length; i++) {
+	        toUncheck[i].click();
+	      }
+	       store.dispatch(actions.updateContent({
+	        chosenMediaItems: [],
+	        chosenMediaItemsInverted: []
+	      }));
+	    }*/
+
 	    value: function assignKeyboardListeners() {
 	      _mousetrap2.default.bind(['ctrl+;'], this.toggleSourceTreeOpen);
 	      _mousetrap2.default.bind(['ctrl+alt+1', 'ctrl+alt+2', 'ctrl+alt+3', 'ctrl+alt+4'], this.handleKeyboardChangeView);
@@ -24466,6 +24489,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      _mousetrap2.default.bind(['alt+d'], this.handleKeyboardSortDimensions);
 	      _mousetrap2.default.bind(['alt+f'], this.handleKeyboardSortFileSize);
 	      _mousetrap2.default.bind(['alt+e'], this.handleKeyboardSortEditedOn);
+
+	      _mousetrap2.default.bind(['alt+s'], this.handleKeyboardChooseSingle);
+	      _mousetrap2.default.bind(['alt+m'], this.handleKeyboardChooseMultiple);
+	      _mousetrap2.default.bind(['alt+i'], this.handleKeyboardToggleInvertSelection);
+	      _mousetrap2.default.bind(['alt+z'], this.handleKeyboardDeselect);
 
 	      if (this.props.config.handlers && this.props.config.handlers.createFile) _mousetrap2.default.bind(['ctrl+shift+n'], this.handleKeyboardCreateFile);
 	    }
@@ -24485,6 +24513,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      _mousetrap2.default.unbind(['alt+d'], this.handleKeyboardSortDimensions);
 	      _mousetrap2.default.unbind(['alt+f'], this.handleKeyboardSortFileSize);
 	      _mousetrap2.default.unbind(['alt+e'], this.handleKeyboardSortEditedOn);
+
+	      _mousetrap2.default.unbind(['alt+s'], this.handleKeyboardChooseSingle);
+	      _mousetrap2.default.unbind(['alt+m'], this.handleKeyboardChooseMultiple);
+	      _mousetrap2.default.unbind(['alt+i'], this.handleKeyboardToggleInvertSelection);
+	      _mousetrap2.default.unbind(['alt+z'], this.handleKeyboardDeselect);
 
 	      if (this.props.config.handlers && this.props.config.handlers.createFile) _mousetrap2.default.unbind(['ctrl+shift+n'], this.handleKeyboardCreateFile);
 	    }
@@ -24750,8 +24783,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var viewChooser = !_utility2.default.serverSideRendering ? _react2.default.createElement(_ViewChooser2.default, props) : undefined;
 	      var chooseBar = shouldDisplayChooseBar ? _react2.default.createElement(_ChooseBar2.default, _extends({ ariaHidden: state.modalOpen }, props)) : undefined;
 	      var enlargeFocusedRows = props.view.enlargeFocusedRows ? ' eureka__enlarge-focused-rows' : '';
+	      var chooseMultipleClass = props.view.chooseMultiple ? ' eureka__choose-multiple' : '';
 	      var searchBar = !_utility2.default.serverSideRendering ? _react2.default.createElement(_SearchBar2.default, props) : undefined;
 	      var serverSideClass = _utility2.default.serverSideRendering ? ' eureka__server-side' : '';
+	      var chooseRadio = props.config.allowChooseMultiple ? _react2.default.createElement(_ChooseRadio2.default, { view: props.view, content: props.content, storagePrefix: props.storagePrefix }) : undefined;
 	      var sortContentsSelector = !_utility2.default.serverSideRendering ? _react2.default.createElement(_SortContents2.default, _extends({}, props, { sort: props.view.sort })) : undefined;
 	      var formDiv = _react2.default.createElement(
 	        'div',
@@ -24780,6 +24815,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                ),
 	                _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'media.contents', defaultMessage: 'Media Content' })
 	              ),
+	              chooseRadio,
 	              searchBar
 	            ),
 	            _react2.default.createElement(
@@ -24809,12 +24845,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        modal
 	      ) : _react2.default.createElement(
 	        'div',
-	        { role: 'widget', lang: props.lang || undefined, className: 'eureka eureka__view-mode__' + props.view.mode + enlargeFocusedRows + serverSideClass },
+	        { role: 'widget', lang: props.lang || undefined, className: 'eureka eureka__view-mode__' + props.view.mode + chooseMultipleClass + enlargeFocusedRows + serverSideClass },
 	        _react2.default.createElement(
 	          'div',
 	          { className: classNames({
 	              "eureka__sticky-bar": this.state.stickyNotifications
-	            }), 'aria-live': 'polite', 'aria-atomic': 'true' },
+	            }), 'aria-live': 'assertive', 'aria-relevant': 'additions', 'aria-atomic': 'true' },
 	          notification
 	        ),
 	        formDiv,
@@ -24892,6 +24928,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	        by: 'editedOn'
 	      }
 	    }));
+	  };
+
+	  this.handleKeyboardChooseSingle = function (event) {
+	    _store2.default.dispatch(_actions2.default.updateView({
+	      chooseMultiple: false
+	    }));
+	  };
+
+	  this.handleKeyboardChooseMultiple = function (event) {
+	    _store2.default.dispatch(_actions2.default.updateView({
+	      chooseMultiple: true
+	    }));
+	  };
+
+	  this.handleKeyboardToggleInvertSelection = function (event) {
+	    if (!_this6.props.view.chooseMultiple) return;
+	    _store2.default.dispatch(_actions2.default.updateView({
+	      selectionInverted: !_this6.props.view.selectionInverted
+	    }));
+	  };
+
+	  this.handleKeyboardDeselect = function (event) {
+	    console.log('handleKeyboardDeselect');
+
+	    _store2.default.dispatch(_actions2.default.deselectAll());
 	  };
 
 	  this.toggleSourceTreeOpen = function (event) {
@@ -25134,6 +25195,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  allowDelete: true,
 	  confirmBeforeDelete: false,
 	  locales: "en-US",
+	  allowChooseMultiple: true,
 	  mediaSource: "0",
 	  currentDirectory: "/",
 	  welcome: true,
@@ -25168,8 +25230,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return state;
 	};
 
+	var selectionInverted = false;
+
 	var initialContentState = Object.assign({}, {
 	  cd: '/',
+	  chosenMediaItems: [],
+	  chosenMediaItemsInverted: [],
 	  contents: [
 	    /*{
 	      filename:'foo.jpg',
@@ -25192,58 +25258,207 @@ return /******/ (function(modules) { // webpackBootstrap
 	  ]
 	}, function () {
 	  try {
-	    return JSON.parse(localStorage.getItem('eureka__content'));
+	    return Object.assign({}, JSON.parse(localStorage.getItem('eureka__content')), {
+	      chosenMediaItems: []
+	    });
 	  } catch (e) {
 	    return {};
 	  }
 	}());
 
+	function getInvertedChosenItems() {
+	  var contents = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+	  var chosenMediaItems = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+	  var selectionInverted = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+
+	  if (!selectionInverted) return chosenMediaItems;
+	  return contents.filter(function (item) {
+	    return !chosenMediaItems.includes(item);
+	  });
+	}
+
 	var contentReducer = function contentReducer(state, action) {
 	  state = state || initialContentState;
+	  var newState = state;
 	  //console.log('contentReducer', action.type);
-	  switch (action.type) {
-	    case actions.UPDATE_CONFIG:
-	      //console.log('UPDATE_CONFIG!!!', state, action.config);
-	      if (action.config.currentDirectory) return Object.assign({}, state, {
-	        cd: action.config.currentDirectory
-	      });
 
-	      break;
+	  var newChosenMediaItems = void 0;
 
-	    case actions.UPDATE_CONTENT:
-	      var content = processContentItems(action.content);
-	      return Object.assign({}, state, content);
-	      break;
+	  var pair;
 
-	    case actions.FETCH_DIRECTORY_CONTENTS_SUCCESS:
-	      //console.log('FETCH_DIRECTORY_CONTENTS_SUCCESS', state, action.contents);
-	      return Object.assign({}, state, {
-	        contents: processContentItems(action.contents.filter(function (file) {
+	  var _ret = function () {
+	    switch (action.type) {
+	      case actions.UPDATE_CONFIG:
+	        //console.log('UPDATE_CONFIG!!!', state, action.config);
+	        if (action.config.currentDirectory) return {
+	            v: Object.assign({}, state, {
+	              cd: action.config.currentDirectory
+	            })
+	          };
+
+	        break;
+
+	      case actions.UPDATE_VIEW:
+	        //console.log('UPDATE_CONFIG!!!', state, action.config);
+	        //console.log(' update view mo fo', selectionInverted, action.view.selectionInverted);
+	        try {
+	          if (selectionInverted !== action.view.selectionInverted || state.contents.chosenMediaItems.length !== state.contents.chosenMediaItemsInverted.length) {
+	            newState = (0, _reactAddonsUpdate2.default)(state, { $merge: { chosenMediaItemsInverted: getInvertedChosenItems(state.contents, state.chosenMediaItems, action.view.selectionInverted) } });
+	          }
+	        } catch (e) {
+	          console.log(e);
+	        }
+
+	        selectionInverted = action.view.selectionInverted;
+	        return {
+	          v: newState
+	        };
+	        break;
+
+	      case actions.INVERT_SELECTION:
+	        return {
+	          v: newState
+	        };
+	        break;
+
+	      case actions.ADD_MEDIA_ITEM_TO_CHOSEN_ITEMS:
+	        if (state.chosenMediaItems.includes(action.item)) return {
+	            v: newState
+	          };
+	        newChosenMediaItems = (0, _reactAddonsUpdate2.default)(newState.chosenMediaItems, { $push: [action.item] });
+	        return {
+	          v: (0, _reactAddonsUpdate2.default)(newState, { $merge: {
+	              chosenMediaItems: newChosenMediaItems,
+	              chosenMediaItemsInverted: getInvertedChosenItems(newState.contents, (0, _reactAddonsUpdate2.default)(newState.chosenMediaItems, { $push: [action.item] }), action.inverted)
+	            } })
+	        };
+	        break;
+
+	      case actions.REMOVE_MEDIA_ITEM_FROM_CHOSEN_ITEMS:
+	        if (!state.chosenMediaItems.includes(action.item)) return {
+	            v: newState
+	          };
+
+	        newChosenMediaItems = newState.chosenMediaItems.filter(function (item) {
+	          return item !== action.item;
+	        });
+
+	        return {
+	          v: (0, _reactAddonsUpdate2.default)(newState, { $merge: {
+	              chosenMediaItems: newChosenMediaItems,
+	              chosenMediaItemsInverted: getInvertedChosenItems(newState.contents, newChosenMediaItems, action.inverted)
+	            } })
+	        };
+	        break;
+
+	      case actions.DESELECT_ALL:
+	        return {
+	          v: (0, _reactAddonsUpdate2.default)(newState, { $merge: {
+	              chosenMediaItems: [],
+	              chosenMediaItemsInverted: []
+	            } })
+	        };
+	        break;
+
+	      case actions.UPDATE_CONTENT:
+	        var content = processContentItems(action.content);
+	        newState = Object.assign({}, state, content);
+	        if (action.content.cd) newState = Object.assign({}, newState, { // if updating the current directory clear the chosen media items
+	          chosenMediaItems: [],
+	          chosenMediaItemsInverted: []
+	        });
+	        if (action.content.chosenMediaItems && state.view !== undefined) {
+	          newState = (0, _reactAddonsUpdate2.default)(state, { $merge: { chosenMediaItemsInverted: getInvertedChosenItems(state.contents, state.chosenMediaItems, state.view.selectionInverted) } });
+	        }
+	        return {
+	          v: newState
+	        };
+	        break;
+
+	      case actions.FETCH_DIRECTORY_CONTENTS_SUCCESS:
+	        //console.log('FETCH_DIRECTORY_CONTENTS_SUCCESS', state, action.contents);
+	        return {
+	          v: Object.assign({}, newState, {
+	            contents: processContentItems(action.contents.filter(function (file) {
+	              return file.filename;
+	            }))
+	          })
+	        };
+
+	      case actions.DELETE_MEDIA_ITEMS_SUCCESS:
+	        console.log(actions.DELETE_MEDIA_ITEMS_SUCCESS);
+	        var formData = action.formData;
+	        var _iteratorNormalCompletion = true;
+	        var _didIteratorError = false;
+	        var _iteratorError = undefined;
+
+	        try {
+	          for (var _iterator = formData.entries()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	            pair = _step.value;
+
+	            console.log(pair[0] + ', ' + pair[1]);
+	          }
+	        } catch (err) {
+	          _didIteratorError = true;
+	          _iteratorError = err;
+	        } finally {
+	          try {
+	            if (!_iteratorNormalCompletion && _iterator.return) {
+	              _iterator.return();
+	            }
+	          } finally {
+	            if (_didIteratorError) {
+	              throw _iteratorError;
+	            }
+	          }
+	        }
+
+	        var deletedFileNames = formData.getAll('delete_file[]');
+	        //if(!Array.isArray(action.contents)) return state; // so the backed can just return res.json([true]) if it wants?
+	        var newContents = processContentItems(action.contents.filter(function (file) {
 	          return file.filename;
-	        }))
-	      });
+	        }));
+	        newChosenMediaItems = newState.chosenMediaItems.filter(function (file) {
+	          return !deletedFileNames.includes(file.filename);
+	        });
+	        var newChosenMediaItemsInverted = newState.chosenMediaItemsInverted.filter(function (file) {
+	          return !deletedFileNames.includes(file.filename);
+	        });
+	        return {
+	          v: Object.assign({}, newState, {
+	            contents: newContents,
+	            chosenMediaItems: newChosenMediaItems,
+	            chosenMediaItemsInverted: newChosenMediaItemsInverted
+	          })
+	        };
 
-	    case actions.UPLOAD_FILES_SUCCESS:
-	      //if(!Array.isArray(action.contents)) return state; // so the backed can just return res.json([true]) if it wants?
-	      return Object.assign({}, state, {
-	        contents: processContentItems(action.contents.filter(function (file) {
-	          return file.filename;
-	        }))
-	      });
+	      case actions.UPLOAD_FILES_SUCCESS:
+	        //if(!Array.isArray(action.contents)) return state; // so the backed can just return res.json([true]) if it wants?
+	        return {
+	          v: Object.assign({}, newState, {
+	            contents: processContentItems(action.contents.filter(function (file) {
+	              return file.filename;
+	            }))
+	          })
+	        };
 
-	    case actions.DELETE_MEDIA_ITEM_SUCCESS:
-	      //console.log(actions.DELETE_MEDIA_ITEM_SUCCESS, action.source, action.path, state);
+	      case actions.DELETE_MEDIA_ITEM_SUCCESS:
+	        //console.log(actions.DELETE_MEDIA_ITEM_SUCCESS, action.source, action.path, state);
 
 
-	      return Object.assign({}, state, {
-	        cd: state.cd === action.path ? path.join(state.cd, '..') : state.cd,
-	        contents: state.contents.filter(function (file) {
-	          return file.path !== action.path;
-	        })
-	      });
-	      break;
-	  }
+	        return {
+	          v: Object.assign({}, newState, {
+	            cd: state.cd === action.path ? path.join(state.cd, '..') : state.cd,
+	            contents: state.contents.filter(function (file) {
+	              return file.path !== action.path;
+	            })
+	          })
+	        };
+	        break;
+	    }
+	  }();
 
+	  if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
 	  return state;
 
 	  function processContentItems(contents) {
@@ -25288,7 +25503,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var treeReducer = function treeReducer(state, action) {
 	  state = state || initialTreeReducer;
 
-	  var _ret = function () {
+	  var _ret2 = function () {
 	    switch (action.type) {
 	      case actions.UPDATE_SOURCE_TREE_SUCCESS:
 	        //console.log('UPDATE_SOURCE_TREE_SUCCESS');
@@ -25392,7 +25607,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }();
 
-	  if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+	  if ((typeof _ret2 === 'undefined' ? 'undefined' : _typeof(_ret2)) === "object") return _ret2.v;
 	  return state;
 	};
 
@@ -25404,11 +25619,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  sourceTreeOpen: false,
 	  enlargeFocusedRows: false,
 	  locale: "en-US",
+	  chooseMultiple: true,
 	  sort: {
 	    by: 'filename',
 	    dir: _utility2.default.ASCENDING
 	  },
 	  isTableScrolling: false,
+	  selectionInverted: selectionInverted,
 	  allowFullscreen: true,
 	  isUploading: false,
 	  isTouch: false,
@@ -25463,6 +25680,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    case actions.UPDATE_VIEW:
 	      return Object.assign({}, state, action.view);
+
+	    case actions.UPDATE_CONTENT:
+	      if (action.content.cd) {
+	        return Object.assign({}, state, {
+	          selectionInverted: false
+	        });
+	      }
+	      return state;
 
 	    case actions.UPDATE_CONFIG:
 	      var o = {};
@@ -25551,7 +25776,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  var foldersToAdd = [];
 
-	  var _ret2 = function () {
+	  var _ret3 = function () {
 	    switch (action.type) {
 	      case actions.UPDATE_SOURCE:
 	        cs = action.source;
@@ -25632,7 +25857,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }();
 
-	  if ((typeof _ret2 === 'undefined' ? 'undefined' : _typeof(_ret2)) === "object") return _ret2.v;
+	  if ((typeof _ret3 === 'undefined' ? 'undefined' : _typeof(_ret3)) === "object") return _ret3.v;
 	  return state;
 	};
 
@@ -26366,11 +26591,47 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	};
 
+	var DESELECT_ALL = 'deselect_all';
+	var deselectAll = function deselectAll() {
+	  return {
+	    type: DESELECT_ALL
+	  };
+	};
+
+	var INVERT_SELECTION = 'invert_selection';
+	var invertSelection = function invertSelection() {
+	  return {
+	    type: INVERT_SELECTION
+	  };
+	};
+
 	var UPDATE_SOURCE = 'update_source';
 	var updateSource = function updateSource(source) {
 	  return {
 	    type: UPDATE_SOURCE,
 	    source: source
+	  };
+	};
+
+	var ADD_MEDIA_ITEM_TO_CHOSEN_ITEMS = 'add_media_item_to_chosen_items';
+	var addMediaItemToChosenItems = function addMediaItemToChosenItems(item) {
+	  var inverted = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+	  return {
+	    type: ADD_MEDIA_ITEM_TO_CHOSEN_ITEMS,
+	    item: item,
+	    inverted: inverted
+	  };
+	};
+
+	var REMOVE_MEDIA_ITEM_FROM_CHOSEN_ITEMS = 'remove_media_item_from_chosen_items';
+	var removeMediaItemFromChosenItems = function removeMediaItemFromChosenItems(item) {
+	  var inverted = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+	  return {
+	    type: REMOVE_MEDIA_ITEM_FROM_CHOSEN_ITEMS,
+	    item: item,
+	    inverted: inverted
 	  };
 	};
 
@@ -26580,6 +26841,125 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 	  };
 	};
+
+	var DELETE_MEDIA_ITEMS_SUCCESS = 'delete_media_items_success';
+	var deleteMediaItemsSuccess = function deleteMediaItemsSuccess(contents, formData) {
+	  //console.log('DELETE_MEDIA_ITEM_SUCCESS', source, path);
+	  return {
+	    type: DELETE_MEDIA_ITEMS_SUCCESS,
+	    contents: contents,
+	    formData: formData
+	  };
+	};
+
+	exports.DELETE_MEDIA_ITEMS_SUCCESS = DELETE_MEDIA_ITEMS_SUCCESS;
+	exports.deleteMediaItemsSuccess = deleteMediaItemsSuccess;
+
+	var DELETE_MEDIA_ITEMS_ERROR = 'delete_media_items_error';
+	var deleteMediaItemsError = function deleteMediaItemsError(source, path) {
+	  //console.log('DELETE_MEDIA_ITEM_SUCCESS', source, path);
+	  return {
+	    type: DELETE_MEDIA_ITEMS_ERROR,
+	    source: source,
+	    path: path
+	  };
+	};
+
+	exports.DELETE_MEDIA_ITEMS_ERROR = DELETE_MEDIA_ITEMS_ERROR;
+	exports.deleteMediaItemsError = deleteMediaItemsError;
+
+	var deleteMediaItems = function deleteMediaItems(source, formData) {
+	  var customHeaders = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+	  console.log('deleteMediaItems');
+	  var _iteratorNormalCompletion = true;
+	  var _didIteratorError = false;
+	  var _iteratorError = undefined;
+
+	  try {
+	    for (var _iterator = formData.entries()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	      var pair = _step.value;
+
+	      console.log(pair[0] + ', ' + pair[1]);
+	    }
+	  } catch (err) {
+	    _didIteratorError = true;
+	    _iteratorError = err;
+	  } finally {
+	    try {
+	      if (!_iteratorNormalCompletion && _iterator.return) {
+	        _iterator.return();
+	      }
+	    } finally {
+	      if (_didIteratorError) {
+	        throw _iteratorError;
+	      }
+	    }
+	  }
+
+	  return function (dispatch) {
+	    return fetch('/assets/components/eureka/media/sources/' + source, {
+	      method: 'DELETE',
+	      body: formData,
+	      headers: Object.assign({}, {
+	        'Accept': 'application/json'
+	      }, customHeaders)
+	    }).then(function (response) {
+	      if (response.state < 200 || response.state >= 300) {
+	        var error = new Error(response.statusText);
+	        error.response = response;
+	        throw error;
+	      }
+	      return response;
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (contents) {
+	      //if(contents === false) throw new Error(`Unable to delete directory ${path}`)
+	      return contents;
+	    }).then(function (contents) {
+	      return dispatch(deleteMediaItemsSuccess(contents, formData));
+	    }).catch(function (error) {
+	      return dispatch(deleteMediaItemsError(error));
+	    });
+	  };
+	};
+
+	//http://localhost:3001/assets/components/eureka/media/sources/0
+
+	/*const deleteMediaItems = (source, formData, customHeaders = {}) => (
+	  (dispatch) => (
+	    fetch(`/assets/components/eureka/media/sources/${source}`), {
+	      method: 'DELETE',
+	      body: formData,
+	      headers: Object.assign({}, {
+	        'Accept': 'application/json',
+	        'Content-Type': 'application/json'
+	      }, customHeaders)
+	    }).then((response) => {
+	      if(response.state < 200 || response.state >= 300) {
+	        var error = new Error(response.statusText)
+	        error.response = response
+	        throw error;
+	      }
+	      return response;
+	    }).then((response) => (
+	      response.json()
+	    )).then((contents) => {
+	      if(contents === false) throw new Error(`Unable to delete items`)
+	      return contents;
+	    }).then((contents) => (
+	      dispatch(
+	        deleteMediaItemsSuccess(source, formData)
+	      )
+	    )).catch((error) => (
+	      dispatch(
+	        deleteMediaItemError(error)
+	      )
+	    )
+	  )
+	);*/
+
+	exports.deleteMediaItems = deleteMediaItems;
 
 	var NOTIFICATION = 'notification';
 	var notify = function notify(message, notificationType, learnMore, dismissAfter) {
@@ -26894,6 +27274,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.renameItemError = renameItemError;
 
 	exports.renameItem = renameItem;
+
+	exports.addMediaItemToChosenItems = addMediaItemToChosenItems;
+	exports.ADD_MEDIA_ITEM_TO_CHOSEN_ITEMS = ADD_MEDIA_ITEM_TO_CHOSEN_ITEMS;
+
+	exports.removeMediaItemFromChosenItems = removeMediaItemFromChosenItems;
+	exports.REMOVE_MEDIA_ITEM_FROM_CHOSEN_ITEMS = REMOVE_MEDIA_ITEM_FROM_CHOSEN_ITEMS;
+
+	exports.invertSelection = invertSelection;
+	exports.INVERT_SELECTION = INVERT_SELECTION;
+
+	exports.deselectAll = deselectAll;
+	exports.DESELECT_ALL = DESELECT_ALL;
 
 /***/ },
 /* 227 */
@@ -32240,6 +32632,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	}), _defineProperty(_defineMessages, 'pluralItem', {
 	  'id': 'pluralItem',
 	  'defaultMessage': 'a media item'
+	}), _defineProperty(_defineMessages, 'pluralChoose', {
+	  'id': 'pluralChoose',
+	  'defaultMessage': 'item'
+	}), _defineProperty(_defineMessages, 'copyListofSelectedFiles', {
+	  'id': 'copyListofSelectedFiles',
+	  'defaultMessage': 'Copy list of selected files'
 	}), _defineProperty(_defineMessages, 'mediaSourceTreeMessage', {
 	  'id': 'media.sourceTree',
 	  'defaultMessage': 'Media Source Panel'
@@ -32324,6 +32722,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _store = __webpack_require__(219);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	var _actions = __webpack_require__(226);
+
+	var _actions2 = _interopRequireDefault(_actions);
+
 	var _utility = __webpack_require__(224);
 
 	var _utility2 = _interopRequireDefault(_utility);
@@ -32339,7 +32745,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	var ChooseBar = function ChooseBar(props) {
 	  //console.log('ChooseBar',props);
 
-
 	  var _props$intl = props.intl,
 	      formatMessage = _props$intl.formatMessage,
 	      formatPlural = _props$intl.formatPlural,
@@ -32347,10 +32752,36 @@ return /******/ (function(modules) { // webpackBootstrap
 	      chooseMessage = formatMessage(_definedMessages2.default.choose),
 	      mediaItem = formatMessage(_definedMessages2.default.mediaItem),
 	      pluralItemPlaceholder = formatPlural(_definedMessages2.default.pluralItem),
+	      fileNames = props.content.chosenMediaItemsInverted.map(function (item) {
+	    return item.filename;
+	  }),
+	      deleteBtnFormFileNames = props.content.chosenMediaItemsInverted.map(function (item) {
+	    return _react2.default.createElement('input', { type: 'hidden', name: 'delete_file[]', key: item.filename, value: item.filename });
+	  }),
+	      len = props.content.chosenMediaItemsInverted.length,
+	      pluralChooseItemPlaceholder = _definedMessages2.default.pluralChoose[formatPlural({
+	    value: len
+	  })],
 	      cancelMessage = formatMessage(_definedMessages2.default.cancel),
+	      postChooseMessage = len > 1 && props.view.chooseMultiple ? ' ' + len + ' ' + pluralChooseItemPlaceholder : _react2.default.createElement(
+	    'span',
+	    { className: 'visually-hidden' },
+	    ' ',
+	    function () {
+	      try {
+	        return props.view.focusedMediaItem.filename || ' ' + pluralItemPlaceholder;
+	      } catch (e) {
+	        return ' ' + mediaItem;
+	      }
+	    }()
+	  ),
 	      chooseBtn = props.config.allowChoose ? _react2.default.createElement(
 	    'button',
-	    { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'choose-button', className: 'eureka__primary', disabled: !props.view.focusedMediaItem && !_utility2.default.serverSideRendering, onClick: function onClick(event) {
+	    { 'aria-describedby': props.config.storagePrefix + 'selected_file_names', id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'choose-button', className: 'eureka__primary', disabled: !props.view.focusedMediaItem && !_utility2.default.serverSideRendering, onClick: function onClick(event) {
+	        if (props.view.chooseMultiple) {
+	          if (props.view.selectionInverted) props.config.callbacks.choose(props.content.chosenMediaItemsInverted);else props.config.callbacks.choose(props.content.chosenMediaItems);
+	          return;
+	        }
 	        if (!props.view.focusedMediaItem) return;
 	        try {
 	          props.config.callbacks.choose(props.view.focusedMediaItem);
@@ -32359,20 +32790,40 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      } },
 	    chooseMessage,
+	    postChooseMessage
+	  ) : undefined,
+	      deleteBtn = len > 1 && props.view.chooseMultiple ? _react2.default.createElement(
+	    'form',
+	    { onSubmit: function onSubmit(event) {
+	        event.preventDefault();
+	        event.stopPropagation();
+	        var formData = new FormData(event.target);
+	        /*for(var pair of formData.entries()) {
+	           console.log(pair[0]+ ', '+ pair[1]);
+	        }*/
+
+	        //console.log('yolo', formData.getAll('delete_file[]'));
+
+	        _store2.default.dispatch(_actions2.default.deleteMediaItems(props.source.currentSource, formData, props.config.headers)).then(function () {
+	          _store2.default.dispatch(_actions2.default.notify('Deleted ' + formData.getAll('delete_file[]').length + ' ' + _definedMessages2.default.pluralItem[formatPlural({
+	            value: formData.getAll('delete_file[]').length
+	          })], _utility2.default.DANGEROUS));
+	        });
+
+	        /*for (var value of formData.values()) {
+	          console.log(value);
+	        }*/
+	      } },
+	    _react2.default.createElement('input', { type: 'hidden', name: 'cd', value: props.content.cd }),
+	    _react2.default.createElement('input', { type: 'hidden', name: 'cs', value: props.source.currentSource }),
+	    deleteBtnFormFileNames,
 	    _react2.default.createElement(
-	      'span',
-	      { className: 'visually-hidden' },
-	      ' ',
-	      function () {
-	        try {
-	          return props.view.focusedMediaItem.filename || ' ' + pluralItemPlaceholder;
-	        } catch (e) {
-	          return ' ' + mediaItem;
-	        }
-	      }()
+	      'button',
+	      { className: 'dangerous' },
+	      _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'delete', defaultValue: 'Delete' }),
+	      postChooseMessage
 	    )
 	  ) : undefined;
-
 
 	  return _react2.default.createElement(
 	    'div',
@@ -32389,6 +32840,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        } },
 	      cancelMessage
 	    ),
+	    deleteBtn,
 	    chooseBtn
 	  );
 	};
@@ -33083,6 +33535,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (this.state.sort !== nextState.sort) return true;
 	      if (nextProps.content.contents !== this.state.contents) return true;
 	      if (this.state.contents.length !== nextState.contents.length || this.state.contents !== nextState.contents) return true;
+	      if (nextProps.view.chooseMultiple !== this.props.view.chooseMultiple) return true;
 
 	      if (nextProps.view.sort !== this.props.view.sort) return true;
 	      return true;
@@ -33142,7 +33595,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this2 = this,
+	      var _React$createElement,
+	          _this2 = this,
 	          _React$createElement2,
 	          _React$createElement3,
 	          _React$createElement4,
@@ -33204,6 +33658,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	        { scope: 'col', role: 'columnheader' },
 	        'Select'
 	      ) : undefined;
+	      var checkboxHead = !_utility2.default.serverSideRendering && props.view.chooseMultiple ? _react2.default.createElement(
+	        'th',
+	        { scope: 'col', role: 'columnheader', className: 'eureka__choose' },
+	        _react2.default.createElement(
+	          'span',
+	          { className: 'visually-hidden' },
+	          _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'choose', defaultMessage: 'Choose' })
+	        )
+	      ) : undefined;
 
 	      var table = _react2.default.createElement(
 	        'table',
@@ -33215,14 +33678,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	            'tr',
 	            null,
 	            selectHead,
+	            checkboxHead,
 	            _react2.default.createElement(
 	              'th',
-	              _defineProperty({ role: 'rowheader', scope: 'col' }, 'role', 'columnheader'),
+	              (_React$createElement = { role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement, 'role', 'columnheader'), _defineProperty(_React$createElement, 'className', 'eureka__th-media'), _React$createElement),
 	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'media', defaultMessage: 'Media' })
 	            ),
 	            _react2.default.createElement(
 	              'th',
-	              (_React$createElement2 = { className: 'sortable', role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement2, 'role', 'columnheader'), _defineProperty(_React$createElement2, 'onClick', function onClick(event) {
+	              (_React$createElement2 = { className: 'eureka__th-filename', 'aria-sort': props.view.sort.by === 'filename' ? props.view.sort.dir : undefined, role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement2, 'role', 'columnheader'), _defineProperty(_React$createElement2, 'onClick', function onClick(event) {
 	                var dir = _this2.props.view.sort.dir;
 	                //console.log("this.state.sort.by === 'filename'", this.state.sort.by === 'filename', dir);
 	                if (_this2.props.view.sort.by === 'filename') {
@@ -33252,12 +33716,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            ),
 	            _react2.default.createElement(
 	              'th',
-	              (_React$createElement3 = { role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement3, 'role', 'columnheader'), _defineProperty(_React$createElement3, 'className', 'visually-hidden'), _React$createElement3),
+	              (_React$createElement3 = { role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement3, 'role', 'columnheader'), _defineProperty(_React$createElement3, 'className', 'visually-hidden eureka__th-actions'), _React$createElement3),
 	              'Actions'
 	            ),
 	            _react2.default.createElement(
 	              'th',
-	              (_React$createElement4 = { className: 'sortable', role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement4, 'role', 'columnheader'), _defineProperty(_React$createElement4, 'onClick', function onClick(event) {
+	              (_React$createElement4 = { className: 'eureka__th-dimensions', 'aria-sort': props.view.sort.by === 'dimensions' ? props.view.sort.dir : undefined, role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement4, 'role', 'columnheader'), _defineProperty(_React$createElement4, 'onClick', function onClick(event) {
 	                var dir = _this2.state.sort.dir;
 	                if (_this2.props.view.sort.by === 'dimensions') {
 	                  dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
@@ -33285,7 +33749,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            ),
 	            _react2.default.createElement(
 	              'th',
-	              (_React$createElement5 = { className: 'sortable', role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement5, 'role', 'columnheader'), _defineProperty(_React$createElement5, 'onClick', function onClick(event) {
+	              (_React$createElement5 = { className: 'eureka__th-file-size', 'aria-sort': props.view.sort.by === 'fileSize' ? props.view.sort.dir : undefined, role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement5, 'role', 'columnheader'), _defineProperty(_React$createElement5, 'onClick', function onClick(event) {
 	                var dir = _this2.state.sort.dir;
 	                if (_this2.props.view.sort.by === 'fileSize') {
 	                  dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
@@ -33313,7 +33777,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            ),
 	            _react2.default.createElement(
 	              'th',
-	              (_React$createElement6 = { className: 'sortable', role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement6, 'role', 'columnheader'), _defineProperty(_React$createElement6, 'onClick', function onClick(event) {
+	              (_React$createElement6 = { className: 'eureka__th-edited-on', 'aria-sort': props.view.sort.by === 'editedOn' ? props.view.sort.dir : undefined, role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement6, 'role', 'columnheader'), _defineProperty(_React$createElement6, 'onClick', function onClick(event) {
 	                var dir = _this2.state.sort.dir;
 	                if (_this2.props.view.sort.by === 'editedOn') {
 	                  dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
@@ -33512,10 +33976,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'shouldComponentUpdate',
 	    value: function shouldComponentUpdate(nextProps, nextState) {
-	      //return true;
+	      return true;
 	      console.log(this.props, this.state);
 	      if (nextProps.view.filter || !nextProps.view.filter && this.props.view.filter) return true;
 	      if (nextProps.view.sort !== this.props.view.sort) return true;
+	      if (nextProps.view.chooseMultiple !== this.props.view.chooseMultiple) return true;
 	      try {
 	        //console.log('shouldComponentUpdate', (this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path), this.state.focusedMediaItem.path, nextProps.view.focusedMediaItem.path);
 	        //if((this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path)) return true; // #janky SLOOOOW
@@ -33580,7 +34045,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      });*/
 
 	      var contentList = contents.length ? contents.map(function (item, index) {
-	        return [_react2.default.createElement(_MediaRow2.default, _extends({}, props, { intl: props.intl, focusedMediaItem: props.view.focusedMediaItem, renameStart: _this2.handleRenameStart, item: item, index: index, key: index, onFocus: function onFocus(event) {
+	        return [_react2.default.createElement(_MediaRow2.default, _extends({ key: _utility2.default.cssSafe(item.filename) }, props, { intl: props.intl, focusedMediaItem: props.view.focusedMediaItem, renameStart: _this2.handleRenameStart, item: item, index: index, onFocus: function onFocus(event) {
 
 	            /*this.setState({
 	              focusedMediaItem: item
@@ -33809,7 +34274,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var _this = _possibleConstructorReturn(this, (MediaRow.__proto__ || Object.getPrototypeOf(MediaRow)).call(this, props));
 
 	    _this.state = {
-	      focusWithin: false
+	      focusWithin: false,
+	      chooseChecked: false
 	    };
 
 	    _this.handleKeyboardBackspace = _this.handleKeyboardBackspace.bind(_this);
@@ -33820,10 +34286,41 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  _createClass(MediaRow, [{
+	    key: 'componentWillUpdate',
+	    value: function componentWillUpdate(nextProps, nextState) {
+	      //return;
+	      //console.log('MediaRow componentWillUpdate');
+	      if (this.props.view.selectionInverted !== nextProps.view.selectionInverted) {
+	        this.setState({
+	          chooseChecked: !this.state.chooseChecked
+	        });
+	        return;
+	      }
+
+	      //const c = (nextProps.view.sele)
+	      if (nextProps.view.selectionInverted) {
+	        if (this.props.content.chosenMediaItemsInverted.length > 1 && nextProps.content.chosenMediaItemsInverted.length < 1) {
+	          this.setState({
+	            chooseChecked: false
+	          });
+	        }
+	      } else {
+	        if (this.props.content.chosenMediaItems.length > 1 && nextProps.content.chosenMediaItems.length < 1) {
+	          this.setState({
+	            chooseChecked: false
+	          });
+	        }
+	      }
+	    }
+	  }, {
 	    key: 'shouldComponentUpdate',
 	    value: function shouldComponentUpdate(nextProps, nextState) {
-	      //console.log('MediaRow shouldComponentUpdate', this.props, nextProps);
+	      //console.log('MediaRow shouldComponentUpdate', this.props, nextProps, this.state, nextState);
+	      //return true;
+
 	      if (this.props.item !== nextProps.item) return true;
+	      if (this.state.chooseChecked !== nextState.chooseChecked) return true;
+	      if (this.props.content.chosenMediaItems.length !== nextProps.content.chosenMediaItems.length || this.props.content.chosenMediaItemsInverted.length !== nextProps.content.chosenMediaItemsInverted.length) return true;
 	      try {
 	        //console.log((nextProps.focusedMediaItem !== undefined));
 	        return nextProps.focusedMediaItem !== undefined;
@@ -33835,7 +34332,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      this.assignKeyboardListeners();
+	      //Mousetrap(document.querySelector('.eureka')).bind(['alt+z'], this.handleKeyboardDeselect);
+
+	      /*store.subscribe(() => {
+	        const state = store.getState();
+	        //console.log(state);
+	         if(!state.content.chosenMediaItemsInverted.length) {
+	          this.setState({
+	            chooseChecked: false
+	          })
+	        }
+	       });*/
 	    }
+
+	    /*handleKeyboardDeselect = (event) => {
+	      console.log('handleKeyboardDeselect');
+	      this.setState({
+	        chooseChecked: false
+	      })
+	    }*/
+
 	  }, {
 	    key: 'assignKeyboardListeners',
 	    value: function assignKeyboardListeners() {
@@ -33854,6 +34370,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'componentWillUnmount',
 	    value: function componentWillUnmount() {
 	      this.removeKeyboardListeners();
+	      //Mousetrap(document.querySelector('.eureka')).unbind(['alt+z'], this.handleKeyboardDeselect);
 	    }
 	  }, {
 	    key: 'removeKeyboardListeners',
@@ -33942,7 +34459,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _React$createElement, _React$createElement2;
+	      var _this2 = this,
+	          _React$createElement,
+	          _React$createElement2;
 
 	      var props = this.props,
 	          item = props.item,
@@ -33962,6 +34481,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 
 	      var contentEditable = false;
+	      var checkboxId = 'eureka__choose_multiple_' + _utility2.default.cssSafe(props.item.filename);
+	      var onMediaClick = props.view.chooseMultiple ? function (event) {
+	        // #janky way to simulate <label>, <label> messes up styling for the default view
+	        event.target.closest('.eureka').querySelector('#' + checkboxId).click();
+	      } : undefined;
 
 	      var media = function (ext) {
 	        // consider abstracting this to its own module
@@ -33980,7 +34504,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          case '.svg':
 	          case '.bmp':
 	          case '.tiff':
-	            return _react2.default.createElement('img', { src: src, alt: alt });
+	            return _react2.default.createElement('img', { src: src, alt: alt, onClick: onMediaClick });
 	            break;
 
 	          case '.mp4':
@@ -34056,7 +34580,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var icon = _utility2.default.getIconByExtension(pathParse(props.item.filename).ext);
 	            return _react2.default.createElement(
 	              'p',
-	              null,
+	              { onClick: onMediaClick },
 	              _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: icon })),
 	              '\u2002',
 	              props.item.absoluteURL
@@ -34104,6 +34628,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      }(ext);
 
+	      //console.log('this.state.chooseChecked', this.state.chooseChecked);
+	      var checkboxAriaLabel = formatMessage(_definedMessages2.default.chooseItem, {
+	        filename: item.filename
+	      });
+
+	      var checkbox = props.view.chooseMultiple ? _react2.default.createElement(
+	        'td',
+	        { className: 'eureka__choose' },
+	        _react2.default.createElement('input', { 'aria-label': 'Choose ' + item.filename, type: 'checkbox', name: 'eureka__chose_multiple', id: checkboxId, key: 'eureka__choose_multiple_' + _utility2.default.cssSafe(props.item.filename) + '__' + (this.state.chooseChecked ? 'checked' : ''), checked: this.state.chooseChecked, onChange: function onChange(event) {
+	            event.preventDefault();
+	            event.stopPropagation();
+
+	            //console.log('event.target.checked', event.target.checked);
+
+	            _this2.setState({
+	              chooseChecked: event.target.checked
+	            });
+
+	            if (props.view.selectionInverted ? !event.target.checked : event.target.checked) {
+	              _store2.default.dispatch(_actions2.default.addMediaItemToChosenItems(props.item, props.view.selectionInverted));
+	            } else {
+	              _store2.default.dispatch(_actions2.default.removeMediaItemFromChosenItems(props.item, props.view.selectionInverted));
+	            }
+	            //console.log('event.target.checked', event.target.checked);
+	          } })
+	      ) : undefined;
+
 	      var openInANewTabMessage = formatMessage(_definedMessages2.default.openFileInNewTab, {
 	        filename: props.item.fileName
 	      });
@@ -34115,6 +34666,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	          { href: props.item.absoluteURL, target: '_' + mediaSelectId, 'aria-label': openInANewTabMessage, role: 'presentation' },
 	          media
 	        );
+	      }
+
+	      if (props.view.chooseMultiple) {
+	        //media = <label htmlFor={checkboxId}>{media}</label>
 	      }
 
 	      var fileName = _utility2.default.wordBreaksEvery(props.item.filename);
@@ -34129,9 +34684,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      var contextMenu = _utility2.default.serverSideRendering ? undefined : _react2.default.createElement(_ContextMenu2.default, _extends({ className: 'eureka__context-row' }, props, { item: item, hidden: shouldHide(item), key: 'cm__' + index }));
 
+	      //<span className="visually-hidden"><FormattedMessage id="media.contents" defaultMessage="Media Contents" /></span>
 	      return _react2.default.createElement(
 	        'tr',
 	        (_React$createElement2 = { role: 'row', className: (0, _classnames2.default)(className), id: _utility2.default.cssSafe(props.item.filename), 'aria-label': ariaLabel }, _defineProperty(_React$createElement2, 'role', 'row'), _defineProperty(_React$createElement2, 'tabIndex', tabIndex), _defineProperty(_React$createElement2, 'onFocus', this.onFocus.bind(this)), _defineProperty(_React$createElement2, 'onBlur', this.onBlur.bind(this)), _defineProperty(_React$createElement2, 'contextMenu', 'context_menu__tbody-' + props.index), _React$createElement2),
+	        checkbox,
 	        mediaSelect,
 	        _react2.default.createElement(
 	          'td',
@@ -34150,11 +34707,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	              detail: props.item
 	              }));*/
 	            } },
-	          _react2.default.createElement(
-	            'span',
-	            { className: 'visually-hidden' },
-	            _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'media.contents', defaultMessage: 'Media Contents' })
-	          ),
 	          media
 	        ),
 	        _react2.default.createElement(
@@ -34192,17 +34744,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	        contextMenu,
 	        _react2.default.createElement(
 	          'td',
-	          { role: 'gridcell' },
+	          { className: 'eureka__dimensions', role: 'gridcell' },
 	          props.item.dimensions[0] + 'x' + props.item.dimensions[1]
 	        ),
 	        _react2.default.createElement(
 	          'td',
-	          { role: 'gridcell' },
+	          { className: 'eureka__file-size', role: 'gridcell' },
 	          (0, _filesize2.default)(props.item.fileSize)
 	        ),
 	        _react2.default.createElement(
 	          'td',
-	          { role: 'gridcell', title: props.item.editedOnLongTimeZone || new Date(props.item.editedOn).toLocaleString(props.view.locale, { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' }) },
+	          { className: 'eureka__edited-on', role: 'gridcell', title: props.item.editedOnLongTimeZone || new Date(props.item.editedOn).toLocaleString(props.view.locale, { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' }) },
 	          props.item.editedOnTwoDigit || new Date(props.item.editedOn).toLocaleString(props.view.locale, { year: '2-digit', month: '2-digit', day: '2-digit' })
 	        )
 	      );
@@ -36898,6 +37450,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utility2 = _interopRequireDefault(_utility);
 
+	var _definedMessages = __webpack_require__(255);
+
+	var _definedMessages2 = _interopRequireDefault(_definedMessages);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var pathParse = __webpack_require__(274);
@@ -36924,9 +37480,51 @@ return /******/ (function(modules) { // webpackBootstrap
 	*/
 
 	var PathBar = function PathBar(props) {
+	  var formatMessage = props.intl.formatMessage;
 	  var contextBtns = props.view.focusedMediaItem ? _react2.default.createElement(_ContextButtons2.default, _extends({}, props, { item: props.view.focusedMediaItem })) : undefined;
 
+	  var copyListofSelectedFiles = formatMessage(_definedMessages2.default.copyListofSelectedFiles);
+
 	  var icon = _utility2.default.getIconByExtension(pathParse(props.view.focusedMediaItem.filename).ext);
+	  var p = props.view.chooseMultiple && props.content.chosenMediaItems.length > 1 ? props.view.focusedMediaItem.directory : _path2.default.join(props.view.focusedMediaItem.directory, props.view.focusedMediaItem.filename);
+	  var fileNames = props.content.chosenMediaItemsInverted.map(function (item) {
+	    return item.filename;
+	  });
+	  //console.log('props.content.chosenMediaItems', props.content.chosenMediaItems);
+	  //console.log('fileNames', fileNames);
+	  var len = props.view.selectionInverted ? props.content.contents.length - props.content.chosenMediaItems.length : props.content.chosenMediaItems.length;
+	  var fileNamesIf = len > 1 && props.view.chooseMultiple ? _react2.default.createElement('textarea', { 'aria-readonly': 'true', 'aria-label': copyListofSelectedFiles, rows: '10', cols: '50', onClick: function onClick(event) {
+	      event.target.focus();
+	      event.target.select();
+	    }, style: {
+	      margin: '0'
+	    }, readOnly: 'readonly', value: fileNames.join(', ') }) : undefined,
+	      a = len < 2 ? _react2.default.createElement(
+	    'a',
+	    { id: props.config.storagePrefix + 'selected_file_names', role: 'presentation', href: props.view.focusedMediaItem.absoluteURL, target: '_' + encodeURI(props.view.focusedMediaItem.absoluteURL) },
+	    _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: icon })),
+	    '\u2002',
+	    p,
+	    fileNamesIf
+	  ) : _react2.default.createElement(
+	    'div',
+	    { id: props.config.storagePrefix + 'selected_file_names' },
+	    _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: icon })),
+	    '\u2002',
+	    p,
+	    fileNamesIf
+	  );
+
+	  var selectedPaths = len > 12 ? _react2.default.createElement(
+	    'details',
+	    { open: true },
+	    _react2.default.createElement(
+	      'summary',
+	      null,
+	      'Selected Paths'
+	    ),
+	    fileNamesIf
+	  ) : fileNamesIf;
 
 	  return _react2.default.createElement(
 	    'div',
@@ -36942,8 +37540,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	          null,
 	          _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: icon })),
 	          '\u2002',
-	          '' + props.view.focusedMediaItem.directory + props.view.focusedMediaItem.filename
+	          props.view.chooseMultiple ? '' + props.view.focusedMediaItem.directory : '' + props.view.focusedMediaItem.directory + props.view.focusedMediaItem.filename
 	        ),
+	        selectedPaths,
 	        _react2.default.createElement(
 	          'div',
 	          null,
@@ -36959,13 +37558,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _react2.default.createElement(
 	      'div',
 	      { role: 'status', className: 'eureka__show-for-mobile-up' },
-	      _react2.default.createElement(
-	        'a',
-	        { role: 'presentation', href: props.view.focusedMediaItem.absoluteURL, target: '_' + encodeURI(props.view.focusedMediaItem.absoluteURL) },
-	        _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: icon })),
-	        '\u2002',
-	        _path2.default.join(props.view.focusedMediaItem.directory, props.view.focusedMediaItem.filename)
-	      )
+	      a
 	    )
 	  );
 	};
@@ -37752,7 +38345,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	Notification.defaultProps = {
-	  dismissAfter: 4200
+	  dismissAfter: 6000
 	};
 
 	exports.default = Notification;
@@ -37761,16 +38354,106 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 285 */
 /***/ function(module, exports, __webpack_require__) {
 
-	!function(e,a){ true?module.exports=a():"function"==typeof define&&define.amd?define(a):(e.ReactIntlLocaleData=e.ReactIntlLocaleData||{},e.ReactIntlLocaleData.en=a())}(this,function(){"use strict";var e=[{locale:"en",pluralRuleFunction:function(e,a){var n=String(e).split("."),l=!n[1],o=Number(n[0])==e,t=o&&n[0].slice(-1),r=o&&n[0].slice(-2);return a?1==t&&11!=r?"one":2==t&&12!=r?"two":3==t&&13!=r?"few":"other":1==e&&l?"one":"other"},fields:{year:{displayName:"year",relative:{0:"this year",1:"next year","-1":"last year"},relativeTime:{future:{one:"in {0} year",other:"in {0} years"},past:{one:"{0} year ago",other:"{0} years ago"}}},month:{displayName:"month",relative:{0:"this month",1:"next month","-1":"last month"},relativeTime:{future:{one:"in {0} month",other:"in {0} months"},past:{one:"{0} month ago",other:"{0} months ago"}}},day:{displayName:"day",relative:{0:"today",1:"tomorrow","-1":"yesterday"},relativeTime:{future:{one:"in {0} day",other:"in {0} days"},past:{one:"{0} day ago",other:"{0} days ago"}}},hour:{displayName:"hour",relativeTime:{future:{one:"in {0} hour",other:"in {0} hours"},past:{one:"{0} hour ago",other:"{0} hours ago"}}},minute:{displayName:"minute",relativeTime:{future:{one:"in {0} minute",other:"in {0} minutes"},past:{one:"{0} minute ago",other:"{0} minutes ago"}}},second:{displayName:"second",relative:{0:"now"},relativeTime:{future:{one:"in {0} second",other:"in {0} seconds"},past:{one:"{0} second ago",other:"{0} seconds ago"}}}}},{locale:"en-001",parentLocale:"en"},{locale:"en-150",parentLocale:"en-001"},{locale:"en-AG",parentLocale:"en-001"},{locale:"en-AI",parentLocale:"en-001"},{locale:"en-AS",parentLocale:"en"},{locale:"en-AT",parentLocale:"en-150"},{locale:"en-AU",parentLocale:"en-001"},{locale:"en-BB",parentLocale:"en-001"},{locale:"en-BE",parentLocale:"en-001"},{locale:"en-BI",parentLocale:"en"},{locale:"en-BM",parentLocale:"en-001"},{locale:"en-BS",parentLocale:"en-001"},{locale:"en-BW",parentLocale:"en-001"},{locale:"en-BZ",parentLocale:"en-001"},{locale:"en-CA",parentLocale:"en-001"},{locale:"en-CC",parentLocale:"en-001"},{locale:"en-CH",parentLocale:"en-150"},{locale:"en-CK",parentLocale:"en-001"},{locale:"en-CM",parentLocale:"en-001"},{locale:"en-CX",parentLocale:"en-001"},{locale:"en-CY",parentLocale:"en-001"},{locale:"en-DE",parentLocale:"en-150"},{locale:"en-DG",parentLocale:"en-001"},{locale:"en-DK",parentLocale:"en-150"},{locale:"en-DM",parentLocale:"en-001"},{locale:"en-Dsrt",pluralRuleFunction:function(e,a){return"other"},fields:{year:{displayName:"Year",relative:{0:"this year",1:"next year","-1":"last year"},relativeTime:{future:{other:"+{0} y"},past:{other:"-{0} y"}}},month:{displayName:"Month",relative:{0:"this month",1:"next month","-1":"last month"},relativeTime:{future:{other:"+{0} m"},past:{other:"-{0} m"}}},day:{displayName:"Day",relative:{0:"today",1:"tomorrow","-1":"yesterday"},relativeTime:{future:{other:"+{0} d"},past:{other:"-{0} d"}}},hour:{displayName:"Hour",relativeTime:{future:{other:"+{0} h"},past:{other:"-{0} h"}}},minute:{displayName:"Minute",relativeTime:{future:{other:"+{0} min"},past:{other:"-{0} min"}}},second:{displayName:"Second",relative:{0:"now"},relativeTime:{future:{other:"+{0} s"},past:{other:"-{0} s"}}}}},{locale:"en-ER",parentLocale:"en-001"},{locale:"en-FI",parentLocale:"en-150"},{locale:"en-FJ",parentLocale:"en-001"},{locale:"en-FK",parentLocale:"en-001"},{locale:"en-FM",parentLocale:"en-001"},{locale:"en-GB",parentLocale:"en-001"},{locale:"en-GD",parentLocale:"en-001"},{locale:"en-GG",parentLocale:"en-001"},{locale:"en-GH",parentLocale:"en-001"},{locale:"en-GI",parentLocale:"en-001"},{locale:"en-GM",parentLocale:"en-001"},{locale:"en-GU",parentLocale:"en"},{locale:"en-GY",parentLocale:"en-001"},{locale:"en-HK",parentLocale:"en-001"},{locale:"en-IE",parentLocale:"en-001"},{locale:"en-IL",parentLocale:"en-001"},{locale:"en-IM",parentLocale:"en-001"},{locale:"en-IN",parentLocale:"en-001"},{locale:"en-IO",parentLocale:"en-001"},{locale:"en-JE",parentLocale:"en-001"},{locale:"en-JM",parentLocale:"en-001"},{locale:"en-KE",parentLocale:"en-001"},{locale:"en-KI",parentLocale:"en-001"},{locale:"en-KN",parentLocale:"en-001"},{locale:"en-KY",parentLocale:"en-001"},{locale:"en-LC",parentLocale:"en-001"},{locale:"en-LR",parentLocale:"en-001"},{locale:"en-LS",parentLocale:"en-001"},{locale:"en-MG",parentLocale:"en-001"},{locale:"en-MH",parentLocale:"en"},{locale:"en-MO",parentLocale:"en-001"},{locale:"en-MP",parentLocale:"en"},{locale:"en-MS",parentLocale:"en-001"},{locale:"en-MT",parentLocale:"en-001"},{locale:"en-MU",parentLocale:"en-001"},{locale:"en-MW",parentLocale:"en-001"},{locale:"en-MY",parentLocale:"en-001"},{locale:"en-NA",parentLocale:"en-001"},{locale:"en-NF",parentLocale:"en-001"},{locale:"en-NG",parentLocale:"en-001"},{locale:"en-NL",parentLocale:"en-150"},{locale:"en-NR",parentLocale:"en-001"},{locale:"en-NU",parentLocale:"en-001"},{locale:"en-NZ",parentLocale:"en-001"},{locale:"en-PG",parentLocale:"en-001"},{locale:"en-PH",parentLocale:"en-001"},{locale:"en-PK",parentLocale:"en-001"},{locale:"en-PN",parentLocale:"en-001"},{locale:"en-PR",parentLocale:"en"},{locale:"en-PW",parentLocale:"en-001"},{locale:"en-RW",parentLocale:"en-001"},{locale:"en-SB",parentLocale:"en-001"},{locale:"en-SC",parentLocale:"en-001"},{locale:"en-SD",parentLocale:"en-001"},{locale:"en-SE",parentLocale:"en-150"},{locale:"en-SG",parentLocale:"en-001"},{locale:"en-SH",parentLocale:"en-001"},{locale:"en-SI",parentLocale:"en-150"},{locale:"en-SL",parentLocale:"en-001"},{locale:"en-SS",parentLocale:"en-001"},{locale:"en-SX",parentLocale:"en-001"},{locale:"en-SZ",parentLocale:"en-001"},{locale:"en-Shaw",pluralRuleFunction:function(e,a){return"other"},fields:{year:{displayName:"Year",relative:{0:"this year",1:"next year","-1":"last year"},relativeTime:{future:{other:"+{0} y"},past:{other:"-{0} y"}}},month:{displayName:"Month",relative:{0:"this month",1:"next month","-1":"last month"},relativeTime:{future:{other:"+{0} m"},past:{other:"-{0} m"}}},day:{displayName:"Day",relative:{0:"today",1:"tomorrow","-1":"yesterday"},relativeTime:{future:{other:"+{0} d"},past:{other:"-{0} d"}}},hour:{displayName:"Hour",relativeTime:{future:{other:"+{0} h"},past:{other:"-{0} h"}}},minute:{displayName:"Minute",relativeTime:{future:{other:"+{0} min"},past:{other:"-{0} min"}}},second:{displayName:"Second",relative:{0:"now"},relativeTime:{future:{other:"+{0} s"},past:{other:"-{0} s"}}}}},{locale:"en-TC",parentLocale:"en-001"},{locale:"en-TK",parentLocale:"en-001"},{locale:"en-TO",parentLocale:"en-001"},{locale:"en-TT",parentLocale:"en-001"},{locale:"en-TV",parentLocale:"en-001"},{locale:"en-TZ",parentLocale:"en-001"},{locale:"en-UG",parentLocale:"en-001"},{locale:"en-UM",parentLocale:"en"},{locale:"en-US",parentLocale:"en"},{locale:"en-VC",parentLocale:"en-001"},{locale:"en-VG",parentLocale:"en-001"},{locale:"en-VI",parentLocale:"en"},{locale:"en-VU",parentLocale:"en-001"},{locale:"en-WS",parentLocale:"en-001"},{locale:"en-ZA",parentLocale:"en-001"},{locale:"en-ZM",parentLocale:"en-001"},{locale:"en-ZW",parentLocale:"en-001"}];return e});
+	'use strict';
 
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _store = __webpack_require__(219);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	var _actions = __webpack_require__(226);
+
+	var _actions2 = _interopRequireDefault(_actions);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function ChooseRadio(props) {
+	  var invert = props.view.chooseMultiple ? _react2.default.createElement(
+	    'label',
+	    { htmlFor: 'eureka__invert_selection' },
+	    '\u2003',
+	    _react2.default.createElement('input', { checked: props.view.selectionInverted, onChange: function onChange(event) {
+	        _store2.default.dispatch(_actions2.default.updateView({
+	          selectionInverted: event.target.checked
+	        }));
+	      }, type: 'checkbox', id: props.storagePrefix + 'invert_selection', name: 'eureka__invert_selection' }),
+	    '\u2002Invert',
+	    _react2.default.createElement(
+	      'span',
+	      { className: 'visually-hidden' },
+	      ' Selection'
+	    ),
+	    '\u2003'
+	  ) : undefined,
+	      maybeSpace = props.view.chooseMultiple ? undefined : _react2.default.createElement(
+	    'span',
+	    null,
+	    '\u2003'
+	  );
+	  return _react2.default.createElement(
+	    'div',
+	    { className: 'eureka__choose-radio' },
+	    _react2.default.createElement(
+	      'fieldset',
+	      null,
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'eureka__fieldset' },
+	        _react2.default.createElement(
+	          'legend',
+	          null,
+	          'Choose Items:\u2002'
+	        ),
+	        _react2.default.createElement('input', { onChange: function onChange(event) {
+	            _store2.default.dispatch(_actions2.default.updateView({
+	              chooseMultiple: false
+	            }));
+	          }, checked: !props.view.chooseMultiple, type: 'radio', name: props.storagePrefix + '__choose_items', id: props.storagePrefix + '__choose_item' }),
+	        _react2.default.createElement(
+	          'label',
+	          { htmlFor: props.storagePrefix + '__choose_item' },
+	          '\u2002Single\u2003'
+	        ),
+	        _react2.default.createElement('input', { onChange: function onChange(event) {
+	            _store2.default.dispatch(_actions2.default.updateView({
+	              chooseMultiple: true
+	            }));
+	          }, checked: props.view.chooseMultiple, type: 'radio', name: props.storagePrefix + '__choose_items', id: props.storagePrefix + '__choose_items' }),
+	        _react2.default.createElement(
+	          'label',
+	          { htmlFor: props.storagePrefix + '__choose_items' },
+	          '\u2002Multiple',
+	          maybeSpace
+	        )
+	      )
+	    ),
+	    invert
+	  );
+	}
+
+	exports.default = ChooseRadio;
 
 /***/ },
 /* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
+	!function(e,a){ true?module.exports=a():"function"==typeof define&&define.amd?define(a):(e.ReactIntlLocaleData=e.ReactIntlLocaleData||{},e.ReactIntlLocaleData.en=a())}(this,function(){"use strict";var e=[{locale:"en",pluralRuleFunction:function(e,a){var n=String(e).split("."),l=!n[1],o=Number(n[0])==e,t=o&&n[0].slice(-1),r=o&&n[0].slice(-2);return a?1==t&&11!=r?"one":2==t&&12!=r?"two":3==t&&13!=r?"few":"other":1==e&&l?"one":"other"},fields:{year:{displayName:"year",relative:{0:"this year",1:"next year","-1":"last year"},relativeTime:{future:{one:"in {0} year",other:"in {0} years"},past:{one:"{0} year ago",other:"{0} years ago"}}},month:{displayName:"month",relative:{0:"this month",1:"next month","-1":"last month"},relativeTime:{future:{one:"in {0} month",other:"in {0} months"},past:{one:"{0} month ago",other:"{0} months ago"}}},day:{displayName:"day",relative:{0:"today",1:"tomorrow","-1":"yesterday"},relativeTime:{future:{one:"in {0} day",other:"in {0} days"},past:{one:"{0} day ago",other:"{0} days ago"}}},hour:{displayName:"hour",relativeTime:{future:{one:"in {0} hour",other:"in {0} hours"},past:{one:"{0} hour ago",other:"{0} hours ago"}}},minute:{displayName:"minute",relativeTime:{future:{one:"in {0} minute",other:"in {0} minutes"},past:{one:"{0} minute ago",other:"{0} minutes ago"}}},second:{displayName:"second",relative:{0:"now"},relativeTime:{future:{one:"in {0} second",other:"in {0} seconds"},past:{one:"{0} second ago",other:"{0} seconds ago"}}}}},{locale:"en-001",parentLocale:"en"},{locale:"en-150",parentLocale:"en-001"},{locale:"en-AG",parentLocale:"en-001"},{locale:"en-AI",parentLocale:"en-001"},{locale:"en-AS",parentLocale:"en"},{locale:"en-AT",parentLocale:"en-150"},{locale:"en-AU",parentLocale:"en-001"},{locale:"en-BB",parentLocale:"en-001"},{locale:"en-BE",parentLocale:"en-001"},{locale:"en-BI",parentLocale:"en"},{locale:"en-BM",parentLocale:"en-001"},{locale:"en-BS",parentLocale:"en-001"},{locale:"en-BW",parentLocale:"en-001"},{locale:"en-BZ",parentLocale:"en-001"},{locale:"en-CA",parentLocale:"en-001"},{locale:"en-CC",parentLocale:"en-001"},{locale:"en-CH",parentLocale:"en-150"},{locale:"en-CK",parentLocale:"en-001"},{locale:"en-CM",parentLocale:"en-001"},{locale:"en-CX",parentLocale:"en-001"},{locale:"en-CY",parentLocale:"en-001"},{locale:"en-DE",parentLocale:"en-150"},{locale:"en-DG",parentLocale:"en-001"},{locale:"en-DK",parentLocale:"en-150"},{locale:"en-DM",parentLocale:"en-001"},{locale:"en-Dsrt",pluralRuleFunction:function(e,a){return"other"},fields:{year:{displayName:"Year",relative:{0:"this year",1:"next year","-1":"last year"},relativeTime:{future:{other:"+{0} y"},past:{other:"-{0} y"}}},month:{displayName:"Month",relative:{0:"this month",1:"next month","-1":"last month"},relativeTime:{future:{other:"+{0} m"},past:{other:"-{0} m"}}},day:{displayName:"Day",relative:{0:"today",1:"tomorrow","-1":"yesterday"},relativeTime:{future:{other:"+{0} d"},past:{other:"-{0} d"}}},hour:{displayName:"Hour",relativeTime:{future:{other:"+{0} h"},past:{other:"-{0} h"}}},minute:{displayName:"Minute",relativeTime:{future:{other:"+{0} min"},past:{other:"-{0} min"}}},second:{displayName:"Second",relative:{0:"now"},relativeTime:{future:{other:"+{0} s"},past:{other:"-{0} s"}}}}},{locale:"en-ER",parentLocale:"en-001"},{locale:"en-FI",parentLocale:"en-150"},{locale:"en-FJ",parentLocale:"en-001"},{locale:"en-FK",parentLocale:"en-001"},{locale:"en-FM",parentLocale:"en-001"},{locale:"en-GB",parentLocale:"en-001"},{locale:"en-GD",parentLocale:"en-001"},{locale:"en-GG",parentLocale:"en-001"},{locale:"en-GH",parentLocale:"en-001"},{locale:"en-GI",parentLocale:"en-001"},{locale:"en-GM",parentLocale:"en-001"},{locale:"en-GU",parentLocale:"en"},{locale:"en-GY",parentLocale:"en-001"},{locale:"en-HK",parentLocale:"en-001"},{locale:"en-IE",parentLocale:"en-001"},{locale:"en-IL",parentLocale:"en-001"},{locale:"en-IM",parentLocale:"en-001"},{locale:"en-IN",parentLocale:"en-001"},{locale:"en-IO",parentLocale:"en-001"},{locale:"en-JE",parentLocale:"en-001"},{locale:"en-JM",parentLocale:"en-001"},{locale:"en-KE",parentLocale:"en-001"},{locale:"en-KI",parentLocale:"en-001"},{locale:"en-KN",parentLocale:"en-001"},{locale:"en-KY",parentLocale:"en-001"},{locale:"en-LC",parentLocale:"en-001"},{locale:"en-LR",parentLocale:"en-001"},{locale:"en-LS",parentLocale:"en-001"},{locale:"en-MG",parentLocale:"en-001"},{locale:"en-MH",parentLocale:"en"},{locale:"en-MO",parentLocale:"en-001"},{locale:"en-MP",parentLocale:"en"},{locale:"en-MS",parentLocale:"en-001"},{locale:"en-MT",parentLocale:"en-001"},{locale:"en-MU",parentLocale:"en-001"},{locale:"en-MW",parentLocale:"en-001"},{locale:"en-MY",parentLocale:"en-001"},{locale:"en-NA",parentLocale:"en-001"},{locale:"en-NF",parentLocale:"en-001"},{locale:"en-NG",parentLocale:"en-001"},{locale:"en-NL",parentLocale:"en-150"},{locale:"en-NR",parentLocale:"en-001"},{locale:"en-NU",parentLocale:"en-001"},{locale:"en-NZ",parentLocale:"en-001"},{locale:"en-PG",parentLocale:"en-001"},{locale:"en-PH",parentLocale:"en-001"},{locale:"en-PK",parentLocale:"en-001"},{locale:"en-PN",parentLocale:"en-001"},{locale:"en-PR",parentLocale:"en"},{locale:"en-PW",parentLocale:"en-001"},{locale:"en-RW",parentLocale:"en-001"},{locale:"en-SB",parentLocale:"en-001"},{locale:"en-SC",parentLocale:"en-001"},{locale:"en-SD",parentLocale:"en-001"},{locale:"en-SE",parentLocale:"en-150"},{locale:"en-SG",parentLocale:"en-001"},{locale:"en-SH",parentLocale:"en-001"},{locale:"en-SI",parentLocale:"en-150"},{locale:"en-SL",parentLocale:"en-001"},{locale:"en-SS",parentLocale:"en-001"},{locale:"en-SX",parentLocale:"en-001"},{locale:"en-SZ",parentLocale:"en-001"},{locale:"en-Shaw",pluralRuleFunction:function(e,a){return"other"},fields:{year:{displayName:"Year",relative:{0:"this year",1:"next year","-1":"last year"},relativeTime:{future:{other:"+{0} y"},past:{other:"-{0} y"}}},month:{displayName:"Month",relative:{0:"this month",1:"next month","-1":"last month"},relativeTime:{future:{other:"+{0} m"},past:{other:"-{0} m"}}},day:{displayName:"Day",relative:{0:"today",1:"tomorrow","-1":"yesterday"},relativeTime:{future:{other:"+{0} d"},past:{other:"-{0} d"}}},hour:{displayName:"Hour",relativeTime:{future:{other:"+{0} h"},past:{other:"-{0} h"}}},minute:{displayName:"Minute",relativeTime:{future:{other:"+{0} min"},past:{other:"-{0} min"}}},second:{displayName:"Second",relative:{0:"now"},relativeTime:{future:{other:"+{0} s"},past:{other:"-{0} s"}}}}},{locale:"en-TC",parentLocale:"en-001"},{locale:"en-TK",parentLocale:"en-001"},{locale:"en-TO",parentLocale:"en-001"},{locale:"en-TT",parentLocale:"en-001"},{locale:"en-TV",parentLocale:"en-001"},{locale:"en-TZ",parentLocale:"en-001"},{locale:"en-UG",parentLocale:"en-001"},{locale:"en-UM",parentLocale:"en"},{locale:"en-US",parentLocale:"en"},{locale:"en-VC",parentLocale:"en-001"},{locale:"en-VG",parentLocale:"en-001"},{locale:"en-VI",parentLocale:"en"},{locale:"en-VU",parentLocale:"en-001"},{locale:"en-WS",parentLocale:"en-001"},{locale:"en-ZA",parentLocale:"en-001"},{locale:"en-ZM",parentLocale:"en-001"},{locale:"en-ZW",parentLocale:"en-001"}];return e});
+
+
+/***/ },
+/* 287 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 
-	var _en = __webpack_require__(287);
+	var _en = __webpack_require__(288);
 
 	var _en2 = _interopRequireDefault(_en);
 
@@ -37781,7 +38464,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 287 */
+/* 288 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -37810,7 +38493,6 @@ return /******/ (function(modules) { // webpackBootstrap
 		"support.noVideo": "Your browser does not support the video tag.",
 		"support.noAudio": "Your browser does not support the audio tag.",
 		"select": "Select",
-		"media.contents": "Media Contents",
 		"grammar.a": "a",
 		"media.source": "Media Source",
 		"modal.closeWindow": "Close {title} Modal Window",
@@ -37830,6 +38512,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		"layout.grid": "Grid Layout",
 		"layout.list": "List Layout",
 		"media.browse": "Browse",
+		"media.contents": "Media Content",
 		"directory.create": "Create a Directory",
 		"directory.createNewIn": "Create a new Directory in {cd}",
 		"mediaSourceTree": "Media Source Panel",
@@ -37861,6 +38544,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		"layout.thumbnail": "Thumbnail layout displays a grid of medium sized thumbnails",
 		"file.openInNewTab": "Open {filename} in a new tab",
 		"toggle": "Toggle",
+		"pluralChoose": "item",
+		"copyListofSelectedFiles": "Copy list of selected files",
 		"media.sourceTree": "Media Source Panel",
 		"upload.dragFilestoUpload": "Drag files here to be uploaded to {cd}"
 	};

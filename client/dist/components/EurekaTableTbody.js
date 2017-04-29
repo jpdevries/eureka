@@ -137,10 +137,11 @@ var EurekaTableTbody = function (_PureComponent) {
   }, {
     key: 'shouldComponentUpdate',
     value: function shouldComponentUpdate(nextProps, nextState) {
-      //return true;
+      return true;
       console.log(this.props, this.state);
       if (nextProps.view.filter || !nextProps.view.filter && this.props.view.filter) return true;
       if (nextProps.view.sort !== this.props.view.sort) return true;
+      if (nextProps.view.chooseMultiple !== this.props.view.chooseMultiple) return true;
       try {
         //console.log('shouldComponentUpdate', (this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path), this.state.focusedMediaItem.path, nextProps.view.focusedMediaItem.path);
         //if((this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path)) return true; // #janky SLOOOOW
@@ -205,7 +206,7 @@ var EurekaTableTbody = function (_PureComponent) {
       });*/
 
       var contentList = contents.length ? contents.map(function (item, index) {
-        return [_react2.default.createElement(_MediaRow2.default, _extends({}, props, { intl: props.intl, focusedMediaItem: props.view.focusedMediaItem, renameStart: _this2.handleRenameStart, item: item, index: index, key: index, onFocus: function onFocus(event) {
+        return [_react2.default.createElement(_MediaRow2.default, _extends({ key: _utility2.default.cssSafe(item.filename) }, props, { intl: props.intl, focusedMediaItem: props.view.focusedMediaItem, renameStart: _this2.handleRenameStart, item: item, index: index, onFocus: function onFocus(event) {
 
             /*this.setState({
               focusedMediaItem: item
