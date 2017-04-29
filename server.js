@@ -195,7 +195,10 @@ function serveIt(dir = "/", lang = undefined) {
   //console.log('serveIt', dir);
   return new Promise((resolve, reject) => {
     store.dispatch(actions.updateConfig({
-      uid:"0"
+      uid:"0",
+      callbacks: {
+        choose: true
+      }
     }));
 
     getMediaSources().then((mediaSources) => ( // get the media sources

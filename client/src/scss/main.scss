@@ -1033,6 +1033,7 @@ a[role="presentation"] {
   }
   .eureka__notification-wrapper {
     //height: 0;
+    z-index: $topMost;
     margin-bottom: .5rem;
     @include media($gtMobile) {
       margin-bottom: 0;
@@ -1061,6 +1062,11 @@ a[role="presentation"] {
   }
   .eureka__choose-radio {
     margin-bottom: 1rem;
+    @include media($gtMobile) {
+      margin-bottom: 0;
+      transform: translateY(.3em);
+      z-index: 0;
+    }
     fieldset {
       border: none;
     }

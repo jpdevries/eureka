@@ -19,7 +19,7 @@ var _actions2 = _interopRequireDefault(_actions);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ChooseRadio(props) {
-  var invert = props.view.chooseMultiple ? _react2.default.createElement(
+  var invert = props.view.chooseMultiple && props.config.allowInvertSelection ? _react2.default.createElement(
     'label',
     { htmlFor: 'eureka__invert_selection' },
     '\u2003',
@@ -35,7 +35,11 @@ function ChooseRadio(props) {
       ' Selection'
     ),
     '\u2003'
-  ) : undefined,
+  ) : _react2.default.createElement(
+    'span',
+    null,
+    '\u2003'
+  ),
       maybeSpace = props.view.chooseMultiple ? undefined : _react2.default.createElement(
     'span',
     null,

@@ -23,6 +23,7 @@ const initialConfigState = {
   confirmBeforeDelete:false,
   locales:"en-US",
   allowChooseMultiple:true,
+  allowInvertSelection:true,
   mediaSource:"0",
   currentDirectory:"/",
   welcome: true,
@@ -165,7 +166,7 @@ var contentReducer = function(state, action) {
     case actions.UPDATE_CONTENT:
     const content = processContentItems(action.content);
     newState = Object.assign({}, state, content);
-    if(action.content.cd) newState = Object.assign({}, newState, { // if updating the current directory clear the chosen media items
+    if(action.content.cd && action.content.cd !== state.cd) newState = Object.assign({}, newState, { // if updating the current directory clear the chosen media items
       chosenMediaItems: [],
       chosenMediaItemsInverted: []
     });
@@ -379,7 +380,7 @@ var initialViewState = Object.assign({}, {
   sourceTreeOpen: false,
   enlargeFocusedRows: false,
   locale:"en-US",
-  chooseMultiple:true,
+  chooseMultiple:false,
   sort:{
     by: 'filename',
     dir: utility.ASCENDING

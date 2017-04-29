@@ -573,7 +573,7 @@ class Eureka extends Component {
     const chooseMultipleClass = (props.view.chooseMultiple) ? ' eureka__choose-multiple' : '';
     const searchBar = (!utility.serverSideRendering) ? <SearchBar {...props} /> : undefined;
     const serverSideClass = (utility.serverSideRendering) ? ' eureka__server-side' : '';
-    const chooseRadio = (props.config.allowChooseMultiple) ? <ChooseRadio view={props.view} content={props.content} storagePrefix={props.storagePrefix} /> : undefined;
+    const chooseRadio = (props.config.allowChooseMultiple && !utility.serverSideRendering) ? <ChooseRadio config={props.config} view={props.view} content={props.content} storagePrefix={props.storagePrefix} /> : undefined;
     const sortContentsSelector = (!utility.serverSideRendering) ? (
       <SortContents {...props} sort={props.view.sort} />
     ) : undefined;

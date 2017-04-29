@@ -148,10 +148,30 @@ The semantic HTML layer remains usable even absent of style as pure&nbsp;HTML.
       <td align="center"><span aria-label="supported">✅</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
     </tr>
-        <tr>
-      <td>Keyboard Shortcuts</td>
+    <tr>
+      <td>Choose Multiple Items</td>
+      <td align="center"><span aria-label="not supported">❌</span></td>
       <td align="center"><span aria-label="not supported">❌</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+    </tr>
+    <tr>
+      <td>Delete Multiple Items</td>
+      <td align="center"><span aria-label="not supported">❌</span></td>
+      <td align="center"><span aria-label="not supported">❌</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+    </tr>
+    <tr>
+      <td>Keyboard Shortcuts</td>
+      <td align="center"><span aria-label="not supported">❌</span></td>
+      <td align="center"><span aria-label="not supported">❌</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
@@ -463,6 +483,8 @@ Configure the `EurekaMediaBrowser` via the optional attributes found in the defa
 | `allowFullscreen` | `true`      |    Whether or not the interface should offer a fullscreen button |
 | `emphasisFocusedMediaItem` | `true`      |    Whether or not to emphasis selected media items (defaults to emphasizing the filename, only applies to table and list view modes) |
 | `doDragNDrop` | `true`      |    Whether or not to enable drag 'n drop features |
+| `allowChooseMultiple` | `true`      |    Whether or not to allow multiple files to be chosen |
+| `allowInvertSelection` | `true`      |    Whether or not to allow selection of multiple items to be inverted |
 
 
 

@@ -518,7 +518,7 @@ var Eureka = function (_Component) {
       var chooseMultipleClass = props.view.chooseMultiple ? ' eureka__choose-multiple' : '';
       var searchBar = !_utility2.default.serverSideRendering ? _react2.default.createElement(_SearchBar2.default, props) : undefined;
       var serverSideClass = _utility2.default.serverSideRendering ? ' eureka__server-side' : '';
-      var chooseRadio = props.config.allowChooseMultiple ? _react2.default.createElement(_ChooseRadio2.default, { view: props.view, content: props.content, storagePrefix: props.storagePrefix }) : undefined;
+      var chooseRadio = props.config.allowChooseMultiple && !_utility2.default.serverSideRendering ? _react2.default.createElement(_ChooseRadio2.default, { config: props.config, view: props.view, content: props.content, storagePrefix: props.storagePrefix }) : undefined;
       var sortContentsSelector = !_utility2.default.serverSideRendering ? _react2.default.createElement(_SortContents2.default, _extends({}, props, { sort: props.view.sort })) : undefined;
       var formDiv = _react2.default.createElement(
         'div',

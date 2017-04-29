@@ -4,13 +4,13 @@ import store from '../model/store';
 import actions from '../model/actions';
 
 function ChooseRadio(props) {
-  const invert = (props.view.chooseMultiple) ? (
+  const invert = (props.view.chooseMultiple && props.config.allowInvertSelection) ? (
     <label htmlFor="eureka__invert_selection">&emsp;<input checked={props.view.selectionInverted} onChange={(event) => {
       store.dispatch(actions.updateView({
         selectionInverted: event.target.checked
       }))
     }} type="checkbox" id={`${props.storagePrefix}invert_selection`} name="eureka__invert_selection" />&ensp;Invert<span className="visually-hidden"> Selection</span>&emsp;</label>
-  ) : undefined,
+  ) : <span>&emsp;</span>,
   maybeSpace = (props.view.chooseMultiple) ? undefined : (<span>&emsp;</span>);
   return (
     <div className="eureka__choose-radio">

@@ -50,6 +50,7 @@ function render() {
     useLocalStorage: true,
     allowRename: true,
     allowDelete: true,
+    allowInvertSelection: false,
     confirmBeforeDelete: true,
     alwaysWelcome: true,
     allowFullscreen: true,
@@ -77,6 +78,6 @@ function render() {
     foo: 'bar'
   }), _defineProperty(_React$createElement, 'intervals', {
     searchBarPlaceholder: 60000,
-    fetchDirectoryContents: false
+    fetchDirectoryContents: 12000
   }), _React$createElement)), document.getElementById('root'));
 }

@@ -1334,7 +1334,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var chooseMultipleClass = props.view.chooseMultiple ? ' eureka__choose-multiple' : '';
 	      var searchBar = !_utility2.default.serverSideRendering ? _react2.default.createElement(_SearchBar2.default, props) : undefined;
 	      var serverSideClass = _utility2.default.serverSideRendering ? ' eureka__server-side' : '';
-	      var chooseRadio = props.config.allowChooseMultiple ? _react2.default.createElement(_ChooseRadio2.default, { view: props.view, content: props.content, storagePrefix: props.storagePrefix }) : undefined;
+	      var chooseRadio = props.config.allowChooseMultiple && !_utility2.default.serverSideRendering ? _react2.default.createElement(_ChooseRadio2.default, { config: props.config, view: props.view, content: props.content, storagePrefix: props.storagePrefix }) : undefined;
 	      var sortContentsSelector = !_utility2.default.serverSideRendering ? _react2.default.createElement(_SortContents2.default, _extends({}, props, { sort: props.view.sort })) : undefined;
 	      var formDiv = _react2.default.createElement(
 	        'div',
@@ -1746,6 +1746,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  confirmBeforeDelete: false,
 	  locales: "en-US",
 	  allowChooseMultiple: true,
+	  allowInvertSelection: true,
 	  mediaSource: "0",
 	  currentDirectory: "/",
 	  welcome: true,
@@ -1913,7 +1914,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      case actions.UPDATE_CONTENT:
 	        var content = processContentItems(action.content);
 	        newState = Object.assign({}, state, content);
-	        if (action.content.cd) newState = Object.assign({}, newState, { // if updating the current directory clear the chosen media items
+	        if (action.content.cd && action.content.cd !== state.cd) newState = Object.assign({}, newState, { // if updating the current directory clear the chosen media items
 	          chosenMediaItems: [],
 	          chosenMediaItemsInverted: []
 	        });
@@ -2169,7 +2170,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  sourceTreeOpen: false,
 	  enlargeFocusedRows: false,
 	  locale: "en-US",
-	  chooseMultiple: true,
+	  chooseMultiple: false,
 	  sort: {
 	    by: 'filename',
 	    dir: _utility2.default.ASCENDING
@@ -4520,7 +4521,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.107",
+		"version": "0.0.108",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -9600,7 +9601,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    chooseMessage,
 	    postChooseMessage
 	  ) : undefined,
-	      deleteBtn = len > 1 && props.view.chooseMultiple ? _react2.default.createElement(
+	      deleteBtn = len > 1 && props.view.chooseMultiple && props.config.allowDelete ? _react2.default.createElement(
 	    'form',
 	    { onSubmit: function onSubmit(event) {
 	        event.preventDefault();
@@ -16957,7 +16958,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function ChooseRadio(props) {
-	  var invert = props.view.chooseMultiple ? _react2.default.createElement(
+	  var invert = props.view.chooseMultiple && props.config.allowInvertSelection ? _react2.default.createElement(
 	    'label',
 	    { htmlFor: 'eureka__invert_selection' },
 	    '\u2003',
@@ -16973,7 +16974,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      ' Selection'
 	    ),
 	    '\u2003'
-	  ) : undefined,
+	  ) : _react2.default.createElement(
+	    'span',
+	    null,
+	    '\u2003'
+	  ),
 	      maybeSpace = props.view.chooseMultiple ? undefined : _react2.default.createElement(
 	    'span',
 	    null,

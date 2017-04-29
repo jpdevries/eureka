@@ -78,7 +78,7 @@ var ChooseBar = function ChooseBar(props) {
     chooseMessage,
     postChooseMessage
   ) : undefined,
-      deleteBtn = len > 1 && props.view.chooseMultiple ? _react2.default.createElement(
+      deleteBtn = len > 1 && props.view.chooseMultiple && props.config.allowDelete ? _react2.default.createElement(
     'form',
     { onSubmit: function onSubmit(event) {
         event.preventDefault();

@@ -57,7 +57,7 @@ const ChooseBar = (props) => {
 
     </button>
   ) : undefined,
-  deleteBtn = (len > 1 && props.view.chooseMultiple) ? (
+  deleteBtn = (len > 1 && props.view.chooseMultiple && props.config.allowDelete) ? (
     <form onSubmit={(event) => {
       event.preventDefault();
       event.stopPropagation();
