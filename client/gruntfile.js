@@ -440,7 +440,7 @@ module.exports = function(grunt) {
 
   grunt.renameTask('string-replace','bump');
 
-  grunt.registerTask('default', ['growl:watch', 'watch:scssdev']);
+  grunt.registerTask('default', ['growl:watch', 'watch:scss']);
   grunt.registerTask('build',['bower','copy:bower','modernizr','sass','copy:css','postcss','cssmin','copy:css','webpack','uglify','clean:buildimg','svgstore','svgo','copy:img','growl:build']);
   grunt.registerTask('buildcss',['sass','copy:css','postcss','cssmin','copy:css','growl:sass']);
 };

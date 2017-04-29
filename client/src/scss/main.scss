@@ -1032,6 +1032,7 @@ a[role="presentation"] {
     }
   }
   .eureka__notification-wrapper {
+    //height: 0;
     margin-bottom: .5rem;
     @include media($gtMobile) {
       margin-bottom: 0;

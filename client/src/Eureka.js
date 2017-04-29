@@ -618,7 +618,9 @@ class Eureka extends Component {
       <div role="widget" lang={props.lang || undefined} className={`eureka eureka__view-mode__${props.view.mode}${chooseMultipleClass}${enlargeFocusedRows}${serverSideClass}`}>
         <div className={classNames({
           "eureka__sticky-bar": this.state.stickyNotifications
-        })} aria-live="assertive" aria-relevant="additions" aria-atomic="true">{notification}</div>
+        })} aria-live="assertive" aria-relevant="additions" aria-atomic="true" onClick={(event) => {
+          event.currentTarget.querySelector('button').click()
+        }}>{notification}</div>
         {formDiv}
         {pathBar}
         {chooseBar}
