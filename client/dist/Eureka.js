@@ -582,7 +582,9 @@ var Eureka = function (_Component) {
           'div',
           { className: classNames({
               "eureka__sticky-bar": this.state.stickyNotifications
-            }), 'aria-live': 'assertive', 'aria-relevant': 'additions', 'aria-atomic': 'true' },
+            }), 'aria-live': 'assertive', 'aria-relevant': 'additions', 'aria-atomic': 'true', onClick: function onClick(event) {
+              event.currentTarget.querySelector('button').click();
+            } },
           notification
         ),
         formDiv,

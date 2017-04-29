@@ -24850,7 +24850,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	          'div',
 	          { className: classNames({
 	              "eureka__sticky-bar": this.state.stickyNotifications
-	            }), 'aria-live': 'assertive', 'aria-relevant': 'additions', 'aria-atomic': 'true' },
+	            }), 'aria-live': 'assertive', 'aria-relevant': 'additions', 'aria-atomic': 'true', onClick: function onClick(event) {
+	              event.currentTarget.querySelector('button').click();
+	            } },
 	          notification
 	        ),
 	        formDiv,
@@ -27770,7 +27772,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.106",
+		"version": "0.0.107",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
