@@ -32,6 +32,11 @@ it('renders without crashing', () => {
         absoluteURL:'cheese.jpg',
         filename:'cheese.jpg'
       }
+    },
+    content: {
+      contents: [],
+      chosenMediaItems: [],
+      chosenMediaItemsInverted: []
     }
   };
 
@@ -52,6 +57,11 @@ it('should display the correct icon based on filename extension', () => {
         absoluteURL:'cheese.jpg',
         filename:'cheese.jpg'
       }
+    },
+    content: {
+      contents: [],
+      chosenMediaItems: [],
+      chosenMediaItemsInverted: []
     }
   };
 
@@ -81,6 +91,11 @@ it('summary should contain correct path', () => {
         filename:'cheese.jpg',
         path:'/cheese.jpg'
       }
+    },
+    content: {
+      contents: [],
+      chosenMediaItems: [],
+      chosenMediaItemsInverted: []
     }
   };
 
@@ -106,6 +121,11 @@ it('renders a snapshot', () => {
         filename:'cheese.jpg',
         path:'/cheese.jpg'
       }
+    },
+    content: {
+      contents: [],
+      chosenMediaItems: [],
+      chosenMediaItemsInverted: []
     }
   };
 

@@ -23,6 +23,11 @@ it('renders without crashing', () => {
     },
     view: {
       focusedMediaItem: undefined
+    },
+    content: {
+      contents: [],
+      chosenMediaItems: [],
+      chosenMediaItemsInverted: []
     }
   };
 
@@ -41,6 +46,11 @@ it('choose button of Virtual DOM should be initially disabled if focused media i
     },
     view: {
       focusedMediaItem: undefined
+    },
+    content: {
+      contents: [],
+      chosenMediaItems: [],
+      chosenMediaItemsInverted: []
     }
   };
 
@@ -64,9 +74,14 @@ it('choose button of Virtual DOM should not be initially disabled if focused med
       focusedMediaItem: {
         filename:'foo.jpg'
       }
+    },
+    content: {
+      contents: [],
+      chosenMediaItems: [],
+      chosenMediaItemsInverted: []
     }
   };
- 
+
   ReactDOM.render(<IntlProvider><ChooseBarIntl {...props} /></IntlProvider>, div);
 
   if(div.querySelector(`#${props.config.storagePrefix}choose-button`).hasAttribute('disabled')) {
@@ -84,6 +99,11 @@ it('renders a snapshot', () => {
       focusedMediaItem: {
         filename:'foo.jpg'
       }
+    },
+    content: {
+      contents: [],
+      chosenMediaItems: [],
+      chosenMediaItemsInverted: []
     }
   };
 
