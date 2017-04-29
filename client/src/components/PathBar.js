@@ -49,7 +49,7 @@ const PathBar = (props) => {
   //console.log('props.content.chosenMediaItems', props.content.chosenMediaItems);
   //console.log('fileNames', fileNames);
   const len = (props.view.selectionInverted) ? props.content.contents.length - props.content.chosenMediaItems.length : props.content.chosenMediaItems.length;
-  const fileNamesIf = (len > 1 && props.view.chooseMultiple) ? <textarea aria-readonly="true" aria-label={copyListofSelectedFiles} rows="10" cols="50" onClick={(event) => {
+  const fileNamesIf = (len > 1 && props.view.chooseMultiple) ? <textarea aria-live="polite" aria-readonly="true" aria-label={copyListofSelectedFiles} rows="10" cols="50" onClick={(event) => {
     event.target.focus();
     event.target.select();
   }}  style={{
