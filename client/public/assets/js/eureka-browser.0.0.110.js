@@ -1745,6 +1745,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  allowRename: true,
 	  allowDelete: true,
 	  confirmBeforeDelete: false,
+	  allowDownloadMultiple: true,
 	  locales: "en-US",
 	  allowChooseMultiple: true,
 	  allowInvertSelection: true,
@@ -2211,7 +2212,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}());
 
 	//console.log('initialViewState', initialViewState);
-
+	var lastCD = initialContentState.cd;
 	var viewReducer = function viewReducer(state, action) {
 	  state = state || initialViewState;
 
@@ -2234,10 +2235,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return Object.assign({}, state, action.view);
 
 	    case actions.UPDATE_CONTENT:
-	      if (action.content.cd) {
-	        return Object.assign({}, state, {
+	      if (action.content.cd && action.content.cd !== lastCD) {
+	        var r = Object.assign({}, state, {
 	          selectionInverted: false
 	        });
+	        lastCD = action.content.cd;
+	        return r;
 	      }
 	      return state;
 
@@ -3404,6 +3407,59 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	};
 
+	/*const downloadMediaItems = (source, customHeaders = {}) => (
+	  (dispatch) => (
+	    fetch(`/assets/components/eureka/media/attachments/${source}`, {
+	      method: 'GET',
+	      body: formData,
+	      headers: Object.assign({}, {
+	        'Accept': 'application/json',
+	        //'Content-Type': 'application/json'
+	      }, customHeaders)
+	    }).then((response) => {
+	      if(response.state < 200 || response.state >= 300) {
+	        var error = new Error(response.statusText)
+	        error.response = response
+	        throw error;
+	      }
+	      return response;
+	    }).then((response) => (
+	      response.json()
+	    )).then((contents) => (
+	      dispatch(
+	        downloadMediaItemsSuccess(formData)
+	      )
+	    )).catch((error) => (
+	      dispatch(
+	        downloadMediaItemsError(error)
+	      )
+	    ))
+	  )
+	);
+
+	const DOWNLOAD_MEDIA_ITEM_SUCCESS = 'download_media_item_success';
+	const DOWNLOAD_MEDIA_ITEM_ERROR = 'download_media_item_error';
+	const downloadMediaItemsSuccess = function(formData) {
+	  return {
+	    type: DOWNLOAD_MEDIA_ITEM_SUCCESS,
+	    formData: formData,
+	  }
+	}
+
+	const downloadMediaItemsError = function(error) {
+	  //console.log('updateSourceTreeError',error);
+	  return {
+	    type: DOWNLOAD_MEDIA_ITEM_ERROR,
+	    error: error
+	  }
+	}
+
+
+	exports.downloadMediaItems = downloadMediaItems;
+	exports.DOWNLOAD_MEDIA_ITEM_SUCCESS = DOWNLOAD_MEDIA_ITEM_SUCCESS;
+	exports.DOWNLOAD_MEDIA_ITEM_ERROR = DOWNLOAD_MEDIA_ITEM_ERROR;
+	*/
+
 	var updateSourceTree = function updateSourceTree(source) {
 	  var customHeaders = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 	  return function (dispatch) {
@@ -4522,7 +4578,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.109",
+		"version": "0.0.110",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -9568,6 +9624,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      deleteBtnFormFileNames = props.content.chosenMediaItemsInverted.map(function (item) {
 	    return _react2.default.createElement('input', { type: 'hidden', name: 'delete_file[]', key: item.filename, value: item.filename });
 	  }),
+	      downloadBtnFormFileNames = props.content.chosenMediaItemsInverted.map(function (item) {
+	    return _react2.default.createElement('input', { type: 'hidden', name: 'zip_file[]', key: item.filename, value: item.filename });
+	  }),
 	      len = props.content.chosenMediaItemsInverted.length,
 	      pluralChooseItemPlaceholder = _definedMessages2.default.pluralChoose[formatPlural({
 	    value: len
@@ -9585,6 +9644,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    }()
 	  ),
+	      downloadBtn = len > 1 && props.view.chooseMultiple && props.config.allowDownloadMultiple ? _react2.default.createElement(
+	    'form',
+	    { target: '_blank', encType: 'multipart/form-data', method: 'POST', action: '/assets/components/eureka/media/attachments/' + props.source.currentSource, onSubmit: function onSubmit(event) {} },
+	    _react2.default.createElement('input', { type: 'hidden', name: 'cd', value: props.content.cd }),
+	    _react2.default.createElement('input', { type: 'hidden', name: 'cs', value: props.source.currentSource }),
+	    downloadBtnFormFileNames,
+	    _react2.default.createElement(
+	      'button',
+	      { className: 'eureka__gratious' },
+	      _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'download', defaultValue: 'Download' }),
+	      postChooseMessage
+	    )
+	  ) : undefined,
 	      chooseBtn = props.config.allowChoose ? _react2.default.createElement(
 	    'button',
 	    { 'aria-describedby': props.config.storagePrefix + 'selected_file_names', id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'choose-button', className: 'eureka__primary', disabled: !props.view.focusedMediaItem && !_utility2.default.serverSideRendering, onClick: function onClick(event) {
@@ -9640,7 +9712,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    { 'aria-hidden': props.ariaHidden, className: 'eureka__button-bar eureka__choose-bar' },
 	    _react2.default.createElement(
 	      'button',
-	      { 'aria-label': closeMediaBrowserMessage, onClick: function onClick(event) {
+	      { className: 'dangerous', 'aria-label': closeMediaBrowserMessage, onClick: function onClick(event) {
 	          //console.log('closing');
 	          try {
 	            props.config.callbacks.close();
@@ -9650,6 +9722,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        } },
 	      cancelMessage
 	    ),
+	    downloadBtn,
 	    deleteBtn,
 	    chooseBtn
 	  );
@@ -11141,13 +11214,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
-	      var props = this.props;
 	      this.assignKeyboardListeners();
-	      if (props.content.chosenMediaItemsInverted.includes(props.item)) {
-	        this.setState({
-	          chooseChecked: true
-	        });
-	      }
+
 	      //Mousetrap(document.querySelector('.eureka')).bind(['alt+z'], this.handleKeyboardDeselect);
 
 	      /*store.subscribe(() => {
@@ -11267,6 +11335,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    //http://localhost:3000/assets/components/eureka/media/sources/1?path=%2FUsers%2FjP%2FSites%2Fstatic%2Feureka%2Fprod%2Fsources%2Ffilesystem%2Fassets%2Fimg%2Fredwoods%2F243823_842410181688_1308368_o.jpg
 	    //http://localhost:3000/assets/components/eureka/media/sources/1?path=%2FUsers%2FjP%2FSites%2Fstatic%2Feureka%2Fprod%2Fsources%2Ffilesystem%2Fassets%2Fimg%2Fredwoods%2F243150_842410286478_7945184_o.jpg
+
+	  }, {
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      var props = this.props;
+	      if (props.content.chosenMediaItemsInverted.includes(props.item)) {
+	        this.setState({
+	          chooseChecked: true
+	        });
+	      }
+	    }
 
 	    /*componentWillUnmount() {
 	      Mousetrap.unbind(['backspace'], this.handleKeyboardBackspace);
@@ -11451,7 +11530,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      var checkbox = props.view.chooseMultiple ? _react2.default.createElement(
 	        'td',
-	        { className: 'eureka__choose' },
+	        { role: 'gridcell', className: 'eureka__choose' },
 	        _react2.default.createElement('input', { value: 'chosen', 'aria-label': 'Choose ' + item.filename, type: 'checkbox', name: 'eureka__chose_multiple', id: checkboxId, key: 'eureka__choose_multiple_' + _utility2.default.cssSafe(props.item.filename) + '__' + (this.state.chooseChecked ? 'checked' : ''), checked: this.state.chooseChecked, onChange: function onChange(event) {
 	            event.preventDefault();
 	            event.stopPropagation();
