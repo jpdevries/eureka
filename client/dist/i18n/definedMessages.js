@@ -31,6 +31,10 @@ exports.default = (0, _reactIntl.defineMessages)((_defineMessages = {
     'id': 'mediaSourceTree',
     'defaultMessage': 'Media Source Panel'
   },
+  deleteAreYouSureMessage: {
+    'id': 'deleteAreYouSureMessage',
+    'defaultMessage': 'Are you sure you want to permanently delete {filename}?'
+  },
   close: {
     'id': 'close',
     'defaultMessage': 'Close'

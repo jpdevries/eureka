@@ -42,6 +42,9 @@ const ContextButtons = (props) => {
   downloadMessage = formatMessage(definedMessages.download),
   downloadItemMessage = formatMessage(definedMessages.downloadItem, {
     filename: item.filename
+  }),
+  deleteAreYouSureMessage = formatMessage(definedMessages.deleteAreYouSureMessage, {
+    filename: item.filename
   });
   const chooseBtn = (props.config.allowChoose) ? (
     <button role="option" id={`choose__${cssSafe(item.filename)}`} title={chooseItemMessage} onClick={(event) => {
@@ -59,13 +62,16 @@ const ContextButtons = (props) => {
   renameBtn = (props.config.allowRename) ? (<button id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }rename__${cssSafe(item.filename)}`} role="option" title={renameItemMessage} onClick={props.onRenameItem ? props.onRenameItem.bind(null, item) : undefined}>{renameMessage}<span className="visually-hidden"> {item.filename}</span></button>) : undefined,
   deleteBtn = (props.config.allowDelete) ? (
     <button id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }delete__${cssSafe(item.filename)}`} role="option" onClick={(event) => {
-        store.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path, props.config.headers)).then(() => {
-          /*notify(`Deleted item ${item.filename}`, {
-            badge: path.join(props.config.assetsBasePath, 'img/src/png/trash-o.png'),
-            silent: true
-          });*/
-          store.dispatch(actions.notify(deletedItemMessage, DANGEROUS));
-        });
+        if(!props.config.confirmBeforeDelete) {
+          deleteIt();
+        } else if(confirm(deleteAreYouSureMessage)) {
+          deleteIt();
+        }
+        function deleteIt() {
+          store.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path, props.config.headers)).then(() => {
+            store.dispatch(actions.notify(deletedItemMessage, DANGEROUS));
+          });
+        }
       }} title={deleteItemMessage} className="dangerous">{deleteMessage}<span className="visually-hidden"> {item.filename}</span></button>
   ) : undefined,
   downloadID = `${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }download__${cssSafe(item.filename)}`,

@@ -70,6 +70,11 @@ const ChooseBar = (props) => {
 
     </button>
   ) : undefined,
+  deleteAreYouSureMessage = formatMessage(definedMessages.deleteAreYouSureMessage, {
+    filename: `${len} ${definedMessages.pluralItem[formatPlural({
+      value: len
+    })]}`
+  }),
   deleteBtn = (len > 1 && props.view.chooseMultiple && props.config.allowDelete) ? (
     <form onSubmit={(event) => {
       event.preventDefault();
@@ -81,11 +86,19 @@ const ChooseBar = (props) => {
 
       //console.log('yolo', formData.getAll('delete_file[]'));
 
-      store.dispatch(actions.deleteMediaItems(props.source.currentSource, formData, props.config.headers)).then(() => {
-        store.dispatch(actions.notify(`Deleted ${formData.getAll('delete_file[]').length} ${definedMessages.pluralItem[formatPlural({
-          value: formData.getAll('delete_file[]').length
-        })]}`, utility.DANGEROUS));
-      });
+      if(!props.config.confirmBeforeDelete) {
+        deleteIt();
+      } else if(confirm(deleteAreYouSureMessage)) {
+        deleteIt();
+      }
+
+      function deleteIt() {
+        store.dispatch(actions.deleteMediaItems(props.source.currentSource, formData, props.config.headers)).then(() => {
+          store.dispatch(actions.notify(`Deleted ${formData.getAll('delete_file[]').length} ${definedMessages.pluralItem[formatPlural({
+            value: formData.getAll('delete_file[]').length
+          })]}`, utility.DANGEROUS));
+        });
+      }
 
       /*for (var value of formData.values()) {
         console.log(value);

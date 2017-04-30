@@ -94,6 +94,11 @@ var ChooseBar = function ChooseBar(props) {
     chooseMessage,
     postChooseMessage
   ) : undefined,
+      deleteAreYouSureMessage = formatMessage(_definedMessages2.default.deleteAreYouSureMessage, {
+    filename: len + ' ' + _definedMessages2.default.pluralItem[formatPlural({
+      value: len
+    })]
+  }),
       deleteBtn = len > 1 && props.view.chooseMultiple && props.config.allowDelete ? _react2.default.createElement(
     'form',
     { onSubmit: function onSubmit(event) {
@@ -106,11 +111,19 @@ var ChooseBar = function ChooseBar(props) {
 
         //console.log('yolo', formData.getAll('delete_file[]'));
 
-        _store2.default.dispatch(_actions2.default.deleteMediaItems(props.source.currentSource, formData, props.config.headers)).then(function () {
-          _store2.default.dispatch(_actions2.default.notify('Deleted ' + formData.getAll('delete_file[]').length + ' ' + _definedMessages2.default.pluralItem[formatPlural({
-            value: formData.getAll('delete_file[]').length
-          })], _utility2.default.DANGEROUS));
-        });
+        if (!props.config.confirmBeforeDelete) {
+          deleteIt();
+        } else if (confirm(deleteAreYouSureMessage)) {
+          deleteIt();
+        }
+
+        function deleteIt() {
+          _store2.default.dispatch(_actions2.default.deleteMediaItems(props.source.currentSource, formData, props.config.headers)).then(function () {
+            _store2.default.dispatch(_actions2.default.notify('Deleted ' + formData.getAll('delete_file[]').length + ' ' + _definedMessages2.default.pluralItem[formatPlural({
+              value: formData.getAll('delete_file[]').length
+            })], _utility2.default.DANGEROUS));
+          });
+        }
 
         /*for (var value of formData.values()) {
           console.log(value);

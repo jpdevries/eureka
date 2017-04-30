@@ -62,6 +62,9 @@ var ContextButtons = function ContextButtons(props) {
       downloadMessage = formatMessage(_definedMessages2.default.download),
       downloadItemMessage = formatMessage(_definedMessages2.default.downloadItem, {
     filename: item.filename
+  }),
+      deleteAreYouSureMessage = formatMessage(_definedMessages2.default.deleteAreYouSureMessage, {
+    filename: item.filename
   });
 
   var chooseBtn = props.config.allowChoose ? _react2.default.createElement(
@@ -99,13 +102,16 @@ var ContextButtons = function ContextButtons(props) {
       deleteBtn = props.config.allowDelete ? _react2.default.createElement(
     'button',
     { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'delete__' + (0, _utility.cssSafe)(item.filename), role: 'option', onClick: function onClick(event) {
-        _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path, props.config.headers)).then(function () {
-          /*notify(`Deleted item ${item.filename}`, {
-            badge: path.join(props.config.assetsBasePath, 'img/src/png/trash-o.png'),
-            silent: true
-          });*/
-          _store2.default.dispatch(_actions2.default.notify(deletedItemMessage, _utility.DANGEROUS));
-        });
+        if (!props.config.confirmBeforeDelete) {
+          deleteIt();
+        } else if (confirm(deleteAreYouSureMessage)) {
+          deleteIt();
+        }
+        function deleteIt() {
+          _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path, props.config.headers)).then(function () {
+            _store2.default.dispatch(_actions2.default.notify(deletedItemMessage, _utility.DANGEROUS));
+          });
+        }
       }, title: deleteItemMessage, className: 'dangerous' },
     deleteMessage,
     _react2.default.createElement(
