@@ -20,6 +20,14 @@
     "defaultMessage": "Media Source Panel"
   },
   {
+    "id": "deleteAreYouSureMessage",
+    "defaultMessage": "Are you sure you want to permanently delete {filename}?"
+  },
+  {
+    "id": "masonryLayoutMessage",
+    "defaultMessage": "Masonry Layout"
+  },
+  {
     "id": "close",
     "defaultMessage": "Close"
   },

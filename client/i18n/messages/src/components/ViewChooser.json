@@ -1,5 +1,9 @@
 [
   {
+    "id": "layout.masonry",
+    "defaultMessage": "Masonry Layout"
+  },
+  {
     "id": "layout.fullscreenMode",
     "defaultMessage": "Fullscreen Mode"
   },

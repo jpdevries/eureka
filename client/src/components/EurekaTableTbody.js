@@ -17,6 +17,8 @@ import Icon from './Icon';
 import { FormattedMessage } from 'react-intl';
 import definedMessages from '../i18n/definedMessages';
 
+import Masonry from 'react-masonry-component';
+
 class EurekaTableTbody extends PureComponent {
   constructor(props) {
     super(props);
@@ -174,6 +176,24 @@ class EurekaTableTbody extends PureComponent {
     )) : (
       <NoResults {...props} />
     );
+
+    if(props.view.mode == 'masonry') {
+      return (
+        //onScroll={this.handleScroll.bind(this)}
+        <Masonry
+          elementType={'tbody'} // default 'div'
+          options={{
+            transitionDuration: 240
+            //fitWidth: true
+          }} // default {}
+          disableImagesLoaded={false} // default false
+          updateOnEachImageLoad={true} // default false and works only if disableImagesLoaded is false
+          role="rowgroup" aria-live="polite" className={classNames({empty:!contents.length})} ref={(tbody) => { this.tbody = tbody }}
+        >
+          {contentList}
+        </Masonry>
+      );
+    }
 
     return (
       //onScroll={this.handleScroll.bind(this)}
