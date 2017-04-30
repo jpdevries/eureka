@@ -93,6 +93,59 @@ var updateConfig = function updateConfig(config) {
   };
 };
 
+/*const downloadMediaItems = (source, customHeaders = {}) => (
+  (dispatch) => (
+    fetch(`/assets/components/eureka/media/attachments/${source}`, {
+      method: 'GET',
+      body: formData,
+      headers: Object.assign({}, {
+        'Accept': 'application/json',
+        //'Content-Type': 'application/json'
+      }, customHeaders)
+    }).then((response) => {
+      if(response.state < 200 || response.state >= 300) {
+        var error = new Error(response.statusText)
+        error.response = response
+        throw error;
+      }
+      return response;
+    }).then((response) => (
+      response.json()
+    )).then((contents) => (
+      dispatch(
+        downloadMediaItemsSuccess(formData)
+      )
+    )).catch((error) => (
+      dispatch(
+        downloadMediaItemsError(error)
+      )
+    ))
+  )
+);
+
+const DOWNLOAD_MEDIA_ITEM_SUCCESS = 'download_media_item_success';
+const DOWNLOAD_MEDIA_ITEM_ERROR = 'download_media_item_error';
+const downloadMediaItemsSuccess = function(formData) {
+  return {
+    type: DOWNLOAD_MEDIA_ITEM_SUCCESS,
+    formData: formData,
+  }
+}
+
+const downloadMediaItemsError = function(error) {
+  //console.log('updateSourceTreeError',error);
+  return {
+    type: DOWNLOAD_MEDIA_ITEM_ERROR,
+    error: error
+  }
+}
+
+
+exports.downloadMediaItems = downloadMediaItems;
+exports.DOWNLOAD_MEDIA_ITEM_SUCCESS = DOWNLOAD_MEDIA_ITEM_SUCCESS;
+exports.DOWNLOAD_MEDIA_ITEM_ERROR = DOWNLOAD_MEDIA_ITEM_ERROR;
+*/
+
 var updateSourceTree = function updateSourceTree(source) {
   var customHeaders = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   return function (dispatch) {

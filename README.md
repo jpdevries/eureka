@@ -299,6 +299,16 @@ The semantic HTML layer remains usable even absent of style as pure&nbsp;HTML.
       <td align="center"><span aria-label="supported">✅</span></td>
     </tr>
     <tr>
+      <td>Download Multiple Items</td>
+      <td align="center"><span aria-label="not supported">❌</span></td>
+      <td align="center"><span aria-label="not supported">❌</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+    </tr>
+    <tr>
       <td>Local Storage</td>
       <td align="center"><span aria-label="not supported">❌</span></td>
       <td align="center"><span aria-label="not supported">❌</span></td>
@@ -485,6 +495,7 @@ Configure the `EurekaMediaBrowser` via the optional attributes found in the defa
 | `doDragNDrop` | `true`      |    Whether or not to enable drag 'n drop features |
 | `allowChooseMultiple` | `true`      |    Whether or not to allow multiple files to be chosen |
 | `allowInvertSelection` | `true`      |    Whether or not to allow selection of multiple items to be inverted |
+| `allowDownloadMultiple` | `true`      |    Whether or not to allow multiple selected items to be download as a zip file |
 
 
 

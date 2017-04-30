@@ -39,6 +39,7 @@ var initialConfigState = {
   allowRename: true,
   allowDelete: true,
   confirmBeforeDelete: false,
+  allowDownloadMultiple: true,
   locales: "en-US",
   allowChooseMultiple: true,
   allowInvertSelection: true,
@@ -505,7 +506,7 @@ var initialViewState = Object.assign({}, {
 }());
 
 //console.log('initialViewState', initialViewState);
-
+var lastCD = initialContentState.cd;
 var viewReducer = function viewReducer(state, action) {
   state = state || initialViewState;
 
@@ -528,10 +529,12 @@ var viewReducer = function viewReducer(state, action) {
       return Object.assign({}, state, action.view);
 
     case actions.UPDATE_CONTENT:
-      if (action.content.cd) {
-        return Object.assign({}, state, {
+      if (action.content.cd && action.content.cd !== lastCD) {
+        var r = Object.assign({}, state, {
           selectionInverted: false
         });
+        lastCD = action.content.cd;
+        return r;
       }
       return state;
 

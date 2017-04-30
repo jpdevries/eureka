@@ -22,6 +22,9 @@ const ChooseBar = (props) => {
   deleteBtnFormFileNames = props.content.chosenMediaItemsInverted.map((item) => (
     <input type="hidden" name="delete_file[]" key={item.filename} value={item.filename} />
   )),
+  downloadBtnFormFileNames = props.content.chosenMediaItemsInverted.map((item) => (
+    <input type="hidden" name="zip_file[]" key={item.filename} value={item.filename} />
+  )),
   len = props.content.chosenMediaItemsInverted.length,  //(props.view.selectionInverted) ? props.content.contents.length - props.content.chosenMediaItems.length : props.content.chosenMediaItems.length,
   pluralChooseItemPlaceholder = definedMessages.pluralChoose[
     formatPlural({
@@ -40,6 +43,16 @@ const ChooseBar = (props) => {
         }
       })()}</span>
   ),
+  downloadBtn = (len > 1 && props.view.chooseMultiple && props.config.allowDownloadMultiple) ? (
+    <form target="_blank" encType="multipart/form-data" method="POST" action={`/assets/components/eureka/media/attachments/${props.source.currentSource}`} onSubmit={(event) => {
+
+    }}>
+      <input type="hidden" name="cd" value={props.content.cd} />
+      <input type="hidden" name="cs" value={props.source.currentSource} />
+      {downloadBtnFormFileNames}
+      <button className="eureka__gratious"><FormattedMessage id="download" defaultValue="Download" />{postChooseMessage}</button>
+    </form>
+  ) : undefined,
   chooseBtn = (props.config.allowChoose) ? (
     <button aria-describedby={`${props.config.storagePrefix}selected_file_names`} id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }choose-button`} className="eureka__primary" disabled={!props.view.focusedMediaItem && !utility.serverSideRendering} onClick={(event) => {
       if(props.view.chooseMultiple) {
@@ -87,7 +100,7 @@ const ChooseBar = (props) => {
 
   return (
     <div aria-hidden={props.ariaHidden} className="eureka__button-bar eureka__choose-bar">
-      <button aria-label={closeMediaBrowserMessage} onClick={(event) => {
+      <button className="dangerous" aria-label={closeMediaBrowserMessage} onClick={(event) => {
         //console.log('closing');
         try {
           props.config.callbacks.close()
@@ -95,6 +108,7 @@ const ChooseBar = (props) => {
           console.log(e)
         }
       }}>{cancelMessage}</button>
+      {downloadBtn}
       {deleteBtn}
     {chooseBtn}
     </div>

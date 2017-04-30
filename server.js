@@ -9,6 +9,8 @@ compression = require('compression'),
 minifyHTML = require('express-minify-html'),
 isProd = (process.env.NODE_ENV == 'production') ? true : false;
 
+const AdmZip = require('adm-zip');
+
 const multiparty = require('multiparty');
 
 import React from 'react';
@@ -525,6 +527,39 @@ app.post('/assets/components/eureka/media/sources/:source', (req, res) => {
 
   form.parse(req);
 
+});
+
+app.post('/assets/components/eureka/media/attachments/:source', (req, res) => {
+  const form = new multiparty.Form();
+
+  form.parse(req, function(err, fields, files) {
+    if(err) {
+      console.log(err);
+      res.json(err);
+      return;
+    }
+
+    const dir = Array.isArray(fields.cd) ? fields.cd[0] : fields[cd];
+    const cs = Array.isArray(fields.cs) ? fields.cs[0] : fields[cs];
+    let relativePath = dir.includes(__dirname) ? dir :  path.join(path.join(__dirname, 'sources/filesystem'), dir);
+
+
+    var zip = new AdmZip();
+
+    const f = fields['zip_file[]'].map((file) => (
+      zip.addLocalFile(path.join(relativePath, file))
+    ));
+    const filename = `eureka-${cs}.zip`;
+    res.set({
+        "Content-Disposition": 'attachment; filename="'+filename+'"'
+    });
+
+    zip.toBuffer((buffer) => (
+      res.end(buffer)
+    ), (err) => (
+      res.json(err)
+    ))
+  });
 });
 
 /*

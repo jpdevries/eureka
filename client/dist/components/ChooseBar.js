@@ -44,6 +44,9 @@ var ChooseBar = function ChooseBar(props) {
       deleteBtnFormFileNames = props.content.chosenMediaItemsInverted.map(function (item) {
     return _react2.default.createElement('input', { type: 'hidden', name: 'delete_file[]', key: item.filename, value: item.filename });
   }),
+      downloadBtnFormFileNames = props.content.chosenMediaItemsInverted.map(function (item) {
+    return _react2.default.createElement('input', { type: 'hidden', name: 'zip_file[]', key: item.filename, value: item.filename });
+  }),
       len = props.content.chosenMediaItemsInverted.length,
       pluralChooseItemPlaceholder = _definedMessages2.default.pluralChoose[formatPlural({
     value: len
@@ -61,6 +64,19 @@ var ChooseBar = function ChooseBar(props) {
       }
     }()
   ),
+      downloadBtn = len > 1 && props.view.chooseMultiple && props.config.allowDownloadMultiple ? _react2.default.createElement(
+    'form',
+    { target: '_blank', encType: 'multipart/form-data', method: 'POST', action: '/assets/components/eureka/media/attachments/' + props.source.currentSource, onSubmit: function onSubmit(event) {} },
+    _react2.default.createElement('input', { type: 'hidden', name: 'cd', value: props.content.cd }),
+    _react2.default.createElement('input', { type: 'hidden', name: 'cs', value: props.source.currentSource }),
+    downloadBtnFormFileNames,
+    _react2.default.createElement(
+      'button',
+      { className: 'eureka__gratious' },
+      _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'download', defaultValue: 'Download' }),
+      postChooseMessage
+    )
+  ) : undefined,
       chooseBtn = props.config.allowChoose ? _react2.default.createElement(
     'button',
     { 'aria-describedby': props.config.storagePrefix + 'selected_file_names', id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'choose-button', className: 'eureka__primary', disabled: !props.view.focusedMediaItem && !_utility2.default.serverSideRendering, onClick: function onClick(event) {
@@ -116,7 +132,7 @@ var ChooseBar = function ChooseBar(props) {
     { 'aria-hidden': props.ariaHidden, className: 'eureka__button-bar eureka__choose-bar' },
     _react2.default.createElement(
       'button',
-      { 'aria-label': closeMediaBrowserMessage, onClick: function onClick(event) {
+      { className: 'dangerous', 'aria-label': closeMediaBrowserMessage, onClick: function onClick(event) {
           //console.log('closing');
           try {
             props.config.callbacks.close();
@@ -126,6 +142,7 @@ var ChooseBar = function ChooseBar(props) {
         } },
       cancelMessage
     ),
+    downloadBtn,
     deleteBtn,
     chooseBtn
   );

@@ -21,6 +21,7 @@ const initialConfigState = {
   allowRename:true,
   allowDelete:true,
   confirmBeforeDelete:false,
+  allowDownloadMultiple: true,
   locales:"en-US",
   allowChooseMultiple:true,
   allowInvertSelection:true,

@@ -140,13 +140,8 @@ var MediaRow = function (_PureComponent) {
   }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
-      var props = this.props;
       this.assignKeyboardListeners();
-      if (props.content.chosenMediaItemsInverted.includes(props.item)) {
-        this.setState({
-          chooseChecked: true
-        });
-      }
+
       //Mousetrap(document.querySelector('.eureka')).bind(['alt+z'], this.handleKeyboardDeselect);
 
       /*store.subscribe(() => {
@@ -266,6 +261,17 @@ var MediaRow = function (_PureComponent) {
 
     //http://localhost:3000/assets/components/eureka/media/sources/1?path=%2FUsers%2FjP%2FSites%2Fstatic%2Feureka%2Fprod%2Fsources%2Ffilesystem%2Fassets%2Fimg%2Fredwoods%2F243823_842410181688_1308368_o.jpg
     //http://localhost:3000/assets/components/eureka/media/sources/1?path=%2FUsers%2FjP%2FSites%2Fstatic%2Feureka%2Fprod%2Fsources%2Ffilesystem%2Fassets%2Fimg%2Fredwoods%2F243150_842410286478_7945184_o.jpg
+
+  }, {
+    key: 'componentWillMount',
+    value: function componentWillMount() {
+      var props = this.props;
+      if (props.content.chosenMediaItemsInverted.includes(props.item)) {
+        this.setState({
+          chooseChecked: true
+        });
+      }
+    }
 
     /*componentWillUnmount() {
       Mousetrap.unbind(['backspace'], this.handleKeyboardBackspace);
@@ -450,7 +456,7 @@ var MediaRow = function (_PureComponent) {
 
       var checkbox = props.view.chooseMultiple ? _react2.default.createElement(
         'td',
-        { className: 'eureka__choose' },
+        { role: 'gridcell', className: 'eureka__choose' },
         _react2.default.createElement('input', { value: 'chosen', 'aria-label': 'Choose ' + item.filename, type: 'checkbox', name: 'eureka__chose_multiple', id: checkboxId, key: 'eureka__choose_multiple_' + _utility2.default.cssSafe(props.item.filename) + '__' + (this.state.chooseChecked ? 'checked' : ''), checked: this.state.chooseChecked, onChange: function onChange(event) {
             event.preventDefault();
             event.stopPropagation();
