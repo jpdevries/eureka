@@ -183,6 +183,7 @@ class EurekaTableTbody extends PureComponent {
         <Masonry
           elementType={'tbody'} // default 'div'
           options={{
+            transitionDuration: 240
             //fitWidth: true
           }} // default {}
           disableImagesLoaded={false} // default false

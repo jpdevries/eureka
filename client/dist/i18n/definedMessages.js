@@ -35,6 +35,10 @@ exports.default = (0, _reactIntl.defineMessages)((_defineMessages = {
     'id': 'deleteAreYouSureMessage',
     'defaultMessage': 'Are you sure you want to permanently delete {filename}?'
   },
+  masonryLayoutMessage: {
+    'id': 'masonryLayoutMessage',
+    'defaultMessage': 'Masonry Layout'
+  },
   close: {
     'id': 'close',
     'defaultMessage': 'Close'

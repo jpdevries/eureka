@@ -331,7 +331,8 @@ module.exports = function(grunt) {
           "react": "React",
           "react-dom":"ReactDOM",
           "redux":"Redux",
-          "react-redux":"ReactRedux"
+          "react-redux":"ReactRedux",
+          "react-masonry-component":"Masonry"
         }
       })
     },

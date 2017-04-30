@@ -40,6 +40,10 @@ var _FullScreenPureComponent = require('./FullScreenPureComponent');
 
 var _FullScreenPureComponent2 = _interopRequireDefault(_FullScreenPureComponent);
 
+var _reactMasonryComponent = require('react-masonry-component');
+
+var _reactMasonryComponent2 = _interopRequireDefault(_reactMasonryComponent);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -68,7 +72,28 @@ var ViewChooser = function (_FullScreenPureCompon) {
           tabularLayoutMessage = formatMessage(_definedMessages2.default.tabularLayoutDescription),
           thumbLayoutMessage = formatMessage(_definedMessages2.default.thumbnailLayoutDescription),
           gridLayoutMessage = formatMessage(_definedMessages2.default.gridLayoutDescription),
+          masonryLayoutMessage = formatMessage(_definedMessages2.default.masonryLayoutMessage),
           listLayoutMessage = formatMessage(_definedMessages2.default.listLayoutDescription),
+          masonryBtn = _reactMasonryComponent2.default && props.config.allowMasonry ? _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement('input', { type: 'radio', id: 'eureka__view-masonry', name: 'eureka__view', onChange: function onChange(event) {
+            return _store2.default.dispatch(_actions2.default.updateView({
+              mode: event.target.value
+            }));
+          }, checked: props.view.mode === 'masonry', value: 'masonry' }),
+        '\u2003',
+        _react2.default.createElement(
+          'label',
+          { htmlFor: 'eureka__view-masonry', title: masonryLayoutMessage },
+          _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'masonry' })),
+          _react2.default.createElement(
+            'span',
+            { className: 'visually-hidden' },
+            _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'layout.masonry', defaultMessage: 'Masonry Layout' })
+          )
+        )
+      ) : undefined,
           fullscreenToggle = props.view.allowFullscreen && this.state.supportsFullscreen ? _react2.default.createElement(
         'div',
         null,
@@ -182,26 +207,7 @@ var ViewChooser = function (_FullScreenPureCompon) {
                 )
               )
             ),
-            _react2.default.createElement(
-              'div',
-              null,
-              _react2.default.createElement('input', { type: 'radio', id: 'eureka__view-masonry', name: 'eureka__view', onChange: function onChange(event) {
-                  return _store2.default.dispatch(_actions2.default.updateView({
-                    mode: event.target.value
-                  }));
-                }, checked: props.view.mode === 'masonry', value: 'masonry' }),
-              '\u2003',
-              _react2.default.createElement(
-                'label',
-                { htmlFor: 'eureka__view-masonry', title: gridLayoutMessage },
-                _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'masonry' })),
-                _react2.default.createElement(
-                  'span',
-                  { className: 'visually-hidden' },
-                  _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'layout.masonry', defaultMessage: 'Masonry Layout' })
-                )
-              )
-            ),
+            masonryBtn,
             _react2.default.createElement(
               'div',
               null,

@@ -223,14 +223,17 @@ var EurekaTableTbody = function (_PureComponent) {
         }))];
       }) : _react2.default.createElement(NoResults, props);
 
-      if (true) {
+      if (props.view.mode == 'masonry') {
         return (
           //onScroll={this.handleScroll.bind(this)}
           _react2.default.createElement(
             _reactMasonryComponent2.default,
             {
               elementType: 'tbody' // default 'div'
-              , options: {} // default {}
+              , options: {
+                transitionDuration: 240
+                //fitWidth: true
+              } // default {}
               , disableImagesLoaded: false // default false
               , updateOnEachImageLoad: true // default false and works only if disableImagesLoaded is false
               , role: 'rowgroup', 'aria-live': 'polite', className: (0, _classnames2.default)({ empty: !contents.length }), ref: function ref(tbody) {

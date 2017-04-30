@@ -14,6 +14,8 @@ import definedMessages from '../i18n/definedMessages';
 
 import FullScreenPureComponent from './FullScreenPureComponent';
 
+import Masonry from 'react-masonry-component';
+
 class ViewChooser extends FullScreenPureComponent {
   render() {
     //console.log('ViewChooser', this.props);
@@ -24,6 +26,19 @@ class ViewChooser extends FullScreenPureComponent {
     gridLayoutMessage = formatMessage(definedMessages.gridLayoutDescription),
     masonryLayoutMessage = formatMessage(definedMessages.masonryLayoutMessage),
     listLayoutMessage = formatMessage(definedMessages.listLayoutDescription),
+    masonryBtn = (Masonry && props.config.allowMasonry) ? (
+      <div>
+        <input type="radio" id="eureka__view-masonry" name="eureka__view" onChange={(event) => (
+          store.dispatch(actions.updateView({
+            mode: event.target.value
+          }))
+          )} checked={props.view.mode === 'masonry'} value="masonry" />&emsp;
+        <label htmlFor="eureka__view-masonry" title={masonryLayoutMessage}>
+          <Icon {...props} icon="masonry" />
+          <span className="visually-hidden"><FormattedMessage id="layout.masonry" defaultMessage="Masonry Layout" /></span>
+        </label>
+      </div>
+    ) : undefined,
     fullscreenToggle = (props.view.allowFullscreen && this.state.supportsFullscreen) ? (
       <div>
         <input type="checkbox" id="eureka__fullscreen-toggle" name="eureka__fullscreen-toggle" value="1" onChange={(event) => {
@@ -99,17 +114,7 @@ class ViewChooser extends FullScreenPureComponent {
               </label>
             </div>
 
-            <div>
-              <input type="radio" id="eureka__view-masonry" name="eureka__view" onChange={(event) => (
-                store.dispatch(actions.updateView({
-                  mode: event.target.value
-                }))
-                )} checked={props.view.mode === 'masonry'} value="masonry" />&emsp;
-              <label htmlFor="eureka__view-masonry" title={masonryLayoutMessage}>
-                <Icon {...props} icon="masonry" />
-                <span className="visually-hidden"><FormattedMessage id="layout.masonry" defaultMessage="Masonry Layout" /></span>
-              </label>
-            </div>
+            {masonryBtn}
 
             <div>
               <input type="radio" id="eureka__view-list" name="eureka__view" onChange={(event) => (

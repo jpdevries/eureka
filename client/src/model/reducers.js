@@ -27,6 +27,7 @@ const initialConfigState = {
   allowInvertSelection:true,
   mediaSource:"0",
   currentDirectory:"/",
+  allowMasonry:true,
   welcome: true,
   alwaysWelcome: false,
   learnMore: 'https://github.com/jpdevries/eureka',

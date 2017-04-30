@@ -24309,7 +24309,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ViewChooser2 = _interopRequireDefault(_ViewChooser);
 
-	var _EurekaTable = __webpack_require__(262);
+	var _EurekaTable = __webpack_require__(294);
 
 	var _EurekaTable2 = _interopRequireDefault(_EurekaTable);
 
@@ -24357,7 +24357,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ChooseRadio2 = _interopRequireDefault(_ChooseRadio);
 
-	var _mousetrap = __webpack_require__(267);
+	var _mousetrap = __webpack_require__(299);
 
 	var _mousetrap2 = _interopRequireDefault(_mousetrap);
 
@@ -24389,7 +24389,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var path = __webpack_require__(178);
 
-	var pathParse = __webpack_require__(274);
+	var pathParse = __webpack_require__(306);
 
 	var classNames = __webpack_require__(260);
 
@@ -25203,6 +25203,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  allowInvertSelection: true,
 	  mediaSource: "0",
 	  currentDirectory: "/",
+	  allowMasonry: true,
 	  welcome: true,
 	  alwaysWelcome: false,
 	  learnMore: 'https://github.com/jpdevries/eureka',
@@ -27830,7 +27831,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.110",
+		"version": "0.0.111",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -32556,6 +32557,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    'id': 'deleteAreYouSureMessage',
 	    'defaultMessage': 'Are you sure you want to permanently delete {filename}?'
 	  },
+	  masonryLayoutMessage: {
+	    'id': 'masonryLayoutMessage',
+	    'defaultMessage': 'Masonry Layout'
+	  },
 	  close: {
 	    'id': 'close',
 	    'defaultMessage': 'Close'
@@ -33189,6 +33194,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _FullScreenPureComponent2 = _interopRequireDefault(_FullScreenPureComponent);
 
+	var _reactMasonryComponent = __webpack_require__(262);
+
+	var _reactMasonryComponent2 = _interopRequireDefault(_reactMasonryComponent);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -33217,7 +33226,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	          tabularLayoutMessage = formatMessage(_definedMessages2.default.tabularLayoutDescription),
 	          thumbLayoutMessage = formatMessage(_definedMessages2.default.thumbnailLayoutDescription),
 	          gridLayoutMessage = formatMessage(_definedMessages2.default.gridLayoutDescription),
+	          masonryLayoutMessage = formatMessage(_definedMessages2.default.masonryLayoutMessage),
 	          listLayoutMessage = formatMessage(_definedMessages2.default.listLayoutDescription),
+	          masonryBtn = _reactMasonryComponent2.default && props.config.allowMasonry ? _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement('input', { type: 'radio', id: 'eureka__view-masonry', name: 'eureka__view', onChange: function onChange(event) {
+	            return _store2.default.dispatch(_actions2.default.updateView({
+	              mode: event.target.value
+	            }));
+	          }, checked: props.view.mode === 'masonry', value: 'masonry' }),
+	        '\u2003',
+	        _react2.default.createElement(
+	          'label',
+	          { htmlFor: 'eureka__view-masonry', title: masonryLayoutMessage },
+	          _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'masonry' })),
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'visually-hidden' },
+	            _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'layout.masonry', defaultMessage: 'Masonry Layout' })
+	          )
+	        )
+	      ) : undefined,
 	          fullscreenToggle = props.view.allowFullscreen && this.state.supportsFullscreen ? _react2.default.createElement(
 	        'div',
 	        null,
@@ -33331,26 +33361,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                )
 	              )
 	            ),
-	            _react2.default.createElement(
-	              'div',
-	              null,
-	              _react2.default.createElement('input', { type: 'radio', id: 'eureka__view-masonry', name: 'eureka__view', onChange: function onChange(event) {
-	                  return _store2.default.dispatch(_actions2.default.updateView({
-	                    mode: event.target.value
-	                  }));
-	                }, checked: props.view.mode === 'masonry', value: 'masonry' }),
-	              '\u2003',
-	              _react2.default.createElement(
-	                'label',
-	                { htmlFor: 'eureka__view-masonry', title: gridLayoutMessage },
-	                _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'masonry' })),
-	                _react2.default.createElement(
-	                  'span',
-	                  { className: 'visually-hidden' },
-	                  _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'layout.masonry', defaultMessage: 'Masonry Layout' })
-	                )
-	              )
-	            ),
+	            masonryBtn,
 	            _react2.default.createElement(
 	              'div',
 	              null,
@@ -33507,3189 +33518,16 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _store = __webpack_require__(219);
-
-	var _store2 = _interopRequireDefault(_store);
-
-	var _actions = __webpack_require__(226);
-
-	var _actions2 = _interopRequireDefault(_actions);
-
-	var _EurekaTableTbody = __webpack_require__(263);
-
-	var _EurekaTableTbody2 = _interopRequireDefault(_EurekaTableTbody);
-
-	var _classnames = __webpack_require__(260);
-
-	var _classnames2 = _interopRequireDefault(_classnames);
-
-	var _reactDropzone = __webpack_require__(307);
-
-	var _reactDropzone2 = _interopRequireDefault(_reactDropzone);
-
-	var _Icon = __webpack_require__(254);
-
-	var _Icon2 = _interopRequireDefault(_Icon);
-
-	var _utility = __webpack_require__(224);
-
-	var _utility2 = _interopRequireDefault(_utility);
-
-	var _reactIntl = __webpack_require__(230);
-
-	var _definedMessages = __webpack_require__(255);
-
-	var _definedMessages2 = _interopRequireDefault(_definedMessages);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var EurekaTable = function (_Component) {
-	  _inherits(EurekaTable, _Component);
-
-	  function EurekaTable(props) {
-	    _classCallCheck(this, EurekaTable);
-
-	    var _this = _possibleConstructorReturn(this, (EurekaTable.__proto__ || Object.getPrototypeOf(EurekaTable)).call(this, props));
-
-	    _this.state = {
-	      contents: function () {
-	        try {
-	          return _this.sortContents(props.content.contents, props.view);
-	        } catch (e) {}
-	        return [];
-	      }(),
-	      sort: Object.assign({}, {
-	        by: 'filename',
-	        dir: _utility2.default.ASCENDING,
-	        renamingItem: undefined
-	      }, props.sort)
-	    };
-	    _this.decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
-	    //console.log('EurekaTable constructor', props, this.state);
-	    return _this;
-	  }
-
-	  /*componentShouldUpdate(nextProps, nextState) {
-	    if(this.state !== nextState) return true;
-	    if(this.props !== nextProps) return true;
-	    //console.log('EurekaTable should not update');
-	    return false;
-	  }*/
-
-	  _createClass(EurekaTable, [{
-	    key: 'sortContents',
-	    value: function sortContents() {
-	      var contents = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.state.contents;
-	      var state = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.props.view;
-
-	      //console.log('sorting contents', contents, state.sort);
-	      //return contents;
-	      return contents.sort(function (a, b) {
-	        if (a[state.sort.by] === b[state.sort.by]) return 0;
-
-	        var n = void 0;
-
-	        //console.log('props.sort.by',props.sort.by,a,b);
-
-	        switch (state.sort.by) {
-	          case 'dimensions':
-	            n = a.dimensions[0] * a.dimensions[1] > b.dimensions[0] * b.dimensions[1] ? 1 : -1;
-	            break;
-
-	          case 'editedOn':
-	            n = new Date(a.editedOn).getTime() > new Date(b.editedOn).getTime() ? 1 : -1;
-	            break;
-
-	          case 'fileSize':
-	            n = a.fileSize < b.fileSize ? 1 : -1;
-	            break;
-
-	          default:
-	            //console.log(a[state.sort.by], b[state.sort.by], a[state.sort.by] > b[state.sort.by]);
-	            n = a[state.sort.by] < b[state.sort.by] ? 1 : -1;
-	            break;
-	        }
-
-	        return state.sort.dir === _utility2.default.DESCENDING ? n : 0 - n;
-	      });
-	    }
-	  }, {
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      //console.log('EurekaTable componentDidMount');
-	      this.setState({
-	        contents: this.sortContents(this.props.content.contents)
-	      });
-	    }
-	  }, {
-	    key: 'shouldComponentUpdate',
-	    value: function shouldComponentUpdate(nextProps, nextState) {
-	      if (nextProps.view.filter) return true;
-	      if (this.state.sort !== nextState.sort) return true;
-	      if (nextProps.content.contents !== this.state.contents) return true;
-	      if (this.state.contents.length !== nextState.contents.length || this.state.contents !== nextState.contents) return true;
-	      if (nextProps.view.chooseMultiple !== this.props.view.chooseMultiple) return true;
-
-	      if (nextProps.view.sort !== this.props.view.sort) return true;
-	      return true;
-	      //console.log('EurekaTable should not update');
-	      return false;
-	    }
-	  }, {
-	    key: 'componentWillUpdate',
-	    value: function componentWillUpdate(nextProps, nextState) {
-	      //console.log('EurekaTable componentWillUpdate');
-	      //console.log('nextProps.sort', nextProps.sort);
-	      //console.log('nextState.sort', nextState.sort);
-	      //console.log('this.props.sort', this.props.sort);
-	      //console.log('nextState.sort', nextState.sort);
-
-	      /*if(nextProps.sort !== nextState.sort) {
-	        console.log('nextProps.sort !== nextState.sort');
-	        this.setState({
-	          sort: nextProps.sort,
-	          //contents: this.sortContents(nextProps.content.contents, nextState)
-	        });
-	        return;
-	      }*/
-
-	      if (this.props.view.sort !== nextProps.view.sort || this.props.content.cd !== nextProps.content.cd) {
-	        //console.log('this.props.view.sort !== nextProps.view.sort || this.props.content.cd !== nextProps.content.cd');
-	        this.setState({
-	          contents: this.sortContents(nextProps.content.contents, nextProps.view)
-	        });
-	      } else if (nextProps.content.contents !== this.props.content.contents) {
-	        //console.log('nextProps.content.contents !== this.state.contents');
-	        this.setState({
-	          contents: nextProps.view.filter ? nextProps.content.contents : this.sortContents(nextProps.content.contents, nextProps.view)
-	        });
-	      }
-	    }
-	  }, {
-	    key: 'onDrop',
-	    value: function onDrop(files) {
-	      var props = this.props;
-	      //console.log('Received files: ', files);
-
-	      var formData = new FormData();
-
-	      var decoratedActions = this.decoratedActions;
-
-	      files.forEach(function (file) {
-	        formData.append('eureka__uploadFiles', file, file.name);
-	      });
-
-	      _store2.default.dispatch(_actions2.default.updateView({
-	        isUploading: true
-	      }));
-
-	      _store2.default.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData, props.config.headers));
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var _React$createElement,
-	          _this2 = this,
-	          _React$createElement2,
-	          _React$createElement3,
-	          _React$createElement4,
-	          _React$createElement5,
-	          _React$createElement6;
-
-	      var props = this.props,
-	          state = this.state,
-	          formatMessage = props.intl.formatMessage;
-
-	      //console.log('render EurekaTable');
-
-	      var decoratedActions = this.decoratedActions;
-
-	      var html5ContextMenus = props.content.contents.length ? props.content.contents.map(function (item, index) {
-	        var chooseMenuItem = props.config.allowChoose ? _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.chooseItem, {
-	            filename: item.filename
-	          }), onClick: function onClick(event) {
-	            // #janky
-	            document.getElementById('choose__' + _utility2.default.cssSafe(item.filename)).click();
-	          } }) : undefined,
-	            downloadMenuItem = props.config.allowDownload ? _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.downloadItem, {
-	            filename: item.filename
-	          }), onClick: function onClick(event) {
-	            // #janky
-	            var a = document.createElement('a');
-	            a.setAttribute('download', item.filename);
-	            a.href = item.absoluteURL;
-	            a.classList.add('visually-hidden');
-	            document.body.appendChild(a);
-	            a.click();
-	            a.remove();
-	          } }) : undefined;
-	        return _react2.default.createElement(
-	          'menu',
-	          { key: index, hidden: 'true', type: 'context', id: 'context_menu__tbody-' + index },
-	          _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.expandItem, {
-	              filename: item.filename
-	            }), onClick: function onClick(event) {
-	              document.getElementById('expand__' + _utility2.default.cssSafe(item.filename)).click();
-	            } }),
-	          chooseMenuItem,
-	          _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.renameItem, {
-	              item: item.filename
-	            }), onClick: function onClick(event) {
-	              document.getElementById((props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'rename__' + _utility2.default.cssSafe(item.filename)).click();
-	            } }),
-	          _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.deleteItem, {
-	              filename: item.filename
-	            }), onClick: function onClick(event) {
-	              _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path, props.config.headers));
-	            } }),
-	          downloadMenuItem
-	        );
-	      }) : undefined;
-
-	      var selectHead = _utility2.default.serverSideRendering ? _react2.default.createElement(
-	        'th',
-	        { scope: 'col', role: 'columnheader' },
-	        'Select'
-	      ) : undefined;
-	      var checkboxHead = !_utility2.default.serverSideRendering && props.view.chooseMultiple ? _react2.default.createElement(
-	        'th',
-	        { scope: 'col', role: 'columnheader', className: 'eureka__choose' },
-	        _react2.default.createElement(
-	          'span',
-	          { className: 'visually-hidden' },
-	          _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'choose', defaultMessage: 'Choose' })
-	        )
-	      ) : undefined;
-
-	      var table = _react2.default.createElement(
-	        'table',
-	        { className: 'eureka__table', cellSpacing: '0', cellPadding: '0', role: 'grid' },
-	        _react2.default.createElement(
-	          'thead',
-	          { hidden: !props.content.contents.length, className: (0, _classnames2.default)(_store2.default.getState().view.isTableScrolling ? 'eureka__tbody-scrolling' : undefined) },
-	          _react2.default.createElement(
-	            'tr',
-	            null,
-	            selectHead,
-	            checkboxHead,
-	            _react2.default.createElement(
-	              'th',
-	              (_React$createElement = { role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement, 'role', 'columnheader'), _defineProperty(_React$createElement, 'className', 'eureka__th-media'), _React$createElement),
-	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'media', defaultMessage: 'Media' })
-	            ),
-	            _react2.default.createElement(
-	              'th',
-	              (_React$createElement2 = { className: 'eureka__th-filename', 'aria-sort': props.view.sort.by === 'filename' ? props.view.sort.dir : undefined, role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement2, 'role', 'columnheader'), _defineProperty(_React$createElement2, 'onClick', function onClick(event) {
-	                var dir = _this2.props.view.sort.dir;
-	                //console.log("this.state.sort.by === 'filename'", this.state.sort.by === 'filename', dir);
-	                if (_this2.props.view.sort.by === 'filename') {
-	                  dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
-	                }
-	                //console.log('dir',dir);
-	                _store2.default.dispatch(_actions2.default.updateView({
-	                  sort: {
-	                    by: 'filename',
-	                    dir: dir
-	                  }
-	                }));
-	                /*this.setState({
-	                  sort:{
-	                    by:'filename',
-	                    dir: dir
-	                  }
-	                });
-	                this.props.handleSort({
-	                  by: 'filename',
-	                  dir: dir
-	                });*/
-	              }), _React$createElement2),
-	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'name', defaultMessage: 'Name' }),
-	              '\u2002',
-	              !_utility2.default.serverSideRendering ? _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'sort' })) : undefined
-	            ),
-	            _react2.default.createElement(
-	              'th',
-	              (_React$createElement3 = { role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement3, 'role', 'columnheader'), _defineProperty(_React$createElement3, 'className', 'visually-hidden eureka__th-actions'), _React$createElement3),
-	              'Actions'
-	            ),
-	            _react2.default.createElement(
-	              'th',
-	              (_React$createElement4 = { className: 'eureka__th-dimensions', 'aria-sort': props.view.sort.by === 'dimensions' ? props.view.sort.dir : undefined, role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement4, 'role', 'columnheader'), _defineProperty(_React$createElement4, 'onClick', function onClick(event) {
-	                var dir = _this2.state.sort.dir;
-	                if (_this2.props.view.sort.by === 'dimensions') {
-	                  dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
-	                }
-	                _store2.default.dispatch(_actions2.default.updateView({
-	                  sort: {
-	                    by: 'dimensions',
-	                    dir: dir
-	                  }
-	                }));
-	                /*this.setState({
-	                  sort:{
-	                    by:'dimensions',
-	                    dir: dir
-	                  }
-	                });
-	                this.props.handleSort({
-	                  by: 'dimensions',
-	                  dir: dir
-	                });*/
-	              }), _React$createElement4),
-	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'dimensions', defaultMessage: 'Dimensions' }),
-	              '\u2002',
-	              !_utility2.default.serverSideRendering ? _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'sort' })) : undefined
-	            ),
-	            _react2.default.createElement(
-	              'th',
-	              (_React$createElement5 = { className: 'eureka__th-file-size', 'aria-sort': props.view.sort.by === 'fileSize' ? props.view.sort.dir : undefined, role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement5, 'role', 'columnheader'), _defineProperty(_React$createElement5, 'onClick', function onClick(event) {
-	                var dir = _this2.state.sort.dir;
-	                if (_this2.props.view.sort.by === 'fileSize') {
-	                  dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
-	                }
-	                _store2.default.dispatch(_actions2.default.updateView({
-	                  sort: {
-	                    by: 'fileSize',
-	                    dir: dir
-	                  }
-	                }));
-	                /*this.setState({
-	                  sort:{
-	                    by:'fileSize',
-	                    dir:dir
-	                  }
-	                });
-	                this.props.handleSort({
-	                  by: 'fileSize',
-	                  dir: dir
-	                });*/
-	              }), _React$createElement5),
-	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'fileSize', defaultMessage: 'File Size' }),
-	              '\u2002',
-	              !_utility2.default.serverSideRendering ? _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'sort' })) : undefined
-	            ),
-	            _react2.default.createElement(
-	              'th',
-	              (_React$createElement6 = { className: 'eureka__th-edited-on', 'aria-sort': props.view.sort.by === 'editedOn' ? props.view.sort.dir : undefined, role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement6, 'role', 'columnheader'), _defineProperty(_React$createElement6, 'onClick', function onClick(event) {
-	                var dir = _this2.state.sort.dir;
-	                if (_this2.props.view.sort.by === 'editedOn') {
-	                  dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
-	                }
-	                _store2.default.dispatch(_actions2.default.updateView({
-	                  sort: {
-	                    by: 'editedOn',
-	                    dir: dir
-	                  }
-	                }));
-	                /*this.setState({
-	                  sort:{
-	                    by:'editedOn',
-	                    dir:dir
-	                  }
-	                });
-	                this.props.handleSort({
-	                  by: 'editedOn',
-	                  dir: dir
-	                });*/
-	              }), _React$createElement6),
-	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'editedOn', defaultMessage: 'Edited On' }),
-	              '\u2002',
-	              !_utility2.default.serverSideRendering ? _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'sort' })) : undefined
-	            )
-	          )
-	        ),
-	        _react2.default.createElement(_EurekaTableTbody2.default, _extends({}, props, { intl: props.intl, filter: props.view.filter, content: props.content, contents: state.contents, sort: this.props.sort }))
-	      );
-
-	      var dz = props.config.doDragNDrop ? _react2.default.createElement(
-	        _reactDropzone2.default,
-	        { onDrop: this.onDrop.bind(this), disableClick: true, style: {} },
-	        table,
-	        html5ContextMenus
-	      ) : _react2.default.createElement(
-	        'div',
-	        null,
-	        table,
-	        html5ContextMenus
-	      );
-
-	      return props.config.allowUploads && !_utility2.default.serverSideRendering ? dz : _react2.default.createElement(
-	        'div',
-	        null,
-	        table
-	      );
-	    }
-	  }]);
-
-	  return EurekaTable;
-	}(_react.Component);
-
-	exports.default = EurekaTable;
-
-/***/ },
-/* 263 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _MediaRow = __webpack_require__(264);
-
-	var _MediaRow2 = _interopRequireDefault(_MediaRow);
-
-	var _ContextMenu = __webpack_require__(265);
-
-	var _ContextMenu2 = _interopRequireDefault(_ContextMenu);
-
-	var _store = __webpack_require__(219);
-
-	var _store2 = _interopRequireDefault(_store);
-
-	var _actions = __webpack_require__(226);
-
-	var _actions2 = _interopRequireDefault(_actions);
-
-	var _filesize = __webpack_require__(225);
-
-	var _filesize2 = _interopRequireDefault(_filesize);
-
-	var _classnames = __webpack_require__(260);
-
-	var _classnames2 = _interopRequireDefault(_classnames);
-
-	var _utility = __webpack_require__(224);
-
-	var _utility2 = _interopRequireDefault(_utility);
-
-	var _Icon = __webpack_require__(254);
-
-	var _Icon2 = _interopRequireDefault(_Icon);
-
-	var _reactIntl = __webpack_require__(230);
-
-	var _definedMessages = __webpack_require__(255);
-
-	var _definedMessages2 = _interopRequireDefault(_definedMessages);
-
-	var _reactMasonryComponent = __webpack_require__(275);
-
-	var _reactMasonryComponent2 = _interopRequireDefault(_reactMasonryComponent);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var EurekaTableTbody = function (_PureComponent) {
-	  _inherits(EurekaTableTbody, _PureComponent);
-
-	  function EurekaTableTbody(props) {
-	    _classCallCheck(this, EurekaTableTbody);
-
-	    var _this = _possibleConstructorReturn(this, (EurekaTableTbody.__proto__ || Object.getPrototypeOf(EurekaTableTbody)).call(this, props));
-
-	    _this.state = {
-	      focusedMediaItem: undefined,
-	      filter: undefined
-	    };
-
-	    //this.handleResize = this.handleResizeEvent.bind(this);
-	    return _this;
-	  }
-
-	  _createClass(EurekaTableTbody, [{
-	    key: 'componentWillMount',
-	    value: function componentWillMount() {
-	      try {
-	        window.addEventListener("resize", this.handleResize, false);
-	      } catch (e) {}
-	    }
-	  }, {
-	    key: 'componentWillUnmount',
-	    value: function componentWillUnmount() {
-	      try {
-	        window.removeEventListener("resize", this.handleResize, false);
-	      } catch (e) {}
-	    }
-
-	    /*componentDidMount() {
-	      //console.log('EurekaTableTbody componentDidMount');
-	      store.dispatch(actions.updateView({
-	        isTableScrolling: this.isScrollable(this.tbody)
-	      }));
-	    }*/
-
-	    /*isScrollable(el) {
-	      const y1 = el.scrollTop;
-	      el.scrollTop+=1;
-	      const y2 = el.scrollTop;
-	      el.scrollTop-=1;
-	      const y3 = el.scrollTop;
-	      el.scrollTop = y1;
-	      const x1 = el.scrollLeft;
-	      el.scrollTop+=1;
-	      const x2 = el.scrollLeft;
-	      el.scrollTop-=1;
-	      const x3 = el.scrollLeft;
-	      el.scrollLeft = x1;
-	      return !(y1 === y2 && y2 === y3 && x1 === x2 && x2 === x3);
-	    }
-	     handleResizeEvent(event) {
-	      const isScrollable = this.isScrollable(this.tbody);
-	      if(isScrollable === store.getState().view.isTableScrolling) return;
-	      store.dispatch(actions.updateView({
-	        isTableScrolling:isScrollable
-	      }));
-	    }*/
-
-	  }, {
-	    key: 'handleRenameStart',
-	    value: function handleRenameStart(item) {
-	      console.log('handleRenameStart', item);
-	    }
-
-	    /*handleScroll(event) {
-	      const isScrollable = this.isScrollable(this.tbody);
-	      if(isScrollable === store.getState().view.isTableScrolling) return;
-	      store.dispatch(actions.updateView({
-	        isTableScrolling: isScrollable
-	      }));
-	    }*/
-
-	  }, {
-	    key: 'shouldComponentUpdate',
-	    value: function shouldComponentUpdate(nextProps, nextState) {
-	      return true;
-	      console.log(this.props, this.state);
-	      if (nextProps.view.filter || !nextProps.view.filter && this.props.view.filter) return true;
-	      if (nextProps.view.sort !== this.props.view.sort) return true;
-	      if (nextProps.view.chooseMultiple !== this.props.view.chooseMultiple) return true;
-	      try {
-	        //console.log('shouldComponentUpdate', (this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path), this.state.focusedMediaItem.path, nextProps.view.focusedMediaItem.path);
-	        //if((this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path)) return true; // #janky SLOOOOW
-	      } catch (e) {}
-	      //console.log(this.props.contents[0], nextProps.contents[0]);
-	      return !(this.props.contents === nextProps.contents);
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var _this2 = this;
-
-	      //console.log('rendering EurekaTableTbody');
-	      var props = this.props,
-	          state = this.state;
-
-	      //console.log('render EurekaTableTbody');
-
-	      function shouldHide(item) {
-
-	        try {
-	          //console.log('shouldHide',props.view.focusedMediaItem.path,item.path,props.view.focusedMediaItem.path !== item.path);
-	          return props.view.focusedMediaItem.path !== item.path;
-	        } catch (e) {
-	          //console.log('shouldHide',true);
-	          return true;
-	        }
-	      }
-
-	      var contents = props.contents;
-
-	      if (props.filter) {
-	        (function () {
-	          // filter based on filename, dimensions, date
-	          var filter = props.view.filter.toLowerCase();
-	          contents = contents.filter(function (value) {
-	            var editedOnDate = new Date(value.editedOn);
-	            //console.log('value', value);
-	            //return value.filename.toLowerCase().includes(filter);
-	            return value.filename.toLowerCase().includes(filter) || value.dimensions.join('x').toLowerCase().includes(filter) || value.localString.toLowerCase().includes(filter) || value.localStringVerbose.toLowerCase().includes(filter) || value.fileSizeHumanReadable.toLowerCase().includes(filter) || value.fileSizeHumanReadable.toLowerCase().replace(/ +?/g, '').includes(filter);
-	          });
-	        })();
-	      }
-
-	      /*const sortContents = true;
-	      contents = contents.sort((a,b) => {
-	        if(a[props.sort.by] === b[props.sort.by]) return 0;
-	         let n;
-	         //console.log('props.sort.by',props.sort.by,a,b);
-	         switch(props.sort.by) {
-	          case 'dimensions':
-	          n = a.dimensions[0] * a.dimensions[1] > b.dimensions[0] * b.dimensions[1] ? 1 : -1;
-	          break;
-	           case 'editedOn':
-	          n = new Date(a.editedOn).getTime() > new Date(b.editedOn).getTime() ? 1 : -1;
-	          break;
-	           default:
-	          n = (a[props.sort.by] > b[props.sort.by]) ? 1 : -1;
-	          break;
-	        }
-	         return (props.sort.dir === utility.ASCENDING) ? n : 0-n;
-	      });*/
-
-	      var contentList = contents.length ? contents.map(function (item, index) {
-	        return [_react2.default.createElement(_MediaRow2.default, _extends({ key: _utility2.default.cssSafe(item.filename) }, props, { intl: props.intl, focusedMediaItem: props.view.focusedMediaItem, renameStart: _this2.handleRenameStart, item: item, index: index, onFocus: function onFocus(event) {
-
-	            /*this.setState({
-	              focusedMediaItem: item
-	            })*/
-	            _store2.default.dispatch(_actions2.default.updateView({
-	              focusedMediaItem: item
-	            }));
-	          },
-	          onBlur: function onBlur(event) {}
-	        }))];
-	      }) : _react2.default.createElement(NoResults, props);
-
-	      if (true) {
-	        return (
-	          //onScroll={this.handleScroll.bind(this)}
-	          _react2.default.createElement(
-	            _reactMasonryComponent2.default,
-	            {
-	              elementType: 'tbody' // default 'div'
-	              , options: {} // default {}
-	              , disableImagesLoaded: false // default false
-	              , updateOnEachImageLoad: true // default false and works only if disableImagesLoaded is false
-	              , role: 'rowgroup', 'aria-live': 'polite', className: (0, _classnames2.default)({ empty: !contents.length }), ref: function ref(tbody) {
-	                _this2.tbody = tbody;
-	              }
-	            },
-	            contentList
-	          )
-	        );
-	      }
-
-	      return (
-	        //onScroll={this.handleScroll.bind(this)}
-	        _react2.default.createElement(
-	          'tbody',
-	          { role: 'rowgroup', 'aria-live': 'polite', className: (0, _classnames2.default)({ empty: !contents.length }), ref: function ref(tbody) {
-	              _this2.tbody = tbody;
-	            } },
-	          contentList
-	        )
-	      );
-	    }
-	  }]);
-
-	  return EurekaTableTbody;
-	}(_react.PureComponent);
-
-	function NoResults(props) {
-	  var searchTryAnother = _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'search.tryAnother', defaultMessage: 'Try another search' });
-
-	  if (props.view.fetchingContents) {
-	    return _react2.default.createElement(
-	      'tr',
-	      { role: 'row' },
-	      _react2.default.createElement(
-	        'td',
-	        { role: 'presentation', colSpan: '5', className: 'comfortable' },
-	        _react2.default.createElement(
-	          'p',
-	          { className: 'alert-info eureka__notice', 'aria-live': 'assertive' },
-	          _react2.default.createElement(
-	            'span',
-	            { className: 'spinner' },
-	            _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'circle-o-notch' }))
-	          ),
-	          _react2.default.createElement('br', null),
-	          _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'contents.fetchingContents', defaultMessage: 'Hold tight while we fetch {cd}', values: {
-	              cd: props.content.cd
-	            } })
-	        )
-	      )
-	    );
-	  }
-
-	  return props.view.filter ? _react2.default.createElement(
-	    'tr',
-	    { role: 'row' },
-	    _react2.default.createElement(
-	      'td',
-	      { role: 'presentation', colSpan: '5', className: 'comfortable' },
-	      _react2.default.createElement(
-	        'p',
-	        { className: 'alert-info eureka__notice', 'aria-live': 'assertive' },
-	        _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'search.noResults', defaultMessage: 'Uh oh. No results found for "{filter}"', values: {
-	            filter: props.view.filter
-	          } }),
-	        '. ',
-	        _react2.default.createElement(
-	          'a',
-	          { href: '#eureka__filter', onClick: function onClick(event) {
-	              event.preventDefault();
-	              document.getElementById('eureka__filter').focus();
-	            } },
-	          searchTryAnother
-	        ),
-	        ' ',
-	        _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'grammar.or', defaultMessage: 'or' }),
-	        ' ',
-	        _react2.default.createElement(
-	          'a',
-	          { href: '#eureka__filter', onClick: function onClick(event) {
-	              event.preventDefault();
-	              _store2.default.dispatch(_actions2.default.updateView({
-	                filter: undefined
-	              }));
-	              document.getElementById('eureka__filter').value = '';
-	            } },
-	          _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'search.clearFilter', defaultMessage: 'clear the search\xA0filter' })
-	        ),
-	        '.'
-	      )
-	    )
-	  ) : _react2.default.createElement(
-	    'tr',
-	    { role: 'row' },
-	    _react2.default.createElement(
-	      'td',
-	      { role: 'presentation', colSpan: '5', className: 'comfortable' },
-	      _react2.default.createElement(
-	        'p',
-	        { className: 'alert-info eureka__notice', 'aria-live': 'assertive' },
-	        _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'directory.appearsToBeEmpty', defaultMessage: 'Directory "{cd}" appears to be empty.', values: {
-	            cd: props.content.cd
-	          } }),
-	        _react2.default.createElement('br', null),
-	        _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'perhapsYouWouldLikeTo', defaultMessage: 'Perhaps you\'d like to' }),
-	        ' ',
-	        _react2.default.createElement(
-	          'a',
-	          { href: '#eureka__upload-form', onClick: function onClick(event) {
-	              event.preventDefault();
-	              //document.getElementById('eureka__upload-form').focus();
-
-	              try {
-	                // wont work if the sidebar is closed
-	                document.getElementById('eureka__upload-form').click();
-	              } catch (e) {
-	                document.querySelector('.eureka__drop-area-zone').click();
-	              }
-	            } },
-	          _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'upload.someFiles', defaultMessage: 'upload some files' }),
-	          _react2.default.createElement(
-	            'span',
-	            { className: 'visually-hidden' },
-	            ' ',
-	            _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'grammar.to', defaultMessage: 'to' }),
-	            ' ',
-	            props.content.cd
-	          )
-	        ),
-	        '?'
-	      )
-	    )
-	  );
-	}
-
-	exports.default = EurekaTableTbody;
-
-/***/ },
-/* 264 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _filesize = __webpack_require__(225);
-
-	var _filesize2 = _interopRequireDefault(_filesize);
-
-	var _ContextMenu = __webpack_require__(265);
-
-	var _ContextMenu2 = _interopRequireDefault(_ContextMenu);
-
-	var _store = __webpack_require__(219);
-
-	var _store2 = _interopRequireDefault(_store);
-
-	var _actions = __webpack_require__(226);
-
-	var _actions2 = _interopRequireDefault(_actions);
-
-	var _utility = __webpack_require__(224);
-
-	var _utility2 = _interopRequireDefault(_utility);
-
-	var _path = __webpack_require__(178);
-
-	var _path2 = _interopRequireDefault(_path);
-
-	var _classnames = __webpack_require__(260);
-
-	var _classnames2 = _interopRequireDefault(_classnames);
-
-	var _Icon = __webpack_require__(254);
-
-	var _Icon2 = _interopRequireDefault(_Icon);
-
-	var _mousetrap = __webpack_require__(267);
-
-	var _mousetrap2 = _interopRequireDefault(_mousetrap);
-
-	var _reactIntl = __webpack_require__(230);
-
-	var _definedMessages = __webpack_require__(255);
-
-	var _definedMessages2 = _interopRequireDefault(_definedMessages);
-
-	var _reactTapEventPlugin = __webpack_require__(268);
-
-	var _reactTapEventPlugin2 = _interopRequireDefault(_reactTapEventPlugin);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var pathParse = __webpack_require__(274);
-
-	try {
-	  (0, _reactTapEventPlugin2.default)();
-	} catch (e) {}
-
-	var MediaRow = function (_PureComponent) {
-	  _inherits(MediaRow, _PureComponent);
-
-	  function MediaRow(props) {
-	    _classCallCheck(this, MediaRow);
-
-	    var _this = _possibleConstructorReturn(this, (MediaRow.__proto__ || Object.getPrototypeOf(MediaRow)).call(this, props));
-
-	    _this.state = {
-	      focusWithin: false,
-	      chooseChecked: false
-	    };
-
-	    _this.handleKeyboardBackspace = _this.handleKeyboardBackspace.bind(_this);
-	    _this.handleKeyboardChoose = _this.handleKeyboardChoose.bind(_this);
-	    _this.handleKeyboardExpand = _this.handleKeyboardExpand.bind(_this);
-	    _this.handleKeyboardRename = _this.handleKeyboardRename.bind(_this);
-	    return _this;
-	  }
-
-	  _createClass(MediaRow, [{
-	    key: 'componentWillUpdate',
-	    value: function componentWillUpdate(nextProps, nextState) {
-	      //return;
-	      //console.log('MediaRow componentWillUpdate');
-	      if (this.props.view.selectionInverted !== nextProps.view.selectionInverted) {
-	        this.setState({
-	          chooseChecked: !this.state.chooseChecked
-	        });
-	        return;
-	      }
-
-	      //const c = (nextProps.view.sele)
-	      if (nextProps.view.selectionInverted) {
-	        if (this.props.content.chosenMediaItemsInverted.length > 1 && nextProps.content.chosenMediaItemsInverted.length < 1) {
-	          this.setState({
-	            chooseChecked: false
-	          });
-	        }
-	      } else {
-	        if (this.props.content.chosenMediaItems.length > 1 && nextProps.content.chosenMediaItems.length < 1) {
-	          this.setState({
-	            chooseChecked: false
-	          });
-	        }
-	      }
-	    }
-	  }, {
-	    key: 'shouldComponentUpdate',
-	    value: function shouldComponentUpdate(nextProps, nextState) {
-	      //console.log('MediaRow shouldComponentUpdate', this.props, nextProps, this.state, nextState);
-	      //return true;
-
-	      if (this.props.item !== nextProps.item) return true;
-	      if (this.state.chooseChecked !== nextState.chooseChecked) return true;
-	      if (this.props.content.chosenMediaItems.length !== nextProps.content.chosenMediaItems.length || this.props.content.chosenMediaItemsInverted.length !== nextProps.content.chosenMediaItemsInverted.length) return true;
-	      try {
-	        //console.log((nextProps.focusedMediaItem !== undefined));
-	        return nextProps.focusedMediaItem !== undefined;
-	      } catch (e) {}
-	      //console.log('MediaRow should not update');
-	      return false;
-	    }
-	  }, {
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      this.assignKeyboardListeners();
-
-	      //Mousetrap(document.querySelector('.eureka')).bind(['alt+z'], this.handleKeyboardDeselect);
-
-	      /*store.subscribe(() => {
-	        const state = store.getState();
-	        //console.log(state);
-	         if(!state.content.chosenMediaItemsInverted.length) {
-	          this.setState({
-	            chooseChecked: false
-	          })
-	        }
-	       });*/
-	    }
-
-	    /*handleKeyboardDeselect = (event) => {
-	      console.log('handleKeyboardDeselect');
-	      this.setState({
-	        chooseChecked: false
-	      })
-	    }*/
-
-	  }, {
-	    key: 'assignKeyboardListeners',
-	    value: function assignKeyboardListeners() {
-	      _mousetrap2.default.bind(['backspace'], this.handleKeyboardBackspace);
-	      _mousetrap2.default.bind(['enter'], this.handleKeyboardChoose);
-	      _mousetrap2.default.bind(['alt+space'], this.handleKeyboardExpand);
-	      _mousetrap2.default.bind(['ctrl+r'], this.handleKeyboardRename);
-	    }
-	  }, {
-	    key: 'onBlur',
-	    value: function onBlur(event) {
-	      //console.log('onBlur');
-	      this.removeKeyboardListeners();
-	    }
-	  }, {
-	    key: 'componentWillUnmount',
-	    value: function componentWillUnmount() {
-	      this.removeKeyboardListeners();
-	      //Mousetrap(document.querySelector('.eureka')).unbind(['alt+z'], this.handleKeyboardDeselect);
-	    }
-	  }, {
-	    key: 'removeKeyboardListeners',
-	    value: function removeKeyboardListeners() {
-	      _mousetrap2.default.unbind(['backspace'], this.handleKeyboardBackspace);
-	      _mousetrap2.default.unbind(['enter'], this.handleKeyboardChoose);
-	      _mousetrap2.default.unbind(['alt+space'], this.handleKeyboardExpand);
-	      _mousetrap2.default.unbind(['ctrl+r'], this.handleKeyboardRename);
-	    }
-	  }, {
-	    key: 'handleKeyboardRename',
-	    value: function handleKeyboardRename(event) {
-	      //console.log('handleKeyboardRename', event);
-	      try {
-	        this.props.onRenameItem(this.props.item);
-	      } catch (e) {}
-	    }
-	  }, {
-	    key: 'handleKeyboardChoose',
-	    value: function handleKeyboardChoose(event) {
-	      if (!event.target.matches('.eureka__focused-media-item')) return;
-	      //event.preventDefault();
-	      try {
-	        document.getElementById('choose__' + _utility2.default.cssSafe(this.props.item.filename)).click();
-	      } catch (e) {}
-	    }
-	  }, {
-	    key: 'handleKeyboardExpand',
-	    value: function handleKeyboardExpand(event) {
-	      if (!event.target.matches('.eureka__focused-media-item')) return;
-	      try {
-	        document.getElementById('expand__' + _utility2.default.cssSafe(this.props.item.filename)).click();
-	      } catch (e) {}
-	    }
-	  }, {
-	    key: 'removeFocusedMediaItems',
-	    value: function removeFocusedMediaItems(target) {
-	      // super #janky but haven't been able to optimize another way
-	      //console.log(`tr[role="row"]:not(#${target.getAttribute('id')})`);
-	      var focusedMediaItems = target.closest('tbody').querySelectorAll('tr[role="row"]'); // :not(#${target.getAttribute('id')})
-	      for (var i = 0; i < focusedMediaItems.length; i++) {
-	        if (focusedMediaItems[i].getAttribute('id') !== target.getAttribute('id')) {
-	          focusedMediaItems[i].classList.remove('eureka__focused-media-item');
-	          focusedMediaItems[i].querySelector('.eureka__context-row').setAttribute('hidden', 'true');
-	        }
-	      }
-	    }
-	  }, {
-	    key: 'onFocus',
-	    value: function onFocus(event) {
-	      if (!event.target.matches('tr')) return;
-
-	      this.assignKeyboardListeners();
-
-	      this.removeFocusedMediaItems(event.target);
-	      event.target.classList.add('eureka__focused-media-item');
-	      event.target.querySelector('.eureka__context-row').removeAttribute('hidden');
-	      this.props.onFocus();
-	    }
-	  }, {
-	    key: 'handleKeyboardBackspace',
-	    value: function handleKeyboardBackspace(event) {
-	      var props = this.props,
-	          formatMessage = props.intl.formatMessage,
-	          decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default,
-	          deletedItemMessage = formatMessage(_definedMessages2.default.deletedItem, {
-	        filename: props.item.filename
-	      });
-	      //console.log('handleKeyboardBackspace', event, props.item.path);
-	      _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, props.item.path, props.config.headers)).then(function () {
-	        /*utility.notify(`Deleted item ${props.item.filename}`, {
-	          badge: path.join(props.config.assetsBasePath, 'img/src/png/trash-o.png'),
-	          silent: true
-	        });*/
-	        _store2.default.dispatch(_actions2.default.notify(deletedItemMessage, _utility2.default.DANGEROUS));
-	      });
-	    }
-
-	    //http://localhost:3000/assets/components/eureka/media/sources/1?path=%2FUsers%2FjP%2FSites%2Fstatic%2Feureka%2Fprod%2Fsources%2Ffilesystem%2Fassets%2Fimg%2Fredwoods%2F243823_842410181688_1308368_o.jpg
-	    //http://localhost:3000/assets/components/eureka/media/sources/1?path=%2FUsers%2FjP%2FSites%2Fstatic%2Feureka%2Fprod%2Fsources%2Ffilesystem%2Fassets%2Fimg%2Fredwoods%2F243150_842410286478_7945184_o.jpg
-
-	  }, {
-	    key: 'componentWillMount',
-	    value: function componentWillMount() {
-	      var props = this.props;
-	      if (props.content.chosenMediaItemsInverted.includes(props.item)) {
-	        this.setState({
-	          chooseChecked: true
-	        });
-	      }
-	    }
-
-	    /*componentWillUnmount() {
-	      Mousetrap.unbind(['backspace'], this.handleKeyboardBackspace);
-	    }*/
-
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var _this2 = this,
-	          _React$createElement,
-	          _React$createElement2;
-
-	      var props = this.props,
-	          item = props.item,
-	          index = props.index,
-	          formatMessage = props.intl.formatMessage,
-	          ariaLabel = props.item.filename + ' displays at ' + props.item.dimensions.join('x') + ', weighs ' + (0, _filesize2.default)(props.item.fileSize, { round: 0 }) + ', and was edited on ' + new Date(props.item.editedOn).toLocaleString(props.view.locale, { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' });
-
-	      function shouldHide(item) {
-	        //console.log('shouldHide', item);
-	        try {
-	          //console.log('shouldHide',props.focusedMediaItem.path,item.path,props.focusedMediaItem.path !== item.path);
-	          return props.focusedMediaItem.path !== item.path;
-	        } catch (e) {
-	          //console.log('shouldHide',true);
-	          return true;
-	        }
-	      }
-
-	      var contentEditable = false;
-	      var checkboxId = 'eureka__choose_multiple_' + _utility2.default.cssSafe(props.item.filename);
-	      var onMediaClick = props.view.chooseMultiple ? function (event) {
-	        // #janky way to simulate <label>, <label> messes up styling for the default view
-	        event.target.closest('.eureka').querySelector('#' + checkboxId).click();
-	      } : undefined;
-
-	      var media = function (ext) {
-	        // consider abstracting this to its own module
-	        //console.log(pathParse(props.item.filename).ext,'props.item',props.item);
-
-	        var src = props.item.absolutePreviewURL || props.item.absoluteURL,
-	            alt = props.item.alt || '';
-
-	        switch (ext.toLowerCase()) {
-	          case '.jpg':
-	          case '.jpeg':
-	          case '.gif':
-	          case '.png':
-	          case '.png8':
-	          case '.png24':
-	          case '.svg':
-	          case '.bmp':
-	          case '.tiff':
-	            return _react2.default.createElement('img', { src: src, alt: alt, onClick: onMediaClick });
-	            break;
-
-	          case '.mp4':
-	          case '.mov':
-	            return _react2.default.createElement(
-	              'video',
-	              { width: '320', height: '240', controls: props.view.mode !== 'list' },
-	              _react2.default.createElement('source', { src: src, type: 'video/mp4' }),
-	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noVideo', defaultMessage: 'Your browser does not support the video tag.' })
-	            );
-	            break;
-
-	          case '.ogv':
-	            return _react2.default.createElement(
-	              'video',
-	              { width: '320', height: '240', controls: props.view.mode !== 'list' },
-	              _react2.default.createElement('source', { src: src, type: 'video/ogg' }),
-	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noVideo', defaultMessage: 'Your browser does not support the video tag.' })
-	            );
-	            break;
-
-	          case '.webm':
-	          case '.wbm':
-	            return _react2.default.createElement(
-	              'video',
-	              { width: '320', height: '240', controls: props.view.mode !== 'list' },
-	              _react2.default.createElement('source', { src: src, type: 'video/webm' }),
-	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noVideo', defaultMessage: 'Your browser does not support the video tag.' })
-	            );
-	            break;
-
-	          case '.pdf':
-	            return _react2.default.createElement('embed', { src: src, width: '320', height: '240' });
-	            break;
-
-	          case '.ogg':
-	            return _react2.default.createElement(
-	              'audio',
-	              { controls: true },
-	              _react2.default.createElement('source', { src: src, type: 'audio/ogg' }),
-	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support the audio tag.' })
-	            );
-	            break;
-
-	          case '.mp3':
-	            return _react2.default.createElement(
-	              'audio',
-	              { controls: true },
-	              _react2.default.createElement('source', { src: src, type: 'audio/mpeg' }),
-	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support the audio tag.' })
-	            );
-	            break;
-
-	          case '.wav':
-	            return _react2.default.createElement(
-	              'audio',
-	              { controls: true },
-	              _react2.default.createElement('source', { src: src, type: 'audio/wav' }),
-	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support the audio tag.' })
-	            );
-	            break;
-
-	          case '.flac':
-	            return _react2.default.createElement(
-	              'audio',
-	              { controls: true },
-	              _react2.default.createElement('source', { src: src, type: 'audio/flac' }),
-	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support the audio tag.' })
-	            );
-	            break;
-
-	          default:
-	            var icon = _utility2.default.getIconByExtension(pathParse(props.item.filename).ext);
-	            return _react2.default.createElement(
-	              'p',
-	              { onClick: onMediaClick },
-	              _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: icon })),
-	              '\u2002',
-	              props.item.absoluteURL
-	            );
-	        }
-	      }(pathParse(props.item.filename).ext);
-
-	      //if((props.item == props.focusedMediaItem)) console.log(props.item == props.focusedMediaItem, props.item, props.focusedMediaItem);
-
-
-	      var mediaId = (props.config.storagePrefix || 'eureka__') + '__media__' + _utility2.default.cssSafe(props.item.filename),
-	          mediaSelectId = (props.config.storagePrefix || 'eureka__') + '__radio_' + _utility2.default.cssSafe(props.item.filename),
-	          mediaSelect = _utility2.default.serverSideRendering ? _react2.default.createElement(
-	        'td',
-	        null,
-	        _react2.default.createElement('input', { id: mediaSelectId, value: props.item.filename, name: 'eureka__chosen_item', type: 'radio', 'aria-labelledby': (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'choose-button', 'aria-describedby': mediaId + ' ' + _utility2.default.cssSafe(props.item.filename) }),
-	        _react2.default.createElement(
-	          'span',
-	          { className: 'visually-hidden' },
-	          '\u2002',
-	          _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'select', defaultMessage: 'Select' }),
-	          ' ',
-	          props.item.filename
-	        )
-	      ) : undefined,
-	          className = props.item == props.focusedMediaItem ? { 'eureka__focused-media-item': true } : {},
-	          tabIndex = _utility2.default.serverSideRendering ? undefined : "0",
-	          ext = pathParse(props.item.absoluteURL).ext,
-	          isLinkableFileType = function (ext) {
-	        switch (ext.toLowerCase()) {
-	          case '.jpg':
-	          case '.jpeg':
-	          case '.gif':
-	          case '.png':
-	          case '.png8':
-	          case '.png24':
-	          case '.svg':
-	          case '.bmp':
-	          case '.tiff':
-	            return true;
-	            break;
-
-	          default:
-	            return false;
-	        }
-	      }(ext);
-
-	      //console.log('this.state.chooseChecked', this.state.chooseChecked);
-	      var checkboxAriaLabel = formatMessage(_definedMessages2.default.chooseItem, {
-	        filename: item.filename
-	      });
-
-	      var checkbox = props.view.chooseMultiple ? _react2.default.createElement(
-	        'td',
-	        { role: 'gridcell', className: 'eureka__choose' },
-	        _react2.default.createElement('input', { value: 'chosen', 'aria-label': 'Choose ' + item.filename, type: 'checkbox', name: 'eureka__chose_multiple', id: checkboxId, key: 'eureka__choose_multiple_' + _utility2.default.cssSafe(props.item.filename) + '__' + (this.state.chooseChecked ? 'checked' : ''), checked: this.state.chooseChecked, onChange: function onChange(event) {
-	            event.preventDefault();
-	            event.stopPropagation();
-
-	            //console.log('event.target.checked', event.target.checked);
-
-	            _this2.setState({
-	              chooseChecked: event.target.checked
-	            });
-
-	            if (props.view.selectionInverted ? !event.target.checked : event.target.checked) {
-	              _store2.default.dispatch(_actions2.default.addMediaItemToChosenItems(props.item, props.view.selectionInverted));
-	            } else {
-	              _store2.default.dispatch(_actions2.default.removeMediaItemFromChosenItems(props.item, props.view.selectionInverted));
-	            }
-	            //console.log('event.target.checked', event.target.checked);
-	          } })
-	      ) : undefined;
-
-	      var openInANewTabMessage = formatMessage(_definedMessages2.default.openFileInNewTab, {
-	        filename: props.item.fileName
-	      });
-
-	      if (_utility2.default.serverSideRendering && isLinkableFileType) {
-	        //media = <label style={{display:'block'}} htmlFor={mediaSelectId} aria-labelledby={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }filename__${utility.cssSafe(props.item.filename)}`}>{media}</label>;
-	        media = _react2.default.createElement(
-	          'a',
-	          { href: props.item.absoluteURL, target: '_' + mediaSelectId, 'aria-label': openInANewTabMessage, role: 'presentation' },
-	          media
-	        );
-	      }
-
-	      if (props.view.chooseMultiple) {
-	        //media = <label htmlFor={checkboxId}>{media}</label>
-	      }
-
-	      var fileName = _utility2.default.wordBreaksEvery(props.item.filename);
-	      if (_utility2.default.serverSideRendering) {
-	        //fileName = <a href={`#${mediaSelectId}`} role="presentation" tabIndex="-1" id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }filename__${utility.cssSafe(props.item.filename)}`}>{fileName}</a>
-	        fileName = _react2.default.createElement(
-	          'label',
-	          { htmlFor: mediaSelectId },
-	          fileName
-	        );
-	      }
-
-	      var contextMenu = _utility2.default.serverSideRendering ? undefined : _react2.default.createElement(_ContextMenu2.default, _extends({ className: 'eureka__context-row' }, props, { item: item, hidden: shouldHide(item), key: 'cm__' + index }));
-
-	      //<span className="visually-hidden"><FormattedMessage id="media.contents" defaultMessage="Media Contents" /></span>
-	      return _react2.default.createElement(
-	        'tr',
-	        (_React$createElement2 = { role: 'row', className: (0, _classnames2.default)(className), id: _utility2.default.cssSafe(props.item.filename), 'aria-label': ariaLabel }, _defineProperty(_React$createElement2, 'role', 'row'), _defineProperty(_React$createElement2, 'tabIndex', tabIndex), _defineProperty(_React$createElement2, 'onFocus', this.onFocus.bind(this)), _defineProperty(_React$createElement2, 'onBlur', this.onBlur.bind(this)), _defineProperty(_React$createElement2, 'contextMenu', 'context_menu__tbody-' + props.index), _React$createElement2),
-	        checkbox,
-	        mediaSelect,
-	        _react2.default.createElement(
-	          'td',
-	          { role: 'gridcell', id: mediaId, title: ariaLabel, className: 'eureka__td-media', onTouchTap: !props.view.isTouch ? undefined : function (e) {
-	              if (_utility2.default.isDblTouchTap(e)) {
-	                if (!props.view.focusedMediaItem) return;
-
-	                props.config.callbacks.choose(props.item);
-	              }
-	            }, onDoubleClick: props.view.isTouch ? undefined : function (event) {
-	              if (!props.view.focusedMediaItem) return;
-
-	              props.config.callbacks.choose(props.item);
-
-	              /*document.dispatchEvent(new CustomEvent('EurekaFoundIt', {
-	              detail: props.item
-	              }));*/
-	            } },
-	          media
-	        ),
-	        _react2.default.createElement(
-	          'td',
-	          (_React$createElement = { role: 'gridcell', id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'filename__' + _utility2.default.cssSafe(props.item.filename) }, _defineProperty(_React$createElement, 'role', 'gridcell'), _defineProperty(_React$createElement, 'className', 'eureka__td-filename'), _defineProperty(_React$createElement, 'contentEditable', contentEditable), _defineProperty(_React$createElement, 'onBlur', function onBlur(event) {
-	            try {
-	              if (!event.target.innerHTML.trim()) {
-	                event.target.innerHTML = props.item.filename;
-	                //alert('file name cannot be empty'); // i mostly hate alerts
-	                throw new Error('file name cannot be empty');
-	              }
-
-	              //console.log(event.target.innerHTML, event.target.innerHTML.trim());
-	              props.onRenameItemModalSubmit(event.target.innerHTML.trim(), props.item);
-	            } catch (e) {
-	              console.log(e);
-	            }
-	          }), _defineProperty(_React$createElement, 'onKeyUp', function onKeyUp(event) {
-	            //console.log('onKeyUp', event);
-	          }), _defineProperty(_React$createElement, 'onKeyDown', function onKeyDown(event) {
-	            //console.log('onKeyDown', event, event.keyCode);
-	            if (event.keyCode === 13) {
-	              event.preventDefault();
-	              event.target.blur();
-	            }
-	          }), _defineProperty(_React$createElement, 'onPaste', function onPaste(event) {
-	            console.log('onPaste', event);
-	          }), _defineProperty(_React$createElement, 'onCopy', function onCopy(event) {
-	            console.log('onCopy', event);
-	          }), _defineProperty(_React$createElement, 'onCut', function onCut(event) {
-	            console.log('onCut', event);
-	          }), _React$createElement),
-	          fileName
-	        ),
-	        contextMenu,
-	        _react2.default.createElement(
-	          'td',
-	          { className: 'eureka__dimensions', role: 'gridcell' },
-	          props.item.dimensions[0] + 'x' + props.item.dimensions[1]
-	        ),
-	        _react2.default.createElement(
-	          'td',
-	          { className: 'eureka__file-size', role: 'gridcell' },
-	          (0, _filesize2.default)(props.item.fileSize)
-	        ),
-	        _react2.default.createElement(
-	          'td',
-	          { className: 'eureka__edited-on', role: 'gridcell', title: props.item.editedOnLongTimeZone || new Date(props.item.editedOn).toLocaleString(props.view.locale, { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' }) },
-	          props.item.editedOnTwoDigit || new Date(props.item.editedOn).toLocaleString(props.view.locale, { year: '2-digit', month: '2-digit', day: '2-digit' })
-	        )
-	      );
-	    }
-	  }]);
-
-	  return MediaRow;
-	}(_react.PureComponent);
-
-	exports.default = MediaRow;
-
-/***/ },
-/* 265 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _store = __webpack_require__(219);
-
-	var _store2 = _interopRequireDefault(_store);
-
-	var _actions = __webpack_require__(226);
-
-	var _actions2 = _interopRequireDefault(_actions);
-
-	var _ContextButtons = __webpack_require__(266);
-
-	var _ContextButtons2 = _interopRequireDefault(_ContextButtons);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var ContextMenu = function ContextMenu(props) {
-	  var item = props.item;
-	  return _react2.default.createElement(
-	    'td',
-	    { className: props.className, hidden: props.hidden === undefined ? true : props.hidden },
-	    _react2.default.createElement(_ContextButtons2.default, _extends({ onBlur: props.onBlur, onFirstFocus: props.onFirstFocus }, props))
-	  );
-	};
-
-	exports.default = ContextMenu;
-
-/***/ },
-/* 266 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _store = __webpack_require__(219);
-
-	var _store2 = _interopRequireDefault(_store);
-
-	var _actions = __webpack_require__(226);
-
-	var _actions2 = _interopRequireDefault(_actions);
-
-	var _utility = __webpack_require__(224);
-
-	var _path = __webpack_require__(178);
-
-	var _path2 = _interopRequireDefault(_path);
-
-	var _reactIntl = __webpack_require__(230);
-
-	var _definedMessages = __webpack_require__(255);
-
-	var _definedMessages2 = _interopRequireDefault(_definedMessages);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var ContextButtons = function ContextButtons(props) {
-	  //console.log('ContextButtons', props);
-	  var item = props.item;
-
-	  var decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
-
-	  var formatMessage = props.intl.formatMessage,
-	      renameMessage = formatMessage(_definedMessages2.default.rename),
-	      renameItemMessage = formatMessage(_definedMessages2.default.renameItem, {
-	    item: ' ' + item.filename
-	  }),
-	      performContextualActionsMessage = formatMessage(_definedMessages2.default.performContextualActions, {
-	    filename: item.filename
-	  }),
-	      expandMessage = formatMessage(_definedMessages2.default.expand),
-	      chooseItemMessage = formatMessage(_definedMessages2.default.chooseItem, {
-	    filename: item.filename
-	  }),
-	      chooseMessage = formatMessage(_definedMessages2.default.choose),
-	      deleteMessage = formatMessage(_definedMessages2.default.delete),
-	      deleteItemMessage = formatMessage(_definedMessages2.default.deleteItem, {
-	    filename: item.filename
-	  }),
-	      deletedItemMessage = formatMessage(_definedMessages2.default.deletedItem, {
-	    filename: item.filename
-	  }),
-	      expandItemMessage = formatMessage(_definedMessages2.default.expandItem, {
-	    filename: item.filename
-	  }),
-	      downloadMessage = formatMessage(_definedMessages2.default.download),
-	      downloadItemMessage = formatMessage(_definedMessages2.default.downloadItem, {
-	    filename: item.filename
-	  }),
-	      deleteAreYouSureMessage = formatMessage(_definedMessages2.default.deleteAreYouSureMessage, {
-	    filename: item.filename
-	  });
-
-	  var chooseBtn = props.config.allowChoose ? _react2.default.createElement(
-	    'button',
-	    { role: 'option', id: 'choose__' + (0, _utility.cssSafe)(item.filename), title: chooseItemMessage, onClick: function onClick(event) {
-	        if (!props.view.focusedMediaItem) return;
-	        try {
-	          props.config.callbacks.choose(item);
-	        } catch (e) {
-	          console.log(e);
-	        }
-	        /*document.dispatchEvent(new CustomEvent('EurekaFoundIt', {
-	          detail: item
-	        }));*/
-	      } },
-	    chooseMessage,
-	    _react2.default.createElement(
-	      'span',
-	      { className: 'visually-hidden' },
-	      ' ',
-	      item.filename
-	    )
-	  ) : undefined,
-	      renameBtn = props.config.allowRename ? _react2.default.createElement(
-	    'button',
-	    { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'rename__' + (0, _utility.cssSafe)(item.filename), role: 'option', title: renameItemMessage, onClick: props.onRenameItem ? props.onRenameItem.bind(null, item) : undefined },
-	    renameMessage,
-	    _react2.default.createElement(
-	      'span',
-	      { className: 'visually-hidden' },
-	      ' ',
-	      item.filename
-	    )
-	  ) : undefined,
-	      deleteBtn = props.config.allowDelete ? _react2.default.createElement(
-	    'button',
-	    { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'delete__' + (0, _utility.cssSafe)(item.filename), role: 'option', onClick: function onClick(event) {
-	        if (!props.config.confirmBeforeDelete) {
-	          deleteIt();
-	        } else if (confirm(deleteAreYouSureMessage)) {
-	          deleteIt();
-	        }
-	        function deleteIt() {
-	          _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path, props.config.headers)).then(function () {
-	            _store2.default.dispatch(_actions2.default.notify(deletedItemMessage, _utility.DANGEROUS));
-	          });
-	        }
-	      }, title: deleteItemMessage, className: 'dangerous' },
-	    deleteMessage,
-	    _react2.default.createElement(
-	      'span',
-	      { className: 'visually-hidden' },
-	      ' ',
-	      item.filename
-	    )
-	  ) : undefined,
-	      downloadID = (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'download__' + (0, _utility.cssSafe)(item.filename),
-	      downloadBtn = props.config.allowDownload ? _react2.default.createElement(
-	    'a',
-	    { download: item.filename, href: item.absoluteURL, id: downloadID, className: 'button', target: '_' + downloadID, title: downloadItemMessage },
-	    downloadMessage,
-	    _react2.default.createElement(
-	      'span',
-	      { className: 'visually-hidden' },
-	      ' ',
-	      item.filename
-	    )
-	  ) : undefined;
-
-	  return (// future-role="toolbar listbox"
-	    _react2.default.createElement(
-	      'div',
-	      { className: 'eureka__button-bar eureka__context-buttons', role: 'listbox', 'aria-label': performContextualActionsMessage, tabIndex: '0', 'aria-activedescendant': 'expand__' + (0, _utility.cssSafe)(item.filename) },
-	      _react2.default.createElement(
-	        'a',
-	        { onBlur: props.onBlur, role: 'option', id: 'expand__' + (0, _utility.cssSafe)(item.filename), href: item.absoluteURL, target: '_' + encodeURI(item.absoluteURL), className: 'button', title: expandItemMessage },
-	        expandMessage,
-	        _react2.default.createElement(
-	          'span',
-	          { className: 'visually-hidden' },
-	          ' ',
-	          item.filename
-	        )
-	      ),
-	      chooseBtn,
-	      renameBtn,
-	      deleteBtn,
-	      downloadBtn
-	    )
-	  );
-	};
-
-	exports.default = ContextButtons;
-
-/***/ },
-/* 267 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_RESULT__;/*global define:false */
-	/**
-	 * Copyright 2012-2017 Craig Campbell
-	 *
-	 * Licensed under the Apache License, Version 2.0 (the "License");
-	 * you may not use this file except in compliance with the License.
-	 * You may obtain a copy of the License at
-	 *
-	 * http://www.apache.org/licenses/LICENSE-2.0
-	 *
-	 * Unless required by applicable law or agreed to in writing, software
-	 * distributed under the License is distributed on an "AS IS" BASIS,
-	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	 * See the License for the specific language governing permissions and
-	 * limitations under the License.
-	 *
-	 * Mousetrap is a simple keyboard shortcut library for Javascript with
-	 * no external dependencies
-	 *
-	 * @version 1.6.1
-	 * @url craig.is/killing/mice
-	 */
-	(function(window, document, undefined) {
-
-	    // Check if mousetrap is used inside browser, if not, return
-	    if (!window) {
-	        return;
-	    }
-
-	    /**
-	     * mapping of special keycodes to their corresponding keys
-	     *
-	     * everything in this dictionary cannot use keypress events
-	     * so it has to be here to map to the correct keycodes for
-	     * keyup/keydown events
-	     *
-	     * @type {Object}
-	     */
-	    var _MAP = {
-	        8: 'backspace',
-	        9: 'tab',
-	        13: 'enter',
-	        16: 'shift',
-	        17: 'ctrl',
-	        18: 'alt',
-	        20: 'capslock',
-	        27: 'esc',
-	        32: 'space',
-	        33: 'pageup',
-	        34: 'pagedown',
-	        35: 'end',
-	        36: 'home',
-	        37: 'left',
-	        38: 'up',
-	        39: 'right',
-	        40: 'down',
-	        45: 'ins',
-	        46: 'del',
-	        91: 'meta',
-	        93: 'meta',
-	        224: 'meta'
-	    };
-
-	    /**
-	     * mapping for special characters so they can support
-	     *
-	     * this dictionary is only used incase you want to bind a
-	     * keyup or keydown event to one of these keys
-	     *
-	     * @type {Object}
-	     */
-	    var _KEYCODE_MAP = {
-	        106: '*',
-	        107: '+',
-	        109: '-',
-	        110: '.',
-	        111 : '/',
-	        186: ';',
-	        187: '=',
-	        188: ',',
-	        189: '-',
-	        190: '.',
-	        191: '/',
-	        192: '`',
-	        219: '[',
-	        220: '\\',
-	        221: ']',
-	        222: '\''
-	    };
-
-	    /**
-	     * this is a mapping of keys that require shift on a US keypad
-	     * back to the non shift equivelents
-	     *
-	     * this is so you can use keyup events with these keys
-	     *
-	     * note that this will only work reliably on US keyboards
-	     *
-	     * @type {Object}
-	     */
-	    var _SHIFT_MAP = {
-	        '~': '`',
-	        '!': '1',
-	        '@': '2',
-	        '#': '3',
-	        '$': '4',
-	        '%': '5',
-	        '^': '6',
-	        '&': '7',
-	        '*': '8',
-	        '(': '9',
-	        ')': '0',
-	        '_': '-',
-	        '+': '=',
-	        ':': ';',
-	        '\"': '\'',
-	        '<': ',',
-	        '>': '.',
-	        '?': '/',
-	        '|': '\\'
-	    };
-
-	    /**
-	     * this is a list of special strings you can use to map
-	     * to modifier keys when you specify your keyboard shortcuts
-	     *
-	     * @type {Object}
-	     */
-	    var _SPECIAL_ALIASES = {
-	        'option': 'alt',
-	        'command': 'meta',
-	        'return': 'enter',
-	        'escape': 'esc',
-	        'plus': '+',
-	        'mod': /Mac|iPod|iPhone|iPad/.test(navigator.platform) ? 'meta' : 'ctrl'
-	    };
-
-	    /**
-	     * variable to store the flipped version of _MAP from above
-	     * needed to check if we should use keypress or not when no action
-	     * is specified
-	     *
-	     * @type {Object|undefined}
-	     */
-	    var _REVERSE_MAP;
-
-	    /**
-	     * loop through the f keys, f1 to f19 and add them to the map
-	     * programatically
-	     */
-	    for (var i = 1; i < 20; ++i) {
-	        _MAP[111 + i] = 'f' + i;
-	    }
-
-	    /**
-	     * loop through to map numbers on the numeric keypad
-	     */
-	    for (i = 0; i <= 9; ++i) {
-
-	        // This needs to use a string cause otherwise since 0 is falsey
-	        // mousetrap will never fire for numpad 0 pressed as part of a keydown
-	        // event.
-	        //
-	        // @see https://github.com/ccampbell/mousetrap/pull/258
-	        _MAP[i + 96] = i.toString();
-	    }
-
-	    /**
-	     * cross browser add event method
-	     *
-	     * @param {Element|HTMLDocument} object
-	     * @param {string} type
-	     * @param {Function} callback
-	     * @returns void
-	     */
-	    function _addEvent(object, type, callback) {
-	        if (object.addEventListener) {
-	            object.addEventListener(type, callback, false);
-	            return;
-	        }
-
-	        object.attachEvent('on' + type, callback);
-	    }
-
-	    /**
-	     * takes the event and returns the key character
-	     *
-	     * @param {Event} e
-	     * @return {string}
-	     */
-	    function _characterFromEvent(e) {
-
-	        // for keypress events we should return the character as is
-	        if (e.type == 'keypress') {
-	            var character = String.fromCharCode(e.which);
-
-	            // if the shift key is not pressed then it is safe to assume
-	            // that we want the character to be lowercase.  this means if
-	            // you accidentally have caps lock on then your key bindings
-	            // will continue to work
-	            //
-	            // the only side effect that might not be desired is if you
-	            // bind something like 'A' cause you want to trigger an
-	            // event when capital A is pressed caps lock will no longer
-	            // trigger the event.  shift+a will though.
-	            if (!e.shiftKey) {
-	                character = character.toLowerCase();
-	            }
-
-	            return character;
-	        }
-
-	        // for non keypress events the special maps are needed
-	        if (_MAP[e.which]) {
-	            return _MAP[e.which];
-	        }
-
-	        if (_KEYCODE_MAP[e.which]) {
-	            return _KEYCODE_MAP[e.which];
-	        }
-
-	        // if it is not in the special map
-
-	        // with keydown and keyup events the character seems to always
-	        // come in as an uppercase character whether you are pressing shift
-	        // or not.  we should make sure it is always lowercase for comparisons
-	        return String.fromCharCode(e.which).toLowerCase();
-	    }
-
-	    /**
-	     * checks if two arrays are equal
-	     *
-	     * @param {Array} modifiers1
-	     * @param {Array} modifiers2
-	     * @returns {boolean}
-	     */
-	    function _modifiersMatch(modifiers1, modifiers2) {
-	        return modifiers1.sort().join(',') === modifiers2.sort().join(',');
-	    }
-
-	    /**
-	     * takes a key event and figures out what the modifiers are
-	     *
-	     * @param {Event} e
-	     * @returns {Array}
-	     */
-	    function _eventModifiers(e) {
-	        var modifiers = [];
-
-	        if (e.shiftKey) {
-	            modifiers.push('shift');
-	        }
-
-	        if (e.altKey) {
-	            modifiers.push('alt');
-	        }
-
-	        if (e.ctrlKey) {
-	            modifiers.push('ctrl');
-	        }
-
-	        if (e.metaKey) {
-	            modifiers.push('meta');
-	        }
-
-	        return modifiers;
-	    }
-
-	    /**
-	     * prevents default for this event
-	     *
-	     * @param {Event} e
-	     * @returns void
-	     */
-	    function _preventDefault(e) {
-	        if (e.preventDefault) {
-	            e.preventDefault();
-	            return;
-	        }
-
-	        e.returnValue = false;
-	    }
-
-	    /**
-	     * stops propogation for this event
-	     *
-	     * @param {Event} e
-	     * @returns void
-	     */
-	    function _stopPropagation(e) {
-	        if (e.stopPropagation) {
-	            e.stopPropagation();
-	            return;
-	        }
-
-	        e.cancelBubble = true;
-	    }
-
-	    /**
-	     * determines if the keycode specified is a modifier key or not
-	     *
-	     * @param {string} key
-	     * @returns {boolean}
-	     */
-	    function _isModifier(key) {
-	        return key == 'shift' || key == 'ctrl' || key == 'alt' || key == 'meta';
-	    }
-
-	    /**
-	     * reverses the map lookup so that we can look for specific keys
-	     * to see what can and can't use keypress
-	     *
-	     * @return {Object}
-	     */
-	    function _getReverseMap() {
-	        if (!_REVERSE_MAP) {
-	            _REVERSE_MAP = {};
-	            for (var key in _MAP) {
-
-	                // pull out the numeric keypad from here cause keypress should
-	                // be able to detect the keys from the character
-	                if (key > 95 && key < 112) {
-	                    continue;
-	                }
-
-	                if (_MAP.hasOwnProperty(key)) {
-	                    _REVERSE_MAP[_MAP[key]] = key;
-	                }
-	            }
-	        }
-	        return _REVERSE_MAP;
-	    }
-
-	    /**
-	     * picks the best action based on the key combination
-	     *
-	     * @param {string} key - character for key
-	     * @param {Array} modifiers
-	     * @param {string=} action passed in
-	     */
-	    function _pickBestAction(key, modifiers, action) {
-
-	        // if no action was picked in we should try to pick the one
-	        // that we think would work best for this key
-	        if (!action) {
-	            action = _getReverseMap()[key] ? 'keydown' : 'keypress';
-	        }
-
-	        // modifier keys don't work as expected with keypress,
-	        // switch to keydown
-	        if (action == 'keypress' && modifiers.length) {
-	            action = 'keydown';
-	        }
-
-	        return action;
-	    }
-
-	    /**
-	     * Converts from a string key combination to an array
-	     *
-	     * @param  {string} combination like "command+shift+l"
-	     * @return {Array}
-	     */
-	    function _keysFromString(combination) {
-	        if (combination === '+') {
-	            return ['+'];
-	        }
-
-	        combination = combination.replace(/\+{2}/g, '+plus');
-	        return combination.split('+');
-	    }
-
-	    /**
-	     * Gets info for a specific key combination
-	     *
-	     * @param  {string} combination key combination ("command+s" or "a" or "*")
-	     * @param  {string=} action
-	     * @returns {Object}
-	     */
-	    function _getKeyInfo(combination, action) {
-	        var keys;
-	        var key;
-	        var i;
-	        var modifiers = [];
-
-	        // take the keys from this pattern and figure out what the actual
-	        // pattern is all about
-	        keys = _keysFromString(combination);
-
-	        for (i = 0; i < keys.length; ++i) {
-	            key = keys[i];
-
-	            // normalize key names
-	            if (_SPECIAL_ALIASES[key]) {
-	                key = _SPECIAL_ALIASES[key];
-	            }
-
-	            // if this is not a keypress event then we should
-	            // be smart about using shift keys
-	            // this will only work for US keyboards however
-	            if (action && action != 'keypress' && _SHIFT_MAP[key]) {
-	                key = _SHIFT_MAP[key];
-	                modifiers.push('shift');
-	            }
-
-	            // if this key is a modifier then add it to the list of modifiers
-	            if (_isModifier(key)) {
-	                modifiers.push(key);
-	            }
-	        }
-
-	        // depending on what the key combination is
-	        // we will try to pick the best event for it
-	        action = _pickBestAction(key, modifiers, action);
-
-	        return {
-	            key: key,
-	            modifiers: modifiers,
-	            action: action
-	        };
-	    }
-
-	    function _belongsTo(element, ancestor) {
-	        if (element === null || element === document) {
-	            return false;
-	        }
-
-	        if (element === ancestor) {
-	            return true;
-	        }
-
-	        return _belongsTo(element.parentNode, ancestor);
-	    }
-
-	    function Mousetrap(targetElement) {
-	        var self = this;
-
-	        targetElement = targetElement || document;
-
-	        if (!(self instanceof Mousetrap)) {
-	            return new Mousetrap(targetElement);
-	        }
-
-	        /**
-	         * element to attach key events to
-	         *
-	         * @type {Element}
-	         */
-	        self.target = targetElement;
-
-	        /**
-	         * a list of all the callbacks setup via Mousetrap.bind()
-	         *
-	         * @type {Object}
-	         */
-	        self._callbacks = {};
-
-	        /**
-	         * direct map of string combinations to callbacks used for trigger()
-	         *
-	         * @type {Object}
-	         */
-	        self._directMap = {};
-
-	        /**
-	         * keeps track of what level each sequence is at since multiple
-	         * sequences can start out with the same sequence
-	         *
-	         * @type {Object}
-	         */
-	        var _sequenceLevels = {};
-
-	        /**
-	         * variable to store the setTimeout call
-	         *
-	         * @type {null|number}
-	         */
-	        var _resetTimer;
-
-	        /**
-	         * temporary state where we will ignore the next keyup
-	         *
-	         * @type {boolean|string}
-	         */
-	        var _ignoreNextKeyup = false;
-
-	        /**
-	         * temporary state where we will ignore the next keypress
-	         *
-	         * @type {boolean}
-	         */
-	        var _ignoreNextKeypress = false;
-
-	        /**
-	         * are we currently inside of a sequence?
-	         * type of action ("keyup" or "keydown" or "keypress") or false
-	         *
-	         * @type {boolean|string}
-	         */
-	        var _nextExpectedAction = false;
-
-	        /**
-	         * resets all sequence counters except for the ones passed in
-	         *
-	         * @param {Object} doNotReset
-	         * @returns void
-	         */
-	        function _resetSequences(doNotReset) {
-	            doNotReset = doNotReset || {};
-
-	            var activeSequences = false,
-	                key;
-
-	            for (key in _sequenceLevels) {
-	                if (doNotReset[key]) {
-	                    activeSequences = true;
-	                    continue;
-	                }
-	                _sequenceLevels[key] = 0;
-	            }
-
-	            if (!activeSequences) {
-	                _nextExpectedAction = false;
-	            }
-	        }
-
-	        /**
-	         * finds all callbacks that match based on the keycode, modifiers,
-	         * and action
-	         *
-	         * @param {string} character
-	         * @param {Array} modifiers
-	         * @param {Event|Object} e
-	         * @param {string=} sequenceName - name of the sequence we are looking for
-	         * @param {string=} combination
-	         * @param {number=} level
-	         * @returns {Array}
-	         */
-	        function _getMatches(character, modifiers, e, sequenceName, combination, level) {
-	            var i;
-	            var callback;
-	            var matches = [];
-	            var action = e.type;
-
-	            // if there are no events related to this keycode
-	            if (!self._callbacks[character]) {
-	                return [];
-	            }
-
-	            // if a modifier key is coming up on its own we should allow it
-	            if (action == 'keyup' && _isModifier(character)) {
-	                modifiers = [character];
-	            }
-
-	            // loop through all callbacks for the key that was pressed
-	            // and see if any of them match
-	            for (i = 0; i < self._callbacks[character].length; ++i) {
-	                callback = self._callbacks[character][i];
-
-	                // if a sequence name is not specified, but this is a sequence at
-	                // the wrong level then move onto the next match
-	                if (!sequenceName && callback.seq && _sequenceLevels[callback.seq] != callback.level) {
-	                    continue;
-	                }
-
-	                // if the action we are looking for doesn't match the action we got
-	                // then we should keep going
-	                if (action != callback.action) {
-	                    continue;
-	                }
-
-	                // if this is a keypress event and the meta key and control key
-	                // are not pressed that means that we need to only look at the
-	                // character, otherwise check the modifiers as well
-	                //
-	                // chrome will not fire a keypress if meta or control is down
-	                // safari will fire a keypress if meta or meta+shift is down
-	                // firefox will fire a keypress if meta or control is down
-	                if ((action == 'keypress' && !e.metaKey && !e.ctrlKey) || _modifiersMatch(modifiers, callback.modifiers)) {
-
-	                    // when you bind a combination or sequence a second time it
-	                    // should overwrite the first one.  if a sequenceName or
-	                    // combination is specified in this call it does just that
-	                    //
-	                    // @todo make deleting its own method?
-	                    var deleteCombo = !sequenceName && callback.combo == combination;
-	                    var deleteSequence = sequenceName && callback.seq == sequenceName && callback.level == level;
-	                    if (deleteCombo || deleteSequence) {
-	                        self._callbacks[character].splice(i, 1);
-	                    }
-
-	                    matches.push(callback);
-	                }
-	            }
-
-	            return matches;
-	        }
-
-	        /**
-	         * actually calls the callback function
-	         *
-	         * if your callback function returns false this will use the jquery
-	         * convention - prevent default and stop propogation on the event
-	         *
-	         * @param {Function} callback
-	         * @param {Event} e
-	         * @returns void
-	         */
-	        function _fireCallback(callback, e, combo, sequence) {
-
-	            // if this event should not happen stop here
-	            if (self.stopCallback(e, e.target || e.srcElement, combo, sequence)) {
-	                return;
-	            }
-
-	            if (callback(e, combo) === false) {
-	                _preventDefault(e);
-	                _stopPropagation(e);
-	            }
-	        }
-
-	        /**
-	         * handles a character key event
-	         *
-	         * @param {string} character
-	         * @param {Array} modifiers
-	         * @param {Event} e
-	         * @returns void
-	         */
-	        self._handleKey = function(character, modifiers, e) {
-	            var callbacks = _getMatches(character, modifiers, e);
-	            var i;
-	            var doNotReset = {};
-	            var maxLevel = 0;
-	            var processedSequenceCallback = false;
-
-	            // Calculate the maxLevel for sequences so we can only execute the longest callback sequence
-	            for (i = 0; i < callbacks.length; ++i) {
-	                if (callbacks[i].seq) {
-	                    maxLevel = Math.max(maxLevel, callbacks[i].level);
-	                }
-	            }
-
-	            // loop through matching callbacks for this key event
-	            for (i = 0; i < callbacks.length; ++i) {
-
-	                // fire for all sequence callbacks
-	                // this is because if for example you have multiple sequences
-	                // bound such as "g i" and "g t" they both need to fire the
-	                // callback for matching g cause otherwise you can only ever
-	                // match the first one
-	                if (callbacks[i].seq) {
-
-	                    // only fire callbacks for the maxLevel to prevent
-	                    // subsequences from also firing
-	                    //
-	                    // for example 'a option b' should not cause 'option b' to fire
-	                    // even though 'option b' is part of the other sequence
-	                    //
-	                    // any sequences that do not match here will be discarded
-	                    // below by the _resetSequences call
-	                    if (callbacks[i].level != maxLevel) {
-	                        continue;
-	                    }
-
-	                    processedSequenceCallback = true;
-
-	                    // keep a list of which sequences were matches for later
-	                    doNotReset[callbacks[i].seq] = 1;
-	                    _fireCallback(callbacks[i].callback, e, callbacks[i].combo, callbacks[i].seq);
-	                    continue;
-	                }
-
-	                // if there were no sequence matches but we are still here
-	                // that means this is a regular match so we should fire that
-	                if (!processedSequenceCallback) {
-	                    _fireCallback(callbacks[i].callback, e, callbacks[i].combo);
-	                }
-	            }
-
-	            // if the key you pressed matches the type of sequence without
-	            // being a modifier (ie "keyup" or "keypress") then we should
-	            // reset all sequences that were not matched by this event
-	            //
-	            // this is so, for example, if you have the sequence "h a t" and you
-	            // type "h e a r t" it does not match.  in this case the "e" will
-	            // cause the sequence to reset
-	            //
-	            // modifier keys are ignored because you can have a sequence
-	            // that contains modifiers such as "enter ctrl+space" and in most
-	            // cases the modifier key will be pressed before the next key
-	            //
-	            // also if you have a sequence such as "ctrl+b a" then pressing the
-	            // "b" key will trigger a "keypress" and a "keydown"
-	            //
-	            // the "keydown" is expected when there is a modifier, but the
-	            // "keypress" ends up matching the _nextExpectedAction since it occurs
-	            // after and that causes the sequence to reset
-	            //
-	            // we ignore keypresses in a sequence that directly follow a keydown
-	            // for the same character
-	            var ignoreThisKeypress = e.type == 'keypress' && _ignoreNextKeypress;
-	            if (e.type == _nextExpectedAction && !_isModifier(character) && !ignoreThisKeypress) {
-	                _resetSequences(doNotReset);
-	            }
-
-	            _ignoreNextKeypress = processedSequenceCallback && e.type == 'keydown';
-	        };
-
-	        /**
-	         * handles a keydown event
-	         *
-	         * @param {Event} e
-	         * @returns void
-	         */
-	        function _handleKeyEvent(e) {
-
-	            // normalize e.which for key events
-	            // @see http://stackoverflow.com/questions/4285627/javascript-keycode-vs-charcode-utter-confusion
-	            if (typeof e.which !== 'number') {
-	                e.which = e.keyCode;
-	            }
-
-	            var character = _characterFromEvent(e);
-
-	            // no character found then stop
-	            if (!character) {
-	                return;
-	            }
-
-	            // need to use === for the character check because the character can be 0
-	            if (e.type == 'keyup' && _ignoreNextKeyup === character) {
-	                _ignoreNextKeyup = false;
-	                return;
-	            }
-
-	            self.handleKey(character, _eventModifiers(e), e);
-	        }
-
-	        /**
-	         * called to set a 1 second timeout on the specified sequence
-	         *
-	         * this is so after each key press in the sequence you have 1 second
-	         * to press the next key before you have to start over
-	         *
-	         * @returns void
-	         */
-	        function _resetSequenceTimer() {
-	            clearTimeout(_resetTimer);
-	            _resetTimer = setTimeout(_resetSequences, 1000);
-	        }
-
-	        /**
-	         * binds a key sequence to an event
-	         *
-	         * @param {string} combo - combo specified in bind call
-	         * @param {Array} keys
-	         * @param {Function} callback
-	         * @param {string=} action
-	         * @returns void
-	         */
-	        function _bindSequence(combo, keys, callback, action) {
-
-	            // start off by adding a sequence level record for this combination
-	            // and setting the level to 0
-	            _sequenceLevels[combo] = 0;
-
-	            /**
-	             * callback to increase the sequence level for this sequence and reset
-	             * all other sequences that were active
-	             *
-	             * @param {string} nextAction
-	             * @returns {Function}
-	             */
-	            function _increaseSequence(nextAction) {
-	                return function() {
-	                    _nextExpectedAction = nextAction;
-	                    ++_sequenceLevels[combo];
-	                    _resetSequenceTimer();
-	                };
-	            }
-
-	            /**
-	             * wraps the specified callback inside of another function in order
-	             * to reset all sequence counters as soon as this sequence is done
-	             *
-	             * @param {Event} e
-	             * @returns void
-	             */
-	            function _callbackAndReset(e) {
-	                _fireCallback(callback, e, combo);
-
-	                // we should ignore the next key up if the action is key down
-	                // or keypress.  this is so if you finish a sequence and
-	                // release the key the final key will not trigger a keyup
-	                if (action !== 'keyup') {
-	                    _ignoreNextKeyup = _characterFromEvent(e);
-	                }
-
-	                // weird race condition if a sequence ends with the key
-	                // another sequence begins with
-	                setTimeout(_resetSequences, 10);
-	            }
-
-	            // loop through keys one at a time and bind the appropriate callback
-	            // function.  for any key leading up to the final one it should
-	            // increase the sequence. after the final, it should reset all sequences
-	            //
-	            // if an action is specified in the original bind call then that will
-	            // be used throughout.  otherwise we will pass the action that the
-	            // next key in the sequence should match.  this allows a sequence
-	            // to mix and match keypress and keydown events depending on which
-	            // ones are better suited to the key provided
-	            for (var i = 0; i < keys.length; ++i) {
-	                var isFinal = i + 1 === keys.length;
-	                var wrappedCallback = isFinal ? _callbackAndReset : _increaseSequence(action || _getKeyInfo(keys[i + 1]).action);
-	                _bindSingle(keys[i], wrappedCallback, action, combo, i);
-	            }
-	        }
-
-	        /**
-	         * binds a single keyboard combination
-	         *
-	         * @param {string} combination
-	         * @param {Function} callback
-	         * @param {string=} action
-	         * @param {string=} sequenceName - name of sequence if part of sequence
-	         * @param {number=} level - what part of the sequence the command is
-	         * @returns void
-	         */
-	        function _bindSingle(combination, callback, action, sequenceName, level) {
-
-	            // store a direct mapped reference for use with Mousetrap.trigger
-	            self._directMap[combination + ':' + action] = callback;
-
-	            // make sure multiple spaces in a row become a single space
-	            combination = combination.replace(/\s+/g, ' ');
-
-	            var sequence = combination.split(' ');
-	            var info;
-
-	            // if this pattern is a sequence of keys then run through this method
-	            // to reprocess each pattern one key at a time
-	            if (sequence.length > 1) {
-	                _bindSequence(combination, sequence, callback, action);
-	                return;
-	            }
-
-	            info = _getKeyInfo(combination, action);
-
-	            // make sure to initialize array if this is the first time
-	            // a callback is added for this key
-	            self._callbacks[info.key] = self._callbacks[info.key] || [];
-
-	            // remove an existing match if there is one
-	            _getMatches(info.key, info.modifiers, {type: info.action}, sequenceName, combination, level);
-
-	            // add this call back to the array
-	            // if it is a sequence put it at the beginning
-	            // if not put it at the end
-	            //
-	            // this is important because the way these are processed expects
-	            // the sequence ones to come first
-	            self._callbacks[info.key][sequenceName ? 'unshift' : 'push']({
-	                callback: callback,
-	                modifiers: info.modifiers,
-	                action: info.action,
-	                seq: sequenceName,
-	                level: level,
-	                combo: combination
-	            });
-	        }
-
-	        /**
-	         * binds multiple combinations to the same callback
-	         *
-	         * @param {Array} combinations
-	         * @param {Function} callback
-	         * @param {string|undefined} action
-	         * @returns void
-	         */
-	        self._bindMultiple = function(combinations, callback, action) {
-	            for (var i = 0; i < combinations.length; ++i) {
-	                _bindSingle(combinations[i], callback, action);
-	            }
-	        };
-
-	        // start!
-	        _addEvent(targetElement, 'keypress', _handleKeyEvent);
-	        _addEvent(targetElement, 'keydown', _handleKeyEvent);
-	        _addEvent(targetElement, 'keyup', _handleKeyEvent);
-	    }
-
-	    /**
-	     * binds an event to mousetrap
-	     *
-	     * can be a single key, a combination of keys separated with +,
-	     * an array of keys, or a sequence of keys separated by spaces
-	     *
-	     * be sure to list the modifier keys first to make sure that the
-	     * correct key ends up getting bound (the last key in the pattern)
-	     *
-	     * @param {string|Array} keys
-	     * @param {Function} callback
-	     * @param {string=} action - 'keypress', 'keydown', or 'keyup'
-	     * @returns void
-	     */
-	    Mousetrap.prototype.bind = function(keys, callback, action) {
-	        var self = this;
-	        keys = keys instanceof Array ? keys : [keys];
-	        self._bindMultiple.call(self, keys, callback, action);
-	        return self;
-	    };
-
-	    /**
-	     * unbinds an event to mousetrap
-	     *
-	     * the unbinding sets the callback function of the specified key combo
-	     * to an empty function and deletes the corresponding key in the
-	     * _directMap dict.
-	     *
-	     * TODO: actually remove this from the _callbacks dictionary instead
-	     * of binding an empty function
-	     *
-	     * the keycombo+action has to be exactly the same as
-	     * it was defined in the bind method
-	     *
-	     * @param {string|Array} keys
-	     * @param {string} action
-	     * @returns void
-	     */
-	    Mousetrap.prototype.unbind = function(keys, action) {
-	        var self = this;
-	        return self.bind.call(self, keys, function() {}, action);
-	    };
-
-	    /**
-	     * triggers an event that has already been bound
-	     *
-	     * @param {string} keys
-	     * @param {string=} action
-	     * @returns void
-	     */
-	    Mousetrap.prototype.trigger = function(keys, action) {
-	        var self = this;
-	        if (self._directMap[keys + ':' + action]) {
-	            self._directMap[keys + ':' + action]({}, keys);
-	        }
-	        return self;
-	    };
-
-	    /**
-	     * resets the library back to its initial state.  this is useful
-	     * if you want to clear out the current keyboard shortcuts and bind
-	     * new ones - for example if you switch to another page
-	     *
-	     * @returns void
-	     */
-	    Mousetrap.prototype.reset = function() {
-	        var self = this;
-	        self._callbacks = {};
-	        self._directMap = {};
-	        return self;
-	    };
-
-	    /**
-	     * should we stop this event before firing off callbacks
-	     *
-	     * @param {Event} e
-	     * @param {Element} element
-	     * @return {boolean}
-	     */
-	    Mousetrap.prototype.stopCallback = function(e, element) {
-	        var self = this;
-
-	        // if the element has the class "mousetrap" then no need to stop
-	        if ((' ' + element.className + ' ').indexOf(' mousetrap ') > -1) {
-	            return false;
-	        }
-
-	        if (_belongsTo(element, self.target)) {
-	            return false;
-	        }
-
-	        // stop for input, select, and textarea
-	        return element.tagName == 'INPUT' || element.tagName == 'SELECT' || element.tagName == 'TEXTAREA' || element.isContentEditable;
-	    };
-
-	    /**
-	     * exposes _handleKey publicly so it can be overwritten by extensions
-	     */
-	    Mousetrap.prototype.handleKey = function() {
-	        var self = this;
-	        return self._handleKey.apply(self, arguments);
-	    };
-
-	    /**
-	     * allow custom key mappings
-	     */
-	    Mousetrap.addKeycodes = function(object) {
-	        for (var key in object) {
-	            if (object.hasOwnProperty(key)) {
-	                _MAP[key] = object[key];
-	            }
-	        }
-	        _REVERSE_MAP = null;
-	    };
-
-	    /**
-	     * Init the global mousetrap functions
-	     *
-	     * This method is needed to allow the global mousetrap functions to work
-	     * now that mousetrap is a constructor function.
-	     */
-	    Mousetrap.init = function() {
-	        var documentMousetrap = Mousetrap(document);
-	        for (var method in documentMousetrap) {
-	            if (method.charAt(0) !== '_') {
-	                Mousetrap[method] = (function(method) {
-	                    return function() {
-	                        return documentMousetrap[method].apply(documentMousetrap, arguments);
-	                    };
-	                } (method));
-	            }
-	        }
-	    };
-
-	    Mousetrap.init();
-
-	    // expose mousetrap to the global object
-	    window.Mousetrap = Mousetrap;
-
-	    // expose as a common js module
-	    if (typeof module !== 'undefined' && module.exports) {
-	        module.exports = Mousetrap;
-	    }
-
-	    // expose mousetrap as an AMD module
-	    if (true) {
-	        !(__WEBPACK_AMD_DEFINE_RESULT__ = function() {
-	            return Mousetrap;
-	        }.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-	    }
-	}) (typeof window !== 'undefined' ? window : null, typeof  window !== 'undefined' ? document : null);
-
-
-/***/ },
-/* 268 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {var invariant = __webpack_require__(8);
-	var defaultClickRejectionStrategy = __webpack_require__(269);
-
-	var alreadyInjected = false;
-
-	module.exports = function injectTapEventPlugin (strategyOverrides) {
-	  strategyOverrides = strategyOverrides || {}
-	  var shouldRejectClick = strategyOverrides.shouldRejectClick || defaultClickRejectionStrategy;
-
-	  if (process.env.NODE_ENV !== 'production') {
-	    invariant(
-	      !alreadyInjected,
-	      'injectTapEventPlugin(): Can only be called once per application lifecycle.\n\n\
-	It is recommended to call injectTapEventPlugin() just before you call \
-	ReactDOM.render(). If you are using an external library which calls injectTapEventPlugin() \
-	itself, please contact the maintainer as it shouldn\'t be called in library code and \
-	should be injected by the application.'
-	    )
-	  }
-
-	  alreadyInjected = true;
-
-	  __webpack_require__(42).injection.injectEventPluginsByName({
-	    'TapEventPlugin':       __webpack_require__(270)(shouldRejectClick)
-	  });
-	};
-
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
-
-/***/ },
-/* 269 */
-/***/ function(module, exports) {
-
-	module.exports = function(lastTouchEvent, clickTimestamp) {
-	  if (lastTouchEvent && (clickTimestamp - lastTouchEvent) < 750) {
-	    return true;
-	  }
-	};
-
-
-/***/ },
-/* 270 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014 Facebook, Inc.
-	 *
-	 * Licensed under the Apache License, Version 2.0 (the "License");
-	 * you may not use this file except in compliance with the License.
-	 * You may obtain a copy of the License at
-	 *
-	 * http://www.apache.org/licenses/LICENSE-2.0
-	 *
-	 * Unless required by applicable law or agreed to in writing, software
-	 * distributed under the License is distributed on an "AS IS" BASIS,
-	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	 * See the License for the specific language governing permissions and
-	 * limitations under the License.
-	 *
-	 * @providesModule TapEventPlugin
-	 * @typechecks static-only
-	 */
-
-	"use strict";
-
-	var EventConstants = __webpack_require__(271);
-	var EventPluginUtils = __webpack_require__(44);
-	var EventPropagators = __webpack_require__(41);
-	var SyntheticUIEvent = __webpack_require__(75);
-	var TouchEventUtils = __webpack_require__(272);
-	var ViewportMetrics = __webpack_require__(76);
-
-	var keyOf = __webpack_require__(273);
-	var topLevelTypes = EventConstants.topLevelTypes;
-
-	var isStartish = EventPluginUtils.isStartish;
-	var isEndish = EventPluginUtils.isEndish;
-
-	var isTouch = function(topLevelType) {
-	  var touchTypes = [
-	    'topTouchCancel',
-	    'topTouchEnd',
-	    'topTouchStart',
-	    'topTouchMove'
-	  ];
-	  return touchTypes.indexOf(topLevelType) >= 0;
-	}
-
-	/**
-	 * Number of pixels that are tolerated in between a `touchStart` and `touchEnd`
-	 * in order to still be considered a 'tap' event.
-	 */
-	var tapMoveThreshold = 10;
-	var ignoreMouseThreshold = 750;
-	var startCoords = {x: null, y: null};
-	var lastTouchEvent = null;
-
-	var Axis = {
-	  x: {page: 'pageX', client: 'clientX', envScroll: 'currentPageScrollLeft'},
-	  y: {page: 'pageY', client: 'clientY', envScroll: 'currentPageScrollTop'}
-	};
-
-	function getAxisCoordOfEvent(axis, nativeEvent) {
-	  var singleTouch = TouchEventUtils.extractSingleTouch(nativeEvent);
-	  if (singleTouch) {
-	    return singleTouch[axis.page];
-	  }
-	  return axis.page in nativeEvent ?
-	    nativeEvent[axis.page] :
-	    nativeEvent[axis.client] + ViewportMetrics[axis.envScroll];
-	}
-
-	function getDistance(coords, nativeEvent) {
-	  var pageX = getAxisCoordOfEvent(Axis.x, nativeEvent);
-	  var pageY = getAxisCoordOfEvent(Axis.y, nativeEvent);
-	  return Math.pow(
-	    Math.pow(pageX - coords.x, 2) + Math.pow(pageY - coords.y, 2),
-	    0.5
-	  );
-	}
-
-	var touchEvents = [
-	  'topTouchStart',
-	  'topTouchCancel',
-	  'topTouchEnd',
-	  'topTouchMove',
-	];
-
-	var dependencies = [
-	  'topMouseDown',
-	  'topMouseMove',
-	  'topMouseUp',
-	].concat(touchEvents);
-
-	var eventTypes = {
-	  touchTap: {
-	    phasedRegistrationNames: {
-	      bubbled: keyOf({onTouchTap: null}),
-	      captured: keyOf({onTouchTapCapture: null})
-	    },
-	    dependencies: dependencies
-	  }
-	};
-
-	var now = (function() {
-	  if (Date.now) {
-	    return Date.now;
-	  } else {
-	    // IE8 support: http://stackoverflow.com/questions/9430357/please-explain-why-and-how-new-date-works-as-workaround-for-date-now-in
-	    return function () {
-	      return +new Date;
-	    }
-	  }
-	})();
-
-	function createTapEventPlugin(shouldRejectClick) {
-	  return {
-
-	    tapMoveThreshold: tapMoveThreshold,
-
-	    ignoreMouseThreshold: ignoreMouseThreshold,
-
-	    eventTypes: eventTypes,
-
-	    /**
-	     * @param {string} topLevelType Record from `EventConstants`.
-	     * @param {DOMEventTarget} targetInst The listening component root node.
-	     * @param {object} nativeEvent Native browser event.
-	     * @return {*} An accumulation of synthetic events.
-	     * @see {EventPluginHub.extractEvents}
-	     */
-	    extractEvents: function(
-	      topLevelType,
-	      targetInst,
-	      nativeEvent,
-	      nativeEventTarget
-	    ) {
-
-	      if (!isStartish(topLevelType) && !isEndish(topLevelType)) {
-	        return null;
-	      }
-
-	      if (isTouch(topLevelType)) {
-	        lastTouchEvent = now();
-	      } else {
-	        if (shouldRejectClick(lastTouchEvent, now())) {
-	          return null;
-	        }
-	      }
-
-	      var event = null;
-	      var distance = getDistance(startCoords, nativeEvent);
-	      if (isEndish(topLevelType) && distance < tapMoveThreshold) {
-	        event = SyntheticUIEvent.getPooled(
-	          eventTypes.touchTap,
-	          targetInst,
-	          nativeEvent,
-	          nativeEventTarget
-	        );
-	      }
-	      if (isStartish(topLevelType)) {
-	        startCoords.x = getAxisCoordOfEvent(Axis.x, nativeEvent);
-	        startCoords.y = getAxisCoordOfEvent(Axis.y, nativeEvent);
-	      } else if (isEndish(topLevelType)) {
-	        startCoords.x = 0;
-	        startCoords.y = 0;
-	      }
-	      EventPropagators.accumulateTwoPhaseDispatches(event);
-	      return event;
-	    }
-
-	  };
-	}
-
-	module.exports = createTapEventPlugin;
-
-
-/***/ },
-/* 271 */
-/***/ function(module, exports) {
-
-	/**
-	 * Copyright 2013-present, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 */
-
-	'use strict';
-
-	/**
-	 * Types of raw signals from the browser caught at the top level.
-	 */
-	var topLevelTypes = {
-	  topAbort: null,
-	  topAnimationEnd: null,
-	  topAnimationIteration: null,
-	  topAnimationStart: null,
-	  topBlur: null,
-	  topCanPlay: null,
-	  topCanPlayThrough: null,
-	  topChange: null,
-	  topClick: null,
-	  topCompositionEnd: null,
-	  topCompositionStart: null,
-	  topCompositionUpdate: null,
-	  topContextMenu: null,
-	  topCopy: null,
-	  topCut: null,
-	  topDoubleClick: null,
-	  topDrag: null,
-	  topDragEnd: null,
-	  topDragEnter: null,
-	  topDragExit: null,
-	  topDragLeave: null,
-	  topDragOver: null,
-	  topDragStart: null,
-	  topDrop: null,
-	  topDurationChange: null,
-	  topEmptied: null,
-	  topEncrypted: null,
-	  topEnded: null,
-	  topError: null,
-	  topFocus: null,
-	  topInput: null,
-	  topInvalid: null,
-	  topKeyDown: null,
-	  topKeyPress: null,
-	  topKeyUp: null,
-	  topLoad: null,
-	  topLoadedData: null,
-	  topLoadedMetadata: null,
-	  topLoadStart: null,
-	  topMouseDown: null,
-	  topMouseMove: null,
-	  topMouseOut: null,
-	  topMouseOver: null,
-	  topMouseUp: null,
-	  topPaste: null,
-	  topPause: null,
-	  topPlay: null,
-	  topPlaying: null,
-	  topProgress: null,
-	  topRateChange: null,
-	  topReset: null,
-	  topScroll: null,
-	  topSeeked: null,
-	  topSeeking: null,
-	  topSelectionChange: null,
-	  topStalled: null,
-	  topSubmit: null,
-	  topSuspend: null,
-	  topTextInput: null,
-	  topTimeUpdate: null,
-	  topTouchCancel: null,
-	  topTouchEnd: null,
-	  topTouchMove: null,
-	  topTouchStart: null,
-	  topTransitionEnd: null,
-	  topVolumeChange: null,
-	  topWaiting: null,
-	  topWheel: null
-	};
-
-	var EventConstants = {
-	  topLevelTypes: topLevelTypes
-	};
-
-	module.exports = EventConstants;
-
-/***/ },
-/* 272 */
-/***/ function(module, exports) {
-
-	/**
-	 * Copyright 2013-2014 Facebook, Inc.
-	 *
-	 * Licensed under the Apache License, Version 2.0 (the "License");
-	 * you may not use this file except in compliance with the License.
-	 * You may obtain a copy of the License at
-	 *
-	 * http://www.apache.org/licenses/LICENSE-2.0
-	 *
-	 * Unless required by applicable law or agreed to in writing, software
-	 * distributed under the License is distributed on an "AS IS" BASIS,
-	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	 * See the License for the specific language governing permissions and
-	 * limitations under the License.
-	 *
-	 * @providesModule TouchEventUtils
-	 */
-
-	var TouchEventUtils = {
-	  /**
-	   * Utility function for common case of extracting out the primary touch from a
-	   * touch event.
-	   * - `touchEnd` events usually do not have the `touches` property.
-	   *   http://stackoverflow.com/questions/3666929/
-	   *   mobile-sarai-touchend-event-not-firing-when-last-touch-is-removed
-	   *
-	   * @param {Event} nativeEvent Native event that may or may not be a touch.
-	   * @return {TouchesObject?} an object with pageX and pageY or null.
-	   */
-	  extractSingleTouch: function(nativeEvent) {
-	    var touches = nativeEvent.touches;
-	    var changedTouches = nativeEvent.changedTouches;
-	    var hasTouches = touches && touches.length > 0;
-	    var hasChangedTouches = changedTouches && changedTouches.length > 0;
-
-	    return !hasTouches && hasChangedTouches ? changedTouches[0] :
-	           hasTouches ? touches[0] :
-	           nativeEvent;
-	  }
-	};
-
-	module.exports = TouchEventUtils;
-
-
-/***/ },
-/* 273 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	/**
-	 * Copyright (c) 2013-present, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 */
-
-	/**
-	 * Allows extraction of a minified key. Let's the build system minify keys
-	 * without losing the ability to dynamically use key strings as values
-	 * themselves. Pass in an object with a single key/val pair and it will return
-	 * you the string key of that single record. Suppose you want to grab the
-	 * value for a key 'className' inside of an object. Key/val minification may
-	 * have aliased that key to be 'xa12'. keyOf({className: null}) will return
-	 * 'xa12' in that case. Resolve keys you want to use once at startup time, then
-	 * reuse those resolutions.
-	 */
-	var keyOf = function keyOf(oneKeyObj) {
-	  var key;
-	  for (key in oneKeyObj) {
-	    if (!oneKeyObj.hasOwnProperty(key)) {
-	      continue;
-	    }
-	    return key;
-	  }
-	  return null;
-	};
-
-	module.exports = keyOf;
-
-/***/ },
-/* 274 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
-
-	var isWindows = process.platform === 'win32';
-
-	// Regex to split a windows path into three parts: [*, device, slash,
-	// tail] windows-only
-	var splitDeviceRe =
-	    /^([a-zA-Z]:|[\\\/]{2}[^\\\/]+[\\\/]+[^\\\/]+)?([\\\/])?([\s\S]*?)$/;
-
-	// Regex to split the tail part of the above into [*, dir, basename, ext]
-	var splitTailRe =
-	    /^([\s\S]*?)((?:\.{1,2}|[^\\\/]+?|)(\.[^.\/\\]*|))(?:[\\\/]*)$/;
-
-	var win32 = {};
-
-	// Function to split a filename into [root, dir, basename, ext]
-	function win32SplitPath(filename) {
-	  // Separate device+slash from tail
-	  var result = splitDeviceRe.exec(filename),
-	      device = (result[1] || '') + (result[2] || ''),
-	      tail = result[3] || '';
-	  // Split the tail into dir, basename and extension
-	  var result2 = splitTailRe.exec(tail),
-	      dir = result2[1],
-	      basename = result2[2],
-	      ext = result2[3];
-	  return [device, dir, basename, ext];
-	}
-
-	win32.parse = function(pathString) {
-	  if (typeof pathString !== 'string') {
-	    throw new TypeError(
-	        "Parameter 'pathString' must be a string, not " + typeof pathString
-	    );
-	  }
-	  var allParts = win32SplitPath(pathString);
-	  if (!allParts || allParts.length !== 4) {
-	    throw new TypeError("Invalid path '" + pathString + "'");
-	  }
-	  return {
-	    root: allParts[0],
-	    dir: allParts[0] + allParts[1].slice(0, -1),
-	    base: allParts[2],
-	    ext: allParts[3],
-	    name: allParts[2].slice(0, allParts[2].length - allParts[3].length)
-	  };
-	};
-
-
-
-	// Split a filename into [root, dir, basename, ext], unix version
-	// 'root' is just a slash, or nothing.
-	var splitPathRe =
-	    /^(\/?|)([\s\S]*?)((?:\.{1,2}|[^\/]+?|)(\.[^.\/]*|))(?:[\/]*)$/;
-	var posix = {};
-
-
-	function posixSplitPath(filename) {
-	  return splitPathRe.exec(filename).slice(1);
-	}
-
-
-	posix.parse = function(pathString) {
-	  if (typeof pathString !== 'string') {
-	    throw new TypeError(
-	        "Parameter 'pathString' must be a string, not " + typeof pathString
-	    );
-	  }
-	  var allParts = posixSplitPath(pathString);
-	  if (!allParts || allParts.length !== 4) {
-	    throw new TypeError("Invalid path '" + pathString + "'");
-	  }
-	  allParts[1] = allParts[1] || '';
-	  allParts[2] = allParts[2] || '';
-	  allParts[3] = allParts[3] || '';
-
-	  return {
-	    root: allParts[0],
-	    dir: allParts[0] + allParts[1].slice(0, -1),
-	    base: allParts[2],
-	    ext: allParts[3],
-	    name: allParts[2].slice(0, allParts[2].length - allParts[3].length)
-	  };
-	};
-
-
-	if (isWindows)
-	  module.exports = win32.parse;
-	else /* posix */
-	  module.exports = posix.parse;
-
-	module.exports.posix = posix.parse;
-	module.exports.win32 = win32.parse;
-
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
-
-/***/ },
-/* 275 */
-/***/ function(module, exports, __webpack_require__) {
-
 	var isBrowser = typeof window !== 'undefined';
-	var Masonry = isBrowser ? window.Masonry || __webpack_require__(276) : null;
-	var imagesloaded = isBrowser ? __webpack_require__(283) : null;
-	var assign = __webpack_require__(284);
-	var elementResizeDetectorMaker = __webpack_require__(285);
-	var debounce = __webpack_require__(298);
-	var omit = __webpack_require__(299);
-	var PropTypes = __webpack_require__(300);
+	var Masonry = isBrowser ? window.Masonry || __webpack_require__(263) : null;
+	var imagesloaded = isBrowser ? __webpack_require__(270) : null;
+	var assign = __webpack_require__(271);
+	var elementResizeDetectorMaker = __webpack_require__(272);
+	var debounce = __webpack_require__(285);
+	var omit = __webpack_require__(286);
+	var PropTypes = __webpack_require__(287);
 	var React = __webpack_require__(1);
-	var createReactClass = __webpack_require__(305);
+	var createReactClass = __webpack_require__(292);
 	var refName = 'masonryContainer';
 
 	var propTypes = {
@@ -36975,7 +33813,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 276 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -36992,8 +33830,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if ( true ) {
 	    // AMD
 	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [
-	        __webpack_require__(277),
-	        __webpack_require__(279)
+	        __webpack_require__(264),
+	        __webpack_require__(266)
 	      ], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	  } else if ( typeof module == 'object' && module.exports ) {
 	    // CommonJS
@@ -37219,7 +34057,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 277 */
+/* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -37235,10 +34073,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if ( true ) {
 	    // AMD - RequireJS
 	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [
-	        __webpack_require__(278),
-	        __webpack_require__(279),
-	        __webpack_require__(280),
-	        __webpack_require__(282)
+	        __webpack_require__(265),
+	        __webpack_require__(266),
+	        __webpack_require__(267),
+	        __webpack_require__(269)
 	      ], __WEBPACK_AMD_DEFINE_RESULT__ = function( EvEmitter, getSize, utils, Item ) {
 	        return factory( window, EvEmitter, getSize, utils, Item);
 	      }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -38162,7 +35000,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 278 */
+/* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -38277,7 +35115,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 279 */
+/* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -38492,7 +35330,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 280 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -38509,7 +35347,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if ( true ) {
 	    // AMD
 	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [
-	      __webpack_require__(281)
+	      __webpack_require__(268)
 	    ], __WEBPACK_AMD_DEFINE_RESULT__ = function( matchesSelector ) {
 	      return factory( window, matchesSelector );
 	    }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -38736,7 +35574,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 281 */
+/* 268 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -38795,7 +35633,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 282 */
+/* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -38808,8 +35646,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if ( true ) {
 	    // AMD - RequireJS
 	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [
-	        __webpack_require__(278),
-	        __webpack_require__(279)
+	        __webpack_require__(265),
+	        __webpack_require__(266)
 	      ], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	  } else if ( typeof module == 'object' && module.exports ) {
 	    // CommonJS - Browserify, Webpack
@@ -39352,7 +36190,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 283 */
+/* 270 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -39369,7 +36207,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if ( true ) {
 	    // AMD
 	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [
-	      __webpack_require__(278)
+	      __webpack_require__(265)
 	    ], __WEBPACK_AMD_DEFINE_RESULT__ = function( EvEmitter ) {
 	      return factory( window, EvEmitter );
 	    }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -39728,7 +36566,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 284 */
+/* 271 */
 /***/ function(module, exports) {
 
 	/**
@@ -40371,24 +37209,24 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 285 */
+/* 272 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var forEach                 = __webpack_require__(286).forEach;
-	var elementUtilsMaker       = __webpack_require__(287);
-	var listenerHandlerMaker    = __webpack_require__(288);
-	var idGeneratorMaker        = __webpack_require__(289);
-	var idHandlerMaker          = __webpack_require__(290);
-	var reporterMaker           = __webpack_require__(291);
-	var browserDetector         = __webpack_require__(292);
-	var batchProcessorMaker     = __webpack_require__(293);
-	var stateHandler            = __webpack_require__(295);
+	var forEach                 = __webpack_require__(273).forEach;
+	var elementUtilsMaker       = __webpack_require__(274);
+	var listenerHandlerMaker    = __webpack_require__(275);
+	var idGeneratorMaker        = __webpack_require__(276);
+	var idHandlerMaker          = __webpack_require__(277);
+	var reporterMaker           = __webpack_require__(278);
+	var browserDetector         = __webpack_require__(279);
+	var batchProcessorMaker     = __webpack_require__(280);
+	var stateHandler            = __webpack_require__(282);
 
 	//Detection strategies.
-	var objectStrategyMaker     = __webpack_require__(296);
-	var scrollStrategyMaker     = __webpack_require__(297);
+	var objectStrategyMaker     = __webpack_require__(283);
+	var scrollStrategyMaker     = __webpack_require__(284);
 
 	function isCollection(obj) {
 	    return Array.isArray(obj) || obj.length !== undefined;
@@ -40698,7 +37536,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 286 */
+/* 273 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -40723,7 +37561,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 287 */
+/* 274 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -40781,7 +37619,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 288 */
+/* 275 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -40847,7 +37685,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 289 */
+/* 276 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -40871,7 +37709,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 290 */
+/* 277 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -40924,7 +37762,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 291 */
+/* 278 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -40972,7 +37810,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 292 */
+/* 279 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -41017,12 +37855,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 293 */
+/* 280 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var utils = __webpack_require__(294);
+	var utils = __webpack_require__(281);
 
 	module.exports = function batchProcessorMaker(options) {
 	    options             = options || {};
@@ -41161,7 +37999,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 294 */
+/* 281 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -41182,7 +38020,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 295 */
+/* 282 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -41210,7 +38048,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 296 */
+/* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -41220,7 +38058,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 
-	var browserDetector = __webpack_require__(292);
+	var browserDetector = __webpack_require__(279);
 
 	module.exports = function(options) {
 	    options             = options || {};
@@ -41430,7 +38268,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 297 */
+/* 284 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -41440,7 +38278,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 
-	var forEach = __webpack_require__(286).forEach;
+	var forEach = __webpack_require__(273).forEach;
 
 	module.exports = function(options) {
 	    options             = options || {};
@@ -42083,7 +38921,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 298 */
+/* 285 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -42467,7 +39305,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 299 */
+/* 286 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -43962,7 +40800,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 300 */
+/* 287 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -43989,17 +40827,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // By explicitly using `prop-types` you are opting into new development behavior.
 	  // http://fb.me/prop-types-in-prod
 	  var throwOnDirectAccess = true;
-	  module.exports = __webpack_require__(301)(isValidElement, throwOnDirectAccess);
+	  module.exports = __webpack_require__(288)(isValidElement, throwOnDirectAccess);
 	} else {
 	  // By explicitly using `prop-types` you are opting into new production behavior.
 	  // http://fb.me/prop-types-in-prod
-	  module.exports = __webpack_require__(304)();
+	  module.exports = __webpack_require__(291)();
 	}
 
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 301 */
+/* 288 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -44017,8 +40855,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var invariant = __webpack_require__(8);
 	var warning = __webpack_require__(11);
 
-	var ReactPropTypesSecret = __webpack_require__(302);
-	var checkPropTypes = __webpack_require__(303);
+	var ReactPropTypesSecret = __webpack_require__(289);
+	var checkPropTypes = __webpack_require__(290);
 
 	module.exports = function(isValidElement, throwOnDirectAccess) {
 	  /* global Symbol */
@@ -44484,7 +41322,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 302 */
+/* 289 */
 /***/ function(module, exports) {
 
 	/**
@@ -44504,7 +41342,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 303 */
+/* 290 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -44521,7 +41359,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	if (process.env.NODE_ENV !== 'production') {
 	  var invariant = __webpack_require__(8);
 	  var warning = __webpack_require__(11);
-	  var ReactPropTypesSecret = __webpack_require__(302);
+	  var ReactPropTypesSecret = __webpack_require__(289);
 	  var loggedTypeFailures = {};
 	}
 
@@ -44572,7 +41410,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 304 */
+/* 291 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -44632,7 +41470,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 305 */
+/* 292 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -44648,7 +41486,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var factory = __webpack_require__(306);
+	var factory = __webpack_require__(293);
 
 	// Hack to grab NoopUpdateQueue from isomorphic React
 	var ReactNoopUpdateQueue = new React.Component().updater;
@@ -44661,7 +41499,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 306 */
+/* 293 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -45388,6 +42226,3182 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 	module.exports = factory;
+
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+
+/***/ },
+/* 294 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _store = __webpack_require__(219);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	var _actions = __webpack_require__(226);
+
+	var _actions2 = _interopRequireDefault(_actions);
+
+	var _EurekaTableTbody = __webpack_require__(295);
+
+	var _EurekaTableTbody2 = _interopRequireDefault(_EurekaTableTbody);
+
+	var _classnames = __webpack_require__(260);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	var _reactDropzone = __webpack_require__(307);
+
+	var _reactDropzone2 = _interopRequireDefault(_reactDropzone);
+
+	var _Icon = __webpack_require__(254);
+
+	var _Icon2 = _interopRequireDefault(_Icon);
+
+	var _utility = __webpack_require__(224);
+
+	var _utility2 = _interopRequireDefault(_utility);
+
+	var _reactIntl = __webpack_require__(230);
+
+	var _definedMessages = __webpack_require__(255);
+
+	var _definedMessages2 = _interopRequireDefault(_definedMessages);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var EurekaTable = function (_Component) {
+	  _inherits(EurekaTable, _Component);
+
+	  function EurekaTable(props) {
+	    _classCallCheck(this, EurekaTable);
+
+	    var _this = _possibleConstructorReturn(this, (EurekaTable.__proto__ || Object.getPrototypeOf(EurekaTable)).call(this, props));
+
+	    _this.state = {
+	      contents: function () {
+	        try {
+	          return _this.sortContents(props.content.contents, props.view);
+	        } catch (e) {}
+	        return [];
+	      }(),
+	      sort: Object.assign({}, {
+	        by: 'filename',
+	        dir: _utility2.default.ASCENDING,
+	        renamingItem: undefined
+	      }, props.sort)
+	    };
+	    _this.decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
+	    //console.log('EurekaTable constructor', props, this.state);
+	    return _this;
+	  }
+
+	  /*componentShouldUpdate(nextProps, nextState) {
+	    if(this.state !== nextState) return true;
+	    if(this.props !== nextProps) return true;
+	    //console.log('EurekaTable should not update');
+	    return false;
+	  }*/
+
+	  _createClass(EurekaTable, [{
+	    key: 'sortContents',
+	    value: function sortContents() {
+	      var contents = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.state.contents;
+	      var state = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.props.view;
+
+	      //console.log('sorting contents', contents, state.sort);
+	      //return contents;
+	      return contents.sort(function (a, b) {
+	        if (a[state.sort.by] === b[state.sort.by]) return 0;
+
+	        var n = void 0;
+
+	        //console.log('props.sort.by',props.sort.by,a,b);
+
+	        switch (state.sort.by) {
+	          case 'dimensions':
+	            n = a.dimensions[0] * a.dimensions[1] > b.dimensions[0] * b.dimensions[1] ? 1 : -1;
+	            break;
+
+	          case 'editedOn':
+	            n = new Date(a.editedOn).getTime() > new Date(b.editedOn).getTime() ? 1 : -1;
+	            break;
+
+	          case 'fileSize':
+	            n = a.fileSize < b.fileSize ? 1 : -1;
+	            break;
+
+	          default:
+	            //console.log(a[state.sort.by], b[state.sort.by], a[state.sort.by] > b[state.sort.by]);
+	            n = a[state.sort.by] < b[state.sort.by] ? 1 : -1;
+	            break;
+	        }
+
+	        return state.sort.dir === _utility2.default.DESCENDING ? n : 0 - n;
+	      });
+	    }
+	  }, {
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      //console.log('EurekaTable componentDidMount');
+	      this.setState({
+	        contents: this.sortContents(this.props.content.contents)
+	      });
+	    }
+	  }, {
+	    key: 'shouldComponentUpdate',
+	    value: function shouldComponentUpdate(nextProps, nextState) {
+	      if (nextProps.view.filter) return true;
+	      if (this.state.sort !== nextState.sort) return true;
+	      if (nextProps.content.contents !== this.state.contents) return true;
+	      if (this.state.contents.length !== nextState.contents.length || this.state.contents !== nextState.contents) return true;
+	      if (nextProps.view.chooseMultiple !== this.props.view.chooseMultiple) return true;
+
+	      if (nextProps.view.sort !== this.props.view.sort) return true;
+	      return true;
+	      //console.log('EurekaTable should not update');
+	      return false;
+	    }
+	  }, {
+	    key: 'componentWillUpdate',
+	    value: function componentWillUpdate(nextProps, nextState) {
+	      //console.log('EurekaTable componentWillUpdate');
+	      //console.log('nextProps.sort', nextProps.sort);
+	      //console.log('nextState.sort', nextState.sort);
+	      //console.log('this.props.sort', this.props.sort);
+	      //console.log('nextState.sort', nextState.sort);
+
+	      /*if(nextProps.sort !== nextState.sort) {
+	        console.log('nextProps.sort !== nextState.sort');
+	        this.setState({
+	          sort: nextProps.sort,
+	          //contents: this.sortContents(nextProps.content.contents, nextState)
+	        });
+	        return;
+	      }*/
+
+	      if (this.props.view.sort !== nextProps.view.sort || this.props.content.cd !== nextProps.content.cd) {
+	        //console.log('this.props.view.sort !== nextProps.view.sort || this.props.content.cd !== nextProps.content.cd');
+	        this.setState({
+	          contents: this.sortContents(nextProps.content.contents, nextProps.view)
+	        });
+	      } else if (nextProps.content.contents !== this.props.content.contents) {
+	        //console.log('nextProps.content.contents !== this.state.contents');
+	        this.setState({
+	          contents: nextProps.view.filter ? nextProps.content.contents : this.sortContents(nextProps.content.contents, nextProps.view)
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'onDrop',
+	    value: function onDrop(files) {
+	      var props = this.props;
+	      //console.log('Received files: ', files);
+
+	      var formData = new FormData();
+
+	      var decoratedActions = this.decoratedActions;
+
+	      files.forEach(function (file) {
+	        formData.append('eureka__uploadFiles', file, file.name);
+	      });
+
+	      _store2.default.dispatch(_actions2.default.updateView({
+	        isUploading: true
+	      }));
+
+	      _store2.default.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData, props.config.headers));
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _React$createElement,
+	          _this2 = this,
+	          _React$createElement2,
+	          _React$createElement3,
+	          _React$createElement4,
+	          _React$createElement5,
+	          _React$createElement6;
+
+	      var props = this.props,
+	          state = this.state,
+	          formatMessage = props.intl.formatMessage;
+
+	      //console.log('render EurekaTable');
+
+	      var decoratedActions = this.decoratedActions;
+
+	      var html5ContextMenus = props.content.contents.length ? props.content.contents.map(function (item, index) {
+	        var chooseMenuItem = props.config.allowChoose ? _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.chooseItem, {
+	            filename: item.filename
+	          }), onClick: function onClick(event) {
+	            // #janky
+	            document.getElementById('choose__' + _utility2.default.cssSafe(item.filename)).click();
+	          } }) : undefined,
+	            downloadMenuItem = props.config.allowDownload ? _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.downloadItem, {
+	            filename: item.filename
+	          }), onClick: function onClick(event) {
+	            // #janky
+	            var a = document.createElement('a');
+	            a.setAttribute('download', item.filename);
+	            a.href = item.absoluteURL;
+	            a.classList.add('visually-hidden');
+	            document.body.appendChild(a);
+	            a.click();
+	            a.remove();
+	          } }) : undefined;
+	        return _react2.default.createElement(
+	          'menu',
+	          { key: index, hidden: 'true', type: 'context', id: 'context_menu__tbody-' + index },
+	          _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.expandItem, {
+	              filename: item.filename
+	            }), onClick: function onClick(event) {
+	              document.getElementById('expand__' + _utility2.default.cssSafe(item.filename)).click();
+	            } }),
+	          chooseMenuItem,
+	          _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.renameItem, {
+	              item: item.filename
+	            }), onClick: function onClick(event) {
+	              document.getElementById((props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'rename__' + _utility2.default.cssSafe(item.filename)).click();
+	            } }),
+	          _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.deleteItem, {
+	              filename: item.filename
+	            }), onClick: function onClick(event) {
+	              _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path, props.config.headers));
+	            } }),
+	          downloadMenuItem
+	        );
+	      }) : undefined;
+
+	      var selectHead = _utility2.default.serverSideRendering ? _react2.default.createElement(
+	        'th',
+	        { scope: 'col', role: 'columnheader' },
+	        'Select'
+	      ) : undefined;
+	      var checkboxHead = !_utility2.default.serverSideRendering && props.view.chooseMultiple ? _react2.default.createElement(
+	        'th',
+	        { scope: 'col', role: 'columnheader', className: 'eureka__choose' },
+	        _react2.default.createElement(
+	          'span',
+	          { className: 'visually-hidden' },
+	          _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'choose', defaultMessage: 'Choose' })
+	        )
+	      ) : undefined;
+
+	      var table = _react2.default.createElement(
+	        'table',
+	        { className: 'eureka__table', cellSpacing: '0', cellPadding: '0', role: 'grid' },
+	        _react2.default.createElement(
+	          'thead',
+	          { hidden: !props.content.contents.length, className: (0, _classnames2.default)(_store2.default.getState().view.isTableScrolling ? 'eureka__tbody-scrolling' : undefined) },
+	          _react2.default.createElement(
+	            'tr',
+	            null,
+	            selectHead,
+	            checkboxHead,
+	            _react2.default.createElement(
+	              'th',
+	              (_React$createElement = { role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement, 'role', 'columnheader'), _defineProperty(_React$createElement, 'className', 'eureka__th-media'), _React$createElement),
+	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'media', defaultMessage: 'Media' })
+	            ),
+	            _react2.default.createElement(
+	              'th',
+	              (_React$createElement2 = { className: 'eureka__th-filename', 'aria-sort': props.view.sort.by === 'filename' ? props.view.sort.dir : undefined, role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement2, 'role', 'columnheader'), _defineProperty(_React$createElement2, 'onClick', function onClick(event) {
+	                var dir = _this2.props.view.sort.dir;
+	                //console.log("this.state.sort.by === 'filename'", this.state.sort.by === 'filename', dir);
+	                if (_this2.props.view.sort.by === 'filename') {
+	                  dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
+	                }
+	                //console.log('dir',dir);
+	                _store2.default.dispatch(_actions2.default.updateView({
+	                  sort: {
+	                    by: 'filename',
+	                    dir: dir
+	                  }
+	                }));
+	                /*this.setState({
+	                  sort:{
+	                    by:'filename',
+	                    dir: dir
+	                  }
+	                });
+	                this.props.handleSort({
+	                  by: 'filename',
+	                  dir: dir
+	                });*/
+	              }), _React$createElement2),
+	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'name', defaultMessage: 'Name' }),
+	              '\u2002',
+	              !_utility2.default.serverSideRendering ? _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'sort' })) : undefined
+	            ),
+	            _react2.default.createElement(
+	              'th',
+	              (_React$createElement3 = { role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement3, 'role', 'columnheader'), _defineProperty(_React$createElement3, 'className', 'visually-hidden eureka__th-actions'), _React$createElement3),
+	              'Actions'
+	            ),
+	            _react2.default.createElement(
+	              'th',
+	              (_React$createElement4 = { className: 'eureka__th-dimensions', 'aria-sort': props.view.sort.by === 'dimensions' ? props.view.sort.dir : undefined, role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement4, 'role', 'columnheader'), _defineProperty(_React$createElement4, 'onClick', function onClick(event) {
+	                var dir = _this2.state.sort.dir;
+	                if (_this2.props.view.sort.by === 'dimensions') {
+	                  dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
+	                }
+	                _store2.default.dispatch(_actions2.default.updateView({
+	                  sort: {
+	                    by: 'dimensions',
+	                    dir: dir
+	                  }
+	                }));
+	                /*this.setState({
+	                  sort:{
+	                    by:'dimensions',
+	                    dir: dir
+	                  }
+	                });
+	                this.props.handleSort({
+	                  by: 'dimensions',
+	                  dir: dir
+	                });*/
+	              }), _React$createElement4),
+	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'dimensions', defaultMessage: 'Dimensions' }),
+	              '\u2002',
+	              !_utility2.default.serverSideRendering ? _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'sort' })) : undefined
+	            ),
+	            _react2.default.createElement(
+	              'th',
+	              (_React$createElement5 = { className: 'eureka__th-file-size', 'aria-sort': props.view.sort.by === 'fileSize' ? props.view.sort.dir : undefined, role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement5, 'role', 'columnheader'), _defineProperty(_React$createElement5, 'onClick', function onClick(event) {
+	                var dir = _this2.state.sort.dir;
+	                if (_this2.props.view.sort.by === 'fileSize') {
+	                  dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
+	                }
+	                _store2.default.dispatch(_actions2.default.updateView({
+	                  sort: {
+	                    by: 'fileSize',
+	                    dir: dir
+	                  }
+	                }));
+	                /*this.setState({
+	                  sort:{
+	                    by:'fileSize',
+	                    dir:dir
+	                  }
+	                });
+	                this.props.handleSort({
+	                  by: 'fileSize',
+	                  dir: dir
+	                });*/
+	              }), _React$createElement5),
+	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'fileSize', defaultMessage: 'File Size' }),
+	              '\u2002',
+	              !_utility2.default.serverSideRendering ? _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'sort' })) : undefined
+	            ),
+	            _react2.default.createElement(
+	              'th',
+	              (_React$createElement6 = { className: 'eureka__th-edited-on', 'aria-sort': props.view.sort.by === 'editedOn' ? props.view.sort.dir : undefined, role: 'rowheader', scope: 'col' }, _defineProperty(_React$createElement6, 'role', 'columnheader'), _defineProperty(_React$createElement6, 'onClick', function onClick(event) {
+	                var dir = _this2.state.sort.dir;
+	                if (_this2.props.view.sort.by === 'editedOn') {
+	                  dir = dir === _utility2.default.ASCENDING ? _utility2.default.DESCENDING : _utility2.default.ASCENDING;
+	                }
+	                _store2.default.dispatch(_actions2.default.updateView({
+	                  sort: {
+	                    by: 'editedOn',
+	                    dir: dir
+	                  }
+	                }));
+	                /*this.setState({
+	                  sort:{
+	                    by:'editedOn',
+	                    dir:dir
+	                  }
+	                });
+	                this.props.handleSort({
+	                  by: 'editedOn',
+	                  dir: dir
+	                });*/
+	              }), _React$createElement6),
+	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'editedOn', defaultMessage: 'Edited On' }),
+	              '\u2002',
+	              !_utility2.default.serverSideRendering ? _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'sort' })) : undefined
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(_EurekaTableTbody2.default, _extends({}, props, { intl: props.intl, filter: props.view.filter, content: props.content, contents: state.contents, sort: this.props.sort }))
+	      );
+
+	      var dz = props.config.doDragNDrop ? _react2.default.createElement(
+	        _reactDropzone2.default,
+	        { onDrop: this.onDrop.bind(this), disableClick: true, style: {} },
+	        table,
+	        html5ContextMenus
+	      ) : _react2.default.createElement(
+	        'div',
+	        null,
+	        table,
+	        html5ContextMenus
+	      );
+
+	      return props.config.allowUploads && !_utility2.default.serverSideRendering ? dz : _react2.default.createElement(
+	        'div',
+	        null,
+	        table
+	      );
+	    }
+	  }]);
+
+	  return EurekaTable;
+	}(_react.Component);
+
+	exports.default = EurekaTable;
+
+/***/ },
+/* 295 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _MediaRow = __webpack_require__(296);
+
+	var _MediaRow2 = _interopRequireDefault(_MediaRow);
+
+	var _ContextMenu = __webpack_require__(297);
+
+	var _ContextMenu2 = _interopRequireDefault(_ContextMenu);
+
+	var _store = __webpack_require__(219);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	var _actions = __webpack_require__(226);
+
+	var _actions2 = _interopRequireDefault(_actions);
+
+	var _filesize = __webpack_require__(225);
+
+	var _filesize2 = _interopRequireDefault(_filesize);
+
+	var _classnames = __webpack_require__(260);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	var _utility = __webpack_require__(224);
+
+	var _utility2 = _interopRequireDefault(_utility);
+
+	var _Icon = __webpack_require__(254);
+
+	var _Icon2 = _interopRequireDefault(_Icon);
+
+	var _reactIntl = __webpack_require__(230);
+
+	var _definedMessages = __webpack_require__(255);
+
+	var _definedMessages2 = _interopRequireDefault(_definedMessages);
+
+	var _reactMasonryComponent = __webpack_require__(262);
+
+	var _reactMasonryComponent2 = _interopRequireDefault(_reactMasonryComponent);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var EurekaTableTbody = function (_PureComponent) {
+	  _inherits(EurekaTableTbody, _PureComponent);
+
+	  function EurekaTableTbody(props) {
+	    _classCallCheck(this, EurekaTableTbody);
+
+	    var _this = _possibleConstructorReturn(this, (EurekaTableTbody.__proto__ || Object.getPrototypeOf(EurekaTableTbody)).call(this, props));
+
+	    _this.state = {
+	      focusedMediaItem: undefined,
+	      filter: undefined
+	    };
+
+	    //this.handleResize = this.handleResizeEvent.bind(this);
+	    return _this;
+	  }
+
+	  _createClass(EurekaTableTbody, [{
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      try {
+	        window.addEventListener("resize", this.handleResize, false);
+	      } catch (e) {}
+	    }
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      try {
+	        window.removeEventListener("resize", this.handleResize, false);
+	      } catch (e) {}
+	    }
+
+	    /*componentDidMount() {
+	      //console.log('EurekaTableTbody componentDidMount');
+	      store.dispatch(actions.updateView({
+	        isTableScrolling: this.isScrollable(this.tbody)
+	      }));
+	    }*/
+
+	    /*isScrollable(el) {
+	      const y1 = el.scrollTop;
+	      el.scrollTop+=1;
+	      const y2 = el.scrollTop;
+	      el.scrollTop-=1;
+	      const y3 = el.scrollTop;
+	      el.scrollTop = y1;
+	      const x1 = el.scrollLeft;
+	      el.scrollTop+=1;
+	      const x2 = el.scrollLeft;
+	      el.scrollTop-=1;
+	      const x3 = el.scrollLeft;
+	      el.scrollLeft = x1;
+	      return !(y1 === y2 && y2 === y3 && x1 === x2 && x2 === x3);
+	    }
+	     handleResizeEvent(event) {
+	      const isScrollable = this.isScrollable(this.tbody);
+	      if(isScrollable === store.getState().view.isTableScrolling) return;
+	      store.dispatch(actions.updateView({
+	        isTableScrolling:isScrollable
+	      }));
+	    }*/
+
+	  }, {
+	    key: 'handleRenameStart',
+	    value: function handleRenameStart(item) {
+	      console.log('handleRenameStart', item);
+	    }
+
+	    /*handleScroll(event) {
+	      const isScrollable = this.isScrollable(this.tbody);
+	      if(isScrollable === store.getState().view.isTableScrolling) return;
+	      store.dispatch(actions.updateView({
+	        isTableScrolling: isScrollable
+	      }));
+	    }*/
+
+	  }, {
+	    key: 'shouldComponentUpdate',
+	    value: function shouldComponentUpdate(nextProps, nextState) {
+	      return true;
+	      console.log(this.props, this.state);
+	      if (nextProps.view.filter || !nextProps.view.filter && this.props.view.filter) return true;
+	      if (nextProps.view.sort !== this.props.view.sort) return true;
+	      if (nextProps.view.chooseMultiple !== this.props.view.chooseMultiple) return true;
+	      try {
+	        //console.log('shouldComponentUpdate', (this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path), this.state.focusedMediaItem.path, nextProps.view.focusedMediaItem.path);
+	        //if((this.state.focusedMediaItem.path !== nextProps.view.focusedMediaItem.path)) return true; // #janky SLOOOOW
+	      } catch (e) {}
+	      //console.log(this.props.contents[0], nextProps.contents[0]);
+	      return !(this.props.contents === nextProps.contents);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+
+	      //console.log('rendering EurekaTableTbody');
+	      var props = this.props,
+	          state = this.state;
+
+	      //console.log('render EurekaTableTbody');
+
+	      function shouldHide(item) {
+
+	        try {
+	          //console.log('shouldHide',props.view.focusedMediaItem.path,item.path,props.view.focusedMediaItem.path !== item.path);
+	          return props.view.focusedMediaItem.path !== item.path;
+	        } catch (e) {
+	          //console.log('shouldHide',true);
+	          return true;
+	        }
+	      }
+
+	      var contents = props.contents;
+
+	      if (props.filter) {
+	        (function () {
+	          // filter based on filename, dimensions, date
+	          var filter = props.view.filter.toLowerCase();
+	          contents = contents.filter(function (value) {
+	            var editedOnDate = new Date(value.editedOn);
+	            //console.log('value', value);
+	            //return value.filename.toLowerCase().includes(filter);
+	            return value.filename.toLowerCase().includes(filter) || value.dimensions.join('x').toLowerCase().includes(filter) || value.localString.toLowerCase().includes(filter) || value.localStringVerbose.toLowerCase().includes(filter) || value.fileSizeHumanReadable.toLowerCase().includes(filter) || value.fileSizeHumanReadable.toLowerCase().replace(/ +?/g, '').includes(filter);
+	          });
+	        })();
+	      }
+
+	      /*const sortContents = true;
+	      contents = contents.sort((a,b) => {
+	        if(a[props.sort.by] === b[props.sort.by]) return 0;
+	         let n;
+	         //console.log('props.sort.by',props.sort.by,a,b);
+	         switch(props.sort.by) {
+	          case 'dimensions':
+	          n = a.dimensions[0] * a.dimensions[1] > b.dimensions[0] * b.dimensions[1] ? 1 : -1;
+	          break;
+	           case 'editedOn':
+	          n = new Date(a.editedOn).getTime() > new Date(b.editedOn).getTime() ? 1 : -1;
+	          break;
+	           default:
+	          n = (a[props.sort.by] > b[props.sort.by]) ? 1 : -1;
+	          break;
+	        }
+	         return (props.sort.dir === utility.ASCENDING) ? n : 0-n;
+	      });*/
+
+	      var contentList = contents.length ? contents.map(function (item, index) {
+	        return [_react2.default.createElement(_MediaRow2.default, _extends({ key: _utility2.default.cssSafe(item.filename) }, props, { intl: props.intl, focusedMediaItem: props.view.focusedMediaItem, renameStart: _this2.handleRenameStart, item: item, index: index, onFocus: function onFocus(event) {
+
+	            /*this.setState({
+	              focusedMediaItem: item
+	            })*/
+	            _store2.default.dispatch(_actions2.default.updateView({
+	              focusedMediaItem: item
+	            }));
+	          },
+	          onBlur: function onBlur(event) {}
+	        }))];
+	      }) : _react2.default.createElement(NoResults, props);
+
+	      if (props.view.mode == 'masonry') {
+	        return (
+	          //onScroll={this.handleScroll.bind(this)}
+	          _react2.default.createElement(
+	            _reactMasonryComponent2.default,
+	            {
+	              elementType: 'tbody' // default 'div'
+	              , options: {
+	                transitionDuration: 240
+	                //fitWidth: true
+	              } // default {}
+	              , disableImagesLoaded: false // default false
+	              , updateOnEachImageLoad: true // default false and works only if disableImagesLoaded is false
+	              , role: 'rowgroup', 'aria-live': 'polite', className: (0, _classnames2.default)({ empty: !contents.length }), ref: function ref(tbody) {
+	                _this2.tbody = tbody;
+	              }
+	            },
+	            contentList
+	          )
+	        );
+	      }
+
+	      return (
+	        //onScroll={this.handleScroll.bind(this)}
+	        _react2.default.createElement(
+	          'tbody',
+	          { role: 'rowgroup', 'aria-live': 'polite', className: (0, _classnames2.default)({ empty: !contents.length }), ref: function ref(tbody) {
+	              _this2.tbody = tbody;
+	            } },
+	          contentList
+	        )
+	      );
+	    }
+	  }]);
+
+	  return EurekaTableTbody;
+	}(_react.PureComponent);
+
+	function NoResults(props) {
+	  var searchTryAnother = _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'search.tryAnother', defaultMessage: 'Try another search' });
+
+	  if (props.view.fetchingContents) {
+	    return _react2.default.createElement(
+	      'tr',
+	      { role: 'row' },
+	      _react2.default.createElement(
+	        'td',
+	        { role: 'presentation', colSpan: '5', className: 'comfortable' },
+	        _react2.default.createElement(
+	          'p',
+	          { className: 'alert-info eureka__notice', 'aria-live': 'assertive' },
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'spinner' },
+	            _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'circle-o-notch' }))
+	          ),
+	          _react2.default.createElement('br', null),
+	          _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'contents.fetchingContents', defaultMessage: 'Hold tight while we fetch {cd}', values: {
+	              cd: props.content.cd
+	            } })
+	        )
+	      )
+	    );
+	  }
+
+	  return props.view.filter ? _react2.default.createElement(
+	    'tr',
+	    { role: 'row' },
+	    _react2.default.createElement(
+	      'td',
+	      { role: 'presentation', colSpan: '5', className: 'comfortable' },
+	      _react2.default.createElement(
+	        'p',
+	        { className: 'alert-info eureka__notice', 'aria-live': 'assertive' },
+	        _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'search.noResults', defaultMessage: 'Uh oh. No results found for "{filter}"', values: {
+	            filter: props.view.filter
+	          } }),
+	        '. ',
+	        _react2.default.createElement(
+	          'a',
+	          { href: '#eureka__filter', onClick: function onClick(event) {
+	              event.preventDefault();
+	              document.getElementById('eureka__filter').focus();
+	            } },
+	          searchTryAnother
+	        ),
+	        ' ',
+	        _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'grammar.or', defaultMessage: 'or' }),
+	        ' ',
+	        _react2.default.createElement(
+	          'a',
+	          { href: '#eureka__filter', onClick: function onClick(event) {
+	              event.preventDefault();
+	              _store2.default.dispatch(_actions2.default.updateView({
+	                filter: undefined
+	              }));
+	              document.getElementById('eureka__filter').value = '';
+	            } },
+	          _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'search.clearFilter', defaultMessage: 'clear the search\xA0filter' })
+	        ),
+	        '.'
+	      )
+	    )
+	  ) : _react2.default.createElement(
+	    'tr',
+	    { role: 'row' },
+	    _react2.default.createElement(
+	      'td',
+	      { role: 'presentation', colSpan: '5', className: 'comfortable' },
+	      _react2.default.createElement(
+	        'p',
+	        { className: 'alert-info eureka__notice', 'aria-live': 'assertive' },
+	        _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'directory.appearsToBeEmpty', defaultMessage: 'Directory "{cd}" appears to be empty.', values: {
+	            cd: props.content.cd
+	          } }),
+	        _react2.default.createElement('br', null),
+	        _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'perhapsYouWouldLikeTo', defaultMessage: 'Perhaps you\'d like to' }),
+	        ' ',
+	        _react2.default.createElement(
+	          'a',
+	          { href: '#eureka__upload-form', onClick: function onClick(event) {
+	              event.preventDefault();
+	              //document.getElementById('eureka__upload-form').focus();
+
+	              try {
+	                // wont work if the sidebar is closed
+	                document.getElementById('eureka__upload-form').click();
+	              } catch (e) {
+	                document.querySelector('.eureka__drop-area-zone').click();
+	              }
+	            } },
+	          _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'upload.someFiles', defaultMessage: 'upload some files' }),
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'visually-hidden' },
+	            ' ',
+	            _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'grammar.to', defaultMessage: 'to' }),
+	            ' ',
+	            props.content.cd
+	          )
+	        ),
+	        '?'
+	      )
+	    )
+	  );
+	}
+
+	exports.default = EurekaTableTbody;
+
+/***/ },
+/* 296 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _filesize = __webpack_require__(225);
+
+	var _filesize2 = _interopRequireDefault(_filesize);
+
+	var _ContextMenu = __webpack_require__(297);
+
+	var _ContextMenu2 = _interopRequireDefault(_ContextMenu);
+
+	var _store = __webpack_require__(219);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	var _actions = __webpack_require__(226);
+
+	var _actions2 = _interopRequireDefault(_actions);
+
+	var _utility = __webpack_require__(224);
+
+	var _utility2 = _interopRequireDefault(_utility);
+
+	var _path = __webpack_require__(178);
+
+	var _path2 = _interopRequireDefault(_path);
+
+	var _classnames = __webpack_require__(260);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	var _Icon = __webpack_require__(254);
+
+	var _Icon2 = _interopRequireDefault(_Icon);
+
+	var _mousetrap = __webpack_require__(299);
+
+	var _mousetrap2 = _interopRequireDefault(_mousetrap);
+
+	var _reactIntl = __webpack_require__(230);
+
+	var _definedMessages = __webpack_require__(255);
+
+	var _definedMessages2 = _interopRequireDefault(_definedMessages);
+
+	var _reactTapEventPlugin = __webpack_require__(300);
+
+	var _reactTapEventPlugin2 = _interopRequireDefault(_reactTapEventPlugin);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var pathParse = __webpack_require__(306);
+
+	try {
+	  (0, _reactTapEventPlugin2.default)();
+	} catch (e) {}
+
+	var MediaRow = function (_PureComponent) {
+	  _inherits(MediaRow, _PureComponent);
+
+	  function MediaRow(props) {
+	    _classCallCheck(this, MediaRow);
+
+	    var _this = _possibleConstructorReturn(this, (MediaRow.__proto__ || Object.getPrototypeOf(MediaRow)).call(this, props));
+
+	    _this.state = {
+	      focusWithin: false,
+	      chooseChecked: false
+	    };
+
+	    _this.handleKeyboardBackspace = _this.handleKeyboardBackspace.bind(_this);
+	    _this.handleKeyboardChoose = _this.handleKeyboardChoose.bind(_this);
+	    _this.handleKeyboardExpand = _this.handleKeyboardExpand.bind(_this);
+	    _this.handleKeyboardRename = _this.handleKeyboardRename.bind(_this);
+	    return _this;
+	  }
+
+	  _createClass(MediaRow, [{
+	    key: 'componentWillUpdate',
+	    value: function componentWillUpdate(nextProps, nextState) {
+	      //return;
+	      //console.log('MediaRow componentWillUpdate');
+	      if (this.props.view.selectionInverted !== nextProps.view.selectionInverted) {
+	        this.setState({
+	          chooseChecked: !this.state.chooseChecked
+	        });
+	        return;
+	      }
+
+	      //const c = (nextProps.view.sele)
+	      if (nextProps.view.selectionInverted) {
+	        if (this.props.content.chosenMediaItemsInverted.length > 1 && nextProps.content.chosenMediaItemsInverted.length < 1) {
+	          this.setState({
+	            chooseChecked: false
+	          });
+	        }
+	      } else {
+	        if (this.props.content.chosenMediaItems.length > 1 && nextProps.content.chosenMediaItems.length < 1) {
+	          this.setState({
+	            chooseChecked: false
+	          });
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'shouldComponentUpdate',
+	    value: function shouldComponentUpdate(nextProps, nextState) {
+	      //console.log('MediaRow shouldComponentUpdate', this.props, nextProps, this.state, nextState);
+	      //return true;
+
+	      if (this.props.item !== nextProps.item) return true;
+	      if (this.state.chooseChecked !== nextState.chooseChecked) return true;
+	      if (this.props.content.chosenMediaItems.length !== nextProps.content.chosenMediaItems.length || this.props.content.chosenMediaItemsInverted.length !== nextProps.content.chosenMediaItemsInverted.length) return true;
+	      try {
+	        //console.log((nextProps.focusedMediaItem !== undefined));
+	        return nextProps.focusedMediaItem !== undefined;
+	      } catch (e) {}
+	      //console.log('MediaRow should not update');
+	      return false;
+	    }
+	  }, {
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.assignKeyboardListeners();
+
+	      //Mousetrap(document.querySelector('.eureka')).bind(['alt+z'], this.handleKeyboardDeselect);
+
+	      /*store.subscribe(() => {
+	        const state = store.getState();
+	        //console.log(state);
+	         if(!state.content.chosenMediaItemsInverted.length) {
+	          this.setState({
+	            chooseChecked: false
+	          })
+	        }
+	       });*/
+	    }
+
+	    /*handleKeyboardDeselect = (event) => {
+	      console.log('handleKeyboardDeselect');
+	      this.setState({
+	        chooseChecked: false
+	      })
+	    }*/
+
+	  }, {
+	    key: 'assignKeyboardListeners',
+	    value: function assignKeyboardListeners() {
+	      _mousetrap2.default.bind(['backspace'], this.handleKeyboardBackspace);
+	      _mousetrap2.default.bind(['enter'], this.handleKeyboardChoose);
+	      _mousetrap2.default.bind(['alt+space'], this.handleKeyboardExpand);
+	      _mousetrap2.default.bind(['ctrl+r'], this.handleKeyboardRename);
+	    }
+	  }, {
+	    key: 'onBlur',
+	    value: function onBlur(event) {
+	      //console.log('onBlur');
+	      this.removeKeyboardListeners();
+	    }
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      this.removeKeyboardListeners();
+	      //Mousetrap(document.querySelector('.eureka')).unbind(['alt+z'], this.handleKeyboardDeselect);
+	    }
+	  }, {
+	    key: 'removeKeyboardListeners',
+	    value: function removeKeyboardListeners() {
+	      _mousetrap2.default.unbind(['backspace'], this.handleKeyboardBackspace);
+	      _mousetrap2.default.unbind(['enter'], this.handleKeyboardChoose);
+	      _mousetrap2.default.unbind(['alt+space'], this.handleKeyboardExpand);
+	      _mousetrap2.default.unbind(['ctrl+r'], this.handleKeyboardRename);
+	    }
+	  }, {
+	    key: 'handleKeyboardRename',
+	    value: function handleKeyboardRename(event) {
+	      //console.log('handleKeyboardRename', event);
+	      try {
+	        this.props.onRenameItem(this.props.item);
+	      } catch (e) {}
+	    }
+	  }, {
+	    key: 'handleKeyboardChoose',
+	    value: function handleKeyboardChoose(event) {
+	      if (!event.target.matches('.eureka__focused-media-item')) return;
+	      //event.preventDefault();
+	      try {
+	        document.getElementById('choose__' + _utility2.default.cssSafe(this.props.item.filename)).click();
+	      } catch (e) {}
+	    }
+	  }, {
+	    key: 'handleKeyboardExpand',
+	    value: function handleKeyboardExpand(event) {
+	      if (!event.target.matches('.eureka__focused-media-item')) return;
+	      try {
+	        document.getElementById('expand__' + _utility2.default.cssSafe(this.props.item.filename)).click();
+	      } catch (e) {}
+	    }
+	  }, {
+	    key: 'removeFocusedMediaItems',
+	    value: function removeFocusedMediaItems(target) {
+	      // super #janky but haven't been able to optimize another way
+	      //console.log(`tr[role="row"]:not(#${target.getAttribute('id')})`);
+	      var focusedMediaItems = target.closest('tbody').querySelectorAll('tr[role="row"]'); // :not(#${target.getAttribute('id')})
+	      for (var i = 0; i < focusedMediaItems.length; i++) {
+	        if (focusedMediaItems[i].getAttribute('id') !== target.getAttribute('id')) {
+	          focusedMediaItems[i].classList.remove('eureka__focused-media-item');
+	          focusedMediaItems[i].querySelector('.eureka__context-row').setAttribute('hidden', 'true');
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'onFocus',
+	    value: function onFocus(event) {
+	      if (!event.target.matches('tr')) return;
+
+	      this.assignKeyboardListeners();
+
+	      this.removeFocusedMediaItems(event.target);
+	      event.target.classList.add('eureka__focused-media-item');
+	      event.target.querySelector('.eureka__context-row').removeAttribute('hidden');
+	      this.props.onFocus();
+	    }
+	  }, {
+	    key: 'handleKeyboardBackspace',
+	    value: function handleKeyboardBackspace(event) {
+	      var props = this.props,
+	          formatMessage = props.intl.formatMessage,
+	          decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default,
+	          deletedItemMessage = formatMessage(_definedMessages2.default.deletedItem, {
+	        filename: props.item.filename
+	      });
+	      //console.log('handleKeyboardBackspace', event, props.item.path);
+	      _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, props.item.path, props.config.headers)).then(function () {
+	        /*utility.notify(`Deleted item ${props.item.filename}`, {
+	          badge: path.join(props.config.assetsBasePath, 'img/src/png/trash-o.png'),
+	          silent: true
+	        });*/
+	        _store2.default.dispatch(_actions2.default.notify(deletedItemMessage, _utility2.default.DANGEROUS));
+	      });
+	    }
+
+	    //http://localhost:3000/assets/components/eureka/media/sources/1?path=%2FUsers%2FjP%2FSites%2Fstatic%2Feureka%2Fprod%2Fsources%2Ffilesystem%2Fassets%2Fimg%2Fredwoods%2F243823_842410181688_1308368_o.jpg
+	    //http://localhost:3000/assets/components/eureka/media/sources/1?path=%2FUsers%2FjP%2FSites%2Fstatic%2Feureka%2Fprod%2Fsources%2Ffilesystem%2Fassets%2Fimg%2Fredwoods%2F243150_842410286478_7945184_o.jpg
+
+	  }, {
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      var props = this.props;
+	      if (props.content.chosenMediaItemsInverted.includes(props.item)) {
+	        this.setState({
+	          chooseChecked: true
+	        });
+	      }
+	    }
+
+	    /*componentWillUnmount() {
+	      Mousetrap.unbind(['backspace'], this.handleKeyboardBackspace);
+	    }*/
+
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this,
+	          _React$createElement,
+	          _React$createElement2;
+
+	      var props = this.props,
+	          item = props.item,
+	          index = props.index,
+	          formatMessage = props.intl.formatMessage,
+	          ariaLabel = props.item.filename + ' displays at ' + props.item.dimensions.join('x') + ', weighs ' + (0, _filesize2.default)(props.item.fileSize, { round: 0 }) + ', and was edited on ' + new Date(props.item.editedOn).toLocaleString(props.view.locale, { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' });
+
+	      function shouldHide(item) {
+	        //console.log('shouldHide', item);
+	        try {
+	          //console.log('shouldHide',props.focusedMediaItem.path,item.path,props.focusedMediaItem.path !== item.path);
+	          return props.focusedMediaItem.path !== item.path;
+	        } catch (e) {
+	          //console.log('shouldHide',true);
+	          return true;
+	        }
+	      }
+
+	      var contentEditable = false;
+	      var checkboxId = 'eureka__choose_multiple_' + _utility2.default.cssSafe(props.item.filename);
+	      var onMediaClick = props.view.chooseMultiple ? function (event) {
+	        // #janky way to simulate <label>, <label> messes up styling for the default view
+	        event.target.closest('.eureka').querySelector('#' + checkboxId).click();
+	      } : undefined;
+
+	      var media = function (ext) {
+	        // consider abstracting this to its own module
+	        //console.log(pathParse(props.item.filename).ext,'props.item',props.item);
+
+	        var src = props.item.absolutePreviewURL || props.item.absoluteURL,
+	            alt = props.item.alt || '';
+
+	        switch (ext.toLowerCase()) {
+	          case '.jpg':
+	          case '.jpeg':
+	          case '.gif':
+	          case '.png':
+	          case '.png8':
+	          case '.png24':
+	          case '.svg':
+	          case '.bmp':
+	          case '.tiff':
+	            return _react2.default.createElement('img', { src: src, alt: alt, onClick: onMediaClick });
+	            break;
+
+	          case '.mp4':
+	          case '.mov':
+	            return _react2.default.createElement(
+	              'video',
+	              { width: '320', height: '240', controls: props.view.mode !== 'list' },
+	              _react2.default.createElement('source', { src: src, type: 'video/mp4' }),
+	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noVideo', defaultMessage: 'Your browser does not support the video tag.' })
+	            );
+	            break;
+
+	          case '.ogv':
+	            return _react2.default.createElement(
+	              'video',
+	              { width: '320', height: '240', controls: props.view.mode !== 'list' },
+	              _react2.default.createElement('source', { src: src, type: 'video/ogg' }),
+	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noVideo', defaultMessage: 'Your browser does not support the video tag.' })
+	            );
+	            break;
+
+	          case '.webm':
+	          case '.wbm':
+	            return _react2.default.createElement(
+	              'video',
+	              { width: '320', height: '240', controls: props.view.mode !== 'list' },
+	              _react2.default.createElement('source', { src: src, type: 'video/webm' }),
+	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noVideo', defaultMessage: 'Your browser does not support the video tag.' })
+	            );
+	            break;
+
+	          case '.pdf':
+	            return _react2.default.createElement('embed', { src: src, width: '320', height: '240' });
+	            break;
+
+	          case '.ogg':
+	            return _react2.default.createElement(
+	              'audio',
+	              { controls: true },
+	              _react2.default.createElement('source', { src: src, type: 'audio/ogg' }),
+	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support the audio tag.' })
+	            );
+	            break;
+
+	          case '.mp3':
+	            return _react2.default.createElement(
+	              'audio',
+	              { controls: true },
+	              _react2.default.createElement('source', { src: src, type: 'audio/mpeg' }),
+	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support the audio tag.' })
+	            );
+	            break;
+
+	          case '.wav':
+	            return _react2.default.createElement(
+	              'audio',
+	              { controls: true },
+	              _react2.default.createElement('source', { src: src, type: 'audio/wav' }),
+	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support the audio tag.' })
+	            );
+	            break;
+
+	          case '.flac':
+	            return _react2.default.createElement(
+	              'audio',
+	              { controls: true },
+	              _react2.default.createElement('source', { src: src, type: 'audio/flac' }),
+	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support the audio tag.' })
+	            );
+	            break;
+
+	          default:
+	            var icon = _utility2.default.getIconByExtension(pathParse(props.item.filename).ext);
+	            return _react2.default.createElement(
+	              'p',
+	              { onClick: onMediaClick },
+	              _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: icon })),
+	              '\u2002',
+	              props.item.absoluteURL
+	            );
+	        }
+	      }(pathParse(props.item.filename).ext);
+
+	      //if((props.item == props.focusedMediaItem)) console.log(props.item == props.focusedMediaItem, props.item, props.focusedMediaItem);
+
+
+	      var mediaId = (props.config.storagePrefix || 'eureka__') + '__media__' + _utility2.default.cssSafe(props.item.filename),
+	          mediaSelectId = (props.config.storagePrefix || 'eureka__') + '__radio_' + _utility2.default.cssSafe(props.item.filename),
+	          mediaSelect = _utility2.default.serverSideRendering ? _react2.default.createElement(
+	        'td',
+	        null,
+	        _react2.default.createElement('input', { id: mediaSelectId, value: props.item.filename, name: 'eureka__chosen_item', type: 'radio', 'aria-labelledby': (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'choose-button', 'aria-describedby': mediaId + ' ' + _utility2.default.cssSafe(props.item.filename) }),
+	        _react2.default.createElement(
+	          'span',
+	          { className: 'visually-hidden' },
+	          '\u2002',
+	          _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'select', defaultMessage: 'Select' }),
+	          ' ',
+	          props.item.filename
+	        )
+	      ) : undefined,
+	          className = props.item == props.focusedMediaItem ? { 'eureka__focused-media-item': true } : {},
+	          tabIndex = _utility2.default.serverSideRendering ? undefined : "0",
+	          ext = pathParse(props.item.absoluteURL).ext,
+	          isLinkableFileType = function (ext) {
+	        switch (ext.toLowerCase()) {
+	          case '.jpg':
+	          case '.jpeg':
+	          case '.gif':
+	          case '.png':
+	          case '.png8':
+	          case '.png24':
+	          case '.svg':
+	          case '.bmp':
+	          case '.tiff':
+	            return true;
+	            break;
+
+	          default:
+	            return false;
+	        }
+	      }(ext);
+
+	      //console.log('this.state.chooseChecked', this.state.chooseChecked);
+	      var checkboxAriaLabel = formatMessage(_definedMessages2.default.chooseItem, {
+	        filename: item.filename
+	      });
+
+	      var checkbox = props.view.chooseMultiple ? _react2.default.createElement(
+	        'td',
+	        { role: 'gridcell', className: 'eureka__choose' },
+	        _react2.default.createElement('input', { value: 'chosen', 'aria-label': 'Choose ' + item.filename, type: 'checkbox', name: 'eureka__chose_multiple', id: checkboxId, key: 'eureka__choose_multiple_' + _utility2.default.cssSafe(props.item.filename) + '__' + (this.state.chooseChecked ? 'checked' : ''), checked: this.state.chooseChecked, onChange: function onChange(event) {
+	            event.preventDefault();
+	            event.stopPropagation();
+
+	            //console.log('event.target.checked', event.target.checked);
+
+	            _this2.setState({
+	              chooseChecked: event.target.checked
+	            });
+
+	            if (props.view.selectionInverted ? !event.target.checked : event.target.checked) {
+	              _store2.default.dispatch(_actions2.default.addMediaItemToChosenItems(props.item, props.view.selectionInverted));
+	            } else {
+	              _store2.default.dispatch(_actions2.default.removeMediaItemFromChosenItems(props.item, props.view.selectionInverted));
+	            }
+	            //console.log('event.target.checked', event.target.checked);
+	          } })
+	      ) : undefined;
+
+	      var openInANewTabMessage = formatMessage(_definedMessages2.default.openFileInNewTab, {
+	        filename: props.item.fileName
+	      });
+
+	      if (_utility2.default.serverSideRendering && isLinkableFileType) {
+	        //media = <label style={{display:'block'}} htmlFor={mediaSelectId} aria-labelledby={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }filename__${utility.cssSafe(props.item.filename)}`}>{media}</label>;
+	        media = _react2.default.createElement(
+	          'a',
+	          { href: props.item.absoluteURL, target: '_' + mediaSelectId, 'aria-label': openInANewTabMessage, role: 'presentation' },
+	          media
+	        );
+	      }
+
+	      if (props.view.chooseMultiple) {
+	        //media = <label htmlFor={checkboxId}>{media}</label>
+	      }
+
+	      var fileName = _utility2.default.wordBreaksEvery(props.item.filename);
+	      if (_utility2.default.serverSideRendering) {
+	        //fileName = <a href={`#${mediaSelectId}`} role="presentation" tabIndex="-1" id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }filename__${utility.cssSafe(props.item.filename)}`}>{fileName}</a>
+	        fileName = _react2.default.createElement(
+	          'label',
+	          { htmlFor: mediaSelectId },
+	          fileName
+	        );
+	      }
+
+	      var contextMenu = _utility2.default.serverSideRendering ? undefined : _react2.default.createElement(_ContextMenu2.default, _extends({ className: 'eureka__context-row' }, props, { item: item, hidden: shouldHide(item), key: 'cm__' + index }));
+
+	      //<span className="visually-hidden"><FormattedMessage id="media.contents" defaultMessage="Media Contents" /></span>
+	      return _react2.default.createElement(
+	        'tr',
+	        (_React$createElement2 = { role: 'row', className: (0, _classnames2.default)(className), id: _utility2.default.cssSafe(props.item.filename), 'aria-label': ariaLabel }, _defineProperty(_React$createElement2, 'role', 'row'), _defineProperty(_React$createElement2, 'tabIndex', tabIndex), _defineProperty(_React$createElement2, 'onFocus', this.onFocus.bind(this)), _defineProperty(_React$createElement2, 'onBlur', this.onBlur.bind(this)), _defineProperty(_React$createElement2, 'contextMenu', 'context_menu__tbody-' + props.index), _React$createElement2),
+	        checkbox,
+	        mediaSelect,
+	        _react2.default.createElement(
+	          'td',
+	          { role: 'gridcell', id: mediaId, title: ariaLabel, className: 'eureka__td-media', onTouchTap: !props.view.isTouch ? undefined : function (e) {
+	              if (_utility2.default.isDblTouchTap(e)) {
+	                if (!props.view.focusedMediaItem) return;
+
+	                props.config.callbacks.choose(props.item);
+	              }
+	            }, onDoubleClick: props.view.isTouch ? undefined : function (event) {
+	              if (!props.view.focusedMediaItem) return;
+
+	              props.config.callbacks.choose(props.item);
+
+	              /*document.dispatchEvent(new CustomEvent('EurekaFoundIt', {
+	              detail: props.item
+	              }));*/
+	            } },
+	          media
+	        ),
+	        _react2.default.createElement(
+	          'td',
+	          (_React$createElement = { role: 'gridcell', id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'filename__' + _utility2.default.cssSafe(props.item.filename) }, _defineProperty(_React$createElement, 'role', 'gridcell'), _defineProperty(_React$createElement, 'className', 'eureka__td-filename'), _defineProperty(_React$createElement, 'contentEditable', contentEditable), _defineProperty(_React$createElement, 'onBlur', function onBlur(event) {
+	            try {
+	              if (!event.target.innerHTML.trim()) {
+	                event.target.innerHTML = props.item.filename;
+	                //alert('file name cannot be empty'); // i mostly hate alerts
+	                throw new Error('file name cannot be empty');
+	              }
+
+	              //console.log(event.target.innerHTML, event.target.innerHTML.trim());
+	              props.onRenameItemModalSubmit(event.target.innerHTML.trim(), props.item);
+	            } catch (e) {
+	              console.log(e);
+	            }
+	          }), _defineProperty(_React$createElement, 'onKeyUp', function onKeyUp(event) {
+	            //console.log('onKeyUp', event);
+	          }), _defineProperty(_React$createElement, 'onKeyDown', function onKeyDown(event) {
+	            //console.log('onKeyDown', event, event.keyCode);
+	            if (event.keyCode === 13) {
+	              event.preventDefault();
+	              event.target.blur();
+	            }
+	          }), _defineProperty(_React$createElement, 'onPaste', function onPaste(event) {
+	            console.log('onPaste', event);
+	          }), _defineProperty(_React$createElement, 'onCopy', function onCopy(event) {
+	            console.log('onCopy', event);
+	          }), _defineProperty(_React$createElement, 'onCut', function onCut(event) {
+	            console.log('onCut', event);
+	          }), _React$createElement),
+	          fileName
+	        ),
+	        contextMenu,
+	        _react2.default.createElement(
+	          'td',
+	          { className: 'eureka__dimensions', role: 'gridcell' },
+	          props.item.dimensions[0] + 'x' + props.item.dimensions[1]
+	        ),
+	        _react2.default.createElement(
+	          'td',
+	          { className: 'eureka__file-size', role: 'gridcell' },
+	          (0, _filesize2.default)(props.item.fileSize)
+	        ),
+	        _react2.default.createElement(
+	          'td',
+	          { className: 'eureka__edited-on', role: 'gridcell', title: props.item.editedOnLongTimeZone || new Date(props.item.editedOn).toLocaleString(props.view.locale, { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' }) },
+	          props.item.editedOnTwoDigit || new Date(props.item.editedOn).toLocaleString(props.view.locale, { year: '2-digit', month: '2-digit', day: '2-digit' })
+	        )
+	      );
+	    }
+	  }]);
+
+	  return MediaRow;
+	}(_react.PureComponent);
+
+	exports.default = MediaRow;
+
+/***/ },
+/* 297 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _store = __webpack_require__(219);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	var _actions = __webpack_require__(226);
+
+	var _actions2 = _interopRequireDefault(_actions);
+
+	var _ContextButtons = __webpack_require__(298);
+
+	var _ContextButtons2 = _interopRequireDefault(_ContextButtons);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var ContextMenu = function ContextMenu(props) {
+	  var item = props.item;
+	  return _react2.default.createElement(
+	    'td',
+	    { className: props.className, hidden: props.hidden === undefined ? true : props.hidden },
+	    _react2.default.createElement(_ContextButtons2.default, _extends({ onBlur: props.onBlur, onFirstFocus: props.onFirstFocus }, props))
+	  );
+	};
+
+	exports.default = ContextMenu;
+
+/***/ },
+/* 298 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _store = __webpack_require__(219);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	var _actions = __webpack_require__(226);
+
+	var _actions2 = _interopRequireDefault(_actions);
+
+	var _utility = __webpack_require__(224);
+
+	var _path = __webpack_require__(178);
+
+	var _path2 = _interopRequireDefault(_path);
+
+	var _reactIntl = __webpack_require__(230);
+
+	var _definedMessages = __webpack_require__(255);
+
+	var _definedMessages2 = _interopRequireDefault(_definedMessages);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var ContextButtons = function ContextButtons(props) {
+	  //console.log('ContextButtons', props);
+	  var item = props.item;
+
+	  var decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
+
+	  var formatMessage = props.intl.formatMessage,
+	      renameMessage = formatMessage(_definedMessages2.default.rename),
+	      renameItemMessage = formatMessage(_definedMessages2.default.renameItem, {
+	    item: ' ' + item.filename
+	  }),
+	      performContextualActionsMessage = formatMessage(_definedMessages2.default.performContextualActions, {
+	    filename: item.filename
+	  }),
+	      expandMessage = formatMessage(_definedMessages2.default.expand),
+	      chooseItemMessage = formatMessage(_definedMessages2.default.chooseItem, {
+	    filename: item.filename
+	  }),
+	      chooseMessage = formatMessage(_definedMessages2.default.choose),
+	      deleteMessage = formatMessage(_definedMessages2.default.delete),
+	      deleteItemMessage = formatMessage(_definedMessages2.default.deleteItem, {
+	    filename: item.filename
+	  }),
+	      deletedItemMessage = formatMessage(_definedMessages2.default.deletedItem, {
+	    filename: item.filename
+	  }),
+	      expandItemMessage = formatMessage(_definedMessages2.default.expandItem, {
+	    filename: item.filename
+	  }),
+	      downloadMessage = formatMessage(_definedMessages2.default.download),
+	      downloadItemMessage = formatMessage(_definedMessages2.default.downloadItem, {
+	    filename: item.filename
+	  }),
+	      deleteAreYouSureMessage = formatMessage(_definedMessages2.default.deleteAreYouSureMessage, {
+	    filename: item.filename
+	  });
+
+	  var chooseBtn = props.config.allowChoose ? _react2.default.createElement(
+	    'button',
+	    { role: 'option', id: 'choose__' + (0, _utility.cssSafe)(item.filename), title: chooseItemMessage, onClick: function onClick(event) {
+	        if (!props.view.focusedMediaItem) return;
+	        try {
+	          props.config.callbacks.choose(item);
+	        } catch (e) {
+	          console.log(e);
+	        }
+	        /*document.dispatchEvent(new CustomEvent('EurekaFoundIt', {
+	          detail: item
+	        }));*/
+	      } },
+	    chooseMessage,
+	    _react2.default.createElement(
+	      'span',
+	      { className: 'visually-hidden' },
+	      ' ',
+	      item.filename
+	    )
+	  ) : undefined,
+	      renameBtn = props.config.allowRename ? _react2.default.createElement(
+	    'button',
+	    { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'rename__' + (0, _utility.cssSafe)(item.filename), role: 'option', title: renameItemMessage, onClick: props.onRenameItem ? props.onRenameItem.bind(null, item) : undefined },
+	    renameMessage,
+	    _react2.default.createElement(
+	      'span',
+	      { className: 'visually-hidden' },
+	      ' ',
+	      item.filename
+	    )
+	  ) : undefined,
+	      deleteBtn = props.config.allowDelete ? _react2.default.createElement(
+	    'button',
+	    { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'delete__' + (0, _utility.cssSafe)(item.filename), role: 'option', onClick: function onClick(event) {
+	        if (!props.config.confirmBeforeDelete) {
+	          deleteIt();
+	        } else if (confirm(deleteAreYouSureMessage)) {
+	          deleteIt();
+	        }
+	        function deleteIt() {
+	          _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.path, props.config.headers)).then(function () {
+	            _store2.default.dispatch(_actions2.default.notify(deletedItemMessage, _utility.DANGEROUS));
+	          });
+	        }
+	      }, title: deleteItemMessage, className: 'dangerous' },
+	    deleteMessage,
+	    _react2.default.createElement(
+	      'span',
+	      { className: 'visually-hidden' },
+	      ' ',
+	      item.filename
+	    )
+	  ) : undefined,
+	      downloadID = (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'download__' + (0, _utility.cssSafe)(item.filename),
+	      downloadBtn = props.config.allowDownload ? _react2.default.createElement(
+	    'a',
+	    { download: item.filename, href: item.absoluteURL, id: downloadID, className: 'button', target: '_' + downloadID, title: downloadItemMessage },
+	    downloadMessage,
+	    _react2.default.createElement(
+	      'span',
+	      { className: 'visually-hidden' },
+	      ' ',
+	      item.filename
+	    )
+	  ) : undefined;
+
+	  return (// future-role="toolbar listbox"
+	    _react2.default.createElement(
+	      'div',
+	      { className: 'eureka__button-bar eureka__context-buttons', role: 'listbox', 'aria-label': performContextualActionsMessage, tabIndex: '0', 'aria-activedescendant': 'expand__' + (0, _utility.cssSafe)(item.filename) },
+	      _react2.default.createElement(
+	        'a',
+	        { onBlur: props.onBlur, role: 'option', id: 'expand__' + (0, _utility.cssSafe)(item.filename), href: item.absoluteURL, target: '_' + encodeURI(item.absoluteURL), className: 'button', title: expandItemMessage },
+	        expandMessage,
+	        _react2.default.createElement(
+	          'span',
+	          { className: 'visually-hidden' },
+	          ' ',
+	          item.filename
+	        )
+	      ),
+	      chooseBtn,
+	      renameBtn,
+	      deleteBtn,
+	      downloadBtn
+	    )
+	  );
+	};
+
+	exports.default = ContextButtons;
+
+/***/ },
+/* 299 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;/*global define:false */
+	/**
+	 * Copyright 2012-2017 Craig Campbell
+	 *
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 *
+	 * Mousetrap is a simple keyboard shortcut library for Javascript with
+	 * no external dependencies
+	 *
+	 * @version 1.6.1
+	 * @url craig.is/killing/mice
+	 */
+	(function(window, document, undefined) {
+
+	    // Check if mousetrap is used inside browser, if not, return
+	    if (!window) {
+	        return;
+	    }
+
+	    /**
+	     * mapping of special keycodes to their corresponding keys
+	     *
+	     * everything in this dictionary cannot use keypress events
+	     * so it has to be here to map to the correct keycodes for
+	     * keyup/keydown events
+	     *
+	     * @type {Object}
+	     */
+	    var _MAP = {
+	        8: 'backspace',
+	        9: 'tab',
+	        13: 'enter',
+	        16: 'shift',
+	        17: 'ctrl',
+	        18: 'alt',
+	        20: 'capslock',
+	        27: 'esc',
+	        32: 'space',
+	        33: 'pageup',
+	        34: 'pagedown',
+	        35: 'end',
+	        36: 'home',
+	        37: 'left',
+	        38: 'up',
+	        39: 'right',
+	        40: 'down',
+	        45: 'ins',
+	        46: 'del',
+	        91: 'meta',
+	        93: 'meta',
+	        224: 'meta'
+	    };
+
+	    /**
+	     * mapping for special characters so they can support
+	     *
+	     * this dictionary is only used incase you want to bind a
+	     * keyup or keydown event to one of these keys
+	     *
+	     * @type {Object}
+	     */
+	    var _KEYCODE_MAP = {
+	        106: '*',
+	        107: '+',
+	        109: '-',
+	        110: '.',
+	        111 : '/',
+	        186: ';',
+	        187: '=',
+	        188: ',',
+	        189: '-',
+	        190: '.',
+	        191: '/',
+	        192: '`',
+	        219: '[',
+	        220: '\\',
+	        221: ']',
+	        222: '\''
+	    };
+
+	    /**
+	     * this is a mapping of keys that require shift on a US keypad
+	     * back to the non shift equivelents
+	     *
+	     * this is so you can use keyup events with these keys
+	     *
+	     * note that this will only work reliably on US keyboards
+	     *
+	     * @type {Object}
+	     */
+	    var _SHIFT_MAP = {
+	        '~': '`',
+	        '!': '1',
+	        '@': '2',
+	        '#': '3',
+	        '$': '4',
+	        '%': '5',
+	        '^': '6',
+	        '&': '7',
+	        '*': '8',
+	        '(': '9',
+	        ')': '0',
+	        '_': '-',
+	        '+': '=',
+	        ':': ';',
+	        '\"': '\'',
+	        '<': ',',
+	        '>': '.',
+	        '?': '/',
+	        '|': '\\'
+	    };
+
+	    /**
+	     * this is a list of special strings you can use to map
+	     * to modifier keys when you specify your keyboard shortcuts
+	     *
+	     * @type {Object}
+	     */
+	    var _SPECIAL_ALIASES = {
+	        'option': 'alt',
+	        'command': 'meta',
+	        'return': 'enter',
+	        'escape': 'esc',
+	        'plus': '+',
+	        'mod': /Mac|iPod|iPhone|iPad/.test(navigator.platform) ? 'meta' : 'ctrl'
+	    };
+
+	    /**
+	     * variable to store the flipped version of _MAP from above
+	     * needed to check if we should use keypress or not when no action
+	     * is specified
+	     *
+	     * @type {Object|undefined}
+	     */
+	    var _REVERSE_MAP;
+
+	    /**
+	     * loop through the f keys, f1 to f19 and add them to the map
+	     * programatically
+	     */
+	    for (var i = 1; i < 20; ++i) {
+	        _MAP[111 + i] = 'f' + i;
+	    }
+
+	    /**
+	     * loop through to map numbers on the numeric keypad
+	     */
+	    for (i = 0; i <= 9; ++i) {
+
+	        // This needs to use a string cause otherwise since 0 is falsey
+	        // mousetrap will never fire for numpad 0 pressed as part of a keydown
+	        // event.
+	        //
+	        // @see https://github.com/ccampbell/mousetrap/pull/258
+	        _MAP[i + 96] = i.toString();
+	    }
+
+	    /**
+	     * cross browser add event method
+	     *
+	     * @param {Element|HTMLDocument} object
+	     * @param {string} type
+	     * @param {Function} callback
+	     * @returns void
+	     */
+	    function _addEvent(object, type, callback) {
+	        if (object.addEventListener) {
+	            object.addEventListener(type, callback, false);
+	            return;
+	        }
+
+	        object.attachEvent('on' + type, callback);
+	    }
+
+	    /**
+	     * takes the event and returns the key character
+	     *
+	     * @param {Event} e
+	     * @return {string}
+	     */
+	    function _characterFromEvent(e) {
+
+	        // for keypress events we should return the character as is
+	        if (e.type == 'keypress') {
+	            var character = String.fromCharCode(e.which);
+
+	            // if the shift key is not pressed then it is safe to assume
+	            // that we want the character to be lowercase.  this means if
+	            // you accidentally have caps lock on then your key bindings
+	            // will continue to work
+	            //
+	            // the only side effect that might not be desired is if you
+	            // bind something like 'A' cause you want to trigger an
+	            // event when capital A is pressed caps lock will no longer
+	            // trigger the event.  shift+a will though.
+	            if (!e.shiftKey) {
+	                character = character.toLowerCase();
+	            }
+
+	            return character;
+	        }
+
+	        // for non keypress events the special maps are needed
+	        if (_MAP[e.which]) {
+	            return _MAP[e.which];
+	        }
+
+	        if (_KEYCODE_MAP[e.which]) {
+	            return _KEYCODE_MAP[e.which];
+	        }
+
+	        // if it is not in the special map
+
+	        // with keydown and keyup events the character seems to always
+	        // come in as an uppercase character whether you are pressing shift
+	        // or not.  we should make sure it is always lowercase for comparisons
+	        return String.fromCharCode(e.which).toLowerCase();
+	    }
+
+	    /**
+	     * checks if two arrays are equal
+	     *
+	     * @param {Array} modifiers1
+	     * @param {Array} modifiers2
+	     * @returns {boolean}
+	     */
+	    function _modifiersMatch(modifiers1, modifiers2) {
+	        return modifiers1.sort().join(',') === modifiers2.sort().join(',');
+	    }
+
+	    /**
+	     * takes a key event and figures out what the modifiers are
+	     *
+	     * @param {Event} e
+	     * @returns {Array}
+	     */
+	    function _eventModifiers(e) {
+	        var modifiers = [];
+
+	        if (e.shiftKey) {
+	            modifiers.push('shift');
+	        }
+
+	        if (e.altKey) {
+	            modifiers.push('alt');
+	        }
+
+	        if (e.ctrlKey) {
+	            modifiers.push('ctrl');
+	        }
+
+	        if (e.metaKey) {
+	            modifiers.push('meta');
+	        }
+
+	        return modifiers;
+	    }
+
+	    /**
+	     * prevents default for this event
+	     *
+	     * @param {Event} e
+	     * @returns void
+	     */
+	    function _preventDefault(e) {
+	        if (e.preventDefault) {
+	            e.preventDefault();
+	            return;
+	        }
+
+	        e.returnValue = false;
+	    }
+
+	    /**
+	     * stops propogation for this event
+	     *
+	     * @param {Event} e
+	     * @returns void
+	     */
+	    function _stopPropagation(e) {
+	        if (e.stopPropagation) {
+	            e.stopPropagation();
+	            return;
+	        }
+
+	        e.cancelBubble = true;
+	    }
+
+	    /**
+	     * determines if the keycode specified is a modifier key or not
+	     *
+	     * @param {string} key
+	     * @returns {boolean}
+	     */
+	    function _isModifier(key) {
+	        return key == 'shift' || key == 'ctrl' || key == 'alt' || key == 'meta';
+	    }
+
+	    /**
+	     * reverses the map lookup so that we can look for specific keys
+	     * to see what can and can't use keypress
+	     *
+	     * @return {Object}
+	     */
+	    function _getReverseMap() {
+	        if (!_REVERSE_MAP) {
+	            _REVERSE_MAP = {};
+	            for (var key in _MAP) {
+
+	                // pull out the numeric keypad from here cause keypress should
+	                // be able to detect the keys from the character
+	                if (key > 95 && key < 112) {
+	                    continue;
+	                }
+
+	                if (_MAP.hasOwnProperty(key)) {
+	                    _REVERSE_MAP[_MAP[key]] = key;
+	                }
+	            }
+	        }
+	        return _REVERSE_MAP;
+	    }
+
+	    /**
+	     * picks the best action based on the key combination
+	     *
+	     * @param {string} key - character for key
+	     * @param {Array} modifiers
+	     * @param {string=} action passed in
+	     */
+	    function _pickBestAction(key, modifiers, action) {
+
+	        // if no action was picked in we should try to pick the one
+	        // that we think would work best for this key
+	        if (!action) {
+	            action = _getReverseMap()[key] ? 'keydown' : 'keypress';
+	        }
+
+	        // modifier keys don't work as expected with keypress,
+	        // switch to keydown
+	        if (action == 'keypress' && modifiers.length) {
+	            action = 'keydown';
+	        }
+
+	        return action;
+	    }
+
+	    /**
+	     * Converts from a string key combination to an array
+	     *
+	     * @param  {string} combination like "command+shift+l"
+	     * @return {Array}
+	     */
+	    function _keysFromString(combination) {
+	        if (combination === '+') {
+	            return ['+'];
+	        }
+
+	        combination = combination.replace(/\+{2}/g, '+plus');
+	        return combination.split('+');
+	    }
+
+	    /**
+	     * Gets info for a specific key combination
+	     *
+	     * @param  {string} combination key combination ("command+s" or "a" or "*")
+	     * @param  {string=} action
+	     * @returns {Object}
+	     */
+	    function _getKeyInfo(combination, action) {
+	        var keys;
+	        var key;
+	        var i;
+	        var modifiers = [];
+
+	        // take the keys from this pattern and figure out what the actual
+	        // pattern is all about
+	        keys = _keysFromString(combination);
+
+	        for (i = 0; i < keys.length; ++i) {
+	            key = keys[i];
+
+	            // normalize key names
+	            if (_SPECIAL_ALIASES[key]) {
+	                key = _SPECIAL_ALIASES[key];
+	            }
+
+	            // if this is not a keypress event then we should
+	            // be smart about using shift keys
+	            // this will only work for US keyboards however
+	            if (action && action != 'keypress' && _SHIFT_MAP[key]) {
+	                key = _SHIFT_MAP[key];
+	                modifiers.push('shift');
+	            }
+
+	            // if this key is a modifier then add it to the list of modifiers
+	            if (_isModifier(key)) {
+	                modifiers.push(key);
+	            }
+	        }
+
+	        // depending on what the key combination is
+	        // we will try to pick the best event for it
+	        action = _pickBestAction(key, modifiers, action);
+
+	        return {
+	            key: key,
+	            modifiers: modifiers,
+	            action: action
+	        };
+	    }
+
+	    function _belongsTo(element, ancestor) {
+	        if (element === null || element === document) {
+	            return false;
+	        }
+
+	        if (element === ancestor) {
+	            return true;
+	        }
+
+	        return _belongsTo(element.parentNode, ancestor);
+	    }
+
+	    function Mousetrap(targetElement) {
+	        var self = this;
+
+	        targetElement = targetElement || document;
+
+	        if (!(self instanceof Mousetrap)) {
+	            return new Mousetrap(targetElement);
+	        }
+
+	        /**
+	         * element to attach key events to
+	         *
+	         * @type {Element}
+	         */
+	        self.target = targetElement;
+
+	        /**
+	         * a list of all the callbacks setup via Mousetrap.bind()
+	         *
+	         * @type {Object}
+	         */
+	        self._callbacks = {};
+
+	        /**
+	         * direct map of string combinations to callbacks used for trigger()
+	         *
+	         * @type {Object}
+	         */
+	        self._directMap = {};
+
+	        /**
+	         * keeps track of what level each sequence is at since multiple
+	         * sequences can start out with the same sequence
+	         *
+	         * @type {Object}
+	         */
+	        var _sequenceLevels = {};
+
+	        /**
+	         * variable to store the setTimeout call
+	         *
+	         * @type {null|number}
+	         */
+	        var _resetTimer;
+
+	        /**
+	         * temporary state where we will ignore the next keyup
+	         *
+	         * @type {boolean|string}
+	         */
+	        var _ignoreNextKeyup = false;
+
+	        /**
+	         * temporary state where we will ignore the next keypress
+	         *
+	         * @type {boolean}
+	         */
+	        var _ignoreNextKeypress = false;
+
+	        /**
+	         * are we currently inside of a sequence?
+	         * type of action ("keyup" or "keydown" or "keypress") or false
+	         *
+	         * @type {boolean|string}
+	         */
+	        var _nextExpectedAction = false;
+
+	        /**
+	         * resets all sequence counters except for the ones passed in
+	         *
+	         * @param {Object} doNotReset
+	         * @returns void
+	         */
+	        function _resetSequences(doNotReset) {
+	            doNotReset = doNotReset || {};
+
+	            var activeSequences = false,
+	                key;
+
+	            for (key in _sequenceLevels) {
+	                if (doNotReset[key]) {
+	                    activeSequences = true;
+	                    continue;
+	                }
+	                _sequenceLevels[key] = 0;
+	            }
+
+	            if (!activeSequences) {
+	                _nextExpectedAction = false;
+	            }
+	        }
+
+	        /**
+	         * finds all callbacks that match based on the keycode, modifiers,
+	         * and action
+	         *
+	         * @param {string} character
+	         * @param {Array} modifiers
+	         * @param {Event|Object} e
+	         * @param {string=} sequenceName - name of the sequence we are looking for
+	         * @param {string=} combination
+	         * @param {number=} level
+	         * @returns {Array}
+	         */
+	        function _getMatches(character, modifiers, e, sequenceName, combination, level) {
+	            var i;
+	            var callback;
+	            var matches = [];
+	            var action = e.type;
+
+	            // if there are no events related to this keycode
+	            if (!self._callbacks[character]) {
+	                return [];
+	            }
+
+	            // if a modifier key is coming up on its own we should allow it
+	            if (action == 'keyup' && _isModifier(character)) {
+	                modifiers = [character];
+	            }
+
+	            // loop through all callbacks for the key that was pressed
+	            // and see if any of them match
+	            for (i = 0; i < self._callbacks[character].length; ++i) {
+	                callback = self._callbacks[character][i];
+
+	                // if a sequence name is not specified, but this is a sequence at
+	                // the wrong level then move onto the next match
+	                if (!sequenceName && callback.seq && _sequenceLevels[callback.seq] != callback.level) {
+	                    continue;
+	                }
+
+	                // if the action we are looking for doesn't match the action we got
+	                // then we should keep going
+	                if (action != callback.action) {
+	                    continue;
+	                }
+
+	                // if this is a keypress event and the meta key and control key
+	                // are not pressed that means that we need to only look at the
+	                // character, otherwise check the modifiers as well
+	                //
+	                // chrome will not fire a keypress if meta or control is down
+	                // safari will fire a keypress if meta or meta+shift is down
+	                // firefox will fire a keypress if meta or control is down
+	                if ((action == 'keypress' && !e.metaKey && !e.ctrlKey) || _modifiersMatch(modifiers, callback.modifiers)) {
+
+	                    // when you bind a combination or sequence a second time it
+	                    // should overwrite the first one.  if a sequenceName or
+	                    // combination is specified in this call it does just that
+	                    //
+	                    // @todo make deleting its own method?
+	                    var deleteCombo = !sequenceName && callback.combo == combination;
+	                    var deleteSequence = sequenceName && callback.seq == sequenceName && callback.level == level;
+	                    if (deleteCombo || deleteSequence) {
+	                        self._callbacks[character].splice(i, 1);
+	                    }
+
+	                    matches.push(callback);
+	                }
+	            }
+
+	            return matches;
+	        }
+
+	        /**
+	         * actually calls the callback function
+	         *
+	         * if your callback function returns false this will use the jquery
+	         * convention - prevent default and stop propogation on the event
+	         *
+	         * @param {Function} callback
+	         * @param {Event} e
+	         * @returns void
+	         */
+	        function _fireCallback(callback, e, combo, sequence) {
+
+	            // if this event should not happen stop here
+	            if (self.stopCallback(e, e.target || e.srcElement, combo, sequence)) {
+	                return;
+	            }
+
+	            if (callback(e, combo) === false) {
+	                _preventDefault(e);
+	                _stopPropagation(e);
+	            }
+	        }
+
+	        /**
+	         * handles a character key event
+	         *
+	         * @param {string} character
+	         * @param {Array} modifiers
+	         * @param {Event} e
+	         * @returns void
+	         */
+	        self._handleKey = function(character, modifiers, e) {
+	            var callbacks = _getMatches(character, modifiers, e);
+	            var i;
+	            var doNotReset = {};
+	            var maxLevel = 0;
+	            var processedSequenceCallback = false;
+
+	            // Calculate the maxLevel for sequences so we can only execute the longest callback sequence
+	            for (i = 0; i < callbacks.length; ++i) {
+	                if (callbacks[i].seq) {
+	                    maxLevel = Math.max(maxLevel, callbacks[i].level);
+	                }
+	            }
+
+	            // loop through matching callbacks for this key event
+	            for (i = 0; i < callbacks.length; ++i) {
+
+	                // fire for all sequence callbacks
+	                // this is because if for example you have multiple sequences
+	                // bound such as "g i" and "g t" they both need to fire the
+	                // callback for matching g cause otherwise you can only ever
+	                // match the first one
+	                if (callbacks[i].seq) {
+
+	                    // only fire callbacks for the maxLevel to prevent
+	                    // subsequences from also firing
+	                    //
+	                    // for example 'a option b' should not cause 'option b' to fire
+	                    // even though 'option b' is part of the other sequence
+	                    //
+	                    // any sequences that do not match here will be discarded
+	                    // below by the _resetSequences call
+	                    if (callbacks[i].level != maxLevel) {
+	                        continue;
+	                    }
+
+	                    processedSequenceCallback = true;
+
+	                    // keep a list of which sequences were matches for later
+	                    doNotReset[callbacks[i].seq] = 1;
+	                    _fireCallback(callbacks[i].callback, e, callbacks[i].combo, callbacks[i].seq);
+	                    continue;
+	                }
+
+	                // if there were no sequence matches but we are still here
+	                // that means this is a regular match so we should fire that
+	                if (!processedSequenceCallback) {
+	                    _fireCallback(callbacks[i].callback, e, callbacks[i].combo);
+	                }
+	            }
+
+	            // if the key you pressed matches the type of sequence without
+	            // being a modifier (ie "keyup" or "keypress") then we should
+	            // reset all sequences that were not matched by this event
+	            //
+	            // this is so, for example, if you have the sequence "h a t" and you
+	            // type "h e a r t" it does not match.  in this case the "e" will
+	            // cause the sequence to reset
+	            //
+	            // modifier keys are ignored because you can have a sequence
+	            // that contains modifiers such as "enter ctrl+space" and in most
+	            // cases the modifier key will be pressed before the next key
+	            //
+	            // also if you have a sequence such as "ctrl+b a" then pressing the
+	            // "b" key will trigger a "keypress" and a "keydown"
+	            //
+	            // the "keydown" is expected when there is a modifier, but the
+	            // "keypress" ends up matching the _nextExpectedAction since it occurs
+	            // after and that causes the sequence to reset
+	            //
+	            // we ignore keypresses in a sequence that directly follow a keydown
+	            // for the same character
+	            var ignoreThisKeypress = e.type == 'keypress' && _ignoreNextKeypress;
+	            if (e.type == _nextExpectedAction && !_isModifier(character) && !ignoreThisKeypress) {
+	                _resetSequences(doNotReset);
+	            }
+
+	            _ignoreNextKeypress = processedSequenceCallback && e.type == 'keydown';
+	        };
+
+	        /**
+	         * handles a keydown event
+	         *
+	         * @param {Event} e
+	         * @returns void
+	         */
+	        function _handleKeyEvent(e) {
+
+	            // normalize e.which for key events
+	            // @see http://stackoverflow.com/questions/4285627/javascript-keycode-vs-charcode-utter-confusion
+	            if (typeof e.which !== 'number') {
+	                e.which = e.keyCode;
+	            }
+
+	            var character = _characterFromEvent(e);
+
+	            // no character found then stop
+	            if (!character) {
+	                return;
+	            }
+
+	            // need to use === for the character check because the character can be 0
+	            if (e.type == 'keyup' && _ignoreNextKeyup === character) {
+	                _ignoreNextKeyup = false;
+	                return;
+	            }
+
+	            self.handleKey(character, _eventModifiers(e), e);
+	        }
+
+	        /**
+	         * called to set a 1 second timeout on the specified sequence
+	         *
+	         * this is so after each key press in the sequence you have 1 second
+	         * to press the next key before you have to start over
+	         *
+	         * @returns void
+	         */
+	        function _resetSequenceTimer() {
+	            clearTimeout(_resetTimer);
+	            _resetTimer = setTimeout(_resetSequences, 1000);
+	        }
+
+	        /**
+	         * binds a key sequence to an event
+	         *
+	         * @param {string} combo - combo specified in bind call
+	         * @param {Array} keys
+	         * @param {Function} callback
+	         * @param {string=} action
+	         * @returns void
+	         */
+	        function _bindSequence(combo, keys, callback, action) {
+
+	            // start off by adding a sequence level record for this combination
+	            // and setting the level to 0
+	            _sequenceLevels[combo] = 0;
+
+	            /**
+	             * callback to increase the sequence level for this sequence and reset
+	             * all other sequences that were active
+	             *
+	             * @param {string} nextAction
+	             * @returns {Function}
+	             */
+	            function _increaseSequence(nextAction) {
+	                return function() {
+	                    _nextExpectedAction = nextAction;
+	                    ++_sequenceLevels[combo];
+	                    _resetSequenceTimer();
+	                };
+	            }
+
+	            /**
+	             * wraps the specified callback inside of another function in order
+	             * to reset all sequence counters as soon as this sequence is done
+	             *
+	             * @param {Event} e
+	             * @returns void
+	             */
+	            function _callbackAndReset(e) {
+	                _fireCallback(callback, e, combo);
+
+	                // we should ignore the next key up if the action is key down
+	                // or keypress.  this is so if you finish a sequence and
+	                // release the key the final key will not trigger a keyup
+	                if (action !== 'keyup') {
+	                    _ignoreNextKeyup = _characterFromEvent(e);
+	                }
+
+	                // weird race condition if a sequence ends with the key
+	                // another sequence begins with
+	                setTimeout(_resetSequences, 10);
+	            }
+
+	            // loop through keys one at a time and bind the appropriate callback
+	            // function.  for any key leading up to the final one it should
+	            // increase the sequence. after the final, it should reset all sequences
+	            //
+	            // if an action is specified in the original bind call then that will
+	            // be used throughout.  otherwise we will pass the action that the
+	            // next key in the sequence should match.  this allows a sequence
+	            // to mix and match keypress and keydown events depending on which
+	            // ones are better suited to the key provided
+	            for (var i = 0; i < keys.length; ++i) {
+	                var isFinal = i + 1 === keys.length;
+	                var wrappedCallback = isFinal ? _callbackAndReset : _increaseSequence(action || _getKeyInfo(keys[i + 1]).action);
+	                _bindSingle(keys[i], wrappedCallback, action, combo, i);
+	            }
+	        }
+
+	        /**
+	         * binds a single keyboard combination
+	         *
+	         * @param {string} combination
+	         * @param {Function} callback
+	         * @param {string=} action
+	         * @param {string=} sequenceName - name of sequence if part of sequence
+	         * @param {number=} level - what part of the sequence the command is
+	         * @returns void
+	         */
+	        function _bindSingle(combination, callback, action, sequenceName, level) {
+
+	            // store a direct mapped reference for use with Mousetrap.trigger
+	            self._directMap[combination + ':' + action] = callback;
+
+	            // make sure multiple spaces in a row become a single space
+	            combination = combination.replace(/\s+/g, ' ');
+
+	            var sequence = combination.split(' ');
+	            var info;
+
+	            // if this pattern is a sequence of keys then run through this method
+	            // to reprocess each pattern one key at a time
+	            if (sequence.length > 1) {
+	                _bindSequence(combination, sequence, callback, action);
+	                return;
+	            }
+
+	            info = _getKeyInfo(combination, action);
+
+	            // make sure to initialize array if this is the first time
+	            // a callback is added for this key
+	            self._callbacks[info.key] = self._callbacks[info.key] || [];
+
+	            // remove an existing match if there is one
+	            _getMatches(info.key, info.modifiers, {type: info.action}, sequenceName, combination, level);
+
+	            // add this call back to the array
+	            // if it is a sequence put it at the beginning
+	            // if not put it at the end
+	            //
+	            // this is important because the way these are processed expects
+	            // the sequence ones to come first
+	            self._callbacks[info.key][sequenceName ? 'unshift' : 'push']({
+	                callback: callback,
+	                modifiers: info.modifiers,
+	                action: info.action,
+	                seq: sequenceName,
+	                level: level,
+	                combo: combination
+	            });
+	        }
+
+	        /**
+	         * binds multiple combinations to the same callback
+	         *
+	         * @param {Array} combinations
+	         * @param {Function} callback
+	         * @param {string|undefined} action
+	         * @returns void
+	         */
+	        self._bindMultiple = function(combinations, callback, action) {
+	            for (var i = 0; i < combinations.length; ++i) {
+	                _bindSingle(combinations[i], callback, action);
+	            }
+	        };
+
+	        // start!
+	        _addEvent(targetElement, 'keypress', _handleKeyEvent);
+	        _addEvent(targetElement, 'keydown', _handleKeyEvent);
+	        _addEvent(targetElement, 'keyup', _handleKeyEvent);
+	    }
+
+	    /**
+	     * binds an event to mousetrap
+	     *
+	     * can be a single key, a combination of keys separated with +,
+	     * an array of keys, or a sequence of keys separated by spaces
+	     *
+	     * be sure to list the modifier keys first to make sure that the
+	     * correct key ends up getting bound (the last key in the pattern)
+	     *
+	     * @param {string|Array} keys
+	     * @param {Function} callback
+	     * @param {string=} action - 'keypress', 'keydown', or 'keyup'
+	     * @returns void
+	     */
+	    Mousetrap.prototype.bind = function(keys, callback, action) {
+	        var self = this;
+	        keys = keys instanceof Array ? keys : [keys];
+	        self._bindMultiple.call(self, keys, callback, action);
+	        return self;
+	    };
+
+	    /**
+	     * unbinds an event to mousetrap
+	     *
+	     * the unbinding sets the callback function of the specified key combo
+	     * to an empty function and deletes the corresponding key in the
+	     * _directMap dict.
+	     *
+	     * TODO: actually remove this from the _callbacks dictionary instead
+	     * of binding an empty function
+	     *
+	     * the keycombo+action has to be exactly the same as
+	     * it was defined in the bind method
+	     *
+	     * @param {string|Array} keys
+	     * @param {string} action
+	     * @returns void
+	     */
+	    Mousetrap.prototype.unbind = function(keys, action) {
+	        var self = this;
+	        return self.bind.call(self, keys, function() {}, action);
+	    };
+
+	    /**
+	     * triggers an event that has already been bound
+	     *
+	     * @param {string} keys
+	     * @param {string=} action
+	     * @returns void
+	     */
+	    Mousetrap.prototype.trigger = function(keys, action) {
+	        var self = this;
+	        if (self._directMap[keys + ':' + action]) {
+	            self._directMap[keys + ':' + action]({}, keys);
+	        }
+	        return self;
+	    };
+
+	    /**
+	     * resets the library back to its initial state.  this is useful
+	     * if you want to clear out the current keyboard shortcuts and bind
+	     * new ones - for example if you switch to another page
+	     *
+	     * @returns void
+	     */
+	    Mousetrap.prototype.reset = function() {
+	        var self = this;
+	        self._callbacks = {};
+	        self._directMap = {};
+	        return self;
+	    };
+
+	    /**
+	     * should we stop this event before firing off callbacks
+	     *
+	     * @param {Event} e
+	     * @param {Element} element
+	     * @return {boolean}
+	     */
+	    Mousetrap.prototype.stopCallback = function(e, element) {
+	        var self = this;
+
+	        // if the element has the class "mousetrap" then no need to stop
+	        if ((' ' + element.className + ' ').indexOf(' mousetrap ') > -1) {
+	            return false;
+	        }
+
+	        if (_belongsTo(element, self.target)) {
+	            return false;
+	        }
+
+	        // stop for input, select, and textarea
+	        return element.tagName == 'INPUT' || element.tagName == 'SELECT' || element.tagName == 'TEXTAREA' || element.isContentEditable;
+	    };
+
+	    /**
+	     * exposes _handleKey publicly so it can be overwritten by extensions
+	     */
+	    Mousetrap.prototype.handleKey = function() {
+	        var self = this;
+	        return self._handleKey.apply(self, arguments);
+	    };
+
+	    /**
+	     * allow custom key mappings
+	     */
+	    Mousetrap.addKeycodes = function(object) {
+	        for (var key in object) {
+	            if (object.hasOwnProperty(key)) {
+	                _MAP[key] = object[key];
+	            }
+	        }
+	        _REVERSE_MAP = null;
+	    };
+
+	    /**
+	     * Init the global mousetrap functions
+	     *
+	     * This method is needed to allow the global mousetrap functions to work
+	     * now that mousetrap is a constructor function.
+	     */
+	    Mousetrap.init = function() {
+	        var documentMousetrap = Mousetrap(document);
+	        for (var method in documentMousetrap) {
+	            if (method.charAt(0) !== '_') {
+	                Mousetrap[method] = (function(method) {
+	                    return function() {
+	                        return documentMousetrap[method].apply(documentMousetrap, arguments);
+	                    };
+	                } (method));
+	            }
+	        }
+	    };
+
+	    Mousetrap.init();
+
+	    // expose mousetrap to the global object
+	    window.Mousetrap = Mousetrap;
+
+	    // expose as a common js module
+	    if (typeof module !== 'undefined' && module.exports) {
+	        module.exports = Mousetrap;
+	    }
+
+	    // expose mousetrap as an AMD module
+	    if (true) {
+	        !(__WEBPACK_AMD_DEFINE_RESULT__ = function() {
+	            return Mousetrap;
+	        }.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    }
+	}) (typeof window !== 'undefined' ? window : null, typeof  window !== 'undefined' ? document : null);
+
+
+/***/ },
+/* 300 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {var invariant = __webpack_require__(8);
+	var defaultClickRejectionStrategy = __webpack_require__(301);
+
+	var alreadyInjected = false;
+
+	module.exports = function injectTapEventPlugin (strategyOverrides) {
+	  strategyOverrides = strategyOverrides || {}
+	  var shouldRejectClick = strategyOverrides.shouldRejectClick || defaultClickRejectionStrategy;
+
+	  if (process.env.NODE_ENV !== 'production') {
+	    invariant(
+	      !alreadyInjected,
+	      'injectTapEventPlugin(): Can only be called once per application lifecycle.\n\n\
+	It is recommended to call injectTapEventPlugin() just before you call \
+	ReactDOM.render(). If you are using an external library which calls injectTapEventPlugin() \
+	itself, please contact the maintainer as it shouldn\'t be called in library code and \
+	should be injected by the application.'
+	    )
+	  }
+
+	  alreadyInjected = true;
+
+	  __webpack_require__(42).injection.injectEventPluginsByName({
+	    'TapEventPlugin':       __webpack_require__(302)(shouldRejectClick)
+	  });
+	};
+
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+
+/***/ },
+/* 301 */
+/***/ function(module, exports) {
+
+	module.exports = function(lastTouchEvent, clickTimestamp) {
+	  if (lastTouchEvent && (clickTimestamp - lastTouchEvent) < 750) {
+	    return true;
+	  }
+	};
+
+
+/***/ },
+/* 302 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014 Facebook, Inc.
+	 *
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 *
+	 * @providesModule TapEventPlugin
+	 * @typechecks static-only
+	 */
+
+	"use strict";
+
+	var EventConstants = __webpack_require__(303);
+	var EventPluginUtils = __webpack_require__(44);
+	var EventPropagators = __webpack_require__(41);
+	var SyntheticUIEvent = __webpack_require__(75);
+	var TouchEventUtils = __webpack_require__(304);
+	var ViewportMetrics = __webpack_require__(76);
+
+	var keyOf = __webpack_require__(305);
+	var topLevelTypes = EventConstants.topLevelTypes;
+
+	var isStartish = EventPluginUtils.isStartish;
+	var isEndish = EventPluginUtils.isEndish;
+
+	var isTouch = function(topLevelType) {
+	  var touchTypes = [
+	    'topTouchCancel',
+	    'topTouchEnd',
+	    'topTouchStart',
+	    'topTouchMove'
+	  ];
+	  return touchTypes.indexOf(topLevelType) >= 0;
+	}
+
+	/**
+	 * Number of pixels that are tolerated in between a `touchStart` and `touchEnd`
+	 * in order to still be considered a 'tap' event.
+	 */
+	var tapMoveThreshold = 10;
+	var ignoreMouseThreshold = 750;
+	var startCoords = {x: null, y: null};
+	var lastTouchEvent = null;
+
+	var Axis = {
+	  x: {page: 'pageX', client: 'clientX', envScroll: 'currentPageScrollLeft'},
+	  y: {page: 'pageY', client: 'clientY', envScroll: 'currentPageScrollTop'}
+	};
+
+	function getAxisCoordOfEvent(axis, nativeEvent) {
+	  var singleTouch = TouchEventUtils.extractSingleTouch(nativeEvent);
+	  if (singleTouch) {
+	    return singleTouch[axis.page];
+	  }
+	  return axis.page in nativeEvent ?
+	    nativeEvent[axis.page] :
+	    nativeEvent[axis.client] + ViewportMetrics[axis.envScroll];
+	}
+
+	function getDistance(coords, nativeEvent) {
+	  var pageX = getAxisCoordOfEvent(Axis.x, nativeEvent);
+	  var pageY = getAxisCoordOfEvent(Axis.y, nativeEvent);
+	  return Math.pow(
+	    Math.pow(pageX - coords.x, 2) + Math.pow(pageY - coords.y, 2),
+	    0.5
+	  );
+	}
+
+	var touchEvents = [
+	  'topTouchStart',
+	  'topTouchCancel',
+	  'topTouchEnd',
+	  'topTouchMove',
+	];
+
+	var dependencies = [
+	  'topMouseDown',
+	  'topMouseMove',
+	  'topMouseUp',
+	].concat(touchEvents);
+
+	var eventTypes = {
+	  touchTap: {
+	    phasedRegistrationNames: {
+	      bubbled: keyOf({onTouchTap: null}),
+	      captured: keyOf({onTouchTapCapture: null})
+	    },
+	    dependencies: dependencies
+	  }
+	};
+
+	var now = (function() {
+	  if (Date.now) {
+	    return Date.now;
+	  } else {
+	    // IE8 support: http://stackoverflow.com/questions/9430357/please-explain-why-and-how-new-date-works-as-workaround-for-date-now-in
+	    return function () {
+	      return +new Date;
+	    }
+	  }
+	})();
+
+	function createTapEventPlugin(shouldRejectClick) {
+	  return {
+
+	    tapMoveThreshold: tapMoveThreshold,
+
+	    ignoreMouseThreshold: ignoreMouseThreshold,
+
+	    eventTypes: eventTypes,
+
+	    /**
+	     * @param {string} topLevelType Record from `EventConstants`.
+	     * @param {DOMEventTarget} targetInst The listening component root node.
+	     * @param {object} nativeEvent Native browser event.
+	     * @return {*} An accumulation of synthetic events.
+	     * @see {EventPluginHub.extractEvents}
+	     */
+	    extractEvents: function(
+	      topLevelType,
+	      targetInst,
+	      nativeEvent,
+	      nativeEventTarget
+	    ) {
+
+	      if (!isStartish(topLevelType) && !isEndish(topLevelType)) {
+	        return null;
+	      }
+
+	      if (isTouch(topLevelType)) {
+	        lastTouchEvent = now();
+	      } else {
+	        if (shouldRejectClick(lastTouchEvent, now())) {
+	          return null;
+	        }
+	      }
+
+	      var event = null;
+	      var distance = getDistance(startCoords, nativeEvent);
+	      if (isEndish(topLevelType) && distance < tapMoveThreshold) {
+	        event = SyntheticUIEvent.getPooled(
+	          eventTypes.touchTap,
+	          targetInst,
+	          nativeEvent,
+	          nativeEventTarget
+	        );
+	      }
+	      if (isStartish(topLevelType)) {
+	        startCoords.x = getAxisCoordOfEvent(Axis.x, nativeEvent);
+	        startCoords.y = getAxisCoordOfEvent(Axis.y, nativeEvent);
+	      } else if (isEndish(topLevelType)) {
+	        startCoords.x = 0;
+	        startCoords.y = 0;
+	      }
+	      EventPropagators.accumulateTwoPhaseDispatches(event);
+	      return event;
+	    }
+
+	  };
+	}
+
+	module.exports = createTapEventPlugin;
+
+
+/***/ },
+/* 303 */
+/***/ function(module, exports) {
+
+	/**
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 */
+
+	'use strict';
+
+	/**
+	 * Types of raw signals from the browser caught at the top level.
+	 */
+	var topLevelTypes = {
+	  topAbort: null,
+	  topAnimationEnd: null,
+	  topAnimationIteration: null,
+	  topAnimationStart: null,
+	  topBlur: null,
+	  topCanPlay: null,
+	  topCanPlayThrough: null,
+	  topChange: null,
+	  topClick: null,
+	  topCompositionEnd: null,
+	  topCompositionStart: null,
+	  topCompositionUpdate: null,
+	  topContextMenu: null,
+	  topCopy: null,
+	  topCut: null,
+	  topDoubleClick: null,
+	  topDrag: null,
+	  topDragEnd: null,
+	  topDragEnter: null,
+	  topDragExit: null,
+	  topDragLeave: null,
+	  topDragOver: null,
+	  topDragStart: null,
+	  topDrop: null,
+	  topDurationChange: null,
+	  topEmptied: null,
+	  topEncrypted: null,
+	  topEnded: null,
+	  topError: null,
+	  topFocus: null,
+	  topInput: null,
+	  topInvalid: null,
+	  topKeyDown: null,
+	  topKeyPress: null,
+	  topKeyUp: null,
+	  topLoad: null,
+	  topLoadedData: null,
+	  topLoadedMetadata: null,
+	  topLoadStart: null,
+	  topMouseDown: null,
+	  topMouseMove: null,
+	  topMouseOut: null,
+	  topMouseOver: null,
+	  topMouseUp: null,
+	  topPaste: null,
+	  topPause: null,
+	  topPlay: null,
+	  topPlaying: null,
+	  topProgress: null,
+	  topRateChange: null,
+	  topReset: null,
+	  topScroll: null,
+	  topSeeked: null,
+	  topSeeking: null,
+	  topSelectionChange: null,
+	  topStalled: null,
+	  topSubmit: null,
+	  topSuspend: null,
+	  topTextInput: null,
+	  topTimeUpdate: null,
+	  topTouchCancel: null,
+	  topTouchEnd: null,
+	  topTouchMove: null,
+	  topTouchStart: null,
+	  topTransitionEnd: null,
+	  topVolumeChange: null,
+	  topWaiting: null,
+	  topWheel: null
+	};
+
+	var EventConstants = {
+	  topLevelTypes: topLevelTypes
+	};
+
+	module.exports = EventConstants;
+
+/***/ },
+/* 304 */
+/***/ function(module, exports) {
+
+	/**
+	 * Copyright 2013-2014 Facebook, Inc.
+	 *
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 *
+	 * @providesModule TouchEventUtils
+	 */
+
+	var TouchEventUtils = {
+	  /**
+	   * Utility function for common case of extracting out the primary touch from a
+	   * touch event.
+	   * - `touchEnd` events usually do not have the `touches` property.
+	   *   http://stackoverflow.com/questions/3666929/
+	   *   mobile-sarai-touchend-event-not-firing-when-last-touch-is-removed
+	   *
+	   * @param {Event} nativeEvent Native event that may or may not be a touch.
+	   * @return {TouchesObject?} an object with pageX and pageY or null.
+	   */
+	  extractSingleTouch: function(nativeEvent) {
+	    var touches = nativeEvent.touches;
+	    var changedTouches = nativeEvent.changedTouches;
+	    var hasTouches = touches && touches.length > 0;
+	    var hasChangedTouches = changedTouches && changedTouches.length > 0;
+
+	    return !hasTouches && hasChangedTouches ? changedTouches[0] :
+	           hasTouches ? touches[0] :
+	           nativeEvent;
+	  }
+	};
+
+	module.exports = TouchEventUtils;
+
+
+/***/ },
+/* 305 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	/**
+	 * Copyright (c) 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 */
+
+	/**
+	 * Allows extraction of a minified key. Let's the build system minify keys
+	 * without losing the ability to dynamically use key strings as values
+	 * themselves. Pass in an object with a single key/val pair and it will return
+	 * you the string key of that single record. Suppose you want to grab the
+	 * value for a key 'className' inside of an object. Key/val minification may
+	 * have aliased that key to be 'xa12'. keyOf({className: null}) will return
+	 * 'xa12' in that case. Resolve keys you want to use once at startup time, then
+	 * reuse those resolutions.
+	 */
+	var keyOf = function keyOf(oneKeyObj) {
+	  var key;
+	  for (key in oneKeyObj) {
+	    if (!oneKeyObj.hasOwnProperty(key)) {
+	      continue;
+	    }
+	    return key;
+	  }
+	  return null;
+	};
+
+	module.exports = keyOf;
+
+/***/ },
+/* 306 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+
+	var isWindows = process.platform === 'win32';
+
+	// Regex to split a windows path into three parts: [*, device, slash,
+	// tail] windows-only
+	var splitDeviceRe =
+	    /^([a-zA-Z]:|[\\\/]{2}[^\\\/]+[\\\/]+[^\\\/]+)?([\\\/])?([\s\S]*?)$/;
+
+	// Regex to split the tail part of the above into [*, dir, basename, ext]
+	var splitTailRe =
+	    /^([\s\S]*?)((?:\.{1,2}|[^\\\/]+?|)(\.[^.\/\\]*|))(?:[\\\/]*)$/;
+
+	var win32 = {};
+
+	// Function to split a filename into [root, dir, basename, ext]
+	function win32SplitPath(filename) {
+	  // Separate device+slash from tail
+	  var result = splitDeviceRe.exec(filename),
+	      device = (result[1] || '') + (result[2] || ''),
+	      tail = result[3] || '';
+	  // Split the tail into dir, basename and extension
+	  var result2 = splitTailRe.exec(tail),
+	      dir = result2[1],
+	      basename = result2[2],
+	      ext = result2[3];
+	  return [device, dir, basename, ext];
+	}
+
+	win32.parse = function(pathString) {
+	  if (typeof pathString !== 'string') {
+	    throw new TypeError(
+	        "Parameter 'pathString' must be a string, not " + typeof pathString
+	    );
+	  }
+	  var allParts = win32SplitPath(pathString);
+	  if (!allParts || allParts.length !== 4) {
+	    throw new TypeError("Invalid path '" + pathString + "'");
+	  }
+	  return {
+	    root: allParts[0],
+	    dir: allParts[0] + allParts[1].slice(0, -1),
+	    base: allParts[2],
+	    ext: allParts[3],
+	    name: allParts[2].slice(0, allParts[2].length - allParts[3].length)
+	  };
+	};
+
+
+
+	// Split a filename into [root, dir, basename, ext], unix version
+	// 'root' is just a slash, or nothing.
+	var splitPathRe =
+	    /^(\/?|)([\s\S]*?)((?:\.{1,2}|[^\/]+?|)(\.[^.\/]*|))(?:[\/]*)$/;
+	var posix = {};
+
+
+	function posixSplitPath(filename) {
+	  return splitPathRe.exec(filename).slice(1);
+	}
+
+
+	posix.parse = function(pathString) {
+	  if (typeof pathString !== 'string') {
+	    throw new TypeError(
+	        "Parameter 'pathString' must be a string, not " + typeof pathString
+	    );
+	  }
+	  var allParts = posixSplitPath(pathString);
+	  if (!allParts || allParts.length !== 4) {
+	    throw new TypeError("Invalid path '" + pathString + "'");
+	  }
+	  allParts[1] = allParts[1] || '';
+	  allParts[2] = allParts[2] || '';
+	  allParts[3] = allParts[3] || '';
+
+	  return {
+	    root: allParts[0],
+	    dir: allParts[0] + allParts[1].slice(0, -1),
+	    base: allParts[2],
+	    ext: allParts[3],
+	    name: allParts[2].slice(0, allParts[2].length - allParts[3].length)
+	  };
+	};
+
+
+	if (isWindows)
+	  module.exports = win32.parse;
+	else /* posix */
+	  module.exports = posix.parse;
+
+	module.exports.posix = posix.parse;
+	module.exports.win32 = win32.parse;
 
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
@@ -46309,7 +46323,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Icon2 = _interopRequireDefault(_Icon);
 
-	var _ContextButtons = __webpack_require__(266);
+	var _ContextButtons = __webpack_require__(298);
 
 	var _ContextButtons2 = _interopRequireDefault(_ContextButtons);
 
@@ -46327,7 +46341,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var pathParse = __webpack_require__(274);
+	var pathParse = __webpack_require__(306);
 
 	/*
 	Example of file
@@ -47065,7 +47079,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _reactIntl = __webpack_require__(230);
 
-	var _mousetrap = __webpack_require__(267);
+	var _mousetrap = __webpack_require__(299);
 
 	var _mousetrap2 = _interopRequireDefault(_mousetrap);
 
@@ -47381,11 +47395,11 @@ return /******/ (function(modules) { // webpackBootstrap
 		"sortBy": "Sort by",
 		"upload.files": "Upload files",
 		"upload.dragFilesUploading": "Uploading files…",
+		"layout.masonry": "Masonry Layout",
 		"layout.fullscreenMode": "Fullscreen Mode",
 		"layout.table": "Table Layout",
 		"layout.thumb": "Thumbnail Layout",
 		"layout.grid": "Grid Layout",
-		"layout.masonry": "Masonry Layout",
 		"layout.list": "List Layout",
 		"media.browse": "Browse",
 		"media.contents": "Media Content",
@@ -47393,6 +47407,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		"directory.createNewIn": "Create a new Directory in {cd}",
 		"mediaSourceTree": "Media Source Panel",
 		"deleteAreYouSureMessage": "Are you sure you want to permanently delete {filename}?",
+		"masonryLayoutMessage": "Masonry Layout",
 		"close": "Close",
 		"open": "Open",
 		"rename": "Rename",
