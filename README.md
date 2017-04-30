@@ -259,6 +259,16 @@ The semantic HTML layer remains usable even absent of style as pure&nbsp;HTML.
       <td align="center"><span aria-label="supported">✅</span></td>
     </tr>
     <tr>
+      <td>Masonry View Mode</td>
+      <td align="center"><span aria-label="not supported">❌</span></td>
+      <td align="center"><span aria-label="not supported">❌</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+    </tr>
+    <tr>
       <td>Pathbar</td>
       <td align="center"><span aria-label="not supported">❌</span></td>
       <td align="center"><span aria-label="not supported">❌</span></td>
@@ -638,6 +648,27 @@ To maximize usability Eureka leverages the Fullscreen&nbsp;API.
 <summary>See the Fullscreen Mode in action</summary>
 <img src="http://j4p.us/1h2w3E1d2h2a/fs.gif">
 </details>
+
+## 🏞 Masonry Layout
+Eureka is enhanced by a Masonry view mode.
+
+<details open>
+<summary>Masonry View Mode</summary>
+<img src="http://j4p.us/1S1h282v2J0N/Screen%20Shot%202017-04-30%20at%208.51.21%20PM.png" />
+</details><br>
+
+If you are using Eureka as a UMD Module (probably not) you'll need [to load Masonry first](https://github.com/jpdevries/eureka/wiki/Loading-Patterns-(WIP)). If you would not like Masonry to be included in your bundle, add Masonry to your Webpack excludes. As Eureka will only enable the Masonry view if Masonry is available, this will effectively disable the view&nbsp;mode.
+
+```js
+externals: {
+  "react": "React",
+  "react-dom":"ReactDOM",
+  "redux":"Redux",
+  "react-redux":"ReactRedux",
+  "react-masonry-component":"Masonry"
+}
+```
+
 
 ## 👀 Accessible Themes
 Eureka is empowered by themes which make it more accessible to users with particular physical or contextual disabilities or preferences.
