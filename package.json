@@ -67,6 +67,7 @@
     "react-dom": "^15.4.2",
     "react-dropzone": "^3.12.2",
     "react-intl": "^2.2.3",
+    "react-masonry-component": "^5.0.5",
     "react-redux": "^5.0.3",
     "react-tap-event-plugin": "^2.0.1",
     "redux": "^3.6.0",

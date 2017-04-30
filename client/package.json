@@ -91,6 +91,7 @@
     "react-dom": "^15.5.0",
     "react-dropzone": "^3.10.0",
     "react-intl": "^2.2.3",
+    "react-masonry-component": "^5.0.5",
     "react-redux": "^5.0.4",
     "react-worker-dom": "^2.0.0-alpha.6",
     "redux": "^3.6.0",

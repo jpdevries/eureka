@@ -22,6 +22,7 @@ class ViewChooser extends FullScreenPureComponent {
     tabularLayoutMessage = formatMessage(definedMessages.tabularLayoutDescription),
     thumbLayoutMessage = formatMessage(definedMessages.thumbnailLayoutDescription),
     gridLayoutMessage = formatMessage(definedMessages.gridLayoutDescription),
+    masonryLayoutMessage = formatMessage(definedMessages.masonryLayoutMessage),
     listLayoutMessage = formatMessage(definedMessages.listLayoutDescription),
     fullscreenToggle = (props.view.allowFullscreen && this.state.supportsFullscreen) ? (
       <div>
@@ -95,6 +96,18 @@ class ViewChooser extends FullScreenPureComponent {
               <label htmlFor="eureka__view-grid" title={gridLayoutMessage}>
                 <Icon {...props} icon="square" />
                 <span className="visually-hidden"><FormattedMessage id="layout.grid" defaultMessage="Grid Layout" /></span>
+              </label>
+            </div>
+
+            <div>
+              <input type="radio" id="eureka__view-masonry" name="eureka__view" onChange={(event) => (
+                store.dispatch(actions.updateView({
+                  mode: event.target.value
+                }))
+                )} checked={props.view.mode === 'masonry'} value="masonry" />&emsp;
+              <label htmlFor="eureka__view-masonry" title={masonryLayoutMessage}>
+                <Icon {...props} icon="masonry" />
+                <span className="visually-hidden"><FormattedMessage id="layout.masonry" defaultMessage="Masonry Layout" /></span>
               </label>
             </div>
 

@@ -16,6 +16,10 @@
     "defaultMessage": "Grid Layout"
   },
   {
+    "id": "layout.masonry",
+    "defaultMessage": "Masonry Layout"
+  },
+  {
     "id": "layout.list",
     "defaultMessage": "List Layout"
   }

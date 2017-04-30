@@ -185,6 +185,26 @@ var ViewChooser = function (_FullScreenPureCompon) {
             _react2.default.createElement(
               'div',
               null,
+              _react2.default.createElement('input', { type: 'radio', id: 'eureka__view-masonry', name: 'eureka__view', onChange: function onChange(event) {
+                  return _store2.default.dispatch(_actions2.default.updateView({
+                    mode: event.target.value
+                  }));
+                }, checked: props.view.mode === 'masonry', value: 'masonry' }),
+              '\u2003',
+              _react2.default.createElement(
+                'label',
+                { htmlFor: 'eureka__view-masonry', title: gridLayoutMessage },
+                _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'masonry' })),
+                _react2.default.createElement(
+                  'span',
+                  { className: 'visually-hidden' },
+                  _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'layout.masonry', defaultMessage: 'Masonry Layout' })
+                )
+              )
+            ),
+            _react2.default.createElement(
+              'div',
+              null,
               _react2.default.createElement('input', { type: 'radio', id: 'eureka__view-list', name: 'eureka__view', onChange: function onChange(event) {
                   return _store2.default.dispatch(_actions2.default.updateView({
                     mode: event.target.value

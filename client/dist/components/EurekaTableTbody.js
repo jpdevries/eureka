@@ -50,6 +50,10 @@ var _definedMessages = require('../i18n/definedMessages');
 
 var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
+var _reactMasonryComponent = require('react-masonry-component');
+
+var _reactMasonryComponent2 = _interopRequireDefault(_reactMasonryComponent);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -218,6 +222,25 @@ var EurekaTableTbody = function (_PureComponent) {
           onBlur: function onBlur(event) {}
         }))];
       }) : _react2.default.createElement(NoResults, props);
+
+      if (true) {
+        return (
+          //onScroll={this.handleScroll.bind(this)}
+          _react2.default.createElement(
+            _reactMasonryComponent2.default,
+            {
+              elementType: 'tbody' // default 'div'
+              , options: {} // default {}
+              , disableImagesLoaded: false // default false
+              , updateOnEachImageLoad: true // default false and works only if disableImagesLoaded is false
+              , role: 'rowgroup', 'aria-live': 'polite', className: (0, _classnames2.default)({ empty: !contents.length }), ref: function ref(tbody) {
+                _this2.tbody = tbody;
+              }
+            },
+            contentList
+          )
+        );
+      }
 
       return (
         //onScroll={this.handleScroll.bind(this)}

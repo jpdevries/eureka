@@ -287,7 +287,7 @@
          }
        }
      }
-     &.eureka__view-mode__thumb, &.eureka__view-mode__grid {
+     &.eureka__view-mode__thumb, &.eureka__view-mode__grid, &.eureka__view-mode__masonry {
        table {
          > thead> tr, > tbody > tr {
            grid-template-areas: "choose choose choose choose choose choose" "media media media media media media";
@@ -470,7 +470,7 @@
               }
             }
           }
-          > .eureka__table-wrapper {
+          > .eureka__table-wrapper { // .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper
             flex-basis:0;
             flex-grow:1;
             height:auto;
@@ -514,6 +514,13 @@
         margin-top: .5rem;
       }
     }
+  }
+}
+
+.eureka-root .eureka.eureka__view-mode__masonry > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper {
+  padding-left: .5rem;
+  @include media($mobile) {
+    padding-right: .5rem;
   }
 }
 
@@ -751,7 +758,7 @@
     }
   }
 
-  &.eureka__view-mode__thumb, &.eureka__view-mode__grid {
+  &.eureka__view-mode__thumb, &.eureka__view-mode__grid, &.eureka__view-mode__masonry {
     .eureka__table {
       thead {
         //@extend %visually-hidden;
@@ -801,7 +808,7 @@
     }
   }
 
-  &.eureka__view-mode__grid {
+  &.eureka__view-mode__grid, &.eureka__view-mode__masonry {
     .eureka__table {
       tbody {
         tr[tabindex] {
@@ -815,6 +822,32 @@
           > td:not(.eureka__context-row) {
             @include media($mobile) {
               padding-right: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &.eureka__view-mode__masonry {
+    .eureka__table {
+      tbody {
+        @include media($gtMobile) {
+          //padding-right: 1rem;
+        }
+        tr[tabindex] {
+
+          @include media($mobile) {
+
+          }
+          @include media($gtMobile) {
+            max-width:20%;
+            margin: 0;
+            padding: 0 .25rem;
+          }
+          > td:not(.eureka__context-row) {
+            @include media($mobile) {
+
             }
           }
         }
@@ -863,7 +896,7 @@
 
   }
 
-  &.eureka__view-mode__grid {
+  &.eureka__view-mode__grid, &.eureka__view-mode__masonry {
     .eureka__td-media {
       margin: 0 auto;
       display: inline-block;
