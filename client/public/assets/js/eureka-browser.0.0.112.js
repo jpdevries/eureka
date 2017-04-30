@@ -1394,7 +1394,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	        modal
 	      ) : _react2.default.createElement(
 	        'div',
-	        { role: 'widget', lang: props.lang || undefined, className: 'eureka eureka__view-mode__' + props.view.mode + chooseMultipleClass + enlargeFocusedRows + serverSideClass },
+	        { onPaste: function onPaste(event) {
+	            if (event.clipboardData) {
+	              var items = event.clipboardData.items;
+	              if (!items || event.target.matches('input') || event.target.matches('textarea')) return;
+
+	              //access data directly
+	              for (var i = 0; i < items.length; i++) {
+	                if (items[i].type.indexOf("image") !== -1) {
+	                  //image
+	                  var blob = items[i].getAsFile();
+
+	                  var formData = new FormData();
+	                  var decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
+	                  formData.append('eureka__uploadFiles', blob, 'paste-image.' + new Date().getTime() + '.png');
+	                  _store2.default.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData, props.config.headers));
+	                }
+	              }
+	            }
+	          }, role: 'widget', lang: props.lang || undefined, className: 'eureka eureka__view-mode__' + props.view.mode + chooseMultipleClass + enlargeFocusedRows + serverSideClass },
 	        _react2.default.createElement(
 	          'div',
 	          { className: classNames({
@@ -4579,7 +4597,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.111",
+		"version": "0.0.112",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -9358,6 +9376,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  mediaSourceTree: {
 	    'id': 'mediaSourceTree',
 	    'defaultMessage': 'Media Source Panel'
+	  },
+	  pastImageFromClipboardMessage: {
+	    'id': 'pastImageFromClipboardMessage',
+	    'defaultMessage': 'Paste images from the clipboard to upload'
+	  },
+	  pastImageFromClipboardToMessage: {
+	    'id': 'pastImageFromClipboardToMessage',
+	    'defaultMessage': 'Paste images from the clipboard to upload to ${cd} of source ${cs}'
 	  },
 	  deleteAreYouSureMessage: {
 	    'id': 'deleteAreYouSureMessage',
@@ -16404,6 +16430,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function render() {
 	      var props = this.props,
 	          formatMessage = props.intl.formatMessage,
+	          pastImageFromClipboardMessage = formatMessage(_definedMessages2.default.pastImageFromClipboardMessage, {}),
 	          dragFilesToBeUploadedToMessage = props.view.isUploading ? formatMessage(_definedMessages2.default.dragFilesUploading, {
 	        cd: props.content.cd
 	      }) : formatMessage(_definedMessages2.default.dragFilesToBeUploadedTo, {
@@ -16412,7 +16439,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      return _react2.default.createElement(
 	        'div',
-	        { className: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'drop-area', title: dragFilesToBeUploadedToMessage },
+	        { tabIndex: '0', 'aria-label': pastImageFromClipboardMessage, className: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'drop-area', title: dragFilesToBeUploadedToMessage },
 	        _react2.default.createElement(
 	          _reactDropzone2.default,
 	          { onDrop: this.onDrop.bind(this), className: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'drop-area-zone', activeClassName: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'drop-area-zone-active', style: {} },
