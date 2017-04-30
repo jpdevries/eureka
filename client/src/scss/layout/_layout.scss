@@ -688,6 +688,9 @@
   &.eureka__view-mode__table {
     .eureka__table {
       img {
+        @include media($mobile) {
+          max-width: none;
+        }
         @include media($gtMobile) {
           max-height:20vh;
         }
