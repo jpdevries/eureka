@@ -267,7 +267,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	          //localStorage.setItem(`${state.config.storagePrefix}sort`, state.view.sort);
 	          //localStorage.setItem(`${state.config.storagePrefix}treeHidden`, !state.view.sourceTreeOpen);
 	          localStorage.setItem(state.config.storagePrefix + 'content', JSON.stringify(Object.assign({}, state.content, {
-	            chosenMediaItemsInverted: undefined
+	            chosenMediaItemsInverted: undefined,
+	            chosenMediaItems: undefined
 	          })));
 	          localStorage.setItem(state.config.storagePrefix + 'tree', JSON.stringify(state.tree));
 	          //console.log('state.view', JSON.stringify(state.view));
@@ -4521,7 +4522,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.108",
+		"version": "0.0.109",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -11140,7 +11141,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
+	      var props = this.props;
 	      this.assignKeyboardListeners();
+	      if (props.content.chosenMediaItemsInverted.includes(props.item)) {
+	        this.setState({
+	          chooseChecked: true
+	        });
+	      }
 	      //Mousetrap(document.querySelector('.eureka')).bind(['alt+z'], this.handleKeyboardDeselect);
 
 	      /*store.subscribe(() => {
@@ -11445,7 +11452,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var checkbox = props.view.chooseMultiple ? _react2.default.createElement(
 	        'td',
 	        { className: 'eureka__choose' },
-	        _react2.default.createElement('input', { 'aria-label': 'Choose ' + item.filename, type: 'checkbox', name: 'eureka__chose_multiple', id: checkboxId, key: 'eureka__choose_multiple_' + _utility2.default.cssSafe(props.item.filename) + '__' + (this.state.chooseChecked ? 'checked' : ''), checked: this.state.chooseChecked, onChange: function onChange(event) {
+	        _react2.default.createElement('input', { value: 'chosen', 'aria-label': 'Choose ' + item.filename, type: 'checkbox', name: 'eureka__chose_multiple', id: checkboxId, key: 'eureka__choose_multiple_' + _utility2.default.cssSafe(props.item.filename) + '__' + (this.state.chooseChecked ? 'checked' : ''), checked: this.state.chooseChecked, onChange: function onChange(event) {
 	            event.preventDefault();
 	            event.stopPropagation();
 
@@ -16076,7 +16083,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  //console.log('props.content.chosenMediaItems', props.content.chosenMediaItems);
 	  //console.log('fileNames', fileNames);
 	  var len = props.view.selectionInverted ? props.content.contents.length - props.content.chosenMediaItems.length : props.content.chosenMediaItems.length;
-	  var fileNamesIf = len > 1 && props.view.chooseMultiple ? _react2.default.createElement('textarea', { 'aria-readonly': 'true', 'aria-label': copyListofSelectedFiles, rows: '10', cols: '50', onClick: function onClick(event) {
+	  var fileNamesIf = len > 1 && props.view.chooseMultiple ? _react2.default.createElement('textarea', { 'aria-live': 'polite', 'aria-readonly': 'true', 'aria-label': copyListofSelectedFiles, rows: '10', cols: '50', onClick: function onClick(event) {
 	      event.target.focus();
 	      event.target.select();
 	    }, style: {

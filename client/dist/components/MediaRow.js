@@ -140,7 +140,13 @@ var MediaRow = function (_PureComponent) {
   }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
+      var props = this.props;
       this.assignKeyboardListeners();
+      if (props.content.chosenMediaItemsInverted.includes(props.item)) {
+        this.setState({
+          chooseChecked: true
+        });
+      }
       //Mousetrap(document.querySelector('.eureka')).bind(['alt+z'], this.handleKeyboardDeselect);
 
       /*store.subscribe(() => {

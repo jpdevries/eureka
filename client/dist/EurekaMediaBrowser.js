@@ -211,7 +211,8 @@ var EurekaMediaBrowser = exports.EurekaMediaBrowser = function (_PureComponent) 
           //localStorage.setItem(`${state.config.storagePrefix}sort`, state.view.sort);
           //localStorage.setItem(`${state.config.storagePrefix}treeHidden`, !state.view.sourceTreeOpen);
           localStorage.setItem(state.config.storagePrefix + 'content', JSON.stringify(Object.assign({}, state.content, {
-            chosenMediaItemsInverted: undefined
+            chosenMediaItemsInverted: undefined,
+            chosenMediaItems: undefined
           })));
           localStorage.setItem(state.config.storagePrefix + 'tree', JSON.stringify(state.tree));
           //console.log('state.view', JSON.stringify(state.view));

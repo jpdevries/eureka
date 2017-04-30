@@ -50,7 +50,7 @@ function render() {
     useLocalStorage: true,
     allowRename: true,
     allowDelete: true,
-    allowInvertSelection: false,
+    allowInvertSelection: true,
     confirmBeforeDelete: true,
     alwaysWelcome: true,
     allowFullscreen: true,
