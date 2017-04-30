@@ -21,6 +21,14 @@ export default defineMessages({
     id: 'mediaSourceTree',
     defaultMessage: 'Media Source Panel'
   },
+  pastImageFromClipboardMessage: {
+    id: 'pastImageFromClipboardMessage',
+    defaultMessage: 'Paste images from the clipboard to upload'
+  },
+  pastImageFromClipboardToMessage: {
+    id: 'pastImageFromClipboardToMessage',
+    defaultMessage: 'Paste images from the clipboard to upload to ${cd} of source ${cs}'
+  },
   deleteAreYouSureMessage: {
     id: 'deleteAreYouSureMessage',
     defaultMessage: 'Are you sure you want to permanently delete {filename}?'

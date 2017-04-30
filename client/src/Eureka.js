@@ -519,7 +519,7 @@ class Eureka extends Component {
       //(state.modalOpen) ? <Modal onCancel={this.onModalCancel.bind(this)} onSubmit={this.onModalSubmit.bind(this)} title="Create Directory" {...props}><ModalCreateDirectoryForm {...props} /></Modal> : undefined
     })();
 
-    const dropArea = (props.config.allowUploads && props.config.doDragNDrop) ? <DropArea {...props} /> : undefined;
+    const dropArea = (props.config.allowUploads && props.config.doDragNDrop) ? <DropArea {...props}  /> : undefined;
 
     const pathbrowser = (!utility.serverSideRendering) ? (
       <div hidden={!props.view.sourceTreeOpen} aria-hidden={!props.view.sourceTreeOpen} id="eureka__pathbrowser" className="eureka__pathbrowser">
@@ -615,7 +615,28 @@ class Eureka extends Component {
         {modal}
       </form>
     ) : (
-      <div role="widget" lang={props.lang || undefined} className={`eureka eureka__view-mode__${props.view.mode}${chooseMultipleClass}${enlargeFocusedRows}${serverSideClass}`}>
+      <div onPaste={(event) => {
+        if (event.clipboardData) {
+          var items = event.clipboardData.items;
+			    if (!items || event.target.matches('input') || event.target.matches('textarea')) return;
+
+          //access data directly
+    			for (var i = 0; i < items.length; i++) {
+    				if (items[i].type.indexOf("image") !== -1) {
+    					//image
+    					const blob = items[i].getAsFile();
+
+              const formData = new FormData();
+              const decoratedActions = props.decoratedActions ? Object.assign({}, actions, props.decoratedActions) : actions;
+              formData.append('eureka__uploadFiles', blob, `paste-image.${new Date().getTime()}.png`);
+              store.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData, props.config.headers));
+    				}
+    			}
+
+        }
+
+
+      }} role="widget" lang={props.lang || undefined} className={`eureka eureka__view-mode__${props.view.mode}${chooseMultipleClass}${enlargeFocusedRows}${serverSideClass}`}>
         <div className={classNames({
           "eureka__sticky-bar": this.state.stickyNotifications
         })} aria-live="assertive" aria-relevant="additions" aria-atomic="true" onClick={(event) => {

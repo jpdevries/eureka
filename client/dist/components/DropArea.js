@@ -77,6 +77,7 @@ var DropArea = function (_PureComponent) {
     value: function render() {
       var props = this.props,
           formatMessage = props.intl.formatMessage,
+          pastImageFromClipboardMessage = formatMessage(_definedMessages2.default.pastImageFromClipboardMessage, {}),
           dragFilesToBeUploadedToMessage = props.view.isUploading ? formatMessage(_definedMessages2.default.dragFilesUploading, {
         cd: props.content.cd
       }) : formatMessage(_definedMessages2.default.dragFilesToBeUploadedTo, {
@@ -85,7 +86,7 @@ var DropArea = function (_PureComponent) {
 
       return _react2.default.createElement(
         'div',
-        { className: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'drop-area', title: dragFilesToBeUploadedToMessage },
+        { tabIndex: '0', 'aria-label': pastImageFromClipboardMessage, className: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'drop-area', title: dragFilesToBeUploadedToMessage },
         _react2.default.createElement(
           _reactDropzone2.default,
           { onDrop: this.onDrop.bind(this), className: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'drop-area-zone', activeClassName: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'drop-area-zone-active', style: {} },

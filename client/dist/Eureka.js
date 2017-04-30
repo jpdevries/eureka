@@ -577,7 +577,25 @@ var Eureka = function (_Component) {
         modal
       ) : _react2.default.createElement(
         'div',
-        { role: 'widget', lang: props.lang || undefined, className: 'eureka eureka__view-mode__' + props.view.mode + chooseMultipleClass + enlargeFocusedRows + serverSideClass },
+        { onPaste: function onPaste(event) {
+            if (event.clipboardData) {
+              var items = event.clipboardData.items;
+              if (!items || event.target.matches('input') || event.target.matches('textarea')) return;
+
+              //access data directly
+              for (var i = 0; i < items.length; i++) {
+                if (items[i].type.indexOf("image") !== -1) {
+                  //image
+                  var blob = items[i].getAsFile();
+
+                  var formData = new FormData();
+                  var decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
+                  formData.append('eureka__uploadFiles', blob, 'paste-image.' + new Date().getTime() + '.png');
+                  _store2.default.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData, props.config.headers));
+                }
+              }
+            }
+          }, role: 'widget', lang: props.lang || undefined, className: 'eureka eureka__view-mode__' + props.view.mode + chooseMultipleClass + enlargeFocusedRows + serverSideClass },
         _react2.default.createElement(
           'div',
           { className: classNames({

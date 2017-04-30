@@ -1,9 +1,10 @@
 # Eureka 🌲
+[![Build Status](https://travis-ci.org/jpdevries/eureka.svg?branch=release-2.0)](https://travis-ci.org/jpdevries/eureka) [![npm version](https://badge.fury.io/js/eureka-browser.svg)](https://badge.fury.io/js/eureka-browser)
 
 Eureka is a progressively enhanced flexible media browser. Connected to your media sources through a REST API, this accessible web component allows users to browse media sources, upload files, and choose media items.
 
-[Try the demo](https://reacteureka.herokuapp.com/) by waking the heroku dino.
-As to be found in [Redactor 3.0](https://www.modmore.com/extras/redactor) by modmore. Contributions&nbsp;welcomed.
+[🤗 Try the demo](https://eureka.markup.tips/).
+As to be found in [Redactor 3.0 for MODX](https://www.modmore.com/extras/redactor/?via=2) by modmore. Contributions&nbsp;welcomed.
 
 > With `eureka.js` users will be saying "I found it!" in no time.
 &emsp;&emsp;&mdash; [@mrktps](https://twitter.com/mrktps)
@@ -17,8 +18,24 @@ Join the conversation in our public Gitter chat room.
 Don't forget to [browse the Wiki](https://github.com/jpdevries/eureka/wiki) for [more information on the REST API](https://github.com/jpdevries/eureka/wiki/REST-API), [patterns](https://github.com/jpdevries/eureka/wiki/Patterns), [screenshots](https://github.com/jpdevries/eureka/wiki/Screenshots) and&nbsp;more.
 
 ## 🍻 Support
-The Eureka Media Browser is provided free as in beer.  
-[Gratuities are accepted through Square&nbsp;Cash](https://cash.me/$MarkupTips).
+The Eureka Media Browser and supporting resources are provided free as in&nbsp;beer.  
+[Gratuities are accepted through Square&nbsp;Cash](https://cash.me/$devriesdev).
+
+## 🏋️‍♀️ Weigh In
+The Eureka Media Browser is pretty lightweight all things&nbsp;considered.
+
+| Asset        | Weight (GZIP minified)
+| ------------- |:-------------:|
+| CSS Stylesheet      | `5.18kB` |
+| SVG Icons      | `5.04kB`      |
+| React Component | `47.40kB`    |
+
+### 📄 HTML&ndash;first
+As a progressively enhanced web component, Eureka is functional HTML&ndash;first. This means that technically anything other than the initial HTML layer is a non&ndash;critical enhancement. Critical features supported by the HTML layer, such as browse, upload, and choose, are universally supported and do not depend on modern&nbsp;browsers, CSS styles, or&nbsp;script.
+
+😲 Take a gander at Eureka in the nued by waking our incredibly lightweight [raw HTML&nbsp;example](https://reacteureka.herokuapp.com/nued).
+
+We also encourage you to temporarily disable JavaScript in your browser and party with Eureka like it's&nbsp;1999.
 
 ## Powered By 🚀
  - Progressively Enhanced from HTML components
@@ -39,7 +56,7 @@ The Eureka Media Browser is provided free as in beer.
    - ARIA & Keyboard Support
    - high contrast themes
 
-## Features
+## 🚥 Features
 The level of isomorphism between the client and server side one can achieve with Node is unmatched. Eureka takes advantage of this unique strength of Node by, through an isomorphic server and standard synchronous forms, achieving full support for critical&nbsp;features.
 
 No features rely solely on sight or the use of a mouse. Keyboard use is supported. Accommodations are taken for users that benefit from high contrast themes. Visually hidden text is used to convey aspects of the interface that are otherwise visually implied to screen readers and assistive&nbsp;technology.
@@ -85,6 +102,76 @@ The semantic HTML layer remains usable even absent of style as pure&nbsp;HTML.
       <td>Choose a media item</td>
       <td align="center"><span aria-label="supported">✅</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+    </tr>
+        <tr>
+      <td>Keyboard Support</td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+    </tr>
+    <tr>
+      <td>ARIA Support</td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="partial supported">✳️</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+    </tr>
+    <tr>
+      <td>WCAG Level AA</td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+    </tr>
+    <tr>
+      <td>Internationalization</td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+    </tr>
+    <tr>
+      <td>Choose Multiple Items</td>
+      <td align="center"><span aria-label="not supported">❌</span></td>
+      <td align="center"><span aria-label="not supported">❌</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+    </tr>
+    <tr>
+      <td>Delete Multiple Items</td>
+      <td align="center"><span aria-label="not supported">❌</span></td>
+      <td align="center"><span aria-label="not supported">❌</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+    </tr>
+    <tr>
+      <td>Keyboard Shortcuts</td>
+      <td align="center"><span aria-label="not supported">❌</span></td>
+      <td align="center"><span aria-label="not supported">❌</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
@@ -172,6 +259,16 @@ The semantic HTML layer remains usable even absent of style as pure&nbsp;HTML.
       <td align="center"><span aria-label="supported">✅</span></td>
     </tr>
     <tr>
+      <td>Masonry Layout Mode</td>
+      <td align="center"><span aria-label="not supported">❌</span></td>
+      <td align="center"><span aria-label="not supported">❌</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+    </tr>
+    <tr>
       <td>Pathbar</td>
       <td align="center"><span aria-label="not supported">❌</span></td>
       <td align="center"><span aria-label="not supported">❌</span></td>
@@ -193,6 +290,26 @@ The semantic HTML layer remains usable even absent of style as pure&nbsp;HTML.
     </tr>
     <tr>
       <td>Delete Item</td>
+      <td align="center"><span aria-label="not supported">❌</span></td>
+      <td align="center"><span aria-label="not supported">❌</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+    </tr>
+    <tr>
+      <td>Download Item</td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+    </tr>
+    <tr>
+      <td>Download Multiple Items</td>
       <td align="center"><span aria-label="not supported">❌</span></td>
       <td align="center"><span aria-label="not supported">❌</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
@@ -234,26 +351,6 @@ The semantic HTML layer remains usable even absent of style as pure&nbsp;HTML.
     <tr>
       <td>Mobile First Layout</td>
       <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-    </tr>
-    <tr>
-      <td>Keyboard Support</td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-    </tr>
-    <tr>
-      <td>ARIA Support</td>
-      <td align="center"><span aria-label="supported">✅</span></td>
       <td align="center"><span aria-label="partial supported">✳️</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
@@ -262,9 +359,9 @@ The semantic HTML layer remains usable even absent of style as pure&nbsp;HTML.
       <td align="center"><span aria-label="supported">✅</span></td>
     </tr>
     <tr>
-      <td>WCAG Level AA</td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
+      <td>Fullscreen Mode</td>
+      <td align="center"><span aria-label="not supported">❌</span></td>
+      <td align="center"><span aria-label="not supported">❌</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
@@ -304,8 +401,121 @@ The semantic HTML layer remains usable even absent of style as pure&nbsp;HTML.
   </tbody>
 </table>
 
+## 🛠 Usage
+
+```bash
+npm install eureka-browser --save
+```
+
+#### Bower
+You can also install Eureka via Bower, which is a good way to fetch its stylesheet and icon sprite. There is also a UMD export of the `EurekaMediaBrowser` component for the unlikely case you'll need&nbsp;it.
+
+```bash
+npm install -g bower
+```
+
+```bash
+bower install eureka-browser#release-2.0
+ls bower_components/eureka-browser/client/build/assets/css/ # default eureka theme
+ls bower_components/eureka-browser/client/build/assets/img # icon sprite
+ls bower_components/eureka-browser/client/build/assets/js # bundled and unbundled UMD exports of EurekaMediaBrowser component
+```
+
+#### HTML
+The `<EurekaMediaBrowser>` React component is styled by a standard CSS stylesheet. Include the CSS for the appropriate version of the media browser. Reference the theming section for [more information on styling Eureka](https://github.com/jpdevries/eureka#-theming).
+
+```html
+<link rel="stylesheet" type="text/css" media="screen" href="bower_components/eureka-browser/client/build/assets/css/eureka.0.0.20.min.css">
+```
+
+```html
+<div id="eureka-root">
+  <!-- for performance, optimization, and accessibility it best to support server-side rendering by initially delivering a base HTML layer
+  see server-side rendering below -->
+</div>
+
+```
+
+#### JS
+```js
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { EurekaMediaBrowser } from 'eureka-browser';
+
+ReactDOM.render(
+  <EurekaMediaBrowser />,
+  document.getElementById('eureka-root')
+);
+```
+
+Eureka will then be injected into the DOM and eagerly reach out to the REST API for the JSON data it needs to offer the&nbsp;interface.
+
+Configure the `EurekaMediaBrowser` via the optional attributes found in the default configuration&nbsp;below:
+```xml
+  <EurekaMediaBrowser
+    basePath="/"
+    allowUploads={true}
+    treeHidden={true}
+    useLocalStorage={true}
+    storagePrefix="eureka__"
+    allowRename={true}
+    allowDelete={true}
+    confirmBeforeDelete={false}
+    locale="en-US"
+    mediaSource="0"
+    currentDirectory="/"
+    headers={{
+        'Powered-By': 'Eureka by Markup.tips'
+    }}
+    intervals={{
+      searchBarPlaceholder: false,
+      fetchDirectoryContents: 18000,
+      updateSourceTree: false
+    }}
+  />
+```
+
+## ⚙️ Options
+
+| Option        | Default           | Description  |
+| ------------- |:-------------:| -----|
+| `basePath`      | `"/"` | Prepended to URLs for XHR requests to the Rest API.<br>Set to the absolute path of your Rest API. |
+| `allowUploads`      | `true`      |   Whether or not to allow uploading of media items |
+| `treeHidden` | `true`      |    Whether or not the Media Source Panel "sidebar" should be initially closed |
+| `useLocalStorage` | `true`      |    Whether or not to use the JavaScript `localStorage` API to remember session data such as the last visited directory and view mode preference |
+| `storagePrefix` | `"eureka__"`      |    Prepended to `localStorage` keys |
+| `allowRename` | `true`      |    Whether or not to offer users the ability to rename directories and media items |
+| `allowDelete` | `true`      |    Whether or not to offer users the ability to delete directories and media items |
+| `allowDownload` | `false`      |    Whether or not to add a download button to media items |
+| `confirmBeforeDelete` | `false`      |    Whether or not to confirm intent before users delete directories and media items |
+| `locale` | `"en-US"`      |    The localization to use. See Lexicons. |
+| `mediaSource` | `undefined`      |    The default initial media source id to use |
+| `currentDirectory` | `"/"`      |    The default initial directory to use |
+| `uid` | `"0"`      |    A unique identifier used to ensure multiple `<EurekaMediaBrowser>` components on the same page do not share the same DOM ids  |
+| `assetsBasePath` | `"./assets/"`      |    Relative path to the Eureka assets directory |
+| `iconSVG` | `"./img/icons.svg"`      |    Path, relative to `assetsBasePath`, to the Eureka icon sprite sheet |
+| `callbacks` | `{close: undefined, choose: undefined}`      |    Object containing close and choose callbacks |
+| `headers` | `{'Powered-By': 'Eureka by Markup.tips'}`      |    Additional request headers sent with XHR requests |
+| `intervals` | `{searchBarPlaceholder: false,fetchDirectoryContents: 18000,updateSourceTree: false}`      |    Intervals for whether or not and how often to do things like hit the REST API for updated data or update the placeholder attribute based on the current directory listing  |
+| `enlargeFocusedRows` | `false`      |    Whether or not to enlarge thumbnails of focused rows |
+| `mode` | `"table"`      |    Initial view mode (table, thumb, grid, list) |
+| `sort` | `"name"`      |    Initial column to sort media items on |
+| `allowFullscreen` | `true`      |    Whether or not the interface should offer a fullscreen button |
+| `emphasisFocusedMediaItem` | `true`      |    Whether or not to emphasis selected media items (defaults to emphasizing the filename, only applies to table and list view modes) |
+| `doDragNDrop` | `true`      |    Whether or not to enable drag 'n drop features |
+| `allowChooseMultiple` | `true`      |    Whether or not to allow multiple files to be chosen |
+| `allowInvertSelection` | `true`      |    Whether or not to allow selection of multiple items to be inverted |
+| `allowDownloadMultiple` | `true`      |    Whether or not to allow multiple selected items to be download as a zip file |
+
+
+
+*Please take note that when `useLocalStorage` is `true` any options manually passed in as props will take&nbsp;precedent.*
+
 ## 🌐 Browser Support
 The server side rendering and HTML&ndash;first design patterns begin progressively enhancing a universally supported HTML layer. So basic features are supported in any browser. JavaScript support begins at IE9. Desired CSS layout requires Flexbox and is further enhanced with Grid Layout.
+
+## 🔡 i18n
+Eureka is on Crowdin. Please [contribute to our translations](https://crowdin.com/project/eureka-browser) if you are&nbsp;able.
 
 ## ♿️ Accessibility Proclaimer
 Eureka strives for WCAG Level AA success criteria in all scenarios with some accessibility preference features leaning towards Level AAA. Please [log *any* a11y issues here](https://github.com/jpdevries/eureka/issues).
@@ -363,89 +573,43 @@ yarn start
 
 The development server, like any other React app created with `create-react-app`, will automatically inject changes as you save changes to your source files.
 
-## 🛠 Usage
-
-**HTML**
-```html
-<div id="eureka-root">
-  <!-- for performance, optimization, and accessibility it best to support server-side rendering by initially delivering a base HTML layer
-  see server-side rendering below -->
-</div>
-
-```
-
-**JS**
-```js
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { EurekaMediaBrowser } from 'eureka-browser';
-
-ReactDOM.render(
-  <EurekaMediaBrowser />,
-  document.getElementById('eureka-root')
-);
-```
-
-Eureka will then be injected into the DOM and eagerly reach out to the REST API for the JSON data it needs to offer the&nbsp;interface.
-
-Configure the `EurekaMediaBrowser` via the optional attributes found in the default configuration&nbsp;below:
-```xml
-  <EurekaMediaBrowser
-    basePath="/"
-    allowUploads={true}
-    treeHidden={true}
-    useLocalStorage={true}
-    storagePrefix="eureka__"
-    allowRename={true}
-    allowDelete={true}
-    confirmBeforeDelete={false}
-    locale="en-US"
-    mediaSource="0"
-    currentDirectory="/"
-    headers={{
-        'Powered-By': 'Eureka by Markup.tips'
-    }}
-    intervals={{
-      searchBarPlaceholder: false,
-      fetchDirectoryContents: 18000,
-      updateSourceTree: false
-    }}
-  />
-```
-## ⚙️ Options
-
-| Option        | Default           | Description  |
-| ------------- |:-------------:| -----|
-| `basePath`      | `"/"` | Prepended to URLs for XHR requests to the Rest API.<br>Set to the absolute path of your Rest API. |
-| `allowUploads`      | `true`      |   Whether or not to allow uploading of media items |
-| `treeHidden` | `true`      |    Whether or not the Media Source Panel "sidebar" should be initially closed |
-| `useLocalStorage` | `true`      |    Whether or not to use the JavaScript `localStorage` API to remember session data such as the last visited directory and view mode preference |
-| `storagePrefix` | `"eureka__"`      |    Prepended to `localStorage` keys |
-| `allowRename` | `true`      |    Whether or not to offer users the ability to rename directories and media items |
-| `allowDelete` | `true`      |    Whether or not to offer users the ability to delete directories and media items |
-| `confirmBeforeDelete` | `false`      |    Whether or not to confirm intent before users delete directories and media items |
-| `locale` | `"en-US"`      |    The localization to use. See Lexicons. |
-| `mediaSource` | `undefined`      |    The default initial media source id to use |
-| `currentDirectory` | `"/"`      |    The default initial directory to use |
-| `headers` | `{'Powered-By': 'Eureka by Markup.tips'}`      |    Additional request headers sent with XHR requests |
-| `intervals` | `{searchBarPlaceholder: false,fetchDirectoryContents: 18000,updateSourceTree: false}`      |    Intervals for whether or not and how often to update the  |
-| `enlargeFocusedRows` | `false`      |    Whether or not to enlarge thumbnails of focused rows |
-| `mode` | `"table"`      |    Initial view mode (table, thumb, grid, list) |
-| `sort` | `"name"`      |    Initial column to sort media items on |
-| `allowFullscreen` | `true`      |    Whether or not the interface should offer a fullscreen button |
-| `emphasisFocusedMediaItem` | `true`      |    Whether or not to emphasis selected media items (defaults to emphasizing the filename, only applies to table and list view modes) |
-| `welcome` | `true`      |    Whether or not to welcome users on their first Eureka experience |
-| `alwaysWelcome` | `true`      |    Whether or not to always welcome users |
-| `learnMore` | `https://github.com/jpdevries/eureka`      | Learn more link to use in the welcome message. Set to `undefined` to omit |
-
 ## 🗄 REST API
-Eureka is hungry. It needs a REST API to feed it JSON data.  
+Eureka is hungry for remote media sources. It needs a REST API to feed it JSON&nbsp;data.  
 Find docs at the [REST API wiki page](https://github.com/jpdevries/eureka/wiki/REST-API).
 
+### 💄 Decorating Actions
+Eureka's core Redux actions assume you'll be using a REST API. If REST isn't really your thing, or you need to modify the Redux actions for some other reason, you can decorate the actions Eureka will use. This is done using a Higher Order Component that wraps `EurekaMediaBrowser` and injects a `decoratedActions` property which will be applied as a shallow merge on top of the default&nbsp;actions. Reference this [Gist example of decorating actions](https://gist.github.com/jpdevries/e967056bd31cf6f01df0e431df68283b) for an example.
+
 ## 📠 Server Side Rendering
-Eureka is progressively enhanced with React to be asynchronous and a richer experience in capable browsers successfully that successfully execute scripts. But Eureka's support doesn't end at modern browsers because its design process doesn't start there. Eureka is a semantic and synchronous HTML form before it is an enhanced Virtual&nbsp;DOM.  
+Eureka is progressively enhanced with React to be asynchronous and a richer experience in capable browsers that successfully execute scripts. But Eureka's support doesn't end at modern browsers because its design process doesn't start there. Eureka is a semantic and synchronous HTML form before it is an enhanced Virtual&nbsp;DOM.  
 
 Reference the [Server Side Rendering Wiki page](https://github.com/jpdevries/eureka/wiki/Server-Side-Rendering) for documentations and examples on achieving world wide&nbsp;support.
+
+### ⌨️ Keyboard Shortcuts
+Eureka uses JavaScript events to enrich the user experience of keyboard&nbsp;users.
+
+| Shortcut        | Command              |
+| --------------- |:-------------:       |
+| Toggle Sidebar      | ctrl+;           |
+| Change View      | ctrl+alt+(1-5)      |
+| Change Media Source | alt+(1-9)        |
+| Delete Item | backspace                |
+| Expand Item | spacebar                 |
+| Choose Item | return                   |
+| Create Directory | ctrl+n              |
+| Create file | ctrl+shift+n              |
+| Upload Files | ctrl+u                  |
+| Rename Item | ctrl+r                   |
+| Filter Items | ctrl+f                  |
+| Sort Ascending | alt+up                  |
+| Sort Descending | alt+down                  |
+| Sort by filename | alt+n                  |
+| Sort by dimensions | alt+d                  |
+| Sort by file size | alt+f                  |
+| Sort by edited on | alt+e                  |
+| Set Choose Mode to Single | alt+s                  |
+| Set Choose Mode to Multiple | alt+m                  |
+| Invert Selection | alt+i                  |
 
 
 ## 🎨 Theming
@@ -467,6 +631,43 @@ Request additional theming options and share your themes by [opening an issue](h
 | `--subtle` | Subtle color, used for Media Source Panel |
 | `--very-subtle` | Very subtle color, used for drop zone area |
 | `--very-subtle-icon-opacity` | Opacity for very subtle icons |
+
+## 📣 Audible Interface
+Eureka uses a combination of ARIA attributes and `.visually-hidden` text to offer an experience that is as accessible visually as it is&nbsp;audibly.
+
+![The Eureka Browser interface without as seen by a screen reader includes  descriptive text for an accessible experience](http://j4p.us/3h1e2G0B0b0q/Screen%20Shot%202017-04-25%20at%205.25.24%20PM.png)
+
+There is one Achilles heel here. Depending on your media source API, you might not be able to provide alternative text for images and media items. In the event that no alt text is provided, Eureka will to the best it can. For example:
+
+> schildpad.jpg displays at 336x125, weighs 37 KB, and was edited on Sunday, April 02, 2017, Central European Summer Time
+
+## 📺 Fullscreen Mode
+To maximize usability Eureka leverages the Fullscreen&nbsp;API.
+
+<details>
+<summary>See the Fullscreen Mode in action</summary>
+<img src="http://j4p.us/1h2w3E1d2h2a/fs.gif">
+</details>
+
+## 🏞 Masonry Layout
+Eureka is enhanced by a Masonry Layout mode.
+
+<details open>
+<summary>Masonry Layout Mode</summary>
+<img src="http://j4p.us/1S1h282v2J0N/Screen%20Shot%202017-04-30%20at%208.51.21%20PM.png" />
+</details><br>
+
+If you are using Eureka as a UMD Module (probably not) you'll need [to load Masonry first](https://github.com/jpdevries/eureka/wiki/Loading-Patterns-(WIP)). If you would not like Masonry to be included in your bundle, add Masonry to your Webpack excludes. Eureka will only enable the Masonry Layout if Masonry is available.
+
+```js
+externals: {
+  "react": "React",
+  "react-dom":"ReactDOM",
+  "redux":"Redux",
+  "react-redux":"ReactRedux",
+  "react-masonry-component":"Masonry"
+}
+```
 
 
 ## 👀 Accessible Themes

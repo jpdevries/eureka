@@ -37,6 +37,8 @@ class DropArea extends PureComponent {
   render() {
     const props = this.props,
     formatMessage = props.intl.formatMessage,
+    pastImageFromClipboardMessage = formatMessage(definedMessages.pastImageFromClipboardMessage, {
+    }),
     dragFilesToBeUploadedToMessage = (props.view.isUploading) ? formatMessage(definedMessages.dragFilesUploading, {
       cd: props.content.cd
     }) : formatMessage(definedMessages.dragFilesToBeUploadedTo, {
@@ -44,7 +46,7 @@ class DropArea extends PureComponent {
     });
 
     return (
-      <div className={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }drop-area`} title={dragFilesToBeUploadedToMessage}>
+      <div tabIndex="0" aria-label={pastImageFromClipboardMessage} className={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }drop-area`} title={dragFilesToBeUploadedToMessage}>
         <Dropzone onDrop={this.onDrop.bind(this)} className={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }drop-area-zone`} activeClassName={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }drop-area-zone-active`} style={{}} >
           <Icon {...props} icon={props.view.isUploading ? 'circle-o-notch' : 'upload'} />
         </Dropzone>

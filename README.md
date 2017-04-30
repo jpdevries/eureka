@@ -179,6 +179,16 @@ The semantic HTML layer remains usable even absent of style as pure&nbsp;HTML.
       <td align="center"><span aria-label="supported">✅</span></td>
     </tr>
     <tr>
+      <td>Paste to Upload</td>
+      <td align="center"><span aria-label="not supported">❌</span></td>
+      <td align="center"><span aria-label="not supported">❌</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+    </tr>
+    <tr>
       <td>Media Source panel</td>
       <td align="center"><span aria-label="not supported">❌</span></td>
       <td align="center"><span aria-label="not supported">❌</span></td>
@@ -259,7 +269,7 @@ The semantic HTML layer remains usable even absent of style as pure&nbsp;HTML.
       <td align="center"><span aria-label="supported">✅</span></td>
     </tr>
     <tr>
-      <td>Masonry View Mode</td>
+      <td>Masonry Layout Mode</td>
       <td align="center"><span aria-label="not supported">❌</span></td>
       <td align="center"><span aria-label="not supported">❌</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
@@ -650,14 +660,14 @@ To maximize usability Eureka leverages the Fullscreen&nbsp;API.
 </details>
 
 ## 🏞 Masonry Layout
-Eureka is enhanced by a Masonry view mode.
+Eureka is enhanced by a Masonry Layout mode.
 
 <details open>
-<summary>Masonry View Mode</summary>
+<summary>Masonry Layout Mode</summary>
 <img src="http://j4p.us/1S1h282v2J0N/Screen%20Shot%202017-04-30%20at%208.51.21%20PM.png" />
 </details><br>
 
-If you are using Eureka as a UMD Module (probably not) you'll need [to load Masonry first](https://github.com/jpdevries/eureka/wiki/Loading-Patterns-(WIP)). If you would not like Masonry to be included in your bundle, add Masonry to your Webpack excludes. As Eureka will only enable the Masonry view if Masonry is available, this will effectively disable the view&nbsp;mode.
+If you are using Eureka as a UMD Module (probably not) you'll need [to load Masonry first](https://github.com/jpdevries/eureka/wiki/Loading-Patterns-(WIP)). If you would not like Masonry to be included in your bundle, add Masonry to your Webpack excludes. Eureka will only enable the Masonry Layout if Masonry is available.
 
 ```js
 externals: {
