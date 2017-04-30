@@ -92,7 +92,13 @@ class MediaRow extends PureComponent {
   }
 
   componentDidMount() {
+    const props = this.props;
     this.assignKeyboardListeners();
+    if(props.content.chosenMediaItemsInverted.includes(props.item)) {
+      this.setState({
+        chooseChecked: true
+      });
+    }
     //Mousetrap(document.querySelector('.eureka')).bind(['alt+z'], this.handleKeyboardDeselect);
 
     /*store.subscribe(() => {
