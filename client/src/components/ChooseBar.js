@@ -76,7 +76,7 @@ const ChooseBar = (props) => {
     })]}`
   }),
   deleteBtn = (len > 1 && props.view.chooseMultiple && props.config.allowDelete) ? (
-    <form onSubmit={(event) => {
+    <form encType="multipart/form-data" onSubmit={(event) => {
       event.preventDefault();
       event.stopPropagation();
       const formData = new FormData(event.target);

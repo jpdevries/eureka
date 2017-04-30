@@ -101,7 +101,7 @@ var ChooseBar = function ChooseBar(props) {
   }),
       deleteBtn = len > 1 && props.view.chooseMultiple && props.config.allowDelete ? _react2.default.createElement(
     'form',
-    { onSubmit: function onSubmit(event) {
+    { encType: 'multipart/form-data', onSubmit: function onSubmit(event) {
         event.preventDefault();
         event.stopPropagation();
         var formData = new FormData(event.target);

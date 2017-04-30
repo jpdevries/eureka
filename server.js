@@ -572,74 +572,83 @@ Delete a directory
 `DELETE /sources/:id/?dir=foo`
 */
 
-app.delete('/assets/components/eureka/media/sources/:source', (req, res) => {
-  const source = req.params.source;
+app.delete('/assets/components/eureka/media/sources/:source', function (req, res) {
+  var source = req.params.source;
 
-  const dir = req.query.dir
-  if(dir) {
+  var dir = req.query.dir;
+  if (dir) {
 
     // this is kinda #janky but whatever
-    let deletePath = dir.includes(__dirname) ? dir :  path.join(path.join(__dirname, 'sources/filesystem'), dir);
+    var deletePath = dir.includes(__dirname) ? dir : path.join(path.join(__dirname, 'sources/filesystem'), dir);
 
-    console.log(`delete ${path} source ${source}`);
+    console.log('delete ' + path + ' source ' + source);
 
     rmdir(deletePath, function (err, dirs, files) {
-      if(err) {
+      if (err) {
         console.log(err);
         res.json(false);
-      }
-      else res.json(true);
+      } else res.json(true);
     });
   } else {
     console.log('deleting files not the whole folder');
 
-    const form = new multiparty.Form(); // formidable doesn't support multiple input names https://github.com/felixge/node-formidable/issues/33
+    var form = new multiparty.Form(); // formidable doesn't support multiple input names https://github.com/felixge/node-formidable/issues/33
     //form.multiples = true;
 
-    form.parse(req, function(err, fields, files) {
-      if(err) {
-        console.log(err);
-        res.json(err);
-        return;
-      }
-      console.log('fields', fields);
-      const dir = Array.isArray(fields.cd) ? fields.cd[0] : fields[cd];
-      console.log(dir);
-      let deletePath = dir.includes(__dirname) ? dir :  path.join(path.join(__dirname, 'sources/filesystem'), dir);
-      //console.log('fields', fields);
-      //console.log(req.body, JSON.stringify(req.body));
-      const promises = fields['delete_file[]'].map((file) => (
-        deleteDirectory(path.join(deletePath, file))
-      ));
-
-
-      Promise.all(promises).then(() => {
-        console.log('deleted files');
-        getDirectoryListing(`${__dirname}/sources/filesystem/`, dir, true, true).then((results) => (
-          res.json(results)
-        )).catch((err) => {
+    if(req.query.path) {
+      deleteDirectory(req.query.path).then(() => {
+        getDirectoryListing(__dirname + '/sources/filesystem/', req.query.path, true, true).then(function (results) {
+          return res.json(results);
+        }).catch(function (err) {
           res.json(err);
         });
-      }).catch((err) => {
-        res.json(err);
-      });
-
-
-
-      function deleteDirectory(directory) {
-        console.log('promising to delete', directory);
-        return new Promise((resolve, reject) => {
-          rmdir(directory, function (err, dirs, files) {
-            console.log(`deleted ${directory}`);
-            if(err) {
-              reject(err);
-            } else resolve(directory);
-            console.log('directory', directory);
-          });
+      })
+    } else {
+      form.parse(req, function (err, fields, files) {
+        if (err) {
+          console.log(err);
+          res.json(err);
+          return;
+        }
+        console.log('fields', fields);
+        var dir = Array.isArray(fields.cd) ? fields.cd[0] : fields[cd];
+        console.log(dir);
+        var deletePath = dir.includes(__dirname) ? dir : path.join(path.join(__dirname, 'sources/filesystem'), dir);
+        //console.log('fields', fields);
+        //console.log(req.body, JSON.stringify(req.body));
+        var promises = fields['delete_file[]'].map(function (file) {
+          return deleteDirectory(path.join(deletePath, file));
         });
-      }
-    });
 
+        Promise.all(promises).then(function () {
+          console.log('deleted files');
+          getDirectoryListing(__dirname + '/sources/filesystem/', dir, true, true).then(function (results) {
+            return res.json(results);
+          }).catch(function (err) {
+            res.json(err);
+          });
+        }).catch(function (err) {
+          res.json(err);
+        });
+
+
+      });
+    }
+
+
+  }
+
+  function deleteDirectory(directory) {
+    console.log('promising to delete', directory);
+    return new Promise(function (resolve, reject) {
+      rmdir(directory, function (err, dirs, files) {
+        console.log('deleted ' + directory);
+        if (err) {
+          reject(err);
+        } else resolve(directory);
+        console.log('directory', directory);
+      });
+    });
   }
 
   /*try {
@@ -659,7 +668,6 @@ app.delete('/assets/components/eureka/media/sources/:source', (req, res) => {
 
   // todo: delete the directory
   //res.json(true);
-
 });
 
 /*

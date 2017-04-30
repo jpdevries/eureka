@@ -51,7 +51,7 @@ function render() {
     allowRename: true,
     allowDelete: true,
     allowInvertSelection: true,
-    confirmBeforeDelete: true,
+    confirmBeforeDelete: false,
     alwaysWelcome: true,
     allowFullscreen: true,
     enlargeFocusedRows: false,

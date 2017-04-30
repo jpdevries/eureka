@@ -9717,7 +9717,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }),
 	      deleteBtn = len > 1 && props.view.chooseMultiple && props.config.allowDelete ? _react2.default.createElement(
 	    'form',
-	    { onSubmit: function onSubmit(event) {
+	    { encType: 'multipart/form-data', onSubmit: function onSubmit(event) {
 	        event.preventDefault();
 	        event.stopPropagation();
 	        var formData = new FormData(event.target);
@@ -17304,6 +17304,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		"directory.create": "Create a Directory",
 		"directory.createNewIn": "Create a new Directory in {cd}",
 		"mediaSourceTree": "Media Source Panel",
+		"pastImageFromClipboardMessage": "Paste images from the clipboard to upload",
+		"pastImageFromClipboardToMessage": "Paste images from the clipboard to upload to ${cd} of source ${cs}",
 		"deleteAreYouSureMessage": "Are you sure you want to permanently delete {filename}?",
 		"masonryLayoutMessage": "Masonry Layout",
 		"close": "Close",
