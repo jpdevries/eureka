@@ -420,7 +420,7 @@ var initialViewState = Object.assign({}, {
 })());
 
 //console.log('initialViewState', initialViewState);
-
+let lastCD = initialContentState.cd;
 var viewReducer = function(state, action) {
   state = state || initialViewState;
 
@@ -443,10 +443,12 @@ var viewReducer = function(state, action) {
     return Object.assign({},state,action.view);
 
     case actions.UPDATE_CONTENT:
-    if(action.content.cd) {
-      return Object.assign({}, state, {
+    if(action.content.cd && action.content.cd !== lastCD) {
+      const r = Object.assign({}, state, {
         selectionInverted: false
       });
+      lastCD = action.content.cd;
+      return r;
     }
     return state;
 
