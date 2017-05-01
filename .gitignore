@@ -11,6 +11,7 @@ bower_components
 #/build
 
 stats.html
+client/public/assets/js/stats.html
 
 # misc
 .DS_Store

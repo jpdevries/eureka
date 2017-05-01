@@ -3054,7 +3054,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  switch (props.sort.by) {
 	    case 'dimensions':
-	      n = a.dimensions[0] * a.dimensions[1] > b.dimensions[0] * b.dimensions[1] ? 1 : -1;
+	      try {
+	        n = a.dimensions[0] * a.dimensions[1] > b.dimensions[0] * b.dimensions[1] ? 1 : -1;
+	      } catch (e) {
+	        console.log(e);
+	      }
 	      break;
 
 	    case 'editedOn':
@@ -4597,7 +4601,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.112",
+		"version": "0.0.113",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -9897,7 +9901,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return randomItem.filename;
 
 	          case 'dimensions':
-	            return randomItem.dimensions.join('x');
+	            try {
+	              return randomItem.dimensions.join('x');
+	            } catch (e) {
+	              return randomItem.filename;
+	            }
 
 	          case 'editedOn':
 	            return Math.random() < .5 ? new Date(randomItem.editedOn).toLocaleString() : new Date(randomItem.editedOn).toLocaleString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -10464,7 +10472,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        switch (state.sort.by) {
 	          case 'dimensions':
-	            n = a.dimensions[0] * a.dimensions[1] > b.dimensions[0] * b.dimensions[1] ? 1 : -1;
+	            try {
+	              n = a.dimensions[0] * a.dimensions[1] > b.dimensions[0] * b.dimensions[1] ? 1 : -1;
+	            } catch (e) {
+	              console.log(e);
+	            }
 	            break;
 
 	          case 'editedOn':
@@ -10988,7 +11000,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var editedOnDate = new Date(value.editedOn);
 	            //console.log('value', value);
 	            //return value.filename.toLowerCase().includes(filter);
-	            return value.filename.toLowerCase().includes(filter) || value.dimensions.join('x').toLowerCase().includes(filter) || value.localString.toLowerCase().includes(filter) || value.localStringVerbose.toLowerCase().includes(filter) || value.fileSizeHumanReadable.toLowerCase().includes(filter) || value.fileSizeHumanReadable.toLowerCase().replace(/ +?/g, '').includes(filter);
+	            return value.filename.toLowerCase().includes(filter) || function () {
+	              try {
+	                return value.dimensions.join('x');
+	              } catch (e) {
+	                return '';
+	              }
+	            }().toLowerCase().includes(filter) || value.localString.toLowerCase().includes(filter) || value.localStringVerbose.toLowerCase().includes(filter) || value.fileSizeHumanReadable.toLowerCase().includes(filter) || value.fileSizeHumanReadable.toLowerCase().replace(/ +?/g, '').includes(filter);
 	          });
 	        })();
 	      }
@@ -11469,7 +11487,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	          item = props.item,
 	          index = props.index,
 	          formatMessage = props.intl.formatMessage,
-	          ariaLabel = props.item.filename + ' displays at ' + props.item.dimensions.join('x') + ', weighs ' + (0, _filesize2.default)(props.item.fileSize, { round: 0 }) + ', and was edited on ' + new Date(props.item.editedOn).toLocaleString(props.view.locale, { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' });
+	          displaysAt = props.item.dimensions ? function () {
+	        try {
+	          return 'displays at ' + props.item.dimensions.join('x') + ', ';
+	        } catch (e) {
+	          return '';
+	        }
+	      }() : '',
+	          ariaLabel = props.item.filename + ' ' + displaysAt + 'weighs ' + (0, _filesize2.default)(props.item.fileSize, { round: 0 }) + ', and was edited on ' + new Date(props.item.editedOn).toLocaleString(props.view.locale, { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' });
 
 	      function shouldHide(item) {
 	        //console.log('shouldHide', item);
@@ -11747,7 +11772,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _react2.default.createElement(
 	          'td',
 	          { className: 'eureka__dimensions', role: 'gridcell' },
-	          props.item.dimensions[0] + 'x' + props.item.dimensions[1]
+	          props.item.dimensions ? props.item.dimensions[0] + 'x' + props.item.dimensions[1] : ''
 	        ),
 	        _react2.default.createElement(
 	          'td',
