@@ -49,6 +49,7 @@ We also encourage you to temporarily disable JavaScript in your browser and part
  - Drag and Drop Upload Support
  - Flexible Layout
  - Responsive Design
+ - Save Data with responsive thumbnails
  - Configurable Styles via CSS Variables
  - Accessible
    - supports mobile and touch devices
