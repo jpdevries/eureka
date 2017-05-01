@@ -9,6 +9,7 @@ compression = require('compression'),
 minifyHTML = require('express-minify-html'),
 isProd = (process.env.NODE_ENV == 'production') ? true : false;
 
+var pathParse = require('path-parse');
 
 /*try {
   imageMagick
@@ -421,6 +422,10 @@ function getDirectoryListing(req, baseURL = '', dirPath = '', includeFiles = tru
   //console.log('getDirectoryListing', baseURL, dirPath, includeFiles, includeDirectories);
   //console.log('saveData', saveData);
 
+
+
+  //const thumb = `?dim=${(saveData) ? '240' : '640'}${(saveData) ? '&quality=0.5' : ''}`;
+
   return new Promise((resolve, reject) => {
     if(!includeFiles && !includeDirectories) resolve([]); // nothing to do!
     const files = filterFiles(fs.readdirSync(dirPath)),
@@ -437,15 +442,32 @@ function getDirectoryListing(req, baseURL = '', dirPath = '', includeFiles = tru
       //console.log(file, isFile, size, atime, mtime, ctime);
 
       //console.log(includeFiles && isFile || includeDirectories && !isFile);
+      let thumb = '';
+      const ext = pathParse(path.join(dirPath, file)).ext;
+      switch(ext) {
+        case '.jpg':
+        case '.jpeg':
+        case '.gif':
+        case '.png':
+        case '.png8':
+        case '.png24':
+        case '.bmp':
+        case '.tiff':
+        thumb = `?dim=${(saveData) ? '240' : '640'}${(saveData) ? '&quality=0.5' : ''}`;
+        break;
 
+        default:
+        break;
+      }
       if(includeFiles && isFile || includeDirectories && !isFile) {
+
         results.push({
           filename:isFile ? file : undefined,
           foldername:!isFile ? file : undefined,
           directory:isFile ? dirPath.replace(baseURL, '') : path.join(dirPath,file).replace(baseURL, ''),
           path:path.join(dirPath,file),
           absoluteURL:path.join(dirPath,file).replace(__dirname, ''),
-          absolutePreviewURL:`${path.join(dirPath,file).replace(__dirname, '')}?dim=${(saveData) ? '240' : '420'}${(saveData) ? '&quality=0.5' : ''}`,
+          absolutePreviewURL:`${path.join(dirPath,file).replace(__dirname, '')}${thumb}`,
           editedOn:Math.round(Math.random() * (new Date(mtime).getTime())),
           dimensions:(() => {
             try {

@@ -233,7 +233,13 @@ class MediaRow extends PureComponent {
     item = props.item,
     index = props.index,
     formatMessage = props.intl.formatMessage,
-    displaysAt = (props.item.dimensions) ? `displays at ${props.item.dimensions.join('x')}, ` : '',
+    displaysAt = (props.item.dimensions) ? (() => {
+      try {
+        return `displays at ${props.item.dimensions.join('x')}, `
+      } catch (e) {
+        return ''
+      }
+    })() : '',
     ariaLabel = `${props.item.filename} ${displaysAt}weighs ${filesize(props.item.fileSize, {round: 0})}, and was edited on ${new Date(props.item.editedOn).toLocaleString(props.view.locale,{ weekday:'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' })}`;
 
     function shouldHide(item) {
