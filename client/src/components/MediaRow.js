@@ -233,7 +233,8 @@ class MediaRow extends PureComponent {
     item = props.item,
     index = props.index,
     formatMessage = props.intl.formatMessage,
-    ariaLabel = `${props.item.filename} displays at ${props.item.dimensions.join('x')}, weighs ${filesize(props.item.fileSize, {round: 0})}, and was edited on ${new Date(props.item.editedOn).toLocaleString(props.view.locale,{ weekday:'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' })}`;
+    displaysAt = (props.item.dimensions) ? `displays at ${props.item.dimensions.join('x')}, ` : '',
+    ariaLabel = `${props.item.filename} ${displaysAt}weighs ${filesize(props.item.fileSize, {round: 0})}, and was edited on ${new Date(props.item.editedOn).toLocaleString(props.view.locale,{ weekday:'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' })}`;
 
     function shouldHide(item) {
       //console.log('shouldHide', item);
@@ -486,7 +487,7 @@ class MediaRow extends PureComponent {
         </td>
         {contextMenu}
         <td className="eureka__dimensions" role="gridcell">
-          {`${props.item.dimensions[0]}x${props.item.dimensions[1]}`}
+          {props.item.dimensions ? `${props.item.dimensions[0]}x${props.item.dimensions[1]}` : ''}
         </td>
         <td className="eureka__file-size" role="gridcell">
           {filesize(props.item.fileSize)}

@@ -9,7 +9,11 @@ compression = require('compression'),
 minifyHTML = require('express-minify-html'),
 isProd = (process.env.NODE_ENV == 'production') ? true : false;
 
+const qt = require('quickthumb');
+
 const AdmZip = require('adm-zip');
+
+import sizeOf from 'image-size';
 
 const multiparty = require('multiparty');
 
@@ -77,7 +81,10 @@ app.set('port', (process.env.PORT || 3001));
    multiples: true
 }));*/
 
-app.use('/sources', express.static(path.join(__dirname, '/sources')));
+//app.use('/sources', express.static(path.join(__dirname, '/sources')));
+app.use('/sources', qt.static(path.join(__dirname, '/sources'), {
+  //quality: .92
+}));
 
 store.dispatch(actions.updateConfig({
   allowUploads:true
@@ -223,7 +230,7 @@ function serveIt(dir = "/", lang = undefined) {
       ))
     )).then(() => { // get the current directory listing
       return new Promise((resolve, reject) => {
-        getDirectoryListing(`${__dirname}/sources/filesystem/`, dir || '/', true, true, `${__dirname}/sources/filesystem/`).then((results) => (
+        getDirectoryListing(req,`${__dirname}/sources/filesystem/`, dir || '/', true, true, `${__dirname}/sources/filesystem/`).then((results) => (
           resolve(results)
         )).catch((err) => (
           res.json([])
@@ -397,12 +404,14 @@ function getSourceDirectories(path) {
   });
 }
 
-function getDirectoryListing(baseURL = '', dirPath = '', includeFiles = true, includeDirectories = true) {
+function getDirectoryListing(req, baseURL = '', dirPath = '', includeFiles = true, includeDirectories = true) {
   //if(dirPath.slice(-1) !== '/') dirPath = `${dirPath}/`;
   //dirPath = `${baseURL}${dirPath}`;
 
   dirPath = path.join(baseURL, dirPath);
+  const saveData = req.get('Save-Data') !== undefined;
   //console.log('getDirectoryListing', baseURL, dirPath, includeFiles, includeDirectories);
+  //console.log('saveData', saveData);
 
   return new Promise((resolve, reject) => {
     if(!includeFiles && !includeDirectories) resolve([]); // nothing to do!
@@ -428,9 +437,20 @@ function getDirectoryListing(baseURL = '', dirPath = '', includeFiles = true, in
           directory:isFile ? dirPath.replace(baseURL, '') : path.join(dirPath,file).replace(baseURL, ''),
           path:path.join(dirPath,file),
           absoluteURL:path.join(dirPath,file).replace(__dirname, ''),
-          absolutePreviewURL:path.join(dirPath,file).replace(__dirname, ''),
-          editedOn:new Date(mtime).getTime(),
-          dimensions:[Math.round(Math.random()*420),Math.round(Math.random()*180)],
+          absolutePreviewURL:`${path.join(dirPath,file).replace(__dirname, '')}?dim=${(saveData) ? '240' : '420'}${(saveData) ? '&quality=0.5' : ''}`,
+          editedOn:Math.round(Math.random() * (new Date(mtime).getTime())),
+          dimensions:(() => {
+            try {
+              //return undefined;
+              const dimensions = sizeOf(path.join(dirPath, file));
+              //console.log('dimensions', dimensions);
+              return [dimensions.width, dimensions.height];
+            } catch (e) {
+              console.log(e);
+              return undefined;
+              //return [Math.round(Math.random()*420), Math.round(Math.random()*180)]
+            }
+          })(),
           fileSize:size
         });
       }
@@ -467,7 +487,7 @@ app.get('/assets/components/eureka/media/sources/:source', (req, res) => {
 
   if(dir) {
     if(dir.slice(-1) != '/') dir = `${dir}/`;
-    getDirectoryListing(`${__dirname}/sources/filesystem/`,dir, true, true, `${__dirname}/sources/filesystem/`).then((results) => (
+    getDirectoryListing(req, `${__dirname}/sources/filesystem/`,dir, true, true, `${__dirname}/sources/filesystem/`).then((results) => (
       res.json(results)
     )).catch((err) => (
       res.json([])
@@ -518,7 +538,7 @@ app.post('/assets/components/eureka/media/sources/:source', (req, res) => {
   });
 
   form.on('end', function() { // now that the files have uploaded return JSON of the destination directory's ENTIRE contents (not just what was uploaded)
-    getDirectoryListing(`${__dirname}/sources/filesystem/`,dir, true, true, `${__dirname}/sources/filesystem/`).then((results) => (
+    getDirectoryListing(req, `${__dirname}/sources/filesystem/`,dir, true, true, `${__dirname}/sources/filesystem/`).then((results) => (
       res.json(results)
     )).catch((err) => (
       res.json([])
@@ -597,7 +617,7 @@ app.delete('/assets/components/eureka/media/sources/:source', function (req, res
 
     if(req.query.path) {
       deleteDirectory(req.query.path).then(() => {
-        getDirectoryListing(__dirname + '/sources/filesystem/', req.query.path, true, true).then(function (results) {
+        getDirectoryListing(req, __dirname + '/sources/filesystem/', req.query.path, true, true).then(function (results) {
           return res.json(results);
         }).catch(function (err) {
           res.json(err);
@@ -622,7 +642,7 @@ app.delete('/assets/components/eureka/media/sources/:source', function (req, res
 
         Promise.all(promises).then(function () {
           console.log('deleted files');
-          getDirectoryListing(__dirname + '/sources/filesystem/', dir, true, true).then(function (results) {
+          getDirectoryListing(req, __dirname + '/sources/filesystem/', dir, true, true).then(function (results) {
             return res.json(results);
           }).catch(function (err) {
             res.json(err);
@@ -704,7 +724,7 @@ app.put('/assets/components/eureka/media/sources/:source', (req, res) => {
     try {
       fs.renameSync(filePath, path.join(dir, name));
       //function getDirectoryListing(baseURL = '', dirPath = '', includeFiles = true, includeDirectories = true)
-      getDirectoryListing(``,dir, true, true).then((results) => (
+      getDirectoryListing(req,``,dir, true, true).then((results) => (
         res.json(results)
       )).catch((err) => {
         console.log(err);

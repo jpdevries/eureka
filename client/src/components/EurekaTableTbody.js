@@ -127,7 +127,7 @@ class EurekaTableTbody extends PureComponent {
         //console.log('value', value);
         //return value.filename.toLowerCase().includes(filter);
         return (
-          value.filename.toLowerCase().includes(filter) || value.dimensions.join('x').toLowerCase().includes(filter) || value.localString.toLowerCase().includes(filter) || value.localStringVerbose.toLowerCase().includes(filter) || value.fileSizeHumanReadable.toLowerCase().includes(filter) || value.fileSizeHumanReadable.toLowerCase().replace(/ +?/g, '').includes(filter)
+          value.filename.toLowerCase().includes(filter) || (() => { try { return value.dimensions.join('x') } catch(e) { return '' } })().toLowerCase().includes(filter) || value.localString.toLowerCase().includes(filter) || value.localStringVerbose.toLowerCase().includes(filter) || value.fileSizeHumanReadable.toLowerCase().includes(filter) || value.fileSizeHumanReadable.toLowerCase().replace(/ +?/g, '').includes(filter)
         )
       });
     }

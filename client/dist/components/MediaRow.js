@@ -288,7 +288,8 @@ var MediaRow = function (_PureComponent) {
           item = props.item,
           index = props.index,
           formatMessage = props.intl.formatMessage,
-          ariaLabel = props.item.filename + ' displays at ' + props.item.dimensions.join('x') + ', weighs ' + (0, _filesize2.default)(props.item.fileSize, { round: 0 }) + ', and was edited on ' + new Date(props.item.editedOn).toLocaleString(props.view.locale, { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' });
+          displaysAt = props.item.dimensions ? 'displays at ' + props.item.dimensions.join('x') + ', ' : '',
+          ariaLabel = props.item.filename + ' ' + displaysAt + 'weighs ' + (0, _filesize2.default)(props.item.fileSize, { round: 0 }) + ', and was edited on ' + new Date(props.item.editedOn).toLocaleString(props.view.locale, { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long' });
 
       function shouldHide(item) {
         //console.log('shouldHide', item);
@@ -566,7 +567,7 @@ var MediaRow = function (_PureComponent) {
         _react2.default.createElement(
           'td',
           { className: 'eureka__dimensions', role: 'gridcell' },
-          props.item.dimensions[0] + 'x' + props.item.dimensions[1]
+          props.item.dimensions ? props.item.dimensions[0] + 'x' + props.item.dimensions[1] : ''
         ),
         _react2.default.createElement(
           'td',

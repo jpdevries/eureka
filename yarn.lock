@@ -2123,6 +2123,14 @@ ignore@^3.2.0:
   version "3.2.6"
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-3.2.6.tgz#26e8da0644be0bb4cb39516f6c79f0e0f4ffe48c"
 
+image-size@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/image-size/-/image-size-0.5.1.tgz#28eea8548a4b1443480ddddc1e083ae54652439f"
+
+"imagemagick@git://github.com/rsms/node-imagemagick.git":
+  version "0.1.3"
+  resolved "git://github.com/rsms/node-imagemagick.git#8ad6a7f251b1d1f3e5c14358140c82246cc15e5b"
+
 imagesloaded@^4.0.0:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/imagesloaded/-/imagesloaded-4.1.1.tgz#53b5b66615360850a5a264b1293e7f4d06d3bd51"
@@ -2558,6 +2566,10 @@ mkdirp@0.x.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.1:
   dependencies:
     minimist "0.0.8"
 
+mkdirp@~0.3.3:
+  version "0.3.5"
+  resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-0.3.5.tgz#de3e5f8961c88c787ee1368df849ac4413eca8d7"
+
 moment@^2.11.2:
   version "2.18.0"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.18.0.tgz#6cfec6a495eca915d02600a67020ed994937252c"
@@ -2963,6 +2975,13 @@ qs@4.0.0:
 qs@~6.4.0:
   version "6.4.0"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.4.0.tgz#13e26d28ad6b0ffaa91312cd3bf708ed351e7233"
+
+"quickthumb@github:jpdevries/node-quickthumb":
+  version "0.0.12"
+  resolved "https://codeload.github.com/jpdevries/node-quickthumb/tar.gz/c7d2fde511ed628486747e685b536e7a68299ace"
+  dependencies:
+    imagemagick "git://github.com/rsms/node-imagemagick.git"
+    mkdirp "~0.3.3"
 
 randomatic@^1.1.3:
   version "1.1.6"

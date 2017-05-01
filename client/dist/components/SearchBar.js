@@ -112,7 +112,11 @@ var SearchBar = function (_Component) {
             return randomItem.filename;
 
           case 'dimensions':
-            return randomItem.dimensions.join('x');
+            try {
+              return randomItem.dimensions.join('x');
+            } catch (e) {
+              return randomItem.filename;
+            }
 
           case 'editedOn':
             return Math.random() < .5 ? new Date(randomItem.editedOn).toLocaleString() : new Date(randomItem.editedOn).toLocaleString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' });

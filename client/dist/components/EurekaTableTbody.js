@@ -185,7 +185,13 @@ var EurekaTableTbody = function (_PureComponent) {
             var editedOnDate = new Date(value.editedOn);
             //console.log('value', value);
             //return value.filename.toLowerCase().includes(filter);
-            return value.filename.toLowerCase().includes(filter) || value.dimensions.join('x').toLowerCase().includes(filter) || value.localString.toLowerCase().includes(filter) || value.localStringVerbose.toLowerCase().includes(filter) || value.fileSizeHumanReadable.toLowerCase().includes(filter) || value.fileSizeHumanReadable.toLowerCase().replace(/ +?/g, '').includes(filter);
+            return value.filename.toLowerCase().includes(filter) || function () {
+              try {
+                return value.dimensions.join('x');
+              } catch (e) {
+                return '';
+              }
+            }().toLowerCase().includes(filter) || value.localString.toLowerCase().includes(filter) || value.localStringVerbose.toLowerCase().includes(filter) || value.fileSizeHumanReadable.toLowerCase().includes(filter) || value.fileSizeHumanReadable.toLowerCase().replace(/ +?/g, '').includes(filter);
           });
         })();
       }

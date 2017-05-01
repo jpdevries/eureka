@@ -106,7 +106,11 @@ var EurekaTable = function (_Component) {
 
         switch (state.sort.by) {
           case 'dimensions':
-            n = a.dimensions[0] * a.dimensions[1] > b.dimensions[0] * b.dimensions[1] ? 1 : -1;
+            try {
+              n = a.dimensions[0] * a.dimensions[1] > b.dimensions[0] * b.dimensions[1] ? 1 : -1;
+            } catch (e) {
+              console.log(e);
+            }
             break;
 
           case 'editedOn':
