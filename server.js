@@ -9,6 +9,14 @@ compression = require('compression'),
 minifyHTML = require('express-minify-html'),
 isProd = (process.env.NODE_ENV == 'production') ? true : false;
 
+
+/*try {
+  imageMagick
+} catch(e) {
+  const gm = require('gm'),
+  imageMagick = gm.subClass({ imageMagick: true });
+}*/
+
 const qt = require('quickthumb');
 
 const AdmZip = require('adm-zip');
@@ -92,7 +100,7 @@ store.dispatch(actions.updateConfig({
 
 app.get('/', (req, res) => {
 
-  serveIt('/', req.query.ln || undefined).then((eurekaMarkup) => {
+  serveIt(req, '/', req.query.ln || undefined).then((eurekaMarkup) => {
     //console.log(path.join(__dirname, 'client/build/index.html'));
     let build = fs.readFileSync(path.join(__dirname, 'client/build/index.html'), 'utf8').replace('<div id="root" class="eureka-root">',`<div id="root" class="eureka-root">${eurekaMarkup}</div>`).replace(`<html lang="en">`,`<html lang="${req.query.ln || 'en'}">`);
     //const build = '<h1>YOLO</h1>';
@@ -115,7 +123,7 @@ app.get('/', (req, res) => {
 
 app.get('/nued', (req, res) => {
 
-  serveIt('/', req.query.ln || undefined).then((eurekaMarkup) => {
+  serveIt(req, '/', req.query.ln || undefined).then((eurekaMarkup) => {
     let build = fs.readFileSync(path.join(__dirname, 'client/build/nued.html'), 'utf8').replace('<div id="root" class="eureka-root">',`<div id="root" class="eureka-root">${eurekaMarkup}</div>`).replace(`<html lang="en">`,`<html lang="${req.query.ln || 'en'}">`);
     res.end(build);
   });
@@ -188,7 +196,7 @@ app.post('/', (req, res) => {
         </html>`);
       });
     } else {
-      serveIt(cd).then((eurekaMarkup) => {
+      serveIt(req, cd).then((eurekaMarkup) => {
         //console.log(eurekaMarkup);
         let build = fs.readFileSync(path.join(__dirname, `client/build/${isNued ? 'nued' : 'index'}.html`), 'utf8').replace('<div id="root" class="eureka-root">',`<div id="root" class="eureka-root">${eurekaMarkup}</div>`).replace(`<html lang="en">`,`<html lang="${req.query.ln || 'en'}">`);
         res.end(build);
@@ -200,7 +208,7 @@ app.post('/', (req, res) => {
   });
 });
 
-function serveIt(dir = "/", lang = undefined) {
+function serveIt(req, dir = "/", lang = undefined) {
   //console.log('serveIt', dir);
   return new Promise((resolve, reject) => {
     store.dispatch(actions.updateConfig({
