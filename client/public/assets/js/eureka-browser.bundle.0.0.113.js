@@ -32880,7 +32880,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  ),
 	      downloadBtn = len > 1 && props.view.chooseMultiple && props.config.allowDownloadMultiple ? _react2.default.createElement(
 	    'form',
-	    { target: '_blank', encType: 'multipart/form-data', method: 'POST', action: '/assets/components/eureka/media/attachments/' + props.source.currentSource, onSubmit: function onSubmit(event) {} },
+	    { encType: 'multipart/form-data', method: 'POST', action: '/assets/components/eureka/media/attachments/' + props.source.currentSource, onSubmit: function onSubmit(event) {} },
 	    _react2.default.createElement('input', { type: 'hidden', name: 'cd', value: props.content.cd }),
 	    _react2.default.createElement('input', { type: 'hidden', name: 'cs', value: props.source.currentSource }),
 	    downloadBtnFormFileNames,
@@ -42369,13 +42369,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return contents.sort(function (a, b) {
 	        if (a[state.sort.by] === b[state.sort.by]) return 0;
 
-	        var n = void 0;
+	        var n = 0;
 
 	        //console.log('props.sort.by',props.sort.by,a,b);
 
 	        switch (state.sort.by) {
 	          case 'dimensions':
 	            try {
+	              // [200, 400]
 	              n = a.dimensions[0] * a.dimensions[1] > b.dimensions[0] * b.dimensions[1] ? 1 : -1;
 	            } catch (e) {
 	              console.log(e);
@@ -42396,6 +42397,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            break;
 	        }
 
+	        // reverse the sort order if we should
 	        return state.sort.dir === _utility2.default.DESCENDING ? n : 0 - n;
 	      });
 	    }

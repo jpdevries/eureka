@@ -50,13 +50,13 @@ class EurekaTable extends Component {
     return contents.sort((a,b) => {
       if(a[state.sort.by] === b[state.sort.by]) return 0;
 
-      let n;
+      let n = 0;
 
       //console.log('props.sort.by',props.sort.by,a,b);
 
       switch(state.sort.by) {
         case 'dimensions':
-        try {
+        try { // [200, 400]
           n = a.dimensions[0] * a.dimensions[1] > b.dimensions[0] * b.dimensions[1] ? 1 : -1;
         } catch (e) {
           console.log(e);
@@ -77,6 +77,7 @@ class EurekaTable extends Component {
         break;
       }
 
+      // reverse the sort order if we should
       return (state.sort.dir === utility.DESCENDING) ? n : 0-n;
     });
   }

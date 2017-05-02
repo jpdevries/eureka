@@ -100,13 +100,14 @@ var EurekaTable = function (_Component) {
       return contents.sort(function (a, b) {
         if (a[state.sort.by] === b[state.sort.by]) return 0;
 
-        var n = void 0;
+        var n = 0;
 
         //console.log('props.sort.by',props.sort.by,a,b);
 
         switch (state.sort.by) {
           case 'dimensions':
             try {
+              // [200, 400]
               n = a.dimensions[0] * a.dimensions[1] > b.dimensions[0] * b.dimensions[1] ? 1 : -1;
             } catch (e) {
               console.log(e);
@@ -127,6 +128,7 @@ var EurekaTable = function (_Component) {
             break;
         }
 
+        // reverse the sort order if we should
         return state.sort.dir === _utility2.default.DESCENDING ? n : 0 - n;
       });
     }

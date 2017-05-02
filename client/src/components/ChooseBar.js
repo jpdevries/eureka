@@ -44,7 +44,7 @@ const ChooseBar = (props) => {
       })()}</span>
   ),
   downloadBtn = (len > 1 && props.view.chooseMultiple && props.config.allowDownloadMultiple) ? (
-    <form target="_blank" encType="multipart/form-data" method="POST" action={`/assets/components/eureka/media/attachments/${props.source.currentSource}`} onSubmit={(event) => {
+    <form encType="multipart/form-data" method="POST" action={`/assets/components/eureka/media/attachments/${props.source.currentSource}`} onSubmit={(event) => {
 
     }}>
       <input type="hidden" name="cd" value={props.content.cd} />
