@@ -1104,4 +1104,26 @@
   [hidden] {
     display: none !important;
   }
+  .eureka__crop-save-as-checkbox {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .eureka__crop-as {
+    padding-right:1rem;
+    input[type="text"] {
+      flex-grow:1;
+    }
+  }
+
+  label[for="eureka__crop-save-as-name"] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  label[for="eureka__crop-aspect-ratio-remember"] {
+    line-height: 2;
+  }
+
 }

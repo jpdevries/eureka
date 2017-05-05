@@ -1,5 +1,17 @@
 [
   {
+    "id": "cropAs",
+    "defaultMessage": "Crop As…"
+  },
+  {
+    "id": "crop",
+    "defaultMessage": "Crop"
+  },
+  {
+    "id": "saveAs",
+    "defaultMessage": "Save As"
+  },
+  {
     "id": "showAdvControls",
     "defaultMessage": "Show Advanced Controls"
   },
@@ -10,10 +22,6 @@
   {
     "id": "crop.move",
     "defaultMessage": "Move"
-  },
-  {
-    "id": "crop",
-    "defaultMessage": "Crop"
   },
   {
     "id": "crop.showGuides",
@@ -78,6 +86,10 @@
   {
     "id": "crop.free",
     "defaultMessage": "Free"
+  },
+  {
+    "id": "rememberAspectRatio",
+    "defaultMessage": "Remember Ratio"
   },
   {
     "id": "crop.scaleRotate",

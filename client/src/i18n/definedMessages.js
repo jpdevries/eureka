@@ -21,6 +21,10 @@ export default defineMessages({
     id: 'reset',
     defaultMessage: 'Reset'
   },
+  rememberThis: {
+    id: 'rememberAspectRatio',
+    defaultMessage: 'Remember Ratio'
+  },
   crop: {
     id: 'crop',
     defaultMessage: 'Crop'
@@ -28,6 +32,10 @@ export default defineMessages({
   cropItem: {
     id: 'cropItem',
     defaultMessage: 'Crop {item}'
+  },
+  saveAsItem: {
+    id: 'saveAsItem',
+    defaultMessage: 'Save as {item}'
   },
   croppingItem: {
     id: 'croppingItem',

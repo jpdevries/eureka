@@ -25,9 +25,11 @@ The Eureka Media Browser is pretty lightweight all things&nbsp;considered.
 
 | Asset        | Weight (GZIP minified)
 | ------------- |:-------------:|
-| CSS Stylesheet      | `5.18kB` |
-| SVG Icons      | `5.04kB`      |
-| React Component | `47.40kB`    |
+| CSS Stylesheet      | `7.83kB` |
+| SVG Icons      | `7.88kB`      |
+| React Component | `75.83kB`    |
+
+[Have a gander at our Webpack Visualizer](https://eureka.markup.tips/assets/js/stats.html)&nbsp;👀 .
 
 ### 📄 HTML&ndash;first
 As a progressively enhanced web component, Eureka is functional HTML&ndash;first. This means that technically anything other than the initial HTML layer is a non&ndash;critical enhancement. Critical features supported by the HTML layer, such as browse, upload, and choose, are universally supported and do not depend on modern&nbsp;browsers, CSS styles, or&nbsp;script.
@@ -149,6 +151,16 @@ The semantic HTML layer remains usable even absent of style as pure&nbsp;HTML.
       <td align="center"><span aria-label="supported">✅</span></td>
     </tr>
     <tr>
+      <td>Download Item</td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+    </tr>
+    <tr>
       <td>Choose Multiple Items</td>
       <td align="center"><span aria-label="not supported">❌</span></td>
       <td align="center"><span aria-label="not supported">❌</span></td>
@@ -170,6 +182,16 @@ The semantic HTML layer remains usable even absent of style as pure&nbsp;HTML.
     </tr>
     <tr>
       <td>Keyboard Shortcuts</td>
+      <td align="center"><span aria-label="not supported">❌</span></td>
+      <td align="center"><span aria-label="not supported">❌</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+      <td align="center"><span aria-label="supported">✅</span></td>
+    </tr>
+    <tr>
+      <td>Crop Images</td>
       <td align="center"><span aria-label="not supported">❌</span></td>
       <td align="center"><span aria-label="not supported">❌</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
@@ -302,16 +324,6 @@ The semantic HTML layer remains usable even absent of style as pure&nbsp;HTML.
       <td>Delete Item</td>
       <td align="center"><span aria-label="not supported">❌</span></td>
       <td align="center"><span aria-label="not supported">❌</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-    </tr>
-    <tr>
-      <td>Download Item</td>
-      <td align="center"><span aria-label="supported">✅</span></td>
-      <td align="center"><span aria-label="supported">✅</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>
       <td align="center"><span aria-label="supported">✅</span></td>

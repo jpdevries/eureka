@@ -545,7 +545,10 @@ app.post('/assets/components/eureka/media/sources/:source', (req, res) => {
 
   const dir = req.query.path,
   uploadDir = path.join(__dirname, path.join('/sources/filesystem/', dir)),
-  form = new formidable.IncomingForm();
+  //form = new formidable.IncomingForm();
+  form = new multiparty.Form({
+    uploadDir: uploadDir
+  });
 
   //console.log(dir, uploadDir);
 
@@ -557,26 +560,32 @@ app.post('/assets/components/eureka/media/sources/:source', (req, res) => {
   }
 
   // specify that we want to allow the user to upload multiple files in a single request
-  form.multiples = true;
+  //form.multiples = true;
 
-  form.on('file', (field, file) => (
+  /*form.on('file', (field, file) => (
     fs.renameSync(file.path, path.join(uploadDir, file.name))
-  ));
+  ));*/
 
   // log any errors that occur
   form.on('error', function(err) {
     console.log('An error has occured: \n' + err);
   });
 
-  form.on('end', function() { // now that the files have uploaded return JSON of the destination directory's ENTIRE contents (not just what was uploaded)
+  /*form.on('end', function() { // now that the files have uploaded return JSON of the destination directory's ENTIRE contents (not just what was uploaded)
+    getDirectoryListing(req, `${__dirname}/sources/filesystem/`,dir, true, true, `${__dirname}/sources/filesystem/`).then((results) => (
+      res.json(results)
+    )).catch((err) => (
+      res.json([])
+    ));
+  });*/
+
+  form.parse(req, function(err, fields, files) {
     getDirectoryListing(req, `${__dirname}/sources/filesystem/`,dir, true, true, `${__dirname}/sources/filesystem/`).then((results) => (
       res.json(results)
     )).catch((err) => (
       res.json([])
     ));
   });
-
-  form.parse(req);
 
 });
 

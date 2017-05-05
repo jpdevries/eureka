@@ -476,6 +476,8 @@ var initialViewState = Object.assign({}, {
     by: 'filename',
     dir: _utility2.default.ASCENDING
   },
+  cropAspectRatio: NaN,
+  rememberAspectRatio: true,
   isTableScrolling: false,
   selectionInverted: selectionInverted,
   allowFullscreen: true,

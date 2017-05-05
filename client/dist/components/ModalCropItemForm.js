@@ -62,6 +62,8 @@ var CropperJS = function () {
   }
 }();
 
+var SAVE_AS = 'save_as';
+
 var ModalCropItemForm = function (_Component) {
   _inherits(ModalCropItemForm, _Component);
 
@@ -78,7 +80,14 @@ var ModalCropItemForm = function (_Component) {
       guides: true,
       dragMode: 'crop',
       cropData: undefined,
-      showFormControls: props.view.showAdvControls
+      showFormControls: props.view.showAdvControls,
+      mode: undefined,
+      saveAs: undefined,
+      saveAsPlaceholder: undefined,
+      doSaveAs: false,
+      saveAsDirty: true,
+      cropAspectRatio: props.view.rememberAspectRatio && props.view.cropAspectRatio !== undefined ? props.view.cropAspectRatio : NaN
+      //rememberAspectRatio:false
     };
 
     _this.decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
@@ -89,7 +98,20 @@ var ModalCropItemForm = function (_Component) {
   _createClass(ModalCropItemForm, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
+      var _pathParse = pathParse(this.props.item.filename),
+          name = _pathParse.name,
+          ext = _pathParse.ext;
+
+      this.name = name;
+      this.ext = ext;
       //this.refs.input.focus(); // simulate HTML5 autofocus
+
+      this.saveAsPlaceholder = name + '_crop' + ext;
+      this.setState({
+        saveAs: this.saveAsPlaceholder,
+        saveAsPlaceholder: this.saveAsPlaceholder
+      });
+
       this.img = document.querySelector('tr[id="' + _utility2.default.cssSafe(this.props.item.filename) + '"]').querySelector('img');
       this.modal = document.querySelector('.eureka__crop-modal');
     }
@@ -97,6 +119,9 @@ var ModalCropItemForm = function (_Component) {
     key: 'componentWillUpdate',
     value: function componentWillUpdate() {
       //this.setDownloadDataURL();
+      if (this.props.view.rememberAspectRatio && this.props.view.cropAspectRatio != event.target.value) _store2.default.dispatch(_actions2.default.updateView({
+        cropAspectRatio: event.target.value
+      }));
     }
   }, {
     key: 'componentWillUnmount',
@@ -108,10 +133,12 @@ var ModalCropItemForm = function (_Component) {
     value: function _crop(event) {
       // image in dataUrl
       console.log(event.detail);
-
+      var saveAsPlaceholder = this.name + '_crop' + Math.round(event.detail.width) + 'x' + Math.round(event.detail.height) + this.ext;
       this.setState({
         crop: event.detail,
-        cropData: this.cropper.getData()
+        cropData: this.cropper.getData(),
+        saveAsPlaceholder: this.name + '_crop' + Math.round(event.detail.width) + 'x' + Math.round(event.detail.height) + this.ext,
+        saveAs: this.state.saveAsDirty ? saveAsPlaceholder : this.state.saveAs
       });
       //this.img.setAttribute('src', this.cropper.getCroppedCanvas().toDataURL());
 
@@ -152,6 +179,56 @@ var ModalCropItemForm = function (_Component) {
       var props = this.props;
 
       var formatMessage = props.intl.formatMessage;
+      var saveAsBtn = this.state.mode !== SAVE_AS ? _react2.default.createElement(
+        'button',
+        { type: 'submit', onClick: function onClick(event) {
+            _this3.setState({
+              'mode': SAVE_AS,
+              doSaveAs: true
+            });
+            //this.saveAsName.focus();
+          }, disabled: false },
+        _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'cropAs', defaultMessage: 'Crop As\u2026' })
+      ) : undefined;
+      var cropBtn = _react2.default.createElement(
+        'button',
+        { type: 'submit', onBlur: function onBlur(event) {// <span className="spinner"><Icon {...props} icon="circle-o-notch" /></span>
+            //this.refs.input.focus();
+          }, disabled: false },
+        _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'crop', defaultMessage: 'Crop' })
+      );
+      var saveAsForm = this.state.mode === SAVE_AS ? _react2.default.createElement(
+        'div',
+        { className: 'eureka__crop-as' },
+        _react2.default.createElement(
+          'div',
+          { className: 'flex-bar' },
+          _react2.default.createElement(
+            'label',
+            { htmlFor: 'eureka__crop-save-as-name' },
+            _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'saveAs', defaultMessage: 'Save As' })
+          ),
+          _react2.default.createElement('input', { onFocus: function onFocus(event) {
+              event.target.setSelectionRange(0, event.target.value.length);
+            }, autoFocus: true, ref: function ref(saveAsName) {
+              return _this3.saveAsName = saveAsName;
+            }, id: 'eureka__crop-save-as-name', name: 'eureka__crop-save-as-name', style: { width: 'auto' }, type: 'text', placeholder: this.state.saveAsPlaceholder, value: this.state.saveAs, onChange: function onChange(event) {
+              _this3.setState({
+                saveAs: event.target.value,
+                saveAsDirty: false
+              });
+            } }),
+          _react2.default.createElement(
+            'div',
+            { className: 'eureka__crop-save-as-checkbox' },
+            _react2.default.createElement('input', { 'aria-label': formatMessage(_definedMessages2.default.saveAsItem, { item: this.state.saveAs }), type: 'checkbox', id: 'eureka__crop-save-as', name: 'eureka__crop-save-as', checked: this.state.doSaveAs, onChange: function onChange(event) {
+                _this3.setState({
+                  doSaveAs: event.target.checked
+                });
+              } })
+          )
+        )
+      ) : undefined;
       /*
       <label htmlFor="eureka__crop-scaleX">scaleX <input id="eureka__crop-scaleX" name="scaleX" type="number" size="5" min="0" step=".25" value={(this.state.crop.scaleX)} onChange={(event) => {
         this.cropper.setData(Object.assign({}, this.state.crop, {
@@ -196,8 +273,8 @@ var ModalCropItemForm = function (_Component) {
             src: props.view.focusedMediaItem.absoluteURL,
             style: { height: window.innerHeight - 300, width: '100%' }
             // Cropper.js options
-            //aspectRatio={16 / 9}
-            , guides: this.state.guides,
+            , aspectRatio: this.state.cropAspectRatio,
+            guides: this.state.guides,
             dragMode: this.state.dragMode,
             crop: this._crop.bind(this),
             cropend: this.cropend,
@@ -530,7 +607,7 @@ var ModalCropItemForm = function (_Component) {
                   null,
                   _react2.default.createElement(
                     'legend',
-                    null,
+                    { id: 'eureka__crop-aspect-ratio-label' },
                     _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'crop.aspectRatio', defaultMessage: 'Aspect Ratio' })
                   )
                 ),
@@ -538,18 +615,12 @@ var ModalCropItemForm = function (_Component) {
                   'div',
                   null,
                   _react2.default.createElement(
-                    'label',
-                    { htmlFor: 'eureka__crop-aspect-ratio' },
-                    _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'crop.aspectRatio', defaultMessage: 'Aspect Ratio' })
-                  ),
-                  _react2.default.createElement(
                     'select',
-                    { name: 'eureka__crop-aspect-ratio', id: 'eureka__crop-aspect-ratio', onChange: function onChange(event) {
-                        if (event.target.value) {
-                          _this3.cropper.setAspectRatio(parseFloat(event.target.value));
-                        } else {
-                          _this3.cropper.setAspectRatio(NaN);
-                        }
+                    { value: this.state.cropAspectRatio, 'aria-labelledby': 'eureka__crop-aspect-ratio-label', name: 'eureka__crop-aspect-ratio', id: 'eureka__crop-aspect-ratio', onChange: function onChange(event) {
+                        _this3.cropper.setAspectRatio(event.target.value ? parseFloat(event.target.value) : NaN);
+                        _this3.setState({
+                          cropAspectRatio: event.target.value
+                        });
                       } },
                     _react2.default.createElement(
                       'option',
@@ -576,6 +647,18 @@ var ModalCropItemForm = function (_Component) {
                       { value: 2 / 3 },
                       '2:3'
                     )
+                  ),
+                  _react2.default.createElement(
+                    'label',
+                    { htmlFor: 'eureka__crop-aspect-ratio-remember' },
+                    _react2.default.createElement('input', { type: 'checkbox', id: 'eureka__crop-aspect-ratio-remember', name: 'eureka__crop-aspect-ratio-remember', checked: this.props.view.rememberAspectRatio, onChange: function onChange(event) {
+                        _store2.default.dispatch(_actions2.default.updateView({
+                          rememberAspectRatio: event.target.checked,
+                          cropAspectRatio: event.target.checked ? _this3.state.cropAspectRatio : _this3.props.view.cropAspectRatio
+                        }));
+                      } }),
+                    '\u2002',
+                    _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'rememberAspectRatio', defaultMessage: 'Remember Ratio' })
                   )
                 )
               )
@@ -664,13 +747,9 @@ var ModalCropItemForm = function (_Component) {
               _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'reset', defaultMessage: 'Reset' }),
               ' '
             ),
-            _react2.default.createElement(
-              'button',
-              { type: 'submit', onBlur: function onBlur(event) {// <span className="spinner"><Icon {...props} icon="circle-o-notch" /></span>
-                  //this.refs.input.focus();
-                }, disabled: false },
-              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'crop', defaultMessage: 'Crop' })
-            )
+            saveAsBtn,
+            saveAsForm,
+            cropBtn
           )
         )
       );
@@ -717,10 +796,10 @@ var _initialiseProps = function _initialiseProps() {
 
     canvas.toBlob(function (blob) {
       var formData = new FormData();
-      formData.append('eureka__uploadFiles', blob, _this4.props.item.filename);
+      formData.append('eureka__uploadFiles', blob, _this4.state.doSaveAs ? _this4.state.saveAs : _this4.props.item.filename);
 
       _store2.default.dispatch(_this4.decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData, props.config.headers)).then(function () {
-        _this4.img.setAttribute('src', _this4.cropper.getCroppedCanvas().toDataURL());
+        if (!_this4.state.doSaveAs) _this4.img.setAttribute('src', _this4.cropper.getCroppedCanvas().toDataURL());
         _store2.default.dispatch(_actions2.default.updateContent({ // fetch new stuff from server, will trigger a re-render if needed
           cd: props.content.cd
         }));

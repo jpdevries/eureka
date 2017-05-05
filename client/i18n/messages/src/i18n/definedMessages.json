@@ -20,12 +20,20 @@
     "defaultMessage": "Reset"
   },
   {
+    "id": "rememberAspectRatio",
+    "defaultMessage": "Remember Ratio"
+  },
+  {
     "id": "crop",
     "defaultMessage": "Crop"
   },
   {
     "id": "cropItem",
     "defaultMessage": "Crop {item}"
+  },
+  {
+    "id": "saveAsItem",
+    "defaultMessage": "Save as {item}"
   },
   {
     "id": "croppingItem",
