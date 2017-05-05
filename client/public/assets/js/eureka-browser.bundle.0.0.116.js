@@ -27904,7 +27904,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.115",
+		"version": "0.0.116",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -47126,9 +47126,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'componentWillUpdate',
 	    value: function componentWillUpdate() {
 	      //this.setDownloadDataURL();
-	      if (this.props.view.rememberAspectRatio && this.props.view.cropAspectRatio != event.target.value) _store2.default.dispatch(_actions2.default.updateView({
-	        cropAspectRatio: event.target.value
-	      }));
+	      /**/
 	    }
 	  }, {
 	    key: 'componentWillUnmount',
@@ -47628,6 +47626,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        _this3.setState({
 	                          cropAspectRatio: event.target.value
 	                        });
+	                        if (_this3.props.view.rememberAspectRatio && _this3.props.view.cropAspectRatio != event.target.value) _store2.default.dispatch(_actions2.default.updateView({
+	                          cropAspectRatio: event.target.value
+	                        }));
 	                      } },
 	                    _react2.default.createElement(
 	                      'option',
@@ -52352,6 +52353,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		"crop.height": "Height",
 		"crop.aspectRatio": "Aspect Ratio",
 		"crop.free": "Free",
+		"rememberAspectRatio": "Remember Ratio",
 		"crop.scaleRotate": "Scale & Rotate",
 		"crop.rotate": "Rotate",
 		"crop.scale": "Scale",

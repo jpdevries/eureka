@@ -119,9 +119,7 @@ var ModalCropItemForm = function (_Component) {
     key: 'componentWillUpdate',
     value: function componentWillUpdate() {
       //this.setDownloadDataURL();
-      if (this.props.view.rememberAspectRatio && this.props.view.cropAspectRatio != event.target.value) _store2.default.dispatch(_actions2.default.updateView({
-        cropAspectRatio: event.target.value
-      }));
+      /**/
     }
   }, {
     key: 'componentWillUnmount',
@@ -621,6 +619,9 @@ var ModalCropItemForm = function (_Component) {
                         _this3.setState({
                           cropAspectRatio: event.target.value
                         });
+                        if (_this3.props.view.rememberAspectRatio && _this3.props.view.cropAspectRatio != event.target.value) _store2.default.dispatch(_actions2.default.updateView({
+                          cropAspectRatio: event.target.value
+                        }));
                       } },
                     _react2.default.createElement(
                       'option',
