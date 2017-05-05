@@ -38,7 +38,9 @@ $gtMobilePH: min-height 480px 4 !default;
   }
 }
 
-
+%pressed {
+  box-shadow: 0 0 0 1px var(--border-shadow-color, #E4E4E4), inset 0 0.175em 0 var(--border-shadow-color, darken(#E4E4E4, 12%));
+}
 
 %visually-hidden { /*https://developer.yahoo.com/blogs/ydn/clip-hidden-content-better-accessibility-53456.html*/
   @include visually-hidden;
@@ -134,6 +136,17 @@ summary {
 
 %flex-bar {
   display:flex;
+
+  &.wrappable {
+    flex-wrap:wrap;
+    > * {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+  }
+  &.balanced {
+    justify-content: center;
+  }
 
   > * {
     margin-right:.5rem;
@@ -399,12 +412,24 @@ a[role="presentation"] {
     //background: red;
   }
 
+  input[aria-pressed="true"] {
+    + label {
+      @extend %pressed;
+    }
+  }
+
+  button {
+    &[aria-pressed="true"] {
+      @extend %pressed;
+    }
+  }
+
   button[id^="eureka__tree-toggle__button"] { // keep this loose so we can append a React id
     margin-bottom:1rem;
     box-shadow: 0 0 0 1px var(--border-color, #E4E4E4), 0 0.25em 0 var(--border-color, darken(#E4E4E4, 12%));
-    &[aria-pressed="true"] {
+    /*&[aria-pressed="true"] {
       box-shadow: 0 0 0 1px var(--border-shadow-color, #E4E4E4), inset 0 0.175em 0 var(--border-shadow-color, darken(#E4E4E4, 12%));
-    }
+    }*/
     &:focus {
       --button-color: var(--active, $active);
     }
@@ -447,7 +472,9 @@ a[role="presentation"] {
     //font: .6875rem system-ui;
   }
 
-  button, a.button {
+
+
+  button, .button {
     @extend %clickable;
     @include button();
     &.eureka__primary {
@@ -459,6 +486,14 @@ a[role="presentation"] {
         background-color: $dangerous;
         color:white;
         background-image: linear-gradient($dangerous, darken($dangerous,10%));
+      }
+    }
+  }
+
+  [aria-hidden="true"] {
+    button, .button {
+      &.eureka__primary {
+        @include button();
       }
     }
   }
@@ -775,6 +810,9 @@ a[role="presentation"] {
     /*@include media($gtMobile) {
       justify-content:flex-end;
     }*/
+    &[aria-hidden="true"] {
+      filter: grayscale(100%);
+    }
     button {
       font-size:1rem;
       @include media($gtMobile) { // todo: and if not that tall
@@ -960,6 +998,8 @@ a[role="presentation"] {
   .eureka__modal {
     @extend %absolute-corners;
 
+    z-index: $topMost + 10;
+
     display:flex;
     justify-content:center;
     align-items: center;
@@ -984,22 +1024,31 @@ a[role="presentation"] {
           margin-top:0;
         }
       }
-      label {
+      summary label {
         display:block;
         margin-bottom:.5rem;
+        &[for="eureka__crop-upload-file"] {
+          margin-bottom: 0;
+        }
       }
       input[type="text"] {
         width:100%;
         font-size:1.4em;
       }
-      .flex-bar {
+      .eureka__button-bar {
         margin-top:.5rem;
         > * {
           flex:1 0 auto;
           &:last-child {
-            @extend %primary-button;
+
           }
         }
+      }
+    }
+    &.eureka__greedy {
+      .eureka__modal-panel {
+        max-width:calc(100vw - 2rem);
+        max-height:calc(100vh - 2rem);
       }
     }
   }
@@ -1014,6 +1063,10 @@ a[role="presentation"] {
   }*/
 
 } // end .eureka
+
+.eureka .eureka__modal-panel .eureka__button-bar:not([aria-hidden="true"]) > *:last-child {
+  @extend %primary-button;
+}
 
 .eureka-root {
   .eureka__sticky-bar {

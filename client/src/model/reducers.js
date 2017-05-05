@@ -30,6 +30,9 @@ const initialConfigState = {
   allowMasonry:true,
   welcome: true,
   alwaysWelcome: false,
+  autoSubmitForms: true,
+  allowCrop: !utility.serverSideRendering,
+  zoomOnWheel: false,
   learnMore: 'https://github.com/jpdevries/eureka',
   uid:"0",
   iconSVG:`./img/icons.${pkg.version}.min.svg`,
@@ -383,6 +386,7 @@ var initialViewState = Object.assign({}, {
   enlargeFocusedRows: false,
   locale:"en-US",
   chooseMultiple:false,
+  showAdvControls:false,
   sort:{
     by: 'filename',
     dir: utility.ASCENDING
@@ -391,6 +395,7 @@ var initialViewState = Object.assign({}, {
   selectionInverted: selectionInverted,
   allowFullscreen: true,
   isUploading: false,
+  isCropping: false,
   isTouch: false,
   fetchingContents: false,
   intervals: {

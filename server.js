@@ -210,7 +210,7 @@ app.post('/', (req, res) => {
 });
 
 function serveIt(req, dir = "/", lang = undefined) {
-  //console.log('serveIt', dir);
+  console.log('serveIt', dir);
   return new Promise((resolve, reject) => {
     store.dispatch(actions.updateConfig({
       uid:"0",
@@ -280,13 +280,14 @@ function serveIt(req, dir = "/", lang = undefined) {
         return localeData[languageWithoutRegionCode] || localeData[language] || localeData.en;
       })();
       //console.log('...');
-      //console.log('time for eurekaMarkup!');
+      console.log('time for eurekaMarkup!');
       //console.log(language);
       //console.log(languageWithoutRegionCode);
       //console.log(messages);
       const eurekaMarkup = ReactDOM.renderToString( //<IntlProvider locale={language} messages={messages}>
         <EurekaMediaBrowser messages={messages} currentDirectory={dir} lang={language} />
       );
+      console.log('eurekaMarkup');
       resolve(eurekaMarkup);
     });
   })

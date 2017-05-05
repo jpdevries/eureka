@@ -30,9 +30,14 @@ var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var pathParse = require('path-parse');
+
 var ContextButtons = function ContextButtons(props) {
   //console.log('ContextButtons', props);
   var item = props.item;
+
+  var _pathParse = pathParse(item.filename),
+      ext = _pathParse.ext;
 
   var decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
 
@@ -49,6 +54,7 @@ var ContextButtons = function ContextButtons(props) {
     filename: item.filename
   }),
       chooseMessage = formatMessage(_definedMessages2.default.choose),
+      cropMessage = formatMessage(_definedMessages2.default.crop),
       deleteMessage = formatMessage(_definedMessages2.default.delete),
       deleteItemMessage = formatMessage(_definedMessages2.default.deleteItem, {
     filename: item.filename
@@ -81,6 +87,17 @@ var ContextButtons = function ContextButtons(props) {
         }));*/
       } },
     chooseMessage,
+    _react2.default.createElement(
+      'span',
+      { className: 'visually-hidden' },
+      ' ',
+      item.filename
+    )
+  ) : undefined,
+      cropBtn = props.config.allowCrop && (ext.toLowerCase() == '.jpg' || ext.toLowerCase() == '.jpeg' || ext.toLowerCase() == '.png' || ext.toLowerCase() == '.gif') ? _react2.default.createElement(
+    'button',
+    { className: 'eureka__crop-btn', role: 'option', id: 'choose__' + (0, _utility.cssSafe)(item.filename), title: chooseItemMessage, onClick: props.onCropItem ? props.onCropItem.bind(null, item) : undefined },
+    cropMessage,
     _react2.default.createElement(
       'span',
       { className: 'visually-hidden' },
@@ -150,6 +167,7 @@ var ContextButtons = function ContextButtons(props) {
         )
       ),
       chooseBtn,
+      cropBtn,
       renameBtn,
       deleteBtn,
       downloadBtn

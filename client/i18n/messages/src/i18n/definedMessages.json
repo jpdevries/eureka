@@ -8,8 +8,28 @@
     "defaultMessage": "Create a new Directory in {cd}"
   },
   {
+    "id": "directory.cancelCreating",
+    "defaultMessage": "Cancel creating directory {cd}"
+  },
+  {
     "id": "choose",
     "defaultMessage": "Choose"
+  },
+  {
+    "id": "reset",
+    "defaultMessage": "Reset"
+  },
+  {
+    "id": "crop",
+    "defaultMessage": "Crop"
+  },
+  {
+    "id": "cropItem",
+    "defaultMessage": "Crop {item}"
+  },
+  {
+    "id": "croppingItem",
+    "defaultMessage": "Cropping {item}"
   },
   {
     "id": "cancel",
@@ -202,5 +222,101 @@
   {
     "id": "upload.dragFilestoUpload",
     "defaultMessage": "Drag files here to be uploaded to {cd}"
+  },
+  {
+    "id": "dragMode",
+    "defaultMessage": "Drag Mode"
+  },
+  {
+    "id": "crop.move",
+    "defaultMessage": "Move"
+  },
+  {
+    "id": "crop.showGuides",
+    "defaultMessage": "Show Guides"
+  },
+  {
+    "id": "crop.hideGuides",
+    "defaultMessage": "Hide Guides"
+  },
+  {
+    "id": "crop.toggleGuides",
+    "defaultMessage": "Toggle Guides"
+  },
+  {
+    "id": "crop.zoomIn",
+    "defaultMessage": "Zoom In"
+  },
+  {
+    "id": "crop.cropZoomOut",
+    "defaultMessage": "Zoom Out"
+  },
+  {
+    "id": "crop.moveLeft",
+    "defaultMessage": "Move Left"
+  },
+  {
+    "id": "crop.moveRight",
+    "defaultMessage": "Move Right"
+  },
+  {
+    "id": "crop.moveUp",
+    "defaultMessage": "Move Up"
+  },
+  {
+    "id": "crop.moveDown",
+    "defaultMessage": "Move Down"
+  },
+  {
+    "id": "crop.download",
+    "defaultMessage": "Download Cropped Image"
+  },
+  {
+    "id": "crop.uploadImage",
+    "defaultMessage": "Upload Image to Crop"
+  },
+  {
+    "id": "crop.upload",
+    "defaultMessage": "Upload"
+  },
+  {
+    "id": "crop.boundingBox",
+    "defaultMessage": "Bounding Box (px)"
+  },
+  {
+    "id": "crop.X",
+    "defaultMessage": "X"
+  },
+  {
+    "id": "crop.Y",
+    "defaultMessage": "Y"
+  },
+  {
+    "id": "crop.width",
+    "defaultMessage": "Width"
+  },
+  {
+    "id": "crop.height",
+    "defaultMessage": "Height"
+  },
+  {
+    "id": "crop.aspectRatio",
+    "defaultMessage": "Aspect Ratio"
+  },
+  {
+    "id": "crop.free",
+    "defaultMessage": "Free"
+  },
+  {
+    "id": "crop.scaleRotate",
+    "defaultMessage": "Scale & Rotate"
+  },
+  {
+    "id": "crop.rotate",
+    "defaultMessage": "Rotate"
+  },
+  {
+    "id": "crop.scale",
+    "defaultMessage": "Scale"
   }
 ]

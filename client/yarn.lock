@@ -1937,6 +1937,10 @@ create-react-class@^15.5.2:
     fbjs "^0.8.9"
     object-assign "^4.1.1"
 
+cropperjs@^0.8.1:
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/cropperjs/-/cropperjs-0.8.1.tgz#3dc01813e2f6d1df2c8909e1ce092146c692548e"
+
 cross-spawn@4.0.2:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-4.0.2.tgz#7b9247621c23adfdd3856004a823cbe397424d41"
@@ -6039,6 +6043,12 @@ react-addons-update:
   dependencies:
     fbjs "^0.8.4"
     object-assign "^4.1.0"
+
+react-cropperjs@^1.2.5:
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/react-cropperjs/-/react-cropperjs-1.2.5.tgz#cb6c57fd5d02d9595350089cf13e01f723f85c8a"
+  dependencies:
+    cropperjs "^0.8.1"
 
 react-dev-utils@^0.5.0:
   version "0.5.0"

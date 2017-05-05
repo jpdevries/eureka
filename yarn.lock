@@ -1250,6 +1250,10 @@ create-react-class@^15.5.2:
     fbjs "^0.8.9"
     object-assign "^4.1.1"
 
+cropperjs@^0.8.1:
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/cropperjs/-/cropperjs-0.8.1.tgz#3dc01813e2f6d1df2c8909e1ce092146c692548e"
+
 cryptiles@2.x.x:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/cryptiles/-/cryptiles-2.0.5.tgz#3bdfecdc608147c1c67202fa291e7dca59eaa3b8"
@@ -3009,6 +3013,12 @@ react-addons-update@^15.5.2:
   dependencies:
     fbjs "^0.8.9"
     object-assign "^4.1.0"
+
+react-cropperjs@^1.2.5:
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/react-cropperjs/-/react-cropperjs-1.2.5.tgz#cb6c57fd5d02d9595350089cf13e01f723f85c8a"
+  dependencies:
+    cropperjs "^0.8.1"
 
 react-dom@^15.4.2:
   version "15.4.2"

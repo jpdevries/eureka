@@ -66,7 +66,7 @@ var ChooseBar = function ChooseBar(props) {
   ),
       downloadBtn = len > 1 && props.view.chooseMultiple && props.config.allowDownloadMultiple ? _react2.default.createElement(
     'form',
-    { target: '_blank', encType: 'multipart/form-data', method: 'POST', action: '/assets/components/eureka/media/attachments/' + props.source.currentSource, onSubmit: function onSubmit(event) {} },
+    { encType: 'multipart/form-data', method: 'POST', action: '/assets/components/eureka/media/attachments/' + props.source.currentSource, onSubmit: function onSubmit(event) {} },
     _react2.default.createElement('input', { type: 'hidden', name: 'cd', value: props.content.cd }),
     _react2.default.createElement('input', { type: 'hidden', name: 'cs', value: props.source.currentSource }),
     downloadBtnFormFileNames,

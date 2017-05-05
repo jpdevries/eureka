@@ -66,6 +66,7 @@
     "quickthumb": "github:jpdevries/node-quickthumb",
     "react": "^15.4.2",
     "react-addons-update": "^15.5.2",
+    "react-cropperjs": "^1.2.5",
     "react-dom": "^15.4.2",
     "react-dropzone": "^3.12.2",
     "react-intl": "^2.2.3",

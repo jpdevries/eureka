@@ -19,9 +19,29 @@ exports.default = (0, _reactIntl.defineMessages)((_defineMessages = {
     'id': 'directory.createNewIn',
     'defaultMessage': 'Create a new Directory in {cd}'
   },
+  directoryCancelCreating: {
+    'id': 'directory.cancelCreating',
+    'defaultMessage': 'Cancel creating directory {cd}'
+  },
   choose: {
     'id': 'choose',
     'defaultMessage': 'Choose'
+  },
+  reset: {
+    'id': 'reset',
+    'defaultMessage': 'Reset'
+  },
+  crop: {
+    'id': 'crop',
+    'defaultMessage': 'Crop'
+  },
+  cropItem: {
+    'id': 'cropItem',
+    'defaultMessage': 'Crop {item}'
+  },
+  croppingItem: {
+    'id': 'croppingItem',
+    'defaultMessage': 'Cropping {item}'
   },
   cancel: {
     'id': 'cancel',
@@ -203,4 +223,76 @@ exports.default = (0, _reactIntl.defineMessages)((_defineMessages = {
 }), _defineProperty(_defineMessages, 'dragFilesToBeUploadedTo', {
   'id': 'upload.dragFilestoUpload',
   'defaultMessage': 'Drag files here to be uploaded to {cd}'
+}), _defineProperty(_defineMessages, 'dragMode', {
+  'id': 'dragMode',
+  'defaultMessage': 'Drag Mode'
+}), _defineProperty(_defineMessages, 'cropMove', {
+  'id': 'crop.move',
+  'defaultMessage': 'Move'
+}), _defineProperty(_defineMessages, 'cropShowGuides', {
+  'id': 'crop.showGuides',
+  'defaultMessage': 'Show Guides'
+}), _defineProperty(_defineMessages, 'cropHideGuides', {
+  'id': 'crop.hideGuides',
+  'defaultMessage': 'Hide Guides'
+}), _defineProperty(_defineMessages, 'cropToggleGuides', {
+  'id': 'crop.toggleGuides',
+  'defaultMessage': 'Toggle Guides'
+}), _defineProperty(_defineMessages, 'cropZoomIn', {
+  'id': 'crop.zoomIn',
+  'defaultMessage': 'Zoom In'
+}), _defineProperty(_defineMessages, 'cropZoomOut', {
+  'id': 'crop.cropZoomOut',
+  'defaultMessage': 'Zoom Out'
+}), _defineProperty(_defineMessages, 'cropMoveLeft', {
+  'id': 'crop.moveLeft',
+  'defaultMessage': 'Move Left'
+}), _defineProperty(_defineMessages, 'cropMoveRight', {
+  'id': 'crop.moveRight',
+  'defaultMessage': 'Move Right'
+}), _defineProperty(_defineMessages, 'cropMoveUp', {
+  'id': 'crop.moveUp',
+  'defaultMessage': 'Move Up'
+}), _defineProperty(_defineMessages, 'cropMoveDown', {
+  'id': 'crop.moveDown',
+  'defaultMessage': 'Move Down'
+}), _defineProperty(_defineMessages, 'cropDownload', {
+  'id': 'crop.download',
+  'defaultMessage': 'Download Cropped Image'
+}), _defineProperty(_defineMessages, 'cropUploadImage', {
+  'id': 'crop.uploadImage',
+  'defaultMessage': 'Upload Image to Crop'
+}), _defineProperty(_defineMessages, 'upload', {
+  'id': 'crop.upload',
+  'defaultMessage': 'Upload'
+}), _defineProperty(_defineMessages, 'cropBoundingBox', {
+  'id': 'crop.boundingBox',
+  'defaultMessage': 'Bounding Box (px)'
+}), _defineProperty(_defineMessages, 'cropX', {
+  'id': 'crop.X',
+  'defaultMessage': 'X'
+}), _defineProperty(_defineMessages, 'cropY', {
+  'id': 'crop.Y',
+  'defaultMessage': 'Y'
+}), _defineProperty(_defineMessages, 'cropWidth', {
+  'id': 'crop.width',
+  'defaultMessage': 'Width'
+}), _defineProperty(_defineMessages, 'cropHeight', {
+  'id': 'crop.height',
+  'defaultMessage': 'Height'
+}), _defineProperty(_defineMessages, 'cropAspectRatio', {
+  'id': 'crop.aspectRatio',
+  'defaultMessage': 'Aspect Ratio'
+}), _defineProperty(_defineMessages, 'cropFree', {
+  'id': 'crop.free',
+  'defaultMessage': 'Free'
+}), _defineProperty(_defineMessages, 'cropScaleRotate', {
+  'id': 'crop.scaleRotate',
+  'defaultMessage': 'Scale & Rotate'
+}), _defineProperty(_defineMessages, 'cropRotate', {
+  'id': 'crop.rotate',
+  'defaultMessage': 'Rotate'
+}), _defineProperty(_defineMessages, 'cropScale', {
+  'id': 'crop.scale',
+  'defaultMessage': 'Scale'
 }), _defineMessages));

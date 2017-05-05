@@ -976,6 +976,23 @@
 }
 
 .eureka {
+  .eureka__crop-btn {
+    @include media($mobile) {
+      display: none;
+    }
+  }
+  .flex-bar {
+    fieldset {
+      margin:0;
+      padding:0;
+      label {
+        margin-bottom:0;
+      }
+    }
+  }
+  .eureka__invert-horz {
+    transform: scaleX(-1);
+  }
   .eureka__td-media {
     display: flex;
     align-items: center;
@@ -994,5 +1011,97 @@
     textarea {
       resize: none;
     }
+  }
+
+  label[for="eureka__crop_show-adv-controls"] {
+    position:absolute;
+    top:.75em;
+    right:1em;
+  }
+
+  .eureka__crop-modal {
+    &.eureka__modal .eureka__modal-panel .eureka__button-bar {
+      //margin-top: 2rem;
+      //justify-content: flex-end;
+      > * {
+        //max-width: 18em;
+        //flex: 0 0 18em;
+      }
+    }
+    .icon-bar {
+      margin-top: 1em;
+      font-size: 1rem;
+      label[for="eureka__crop-drag-mode-move"] {
+        border-top-left-radius: 3px;
+        border-bottom-left-radius: 3px;
+      }
+      button, .button {
+        border-radius: 0;
+        &:first-child {
+          border-top-left-radius: 3px;
+          border-bottom-left-radius: 3px;
+        }
+        &:last-child {
+          border-top-right-radius: 3px;
+          border-bottom-right-radius: 3px;
+        }
+      }
+      &.flex-bar {
+        > * {
+          margin-right: 0;
+        }
+      }
+      button {
+        font-size: 1rem;
+      }
+    }
+    .wrappable.flex-bar {
+      justify-content: space-around;
+      margin-bottom: 2rem;
+      > * {
+        padding-left:1rem;
+        padding-right:1rem;
+      }
+      summary {
+        margin-bottom:.5rem;
+      }
+    }
+  }
+
+  .eureka__modal .eureka__modal-panel .eureka__crop-bounding-box {
+    margin-top: 1rem;
+    label {
+      margin-bottom:0;
+    }
+    label[for="eureka__crop-aspect-ratio"] {
+      line-height: 2;
+    }
+    input[type="number"] {
+      width:5em;
+    }
+    input[id*="eureka__crop-scale"] {
+      width:4em;
+    }
+    summary {
+      @include media($gtMobile) {
+        display: flex;
+      }
+    }
+    > div, > details > div {
+      @include media($gtMobile) {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        > * {
+          margin-right:.5rem;
+        }
+        &:last-child {
+          margin-right:0;
+        }
+      }
+    }
+  }
+  [hidden] {
+    display: none !important;
   }
 }

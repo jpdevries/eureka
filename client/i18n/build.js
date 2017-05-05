@@ -42,3 +42,24 @@ var defaultMessages = (0, _glob.sync)(filePattern).map(function (filename) {
 // Write the messages to this directory
 console.log(outputDir + 'en.json');
 fs.writeFileSync(outputDir + 'en.json', JSON.stringify(defaultMessages, null, 2));
+
+/*
+const ms = [];
+Object.keys(defaultMessages).forEach(function (key) {
+  ms.push({
+    id: key,
+    defaultMessage: defaultMessages[key]
+  })
+});
+
+const ds = JSON.parse(fs.readFileSync('./messages/src/i18n/definedMessages.json', 'utf8'));
+let dso = {};
+Object.keys(ds).forEach(function(key) {
+  dso[ds[key].id] = ds[key];
+});
+
+//console.log(dso);
+//console.log(Object.assign({}, defaultMessages, ds));
+//console.log(Object.assign({}, defaultMessages, dso));
+fs.writeFileSync('./messages/src/i18n/definedMessages2.json', JSON.stringify(Object.assign({}, defaultMessages, ds), null, 2));
+*/

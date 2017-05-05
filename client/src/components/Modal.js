@@ -2,11 +2,17 @@ import React, { Component } from 'react';
 
 import { FormattedMessage } from 'react-intl';
 
+import Icon from './Icon';
+
 const Modal = (props) => {
+  const spinner = (props.showSpinner) ? (
+    <span className="spinner"><Icon {...props} icon="circle-o-notch" />&emsp;</span>
+  ) : undefined;
   return (
-    <div className="eureka__modal" role="dialog">
+    <div className={`eureka__modal ${props.className}`} role="dialog">
       <div className="eureka__modal-panel">
         <h2>
+          {spinner}
           {props.title}
         </h2>
 

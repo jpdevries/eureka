@@ -9,9 +9,29 @@ export default defineMessages({
     id: 'directory.createNewIn',
     defaultMessage: 'Create a new Directory in {cd}'
   },
+  directoryCancelCreating: {
+    id: 'directory.cancelCreating',
+    defaultMessage: 'Cancel creating directory {cd}'
+  },
   choose: {
     id: 'choose',
     defaultMessage: 'Choose'
+  },
+  reset: {
+    id: 'reset',
+    defaultMessage: 'Reset'
+  },
+  crop: {
+    id: 'crop',
+    defaultMessage: 'Crop'
+  },
+  cropItem: {
+    id: 'cropItem',
+    defaultMessage: 'Crop {item}'
+  },
+  croppingItem: {
+    id: 'croppingItem',
+    defaultMessage: 'Cropping {item}'
   },
   cancel: {
     id: 'cancel',
@@ -222,5 +242,103 @@ export default defineMessages({
     values: {
       cd: './'
     }
+  },
+
+  dragMode: {
+    id: 'dragMode',
+    defaultMessage: 'Drag Mode'
+  },
+  cropMove: {
+    id: 'crop.move',
+    defaultMessage: 'Move'
+  },
+  cropShowGuides: {
+    id: 'crop.showGuides',
+    defaultMessage: 'Show Guides'
+  },
+  cropHideGuides: {
+    id: 'crop.hideGuides',
+    defaultMessage: 'Hide Guides'
+  },
+  cropToggleGuides: {
+    id: 'crop.toggleGuides',
+    defaultMessage: 'Toggle Guides'
+  },
+  cropZoomIn: {
+    id: 'crop.zoomIn',
+    defaultMessage: 'Zoom In'
+  },
+  cropZoomOut: {
+    id: 'crop.cropZoomOut',
+    defaultMessage: 'Zoom Out'
+  },
+  cropMoveLeft: {
+    id: 'crop.moveLeft',
+    defaultMessage: 'Move Left'
+  },
+  cropMoveRight: {
+    id: 'crop.moveRight',
+    defaultMessage: 'Move Right'
+  },
+  cropMoveUp: {
+    id: 'crop.moveUp',
+    defaultMessage: 'Move Up'
+  },
+  cropMoveDown: {
+    id: 'crop.moveDown',
+    defaultMessage: 'Move Down'
+  },
+  cropDownload: {
+    id: 'crop.download',
+    defaultMessage: 'Download Cropped Image'
+  },
+  cropUploadImage: {
+    id: 'crop.uploadImage',
+    defaultMessage: 'Upload Image to Crop'
+  },
+  upload: {
+    id: 'crop.upload',
+    defaultMessage: 'Upload'
+  },
+  cropBoundingBox: {
+    id: 'crop.boundingBox',
+    defaultMessage: 'Bounding Box (px)'
+  },
+  cropX: {
+    id: 'crop.X',
+    defaultMessage: 'X'
+  },
+  cropY: {
+    id: 'crop.Y',
+    defaultMessage: 'Y'
+  },
+  cropWidth: {
+    id: 'crop.width',
+    defaultMessage: 'Width'
+  },
+  cropHeight: {
+    id: 'crop.height',
+    defaultMessage: 'Height'
+  },
+  cropAspectRatio: {
+    id: 'crop.aspectRatio',
+    defaultMessage: 'Aspect Ratio'
+  },
+  cropFree: {
+    id: 'crop.free',
+    defaultMessage: 'Free'
+  },
+  cropScaleRotate: {
+    id: 'crop.scaleRotate',
+    defaultMessage: 'Scale & Rotate'
+  },
+  cropRotate: {
+    id: 'crop.rotate',
+    defaultMessage: 'Rotate'
+  },
+  cropScale: {
+    id: 'crop.scale',
+    defaultMessage: 'Scale'
   }
+
 });

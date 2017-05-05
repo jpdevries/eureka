@@ -68,6 +68,10 @@ var _ModalCreateDirectoryForm = require('./components/ModalCreateDirectoryForm')
 
 var _ModalCreateDirectoryForm2 = _interopRequireDefault(_ModalCreateDirectoryForm);
 
+var _ModalCropItemForm = require('./components/ModalCropItemForm');
+
+var _ModalCropItemForm2 = _interopRequireDefault(_ModalCropItemForm);
+
 var _ModalRenameItemForm = require('./components/ModalRenameItemForm');
 
 var _ModalRenameItemForm2 = _interopRequireDefault(_ModalRenameItemForm);
@@ -126,6 +130,7 @@ var classNames = require('classnames');
 
 var CREATE_DIRECTORY = 'create_directory';
 var RENAME_ITEM = 'rename_item';
+var CROP_ITEM = 'crop_item';
 
 //Notification.propTypes = { initialCount: React.PropTypes.number };
 //Notification.defaultProps = { initialCount: 0 };
@@ -350,7 +355,12 @@ var Eureka = function (_Component) {
   }, {
     key: 'onModalCancel',
     value: function onModalCancel(event) {
-      event.preventDefault();
+      _store2.default.dispatch(_actions2.default.updateView({
+        isCropping: false
+      }));
+      try {
+        event.preventDefault();
+      } catch (e) {}
       //console.log('onModalCancel');
       this.setState({
         modalOpen: false,
@@ -418,6 +428,11 @@ var Eureka = function (_Component) {
       });
     }
   }, {
+    key: 'onCropItemModalSubmit',
+    value: function onCropItemModalSubmit(item) {
+      console.log('onCropItemModalSubmit', item);
+    }
+  }, {
     key: 'onRenameItem',
     value: function onRenameItem(item) {
       //console.log('onRenameItem', item);
@@ -425,6 +440,15 @@ var Eureka = function (_Component) {
         renamingItem: item,
         modalOpen: true,
         currentModal: RENAME_ITEM
+      });
+    }
+  }, {
+    key: 'onCropItem',
+    value: function onCropItem(item) {
+      this.setState({
+        renamingItem: item,
+        modalOpen: true,
+        currentModal: CROP_ITEM
       });
     }
   }, {
@@ -441,6 +465,18 @@ var Eureka = function (_Component) {
           createDirectoryMessage = formatMessage(_definedMessages2.default.directory),
           renameItemMessage = formatMessage(_definedMessages2.default.rename, {
         item: state.renamingItem ? ' ' + state.renamingItem.filename : ''
+      }),
+          cropItemMessage = formatMessage(_definedMessages2.default.cropItem, {
+        item: ' '
+      }),
+          croppingItemMessage = formatMessage(_definedMessages2.default.croppingItem, {
+        item: function () {
+          try {
+            return props.view.focusedMediaItem.filename;
+          } catch (e) {
+            return undefined;
+          }
+        }()
       });
 
       //console.log('state.notifications', state.notifications);
@@ -461,6 +497,14 @@ var Eureka = function (_Component) {
                 _Modal2.default,
                 _extends({ onCancel: _this5.onModalCancel.bind(_this5), onSubmit: _this5.onRenameItemModalSubmit.bind(_this5), title: renameItemMessage }, props),
                 _react2.default.createElement(_ModalRenameItemForm2.default, _extends({}, props, { item: state.renamingItem }))
+              );
+              break;
+
+            case CROP_ITEM:
+              return _react2.default.createElement(
+                _Modal2.default,
+                _extends({ className: 'eureka__greedy eureka__crop-modal', showSpinner: props.view.isCropping, onCancel: _this5.onModalCancel.bind(_this5), onSubmit: _this5.onCropItemModalSubmit.bind(_this5), title: croppingItemMessage }, props),
+                _react2.default.createElement(_ModalCropItemForm2.default, _extends({}, props, { item: props.view.focusedMediaItem }))
               );
               break;
 
@@ -563,7 +607,7 @@ var Eureka = function (_Component) {
           _react2.default.createElement(
             'div',
             { className: 'eureka__table-wrapper' },
-            _react2.default.createElement(_EurekaTable2.default, _extends({ view: props.view }, props, { decoratedActions: props.decoratedActions, source: props.source, content: props.content, config: props.config, onRenameItem: this.onRenameItem.bind(this), onSubmit: this.onRenameItemModalSubmit.bind(this) }))
+            _react2.default.createElement(_EurekaTable2.default, _extends({ view: props.view }, props, { decoratedActions: props.decoratedActions, source: props.source, content: props.content, config: props.config, onCropItem: this.onCropItem.bind(this), onRenameItem: this.onRenameItem.bind(this), onSubmit: this.onRenameItemModalSubmit.bind(this) }))
           )
         )
       );

@@ -13,6 +13,7 @@ import PathBar from './components/PathBar';
 import DropArea from './components/DropArea';
 import Modal from './components/Modal';
 import ModalCreateDirectoryForm from './components/ModalCreateDirectoryForm';
+import ModalCropItemForm from './components/ModalCropItemForm';
 import ModalRenameItemForm from './components/ModalRenameItemForm';
 import SortContents from './components/SortContents';
 import Icon from './components/Icon';
@@ -38,6 +39,7 @@ import definedMessages from './i18n/definedMessages';
 
 const CREATE_DIRECTORY = 'create_directory';
 const RENAME_ITEM = 'rename_item';
+const CROP_ITEM = 'crop_item';
 
 
 
@@ -410,7 +412,12 @@ class Eureka extends Component {
   }
 
   onModalCancel(event) {
-    event.preventDefault();
+    store.dispatch(actions.updateView({
+      isCropping: false
+    }));
+    try {
+      event.preventDefault();
+    } catch(e) {}
     //console.log('onModalCancel');
     this.setState({
       modalOpen:false,
@@ -471,12 +478,24 @@ class Eureka extends Component {
     });
   }
 
+  onCropItemModalSubmit(item) {
+    console.log('onCropItemModalSubmit', item);
+  }
+
   onRenameItem(item) {
     //console.log('onRenameItem', item);
     this.setState({
       renamingItem: item,
       modalOpen: true,
       currentModal: RENAME_ITEM
+    });
+  }
+
+  onCropItem(item) {
+    this.setState({
+      renamingItem: item,
+      modalOpen: true,
+      currentModal: CROP_ITEM
     });
   }
 
@@ -488,6 +507,18 @@ class Eureka extends Component {
     createDirectoryMessage = formatMessage(definedMessages.directory),
     renameItemMessage = formatMessage(definedMessages.rename, {
       item:(state.renamingItem) ? ` ${state.renamingItem.filename}` : ''
+    }),
+    cropItemMessage = formatMessage(definedMessages.cropItem, {
+      item: ` `
+    }),
+    croppingItemMessage = formatMessage(definedMessages.croppingItem, {
+      item: (() => {
+        try {
+          return props.view.focusedMediaItem.filename
+        } catch (e) {
+          return undefined
+        } 
+      })()
     });
 
     //console.log('state.notifications', state.notifications);
@@ -507,6 +538,14 @@ class Eureka extends Component {
           return (
             <Modal onCancel={this.onModalCancel.bind(this)} onSubmit={this.onRenameItemModalSubmit.bind(this)} title={renameItemMessage} {...props}>
               <ModalRenameItemForm {...props} item={state.renamingItem} />
+            </Modal>
+          );
+          break;
+
+          case CROP_ITEM:
+          return (
+            <Modal className="eureka__greedy eureka__crop-modal" showSpinner={props.view.isCropping} onCancel={this.onModalCancel.bind(this)} onSubmit={this.onCropItemModalSubmit.bind(this)} title={croppingItemMessage} {...props}>
+              <ModalCropItemForm  {...props} item={props.view.focusedMediaItem} />
             </Modal>
           );
           break;
@@ -601,7 +640,7 @@ class Eureka extends Component {
             </div>
           </div>
           <div className="eureka__table-wrapper">
-            <EurekaTable view={props.view} {...props} decoratedActions={props.decoratedActions} source={props.source} content={props.content} config={props.config} onRenameItem={this.onRenameItem.bind(this)} onSubmit={this.onRenameItemModalSubmit.bind(this)} />
+            <EurekaTable view={props.view} {...props} decoratedActions={props.decoratedActions} source={props.source} content={props.content} config={props.config} onCropItem={this.onCropItem.bind(this)} onRenameItem={this.onRenameItem.bind(this)} onSubmit={this.onRenameItemModalSubmit.bind(this)} />
           </div>
         </div>
       </div>
