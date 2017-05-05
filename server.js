@@ -562,6 +562,10 @@ app.post('/assets/components/eureka/media/sources/:source', (req, res) => {
   // specify that we want to allow the user to upload multiple files in a single request
   //form.multiples = true;
 
+  form.on('file', function(name, file) {
+    fs.renameSync(file.path, path.join(uploadDir, file.originalFilename))
+  })
+
   /*form.on('file', (field, file) => (
     fs.renameSync(file.path, path.join(uploadDir, file.name))
   ));*/

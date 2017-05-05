@@ -68,9 +68,7 @@ class ModalCropItemForm extends Component {
 
   componentWillUpdate() {
     //this.setDownloadDataURL();
-    if(this.props.view.rememberAspectRatio && this.props.view.cropAspectRatio != event.target.value) store.dispatch(actions.updateView({
-      cropAspectRatio: event.target.value
-    }))
+    /**/
   }
 
   componentWillUnmount() {
@@ -427,7 +425,10 @@ class ModalCropItemForm extends Component {
                 this.cropper.setAspectRatio((event.target.value) ? parseFloat(event.target.value) : NaN);
                 this.setState({
                   cropAspectRatio: event.target.value
-                })
+                });
+                if(this.props.view.rememberAspectRatio && this.props.view.cropAspectRatio != event.target.value) store.dispatch(actions.updateView({
+                  cropAspectRatio: event.target.value
+                }))
               }}>
                 <option value=""><FormattedMessage id="crop.free" defaultMessage="Free" /></option>
                 <option value={16/9}>16:9</option>
@@ -440,7 +441,8 @@ class ModalCropItemForm extends Component {
                   store.dispatch(actions.updateView({
                     rememberAspectRatio: event.target.checked,
                     cropAspectRatio: (event.target.checked) ? this.state.cropAspectRatio : this.props.view.cropAspectRatio
-                  }))
+                  }));
+
                 }} />&ensp;
                 <FormattedMessage id="rememberAspectRatio" defaultMessage="Remember Ratio" />
               </label>
