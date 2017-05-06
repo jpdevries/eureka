@@ -418,6 +418,14 @@ a[role="presentation"] {
     }
   }
 
+  .eureka__crop-modal {
+    input[type="radio"]:checked {
+      + label {
+        @extend %pressed;
+      }
+    }
+  }
+
   button {
     &[aria-pressed="true"] {
       @extend %pressed;

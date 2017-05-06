@@ -30,7 +30,7 @@ const SAVE_AS = 'save_as';
 class ModalCropItemForm extends Component {
   constructor(props) {
     super(props);
-    this.state = {
+    this.state = this.initialState = {
       disabled: false,
       crop: {},
       guides: true,
@@ -51,12 +51,13 @@ class ModalCropItemForm extends Component {
   }
 
   componentDidMount() {
+    console.log('componentDidMount', this.state);
     const {name, ext} = pathParse(this.props.item.filename);
     this.name = name;
     this.ext = ext;
     //this.refs.input.focus(); // simulate HTML5 autofocus
 
-    this.saveAsPlaceholder = `${name}_crop${ext}`;
+    this.saveAsPlaceholder = `${name}_${ext}`;
     this.setState({
       saveAs: this.saveAsPlaceholder,
       saveAsPlaceholder: this.saveAsPlaceholder
@@ -64,6 +65,12 @@ class ModalCropItemForm extends Component {
 
     this.img = document.querySelector(`tr[id="${utility.cssSafe(this.props.item.filename)}"]`).querySelector('img');
     this.modal = document.querySelector('.eureka__crop-modal');
+
+    try {
+      this.cropper.setAspectRatio(parseFloat(this.state.cropAspectRatio))
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   componentWillUpdate() {
@@ -75,14 +82,14 @@ class ModalCropItemForm extends Component {
     //this.cropper.destroy();
   }
 
-  _crop(event) {
+  crop = (event) => {
+    console.log('crop', event.detail, this.cropper.getData());
     // image in dataUrl
-    console.log(event.detail);
-    let saveAsPlaceholder = `${this.name}_crop${Math.round(event.detail.width)}x${Math.round(event.detail.height)}${this.ext}`;
+    let saveAsPlaceholder = `${this.name}_${Math.round(event.detail.width)}x${Math.round(event.detail.height)}${this.ext}`;
     this.setState({
       crop: event.detail,
       cropData: this.cropper.getData(),
-      saveAsPlaceholder: `${this.name}_crop${Math.round(event.detail.width)}x${Math.round(event.detail.height)}${this.ext}`,
+      saveAsPlaceholder: `${this.name}_${Math.round(event.detail.width)}x${Math.round(event.detail.height)}${this.ext}`,
       saveAs: (this.state.saveAsDirty) ? saveAsPlaceholder : this.state.saveAs
     })
     //this.img.setAttribute('src', this.cropper.getCroppedCanvas().toDataURL());
@@ -158,14 +165,36 @@ class ModalCropItemForm extends Component {
 
   }
 
+  doReset() {
+    this.setDownloadDataURL();
+    this.cropper.reset();
+    this.cropper.setAspectRatio(NaN);
+    this.setState({
+      cropAspectRatio: NaN,
+      doSaveAs: false,
+      mode: undefined,
+    })
+    store.dispatch(actions.updateView({
+      cropAspectRatio: NaN
+    }));
+    /*this.setState(
+      Object.assign({}, this.initialState, {
+       doSaveAs: false,
+       mode: undefined,
+       crop: this.state.crop,
+       cropData: this.state.cropData
+     })
+   );*/
+  }
+
   render() {
-    //console.log('ModalCropitemForm render')
+    console.log('ModalCropitemForm render', this.state.crop)
     const state = this.state;
     const props = this.props;
 
 
 
-    const formatMessage = props.intl.formatMessage;
+    const formatMessage = props.intl.formatMessage;// …
     const saveAsBtn = (this.state.mode !== SAVE_AS) ? (
       <button type="submit" onClick={(event) => {
         this.setState({
@@ -174,13 +203,16 @@ class ModalCropItemForm extends Component {
         });
         //this.saveAsName.focus();
       }} disabled={false}>
-        <FormattedMessage id="cropAs" defaultMessage="Crop As…" />
+        <FormattedMessage id="cropAs" defaultMessage="Crop as" />
       </button>
     ) : undefined;
+    const cropBtnTitle = (this.state.doSaveAs) ? formatMessage(definedMessages.cropAsItem, {
+      item: this.state.doSaveAs ? this.state.saveAs : ''
+    }) : undefined;
     const cropBtn = (
-      <button type="submit" onBlur={(event) => { // <span className="spinner"><Icon {...props} icon="circle-o-notch" /></span>
+      <button title={cropBtnTitle} aria-label={cropBtnTitle} type="submit" onBlur={(event) => { // <span className="spinner"><Icon {...props} icon="circle-o-notch" /></span>
           //this.refs.input.focus();
-        }} disabled={false}><FormattedMessage id="crop" defaultMessage="Crop" /></button>
+        }} disabled={false}>{(!this.state.doSaveAs) ? <FormattedMessage id="crop" defaultMessage="Crop" /> : <FormattedMessage id="cropAs" defaultMessage="Crop as" />}</button>
     );
     const saveAsForm = (this.state.mode === SAVE_AS) ? (
       <div className="eureka__crop-as">
@@ -197,7 +229,7 @@ class ModalCropItemForm extends Component {
             })
           }} />
           <div className="eureka__crop-save-as-checkbox">
-            <input aria-label={formatMessage(definedMessages.saveAsItem, { item: this.state.saveAs })} type="checkbox" id="eureka__crop-save-as" name="eureka__crop-save-as" checked={this.state.doSaveAs} onChange={(event) => {
+            <input title={formatMessage(definedMessages.saveAsItem, { item: this.state.saveAs })} aria-label={formatMessage(definedMessages.saveAsItem, { item: this.state.saveAs })} type="checkbox" id="eureka__crop-save-as" name="eureka__crop-save-as" checked={this.state.doSaveAs} onChange={(event) => {
               this.setState({
                 doSaveAs: event.target.checked
               })
@@ -240,14 +272,14 @@ class ModalCropItemForm extends Component {
           <CropperJS
             data={this.state.cropData}
             key={`cropper_${this.state.guides ? 'guides' : ''}_${this.state.dragMode}`}
-            ref={(cropper) => { this.cropper = cropper; }}
+            ref={(cropper) => { if(cropper) this.cropper = cropper; }}
             src={props.view.focusedMediaItem.absoluteURL}
             style={{height: window.innerHeight - 300, width: '100%'}}
             // Cropper.js options
-            aspectRatio={this.state.cropAspectRatio}
+            //aspectRatio={this.state.cropAspectRatio}
             guides={this.state.guides}
             dragMode={this.state.dragMode}
-            crop={this._crop.bind(this)}
+            crop={this.crop}
             cropend={this.cropend}
             ready={this.ready}
             zoomOnWheel={props.config.zoomOnWheel}
@@ -380,7 +412,11 @@ class ModalCropItemForm extends Component {
         </div>
 
         <form onReset={(event) => {
-          this.setDownloadDataURL();
+          this.doReset();
+          /*if(props.config.confirmBeforeDelete || true) {
+            var r = confirm(formatMessage(definedMessages.cropAreYouSureMessage));
+            if(r) this.doReset();
+          }*/
         }} onSubmit={this.onSubmit}>
         <div hidden={!this.state.showFormControls} className="wrappable flex-bar">
         <fieldset className="eureka__crop-bounding-box">
@@ -424,10 +460,10 @@ class ModalCropItemForm extends Component {
               <select value={this.state.cropAspectRatio} aria-labelledby="eureka__crop-aspect-ratio-label" name="eureka__crop-aspect-ratio" id="eureka__crop-aspect-ratio" onChange={(event) => {
                 this.cropper.setAspectRatio((event.target.value) ? parseFloat(event.target.value) : NaN);
                 this.setState({
-                  cropAspectRatio: event.target.value
+                  cropAspectRatio: parseFloat(event.target.value)
                 });
                 if(this.props.view.rememberAspectRatio && this.props.view.cropAspectRatio != event.target.value) store.dispatch(actions.updateView({
-                  cropAspectRatio: event.target.value
+                  cropAspectRatio: parseFloat(event.target.value)
                 }))
               }}>
                 <option value=""><FormattedMessage id="crop.free" defaultMessage="Free" /></option>
@@ -492,7 +528,7 @@ class ModalCropItemForm extends Component {
               state: state
             }} /></span></button>
             <button className="dangerous" hidden={!this.state.showFormControls} type="reset" onClick={(event) => {
-              this.cropper.reset();
+
             }}><FormattedMessage id="reset" defaultMessage="Reset" /> </button>
             {saveAsBtn}
             {saveAsForm}

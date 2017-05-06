@@ -1126,4 +1126,10 @@
     line-height: 2;
   }
 
+  label[for="eureka__crop-rotate"] {
+    + input[type="range"] {
+      min-width:14em;
+    }
+  }
+
 }

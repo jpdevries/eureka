@@ -74,7 +74,7 @@ var ModalCropItemForm = function (_Component) {
 
     _initialiseProps.call(_this);
 
-    _this.state = {
+    _this.state = _this.initialState = {
       disabled: false,
       crop: {},
       guides: true,
@@ -98,6 +98,8 @@ var ModalCropItemForm = function (_Component) {
   _createClass(ModalCropItemForm, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
+      console.log('componentDidMount', this.state);
+
       var _pathParse = pathParse(this.props.item.filename),
           name = _pathParse.name,
           ext = _pathParse.ext;
@@ -106,7 +108,7 @@ var ModalCropItemForm = function (_Component) {
       this.ext = ext;
       //this.refs.input.focus(); // simulate HTML5 autofocus
 
-      this.saveAsPlaceholder = name + '_crop' + ext;
+      this.saveAsPlaceholder = name + '_' + ext;
       this.setState({
         saveAs: this.saveAsPlaceholder,
         saveAsPlaceholder: this.saveAsPlaceholder
@@ -114,6 +116,12 @@ var ModalCropItemForm = function (_Component) {
 
       this.img = document.querySelector('tr[id="' + _utility2.default.cssSafe(this.props.item.filename) + '"]').querySelector('img');
       this.modal = document.querySelector('.eureka__crop-modal');
+
+      try {
+        this.cropper.setAspectRatio(parseFloat(this.state.cropAspectRatio));
+      } catch (e) {
+        console.log(e);
+      }
     }
   }, {
     key: 'componentWillUpdate',
@@ -125,24 +133,6 @@ var ModalCropItemForm = function (_Component) {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
       //this.cropper.destroy();
-    }
-  }, {
-    key: '_crop',
-    value: function _crop(event) {
-      // image in dataUrl
-      console.log(event.detail);
-      var saveAsPlaceholder = this.name + '_crop' + Math.round(event.detail.width) + 'x' + Math.round(event.detail.height) + this.ext;
-      this.setState({
-        crop: event.detail,
-        cropData: this.cropper.getData(),
-        saveAsPlaceholder: this.name + '_crop' + Math.round(event.detail.width) + 'x' + Math.round(event.detail.height) + this.ext,
-        saveAs: this.state.saveAsDirty ? saveAsPlaceholder : this.state.saveAs
-      });
-      //this.img.setAttribute('src', this.cropper.getCroppedCanvas().toDataURL());
-
-
-      //ctx.filter = 'blur(5px)';
-      //console.log(this.cropper.getCroppedCanvas().toDataURL());
     }
   }, {
     key: 'setDownloadDataURL',
@@ -167,16 +157,39 @@ var ModalCropItemForm = function (_Component) {
       });
     }
   }, {
+    key: 'doReset',
+    value: function doReset() {
+      this.setDownloadDataURL();
+      this.cropper.reset();
+      this.cropper.setAspectRatio(NaN);
+      this.setState({
+        cropAspectRatio: NaN,
+        doSaveAs: false,
+        mode: undefined
+      });
+      _store2.default.dispatch(_actions2.default.updateView({
+        cropAspectRatio: NaN
+      }));
+      /*this.setState(
+        Object.assign({}, this.initialState, {
+         doSaveAs: false,
+         mode: undefined,
+         crop: this.state.crop,
+         cropData: this.state.cropData
+       })
+      );*/
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _this3 = this,
           _React$createElement;
 
-      //console.log('ModalCropitemForm render')
+      console.log('ModalCropitemForm render', this.state.crop);
       var state = this.state;
       var props = this.props;
 
-      var formatMessage = props.intl.formatMessage;
+      var formatMessage = props.intl.formatMessage; // …
       var saveAsBtn = this.state.mode !== SAVE_AS ? _react2.default.createElement(
         'button',
         { type: 'submit', onClick: function onClick(event) {
@@ -186,14 +199,17 @@ var ModalCropItemForm = function (_Component) {
             });
             //this.saveAsName.focus();
           }, disabled: false },
-        _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'cropAs', defaultMessage: 'Crop As\u2026' })
+        _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'cropAs', defaultMessage: 'Crop as' })
       ) : undefined;
+      var cropBtnTitle = this.state.doSaveAs ? formatMessage(_definedMessages2.default.cropAsItem, {
+        item: this.state.doSaveAs ? this.state.saveAs : ''
+      }) : undefined;
       var cropBtn = _react2.default.createElement(
         'button',
-        { type: 'submit', onBlur: function onBlur(event) {// <span className="spinner"><Icon {...props} icon="circle-o-notch" /></span>
+        { title: cropBtnTitle, 'aria-label': cropBtnTitle, type: 'submit', onBlur: function onBlur(event) {// <span className="spinner"><Icon {...props} icon="circle-o-notch" /></span>
             //this.refs.input.focus();
           }, disabled: false },
-        _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'crop', defaultMessage: 'Crop' })
+        !this.state.doSaveAs ? _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'crop', defaultMessage: 'Crop' }) : _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'cropAs', defaultMessage: 'Crop as' })
       );
       var saveAsForm = this.state.mode === SAVE_AS ? _react2.default.createElement(
         'div',
@@ -219,7 +235,7 @@ var ModalCropItemForm = function (_Component) {
           _react2.default.createElement(
             'div',
             { className: 'eureka__crop-save-as-checkbox' },
-            _react2.default.createElement('input', { 'aria-label': formatMessage(_definedMessages2.default.saveAsItem, { item: this.state.saveAs }), type: 'checkbox', id: 'eureka__crop-save-as', name: 'eureka__crop-save-as', checked: this.state.doSaveAs, onChange: function onChange(event) {
+            _react2.default.createElement('input', { title: formatMessage(_definedMessages2.default.saveAsItem, { item: this.state.saveAs }), 'aria-label': formatMessage(_definedMessages2.default.saveAsItem, { item: this.state.saveAs }), type: 'checkbox', id: 'eureka__crop-save-as', name: 'eureka__crop-save-as', checked: this.state.doSaveAs, onChange: function onChange(event) {
                 _this3.setState({
                   doSaveAs: event.target.checked
                 });
@@ -266,15 +282,15 @@ var ModalCropItemForm = function (_Component) {
             data: this.state.cropData,
             key: 'cropper_' + (this.state.guides ? 'guides' : '') + '_' + this.state.dragMode,
             ref: function ref(cropper) {
-              _this3.cropper = cropper;
+              if (cropper) _this3.cropper = cropper;
             },
             src: props.view.focusedMediaItem.absoluteURL,
             style: { height: window.innerHeight - 300, width: '100%' }
             // Cropper.js options
-            , aspectRatio: this.state.cropAspectRatio,
-            guides: this.state.guides,
+            //aspectRatio={this.state.cropAspectRatio}
+            , guides: this.state.guides,
             dragMode: this.state.dragMode,
-            crop: this._crop.bind(this),
+            crop: this.crop,
             cropend: this.cropend,
             ready: this.ready,
             zoomOnWheel: props.config.zoomOnWheel
@@ -503,7 +519,11 @@ var ModalCropItemForm = function (_Component) {
         _react2.default.createElement(
           'form',
           { onReset: function onReset(event) {
-              _this3.setDownloadDataURL();
+              _this3.doReset();
+              /*if(props.config.confirmBeforeDelete || true) {
+                var r = confirm(formatMessage(definedMessages.cropAreYouSureMessage));
+                if(r) this.doReset();
+              }*/
             }, onSubmit: this.onSubmit },
           _react2.default.createElement(
             'div',
@@ -617,10 +637,10 @@ var ModalCropItemForm = function (_Component) {
                     { value: this.state.cropAspectRatio, 'aria-labelledby': 'eureka__crop-aspect-ratio-label', name: 'eureka__crop-aspect-ratio', id: 'eureka__crop-aspect-ratio', onChange: function onChange(event) {
                         _this3.cropper.setAspectRatio(event.target.value ? parseFloat(event.target.value) : NaN);
                         _this3.setState({
-                          cropAspectRatio: event.target.value
+                          cropAspectRatio: parseFloat(event.target.value)
                         });
                         if (_this3.props.view.rememberAspectRatio && _this3.props.view.cropAspectRatio != event.target.value) _store2.default.dispatch(_actions2.default.updateView({
-                          cropAspectRatio: event.target.value
+                          cropAspectRatio: parseFloat(event.target.value)
                         }));
                       } },
                     _react2.default.createElement(
@@ -742,9 +762,7 @@ var ModalCropItemForm = function (_Component) {
             ),
             _react2.default.createElement(
               'button',
-              { className: 'dangerous', hidden: !this.state.showFormControls, type: 'reset', onClick: function onClick(event) {
-                  _this3.cropper.reset();
-                } },
+              { className: 'dangerous', hidden: !this.state.showFormControls, type: 'reset', onClick: function onClick(event) {} },
               _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'reset', defaultMessage: 'Reset' }),
               ' '
             ),
@@ -762,6 +780,23 @@ var ModalCropItemForm = function (_Component) {
 
 var _initialiseProps = function _initialiseProps() {
   var _this4 = this;
+
+  this.crop = function (event) {
+    console.log('crop', event.detail, _this4.cropper.getData());
+    // image in dataUrl
+    var saveAsPlaceholder = _this4.name + '_' + Math.round(event.detail.width) + 'x' + Math.round(event.detail.height) + _this4.ext;
+    _this4.setState({
+      crop: event.detail,
+      cropData: _this4.cropper.getData(),
+      saveAsPlaceholder: _this4.name + '_' + Math.round(event.detail.width) + 'x' + Math.round(event.detail.height) + _this4.ext,
+      saveAs: _this4.state.saveAsDirty ? saveAsPlaceholder : _this4.state.saveAs
+    });
+    //this.img.setAttribute('src', this.cropper.getCroppedCanvas().toDataURL());
+
+
+    //ctx.filter = 'blur(5px)';
+    //console.log(this.cropper.getCroppedCanvas().toDataURL());
+  };
 
   this.cropend = function (event) {
     console.log('cropend');

@@ -43,6 +43,14 @@ exports.default = (0, _reactIntl.defineMessages)((_defineMessages = {
     'id': 'cropItem',
     'defaultMessage': 'Crop {item}'
   },
+  cropAs: {
+    'id': 'cropAs',
+    'defaultMessage': 'Crop as'
+  },
+  cropAsItem: {
+    'id': 'cropAsItem',
+    'defaultMessage': 'Crop as {item}'
+  },
   saveAsItem: {
     'id': 'saveAsItem',
     'defaultMessage': 'Save as {item}'
@@ -70,6 +78,10 @@ exports.default = (0, _reactIntl.defineMessages)((_defineMessages = {
   deleteAreYouSureMessage: {
     'id': 'deleteAreYouSureMessage',
     'defaultMessage': 'Are you sure you want to permanently delete {filename}?'
+  },
+  cropAreYouSureMessage: {
+    'id': 'cropAreYouSureMessage',
+    'defaultMessage': 'Are you sure you want to reset your crop?'
   },
   masonryLayoutMessage: {
     'id': 'masonryLayoutMessage',
