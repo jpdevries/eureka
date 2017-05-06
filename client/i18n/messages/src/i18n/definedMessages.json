@@ -32,6 +32,14 @@
     "defaultMessage": "Crop {item}"
   },
   {
+    "id": "cropAs",
+    "defaultMessage": "Crop as"
+  },
+  {
+    "id": "cropAsItem",
+    "defaultMessage": "Crop as {item}"
+  },
+  {
     "id": "saveAsItem",
     "defaultMessage": "Save as {item}"
   },
@@ -58,6 +66,10 @@
   {
     "id": "deleteAreYouSureMessage",
     "defaultMessage": "Are you sure you want to permanently delete {filename}?"
+  },
+  {
+    "id": "cropAreYouSureMessage",
+    "defaultMessage": "Are you sure you want to reset your crop?"
   },
   {
     "id": "masonryLayoutMessage",
