@@ -192,9 +192,9 @@ var contentReducer = function(state, action) {
     case actions.DELETE_MEDIA_ITEMS_SUCCESS:
     console.log(actions.DELETE_MEDIA_ITEMS_SUCCESS);
     const formData = action.formData;
-    for(var pair of formData.entries()) {
+    /*for(var pair of formData.entries()) {
       console.log(pair[0]+ ', '+ pair[1]);
-    }
+    }*/
     const deletedFileNames = formData.getAll('delete_file[]');
     //if(!Array.isArray(action.contents)) return state; // so the backed can just return res.json([true]) if it wants?
     const newContents = processContentItems(action.contents.filter((file) => (

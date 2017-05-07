@@ -395,9 +395,9 @@ exports.deleteMediaItemsError = deleteMediaItemsError;
 
 const deleteMediaItems = (source, formData, customHeaders = {}) => {
   console.log('deleteMediaItems');
-  for(var pair of formData.entries()) {
+  /*for(var pair of formData.entries()) {
      console.log(pair[0]+ ', '+ pair[1]);
-  }
+  }*/
   return (dispatch) => (
     fetch(`/assets/components/eureka/media/sources/${source}`, {
       method: 'DELETE',
