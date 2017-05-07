@@ -4652,7 +4652,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.118",
+		"version": "0.0.119",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -16320,31 +16320,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var decoratedActions = this.decoratedActions;
 
 	      var formData = new FormData(event.target);
-	      var _iteratorNormalCompletion = true;
-	      var _didIteratorError = false;
-	      var _iteratorError = undefined;
-
-	      try {
-	        for (var _iterator = formData.entries()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	          var pair = _step.value;
-
-	          console.log(pair[0], pair[1]);
-	        }
-	      } catch (err) {
-	        _didIteratorError = true;
-	        _iteratorError = err;
-	      } finally {
-	        try {
-	          if (!_iteratorNormalCompletion && _iterator.return) {
-	            _iterator.return();
-	          }
-	        } finally {
-	          if (_didIteratorError) {
-	            throw _iteratorError;
-	          }
-	        }
-	      }
-
+	      /*for(var pair of formData.entries()) {
+	         console.log(pair[0], pair[1]);
+	      }*/
 	      _store2.default.dispatch(_actions2.default.updateView({
 	        isUploading: true
 	      }));
@@ -17872,11 +17850,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	   move: function move(offsetX, offsetY) {
 	      return this.cropper.move(offsetX, offsetY);
-	   },
-
-	   moveTo: function move(x, y) {
-	     console.log('moveTo',x,y);
-	      return this.cropper.moveTo(x, y);
 	   },
 
 	   zoom: function zoom(ratio) {
@@ -22309,6 +22282,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		"upload.dragFilesUploading": "Uploading files…",
 		"layout.masonry": "Masonry Layout",
 		"layout.fullscreenMode": "Fullscreen Mode",
+		"layout.viewMode": "View Mode",
 		"layout.table": "Table Layout",
 		"layout.thumb": "Thumbnail Layout",
 		"layout.grid": "Grid Layout",
