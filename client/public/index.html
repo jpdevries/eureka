@@ -23,7 +23,7 @@
           left:0;
           right: 0;
           bottom: 0;
-          height: auto; 
+          height: auto;
         }
       }
 
@@ -163,6 +163,25 @@
         new URLSearchParams()
       } catch (e) {
         document.write('<script src="assets/js/vendor/url-search-params/url-search-params.js"><\/script>')
+      }
+    </script>
+
+    <script>
+      if (!HTMLCanvasElement.prototype.toBlob) {
+       Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
+        value: function (callback, type, quality) {
+
+          var binStr = atob( this.toDataURL(type, quality).split(',')[1] ),
+              len = binStr.length,
+              arr = new Uint8Array(len);
+
+          for (var i = 0; i < len; i++ ) {
+           arr[i] = binStr.charCodeAt(i);
+          }
+
+          callback( new Blob( [arr], {type: type || 'image/png'} ) );
+        }
+       });
       }
     </script>
 

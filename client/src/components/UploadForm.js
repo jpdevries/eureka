@@ -16,7 +16,7 @@ class UploadForm extends PureComponent {
   constructor(props) {
     super(props);
     this.decoratedActions = props.decoratedActions ? Object.assign({}, actions, props.decoratedActions) : actions;
-    
+
   }
 
 
@@ -29,9 +29,9 @@ class UploadForm extends PureComponent {
     const decoratedActions = this.decoratedActions;
 
     const formData = new FormData(event.target);
-    for(var pair of formData.entries()) {
+    /*for(var pair of formData.entries()) {
        console.log(pair[0], pair[1]);
-    }
+    }*/ 
     store.dispatch(actions.updateView({
        isUploading: true
     }));
