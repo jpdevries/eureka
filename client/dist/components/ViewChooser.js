@@ -77,7 +77,7 @@ var ViewChooser = function (_FullScreenPureCompon) {
           masonryBtn = _reactMasonryComponent2.default && props.config.allowMasonry ? _react2.default.createElement(
         'div',
         null,
-        _react2.default.createElement('input', { type: 'radio', id: 'eureka__view-masonry', name: 'eureka__view', onChange: function onChange(event) {
+        _react2.default.createElement('input', { 'aria-labelledby': (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'view-mode-legend', type: 'radio', id: 'eureka__view-masonry', name: 'eureka__view', onChange: function onChange(event) {
             return _store2.default.dispatch(_actions2.default.updateView({
               mode: event.target.value
             }));
@@ -146,11 +146,16 @@ var ViewChooser = function (_FullScreenPureCompon) {
           ),
           _react2.default.createElement(
             'div',
-            { className: 'eureka__icon-radio-btns' },
+            { className: 'eureka__icon-radio-btns', role: 'radiogroup' },
+            _react2.default.createElement(
+              'legend',
+              { className: 'visually-hidden', id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'view-mode-legend' },
+              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'layout.viewMode', defaultMessage: 'View Mode' })
+            ),
             _react2.default.createElement(
               'div',
               null,
-              _react2.default.createElement('input', { type: 'radio', id: 'eureka__view-table', name: 'eureka__view', onChange: function onChange(event) {
+              _react2.default.createElement('input', { 'aria-labelledby': (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'view-mode-legend', type: 'radio', id: 'eureka__view-table', name: 'eureka__view', onChange: function onChange(event) {
                   return _store2.default.dispatch(_actions2.default.updateView({
                     mode: event.target.value
                   }));
@@ -170,7 +175,7 @@ var ViewChooser = function (_FullScreenPureCompon) {
             _react2.default.createElement(
               'div',
               null,
-              _react2.default.createElement('input', { type: 'radio', id: 'eureka__view-thumb', name: 'eureka__view', onChange: function onChange(event) {
+              _react2.default.createElement('input', { 'aria-labelledby': (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'view-mode-legend', type: 'radio', id: 'eureka__view-thumb', name: 'eureka__view', onChange: function onChange(event) {
                   return _store2.default.dispatch(_actions2.default.updateView({
                     mode: event.target.value
                   }));
@@ -190,7 +195,7 @@ var ViewChooser = function (_FullScreenPureCompon) {
             _react2.default.createElement(
               'div',
               null,
-              _react2.default.createElement('input', { type: 'radio', id: 'eureka__view-grid', name: 'eureka__view', onChange: function onChange(event) {
+              _react2.default.createElement('input', { 'aria-labelledby': (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'view-mode-legend', type: 'radio', id: 'eureka__view-grid', name: 'eureka__view', onChange: function onChange(event) {
                   return _store2.default.dispatch(_actions2.default.updateView({
                     mode: event.target.value
                   }));
@@ -211,7 +216,7 @@ var ViewChooser = function (_FullScreenPureCompon) {
             _react2.default.createElement(
               'div',
               null,
-              _react2.default.createElement('input', { type: 'radio', id: 'eureka__view-list', name: 'eureka__view', onChange: function onChange(event) {
+              _react2.default.createElement('input', { 'aria-labelledby': (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'view-mode-legend', type: 'radio', id: 'eureka__view-list', name: 'eureka__view', onChange: function onChange(event) {
                   return _store2.default.dispatch(_actions2.default.updateView({
                     mode: event.target.value
                   }));

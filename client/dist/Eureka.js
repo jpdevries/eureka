@@ -639,7 +639,7 @@ var Eureka = function (_Component) {
                 }
               }
             }
-          }, role: 'widget', lang: props.lang || undefined, className: 'eureka eureka__view-mode__' + props.view.mode + chooseMultipleClass + enlargeFocusedRows + serverSideClass },
+          }, lang: props.lang || undefined, className: 'eureka eureka__view-mode__' + props.view.mode + chooseMultipleClass + enlargeFocusedRows + serverSideClass },
         _react2.default.createElement(
           'div',
           { className: classNames({

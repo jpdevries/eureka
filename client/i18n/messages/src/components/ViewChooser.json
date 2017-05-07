@@ -8,6 +8,10 @@
     "defaultMessage": "Fullscreen Mode"
   },
   {
+    "id": "layout.viewMode",
+    "defaultMessage": "View Mode"
+  },
+  {
     "id": "layout.table",
     "defaultMessage": "Table Layout"
   },

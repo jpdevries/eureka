@@ -1456,7 +1456,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	              }
 	            }
-	          }, role: 'widget', lang: props.lang || undefined, className: 'eureka eureka__view-mode__' + props.view.mode + chooseMultipleClass + enlargeFocusedRows + serverSideClass },
+	          }, lang: props.lang || undefined, className: 'eureka eureka__view-mode__' + props.view.mode + chooseMultipleClass + enlargeFocusedRows + serverSideClass },
 	        _react2.default.createElement(
 	          'div',
 	          { className: classNames({
@@ -4652,7 +4652,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.117",
+		"version": "0.0.118",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -9767,7 +9767,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    null,
 	    _react2.default.createElement(
 	      'button',
-	      { role: 'menuitem', id: 'eureka__tree-toggle__button', 'aria-controls': 'eureka__pathbrowser', 'aria-pressed': props.view.sourceTreeOpen, 'aria-expanded': props.view.sourceTreeOpen, onClick: function onClick(event) {
+	      { role: 'button', id: 'eureka__tree-toggle__button', 'aria-controls': 'eureka__pathbrowser', 'aria-pressed': props.view.sourceTreeOpen, 'aria-expanded': props.view.sourceTreeOpen, onClick: function onClick(event) {
 	          _store2.default.dispatch(_actions2.default.updateView({
 	            sourceTreeOpen: !props.view.sourceTreeOpen
 	          }));
@@ -10003,15 +10003,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    var _this = _possibleConstructorReturn(this, (SearchBar.__proto__ || Object.getPrototypeOf(SearchBar)).call(this, props));
 
+	    _this.searchBarPlaceholderTick = function () {
+	      _this.pickRandomField();
+	    };
+
 	    _this.state = {
 	      placeholderField: 'filename',
 	      lastDir: '/'
 	    };
-	    if (!_utility2.default.serverSideRendering && _this.props.view.intervals.searchBarPlaceholder) {
-	      setInterval(function () {
-	        _this.pickRandomField();
-	      }, _this.props.view.intervals.searchBarPlaceholder);
-	    }
 
 	    return _this;
 	  }
@@ -10022,12 +10021,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	      //console.log('componentDidMount');
 	      this.pickRandomField();
 
+	      if (!_utility2.default.serverSideRendering && this.props.view.intervals.searchBarPlaceholder) {
+	        this.clearSearchBarPlaceholderInterval();
+	        this.searchBarPlaceholderInterval = setInterval(this.searchBarPlaceholderTick, this.props.view.intervals.searchBarPlaceholder);
+	      }
+
 	      /*store.subscribe(() => {
 	        if(this.state.lastDir !== store.getState().content.cd) this.pickRandomField();
 	         this.setState({
 	          lastDir:store.getState().content.cd
 	        })
 	      });*/
+	    }
+	  }, {
+	    key: 'clearSearchBarPlaceholderInterval',
+	    value: function clearSearchBarPlaceholderInterval() {
+	      try {
+	        clearInterval(this.searchBarPlaceholderInterval);
+	      } catch (e) {}
+	    }
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      this.clearSearchBarPlaceholderInterval();
 	    }
 	  }, {
 	    key: 'pickRandomField',
@@ -10237,7 +10253,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          masonryBtn = _reactMasonryComponent2.default && props.config.allowMasonry ? _react2.default.createElement(
 	        'div',
 	        null,
-	        _react2.default.createElement('input', { type: 'radio', id: 'eureka__view-masonry', name: 'eureka__view', onChange: function onChange(event) {
+	        _react2.default.createElement('input', { 'aria-labelledby': (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'view-mode-legend', type: 'radio', id: 'eureka__view-masonry', name: 'eureka__view', onChange: function onChange(event) {
 	            return _store2.default.dispatch(_actions2.default.updateView({
 	              mode: event.target.value
 	            }));
@@ -10306,11 +10322,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	          ),
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'eureka__icon-radio-btns' },
+	            { className: 'eureka__icon-radio-btns', role: 'radiogroup' },
+	            _react2.default.createElement(
+	              'legend',
+	              { className: 'visually-hidden', id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'view-mode-legend' },
+	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'layout.viewMode', defaultMessage: 'View Mode' })
+	            ),
 	            _react2.default.createElement(
 	              'div',
 	              null,
-	              _react2.default.createElement('input', { type: 'radio', id: 'eureka__view-table', name: 'eureka__view', onChange: function onChange(event) {
+	              _react2.default.createElement('input', { 'aria-labelledby': (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'view-mode-legend', type: 'radio', id: 'eureka__view-table', name: 'eureka__view', onChange: function onChange(event) {
 	                  return _store2.default.dispatch(_actions2.default.updateView({
 	                    mode: event.target.value
 	                  }));
@@ -10330,7 +10351,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            _react2.default.createElement(
 	              'div',
 	              null,
-	              _react2.default.createElement('input', { type: 'radio', id: 'eureka__view-thumb', name: 'eureka__view', onChange: function onChange(event) {
+	              _react2.default.createElement('input', { 'aria-labelledby': (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'view-mode-legend', type: 'radio', id: 'eureka__view-thumb', name: 'eureka__view', onChange: function onChange(event) {
 	                  return _store2.default.dispatch(_actions2.default.updateView({
 	                    mode: event.target.value
 	                  }));
@@ -10350,7 +10371,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            _react2.default.createElement(
 	              'div',
 	              null,
-	              _react2.default.createElement('input', { type: 'radio', id: 'eureka__view-grid', name: 'eureka__view', onChange: function onChange(event) {
+	              _react2.default.createElement('input', { 'aria-labelledby': (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'view-mode-legend', type: 'radio', id: 'eureka__view-grid', name: 'eureka__view', onChange: function onChange(event) {
 	                  return _store2.default.dispatch(_actions2.default.updateView({
 	                    mode: event.target.value
 	                  }));
@@ -10371,7 +10392,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            _react2.default.createElement(
 	              'div',
 	              null,
-	              _react2.default.createElement('input', { type: 'radio', id: 'eureka__view-list', name: 'eureka__view', onChange: function onChange(event) {
+	              _react2.default.createElement('input', { 'aria-labelledby': (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'view-mode-legend', type: 'radio', id: 'eureka__view-list', name: 'eureka__view', onChange: function onChange(event) {
 	                  return _store2.default.dispatch(_actions2.default.updateView({
 	                    mode: event.target.value
 	                  }));
@@ -12083,7 +12104,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  var chooseBtn = props.config.allowChoose ? _react2.default.createElement(
 	    'button',
-	    { role: 'option', id: 'choose__' + (0, _utility.cssSafe)(item.filename), title: chooseItemMessage, onClick: function onClick(event) {
+	    { role: 'option', id: 'choose__' + props.idPrefix + (0, _utility.cssSafe)(item.filename), title: chooseItemMessage, onClick: function onClick(event) {
 	        if (!props.view.focusedMediaItem) return;
 	        try {
 	          props.config.callbacks.choose(item);
@@ -12104,7 +12125,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  ) : undefined,
 	      cropBtn = props.config.allowCrop && (ext.toLowerCase() == '.jpg' || ext.toLowerCase() == '.jpeg' || ext.toLowerCase() == '.png' || ext.toLowerCase() == '.gif') ? _react2.default.createElement(
 	    'button',
-	    { className: 'eureka__crop-btn', role: 'option', id: 'choose__' + (0, _utility.cssSafe)(item.filename), title: chooseItemMessage, onClick: props.onCropItem ? props.onCropItem.bind(null, item) : undefined },
+	    { className: 'eureka__crop-btn', role: 'option', id: 'crop__' + props.idPrefix + (0, _utility.cssSafe)(item.filename), title: chooseItemMessage, onClick: props.onCropItem ? props.onCropItem.bind(null, item) : undefined },
 	    cropMessage,
 	    _react2.default.createElement(
 	      'span',
@@ -12115,7 +12136,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  ) : undefined,
 	      renameBtn = props.config.allowRename ? _react2.default.createElement(
 	    'button',
-	    { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'rename__' + (0, _utility.cssSafe)(item.filename), role: 'option', title: renameItemMessage, onClick: props.onRenameItem ? props.onRenameItem.bind(null, item) : undefined },
+	    { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'rename' + props.idPrefix + '__' + (0, _utility.cssSafe)(item.filename), role: 'option', title: renameItemMessage, onClick: props.onRenameItem ? props.onRenameItem.bind(null, item) : undefined },
 	    renameMessage,
 	    _react2.default.createElement(
 	      'span',
@@ -12126,7 +12147,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  ) : undefined,
 	      deleteBtn = props.config.allowDelete ? _react2.default.createElement(
 	    'button',
-	    { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'delete__' + (0, _utility.cssSafe)(item.filename), role: 'option', onClick: function onClick(event) {
+	    { id: '' + (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + props.idPrefix + 'delete__' + (0, _utility.cssSafe)(item.filename), role: 'option', onClick: function onClick(event) {
 	        if (!props.config.confirmBeforeDelete) {
 	          deleteIt();
 	        } else if (confirm(deleteAreYouSureMessage)) {
@@ -12146,7 +12167,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      item.filename
 	    )
 	  ) : undefined,
-	      downloadID = (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'download__' + (0, _utility.cssSafe)(item.filename),
+	      downloadID = '' + (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + props.idPrefix + 'download__' + (0, _utility.cssSafe)(item.filename),
 	      downloadBtn = props.config.allowDownload ? _react2.default.createElement(
 	    'a',
 	    { download: item.filename, href: item.absoluteURL, id: downloadID, className: 'button', target: '_' + downloadID, title: downloadItemMessage },
@@ -12165,7 +12186,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      { className: 'eureka__button-bar eureka__context-buttons', role: 'listbox', 'aria-label': performContextualActionsMessage, tabIndex: '0', 'aria-activedescendant': 'expand__' + (0, _utility.cssSafe)(item.filename) },
 	      _react2.default.createElement(
 	        'a',
-	        { onBlur: props.onBlur, role: 'option', id: 'expand__' + (0, _utility.cssSafe)(item.filename), href: item.absoluteURL, target: '_' + encodeURI(item.absoluteURL), className: 'button', title: expandItemMessage },
+	        { onBlur: props.onBlur, role: 'option', id: 'expand__' + props.idPrefix + (0, _utility.cssSafe)(item.filename), href: item.absoluteURL, target: '_' + encodeURI(item.absoluteURL), className: 'button', title: expandItemMessage },
 	        expandMessage,
 	        _react2.default.createElement(
 	          'span',
@@ -12181,6 +12202,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      downloadBtn
 	    )
 	  );
+	};
+
+	ContextButtons.defaultProps = {
+	  idPrefix: ''
 	};
 
 	exports.default = ContextButtons;
@@ -16474,7 +16499,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var PathBar = function PathBar(props) {
 	  var formatMessage = props.intl.formatMessage;
-	  var contextBtns = props.view.focusedMediaItem ? _react2.default.createElement(_ContextButtons2.default, _extends({}, props, { item: props.view.focusedMediaItem })) : undefined;
+	  var contextBtns = props.view.focusedMediaItem ? _react2.default.createElement(_ContextButtons2.default, _extends({}, props, { idPrefix: 'pathbar', item: props.view.focusedMediaItem })) : undefined;
 
 	  var copyListofSelectedFiles = formatMessage(_definedMessages2.default.copyListofSelectedFiles);
 
@@ -22150,17 +22175,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    'div',
 	    { className: 'eureka__choose-radio' },
 	    _react2.default.createElement(
-	      'fieldset',
+	      'div',
 	      null,
 	      _react2.default.createElement(
 	        'div',
-	        { className: 'eureka__fieldset' },
+	        { role: 'radiogroup', className: 'eureka__fieldset' },
 	        _react2.default.createElement(
 	          'legend',
-	          null,
+	          { id: 'eureka__choose-radio-legend' },
 	          'Choose Items:\u2002'
 	        ),
-	        _react2.default.createElement('input', { onChange: function onChange(event) {
+	        _react2.default.createElement('input', { 'aria-labelledby': 'eureka__choose-radio-legend', onChange: function onChange(event) {
 	            _store2.default.dispatch(_actions2.default.updateView({
 	              chooseMultiple: false
 	            }));
@@ -22170,7 +22195,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          { htmlFor: props.storagePrefix + '__choose_item' },
 	          '\u2002Single\u2003'
 	        ),
-	        _react2.default.createElement('input', { onChange: function onChange(event) {
+	        _react2.default.createElement('input', { 'aria-labelledby': 'eureka__choose-radio-legend', onChange: function onChange(event) {
 	            _store2.default.dispatch(_actions2.default.updateView({
 	              chooseMultiple: true
 	            }));
@@ -22249,7 +22274,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		"directory.cancelCreating": "creating directory {cd}",
 		"create": "Create",
 		"directory": "directory",
-		"cropAs": "Crop As…",
+		"cropAs": "Crop as",
 		"crop": "Crop",
 		"saveAs": "Save As",
 		"showAdvControls": "Show Advanced Controls",
@@ -22293,12 +22318,14 @@ return /******/ (function(modules) { // webpackBootstrap
 		"directory.create": "Create a Directory",
 		"directory.createNewIn": "Create a new Directory in {cd}",
 		"cropItem": "Crop {item}",
+		"cropAsItem": "Crop as {item}",
 		"saveAsItem": "Save as {item}",
 		"croppingItem": "Cropping {item}",
 		"mediaSourceTree": "Media Source Panel",
 		"pastImageFromClipboardMessage": "Paste images from the clipboard to upload",
 		"pastImageFromClipboardToMessage": "Paste images from the clipboard to upload to ${cd} of source ${cs}",
 		"deleteAreYouSureMessage": "Are you sure you want to permanently delete {filename}?",
+		"cropAreYouSureMessage": "Are you sure you want to reset your crop?",
 		"masonryLayoutMessage": "Masonry Layout",
 		"close": "Close",
 		"open": "Open",

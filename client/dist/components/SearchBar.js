@@ -48,15 +48,14 @@ var SearchBar = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, (SearchBar.__proto__ || Object.getPrototypeOf(SearchBar)).call(this, props));
 
+    _this.searchBarPlaceholderTick = function () {
+      _this.pickRandomField();
+    };
+
     _this.state = {
       placeholderField: 'filename',
       lastDir: '/'
     };
-    if (!_utility2.default.serverSideRendering && _this.props.view.intervals.searchBarPlaceholder) {
-      setInterval(function () {
-        _this.pickRandomField();
-      }, _this.props.view.intervals.searchBarPlaceholder);
-    }
 
     return _this;
   }
@@ -67,12 +66,29 @@ var SearchBar = function (_Component) {
       //console.log('componentDidMount');
       this.pickRandomField();
 
+      if (!_utility2.default.serverSideRendering && this.props.view.intervals.searchBarPlaceholder) {
+        this.clearSearchBarPlaceholderInterval();
+        this.searchBarPlaceholderInterval = setInterval(this.searchBarPlaceholderTick, this.props.view.intervals.searchBarPlaceholder);
+      }
+
       /*store.subscribe(() => {
         if(this.state.lastDir !== store.getState().content.cd) this.pickRandomField();
          this.setState({
           lastDir:store.getState().content.cd
         })
       });*/
+    }
+  }, {
+    key: 'clearSearchBarPlaceholderInterval',
+    value: function clearSearchBarPlaceholderInterval() {
+      try {
+        clearInterval(this.searchBarPlaceholderInterval);
+      } catch (e) {}
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      this.clearSearchBarPlaceholderInterval();
     }
   }, {
     key: 'pickRandomField',

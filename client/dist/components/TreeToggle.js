@@ -40,7 +40,7 @@ var TreeToggle = exports.TreeToggle = function TreeToggle(props) {
     null,
     _react2.default.createElement(
       'button',
-      { role: 'menuitem', id: 'eureka__tree-toggle__button', 'aria-controls': 'eureka__pathbrowser', 'aria-pressed': props.view.sourceTreeOpen, 'aria-expanded': props.view.sourceTreeOpen, onClick: function onClick(event) {
+      { role: 'button', id: 'eureka__tree-toggle__button', 'aria-controls': 'eureka__pathbrowser', 'aria-pressed': props.view.sourceTreeOpen, 'aria-expanded': props.view.sourceTreeOpen, onClick: function onClick(event) {
           _store2.default.dispatch(_actions2.default.updateView({
             sourceTreeOpen: !props.view.sourceTreeOpen
           }));

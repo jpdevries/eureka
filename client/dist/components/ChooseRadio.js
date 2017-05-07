@@ -49,17 +49,17 @@ function ChooseRadio(props) {
     'div',
     { className: 'eureka__choose-radio' },
     _react2.default.createElement(
-      'fieldset',
+      'div',
       null,
       _react2.default.createElement(
         'div',
-        { className: 'eureka__fieldset' },
+        { role: 'radiogroup', className: 'eureka__fieldset' },
         _react2.default.createElement(
           'legend',
-          null,
+          { id: 'eureka__choose-radio-legend' },
           'Choose Items:\u2002'
         ),
-        _react2.default.createElement('input', { onChange: function onChange(event) {
+        _react2.default.createElement('input', { 'aria-labelledby': 'eureka__choose-radio-legend', onChange: function onChange(event) {
             _store2.default.dispatch(_actions2.default.updateView({
               chooseMultiple: false
             }));
@@ -69,7 +69,7 @@ function ChooseRadio(props) {
           { htmlFor: props.storagePrefix + '__choose_item' },
           '\u2002Single\u2003'
         ),
-        _react2.default.createElement('input', { onChange: function onChange(event) {
+        _react2.default.createElement('input', { 'aria-labelledby': 'eureka__choose-radio-legend', onChange: function onChange(event) {
             _store2.default.dispatch(_actions2.default.updateView({
               chooseMultiple: true
             }));
