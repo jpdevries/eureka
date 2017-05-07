@@ -51,7 +51,7 @@ const ContextButtons = (props) => {
     filename: item.filename
   });
   const chooseBtn = (props.config.allowChoose) ? (
-    <button role="option" id={`choose__${cssSafe(item.filename)}`} title={chooseItemMessage} onClick={(event) => {
+    <button role="option" id={`choose__${props.idPrefix}${cssSafe(item.filename)}`} title={chooseItemMessage} onClick={(event) => {
       if(!props.view.focusedMediaItem) return;
       try {
         props.config.callbacks.choose(item);
@@ -64,11 +64,11 @@ const ContextButtons = (props) => {
     }}>{chooseMessage}<span className="visually-hidden"> {item.filename}</span></button>
 ) : undefined,
   cropBtn = (props.config.allowCrop && (ext.toLowerCase() == '.jpg' || ext.toLowerCase() == '.jpeg' || ext.toLowerCase() == '.png' || ext.toLowerCase() == '.gif')) ? (
-    <button className="eureka__crop-btn" role="option" id={`choose__${cssSafe(item.filename)}`} title={chooseItemMessage} onClick={props.onCropItem ? props.onCropItem.bind(null, item) : undefined}>{cropMessage}<span className="visually-hidden"> {item.filename}</span></button>
+    <button className="eureka__crop-btn" role="option" id={`crop__${props.idPrefix}${cssSafe(item.filename)}`} title={chooseItemMessage} onClick={props.onCropItem ? props.onCropItem.bind(null, item) : undefined}>{cropMessage}<span className="visually-hidden"> {item.filename}</span></button>
 ) : undefined,
-  renameBtn = (props.config.allowRename) ? (<button id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }rename__${cssSafe(item.filename)}`} role="option" title={renameItemMessage} onClick={props.onRenameItem ? props.onRenameItem.bind(null, item) : undefined}>{renameMessage}<span className="visually-hidden"> {item.filename}</span></button>) : undefined,
+  renameBtn = (props.config.allowRename) ? (<button id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }rename${props.idPrefix}__${cssSafe(item.filename)}`} role="option" title={renameItemMessage} onClick={props.onRenameItem ? props.onRenameItem.bind(null, item) : undefined}>{renameMessage}<span className="visually-hidden"> {item.filename}</span></button>) : undefined,
   deleteBtn = (props.config.allowDelete) ? (
-    <button id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }delete__${cssSafe(item.filename)}`} role="option" onClick={(event) => {
+    <button id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }${props.idPrefix}delete__${cssSafe(item.filename)}`} role="option" onClick={(event) => {
         if(!props.config.confirmBeforeDelete) {
           deleteIt();
         } else if(confirm(deleteAreYouSureMessage)) {
@@ -81,7 +81,7 @@ const ContextButtons = (props) => {
         }
       }} title={deleteItemMessage} className="dangerous">{deleteMessage}<span className="visually-hidden"> {item.filename}</span></button>
   ) : undefined,
-  downloadID = `${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }download__${cssSafe(item.filename)}`,
+  downloadID = `${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__' }${props.idPrefix}download__${cssSafe(item.filename)}`,
   downloadBtn = (props.config.allowDownload) ? (
     <a download={item.filename} href={item.absoluteURL} id={downloadID} className="button" target={`_${downloadID}`} title={downloadItemMessage}>{downloadMessage}<span className="visually-hidden"> {item.filename}</span></a>
   ) : undefined;
@@ -90,7 +90,7 @@ const ContextButtons = (props) => {
 
   return ( // future-role="toolbar listbox"
     <div className="eureka__button-bar eureka__context-buttons" role="listbox"  aria-label={performContextualActionsMessage} tabIndex="0" aria-activedescendant={`expand__${cssSafe(item.filename)}`}>
-      <a onBlur={props.onBlur} role="option" id={`expand__${cssSafe(item.filename)}`} href={item.absoluteURL} target={`_${encodeURI(item.absoluteURL)}`} className="button" title={expandItemMessage}>{expandMessage}<span className="visually-hidden"> {item.filename}</span></a>
+      <a onBlur={props.onBlur} role="option" id={`expand__${props.idPrefix}${cssSafe(item.filename)}`} href={item.absoluteURL} target={`_${encodeURI(item.absoluteURL)}`} className="button" title={expandItemMessage}>{expandMessage}<span className="visually-hidden"> {item.filename}</span></a>
       {chooseBtn}
       {cropBtn}
     {renameBtn}
@@ -99,5 +99,9 @@ const ContextButtons = (props) => {
     </div>
   );
 }
+
+ContextButtons.defaultProps = {
+  idPrefix: ''
+};
 
 export default ContextButtons;

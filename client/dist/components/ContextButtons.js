@@ -75,7 +75,7 @@ var ContextButtons = function ContextButtons(props) {
 
   var chooseBtn = props.config.allowChoose ? _react2.default.createElement(
     'button',
-    { role: 'option', id: 'choose__' + (0, _utility.cssSafe)(item.filename), title: chooseItemMessage, onClick: function onClick(event) {
+    { role: 'option', id: 'choose__' + props.idPrefix + (0, _utility.cssSafe)(item.filename), title: chooseItemMessage, onClick: function onClick(event) {
         if (!props.view.focusedMediaItem) return;
         try {
           props.config.callbacks.choose(item);
@@ -96,7 +96,7 @@ var ContextButtons = function ContextButtons(props) {
   ) : undefined,
       cropBtn = props.config.allowCrop && (ext.toLowerCase() == '.jpg' || ext.toLowerCase() == '.jpeg' || ext.toLowerCase() == '.png' || ext.toLowerCase() == '.gif') ? _react2.default.createElement(
     'button',
-    { className: 'eureka__crop-btn', role: 'option', id: 'choose__' + (0, _utility.cssSafe)(item.filename), title: chooseItemMessage, onClick: props.onCropItem ? props.onCropItem.bind(null, item) : undefined },
+    { className: 'eureka__crop-btn', role: 'option', id: 'crop__' + props.idPrefix + (0, _utility.cssSafe)(item.filename), title: chooseItemMessage, onClick: props.onCropItem ? props.onCropItem.bind(null, item) : undefined },
     cropMessage,
     _react2.default.createElement(
       'span',
@@ -107,7 +107,7 @@ var ContextButtons = function ContextButtons(props) {
   ) : undefined,
       renameBtn = props.config.allowRename ? _react2.default.createElement(
     'button',
-    { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'rename__' + (0, _utility.cssSafe)(item.filename), role: 'option', title: renameItemMessage, onClick: props.onRenameItem ? props.onRenameItem.bind(null, item) : undefined },
+    { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'rename' + props.idPrefix + '__' + (0, _utility.cssSafe)(item.filename), role: 'option', title: renameItemMessage, onClick: props.onRenameItem ? props.onRenameItem.bind(null, item) : undefined },
     renameMessage,
     _react2.default.createElement(
       'span',
@@ -118,7 +118,7 @@ var ContextButtons = function ContextButtons(props) {
   ) : undefined,
       deleteBtn = props.config.allowDelete ? _react2.default.createElement(
     'button',
-    { id: (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'delete__' + (0, _utility.cssSafe)(item.filename), role: 'option', onClick: function onClick(event) {
+    { id: '' + (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + props.idPrefix + 'delete__' + (0, _utility.cssSafe)(item.filename), role: 'option', onClick: function onClick(event) {
         if (!props.config.confirmBeforeDelete) {
           deleteIt();
         } else if (confirm(deleteAreYouSureMessage)) {
@@ -138,7 +138,7 @@ var ContextButtons = function ContextButtons(props) {
       item.filename
     )
   ) : undefined,
-      downloadID = (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + 'download__' + (0, _utility.cssSafe)(item.filename),
+      downloadID = '' + (props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__') + props.idPrefix + 'download__' + (0, _utility.cssSafe)(item.filename),
       downloadBtn = props.config.allowDownload ? _react2.default.createElement(
     'a',
     { download: item.filename, href: item.absoluteURL, id: downloadID, className: 'button', target: '_' + downloadID, title: downloadItemMessage },
@@ -157,7 +157,7 @@ var ContextButtons = function ContextButtons(props) {
       { className: 'eureka__button-bar eureka__context-buttons', role: 'listbox', 'aria-label': performContextualActionsMessage, tabIndex: '0', 'aria-activedescendant': 'expand__' + (0, _utility.cssSafe)(item.filename) },
       _react2.default.createElement(
         'a',
-        { onBlur: props.onBlur, role: 'option', id: 'expand__' + (0, _utility.cssSafe)(item.filename), href: item.absoluteURL, target: '_' + encodeURI(item.absoluteURL), className: 'button', title: expandItemMessage },
+        { onBlur: props.onBlur, role: 'option', id: 'expand__' + props.idPrefix + (0, _utility.cssSafe)(item.filename), href: item.absoluteURL, target: '_' + encodeURI(item.absoluteURL), className: 'button', title: expandItemMessage },
         expandMessage,
         _react2.default.createElement(
           'span',
@@ -173,6 +173,10 @@ var ContextButtons = function ContextButtons(props) {
       downloadBtn
     )
   );
+};
+
+ContextButtons.defaultProps = {
+  idPrefix: ''
 };
 
 exports.default = ContextButtons;

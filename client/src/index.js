@@ -67,7 +67,7 @@ function render() {
         foo: 'bar'
       }}
       intervals={{
-        searchBarPlaceholder: 60000,
+        searchBarPlaceholder: 12000,
         //fetchDirectoryContents: 12000
       }}
     />,

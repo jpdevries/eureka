@@ -517,7 +517,7 @@ class Eureka extends Component {
           return props.view.focusedMediaItem.filename
         } catch (e) {
           return undefined
-        } 
+        }
       })()
     });
 
@@ -675,7 +675,7 @@ class Eureka extends Component {
         }
 
 
-      }} role="widget" lang={props.lang || undefined} className={`eureka eureka__view-mode__${props.view.mode}${chooseMultipleClass}${enlargeFocusedRows}${serverSideClass}`}>
+      }} lang={props.lang || undefined} className={`eureka eureka__view-mode__${props.view.mode}${chooseMultipleClass}${enlargeFocusedRows}${serverSideClass}`}>
         <div className={classNames({
           "eureka__sticky-bar": this.state.stickyNotifications
         })} aria-live="assertive" aria-relevant="additions" aria-atomic="true" onClick={(event) => {

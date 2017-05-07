@@ -28,7 +28,7 @@ class ViewChooser extends FullScreenPureComponent {
     listLayoutMessage = formatMessage(definedMessages.listLayoutDescription),
     masonryBtn = (Masonry && props.config.allowMasonry) ? (
       <div>
-        <input type="radio" id="eureka__view-masonry" name="eureka__view" onChange={(event) => (
+        <input aria-labelledby={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__'}view-mode-legend`} type="radio" id="eureka__view-masonry" name="eureka__view" onChange={(event) => (
           store.dispatch(actions.updateView({
             mode: event.target.value
           }))
@@ -76,10 +76,10 @@ class ViewChooser extends FullScreenPureComponent {
       <form className="eureka__layout-chooser">
         <fieldset>
           <legend>Choose a Layout Mode</legend>
-
-          <div className="eureka__icon-radio-btns">
+          <div className="eureka__icon-radio-btns" role="radiogroup">
+            <legend className="visually-hidden" id={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__'}view-mode-legend`}><FormattedMessage id="layout.viewMode" defaultMessage="View Mode" /></legend>
             <div>
-              <input type="radio" id="eureka__view-table" name="eureka__view" onChange={(event) => (
+              <input aria-labelledby={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__'}view-mode-legend`} type="radio" id="eureka__view-table" name="eureka__view" onChange={(event) => (
                 store.dispatch(actions.updateView({
                   mode: event.target.value
                 }))
@@ -91,7 +91,7 @@ class ViewChooser extends FullScreenPureComponent {
             </div>
 
             <div>
-              <input type="radio" id="eureka__view-thumb" name="eureka__view" onChange={(event) => (
+              <input aria-labelledby={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__'}view-mode-legend`} type="radio" id="eureka__view-thumb" name="eureka__view" onChange={(event) => (
                 store.dispatch(actions.updateView({
                   mode: event.target.value
                 }))
@@ -103,7 +103,7 @@ class ViewChooser extends FullScreenPureComponent {
             </div>
 
             <div>
-              <input type="radio" id="eureka__view-grid" name="eureka__view" onChange={(event) => (
+              <input aria-labelledby={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__'}view-mode-legend`} type="radio" id="eureka__view-grid" name="eureka__view" onChange={(event) => (
                 store.dispatch(actions.updateView({
                   mode: event.target.value
                 }))
@@ -117,7 +117,7 @@ class ViewChooser extends FullScreenPureComponent {
             {masonryBtn}
 
             <div>
-              <input type="radio" id="eureka__view-list" name="eureka__view" onChange={(event) => (
+              <input aria-labelledby={`${props.config.storagePrefix !== undefined ? props.config.storagePrefix : 'eureka__'}view-mode-legend`} type="radio" id="eureka__view-list" name="eureka__view" onChange={(event) => (
                 store.dispatch(actions.updateView({
                   mode: event.target.value
                 }))

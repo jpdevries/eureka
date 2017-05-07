@@ -259,8 +259,12 @@ a[role="presentation"] {
   padding-right: 1.5em;
 
   background: var(--notification-background, #d9edf7);
-  color: var(--notification-color, darken(#d9edf7, 40%));
+  color: var(--notification-color, #1D6E95);
   border: 1px solid var(--notification-border-color, var(--notification-color, darken(#d9edf7, 40%)));
+
+  a {
+    color: currentColor;
+  }
 
   @include media($gtMobile) {
     br {
@@ -286,9 +290,9 @@ a[role="presentation"] {
   }
   &.eureka__dangerous {
     --notification-background: #f7a2a2;
-    --notification-color: darken(#e67a7a, 30%);
-    --notification-border-color: var(--notification-color, darken(#e67a7a, 30%));
-    --notification-focus-color: darken(#e67a7a, 35%);
+    --notification-color: #911912;
+    --notification-border-color: #911912;
+    --notification-focus-color: #911912;
   }
 }
 

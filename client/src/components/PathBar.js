@@ -36,7 +36,7 @@ Example of file-zip-o
 const PathBar = (props) => {
   const formatMessage = props.intl.formatMessage;
   const contextBtns = props.view.focusedMediaItem ? (
-    <ContextButtons {...props} item={props.view.focusedMediaItem} />
+    <ContextButtons {...props} idPrefix="pathbar" item={props.view.focusedMediaItem} />
   ) : undefined;
 
   const copyListofSelectedFiles = formatMessage(definedMessages.copyListofSelectedFiles);

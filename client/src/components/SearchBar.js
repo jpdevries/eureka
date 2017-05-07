@@ -17,17 +17,22 @@ class SearchBar extends Component {
       placeholderField:'filename',
       lastDir:'/'
     };
-    if(!utility.serverSideRendering && this.props.view.intervals.searchBarPlaceholder) {
-      setInterval(() => {
-        this.pickRandomField();
-      }, this.props.view.intervals.searchBarPlaceholder);
-    }
 
+
+  }
+
+  searchBarPlaceholderTick = () => {
+    this.pickRandomField();
   }
 
   componentDidMount() {
     //console.log('componentDidMount');
     this.pickRandomField();
+
+    if(!utility.serverSideRendering && this.props.view.intervals.searchBarPlaceholder) {
+      this.clearSearchBarPlaceholderInterval();
+      this.searchBarPlaceholderInterval = setInterval(this.searchBarPlaceholderTick, this.props.view.intervals.searchBarPlaceholder);
+    }
 
 
     /*store.subscribe(() => {
@@ -39,7 +44,15 @@ class SearchBar extends Component {
     });*/
   }
 
+  clearSearchBarPlaceholderInterval() {
+    try {
+      clearInterval(this.searchBarPlaceholderInterval);
+    } catch (e) {}
+  }
 
+  componentWillUnmount() {
+    this.clearSearchBarPlaceholderInterval();
+  }
 
   pickRandomField() {
     const random = Math.random();

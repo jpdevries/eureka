@@ -57,7 +57,7 @@ Example of file-zip-o
 
 var PathBar = function PathBar(props) {
   var formatMessage = props.intl.formatMessage;
-  var contextBtns = props.view.focusedMediaItem ? _react2.default.createElement(_ContextButtons2.default, _extends({}, props, { item: props.view.focusedMediaItem })) : undefined;
+  var contextBtns = props.view.focusedMediaItem ? _react2.default.createElement(_ContextButtons2.default, _extends({}, props, { idPrefix: 'pathbar', item: props.view.focusedMediaItem })) : undefined;
 
   var copyListofSelectedFiles = formatMessage(_definedMessages2.default.copyListofSelectedFiles);
 
