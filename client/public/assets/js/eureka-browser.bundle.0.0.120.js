@@ -25355,8 +25355,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  var newChosenMediaItems = void 0;
 
-	  var pair;
-
 	  var _ret = function () {
 	    switch (action.type) {
 	      case actions.UPDATE_CONFIG:
@@ -25459,39 +25457,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	      case actions.DELETE_MEDIA_ITEMS_SUCCESS:
 	        console.log(actions.DELETE_MEDIA_ITEMS_SUCCESS);
 	        var formData = action.formData;
-	        var _iteratorNormalCompletion = true;
-	        var _didIteratorError = false;
-	        var _iteratorError = undefined;
+	        /*for(var pair of formData.entries()) {
+	          console.log(pair[0]+ ', '+ pair[1]);
+	        }*/
 
-	        try {
-	          for (var _iterator = formData.entries()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	            pair = _step.value;
-
-	            console.log(pair[0] + ', ' + pair[1]);
-	          }
-	        } catch (err) {
-	          _didIteratorError = true;
-	          _iteratorError = err;
-	        } finally {
+	        var deletedFileNames = function () {
 	          try {
-	            if (!_iteratorNormalCompletion && _iterator.return) {
-	              _iterator.return();
-	            }
-	          } finally {
-	            if (_didIteratorError) {
-	              throw _iteratorError;
-	            }
+	            return formData.getAll('delete_file[]');
+	          } catch (e) {
+	            return action.chosenMediaItems.map(function (file) {
+	              return file.filename;
+	            });
 	          }
-	        }
-
-	        var deletedFileNames = formData.getAll('delete_file[]');
+	        }();
+	        newChosenMediaItems = newState.chosenMediaItems.filter(function (file) {
+	          return !deletedFileNames.includes(file.filename);
+	        });
 	        //if(!Array.isArray(action.contents)) return state; // so the backed can just return res.json([true]) if it wants?
 	        var newContents = processContentItems(action.contents.filter(function (file) {
 	          return file.filename;
 	        }));
-	        newChosenMediaItems = newState.chosenMediaItems.filter(function (file) {
-	          return !deletedFileNames.includes(file.filename);
-	        });
+
 	        var newChosenMediaItemsInverted = newState.chosenMediaItemsInverted.filter(function (file) {
 	          return !deletedFileNames.includes(file.filename);
 	        });
@@ -26969,7 +26955,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (contents === false) throw new Error('Unable to delete directory ' + path);
 	      return contents;
 	    }).then(function (contents) {
-	      return dispatch(deleteMediaItemSuccess(source, path));
+	      return dispatch(deleteMediaItemSuccess(source, path, contents));
 	    }).catch(function (error) {
 	      return dispatch(deleteMediaItemError(error));
 	    });
@@ -26978,11 +26964,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var DELETE_MEDIA_ITEMS_SUCCESS = 'delete_media_items_success';
 	var deleteMediaItemsSuccess = function deleteMediaItemsSuccess(contents, formData) {
+	  var chosenMediaItems = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
+
 	  //console.log('DELETE_MEDIA_ITEM_SUCCESS', source, path);
 	  return {
 	    type: DELETE_MEDIA_ITEMS_SUCCESS,
 	    contents: contents,
-	    formData: formData
+	    formData: formData,
+	    chosenMediaItems: chosenMediaItems
 	  };
 	};
 
@@ -27004,33 +26993,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var deleteMediaItems = function deleteMediaItems(source, formData) {
 	  var customHeaders = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+	  var chosenMediaItems = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
 
 	  console.log('deleteMediaItems');
-	  var _iteratorNormalCompletion = true;
-	  var _didIteratorError = false;
-	  var _iteratorError = undefined;
-
-	  try {
-	    for (var _iterator = formData.entries()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	      var pair = _step.value;
-
-	      console.log(pair[0] + ', ' + pair[1]);
-	    }
-	  } catch (err) {
-	    _didIteratorError = true;
-	    _iteratorError = err;
-	  } finally {
-	    try {
-	      if (!_iteratorNormalCompletion && _iterator.return) {
-	        _iterator.return();
-	      }
-	    } finally {
-	      if (_didIteratorError) {
-	        throw _iteratorError;
-	      }
-	    }
-	  }
-
+	  /*for(var pair of formData.entries()) {
+	     console.log(pair[0]+ ', '+ pair[1]);
+	  }*/
 	  return function (dispatch) {
 	    return fetch('/assets/components/eureka/media/sources/' + source, {
 	      method: 'DELETE',
@@ -27051,7 +27019,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      //if(contents === false) throw new Error(`Unable to delete directory ${path}`)
 	      return contents;
 	    }).then(function (contents) {
-	      return dispatch(deleteMediaItemsSuccess(contents, formData));
+	      return dispatch(deleteMediaItemsSuccess(contents, formData, chosenMediaItems));
 	    }).catch(function (error) {
 	      return dispatch(deleteMediaItemsError(error));
 	    });
@@ -27904,7 +27872,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.119",
+		"version": "0.0.120",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -33085,6 +33053,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        event.preventDefault();
 	        event.stopPropagation();
 	        var formData = new FormData(event.target);
+
 	        /*for(var pair of formData.entries()) {
 	           console.log(pair[0]+ ', '+ pair[1]);
 	        }*/
@@ -33098,9 +33067,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 
 	        function deleteIt() {
-	          _store2.default.dispatch(_actions2.default.deleteMediaItems(props.source.currentSource, formData, props.config.headers)).then(function () {
-	            _store2.default.dispatch(_actions2.default.notify('Deleted ' + formData.getAll('delete_file[]').length + ' ' + _definedMessages2.default.pluralItem[formatPlural({
-	              value: formData.getAll('delete_file[]').length
+	          _store2.default.dispatch(_actions2.default.deleteMediaItems(props.source.currentSource, formData, props.config.headers, props.content.chosenMediaItemsInverted)).then(function () {
+	            var numItems = function () {
+	              try {
+	                return formData.getAll('delete_file[]').length;
+	              } catch (e) {
+	                return props.content.chosenMediaItemsInverted.length;
+	              }
+	            }();
+	            _store2.default.dispatch(_actions2.default.notify('Deleted ' + numItems + ' ' + _definedMessages2.default.pluralItem[formatPlural({
+	              value: numItems
 	            })], _utility2.default.DANGEROUS));
 	          });
 	        }
@@ -43754,24 +43730,28 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      var checkbox = props.view.chooseMultiple ? _react2.default.createElement(
 	        'td',
-	        { role: 'gridcell', className: 'eureka__choose' },
-	        _react2.default.createElement('input', { value: 'chosen', 'aria-label': 'Choose ' + item.filename, type: 'checkbox', name: 'eureka__chose_multiple', id: checkboxId, key: 'eureka__choose_multiple_' + _utility2.default.cssSafe(props.item.filename) + '__' + (this.state.chooseChecked ? 'checked' : ''), checked: this.state.chooseChecked, onChange: function onChange(event) {
-	            event.preventDefault();
-	            event.stopPropagation();
+	        { role: 'gridcell', className: 'eureka__choose eureka__choose-multile' },
+	        _react2.default.createElement(
+	          'label',
+	          { htmlFor: checkboxId },
+	          _react2.default.createElement('input', { value: 'chosen', 'aria-label': 'Choose ' + item.filename, type: 'checkbox', name: 'eureka__chose_multiple', id: checkboxId, key: 'eureka__choose_multiple_' + _utility2.default.cssSafe(props.item.filename) + '__' + (this.state.chooseChecked ? 'checked' : ''), checked: this.state.chooseChecked, onChange: function onChange(event) {
+	              event.preventDefault();
+	              event.stopPropagation();
 
-	            //console.log('event.target.checked', event.target.checked);
+	              //console.log('event.target.checked', event.target.checked);
 
-	            _this2.setState({
-	              chooseChecked: event.target.checked
-	            });
+	              _this2.setState({
+	                chooseChecked: event.target.checked
+	              });
 
-	            if (props.view.selectionInverted ? !event.target.checked : event.target.checked) {
-	              _store2.default.dispatch(_actions2.default.addMediaItemToChosenItems(props.item, props.view.selectionInverted));
-	            } else {
-	              _store2.default.dispatch(_actions2.default.removeMediaItemFromChosenItems(props.item, props.view.selectionInverted));
-	            }
-	            //console.log('event.target.checked', event.target.checked);
-	          } })
+	              if (props.view.selectionInverted ? !event.target.checked : event.target.checked) {
+	                _store2.default.dispatch(_actions2.default.addMediaItemToChosenItems(props.item, props.view.selectionInverted));
+	              } else {
+	                _store2.default.dispatch(_actions2.default.removeMediaItemFromChosenItems(props.item, props.view.selectionInverted));
+	              }
+	              //console.log('event.target.checked', event.target.checked);
+	            } })
+	        )
 	      ) : undefined;
 
 	      var openInANewTabMessage = formatMessage(_definedMessages2.default.openFileInNewTab, {

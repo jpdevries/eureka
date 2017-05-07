@@ -463,24 +463,28 @@ var MediaRow = function (_PureComponent) {
 
       var checkbox = props.view.chooseMultiple ? _react2.default.createElement(
         'td',
-        { role: 'gridcell', className: 'eureka__choose' },
-        _react2.default.createElement('input', { value: 'chosen', 'aria-label': 'Choose ' + item.filename, type: 'checkbox', name: 'eureka__chose_multiple', id: checkboxId, key: 'eureka__choose_multiple_' + _utility2.default.cssSafe(props.item.filename) + '__' + (this.state.chooseChecked ? 'checked' : ''), checked: this.state.chooseChecked, onChange: function onChange(event) {
-            event.preventDefault();
-            event.stopPropagation();
+        { role: 'gridcell', className: 'eureka__choose eureka__choose-multile' },
+        _react2.default.createElement(
+          'label',
+          { htmlFor: checkboxId },
+          _react2.default.createElement('input', { value: 'chosen', 'aria-label': 'Choose ' + item.filename, type: 'checkbox', name: 'eureka__chose_multiple', id: checkboxId, key: 'eureka__choose_multiple_' + _utility2.default.cssSafe(props.item.filename) + '__' + (this.state.chooseChecked ? 'checked' : ''), checked: this.state.chooseChecked, onChange: function onChange(event) {
+              event.preventDefault();
+              event.stopPropagation();
 
-            //console.log('event.target.checked', event.target.checked);
+              //console.log('event.target.checked', event.target.checked);
 
-            _this2.setState({
-              chooseChecked: event.target.checked
-            });
+              _this2.setState({
+                chooseChecked: event.target.checked
+              });
 
-            if (props.view.selectionInverted ? !event.target.checked : event.target.checked) {
-              _store2.default.dispatch(_actions2.default.addMediaItemToChosenItems(props.item, props.view.selectionInverted));
-            } else {
-              _store2.default.dispatch(_actions2.default.removeMediaItemFromChosenItems(props.item, props.view.selectionInverted));
-            }
-            //console.log('event.target.checked', event.target.checked);
-          } })
+              if (props.view.selectionInverted ? !event.target.checked : event.target.checked) {
+                _store2.default.dispatch(_actions2.default.addMediaItemToChosenItems(props.item, props.view.selectionInverted));
+              } else {
+                _store2.default.dispatch(_actions2.default.removeMediaItemFromChosenItems(props.item, props.view.selectionInverted));
+              }
+              //console.log('event.target.checked', event.target.checked);
+            } })
+        )
       ) : undefined;
 
       var openInANewTabMessage = formatMessage(_definedMessages2.default.openFileInNewTab, {

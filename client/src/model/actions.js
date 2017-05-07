@@ -351,7 +351,7 @@ const deleteMediaItem = (source, path, customHeaders = {}) => (
       return contents;
     }).then((contents) => (
       dispatch(
-        deleteMediaItemSuccess(source, path)
+        deleteMediaItemSuccess(source, path, contents)
       )
     )).catch((error) => (
       dispatch(
@@ -365,12 +365,13 @@ const deleteMediaItem = (source, path, customHeaders = {}) => (
 
 
 const DELETE_MEDIA_ITEMS_SUCCESS = 'delete_media_items_success';
-const deleteMediaItemsSuccess = function(contents, formData) {
+const deleteMediaItemsSuccess = function(contents, formData, chosenMediaItems = undefined) {
   //console.log('DELETE_MEDIA_ITEM_SUCCESS', source, path);
   return {
     type:DELETE_MEDIA_ITEMS_SUCCESS,
-    contents: contents,
-    formData: formData
+    contents,
+    formData,
+    chosenMediaItems
   }
 }
 
@@ -393,7 +394,7 @@ exports.DELETE_MEDIA_ITEMS_ERROR = DELETE_MEDIA_ITEMS_ERROR;
 exports.deleteMediaItemsError = deleteMediaItemsError;
 
 
-const deleteMediaItems = (source, formData, customHeaders = {}) => {
+const deleteMediaItems = (source, formData, customHeaders = {}, chosenMediaItems = undefined) => {
   console.log('deleteMediaItems');
   /*for(var pair of formData.entries()) {
      console.log(pair[0]+ ', '+ pair[1]);
@@ -420,7 +421,7 @@ const deleteMediaItems = (source, formData, customHeaders = {}) => {
       return contents;
     }).then((contents) => (
       dispatch(
-        deleteMediaItemsSuccess(contents, formData)
+        deleteMediaItemsSuccess(contents, formData, chosenMediaItems)
       )
     )).catch((error) => (
       dispatch(

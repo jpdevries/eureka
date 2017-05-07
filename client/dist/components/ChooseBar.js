@@ -105,6 +105,7 @@ var ChooseBar = function ChooseBar(props) {
         event.preventDefault();
         event.stopPropagation();
         var formData = new FormData(event.target);
+
         /*for(var pair of formData.entries()) {
            console.log(pair[0]+ ', '+ pair[1]);
         }*/
@@ -118,9 +119,16 @@ var ChooseBar = function ChooseBar(props) {
         }
 
         function deleteIt() {
-          _store2.default.dispatch(_actions2.default.deleteMediaItems(props.source.currentSource, formData, props.config.headers)).then(function () {
-            _store2.default.dispatch(_actions2.default.notify('Deleted ' + formData.getAll('delete_file[]').length + ' ' + _definedMessages2.default.pluralItem[formatPlural({
-              value: formData.getAll('delete_file[]').length
+          _store2.default.dispatch(_actions2.default.deleteMediaItems(props.source.currentSource, formData, props.config.headers, props.content.chosenMediaItemsInverted)).then(function () {
+            var numItems = function () {
+              try {
+                return formData.getAll('delete_file[]').length;
+              } catch (e) {
+                return props.content.chosenMediaItemsInverted.length;
+              }
+            }();
+            _store2.default.dispatch(_actions2.default.notify('Deleted ' + numItems + ' ' + _definedMessages2.default.pluralItem[formatPlural({
+              value: numItems
             })], _utility2.default.DANGEROUS));
           });
         }

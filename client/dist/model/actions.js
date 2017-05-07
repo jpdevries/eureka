@@ -329,7 +329,7 @@ var deleteMediaItem = function deleteMediaItem(source, path) {
       if (contents === false) throw new Error('Unable to delete directory ' + path);
       return contents;
     }).then(function (contents) {
-      return dispatch(deleteMediaItemSuccess(source, path));
+      return dispatch(deleteMediaItemSuccess(source, path, contents));
     }).catch(function (error) {
       return dispatch(deleteMediaItemError(error));
     });
@@ -338,11 +338,14 @@ var deleteMediaItem = function deleteMediaItem(source, path) {
 
 var DELETE_MEDIA_ITEMS_SUCCESS = 'delete_media_items_success';
 var deleteMediaItemsSuccess = function deleteMediaItemsSuccess(contents, formData) {
+  var chosenMediaItems = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
+
   //console.log('DELETE_MEDIA_ITEM_SUCCESS', source, path);
   return {
     type: DELETE_MEDIA_ITEMS_SUCCESS,
     contents: contents,
-    formData: formData
+    formData: formData,
+    chosenMediaItems: chosenMediaItems
   };
 };
 
@@ -364,6 +367,7 @@ exports.deleteMediaItemsError = deleteMediaItemsError;
 
 var deleteMediaItems = function deleteMediaItems(source, formData) {
   var customHeaders = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  var chosenMediaItems = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
 
   console.log('deleteMediaItems');
   /*for(var pair of formData.entries()) {
@@ -389,7 +393,7 @@ var deleteMediaItems = function deleteMediaItems(source, formData) {
       //if(contents === false) throw new Error(`Unable to delete directory ${path}`)
       return contents;
     }).then(function (contents) {
-      return dispatch(deleteMediaItemsSuccess(contents, formData));
+      return dispatch(deleteMediaItemsSuccess(contents, formData, chosenMediaItems));
     }).catch(function (error) {
       return dispatch(deleteMediaItemsError(error));
     });

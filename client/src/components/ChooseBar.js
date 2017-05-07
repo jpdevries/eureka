@@ -79,7 +79,8 @@ const ChooseBar = (props) => {
     <form encType="multipart/form-data" onSubmit={(event) => {
       event.preventDefault();
       event.stopPropagation();
-      const formData = new FormData(event.target);
+      let formData = new FormData(event.target);
+
       /*for(var pair of formData.entries()) {
          console.log(pair[0]+ ', '+ pair[1]);
       }*/
@@ -93,9 +94,16 @@ const ChooseBar = (props) => {
       }
 
       function deleteIt() {
-        store.dispatch(actions.deleteMediaItems(props.source.currentSource, formData, props.config.headers)).then(() => {
-          store.dispatch(actions.notify(`Deleted ${formData.getAll('delete_file[]').length} ${definedMessages.pluralItem[formatPlural({
-            value: formData.getAll('delete_file[]').length
+        store.dispatch(actions.deleteMediaItems(props.source.currentSource, formData, props.config.headers, props.content.chosenMediaItemsInverted)).then(() => {
+          const numItems = (() => {
+            try {
+              return formData.getAll('delete_file[]').length
+            } catch (e) {
+              return props.content.chosenMediaItemsInverted.length;
+            }
+          })();
+          store.dispatch(actions.notify(`Deleted ${numItems} ${definedMessages.pluralItem[formatPlural({
+            value: numItems
           })]}`, utility.DANGEROUS));
         });
       }

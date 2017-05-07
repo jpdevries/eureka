@@ -390,8 +390,8 @@ class MediaRow extends PureComponent {
 
 
     const checkbox = (props.view.chooseMultiple) ? (
-      <td role="gridcell" className="eureka__choose">
-        <input value="chosen" aria-label={`Choose ${item.filename}`} type="checkbox" name="eureka__chose_multiple" id={checkboxId} key={`eureka__choose_multiple_${utility.cssSafe(props.item.filename)}__${this.state.chooseChecked ? 'checked' : ''}`} checked={this.state.chooseChecked} onChange={(event) => {
+      <td role="gridcell" className="eureka__choose eureka__choose-multile">
+        <label htmlFor={checkboxId}><input value="chosen" aria-label={`Choose ${item.filename}`} type="checkbox" name="eureka__chose_multiple" id={checkboxId} key={`eureka__choose_multiple_${utility.cssSafe(props.item.filename)}__${this.state.chooseChecked ? 'checked' : ''}`} checked={this.state.chooseChecked} onChange={(event) => {
           event.preventDefault();
           event.stopPropagation();
 
@@ -407,7 +407,7 @@ class MediaRow extends PureComponent {
             store.dispatch(actions.removeMediaItemFromChosenItems(props.item, props.view.selectionInverted));
           }
           //console.log('event.target.checked', event.target.checked);
-        }} />
+        }} /></label>
       </td>
     ) : undefined;
 

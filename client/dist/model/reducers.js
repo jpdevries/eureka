@@ -240,14 +240,24 @@ var contentReducer = function contentReducer(state, action) {
         /*for(var pair of formData.entries()) {
           console.log(pair[0]+ ', '+ pair[1]);
         }*/
-        var deletedFileNames = formData.getAll('delete_file[]');
+
+        var deletedFileNames = function () {
+          try {
+            return formData.getAll('delete_file[]');
+          } catch (e) {
+            return action.chosenMediaItems.map(function (file) {
+              return file.filename;
+            });
+          }
+        }();
+        newChosenMediaItems = newState.chosenMediaItems.filter(function (file) {
+          return !deletedFileNames.includes(file.filename);
+        });
         //if(!Array.isArray(action.contents)) return state; // so the backed can just return res.json([true]) if it wants?
         var newContents = processContentItems(action.contents.filter(function (file) {
           return file.filename;
         }));
-        newChosenMediaItems = newState.chosenMediaItems.filter(function (file) {
-          return !deletedFileNames.includes(file.filename);
-        });
+
         var newChosenMediaItemsInverted = newState.chosenMediaItemsInverted.filter(function (file) {
           return !deletedFileNames.includes(file.filename);
         });
