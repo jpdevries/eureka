@@ -125,7 +125,7 @@ var PathBar = function PathBar(props) {
           _react2.default.createElement(
             'div',
             null,
-            _react2.default.createElement('img', { src: props.view.focusedMediaItem.absoluteURL, alt: '' })
+            _react2.default.createElement('img', { key: props.view.focusedMediaItem.absoluteURL, src: props.view.focusedMediaItem.absoluteURL, alt: '' })
           ),
           contextBtns
         )

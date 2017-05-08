@@ -339,7 +339,7 @@ var MediaRow = function (_PureComponent) {
           case '.mov':
             return _react2.default.createElement(
               'video',
-              { width: '320', height: '240', controls: props.view.mode !== 'list' },
+              { key: src, width: '320', height: '240', controls: props.view.mode !== 'list' },
               _react2.default.createElement('source', { src: src, type: 'video/mp4' }),
               _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noVideo', defaultMessage: 'Your browser does not support the video tag.' })
             );
@@ -348,7 +348,7 @@ var MediaRow = function (_PureComponent) {
           case '.ogv':
             return _react2.default.createElement(
               'video',
-              { width: '320', height: '240', controls: props.view.mode !== 'list' },
+              { key: src, width: '320', height: '240', controls: props.view.mode !== 'list' },
               _react2.default.createElement('source', { src: src, type: 'video/ogg' }),
               _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noVideo', defaultMessage: 'Your browser does not support the video tag.' })
             );
@@ -358,20 +358,20 @@ var MediaRow = function (_PureComponent) {
           case '.wbm':
             return _react2.default.createElement(
               'video',
-              { width: '320', height: '240', controls: props.view.mode !== 'list' },
+              { key: src, width: '320', height: '240', controls: props.view.mode !== 'list' },
               _react2.default.createElement('source', { src: src, type: 'video/webm' }),
               _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noVideo', defaultMessage: 'Your browser does not support the video tag.' })
             );
             break;
 
           case '.pdf':
-            return _react2.default.createElement('embed', { src: src, width: '320', height: '240' });
+            return _react2.default.createElement('embed', { key: src, src: src, width: '320', height: '240' });
             break;
 
           case '.ogg':
             return _react2.default.createElement(
               'audio',
-              { controls: true },
+              { key: src, controls: true },
               _react2.default.createElement('source', { src: src, type: 'audio/ogg' }),
               _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support the audio tag.' })
             );
@@ -380,7 +380,7 @@ var MediaRow = function (_PureComponent) {
           case '.mp3':
             return _react2.default.createElement(
               'audio',
-              { controls: true },
+              { key: src, controls: true },
               _react2.default.createElement('source', { src: src, type: 'audio/mpeg' }),
               _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support the audio tag.' })
             );
@@ -389,7 +389,7 @@ var MediaRow = function (_PureComponent) {
           case '.wav':
             return _react2.default.createElement(
               'audio',
-              { controls: true },
+              { key: src, controls: true },
               _react2.default.createElement('source', { src: src, type: 'audio/wav' }),
               _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support the audio tag.' })
             );
@@ -398,7 +398,7 @@ var MediaRow = function (_PureComponent) {
           case '.flac':
             return _react2.default.createElement(
               'audio',
-              { controls: true },
+              { key: src, controls: true },
               _react2.default.createElement('source', { src: src, type: 'audio/flac' }),
               _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support the audio tag.' })
             );

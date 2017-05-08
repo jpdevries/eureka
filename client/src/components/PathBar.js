@@ -8,6 +8,8 @@ import path from 'path';
 
 import utility from './../utility/utility';
 
+import MediaEmbed from './MediaEmbed';
+
 import definedMessages from './../i18n/definedMessages';
 
 var pathParse = require('path-parse');
@@ -74,6 +76,10 @@ const PathBar = (props) => {
     </details>
   ) : fileNamesIf;
 
+  const mediaEmbed = (
+    <MediaEmbed key={props.view.focusedMediaItem.absoluteURL} item={props.view.focusedMediaItem} {...props} />
+  );
+
 
   return (
     <div className="eureka__pathbar">
@@ -86,7 +92,7 @@ const PathBar = (props) => {
           {selectedPaths}
           <div>
             <div>
-              <img src={props.view.focusedMediaItem.absoluteURL} alt="" />
+              {mediaEmbed}
             </div>
             {contextBtns}
           </div>

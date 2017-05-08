@@ -19,6 +19,8 @@ import Icon from './Icon';
 
 import Mousetrap from 'mousetrap';
 
+import MediaEmbed from './MediaEmbed';
+
 import { FormattedMessage, FormattedPlural, FormattedNumber, FormattedRelative, defineMessages } from 'react-intl';
 import definedMessages from '../i18n/definedMessages';
 
@@ -259,101 +261,9 @@ class MediaRow extends PureComponent {
       event.target.closest('.eureka').querySelector(`#${checkboxId}`).click();
     } : undefined;
 
-    let media = (function(ext){ // consider abstracting this to its own module
-      //console.log(pathParse(props.item.filename).ext,'props.item',props.item);
-
-      const src = props.item.absolutePreviewURL || props.item.absoluteURL,
-      alt = props.item.alt || '';
-
-      switch(ext.toLowerCase()) {
-        case '.jpg':
-        case '.jpeg':
-        case '.gif':
-        case '.png':
-        case '.png8':
-        case '.png24':
-        case '.svg':
-        case '.bmp':
-        case '.tiff':
-        return (<img src={src}  alt={alt} onClick={onMediaClick} />);
-        break;
-
-        case '.mp4':
-        case '.mov':
-        return (
-          <video width="320" height="240" controls={props.view.mode !== 'list'}>
-            <source src={src} type="video/mp4" />
-            <FormattedMessage id="support.noVideo" defaultMessage="Your browser does not support the video tag." />
-          </video>
-        );
-        break;
-
-        case '.ogv':
-        return (
-          <video width="320" height="240"  controls={props.view.mode !== 'list'}>
-            <source src={src} type="video/ogg" />
-            <FormattedMessage id="support.noVideo" defaultMessage="Your browser does not support the video tag." />
-          </video>
-        );
-        break;
-
-        case '.webm':
-        case '.wbm':
-        return (
-          <video width="320" height="240"  controls={props.view.mode !== 'list'}>
-            <source src={src} type="video/webm" />
-            <FormattedMessage id="support.noVideo" defaultMessage="Your browser does not support the video tag." />
-          </video>
-        );
-        break;
-
-        case '.pdf':
-        return (
-          <embed src={src} width="320" height="240" />
-        );
-        break;
-
-        case '.ogg':
-        return (
-          <audio controls>
-            <source src={src} type="audio/ogg" />
-            <FormattedMessage id="support.noAudio" defaultMessage="Your browser does not support the audio tag." />
-          </audio>
-        );
-        break;
-
-        case '.mp3':
-        return (
-          <audio controls>
-            <source src={src} type="audio/mpeg" />
-            <FormattedMessage id="support.noAudio" defaultMessage="Your browser does not support the audio tag." />
-          </audio>
-        );
-        break;
-
-        case '.wav':
-        return (
-          <audio controls>
-            <source src={src} type="audio/wav" />
-            <FormattedMessage id="support.noAudio" defaultMessage="Your browser does not support the audio tag." />
-          </audio>
-        );
-        break;
-
-        case '.flac':
-        return (
-          <audio controls>
-            <source src={src} type="audio/flac" />
-            <FormattedMessage id="support.noAudio" defaultMessage="Your browser does not support the audio tag." />
-          </audio>
-        );
-        break;
-
-        default:
-        const icon = utility.getIconByExtension(pathParse(props.item.filename).ext);
-        return (<p onClick={onMediaClick}><Icon {...props} icon={icon} />&ensp;{props.item.absoluteURL}</p>);
-      }
-    })(pathParse(props.item.filename).ext);
+    let media = (
+      <MediaEmbed item={item} {...props} onMediaClick={onMediaClick} />
+    );
 
     //if((props.item == props.focusedMediaItem)) console.log(props.item == props.focusedMediaItem, props.item, props.focusedMediaItem);
 
