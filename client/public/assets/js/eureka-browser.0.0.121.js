@@ -91,11 +91,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utility2 = _interopRequireDefault(_utility);
 
-	var _en = __webpack_require__(100);
+	var _en = __webpack_require__(101);
 
 	var _en2 = _interopRequireDefault(_en);
 
-	var _i18n = __webpack_require__(101);
+	var _i18n = __webpack_require__(102);
 
 	var _i18n2 = _interopRequireDefault(_i18n);
 
@@ -861,39 +861,39 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _EurekaTable2 = _interopRequireDefault(_EurekaTable);
 
-	var _FileTree = __webpack_require__(86);
+	var _FileTree = __webpack_require__(87);
 
 	var _FileTree2 = _interopRequireDefault(_FileTree);
 
-	var _UploadForm = __webpack_require__(87);
+	var _UploadForm = __webpack_require__(88);
 
 	var _UploadForm2 = _interopRequireDefault(_UploadForm);
 
-	var _PathBar = __webpack_require__(88);
+	var _PathBar = __webpack_require__(89);
 
 	var _PathBar2 = _interopRequireDefault(_PathBar);
 
-	var _DropArea = __webpack_require__(89);
+	var _DropArea = __webpack_require__(90);
 
 	var _DropArea2 = _interopRequireDefault(_DropArea);
 
-	var _Modal = __webpack_require__(90);
+	var _Modal = __webpack_require__(91);
 
 	var _Modal2 = _interopRequireDefault(_Modal);
 
-	var _ModalCreateDirectoryForm = __webpack_require__(91);
+	var _ModalCreateDirectoryForm = __webpack_require__(92);
 
 	var _ModalCreateDirectoryForm2 = _interopRequireDefault(_ModalCreateDirectoryForm);
 
-	var _ModalCropItemForm = __webpack_require__(92);
+	var _ModalCropItemForm = __webpack_require__(93);
 
 	var _ModalCropItemForm2 = _interopRequireDefault(_ModalCropItemForm);
 
-	var _ModalRenameItemForm = __webpack_require__(96);
+	var _ModalRenameItemForm = __webpack_require__(97);
 
 	var _ModalRenameItemForm2 = _interopRequireDefault(_ModalRenameItemForm);
 
-	var _SortContents = __webpack_require__(97);
+	var _SortContents = __webpack_require__(98);
 
 	var _SortContents2 = _interopRequireDefault(_SortContents);
 
@@ -901,11 +901,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Icon2 = _interopRequireDefault(_Icon);
 
-	var _Notification = __webpack_require__(98);
+	var _Notification = __webpack_require__(99);
 
 	var _Notification2 = _interopRequireDefault(_Notification);
 
-	var _ChooseRadio = __webpack_require__(99);
+	var _ChooseRadio = __webpack_require__(100);
 
 	var _ChooseRadio2 = _interopRequireDefault(_ChooseRadio);
 
@@ -4620,7 +4620,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 		"name": "eureka-browser",
 		"description": "Eureka is a progressively enhanced Media Browser Component.",
-		"version": "0.0.120",
+		"version": "0.0.121",
 		"license": "BSD-3-Clause",
 		"author": {
 			"name": "JP de Vries",
@@ -10557,7 +10557,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _reactDropzone = __webpack_require__(85);
+	var _reactDropzone = __webpack_require__(86);
 
 	var _reactDropzone2 = _interopRequireDefault(_reactDropzone);
 
@@ -11412,13 +11412,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _mousetrap2 = _interopRequireDefault(_mousetrap);
 
+	var _MediaEmbed = __webpack_require__(64);
+
+	var _MediaEmbed2 = _interopRequireDefault(_MediaEmbed);
+
 	var _reactIntl = __webpack_require__(23);
 
 	var _definedMessages = __webpack_require__(49);
 
 	var _definedMessages2 = _interopRequireDefault(_definedMessages);
 
-	var _reactTapEventPlugin = __webpack_require__(64);
+	var _reactTapEventPlugin = __webpack_require__(65);
 
 	var _reactTapEventPlugin2 = _interopRequireDefault(_reactTapEventPlugin);
 
@@ -11679,106 +11683,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        event.target.closest('.eureka').querySelector('#' + checkboxId).click();
 	      } : undefined;
 
-	      var media = function (ext) {
-	        // consider abstracting this to its own module
-	        //console.log(pathParse(props.item.filename).ext,'props.item',props.item);
-
-	        var src = props.item.absolutePreviewURL || props.item.absoluteURL,
-	            alt = props.item.alt || '';
-
-	        switch (ext.toLowerCase()) {
-	          case '.jpg':
-	          case '.jpeg':
-	          case '.gif':
-	          case '.png':
-	          case '.png8':
-	          case '.png24':
-	          case '.svg':
-	          case '.bmp':
-	          case '.tiff':
-	            return _react2.default.createElement('img', { src: src, alt: alt, onClick: onMediaClick });
-	            break;
-
-	          case '.mp4':
-	          case '.mov':
-	            return _react2.default.createElement(
-	              'video',
-	              { width: '320', height: '240', controls: props.view.mode !== 'list' },
-	              _react2.default.createElement('source', { src: src, type: 'video/mp4' }),
-	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noVideo', defaultMessage: 'Your browser does not support the video tag.' })
-	            );
-	            break;
-
-	          case '.ogv':
-	            return _react2.default.createElement(
-	              'video',
-	              { width: '320', height: '240', controls: props.view.mode !== 'list' },
-	              _react2.default.createElement('source', { src: src, type: 'video/ogg' }),
-	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noVideo', defaultMessage: 'Your browser does not support the video tag.' })
-	            );
-	            break;
-
-	          case '.webm':
-	          case '.wbm':
-	            return _react2.default.createElement(
-	              'video',
-	              { width: '320', height: '240', controls: props.view.mode !== 'list' },
-	              _react2.default.createElement('source', { src: src, type: 'video/webm' }),
-	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noVideo', defaultMessage: 'Your browser does not support the video tag.' })
-	            );
-	            break;
-
-	          case '.pdf':
-	            return _react2.default.createElement('embed', { src: src, width: '320', height: '240' });
-	            break;
-
-	          case '.ogg':
-	            return _react2.default.createElement(
-	              'audio',
-	              { controls: true },
-	              _react2.default.createElement('source', { src: src, type: 'audio/ogg' }),
-	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support the audio tag.' })
-	            );
-	            break;
-
-	          case '.mp3':
-	            return _react2.default.createElement(
-	              'audio',
-	              { controls: true },
-	              _react2.default.createElement('source', { src: src, type: 'audio/mpeg' }),
-	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support the audio tag.' })
-	            );
-	            break;
-
-	          case '.wav':
-	            return _react2.default.createElement(
-	              'audio',
-	              { controls: true },
-	              _react2.default.createElement('source', { src: src, type: 'audio/wav' }),
-	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support the audio tag.' })
-	            );
-	            break;
-
-	          case '.flac':
-	            return _react2.default.createElement(
-	              'audio',
-	              { controls: true },
-	              _react2.default.createElement('source', { src: src, type: 'audio/flac' }),
-	              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support the audio tag.' })
-	            );
-	            break;
-
-	          default:
-	            var icon = _utility2.default.getIconByExtension(pathParse(props.item.filename).ext);
-	            return _react2.default.createElement(
-	              'p',
-	              { onClick: onMediaClick },
-	              _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: icon })),
-	              '\u2002',
-	              props.item.absoluteURL
-	            );
-	        }
-	      }(pathParse(props.item.filename).ext);
+	      var media = _react2.default.createElement(_MediaEmbed2.default, _extends({ item: item }, props, { onMediaClick: onMediaClick }));
 
 	      //if((props.item == props.focusedMediaItem)) console.log(props.item == props.focusedMediaItem, props.item, props.focusedMediaItem);
 
@@ -13344,8 +13249,146 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	exports.default = MediaEmbed;
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactIntl = __webpack_require__(23);
+
+	var _definedMessages = __webpack_require__(49);
+
+	var _definedMessages2 = _interopRequireDefault(_definedMessages);
+
+	var _utility = __webpack_require__(17);
+
+	var _utility2 = _interopRequireDefault(_utility);
+
+	var _Icon = __webpack_require__(48);
+
+	var _Icon2 = _interopRequireDefault(_Icon);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var pathParse = __webpack_require__(62);
+
+	function MediaEmbed(props) {
+	  var src = props.item.absolutePreviewURL || props.item.absoluteURL,
+	      alt = props.item.alt || '',
+	      ext = pathParse(props.item.absoluteURL.split('?')[0]).ext,
+	      onMediaClick = props.onMediaClick || undefined;
+
+	  switch (ext.toLowerCase()) {
+	    case '.jpg':
+	    case '.jpeg':
+	    case '.gif':
+	    case '.png':
+	    case '.png8':
+	    case '.png24':
+	    case '.svg':
+	    case '.bmp':
+	    case '.tiff':
+	      return _react2.default.createElement('img', { src: src, alt: alt, onClick: onMediaClick });
+	      break;
+
+	    case '.mp4':
+	    case '.mov':
+	      return _react2.default.createElement(
+	        'video',
+	        { key: src, width: '320', height: '240', controls: props.view.mode !== 'list' },
+	        _react2.default.createElement('source', { src: src, type: 'video/mp4' }),
+	        _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noVideo', defaultMessage: 'Your browser does not support HTML5 Video.' })
+	      );
+	      break;
+
+	    case '.ogv':
+	      return _react2.default.createElement(
+	        'video',
+	        { key: src, width: '320', height: '240', controls: props.view.mode !== 'list' },
+	        _react2.default.createElement('source', { src: src, type: 'video/ogg' }),
+	        _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noVideo', defaultMessage: 'Your browser does not support HTML5 Video.' })
+	      );
+	      break;
+
+	    case '.webm':
+	    case '.wbm':
+	      return _react2.default.createElement(
+	        'video',
+	        { key: src, width: '320', height: '240', controls: props.view.mode !== 'list' },
+	        _react2.default.createElement('source', { src: src, type: 'video/webm' }),
+	        _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noVideo', defaultMessage: 'Your browser does not support HTML5 Video.' })
+	      );
+	      break;
+
+	    case '.pdf':
+	      return _react2.default.createElement('embed', { key: src, src: src, width: '320', height: '240' });
+	      break;
+
+	    case '.ogg':
+	      return _react2.default.createElement(
+	        'audio',
+	        { key: src, controls: true },
+	        _react2.default.createElement('source', { src: src, type: 'audio/ogg' }),
+	        _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support HTML5 Audio.' })
+	      );
+	      break;
+
+	    case '.mp3':
+	      return _react2.default.createElement(
+	        'audio',
+	        { key: src, controls: true },
+	        _react2.default.createElement('source', { src: src, type: 'audio/mpeg' }),
+	        _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support HTML5 Audio.' })
+	      );
+	      break;
+
+	    case '.wav':
+	      return _react2.default.createElement(
+	        'audio',
+	        { key: src, controls: true },
+	        _react2.default.createElement('source', { src: src, type: 'audio/wav' }),
+	        _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support HTML5 Audio.' })
+	      );
+	      break;
+
+	    case '.flac':
+	      return _react2.default.createElement(
+	        'audio',
+	        { key: src, controls: true },
+	        _react2.default.createElement('source', { src: src, type: 'audio/flac' }),
+	        _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support HTML5 Audio.' })
+	      );
+	      break;
+
+	    default:
+	      var icon = _utility2.default.getIconByExtension(pathParse(props.item.filename).ext);
+	      return _react2.default.createElement(
+	        'p',
+	        { onClick: onMediaClick },
+	        _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: icon })),
+	        '\u2002',
+	        props.item.absoluteURL
+	      );
+	  }
+	}
+
+	module.exports = MediaEmbed;
+
+/***/ },
+/* 65 */
+/***/ function(module, exports, __webpack_require__) {
+
 	/* WEBPACK VAR INJECTION */(function(process) {var invariant = __webpack_require__(16);
-	var defaultClickRejectionStrategy = __webpack_require__(65);
+	var defaultClickRejectionStrategy = __webpack_require__(66);
 
 	var alreadyInjected = false;
 
@@ -13366,15 +13409,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  alreadyInjected = true;
 
-	  __webpack_require__(66).injection.injectEventPluginsByName({
-	    'TapEventPlugin':       __webpack_require__(75)(shouldRejectClick)
+	  __webpack_require__(67).injection.injectEventPluginsByName({
+	    'TapEventPlugin':       __webpack_require__(76)(shouldRejectClick)
 	  });
 	};
 
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 65 */
+/* 66 */
 /***/ function(module, exports) {
 
 	module.exports = function(lastTouchEvent, clickTimestamp) {
@@ -13385,7 +13428,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 66 */
+/* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -13400,14 +13443,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _prodInvariant = __webpack_require__(67);
+	var _prodInvariant = __webpack_require__(68);
 
-	var EventPluginRegistry = __webpack_require__(68);
-	var EventPluginUtils = __webpack_require__(69);
-	var ReactErrorUtils = __webpack_require__(70);
+	var EventPluginRegistry = __webpack_require__(69);
+	var EventPluginUtils = __webpack_require__(70);
+	var ReactErrorUtils = __webpack_require__(71);
 
-	var accumulateInto = __webpack_require__(73);
-	var forEachAccumulated = __webpack_require__(74);
+	var accumulateInto = __webpack_require__(74);
+	var forEachAccumulated = __webpack_require__(75);
 	var invariant = __webpack_require__(16);
 
 	/**
@@ -13668,7 +13711,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 67 */
+/* 68 */
 /***/ function(module, exports) {
 
 	/**
@@ -13711,7 +13754,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = reactProdInvariant;
 
 /***/ },
-/* 68 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -13727,7 +13770,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _prodInvariant = __webpack_require__(67);
+	var _prodInvariant = __webpack_require__(68);
 
 	var invariant = __webpack_require__(16);
 
@@ -13971,7 +14014,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 69 */
+/* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -13986,12 +14029,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _prodInvariant = __webpack_require__(67);
+	var _prodInvariant = __webpack_require__(68);
 
-	var ReactErrorUtils = __webpack_require__(70);
+	var ReactErrorUtils = __webpack_require__(71);
 
 	var invariant = __webpack_require__(16);
-	var warning = __webpack_require__(71);
+	var warning = __webpack_require__(72);
 
 	/**
 	 * Injected dependencies:
@@ -14202,7 +14245,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 70 */
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -14284,7 +14327,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 71 */
+/* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -14299,7 +14342,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var emptyFunction = __webpack_require__(72);
+	var emptyFunction = __webpack_require__(73);
 
 	/**
 	 * Similar to invariant but only logs a warning if the condition is not met.
@@ -14356,7 +14399,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 72 */
+/* 73 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -14399,7 +14442,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = emptyFunction;
 
 /***/ },
-/* 73 */
+/* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -14415,7 +14458,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _prodInvariant = __webpack_require__(67);
+	var _prodInvariant = __webpack_require__(68);
 
 	var invariant = __webpack_require__(16);
 
@@ -14462,7 +14505,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 74 */
+/* 75 */
 /***/ function(module, exports) {
 
 	/**
@@ -14497,7 +14540,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = forEachAccumulated;
 
 /***/ },
-/* 75 */
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -14521,14 +14564,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 
-	var EventConstants = __webpack_require__(76);
-	var EventPluginUtils = __webpack_require__(69);
-	var EventPropagators = __webpack_require__(77);
-	var SyntheticUIEvent = __webpack_require__(78);
-	var TouchEventUtils = __webpack_require__(82);
-	var ViewportMetrics = __webpack_require__(83);
+	var EventConstants = __webpack_require__(77);
+	var EventPluginUtils = __webpack_require__(70);
+	var EventPropagators = __webpack_require__(78);
+	var SyntheticUIEvent = __webpack_require__(79);
+	var TouchEventUtils = __webpack_require__(83);
+	var ViewportMetrics = __webpack_require__(84);
 
-	var keyOf = __webpack_require__(84);
+	var keyOf = __webpack_require__(85);
 	var topLevelTypes = EventConstants.topLevelTypes;
 
 	var isStartish = EventPluginUtils.isStartish;
@@ -14674,7 +14717,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 76 */
+/* 77 */
 /***/ function(module, exports) {
 
 	/**
@@ -14770,7 +14813,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = EventConstants;
 
 /***/ },
-/* 77 */
+/* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -14785,12 +14828,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var EventPluginHub = __webpack_require__(66);
-	var EventPluginUtils = __webpack_require__(69);
+	var EventPluginHub = __webpack_require__(67);
+	var EventPluginUtils = __webpack_require__(70);
 
-	var accumulateInto = __webpack_require__(73);
-	var forEachAccumulated = __webpack_require__(74);
-	var warning = __webpack_require__(71);
+	var accumulateInto = __webpack_require__(74);
+	var forEachAccumulated = __webpack_require__(75);
+	var warning = __webpack_require__(72);
 
 	var getListener = EventPluginHub.getListener;
 
@@ -14909,7 +14952,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 78 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -14924,9 +14967,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var SyntheticEvent = __webpack_require__(79);
+	var SyntheticEvent = __webpack_require__(80);
 
-	var getEventTarget = __webpack_require__(81);
+	var getEventTarget = __webpack_require__(82);
 
 	/**
 	 * @interface UIEvent
@@ -14972,7 +15015,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = SyntheticUIEvent;
 
 /***/ },
-/* 79 */
+/* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -14989,10 +15032,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _assign = __webpack_require__(15);
 
-	var PooledClass = __webpack_require__(80);
+	var PooledClass = __webpack_require__(81);
 
-	var emptyFunction = __webpack_require__(72);
-	var warning = __webpack_require__(71);
+	var emptyFunction = __webpack_require__(73);
+	var warning = __webpack_require__(72);
 
 	var didWarnForAddedNewProperty = false;
 	var isProxySupported = typeof Proxy === 'function';
@@ -15245,7 +15288,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 80 */
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -15261,7 +15304,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _prodInvariant = __webpack_require__(67);
+	var _prodInvariant = __webpack_require__(68);
 
 	var invariant = __webpack_require__(16);
 
@@ -15362,7 +15405,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 81 */
+/* 82 */
 /***/ function(module, exports) {
 
 	/**
@@ -15401,7 +15444,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = getEventTarget;
 
 /***/ },
-/* 82 */
+/* 83 */
 /***/ function(module, exports) {
 
 	/**
@@ -15449,7 +15492,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 83 */
+/* 84 */
 /***/ function(module, exports) {
 
 	/**
@@ -15480,7 +15523,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ViewportMetrics;
 
 /***/ },
-/* 84 */
+/* 85 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -15519,7 +15562,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = keyOf;
 
 /***/ },
-/* 85 */
+/* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function webpackUniversalModuleDefinition(root, factory) {
@@ -16035,7 +16078,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=index.js.map
 
 /***/ },
-/* 86 */
+/* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -16228,7 +16271,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = FileTree;
 
 /***/ },
-/* 87 */
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -16395,7 +16438,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = UploadForm;
 
 /***/ },
-/* 88 */
+/* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -16425,6 +16468,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _utility = __webpack_require__(17);
 
 	var _utility2 = _interopRequireDefault(_utility);
+
+	var _MediaEmbed = __webpack_require__(64);
+
+	var _MediaEmbed2 = _interopRequireDefault(_MediaEmbed);
 
 	var _definedMessages = __webpack_require__(49);
 
@@ -16502,6 +16549,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    fileNamesIf
 	  ) : fileNamesIf;
 
+	  var mediaEmbed = _react2.default.createElement(_MediaEmbed2.default, _extends({ key: props.view.focusedMediaItem.absoluteURL, item: props.view.focusedMediaItem }, props));
+
 	  return _react2.default.createElement(
 	    'div',
 	    { className: 'eureka__pathbar' },
@@ -16525,7 +16574,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          _react2.default.createElement(
 	            'div',
 	            null,
-	            _react2.default.createElement('img', { src: props.view.focusedMediaItem.absoluteURL, alt: '' })
+	            mediaEmbed
 	          ),
 	          contextBtns
 	        )
@@ -16542,7 +16591,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = PathBar;
 
 /***/ },
-/* 89 */
+/* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -16559,7 +16608,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactDropzone = __webpack_require__(85);
+	var _reactDropzone = __webpack_require__(86);
 
 	var _reactDropzone2 = _interopRequireDefault(_reactDropzone);
 
@@ -16649,7 +16698,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = DropArea;
 
 /***/ },
-/* 90 */
+/* 91 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -16711,7 +16760,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = Modal;
 
 /***/ },
-/* 91 */
+/* 92 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -16868,7 +16917,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = ModalCreateDirectoryForm;
 
 /***/ },
-/* 92 */
+/* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -16929,7 +16978,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var CropperJS = function () {
 	  try {
-	    return __webpack_require__(93);
+	    return __webpack_require__(94);
 	  } catch (e) {
 	    return undefined;
 	  }
@@ -17723,7 +17772,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = ModalCropItemForm;
 
 /***/ },
-/* 93 */
+/* 94 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -17738,11 +17787,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _cropperjs = __webpack_require__(94);
+	var _cropperjs = __webpack_require__(95);
 
 	var _cropperjs2 = _interopRequireDefault(_cropperjs);
 
-	__webpack_require__(94);
+	__webpack_require__(95);
 
 	__webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"cropperjs/dist/cropper.css\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 
@@ -17930,7 +17979,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 94 */
+/* 95 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -21600,8 +21649,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=cropper.js.map
 
 /***/ },
-/* 95 */,
-/* 96 */
+/* 96 */,
+/* 97 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21773,7 +21822,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = ModalRenameItemForm;
 
 /***/ },
-/* 97 */
+/* 98 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21893,7 +21942,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = SortContents;
 
 /***/ },
-/* 98 */
+/* 99 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22074,7 +22123,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = Notification;
 
 /***/ },
-/* 99 */
+/* 100 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22168,19 +22217,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = ChooseRadio;
 
 /***/ },
-/* 100 */
+/* 101 */
 /***/ function(module, exports, __webpack_require__) {
 
 	!function(e,a){ true?module.exports=a():"function"==typeof define&&define.amd?define(a):(e.ReactIntlLocaleData=e.ReactIntlLocaleData||{},e.ReactIntlLocaleData.en=a())}(this,function(){"use strict";var e=[{locale:"en",pluralRuleFunction:function(e,a){var n=String(e).split("."),l=!n[1],o=Number(n[0])==e,t=o&&n[0].slice(-1),r=o&&n[0].slice(-2);return a?1==t&&11!=r?"one":2==t&&12!=r?"two":3==t&&13!=r?"few":"other":1==e&&l?"one":"other"},fields:{year:{displayName:"year",relative:{0:"this year",1:"next year","-1":"last year"},relativeTime:{future:{one:"in {0} year",other:"in {0} years"},past:{one:"{0} year ago",other:"{0} years ago"}}},month:{displayName:"month",relative:{0:"this month",1:"next month","-1":"last month"},relativeTime:{future:{one:"in {0} month",other:"in {0} months"},past:{one:"{0} month ago",other:"{0} months ago"}}},day:{displayName:"day",relative:{0:"today",1:"tomorrow","-1":"yesterday"},relativeTime:{future:{one:"in {0} day",other:"in {0} days"},past:{one:"{0} day ago",other:"{0} days ago"}}},hour:{displayName:"hour",relativeTime:{future:{one:"in {0} hour",other:"in {0} hours"},past:{one:"{0} hour ago",other:"{0} hours ago"}}},minute:{displayName:"minute",relativeTime:{future:{one:"in {0} minute",other:"in {0} minutes"},past:{one:"{0} minute ago",other:"{0} minutes ago"}}},second:{displayName:"second",relative:{0:"now"},relativeTime:{future:{one:"in {0} second",other:"in {0} seconds"},past:{one:"{0} second ago",other:"{0} seconds ago"}}}}},{locale:"en-001",parentLocale:"en"},{locale:"en-150",parentLocale:"en-001"},{locale:"en-AG",parentLocale:"en-001"},{locale:"en-AI",parentLocale:"en-001"},{locale:"en-AS",parentLocale:"en"},{locale:"en-AT",parentLocale:"en-150"},{locale:"en-AU",parentLocale:"en-001"},{locale:"en-BB",parentLocale:"en-001"},{locale:"en-BE",parentLocale:"en-001"},{locale:"en-BI",parentLocale:"en"},{locale:"en-BM",parentLocale:"en-001"},{locale:"en-BS",parentLocale:"en-001"},{locale:"en-BW",parentLocale:"en-001"},{locale:"en-BZ",parentLocale:"en-001"},{locale:"en-CA",parentLocale:"en-001"},{locale:"en-CC",parentLocale:"en-001"},{locale:"en-CH",parentLocale:"en-150"},{locale:"en-CK",parentLocale:"en-001"},{locale:"en-CM",parentLocale:"en-001"},{locale:"en-CX",parentLocale:"en-001"},{locale:"en-CY",parentLocale:"en-001"},{locale:"en-DE",parentLocale:"en-150"},{locale:"en-DG",parentLocale:"en-001"},{locale:"en-DK",parentLocale:"en-150"},{locale:"en-DM",parentLocale:"en-001"},{locale:"en-Dsrt",pluralRuleFunction:function(e,a){return"other"},fields:{year:{displayName:"Year",relative:{0:"this year",1:"next year","-1":"last year"},relativeTime:{future:{other:"+{0} y"},past:{other:"-{0} y"}}},month:{displayName:"Month",relative:{0:"this month",1:"next month","-1":"last month"},relativeTime:{future:{other:"+{0} m"},past:{other:"-{0} m"}}},day:{displayName:"Day",relative:{0:"today",1:"tomorrow","-1":"yesterday"},relativeTime:{future:{other:"+{0} d"},past:{other:"-{0} d"}}},hour:{displayName:"Hour",relativeTime:{future:{other:"+{0} h"},past:{other:"-{0} h"}}},minute:{displayName:"Minute",relativeTime:{future:{other:"+{0} min"},past:{other:"-{0} min"}}},second:{displayName:"Second",relative:{0:"now"},relativeTime:{future:{other:"+{0} s"},past:{other:"-{0} s"}}}}},{locale:"en-ER",parentLocale:"en-001"},{locale:"en-FI",parentLocale:"en-150"},{locale:"en-FJ",parentLocale:"en-001"},{locale:"en-FK",parentLocale:"en-001"},{locale:"en-FM",parentLocale:"en-001"},{locale:"en-GB",parentLocale:"en-001"},{locale:"en-GD",parentLocale:"en-001"},{locale:"en-GG",parentLocale:"en-001"},{locale:"en-GH",parentLocale:"en-001"},{locale:"en-GI",parentLocale:"en-001"},{locale:"en-GM",parentLocale:"en-001"},{locale:"en-GU",parentLocale:"en"},{locale:"en-GY",parentLocale:"en-001"},{locale:"en-HK",parentLocale:"en-001"},{locale:"en-IE",parentLocale:"en-001"},{locale:"en-IL",parentLocale:"en-001"},{locale:"en-IM",parentLocale:"en-001"},{locale:"en-IN",parentLocale:"en-001"},{locale:"en-IO",parentLocale:"en-001"},{locale:"en-JE",parentLocale:"en-001"},{locale:"en-JM",parentLocale:"en-001"},{locale:"en-KE",parentLocale:"en-001"},{locale:"en-KI",parentLocale:"en-001"},{locale:"en-KN",parentLocale:"en-001"},{locale:"en-KY",parentLocale:"en-001"},{locale:"en-LC",parentLocale:"en-001"},{locale:"en-LR",parentLocale:"en-001"},{locale:"en-LS",parentLocale:"en-001"},{locale:"en-MG",parentLocale:"en-001"},{locale:"en-MH",parentLocale:"en"},{locale:"en-MO",parentLocale:"en-001"},{locale:"en-MP",parentLocale:"en"},{locale:"en-MS",parentLocale:"en-001"},{locale:"en-MT",parentLocale:"en-001"},{locale:"en-MU",parentLocale:"en-001"},{locale:"en-MW",parentLocale:"en-001"},{locale:"en-MY",parentLocale:"en-001"},{locale:"en-NA",parentLocale:"en-001"},{locale:"en-NF",parentLocale:"en-001"},{locale:"en-NG",parentLocale:"en-001"},{locale:"en-NL",parentLocale:"en-150"},{locale:"en-NR",parentLocale:"en-001"},{locale:"en-NU",parentLocale:"en-001"},{locale:"en-NZ",parentLocale:"en-001"},{locale:"en-PG",parentLocale:"en-001"},{locale:"en-PH",parentLocale:"en-001"},{locale:"en-PK",parentLocale:"en-001"},{locale:"en-PN",parentLocale:"en-001"},{locale:"en-PR",parentLocale:"en"},{locale:"en-PW",parentLocale:"en-001"},{locale:"en-RW",parentLocale:"en-001"},{locale:"en-SB",parentLocale:"en-001"},{locale:"en-SC",parentLocale:"en-001"},{locale:"en-SD",parentLocale:"en-001"},{locale:"en-SE",parentLocale:"en-150"},{locale:"en-SG",parentLocale:"en-001"},{locale:"en-SH",parentLocale:"en-001"},{locale:"en-SI",parentLocale:"en-150"},{locale:"en-SL",parentLocale:"en-001"},{locale:"en-SS",parentLocale:"en-001"},{locale:"en-SX",parentLocale:"en-001"},{locale:"en-SZ",parentLocale:"en-001"},{locale:"en-Shaw",pluralRuleFunction:function(e,a){return"other"},fields:{year:{displayName:"Year",relative:{0:"this year",1:"next year","-1":"last year"},relativeTime:{future:{other:"+{0} y"},past:{other:"-{0} y"}}},month:{displayName:"Month",relative:{0:"this month",1:"next month","-1":"last month"},relativeTime:{future:{other:"+{0} m"},past:{other:"-{0} m"}}},day:{displayName:"Day",relative:{0:"today",1:"tomorrow","-1":"yesterday"},relativeTime:{future:{other:"+{0} d"},past:{other:"-{0} d"}}},hour:{displayName:"Hour",relativeTime:{future:{other:"+{0} h"},past:{other:"-{0} h"}}},minute:{displayName:"Minute",relativeTime:{future:{other:"+{0} min"},past:{other:"-{0} min"}}},second:{displayName:"Second",relative:{0:"now"},relativeTime:{future:{other:"+{0} s"},past:{other:"-{0} s"}}}}},{locale:"en-TC",parentLocale:"en-001"},{locale:"en-TK",parentLocale:"en-001"},{locale:"en-TO",parentLocale:"en-001"},{locale:"en-TT",parentLocale:"en-001"},{locale:"en-TV",parentLocale:"en-001"},{locale:"en-TZ",parentLocale:"en-001"},{locale:"en-UG",parentLocale:"en-001"},{locale:"en-UM",parentLocale:"en"},{locale:"en-US",parentLocale:"en"},{locale:"en-VC",parentLocale:"en-001"},{locale:"en-VG",parentLocale:"en-001"},{locale:"en-VI",parentLocale:"en"},{locale:"en-VU",parentLocale:"en-001"},{locale:"en-WS",parentLocale:"en-001"},{locale:"en-ZA",parentLocale:"en-001"},{locale:"en-ZM",parentLocale:"en-001"},{locale:"en-ZW",parentLocale:"en-001"}];return e});
 
 
 /***/ },
-/* 101 */
+/* 102 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _en = __webpack_require__(102);
+	var _en = __webpack_require__(103);
 
 	var _en2 = _interopRequireDefault(_en);
 
@@ -22191,7 +22240,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 102 */
+/* 103 */
 /***/ function(module, exports) {
 
 	module.exports = {

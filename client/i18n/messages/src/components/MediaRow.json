@@ -1,13 +1,5 @@
 [
   {
-    "id": "support.noVideo",
-    "defaultMessage": "Your browser does not support the video tag."
-  },
-  {
-    "id": "support.noAudio",
-    "defaultMessage": "Your browser does not support the audio tag."
-  },
-  {
     "id": "select",
     "defaultMessage": "Select"
   }

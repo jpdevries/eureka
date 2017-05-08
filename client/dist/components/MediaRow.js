@@ -48,6 +48,10 @@ var _mousetrap = require('mousetrap');
 
 var _mousetrap2 = _interopRequireDefault(_mousetrap);
 
+var _MediaEmbed = require('./MediaEmbed');
+
+var _MediaEmbed2 = _interopRequireDefault(_MediaEmbed);
+
 var _reactIntl = require('react-intl');
 
 var _definedMessages = require('../i18n/definedMessages');
@@ -315,106 +319,7 @@ var MediaRow = function (_PureComponent) {
         event.target.closest('.eureka').querySelector('#' + checkboxId).click();
       } : undefined;
 
-      var media = function (ext) {
-        // consider abstracting this to its own module
-        //console.log(pathParse(props.item.filename).ext,'props.item',props.item);
-
-        var src = props.item.absolutePreviewURL || props.item.absoluteURL,
-            alt = props.item.alt || '';
-
-        switch (ext.toLowerCase()) {
-          case '.jpg':
-          case '.jpeg':
-          case '.gif':
-          case '.png':
-          case '.png8':
-          case '.png24':
-          case '.svg':
-          case '.bmp':
-          case '.tiff':
-            return _react2.default.createElement('img', { src: src, alt: alt, onClick: onMediaClick });
-            break;
-
-          case '.mp4':
-          case '.mov':
-            return _react2.default.createElement(
-              'video',
-              { key: src, width: '320', height: '240', controls: props.view.mode !== 'list' },
-              _react2.default.createElement('source', { src: src, type: 'video/mp4' }),
-              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noVideo', defaultMessage: 'Your browser does not support the video tag.' })
-            );
-            break;
-
-          case '.ogv':
-            return _react2.default.createElement(
-              'video',
-              { key: src, width: '320', height: '240', controls: props.view.mode !== 'list' },
-              _react2.default.createElement('source', { src: src, type: 'video/ogg' }),
-              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noVideo', defaultMessage: 'Your browser does not support the video tag.' })
-            );
-            break;
-
-          case '.webm':
-          case '.wbm':
-            return _react2.default.createElement(
-              'video',
-              { key: src, width: '320', height: '240', controls: props.view.mode !== 'list' },
-              _react2.default.createElement('source', { src: src, type: 'video/webm' }),
-              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noVideo', defaultMessage: 'Your browser does not support the video tag.' })
-            );
-            break;
-
-          case '.pdf':
-            return _react2.default.createElement('embed', { key: src, src: src, width: '320', height: '240' });
-            break;
-
-          case '.ogg':
-            return _react2.default.createElement(
-              'audio',
-              { key: src, controls: true },
-              _react2.default.createElement('source', { src: src, type: 'audio/ogg' }),
-              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support the audio tag.' })
-            );
-            break;
-
-          case '.mp3':
-            return _react2.default.createElement(
-              'audio',
-              { key: src, controls: true },
-              _react2.default.createElement('source', { src: src, type: 'audio/mpeg' }),
-              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support the audio tag.' })
-            );
-            break;
-
-          case '.wav':
-            return _react2.default.createElement(
-              'audio',
-              { key: src, controls: true },
-              _react2.default.createElement('source', { src: src, type: 'audio/wav' }),
-              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support the audio tag.' })
-            );
-            break;
-
-          case '.flac':
-            return _react2.default.createElement(
-              'audio',
-              { key: src, controls: true },
-              _react2.default.createElement('source', { src: src, type: 'audio/flac' }),
-              _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'support.noAudio', defaultMessage: 'Your browser does not support the audio tag.' })
-            );
-            break;
-
-          default:
-            var icon = _utility2.default.getIconByExtension(pathParse(props.item.filename).ext);
-            return _react2.default.createElement(
-              'p',
-              { onClick: onMediaClick },
-              _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: icon })),
-              '\u2002',
-              props.item.absoluteURL
-            );
-        }
-      }(pathParse(props.item.filename).ext);
+      var media = _react2.default.createElement(_MediaEmbed2.default, _extends({ item: item }, props, { onMediaClick: onMediaClick }));
 
       //if((props.item == props.focusedMediaItem)) console.log(props.item == props.focusedMediaItem, props.item, props.focusedMediaItem);
 

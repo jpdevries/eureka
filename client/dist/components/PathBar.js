@@ -26,6 +26,10 @@ var _utility = require('./../utility/utility');
 
 var _utility2 = _interopRequireDefault(_utility);
 
+var _MediaEmbed = require('./MediaEmbed');
+
+var _MediaEmbed2 = _interopRequireDefault(_MediaEmbed);
+
 var _definedMessages = require('./../i18n/definedMessages');
 
 var _definedMessages2 = _interopRequireDefault(_definedMessages);
@@ -102,6 +106,8 @@ var PathBar = function PathBar(props) {
     fileNamesIf
   ) : fileNamesIf;
 
+  var mediaEmbed = _react2.default.createElement(_MediaEmbed2.default, _extends({ key: props.view.focusedMediaItem.absoluteURL, item: props.view.focusedMediaItem }, props));
+
   return _react2.default.createElement(
     'div',
     { className: 'eureka__pathbar' },
@@ -125,7 +131,7 @@ var PathBar = function PathBar(props) {
           _react2.default.createElement(
             'div',
             null,
-            _react2.default.createElement('img', { key: props.view.focusedMediaItem.absoluteURL, src: props.view.focusedMediaItem.absoluteURL, alt: '' })
+            mediaEmbed
           ),
           contextBtns
         )

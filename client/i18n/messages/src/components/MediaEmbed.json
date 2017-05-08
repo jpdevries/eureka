@@ -1,0 +1,10 @@
+[
+  {
+    "id": "support.noVideo",
+    "defaultMessage": "Your browser does not support HTML5 Video."
+  },
+  {
+    "id": "support.noAudio",
+    "defaultMessage": "Your browser does not support HTML5 Audio."
+  }
+]
