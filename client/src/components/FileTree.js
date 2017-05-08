@@ -64,7 +64,6 @@ const FileTree = (props) => {
   const decoratedActions = props.decoratedActions ? Object.assign({}, actions, props.decoratedActions) : actions;
 
   const formatMessage = props.intl.formatMessage,
-  chmodDirectoryMessage = formatMessage(definedMessages.chmodDirectory),
   renameMessage = formatMessage(definedMessages.rename),
   refreshDirectoryMessage = formatMessage(definedMessages.refreshDirectory),
   uploadFilesMessage = formatMessage(definedMessages.uploadFiles),
@@ -98,7 +97,6 @@ const FileTree = (props) => {
               <menuitem label="Create Directory Here" onClick={(event) => {
                 props.onCreateDirectory();
               }}></menuitem>
-              <menuitem label={chmodDirectoryMessage}></menuitem>
               <menuitem label={renameMessage}></menuitem>
               <menuitem label={refreshDirectoryMessage}></menuitem>
               <hr />

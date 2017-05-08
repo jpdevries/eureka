@@ -189,10 +189,6 @@ export default defineMessages({
     id: 'choose',
     defaultMessage: 'Choose'
   },
-  chmodDirectory: {
-    id: 'directory.chmod',
-    defaultMessage: 'chmod Directory'
-  },
   item: {
     id: 'item',
     defaultMessage: 'item'
