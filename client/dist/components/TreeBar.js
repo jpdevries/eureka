@@ -46,7 +46,7 @@ var TreeBar = function TreeBar(props) {
   ) : undefined,
       createFileBtn = props.config.handlers && props.config.handlers.createFile ? _react2.default.createElement(
     'a',
-    _extends({}, props.config.handlers.createFile(props.source.currentSource, props.content.cd), { className: 'button', title: createFileInMessage }),
+    _extends({}, props.config.handlers.createFile(props.source.currentSource, props.content.cd), { className: 'button eureka__create-file-button', title: createFileInMessage }),
     _react2.default.createElement(
       'span',
       { className: 'visually-hidden' },

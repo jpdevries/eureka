@@ -371,6 +371,7 @@ class Eureka extends Component {
 
         if(props.view.intervals.updateSourceTree !== undefined && props.view.intervals.updateSourceTree > 0) { // hit the server and get the (top-level-ish) directory tree of the current source
           setInterval(() => {
+            console.log('updating source tree');
             store.dispatch(decoratedActions.updateSourceTree(props.source.currentSource, props.config.headers));
           }, props.view.intervals.updateSourceTree);
         }
@@ -453,23 +454,62 @@ class Eureka extends Component {
   }
 
   onRenameItemModalSubmit(newName, item) {
-    //console.log('onRenameItemModalSubmit!!!', newName, item);
-    //console.log(item.path);
+    const props = this.props;
+    console.log('onRenameItemModalSubmit!!!', newName, item);
+    //console.log(item);
     const decoratedActions = this.decoratedActions;
     const dir = (() => {
-      try { // this is bullshit webpack isn't including the parse method with the Node path module
-        return path.parse(item.path).dir;
+      try { // this is weird webpack isn't including the parse method with the Node path module
+        return path.parse(item.path || item.cd).dir;
       } catch(e) {
         //console.log('oh crap', item.path);
         console.log(e);
-        return pathParse(item.path).dir;
+        return pathParse(item.path || item.cd).dir;
       }
     })();
 
-    store.dispatch(decoratedActions.renameItem(this.props.source.currentSource, item.path, newName, this.props.config.headers)).then((results) => {
-      store.dispatch(decoratedActions.updateContent({contents:results.contents.filter((file) => (
-        file.filename
-      ))}));
+    const renameItem = (item.filename) ? decoratedActions.renameItem : decoratedActions.renameDirectory;
+
+    store.dispatch(renameItem(this.props.source.currentSource, item.path || item.cd, newName, this.props.config.headers)).then((results) => {
+      if(!item.filename) {
+        console.log(dir);
+        /*store.dispatch(decoratedActions.updateContent({contents:results.contents.filter((file) => (
+          file.filename
+        ))}));*/
+        /*store.dispatch(decoratedActions.updateSourceTree(this.props.source.currentSource, this.props.config.headers)).then((content) => {
+          console.log(content);
+        })*/
+        /*store.dispatch(decoratedActions.updateContent({ // updates the "current directory" of the view right away
+          cd: item.cd
+        }));*/
+        console.log('fetching, ' + dir);
+        store.dispatch(decoratedActions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
+          path:dir
+        }, props.config.headers)).then(() => {
+          console.log('all done', props.content.cd, item, newName);
+          if(props.content.cd === item.cd) {
+            console.log('they equal', path.join(dir, newName));
+            store.dispatch(decoratedActions.updateContent({
+              cd: path.join(dir, newName)
+            }));
+
+            store.dispatch(decoratedActions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
+              path: path.join(dir, newName)
+            }, props.config.headers));
+
+            /*if(results.contents !== undefined) store.dispatch(decoratedActions.updateContent({contents:results.contents.filter((file) => (
+              file.filename
+            ))}));*/
+
+          }
+        });
+      } else {
+        console.log('updating contents with result contents');
+        if(results.contents !== undefined) store.dispatch(decoratedActions.updateContent({contents:results.contents.filter((file) => (
+          file.filename
+        ))}));
+      }
+
       this.setState({
         renamingItem:undefined,
         modalOpen:false,
@@ -483,7 +523,7 @@ class Eureka extends Component {
   }
 
   onRenameItem(item) {
-    //console.log('onRenameItem', item);
+    console.log('onRenameItem', item);
     this.setState({
       renamingItem: item,
       modalOpen: true,
@@ -563,7 +603,7 @@ class Eureka extends Component {
     const pathbrowser = (!utility.serverSideRendering) ? (
       <div hidden={!props.view.sourceTreeOpen} aria-hidden={!props.view.sourceTreeOpen} id="eureka__pathbrowser" className="eureka__pathbrowser">
         <MediaSourceSelector {...props} />
-        <FileTree {...props} onCreateDirectory={this.onCreateDirectory.bind(this)} />
+        <FileTree {...props} onCreateDirectory={this.onCreateDirectory.bind(this)} onRenameItem={this.onRenameItem.bind(this)} />
         {dropArea}
         <TreeBar onCreateDirectory={this.onCreateDirectory.bind(this)} {...props} />
       </div>

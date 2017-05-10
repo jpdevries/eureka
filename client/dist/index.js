@@ -77,6 +77,8 @@ function render() {
   }), _defineProperty(_React$createElement, 'headers', {
     foo: 'bar'
   }), _defineProperty(_React$createElement, 'intervals', {
-    searchBarPlaceholder: 12000
+    searchBarPlaceholder: 12000,
+    updateSourceTree: 10000
+    //fetchDirectoryContents: 12000
   }), _React$createElement)), document.getElementById('root'));
 }

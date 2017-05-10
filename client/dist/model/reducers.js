@@ -340,10 +340,12 @@ var gotTreeDataFromServer = false;
 var treeReducer = function treeReducer(state, action) {
   state = state || initialTreeReducer;
 
+  console.log('treeReducer', action);
+
   var _ret2 = function () {
     switch (action.type) {
       case actions.UPDATE_SOURCE_TREE_SUCCESS:
-        //console.log('UPDATE_SOURCE_TREE_SUCCESS');
+        console.log('UPDATE_SOURCE_TREE_SUCCESS!!!');
         var newState = gotTreeDataFromServer ? state.slice(0) : [];
 
         var directoryInState = function directoryInState(directory) {
@@ -354,6 +356,8 @@ var treeReducer = function treeReducer(state, action) {
           return false;
         };
 
+        console.log('.');
+
         var directoryOnServer = function directoryOnServer(directory) {
           for (var i = 0; i < contents.length; i++) {
             if (contents[i].cd === directory.cd) return true;
@@ -361,11 +365,15 @@ var treeReducer = function treeReducer(state, action) {
           return false;
         };
 
+        console.log('..');
+
         var contents = action.contents.map(function (file) {
           return Object.assign({}, file, {
             children: file.children ? file.children : []
           });
         });
+
+        console.log('...');
 
         // loop through top level directories returned from server add any we don't already have
         contents.map(function (directory) {
@@ -374,7 +382,80 @@ var treeReducer = function treeReducer(state, action) {
           }
         });
 
+        console.log('....');
+
+        var actionContents = action.contents;
+
+        console.log('actionContents', actionContents);
+
+        var recursivelyGetDirectoryChildren = function recursivelyGetDirectoryChildren(cd, contents) {
+          console.log('recursivelyGetDirectoryChildren', cd, contents);
+          for (var i = 0; i < contents.length; i++) {
+            var directory = contents[i];
+            console.log(i, directory);
+            if (directory.cd == cd) {
+              console.log('HOLY SHIT');
+            }
+            if (directory) {
+              console.log('directory', directory.cd == cd, directory, cd);
+              /*if(directory.cd == cd) return (() => {
+                console.log('found some shit');
+                try {
+                  return directory.children || []
+                } catch (e) {
+                  //console.log(e);
+                  return []
+                }
+              })();*/
+
+              if (directory.children) return recursivelyGetDirectoryChildren(cd, directory.children);
+            }
+          }
+          return [];
+        };
+
+        var loopIt = function loopIt(contents) {
+          //console.log('loopIt', contents);
+          return contents.filter(function (directory) {
+            return directory !== undefined;
+          }).map(function (directory) {
+            //console.log(directory, directory.children);
+            if (!directory.children) {
+              console.log('the server didn\'t tell us if ' + directory.cd + ' has children');
+              if (directory && directory.cd) {
+                console.log('here we fuckin go', directory.cd, newState);
+                var children = recursivelyGetDirectoryChildren(directory.cd, newState) || [];
+                if (children.length) {
+                  console.log('gonna return some shit!', children);
+                  return Object.assign({}, directory, {
+                    children: children
+                  });
+                }
+              }
+            } else {
+              if (directory) {
+                if (directory.children && directory.children.length) return loopIt(directory.children);
+                return directory;
+              }
+            }
+          });
+        };
+
+        console.log('---------');
+
+        console.log('loop it::::');
+        var r = loopIt(actionContents);
+
+        console.log('---------');
+
+        console.log('actionContents', actionContents);
+
         gotTreeDataFromServer = true;
+
+        return {
+          v: r
+        };
+
         // if any of the top-level directories in our local state are no longer on the store remove them
         return {
           v: newState.filter(function (directory) {

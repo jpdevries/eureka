@@ -24,7 +24,7 @@ const TreeBar = (props) => {
     </button>
   ) : undefined,
   createFileBtn = (props.config.handlers && props.config.handlers.createFile) ? (
-    <a {...props.config.handlers.createFile(props.source.currentSource, props.content.cd)} className="button" title={createFileInMessage}>
+    <a {...props.config.handlers.createFile(props.source.currentSource, props.content.cd)} className="button eureka__create-file-button" title={createFileInMessage}>
       <span className="visually-hidden">{createFileInMessage}</span>
       <Icon {...props} icon="file-text-o" />
     </a>

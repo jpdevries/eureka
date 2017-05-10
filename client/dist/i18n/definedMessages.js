@@ -198,9 +198,6 @@ exports.default = (0, _reactIntl.defineMessages)((_defineMessages = {
 }, _defineProperty(_defineMessages, 'choose', {
   'id': 'choose',
   'defaultMessage': 'Choose'
-}), _defineProperty(_defineMessages, 'chmodDirectory', {
-  'id': 'directory.chmod',
-  'defaultMessage': 'chmod Directory'
 }), _defineProperty(_defineMessages, 'item', {
   'id': 'item',
   'defaultMessage': 'item'
