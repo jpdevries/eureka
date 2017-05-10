@@ -288,9 +288,10 @@ let gotTreeDataFromServer = false;
 var treeReducer = function(state, action) {
   state = state || initialTreeReducer;
 
+  console.log('treeReducer', action);
   switch(action.type) {
     case actions.UPDATE_SOURCE_TREE_SUCCESS:
-    //console.log('UPDATE_SOURCE_TREE_SUCCESS');
+    console.log('UPDATE_SOURCE_TREE_SUCCESS!!!');
     let newState = (gotTreeDataFromServer) ? state.slice(0) : [];
 
     function directoryInState(directory) {
@@ -301,6 +302,8 @@ var treeReducer = function(state, action) {
       return false;
     }
 
+    console.log('.');
+
     function directoryOnServer(directory) {
       for(let i = 0; i < contents.length; i++) {
         if(contents[i].cd === directory.cd) return true;
@@ -308,12 +311,15 @@ var treeReducer = function(state, action) {
       return false;
     }
 
+    console.log('..');
 
     const contents = action.contents.map((file) => (
       Object.assign({},file,{
         children: (file.children) ? file.children : []
       })
     ));
+
+    console.log('...');
 
     // loop through top level directories returned from server add any we don't already have
     contents.map((directory) => {
@@ -322,8 +328,85 @@ var treeReducer = function(state, action) {
       }
     });
 
+    console.log('....');
+
+    let actionContents = action.contents;
+
+    console.log('actionContents', actionContents);
+
+    /*function recursivelyGetDirectoryChildren(cd, contents) {
+      console.log('recursivelyGetDirectoryChildren',cd,contents);
+      for(let i = 0; i < contents.length; i++) {
+        const directory = contents[i];
+        console.log(i);
+        if(directory) {
+          console.log('directory',directory,cd);
+          if(directory.cd == cd) return (() => {
+            console.log('found some shit');
+            try {
+              return directory.children || []
+            } catch (e) {
+              //console.log(e);
+              return []
+            }
+          })();
+          if(directory.children) return recursivelyGetDirectoryChildren(cd, directory.children);
+        }
+      }
+      return [];
+    }*/
+
+    function recursivelyGetDirectoryChildren(cd, contents) {
+      console.log('recursivelyGetDirectoryChildren',cd,contents);
+      for(let i =0; i < contents.length; i++) {
+        const directory = contents[i];
+        console.log(directory);
+      }
+      return [];
+    }
+
+    function loopIt(contents) {
+      //console.log('loopIt', contents);
+      return contents.filter((directory) => (directory !== undefined)).map((directory) => {
+        console.log(directory, directory.children);
+        if(!directory.children) {
+          console.log(`the server didn't tell us if ${directory.cd} has children`);
+          if(directory && directory.cd) {
+            console.log('here we fuckin go',directory.cd, newState);
+            const children = recursivelyGetDirectoryChildren(directory.cd, newState);
+            if(children && children.length) {
+              console.log('gonna return some shit!', children);
+              return Object.assign({}, directory, {
+                children
+              })
+            } else {
+              return directory;
+            }
+          }
+        } else {
+          if(directory) {
+            if(directory.children) loopIt(directory.children);
+            return directory;
+          }
+        }
+      });
+    }
+
+    console.log('---------');
+
+    console.log('loop it::::');
+    let r = loopIt(actionContents);
+
+    console.log('---------');
+
+    console.log('actionContents', actionContents);
 
     gotTreeDataFromServer = true;
+
+    return r;
+
+
+
     // if any of the top-level directories in our local state are no longer on the store remove them
     return newState.filter((directory) => (
       directoryOnServer(directory)

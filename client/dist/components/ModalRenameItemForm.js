@@ -66,7 +66,7 @@ var ModalRenameItemForm = function (_PureComponent) {
           props = this.props,
           formatMessage = props.intl.formatMessage;
 
-      var filename = props.item.filename;
+      var filename = props.item.filename || props.item.name;
 
       var disable = false,
           sameName = false,
@@ -77,7 +77,7 @@ var ModalRenameItemForm = function (_PureComponent) {
         filename: filename
       });
 
-      if (state.newName === props.item.filename) {
+      if (state.newName === (props.item.filename || props.item.name)) {
         disable = true;
         sameName = true;
         label = '&ensp;' + cannotRenameMessage;
@@ -107,6 +107,7 @@ var ModalRenameItemForm = function (_PureComponent) {
         { onSubmit: function onSubmit(event) {
             event.preventDefault();
             props.onSubmit(state.newName, props.item);
+            console.log('submitted item');
           } },
         _react2.default.createElement(
           'label',
@@ -151,7 +152,7 @@ var ModalRenameItemForm = function (_PureComponent) {
               'span',
               { className: 'visually-hidden' },
               ' item ',
-              props.item.filename,
+              props.item.filename || props.item.name,
               ' to ',
               state.newName
             )

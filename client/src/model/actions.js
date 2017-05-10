@@ -215,6 +215,7 @@ const fetchDirectoryContents = (source, params, customHeaders = {}) => (
     }).then((response) => {
       if(response.state < 200 || response.state >= 300) {
         var error = new Error(response.statusText)
+        console.log(error);
         error.response = response
         throw error;
       }
@@ -223,7 +224,7 @@ const fetchDirectoryContents = (source, params, customHeaders = {}) => (
       response.json()
     )).then((contents) => (
       dispatch(
-        fetchDirectoryContentsSuccess(contents)
+        fetchDirectoryContentsSuccess(contents, source, params)
       )
     )).catch((error) => (
       dispatch(
@@ -236,10 +237,13 @@ const fetchDirectoryContents = (source, params, customHeaders = {}) => (
 const FETCH_DIRECTORY_CONTENTS_SUCCESS = 'fetch_directory_contents_success';
 const FETCH_DIRECTORY_CONTENTS_ERROR = 'fetch_directory_contents_error';
 
-const fetchDirectoryContentsSuccess = function(contents) {
+const fetchDirectoryContentsSuccess = function(contents, source, params) {
+  //console.log('fetchDirectoryContentsSuccess', contents, source, params);
   return {
     type:FETCH_DIRECTORY_CONTENTS_SUCCESS,
-    contents:contents
+    contents,
+    source,
+    params
   }
 }
 
@@ -247,6 +251,7 @@ exports.fetchDirectoryContentsSuccess = fetchDirectoryContentsSuccess;
 
 
 const fetchDirectoryContentsError = function(error) {
+  //console.log('fetchDirectoryContentsError', error);
   return {
     type:FETCH_DIRECTORY_CONTENTS_ERROR,
     error:error
@@ -366,7 +371,7 @@ const deleteMediaItem = (source, path, customHeaders = {}) => (
 
 const DELETE_MEDIA_ITEMS_SUCCESS = 'delete_media_items_success';
 const deleteMediaItemsSuccess = function(contents, formData, chosenMediaItems = undefined) {
-  //console.log('DELETE_MEDIA_ITEM_SUCCESS', source, path);
+  //console.log('DELETE_MEDIA_ITEMS_SUCCESS', contents);
   return {
     type:DELETE_MEDIA_ITEMS_SUCCESS,
     contents,
@@ -711,7 +716,7 @@ const renameDirectory = (source, dirPath, name, customHeaders = {}) => (
       }
     }).then((success) => (
       dispatch(
-        renameDirectorySuccess(success)
+        renameDirectorySuccess(success, source, dirPath, name)
       )
     )).catch((error) => (
       dispatch(
@@ -722,10 +727,13 @@ const renameDirectory = (source, dirPath, name, customHeaders = {}) => (
 );
 
 const  RENAME_DIRECTORY_SUCCESS = 'rename_directory_success';
-const renameDirectorySuccess = function(success) {
+const renameDirectorySuccess = function(success, source, dirPath, name) {
   return {
     type:RENAME_DIRECTORY_SUCCESS,
-    success: success
+    success,
+    source,
+    dirPath,
+    name
   }
 }
 

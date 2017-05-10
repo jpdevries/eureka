@@ -66,9 +66,9 @@ const FileTree = (props) => {
   const formatMessage = props.intl.formatMessage,
   renameMessage = formatMessage(definedMessages.rename),
   refreshDirectoryMessage = formatMessage(definedMessages.refreshDirectory),
-  uploadFilesMessage = formatMessage(definedMessages.uploadFiles),
+  //uploadFilesMessage = formatMessage(definedMessages.uploadFiles),
   createFileMessage = formatMessage(definedMessages.createFile),
-  quickCreateFileMessage = formatMessage(definedMessages.quickCreateFile),
+  //quickCreateFileMessage = formatMessage(definedMessages.quickCreateFile),
   deleteDirectoryMessage = formatMessage(definedMessages.deleteDirectory);
 
   function listTree(tree) {
@@ -81,6 +81,7 @@ const FileTree = (props) => {
       }
 
     }
+
 
     return tree.map((item, index) => (
       (item.children || true) ? // still deciding if we need this disabled for now
@@ -97,13 +98,32 @@ const FileTree = (props) => {
               <menuitem label="Create Directory Here" onClick={(event) => {
                 props.onCreateDirectory();
               }}></menuitem>
-              <menuitem label={renameMessage}></menuitem>
-              <menuitem label={refreshDirectoryMessage}></menuitem>
+              <menuitem label={renameMessage} onClick={(event) => {
+                console.log('rename', item);
+                props.onRenameItem(item);
+              }}></menuitem>
+              {(item.cd === props.content.cd) ? (
+                <menuitem label={refreshDirectoryMessage} onClick={(event) => {
+                  store.dispatch(decoratedActions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
+                    path: item.cd
+                  }, props.config.headers));
+                }}></menuitem>
+              ) : undefined}
               <hr />
-              <menuitem label={uploadFilesMessage}></menuitem>
-              <menuitem label={createFileMessage}></menuitem>
-              <menuitem label={quickCreateFileMessage}></menuitem>
+              <menuitem label={createFileMessage} onClick={(event) => {
+                //event.target.closest('.eureka').querySelector('.eureka__create-file-button').click()
+                const {href, target} = props.config.handlers.createFile(props.source.currentSource, item.cd);
+                const a = document.createElement('a');
+                a.setAttribute('href', href);
+                a.setAttribute('target', target);
+                a.classList.add('visually-hidden');
+                event.target.closest('.eureka').appendChild(a);
+
+                a.click();
+                a.remove();
+              }}></menuitem>
               <menuitem label={deleteDirectoryMessage} onClick={(event) => {
+                  //store.dispatch(actions.deleteMediaItems(props.source.currentSource, formData, props.config.headers, props.content.chosenMediaItemsInverted))
                   store.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.cd, props.config.headers))
                 }}></menuitem>
           </menu>

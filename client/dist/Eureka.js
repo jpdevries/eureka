@@ -312,6 +312,7 @@ var Eureka = function (_Component) {
           if (props.view.intervals.updateSourceTree !== undefined && props.view.intervals.updateSourceTree > 0) {
             // hit the server and get the (top-level-ish) directory tree of the current source
             setInterval(function () {
+              console.log('updating source tree');
               _store2.default.dispatch(decoratedActions.updateSourceTree(props.source.currentSource, props.config.headers));
             }, props.view.intervals.updateSourceTree);
           }
@@ -402,24 +403,62 @@ var Eureka = function (_Component) {
     value: function onRenameItemModalSubmit(newName, item) {
       var _this4 = this;
 
-      //console.log('onRenameItemModalSubmit!!!', newName, item);
-      //console.log(item.path);
+      var props = this.props;
+      console.log('onRenameItemModalSubmit!!!', newName, item);
+      //console.log(item);
       var decoratedActions = this.decoratedActions;
       var dir = function () {
         try {
-          // this is bullshit webpack isn't including the parse method with the Node path module
-          return path.parse(item.path).dir;
+          // this is weird webpack isn't including the parse method with the Node path module
+          return path.parse(item.path || item.cd).dir;
         } catch (e) {
           //console.log('oh crap', item.path);
           console.log(e);
-          return pathParse(item.path).dir;
+          return pathParse(item.path || item.cd).dir;
         }
       }();
 
-      _store2.default.dispatch(decoratedActions.renameItem(this.props.source.currentSource, item.path, newName, this.props.config.headers)).then(function (results) {
-        _store2.default.dispatch(decoratedActions.updateContent({ contents: results.contents.filter(function (file) {
-            return file.filename;
-          }) }));
+      var renameItem = item.filename ? decoratedActions.renameItem : decoratedActions.renameDirectory;
+
+      _store2.default.dispatch(renameItem(this.props.source.currentSource, item.path || item.cd, newName, this.props.config.headers)).then(function (results) {
+        if (!item.filename) {
+          console.log(dir);
+          /*store.dispatch(decoratedActions.updateContent({contents:results.contents.filter((file) => (
+            file.filename
+          ))}));*/
+          /*store.dispatch(decoratedActions.updateSourceTree(this.props.source.currentSource, this.props.config.headers)).then((content) => {
+            console.log(content);
+          })*/
+          /*store.dispatch(decoratedActions.updateContent({ // updates the "current directory" of the view right away
+            cd: item.cd
+          }));*/
+          console.log('fetching, ' + dir);
+          _store2.default.dispatch(decoratedActions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
+            path: dir
+          }, props.config.headers)).then(function () {
+            console.log('all done', props.content.cd, item, newName);
+            if (props.content.cd === item.cd) {
+              console.log('they equal', path.join(dir, newName));
+              _store2.default.dispatch(decoratedActions.updateContent({
+                cd: path.join(dir, newName)
+              }));
+
+              _store2.default.dispatch(decoratedActions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
+                path: path.join(dir, newName)
+              }, props.config.headers));
+
+              /*if(results.contents !== undefined) store.dispatch(decoratedActions.updateContent({contents:results.contents.filter((file) => (
+                file.filename
+              ))}));*/
+            }
+          });
+        } else {
+          console.log('updating contents with result contents');
+          if (results.contents !== undefined) _store2.default.dispatch(decoratedActions.updateContent({ contents: results.contents.filter(function (file) {
+              return file.filename;
+            }) }));
+        }
+
         _this4.setState({
           renamingItem: undefined,
           modalOpen: false,
@@ -435,7 +474,7 @@ var Eureka = function (_Component) {
   }, {
     key: 'onRenameItem',
     value: function onRenameItem(item) {
-      //console.log('onRenameItem', item);
+      console.log('onRenameItem', item);
       this.setState({
         renamingItem: item,
         modalOpen: true,
@@ -522,7 +561,7 @@ var Eureka = function (_Component) {
         'div',
         { hidden: !props.view.sourceTreeOpen, 'aria-hidden': !props.view.sourceTreeOpen, id: 'eureka__pathbrowser', className: 'eureka__pathbrowser' },
         _react2.default.createElement(_MediaSourceSelector2.default, props),
-        _react2.default.createElement(_FileTree2.default, _extends({}, props, { onCreateDirectory: this.onCreateDirectory.bind(this) })),
+        _react2.default.createElement(_FileTree2.default, _extends({}, props, { onCreateDirectory: this.onCreateDirectory.bind(this), onRenameItem: this.onRenameItem.bind(this) })),
         dropArea,
         _react2.default.createElement(_TreeBar2.default, _extends({ onCreateDirectory: this.onCreateDirectory.bind(this) }, props))
       ) : undefined;

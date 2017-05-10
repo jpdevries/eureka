@@ -201,6 +201,7 @@ var fetchDirectoryContents = function fetchDirectoryContents(source, params) {
     }).then(function (response) {
       if (response.state < 200 || response.state >= 300) {
         var error = new Error(response.statusText);
+        console.log(error);
         error.response = response;
         throw error;
       }
@@ -208,7 +209,7 @@ var fetchDirectoryContents = function fetchDirectoryContents(source, params) {
     }).then(function (response) {
       return response.json();
     }).then(function (contents) {
-      return dispatch(fetchDirectoryContentsSuccess(contents));
+      return dispatch(fetchDirectoryContentsSuccess(contents, source, params));
     }).catch(function (error) {
       return dispatch(fetchDirectoryContentsError(error));
     });
@@ -218,16 +219,20 @@ var fetchDirectoryContents = function fetchDirectoryContents(source, params) {
 var FETCH_DIRECTORY_CONTENTS_SUCCESS = 'fetch_directory_contents_success';
 var FETCH_DIRECTORY_CONTENTS_ERROR = 'fetch_directory_contents_error';
 
-var fetchDirectoryContentsSuccess = function fetchDirectoryContentsSuccess(contents) {
+var fetchDirectoryContentsSuccess = function fetchDirectoryContentsSuccess(contents, source, params) {
+  //console.log('fetchDirectoryContentsSuccess', contents, source, params);
   return {
     type: FETCH_DIRECTORY_CONTENTS_SUCCESS,
-    contents: contents
+    contents: contents,
+    source: source,
+    params: params
   };
 };
 
 exports.fetchDirectoryContentsSuccess = fetchDirectoryContentsSuccess;
 
 var fetchDirectoryContentsError = function fetchDirectoryContentsError(error) {
+  //console.log('fetchDirectoryContentsError', error);
   return {
     type: FETCH_DIRECTORY_CONTENTS_ERROR,
     error: error
@@ -340,7 +345,7 @@ var DELETE_MEDIA_ITEMS_SUCCESS = 'delete_media_items_success';
 var deleteMediaItemsSuccess = function deleteMediaItemsSuccess(contents, formData) {
   var chosenMediaItems = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
 
-  //console.log('DELETE_MEDIA_ITEM_SUCCESS', source, path);
+  //console.log('DELETE_MEDIA_ITEMS_SUCCESS', contents);
   return {
     type: DELETE_MEDIA_ITEMS_SUCCESS,
     contents: contents,
@@ -658,7 +663,7 @@ var renameDirectory = function renameDirectory(source, dirPath, name) {
         throw error;
       }
     }).then(function (success) {
-      return dispatch(renameDirectorySuccess(success));
+      return dispatch(renameDirectorySuccess(success, source, dirPath, name));
     }).catch(function (error) {
       return dispatch(renameDirectoryError(error));
     });
@@ -666,10 +671,13 @@ var renameDirectory = function renameDirectory(source, dirPath, name) {
 };
 
 var RENAME_DIRECTORY_SUCCESS = 'rename_directory_success';
-var renameDirectorySuccess = function renameDirectorySuccess(success) {
+var renameDirectorySuccess = function renameDirectorySuccess(success, source, dirPath, name) {
   return {
     type: RENAME_DIRECTORY_SUCCESS,
-    success: success
+    success: success,
+    source: source,
+    dirPath: dirPath,
+    name: name
   };
 };
 

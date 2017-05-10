@@ -109,13 +109,14 @@ var FileTree = function FileTree(props) {
   var decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
 
   var formatMessage = props.intl.formatMessage,
-      chmodDirectoryMessage = formatMessage(_definedMessages2.default.chmodDirectory),
       renameMessage = formatMessage(_definedMessages2.default.rename),
       refreshDirectoryMessage = formatMessage(_definedMessages2.default.refreshDirectory),
-      uploadFilesMessage = formatMessage(_definedMessages2.default.uploadFiles),
-      createFileMessage = formatMessage(_definedMessages2.default.createFile),
-      quickCreateFileMessage = formatMessage(_definedMessages2.default.quickCreateFile),
-      deleteDirectoryMessage = formatMessage(_definedMessages2.default.deleteDirectory);
+
+  //uploadFilesMessage = formatMessage(definedMessages.uploadFiles),
+  createFileMessage = formatMessage(_definedMessages2.default.createFile),
+
+  //quickCreateFileMessage = formatMessage(definedMessages.quickCreateFile),
+  deleteDirectoryMessage = formatMessage(_definedMessages2.default.deleteDirectory);
 
   function listTree(tree) {
     function shouldBeOpen(item) {
@@ -147,14 +148,33 @@ var FileTree = function FileTree(props) {
             _react2.default.createElement('menuitem', { label: 'Create Directory Here', onClick: function onClick(event) {
                 props.onCreateDirectory();
               } }),
-            _react2.default.createElement('menuitem', { label: chmodDirectoryMessage }),
-            _react2.default.createElement('menuitem', { label: renameMessage }),
-            _react2.default.createElement('menuitem', { label: refreshDirectoryMessage }),
+            _react2.default.createElement('menuitem', { label: renameMessage, onClick: function onClick(event) {
+                console.log('rename', item);
+                props.onRenameItem(item);
+              } }),
+            item.cd === props.content.cd ? _react2.default.createElement('menuitem', { label: refreshDirectoryMessage, onClick: function onClick(event) {
+                _store2.default.dispatch(decoratedActions.fetchDirectoryContents(props.source.currentSource, { // asyncronously fetches the directory contents from the API
+                  path: item.cd
+                }, props.config.headers));
+              } }) : undefined,
             _react2.default.createElement('hr', null),
-            _react2.default.createElement('menuitem', { label: uploadFilesMessage }),
-            _react2.default.createElement('menuitem', { label: createFileMessage }),
-            _react2.default.createElement('menuitem', { label: quickCreateFileMessage }),
+            _react2.default.createElement('menuitem', { label: createFileMessage, onClick: function onClick(event) {
+                //event.target.closest('.eureka').querySelector('.eureka__create-file-button').click()
+                var _props$config$handler = props.config.handlers.createFile(props.source.currentSource, item.cd),
+                    href = _props$config$handler.href,
+                    target = _props$config$handler.target;
+
+                var a = document.createElement('a');
+                a.setAttribute('href', href);
+                a.setAttribute('target', target);
+                a.classList.add('visually-hidden');
+                event.target.closest('.eureka').appendChild(a);
+
+                a.click();
+                a.remove();
+              } }),
             _react2.default.createElement('menuitem', { label: deleteDirectoryMessage, onClick: function onClick(event) {
+                //store.dispatch(actions.deleteMediaItems(props.source.currentSource, formData, props.config.headers, props.content.chosenMediaItemsInverted))
                 _store2.default.dispatch(decoratedActions.deleteMediaItem(props.source.currentSource, item.cd, props.config.headers));
               } })
           )

@@ -26,7 +26,7 @@ class ModalRenameItemForm extends PureComponent {
     props = this.props,
     formatMessage = props.intl.formatMessage;
 
-    const filename = props.item.filename;
+    const filename = (props.item.filename || props.item.name);
 
     let disable = false,
     sameName = false,
@@ -37,7 +37,7 @@ class ModalRenameItemForm extends PureComponent {
       filename: filename
     });
 
-    if(state.newName === props.item.filename) {
+    if(state.newName === (props.item.filename || props.item.name)) {
       disable = true;
       sameName = true;
       label = `${('&ensp;')}${cannotRenameMessage}`;
@@ -71,6 +71,7 @@ class ModalRenameItemForm extends PureComponent {
       <form onSubmit={(event) => {
         event.preventDefault();
         props.onSubmit(state.newName, props.item);
+        console.log('submitted item');
       }}>
         <label htmlFor="eureka__modal-panel__directory" aria-live="polite" className={classNames({
             dangerous: sameName
@@ -89,7 +90,7 @@ class ModalRenameItemForm extends PureComponent {
             }} /></span></button>
           <button type="submit" onBlur={(event) => {
               this.refs.input.focus();
-            }} disabled={disable}>Rename <span className="visually-hidden"> item {props.item.filename} to {state.newName}</span></button>
+            }} disabled={disable}>Rename <span className="visually-hidden"> item {props.item.filename || props.item.name} to {state.newName}</span></button>
         </div>
       </form>
     );

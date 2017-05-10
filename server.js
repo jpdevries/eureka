@@ -95,6 +95,9 @@ app.use('/sources', qt.static(path.join(__dirname, '/sources'), {
   //quality: .92
 }));
 
+app.use('/',express.static('client/build')); // serve the create react app
+app.use('/assets/js/i18n/locales', express.static('client/i18n/locales'));
+
 store.dispatch(actions.updateConfig({
   allowUploads:true
 }));
@@ -130,11 +133,6 @@ app.get('/nued', (req, res) => {
   });
 
 });
-
-
-app.use('/',express.static('client/build')); // serve the create react app
-app.use('/assets/js/i18n/locales', express.static('client/i18n/locales'));
-
 
 app.post('/', (req, res) => {
   //console.log('params',req.params);
@@ -367,7 +365,7 @@ function recursivelyGetSourceDirectories(path) {
             resolve({
               name:file,
               cd:`${path}${file}`.replace(__dirname, '').replace('/sources/filesystem/', ''),
-              children:children.length ? children : [],
+              children:(file == 'social' && Math.random() > .5) ? undefined : (children.length ? children : []),
               //fcd:`${path}${file}`.replace(__dirname, '')
             })
           })
@@ -639,7 +637,7 @@ Delete a directory
 app.delete('/assets/components/eureka/media/sources/:source', function (req, res) {
   var source = req.params.source;
 
-  var dir = req.query.dir;
+  var dir = req.query.dir || req.query.path; // #janky
   if (dir) {
 
     // this is kinda #janky but whatever
@@ -743,7 +741,7 @@ Rename a directory
 */
 
 app.put('/assets/components/eureka/media/sources/:source', (req, res) => {
-  const filePath = req.query.path,
+  let filePath = req.query.path,
   name = req.query.name;
 
   //console.log(filePath,name);
@@ -759,7 +757,15 @@ app.put('/assets/components/eureka/media/sources/:source', (req, res) => {
     // rename directory or file
 
 
-    const stat = fs.statSync(`${filePath}`),
+    const stat = (() => { // #janky
+      try {
+        return fs.statSync(`${filePath}`)
+      } catch (e) {
+        console.log(e);
+        filePath = path.join(__dirname, 'sources/filesystem', filePath);
+        return fs.statSync(`${filePath}`);
+      }
+    })(),
     {size, atime, mtime, ctime} = stat,
     isFile = stat.isFile(),
     dir = path.parse(filePath).dir;
