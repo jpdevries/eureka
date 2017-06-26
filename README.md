@@ -3,7 +3,7 @@
 
 Eureka is a progressively enhanced flexible media browser. Connected to your media sources through a REST API, this accessible web component allows users to browse media sources, upload files, and choose media items.
 
-[🤗 Try the demo](https://eureka.markup.tips/).
+[🤗 Try the demo](https://eureka.markup.tips/). 
 
 > With `eureka.js` users will be saying "I found it!" in no time.
 &emsp;&emsp;&mdash; [@mrktps](https://twitter.com/mrktps)
