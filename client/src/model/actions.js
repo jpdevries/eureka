@@ -338,6 +338,7 @@ const deleteMediaItem = (source, path, customHeaders = {}) => (
       path: path
     }), {
       method: 'DELETE',
+      credentials: 'include',
       headers: Object.assign({}, {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
@@ -408,6 +409,7 @@ const deleteMediaItems = (source, formData, customHeaders = {}, chosenMediaItems
     fetch(`/assets/components/eureka/media/sources/${source}`, {
       method: 'DELETE',
       body: formData,
+      credentials: 'include',
       headers: Object.assign({}, {
         'Accept': 'application/json',
         //'Content-Type': 'multipart/form-data'
