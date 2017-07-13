@@ -9,3 +9,8 @@ deploy:
   on:
     repo: jpdevries/eureka
     branch: release-2.0
+
+# safelist
+branches:
+  only:
+  - release-2.0
