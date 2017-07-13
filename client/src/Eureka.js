@@ -547,7 +547,7 @@ class Eureka extends Component {
     modalOpen = false,
     { formatMessage, formatDate } = this.props.intl,
     createDirectoryMessage = formatMessage(definedMessages.directory),
-    renameItemMessage = formatMessage(definedMessages.rename, {
+    renameItemMessage = formatMessage(definedMessages.renameItem, {
       item:(state.renamingItem) ? ` ${state.renamingItem.filename}` : ''
     }),
     cropItemMessage = formatMessage(definedMessages.cropItem, {

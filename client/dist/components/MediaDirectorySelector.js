@@ -42,13 +42,13 @@ var MediaDirectorySelector = function MediaDirectorySelector(props) {
       //console.log(props.source.currentSource.id == source.id && props.content.cd == directory.cd, props.source.currentSource.id, source.id, props.content.cd, directory.cd);
       return _react2.default.createElement(
         'option',
-        { key: index, value: source.id + '||' + directory.cd, checked: props.source.currentSource.id == source.id && props.content.cd == directory.cd },
+        { key: source.id + '||' + directory.cd, value: source.id + '||' + directory.cd, checked: props.source.currentSource.id == source.id && props.content.cd == directory.cd },
         directory.cd
       );
     });
     return _react2.default.createElement(
       'optgroup',
-      { key: index, label: source.name, 'data-source': source.id === undefined ? index : source.id },
+      { key: source.name, label: source.name, 'data-source': source.id === undefined ? index : source.id },
       _react2.default.createElement(
         'option',
         { value: source.id + '||/', checked: props.content.cd == "/" && props.source.currentSource == source.id },

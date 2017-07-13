@@ -143,6 +143,10 @@ exports.default = (0, _reactIntl.defineMessages)((_defineMessages = {
     'id': 'rename.item',
     'defaultMessage': 'Rename {filename}'
   },
+  newName: {
+    'id': 'new.name',
+    'defaultMessage': 'New name'
+  },
   deleteDirectory: {
     'id': 'directory.delete',
     'defaultMessage': 'Delete Directory'

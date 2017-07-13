@@ -60,6 +60,7 @@ var UploadForm = function (_PureComponent) {
   _createClass(UploadForm, [{
     key: 'handleSubmit',
     value: function handleSubmit(event) {
+      console.log('handleSubmit');
       event.preventDefault();
 
       var props = this.props;
@@ -73,7 +74,14 @@ var UploadForm = function (_PureComponent) {
       _store2.default.dispatch(_actions2.default.updateView({
         isUploading: true
       }));
-      _store2.default.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData, props.config.headers));
+      _store2.default.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData, props.config.headers)).then(function (response) {
+        console.log(response, response.error);
+        if (response.error) {
+          console.log(response.error);
+          //notify = function(message, notificationType, learnMore, dismissAfter, sticky = true, archived = false)
+          _store2.default.dispatch(decoratedActions.notify(response.error, _utility2.default.DANGEROUS, undefined, 3000));
+        }
+      });
     }
   }, {
     key: 'handleLabelKeyPress',

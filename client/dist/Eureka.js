@@ -447,6 +447,8 @@ var Eureka = function (_Component) {
                 path: path.join(dir, newName)
               }, props.config.headers));
 
+              _store2.default.dispatch(decoratedActions.updateSourceTree(props.source.currentSource, props.config.headers));
+
               /*if(results.contents !== undefined) store.dispatch(decoratedActions.updateContent({contents:results.contents.filter((file) => (
                 file.filename
               ))}));*/
@@ -502,7 +504,7 @@ var Eureka = function (_Component) {
           formatMessage = _props$intl2.formatMessage,
           formatDate = _props$intl2.formatDate,
           createDirectoryMessage = formatMessage(_definedMessages2.default.directory),
-          renameItemMessage = formatMessage(_definedMessages2.default.rename, {
+          renameItemMessage = formatMessage(_definedMessages2.default.renameItem, {
         item: state.renamingItem ? ' ' + state.renamingItem.filename : ''
       }),
           cropItemMessage = formatMessage(_definedMessages2.default.cropItem, {

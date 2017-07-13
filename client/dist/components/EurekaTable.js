@@ -244,7 +244,7 @@ var EurekaTable = function (_Component) {
           } }) : undefined;
         return _react2.default.createElement(
           'menu',
-          { key: index, hidden: 'true', type: 'context', id: 'context_menu__tbody-' + index },
+          { key: 'context_menu__' + item.absoluteURL, hidden: 'true', type: 'context', id: 'context_menu__tbody-' + index },
           _react2.default.createElement('menuitem', { label: formatMessage(_definedMessages2.default.expandItem, {
               filename: item.filename
             }), onClick: function onClick(event) {

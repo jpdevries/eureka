@@ -43,7 +43,7 @@ var initialConfigState = {
   locales: "en-US",
   allowChooseMultiple: true,
   allowInvertSelection: true,
-  mediaSource: "0",
+  mediaSource: undefined,
   currentDirectory: "/",
   allowMasonry: true,
   welcome: true,
@@ -388,17 +388,14 @@ var treeReducer = function treeReducer(state, action) {
 
         console.log('actionContents', actionContents);
 
-        var recursivelyGetDirectoryChildren = function recursivelyGetDirectoryChildren(cd, contents) {
-          console.log('recursivelyGetDirectoryChildren', cd, contents);
-          for (var i = 0; i < contents.length; i++) {
-            var directory = contents[i];
-            console.log(i, directory);
-            if (directory.cd == cd) {
-              console.log('HOLY SHIT');
-            }
-            if (directory) {
-              console.log('directory', directory.cd == cd, directory, cd);
-              /*if(directory.cd == cd) return (() => {
+        /*function recursivelyGetDirectoryChildren(cd, contents) {
+          console.log('recursivelyGetDirectoryChildren',cd,contents);
+          for(let i = 0; i < contents.length; i++) {
+            const directory = contents[i];
+            console.log(i);
+            if(directory) {
+              console.log('directory',directory,cd);
+              if(directory.cd == cd) return (() => {
                 console.log('found some shit');
                 try {
                   return directory.children || []
@@ -406,10 +403,18 @@ var treeReducer = function treeReducer(state, action) {
                   //console.log(e);
                   return []
                 }
-              })();*/
-
-              if (directory.children) return recursivelyGetDirectoryChildren(cd, directory.children);
+              })();
+              if(directory.children) return recursivelyGetDirectoryChildren(cd, directory.children);
             }
+          }
+          return [];
+        }*/
+
+        var recursivelyGetDirectoryChildren = function recursivelyGetDirectoryChildren(cd, contents) {
+          console.log('recursivelyGetDirectoryChildren', cd, contents);
+          for (var i = 0; i < contents.length; i++) {
+            var directory = contents[i];
+            console.log(directory);
           }
           return [];
         };
@@ -419,22 +424,24 @@ var treeReducer = function treeReducer(state, action) {
           return contents.filter(function (directory) {
             return directory !== undefined;
           }).map(function (directory) {
-            //console.log(directory, directory.children);
+            console.log(directory, directory.children);
             if (!directory.children) {
               console.log('the server didn\'t tell us if ' + directory.cd + ' has children');
               if (directory && directory.cd) {
                 console.log('here we fuckin go', directory.cd, newState);
-                var children = recursivelyGetDirectoryChildren(directory.cd, newState) || [];
-                if (children.length) {
+                var children = recursivelyGetDirectoryChildren(directory.cd, newState);
+                if (children && children.length) {
                   console.log('gonna return some shit!', children);
                   return Object.assign({}, directory, {
                     children: children
                   });
+                } else {
+                  return directory;
                 }
               }
             } else {
               if (directory) {
-                if (directory.children && directory.children.length) return loopIt(directory.children);
+                if (directory.children) loopIt(directory.children);
                 return directory;
               }
             }

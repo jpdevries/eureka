@@ -22,6 +22,7 @@ class UploadForm extends PureComponent {
 
 
   handleSubmit(event) {
+    console.log('handleSubmit');
     event.preventDefault();
 
     const props = this.props;
@@ -31,11 +32,18 @@ class UploadForm extends PureComponent {
     const formData = new FormData(event.target);
     /*for(var pair of formData.entries()) {
        console.log(pair[0], pair[1]);
-    }*/ 
+    }*/
     store.dispatch(actions.updateView({
        isUploading: true
     }));
-    store.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData, props.config.headers));
+    store.dispatch(decoratedActions.uploadFiles(props.source.currentSource, props.content.cd, formData, props.config.headers)).then((response) => {
+      console.log(response, response.error);
+      if(response.error) {
+        console.log(response.error);
+        //notify = function(message, notificationType, learnMore, dismissAfter, sticky = true, archived = false)
+        store.dispatch(decoratedActions.notify(response.error, utility.DANGEROUS, undefined, 3000));
+      }
+    });
   }
 
   handleLabelKeyPress(e) {

@@ -108,7 +108,7 @@ var ModalCreateDirectoryForm = function (_Component) {
           { className: 'flex-bar' },
           _react2.default.createElement(
             'button',
-            { type: 'reset', onBlur: function onBlur(event) {
+            { className: 'growable', type: 'reset', onBlur: function onBlur(event) {
                 if (state.createDirectory) return;
                 _this2.refs.input.focus();
               }, onClick: props.onCancel },
@@ -127,7 +127,7 @@ var ModalCreateDirectoryForm = function (_Component) {
           ),
           _react2.default.createElement(
             'button',
-            { type: 'submit', onBlur: function onBlur(event) {
+            { className: 'growable', type: 'submit', onBlur: function onBlur(event) {
                 _this2.refs.input.focus();
               }, disabled: disable },
             _react2.default.createElement(_reactIntl.FormattedMessage, { id: 'create', defaultMessage: 'Create' }),

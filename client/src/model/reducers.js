@@ -25,7 +25,7 @@ const initialConfigState = {
   locales:"en-US",
   allowChooseMultiple:true,
   allowInvertSelection:true,
-  mediaSource:"0",
+  mediaSource:undefined,
   currentDirectory:"/",
   allowMasonry:true,
   welcome: true,
@@ -50,7 +50,8 @@ const initialConfigState = {
   }
 };
 
-var configReducer = function(state, action) {
+let cs;
+const configReducer = function(state, action) {
   state = state || initialConfigState;
 
   switch(action.type) {
@@ -58,6 +59,14 @@ var configReducer = function(state, action) {
     //console.log('UPDATE_CONFIG!!', action.config);
     return Object.assign({},state,action.config);
     break;
+
+    case actions.FETCH_MEDIA_SOURCES_SUCCESS:
+    if(state.mediaSource === undefined) {
+      return Object.assign({}, state, {
+        mediaSource: action.sources[0].id
+      });
+    }
+    return;
   }
 
 
@@ -639,7 +648,7 @@ var initialDirectoryState = (() => {
   }
 })();
 
-let cs;
+
 var directoryReducer = function(state, action) {
   state = state || initialDirectoryState;
 

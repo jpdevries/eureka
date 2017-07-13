@@ -30,7 +30,7 @@ class ModalRenameItemForm extends PureComponent {
 
     let disable = false,
     sameName = false,
-    label = `Rename item`,
+    label = formatMessage(definedMessages.newName),
     labelIcon = undefined;
 
     const cannotRenameMessage = formatMessage(definedMessages.cannotRename, {
@@ -40,7 +40,7 @@ class ModalRenameItemForm extends PureComponent {
     if(state.newName === (props.item.filename || props.item.name)) {
       disable = true;
       sameName = true;
-      label = `${('&ensp;')}${cannotRenameMessage}`;
+      label = `${cannotRenameMessage}`;
       labelIcon = (<Icon {...props} icon="exclamation-triangle" />);
     }
 
@@ -75,7 +75,7 @@ class ModalRenameItemForm extends PureComponent {
       }}>
         <label htmlFor="eureka__modal-panel__directory" aria-live="polite" className={classNames({
             dangerous: sameName
-          })}>{labelIcon}{label}</label>
+          })}>{labelIcon}&ensp;{label}</label>
         <input ref="input" type="text" id="eureka__modal-panel__directory" name="eureka__modal-panel__directory" placeholder={`foo${path.extname(props.item.filename)}`} autoComplete="off" value={state.newName} onChange={(event) => {
             this.setState({
               newName:event.target.value

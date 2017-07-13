@@ -449,6 +449,7 @@ var notify = function notify(message, notificationType, learnMore, dismissAfter)
   var sticky = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : true;
   var archived = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : false;
 
+  console.log('notify', message);
   return {
     type: NOTIFICATION,
     message: message,

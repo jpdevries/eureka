@@ -70,7 +70,7 @@ var ModalRenameItemForm = function (_PureComponent) {
 
       var disable = false,
           sameName = false,
-          label = 'Rename item',
+          label = formatMessage(_definedMessages2.default.newName),
           labelIcon = undefined;
 
       var cannotRenameMessage = formatMessage(_definedMessages2.default.cannotRename, {
@@ -80,7 +80,7 @@ var ModalRenameItemForm = function (_PureComponent) {
       if (state.newName === (props.item.filename || props.item.name)) {
         disable = true;
         sameName = true;
-        label = '&ensp;' + cannotRenameMessage;
+        label = '' + cannotRenameMessage;
         labelIcon = _react2.default.createElement(_Icon2.default, _extends({}, props, { icon: 'exclamation-triangle' }));
       }
 
@@ -115,6 +115,7 @@ var ModalRenameItemForm = function (_PureComponent) {
               dangerous: sameName
             }) },
           labelIcon,
+          '\u2002',
           label
         ),
         _react2.default.createElement('input', { ref: 'input', type: 'text', id: 'eureka__modal-panel__directory', name: 'eureka__modal-panel__directory', placeholder: 'foo' + _path2.default.extname(props.item.filename), autoComplete: 'off', value: state.newName, onChange: function onChange(event) {
@@ -127,7 +128,7 @@ var ModalRenameItemForm = function (_PureComponent) {
           { className: 'flex-bar' },
           _react2.default.createElement(
             'button',
-            { type: 'reset', onBlur: function onBlur(event) {
+            { className: 'growable', type: 'reset', onBlur: function onBlur(event) {
                 if (state.newName) return;
                 _this2.refs.input.focus();
               }, onClick: props.onCancel },
@@ -144,7 +145,7 @@ var ModalRenameItemForm = function (_PureComponent) {
           ),
           _react2.default.createElement(
             'button',
-            { type: 'submit', onBlur: function onBlur(event) {
+            { className: 'growable', type: 'submit', onBlur: function onBlur(event) {
                 _this2.refs.input.focus();
               }, disabled: disable },
             'Rename ',

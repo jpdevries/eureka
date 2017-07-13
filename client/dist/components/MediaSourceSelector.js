@@ -26,7 +26,7 @@ var MediaSourceSelector = function MediaSourceSelector(props) {
   var options = props.source.sources.map(function (source, index) {
     return _react2.default.createElement(
       'option',
-      { key: index, value: source.id === undefined ? index : source.id },
+      { key: source.name + '__' + (source.id === undefined ? index : source.id), value: source.id === undefined ? index : source.id },
       source.name
     );
   });

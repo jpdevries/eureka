@@ -478,6 +478,7 @@ exports.deleteMediaItems = deleteMediaItems;
 
 const NOTIFICATION = 'notification';
 const notify = function(message, notificationType, learnMore, dismissAfter, sticky = true, archived = false) {
+  console.log('notify', message); 
   return {
     type: NOTIFICATION,
     message: message,

@@ -78,7 +78,7 @@ function render() {
     foo: 'bar'
   }), _defineProperty(_React$createElement, 'intervals', {
     searchBarPlaceholder: 12000,
-    updateSourceTree: 10000
-    //fetchDirectoryContents: 12000
+    updateSourceTree: 10000,
+    fetchDirectoryContents: false
   }), _React$createElement)), document.getElementById('root'));
 }
