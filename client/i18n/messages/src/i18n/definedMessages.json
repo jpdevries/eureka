@@ -132,6 +132,10 @@
     "defaultMessage": "Rename {filename}"
   },
   {
+    "id": "new.name",
+    "defaultMessage": "New name"
+  },
+  {
     "id": "directory.delete",
     "defaultMessage": "Delete Directory"
   },
@@ -182,10 +186,6 @@
   {
     "id": "context.performActions",
     "defaultMessage": "Perform Actions such as Expand or Choose on {filename}"
-  },
-  {
-    "id": "directory.chmod",
-    "defaultMessage": "chmod Directory"
   },
   {
     "id": "item",
