@@ -17,10 +17,10 @@ const MediaDirectorySelector = (props) => {
       return (a.cd > b.cd) ? 1 : -1;
     }).map((directory, index) => {
       //console.log(props.source.currentSource.id == source.id && props.content.cd == directory.cd, props.source.currentSource.id, source.id, props.content.cd, directory.cd);
-      return <option key={index} value={`${source.id}||${directory.cd}`} checked={props.source.currentSource.id == source.id && props.content.cd == directory.cd}>{directory.cd}</option>;
+      return <option key={`${source.id}||${directory.cd}`} value={`${source.id}||${directory.cd}`} checked={props.source.currentSource.id == source.id && props.content.cd == directory.cd}>{directory.cd}</option>;
     });
     return (
-      <optgroup key={index} label={source.name} data-source={source.id === undefined ? index : source.id}>
+      <optgroup key={source.name} label={source.name} data-source={source.id === undefined ? index : source.id}>
         <option value={`${source.id}||/`} checked={props.content.cd == "/" && props.source.currentSource == source.id}>./</option>
         {opts}
       </optgroup>

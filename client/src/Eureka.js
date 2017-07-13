@@ -497,6 +497,8 @@ class Eureka extends Component {
               path: path.join(dir, newName)
             }, props.config.headers));
 
+            store.dispatch(decoratedActions.updateSourceTree(props.source.currentSource, props.config.headers));
+
             /*if(results.contents !== undefined) store.dispatch(decoratedActions.updateContent({contents:results.contents.filter((file) => (
               file.filename
             ))}));*/

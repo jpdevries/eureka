@@ -150,6 +150,9 @@ summary {
 
   > * {
     margin-right:.5rem;
+    &.growable {
+      flex-grow: 1;
+    }
     &:last-child {
       margin-right:0;
     }
@@ -158,6 +161,9 @@ summary {
 
 .flex-bar {
   @extend %flex-bar;
+  [role="dialog"] & {
+    margin-top: .5rem;
+  }
 }
 
 %balanced {

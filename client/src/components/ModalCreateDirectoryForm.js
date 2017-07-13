@@ -63,7 +63,7 @@ class ModalCreateDirectoryForm extends Component {
             })
           }} />
         <div className="flex-bar">
-          <button type="reset" onBlur={(event) => {
+          <button className="growable" type="reset" onBlur={(event) => {
               if(state.createDirectory) return;
               this.refs.input.focus();
             }} onClick={props.onCancel}><FormattedMessage id="cancel" defaultMessage="Cancel" /> <span className="visually-hidden"> <FormattedMessage id="directory.cancelCreating" defaultMessage={'creating directory {cd}'} value={{
@@ -71,7 +71,7 @@ class ModalCreateDirectoryForm extends Component {
             }} values={{
               state: state
             }} /></span></button>
-          <button type="submit" onBlur={(event) => {
+          <button className="growable" type="submit" onBlur={(event) => {
               this.refs.input.focus();
             }} disabled={disable}><FormattedMessage id="create" defaultMessage="Create" /> <span className="visually-hidden"> <FormattedMessage id="directory" defaultMessage="directory" /> {state.createDirectory}</span></button>
         </div>

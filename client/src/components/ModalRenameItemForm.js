@@ -82,13 +82,13 @@ class ModalRenameItemForm extends PureComponent {
             })
           }} />
         <div className="flex-bar">
-          <button type="reset" onBlur={(event) => {
+          <button className="growable" type="reset" onBlur={(event) => {
               if(state.newName) return;
               this.refs.input.focus();
             }} onClick={props.onCancel}><FormattedMessage id="cancel" defaultMessage="Cancel" /> <span className="visually-hidden"> <FormattedMessage id="renamingItem" defaultMessage={'renaming item {filename}'} values={{
               filename: filename
             }} /></span></button>
-          <button type="submit" onBlur={(event) => {
+          <button className="growable" type="submit" onBlur={(event) => {
               this.refs.input.focus();
             }} disabled={disable}>Rename <span className="visually-hidden"> item {props.item.filename || props.item.name} to {state.newName}</span></button>
         </div>

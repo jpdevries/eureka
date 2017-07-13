@@ -88,11 +88,11 @@ const FileTree = (props) => {
       <details onToggle={(event) => {
           console.log('TOGGLE!!!', item);
           console.log(event.target.hasAttribute('open'));
-        }} key={index} open={shouldBeOpen(item)}>
+        }} key={`${props.source.currentSource}__${item.cd}`} open={shouldBeOpen(item)}>
         <summary role="treeitem" contextMenu={`context_menu__${item.cd.replace(/^[^a-z]+|[^\w:.-]+/gi, "")}`} className={(props.content.cd === item.cd) ? 'active' : undefined}>
           <Icon {...props} icon="folder" />
           <Icon {...props} icon="folder-open" />
-          <FileTreeSpan {...props} item={item} index={index} key={index} />
+          <FileTreeSpan {...props} item={item} index={index} key={`${props.source.currentSource}__${item.cd}__span`} />
 
           <menu hidden="true" type="context" id={`context_menu__${item.cd.replace(/^[^a-z]+|[^\w:.-]+/gi, "")}`}>
               <menuitem label="Create Directory Here" onClick={(event) => {
@@ -134,7 +134,7 @@ const FileTree = (props) => {
         </div>
       </details>
       :
-      <span key={index}>{item.name}</span>
+      <span key={`${props.source.currentSource}__${item.cd}__span`}>{item.name}</span>
     ));
   }
 

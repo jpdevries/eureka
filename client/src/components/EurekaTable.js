@@ -181,7 +181,7 @@ class EurekaTable extends Component {
           }}></menuitem>
       ) : undefined;
       return (
-        <menu key={index} hidden="true" type="context" id={`context_menu__tbody-${index}`}>
+        <menu key={`context_menu__${item.absoluteURL}`} hidden="true" type="context" id={`context_menu__tbody-${index}`}>
             <menuitem label={formatMessage(definedMessages.expandItem, {
               filename: item.filename
             })} onClick={(event) => {

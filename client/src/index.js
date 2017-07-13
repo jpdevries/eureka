@@ -68,8 +68,8 @@ function render() {
       }}
       intervals={{
         searchBarPlaceholder: 12000,
-        updateSourceTree: 10000
-        //fetchDirectoryContents: 12000
+        updateSourceTree: 10000,
+        fetchDirectoryContents: false
       }}
     />,
     document.getElementById('root')
