@@ -68,6 +68,7 @@ var initialConfigState = {
   }
 };
 
+var cs = void 0;
 var configReducer = function configReducer(state, action) {
   state = state || initialConfigState;
 
@@ -76,6 +77,14 @@ var configReducer = function configReducer(state, action) {
       //console.log('UPDATE_CONFIG!!', action.config);
       return Object.assign({}, state, action.config);
       break;
+
+    case actions.FETCH_MEDIA_SOURCES_SUCCESS:
+      if (state.mediaSource === undefined) {
+        return Object.assign({}, state, {
+          mediaSource: action.sources[0].id
+        });
+      }
+      return;
   }
 
   return state;
@@ -428,7 +437,7 @@ var treeReducer = function treeReducer(state, action) {
             if (!directory.children) {
               console.log('the server didn\'t tell us if ' + directory.cd + ' has children');
               if (directory && directory.cd) {
-                console.log('here we fuckin go', directory.cd, newState);
+                //console.log('here we fuckin go',directory.cd, newState);
                 var children = recursivelyGetDirectoryChildren(directory.cd, newState);
                 if (children && children.length) {
                   console.log('gonna return some shit!', children);
@@ -488,12 +497,19 @@ var treeReducer = function treeReducer(state, action) {
           };
         });
 
+        console.log('foldersToAdd', foldersToAdd);
+
         var addChildrenToCurrentFolder = function addChildrenToCurrentFolder(children) {
-          return children.map(function (child) {
+          console.log(children);
+          return Array.isArray(children) ? children.map(function (child) {
+            return Object.assign({}, child, {
+              children: child.children || []
+            });
+          }).map(function (child) {
             return Object.assign({}, child, {
               children: child.cd === cd ? _utility2.default.removeDuplicates([].concat(_toConsumableArray(child.children), _toConsumableArray(foldersToAdd)), 'name') : addChildrenToCurrentFolder(child.children)
             });
-          });
+          }) : [];
         };
 
         return {
@@ -701,7 +717,6 @@ var initialDirectoryState = function () {
   }
 }();
 
-var cs = void 0;
 var directoryReducer = function directoryReducer(state, action) {
   state = state || initialDirectoryState;
 
