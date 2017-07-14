@@ -344,7 +344,8 @@ class Eureka extends Component {
     this.assignKeyboardListeners();
 
     store.dispatch(decoratedActions.fetchMediaSources(props.config.headers)).then(() => { // hit the server and get the media sources
-      store.dispatch(decoratedActions.updateSourceTree(this.props.source.sources[0].id), props.config.headers).then((content) => { // then hit server for the directory tree of the first (default) media source
+      //console.log('got media sources fetching source tree for', this.props.source.sources[0].id);
+      store.dispatch(decoratedActions.updateSourceTree(this.props.source.currentSource || this.props.source.sources[0].id), props.config.headers).then((content) => { // then hit server for the directory tree of the first (default) media source
         const props = this.props;
 
         store.dispatch(decoratedActions.updateContent({ // updates the "current directory" of the view right away

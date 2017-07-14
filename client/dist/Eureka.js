@@ -283,7 +283,8 @@ var Eureka = function (_Component) {
 
       _store2.default.dispatch(decoratedActions.fetchMediaSources(props.config.headers)).then(function () {
         // hit the server and get the media sources
-        _store2.default.dispatch(decoratedActions.updateSourceTree(_this2.props.source.sources[0].id), props.config.headers).then(function (content) {
+        //console.log('got media sources fetching source tree for', this.props.source.sources[0].id);
+        _store2.default.dispatch(decoratedActions.updateSourceTree(_this2.props.source.currentSource || _this2.props.source.sources[0].id), props.config.headers).then(function (content) {
           // then hit server for the directory tree of the first (default) media source
           var props = _this2.props;
 
