@@ -78,13 +78,13 @@ var configReducer = function configReducer(state, action) {
       return Object.assign({}, state, action.config);
       break;
 
-    case actions.FETCH_MEDIA_SOURCES_SUCCESS:
-      if (state.mediaSource === undefined) {
-        return Object.assign({}, state, {
-          mediaSource: action.sources[0].id
-        });
-      }
-      return;
+    /*case actions.FETCH_MEDIA_SOURCES_SUCCESS:
+    if(state.mediaSource === undefined) {
+      return Object.assign({}, state, {
+        mediaSource: action.sources[0].id
+      });
+    }
+    return;*/
   }
 
   return state;
