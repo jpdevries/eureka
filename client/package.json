@@ -65,7 +65,7 @@
     "grunt-svgmin": "^4.0.0",
     "grunt-svgo": "^0.1.0",
     "grunt-svgstore": "^1.0.0",
-    "grunt-webpack": "^3.0.0",
+    "grunt-webpack": "^3.0.2",
     "json-loader": "^0.5.4",
     "lazyload-script": "^1.0.0",
     "postcss-custom-properties": "^6.0.1",

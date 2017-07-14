@@ -381,7 +381,7 @@ var treeReducer = function(state, action) {
         if(!directory.children) {
           console.log(`the server didn't tell us if ${directory.cd} has children`);
           if(directory && directory.cd) {
-            console.log('here we fuckin go',directory.cd, newState);
+            //console.log('here we fuckin go',directory.cd, newState);
             const children = recursivelyGetDirectoryChildren(directory.cd, newState);
             if(children && children.length) {
               console.log('gonna return some shit!', children);
