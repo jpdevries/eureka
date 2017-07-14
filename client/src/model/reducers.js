@@ -435,8 +435,15 @@ var treeReducer = function(state, action) {
       children:[]
     }));
 
+    console.log('foldersToAdd', foldersToAdd);
+
     function addChildrenToCurrentFolder(children) {
+      console.log(children);
       return children.map((child) => (
+        Object.assign({}, child, {
+          children: child.children || []
+        })
+      )).map((child) => (
         Object.assign({}, child, {
           children: (child.cd === cd) ? utility.removeDuplicates([...child.children, ...foldersToAdd], 'name') : addChildrenToCurrentFolder(child.children)
         })
