@@ -443,6 +443,9 @@ function getDirectoryListing(req, baseURL = '', dirPath = '', includeFiles = tru
       //console.log(includeFiles && isFile || includeDirectories && !isFile);
       let thumb = '';
       const ext = pathParse(path.join(dirPath, file)).ext;
+
+
+
       switch(ext) {
         case '.jpg':
         case '.jpeg':
@@ -458,7 +461,29 @@ function getDirectoryListing(req, baseURL = '', dirPath = '', includeFiles = tru
         default:
         break;
       }
+
+
+
       if(includeFiles && isFile || includeDirectories && !isFile) {
+
+        const dimensions = (() => {
+          try {
+            //return undefined;
+            const dimensions = sizeOf(path.join(dirPath, file));
+            //console.log('dimensions', dimensions);
+            return [dimensions.width, dimensions.height];
+          } catch (e) {
+            console.log(e);
+            return undefined;
+            //return [Math.round(Math.random()*420), Math.round(Math.random()*180)]
+          }
+        })();
+
+        try {
+          if(parseInt(dimensions[0] <= (saveData) ? 240 : 640)) {
+            thumb = '';
+          }
+        } catch (e) { } 
 
         results.push({
           filename:isFile ? file : undefined,
@@ -468,18 +493,7 @@ function getDirectoryListing(req, baseURL = '', dirPath = '', includeFiles = tru
           absoluteURL:path.join(dirPath,file).replace(__dirname, ''),
           absolutePreviewURL:`${path.join(dirPath,file).replace(__dirname, '')}${thumb}`,
           editedOn:Math.round(Math.random() * (new Date(mtime).getTime())),
-          dimensions:(() => {
-            try {
-              //return undefined;
-              const dimensions = sizeOf(path.join(dirPath, file));
-              //console.log('dimensions', dimensions);
-              return [dimensions.width, dimensions.height];
-            } catch (e) {
-              console.log(e);
-              return undefined;
-              //return [Math.round(Math.random()*420), Math.round(Math.random()*180)]
-            }
-          })(),
+          dimensions:dimensions,
           fileSize:size
         });
       }
