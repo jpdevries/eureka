@@ -431,7 +431,6 @@ var treeReducer = function treeReducer(state, action) {
               console.log('directory', directory.cd == cd, directory, cd);
               if (directory.cd == cd) return {
                   v: function () {
-                    console.log('found some shit', directory, cd);
                     try {
                       return directory.children || [];
                     } catch (e) {
@@ -476,11 +475,9 @@ var treeReducer = function treeReducer(state, action) {
             if (!directory.children) {
               console.log('the server didn\'t tell us if ' + directory.cd + ' has children');
               if (directory && directory.cd) {
-                console.log('here we fuckin go', directory, directory.cd, newState);
                 var children = recursivelyGetDirectoryChildren(directory.cd, newState);
                 console.log('children', children);
                 if (children && children.length) {
-                  console.log('gonna return some shit!', children);
                   return Object.assign({}, directory, {
                     children: children
                   });
