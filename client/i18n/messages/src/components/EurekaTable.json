@@ -1,0 +1,26 @@
+[
+  {
+    "id": "choose",
+    "defaultMessage": "Choose"
+  },
+  {
+    "id": "media",
+    "defaultMessage": "Media"
+  },
+  {
+    "id": "name",
+    "defaultMessage": "Name"
+  },
+  {
+    "id": "dimensions",
+    "defaultMessage": "Dimensions"
+  },
+  {
+    "id": "fileSize",
+    "defaultMessage": "File Size"
+  },
+  {
+    "id": "editedOn",
+    "defaultMessage": "Edited On"
+  }
+]

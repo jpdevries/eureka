@@ -1,0 +1,22 @@
+[
+  {
+    "id": "close.mediaBrowser",
+    "defaultMessage": "Close Media Browser"
+  },
+  {
+    "id": "choose",
+    "defaultMessage": "Choose"
+  },
+  {
+    "id": "item",
+    "defaultMessage": "item"
+  },
+  {
+    "id": "mediaItem",
+    "defaultMessage": "media item"
+  },
+  {
+    "id": "pluralItem",
+    "defaultMessage": "a media item"
+  }
+]

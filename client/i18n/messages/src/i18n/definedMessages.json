@@ -1,0 +1,342 @@
+[
+  {
+    "id": "directory.create",
+    "defaultMessage": "Create a Directory"
+  },
+  {
+    "id": "directory.createNewIn",
+    "defaultMessage": "Create a new Directory in {cd}"
+  },
+  {
+    "id": "directory.cancelCreating",
+    "defaultMessage": "Cancel creating directory {cd}"
+  },
+  {
+    "id": "choose",
+    "defaultMessage": "Choose"
+  },
+  {
+    "id": "reset",
+    "defaultMessage": "Reset"
+  },
+  {
+    "id": "rememberAspectRatio",
+    "defaultMessage": "Remember Ratio"
+  },
+  {
+    "id": "crop",
+    "defaultMessage": "Crop"
+  },
+  {
+    "id": "cropItem",
+    "defaultMessage": "Crop {item}"
+  },
+  {
+    "id": "cropAs",
+    "defaultMessage": "Crop as"
+  },
+  {
+    "id": "cropAsItem",
+    "defaultMessage": "Crop as {item}"
+  },
+  {
+    "id": "saveAsItem",
+    "defaultMessage": "Save as {item}"
+  },
+  {
+    "id": "croppingItem",
+    "defaultMessage": "Cropping {item}"
+  },
+  {
+    "id": "cancel",
+    "defaultMessage": "Cancel"
+  },
+  {
+    "id": "mediaSourceTree",
+    "defaultMessage": "Media Source Panel"
+  },
+  {
+    "id": "pastImageFromClipboardMessage",
+    "defaultMessage": "Paste images from the clipboard to upload"
+  },
+  {
+    "id": "pastImageFromClipboardToMessage",
+    "defaultMessage": "Paste images from the clipboard to upload to ${cd} of source ${cs}"
+  },
+  {
+    "id": "deleteAreYouSureMessage",
+    "defaultMessage": "Are you sure you want to permanently delete {filename}?"
+  },
+  {
+    "id": "cropAreYouSureMessage",
+    "defaultMessage": "Are you sure you want to reset your crop?"
+  },
+  {
+    "id": "masonryLayoutMessage",
+    "defaultMessage": "Masonry Layout"
+  },
+  {
+    "id": "close",
+    "defaultMessage": "Close"
+  },
+  {
+    "id": "open",
+    "defaultMessage": "Open"
+  },
+  {
+    "id": "rename",
+    "defaultMessage": "Rename"
+  },
+  {
+    "id": "welcomeToEureka",
+    "defaultMessage": "Welcome to Eureka. You found it."
+  },
+  {
+    "id": "delete",
+    "defaultMessage": "Delete"
+  },
+  {
+    "id": "in",
+    "defaultMessage": "in"
+  },
+  {
+    "id": "file.create",
+    "defaultMessage": "Create File"
+  },
+  {
+    "id": "contents.ofby",
+    "defaultMessage": "contents of {cd} by filename, filesize, dimensions or even modification date"
+  },
+  {
+    "id": "contents.filterBy",
+    "defaultMessage": "Filter contents of {cd} by filename, filesize, dimensions or even modification date"
+  },
+  {
+    "id": "file.quickCreate",
+    "defaultMessage": "Quick Create Files"
+  },
+  {
+    "id": "rename.cannot",
+    "defaultMessage": "Cannot rename {filename} to the same name"
+  },
+  {
+    "id": "expand",
+    "defaultMessage": "Expand"
+  },
+  {
+    "id": "choose.item",
+    "defaultMessage": "Choose {filename}"
+  },
+  {
+    "id": "rename.item",
+    "defaultMessage": "Rename {filename}"
+  },
+  {
+    "id": "new.name",
+    "defaultMessage": "New name"
+  },
+  {
+    "id": "directory.delete",
+    "defaultMessage": "Delete Directory"
+  },
+  {
+    "id": "contents.fetchingContents",
+    "defaultMessage": "Hold tight while we fetch {cd}"
+  },
+  {
+    "id": "delete.item",
+    "defaultMessage": "Delete {filename}"
+  },
+  {
+    "id": "deleted.item",
+    "defaultMessage": "Deleted {filename}"
+  },
+  {
+    "id": "download",
+    "defaultMessage": "Download"
+  },
+  {
+    "id": "download.item",
+    "defaultMessage": "Download {filename}"
+  },
+  {
+    "id": "expand.item",
+    "defaultMessage": "Expand {filename}"
+  },
+  {
+    "id": "directory.refresh",
+    "defaultMessage": "Refresh Directory"
+  },
+  {
+    "id": "upload.files",
+    "defaultMessage": "Upload Files"
+  },
+  {
+    "id": "upload.filesTo",
+    "defaultMessage": "Upload File to {cd}"
+  },
+  {
+    "id": "upload.createFileIn",
+    "defaultMessage": "Create File in {cd}"
+  },
+  {
+    "id": "close.mediaBrowser",
+    "defaultMessage": "Close Media Browser"
+  },
+  {
+    "id": "context.performActions",
+    "defaultMessage": "Perform Actions such as Expand or Choose on {filename}"
+  },
+  {
+    "id": "item",
+    "defaultMessage": "item"
+  },
+  {
+    "id": "layout.tabular",
+    "defaultMessage": "Tabular Layout displays image thumbnails along with Name, Description, File Size and Edited On columns"
+  },
+  {
+    "id": "layout.thumbnail",
+    "defaultMessage": "Thumbnail layout displays a grid of medium sized thumbnails"
+  },
+  {
+    "id": "layout.grid",
+    "defaultMessage": "Grid View displays images a grid of large images"
+  },
+  {
+    "id": "layout.list",
+    "defaultMessage": "List Layout displays Name, Description, File Size and Edited On columns"
+  },
+  {
+    "id": "file.openInNewTab",
+    "defaultMessage": "Open {filename} in a new tab"
+  },
+  {
+    "id": "mediaItem",
+    "defaultMessage": "media item"
+  },
+  {
+    "id": "toggle",
+    "defaultMessage": "Toggle"
+  },
+  {
+    "id": "pluralItem",
+    "defaultMessage": "a media item"
+  },
+  {
+    "id": "pluralChoose",
+    "defaultMessage": "item"
+  },
+  {
+    "id": "copyListofSelectedFiles",
+    "defaultMessage": "Copy list of selected files"
+  },
+  {
+    "id": "media.sourceTree",
+    "defaultMessage": "Media Source Panel"
+  },
+  {
+    "id": "upload.dragFilesUploading",
+    "defaultMessage": "Uploading files…"
+  },
+  {
+    "id": "upload.dragFilestoUpload",
+    "defaultMessage": "Drag files here to be uploaded to {cd}"
+  },
+  {
+    "id": "dragMode",
+    "defaultMessage": "Drag Mode"
+  },
+  {
+    "id": "crop.move",
+    "defaultMessage": "Move"
+  },
+  {
+    "id": "crop.showGuides",
+    "defaultMessage": "Show Guides"
+  },
+  {
+    "id": "crop.hideGuides",
+    "defaultMessage": "Hide Guides"
+  },
+  {
+    "id": "crop.toggleGuides",
+    "defaultMessage": "Toggle Guides"
+  },
+  {
+    "id": "crop.zoomIn",
+    "defaultMessage": "Zoom In"
+  },
+  {
+    "id": "crop.cropZoomOut",
+    "defaultMessage": "Zoom Out"
+  },
+  {
+    "id": "crop.moveLeft",
+    "defaultMessage": "Move Left"
+  },
+  {
+    "id": "crop.moveRight",
+    "defaultMessage": "Move Right"
+  },
+  {
+    "id": "crop.moveUp",
+    "defaultMessage": "Move Up"
+  },
+  {
+    "id": "crop.moveDown",
+    "defaultMessage": "Move Down"
+  },
+  {
+    "id": "crop.download",
+    "defaultMessage": "Download Cropped Image"
+  },
+  {
+    "id": "crop.uploadImage",
+    "defaultMessage": "Upload Image to Crop"
+  },
+  {
+    "id": "crop.upload",
+    "defaultMessage": "Upload"
+  },
+  {
+    "id": "crop.boundingBox",
+    "defaultMessage": "Bounding Box (px)"
+  },
+  {
+    "id": "crop.X",
+    "defaultMessage": "X"
+  },
+  {
+    "id": "crop.Y",
+    "defaultMessage": "Y"
+  },
+  {
+    "id": "crop.width",
+    "defaultMessage": "Width"
+  },
+  {
+    "id": "crop.height",
+    "defaultMessage": "Height"
+  },
+  {
+    "id": "crop.aspectRatio",
+    "defaultMessage": "Aspect Ratio"
+  },
+  {
+    "id": "crop.free",
+    "defaultMessage": "Free"
+  },
+  {
+    "id": "crop.scaleRotate",
+    "defaultMessage": "Scale & Rotate"
+  },
+  {
+    "id": "crop.rotate",
+    "defaultMessage": "Rotate"
+  },
+  {
+    "id": "crop.scale",
+    "defaultMessage": "Scale"
+  }
+]

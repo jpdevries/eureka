@@ -1,0 +1,57 @@
+{
+  "name": "eureka-browser",
+  "description": "Eureka is a progressively enhanced Media Browser Component.",
+  "main": [
+    "client/build/assets/css/eureka.0.0.21.min.css",
+    "client/build/assets/js/eureka.0.0.21.min.js"
+  ],
+  "version": "0.0.21",
+  "authors": [
+    "JP de Vries <mail@devries.jp>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/jpdevries/eureka",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "lib",
+    "prod",
+    "server.js",
+    "yarn.lock",
+    "client/public",
+    "client/build/index.html",
+    "client/build/favicon.ico",
+    "client/build/fakepi",
+    "client/src",
+    "client/build/assets/css/main*",
+    ".babelrc",
+    ".DS_Store",
+    "client/gruntfile.js",
+    "package.json",
+    "client/package.json",
+    "client/yarn.lock"
+  ],
+  "dependencies": {
+    "url-search-params": "^0.6.2"
+  },
+  "devDependencies": {
+    "bourbon": "^4.3.2",
+    "neat": "^1.8.0",
+    "spectacular": "^0.0.0"
+  },
+  "exportsOverride": {
+    "bourbon": {
+      "": "app/assets/stylesheets/"
+    },
+    "neat": {
+      "": "app/assets/stylesheets/"
+    },
+    "spectacular": {
+      "": "app/assets/stylesheets/"
+    }
+  }
+}

@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+
+    <base href="%PUBLIC_URL%/" />
+
+    <style type="text/css">
+      html {
+        box-sizing: border-box;
+      }
+
+      @media screen and (min-width: 40.0625em) {
+        [class*="modal-section"], [class*="eureka-wrapper"] {
+          height: 100vh;
+          max-height: 100vh;
+        }
+      }
+
+      *, *::after, *::before {
+        box-sizing: inherit;
+      }
+
+      svg.icon {
+        display:none;
+      }
+    </style>
+
+    <style type="text/css">
+      @media screen and (-ms-high-contrast: active) {
+        body {
+          /* black on white */
+          --panel-border-color:rgb(8,8,8);
+          --light-bg:white;
+          --border-width:2px;
+          --button-color:rgb(20,20,20);
+          --subtle:rgb(20,20,20);
+          --border-style:solid;
+          --border-color:rgb(8,8,8);
+          --very-subtle:rgb(40,40,40);
+          --very-subtle-icon-opacity:1;
+        }
+      }
+      @media screen and (-ms-high-contrast: black-on-white) {
+        body {
+          /* black on white */
+          --panel-border-color:rgb(8,8,8);
+          --light-bg:white;
+          --border-width:2px;
+          --button-color:rgb(20,20,20);
+          --subtle:rgb(20,20,20);
+          --border-style:solid;
+          --border-color:rgb(8,8,8);
+          --very-subtle:rgb(40,40,40);
+          --very-subtle-icon-opacity:1;
+        }
+      }
+      @media screen and (-ms-high-contrast: white-on-black) {
+        body {
+          /* white on black */
+          background:var(--light-bg, rgb(8,8,8));
+          color:var(--color, white);
+          --panel-border-color:white;
+          --light-bg:rgb(8,8,8);
+          --border-width:2px;
+          --button-bg:transparent;
+          --button-color:rgb(220,220,220);
+          --subtle:rgb(220,220,220);
+          --border-style:solid;
+          --border-color:white;
+          --very-subtle:rgb(120,120,120);
+          --active:yellow;
+          --dangerous:red;
+          --link-color:yellow;
+          --very-subtle-icon-opacity:1;
+        }
+      }
+
+      body.black-on-white {
+        /* black on white */
+        --panel-border-color:rgb(8,8,8);
+        --light-bg:white;
+        --border-width:2px;
+        --button-color:rgb(20,20,20);
+        --subtle:rgb(20,20,20);
+        --border-style:solid;
+        --border-color:rgb(8,8,8);
+        --very-subtle:rgb(40,40,40);
+        --very-subtle-icon-opacity:1;
+      }
+
+      body.white-on-black {
+        /* white on black */
+        background:var(--light-bg, rgb(8,8,8));
+        color:var(--color, white);
+        --panel-border-color:white;
+        --light-bg:rgb(8,8,8);
+        --border-width:2px;
+        --button-bg:transparent;
+        --button-color:rgb(220,220,220);
+        --subtle:rgb(220,220,220);
+        --border-style:solid;
+        --border-color:white;
+        --very-subtle:rgb(120,120,120);
+        --active:yellow;
+        --dangerous:red;
+        --link-color:yellow;
+        --very-subtle-icon-opacity:1;
+      }
+
+      body {
+        background: #ececec;
+        font: 400 .8125em/1.375em "Helvetica Neue",Helvetica,Arial,Tahoma,sans-serif;
+        color: #081922;
+        margin: 0;
+        padding: 8px;
+        padding: 8px;
+        padding: .5rem;
+      }
+
+    </style>
+
+    <!--
+      Notice the use of %PUBLIC_URL% in the tag above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title data-site-name="Eureka Media Browser">Eureka Media Browser</title>
+  </head>
+  <body class="modal-section">
+    <div id="root" class="eureka-root"></div>
+
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start`.
+      To create a production bundle, use `npm run build`.
+    -->
+  </body>
+</html>

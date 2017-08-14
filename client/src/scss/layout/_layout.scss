@@ -1,0 +1,1140 @@
+[class*="modal-section"], [class*="eureka-wrapper"] {
+  padding:0;
+  @include media($gtMobile) {
+    display: flex;
+    overflow-y:hidden;
+    flex-direction: column;
+
+  } // end @include media($gtMobile)
+} // end body
+
+.eureka-root {
+
+  &:-webkit-full-screen {
+    width: 100vw;
+    height: 100vh;
+    overflow-y: auto;
+    background: var(--bg-color, #ececec);
+  }
+
+  label[for*="fullscreen-toggle"] {
+    margin-left: .5rem;
+  }
+
+  .eureka__view-mode__table, .eureka__view-mode__list { // this is pretty janky looking, but needed after optimizing React
+    tbody:not(.empty) {
+      > tr {
+        &.eureka__focused-media-item, &:focus {
+          > td.eureka__context-row {
+            display: block !important;
+            &[hidden] {
+              display: block !important;
+            }
+          }
+        }
+
+        > td.eureka__td-media {
+          @include media($mobile) {
+            text-align: center;
+          }
+        }
+
+        &:focus {
+          > td.eureka__context-row {
+            display: block !important;
+            &[hidden] {
+              display: block !important;
+            }
+          }
+        }
+
+        &:focus-within {
+          > td.eureka__context-row {
+            display: block !important;
+            &[hidden] {
+              display: block !important;
+            }
+          }
+        }
+
+      }
+    }
+  }
+
+ tbody { // .eureka>.eureka__browse-content>.eureka__stage>.eureka__table-wrapper>div>table>
+   &:not(.empty) {
+     > tr:not(.empty) {
+       display:flex;
+       flex-wrap:wrap;
+       > * {
+         flex:1 0 auto;
+       }
+       /*@supports (display: flex) and ( not (display:grid) ) {
+       }*/
+
+       @supports (display:grid) {
+         display:grid;
+         //grid-gap:0;
+         //grid-template-columns:40% 15% 15% 15% 15%;
+         //grid-template-areas:"media name dimensions file-size edited-on" "actions actions actions actions actions";
+
+         > td {
+           .eureka__td-media {
+             grid-area:media;
+           }
+           .eureka__td-filename {
+             grid-area:name;
+           }
+           &.eureka__context-row {
+             grid-area:actions;
+           }
+           &.eureka__dimensions {
+             grid-area:dimensions;
+             @include media($mobile) {
+               display: none;
+             }
+           }
+           &.eureka__file-size {
+             grid-area:file-size;
+             @include media($mobile) {
+               display: none;
+             }
+           }
+           &.eureka__edited-on {
+             grid-area:edited-on;
+             @include media($mobile) {
+               display: none;
+             }
+           }
+         }
+       }
+     }
+   }
+ }
+
+  /*.eureka {
+    tbody {
+      &:not(.empty) {
+        > tr:not(.empty) {
+          @supports (display:grid) {
+            grid-template-areas:"media name dimensions file-size edited-on" "actions actions actions actions actions";
+            grid-template-columns: auto 24% 12% 12% 12%;
+          }
+        }
+      }
+    }
+  }*/
+
+  .eureka {
+   tbody { // .eureka>.eureka__browse-content>.eureka__stage>.eureka__table-wrapper>div>table>
+     &:not(.empty) {
+       > tr:not(.empty) {
+         @supports (display:grid) {
+           //display:grid;
+           //grid-gap:0;
+           //grid-template-columns:40% 15% 15% 15% 15%;
+           @include media($gtMobile) {
+             //grid-template-areas:"choose media name dimensions file-size edited-on" "actions actions actions actions actions actions";
+             //grid-template-columns: 2rem auto 24% 12% 12% 12%;
+           }
+
+           > td {
+             &.eureka__choose {
+               grid-area:choose;
+             }
+             &.eureka__td-media {
+               grid-area:media;
+             }
+             &.eureka__td-filename {
+               grid-area:name;
+             }
+             &.eureka__context-row {
+               grid-area:actions;
+             }
+             &.eureka__dimensions {
+               grid-area:dimensions;
+               @include media($mobile) {
+                 display: none;
+               }
+             }
+             &.eureka__file-size {
+               grid-area:file-size;
+               @include media($mobile) {
+                 display: none;
+               }
+             }
+             &.eureka__edited-on {
+               grid-area:edited-on;
+               @include media($mobile) {
+                 display: none;
+               }
+             }
+           }
+         }
+       }
+     }
+   }
+  }
+
+ .eureka.eureka__choose-multiple.eureka__view-mode__table, .eureka.eureka__choose-multiple.eureka__view-mode__list {
+  tbody { // .eureka>.eureka__browse-content>.eureka__stage>.eureka__table-wrapper>div>table>
+    &:not(.empty) {
+      > tr:not(.empty) {
+        @supports (display:grid) {
+          //display:grid;
+          //grid-gap:0;
+          //grid-template-columns:40% 15% 15% 15% 15%;
+          @include media($gtMobile) {
+            grid-template-areas:"choose media name dimensions file-size edited-on" "actions actions actions actions actions actions";
+            grid-template-columns: 2rem auto 24% 12% 12% 12%;
+          }
+        }
+      }
+    }
+  }
+ }
+}
+
+.eureka {
+  .eureka__choose-radio {
+    display: flex;
+    fieldset {
+      margin: 0;
+      padding: 0;
+    }
+    .eureka__fieldset {
+      display: flex;
+      > * {
+        flex: 0 0 auto;
+      }
+    }
+  }
+}
+
+.eureka-root .eureka.eureka__view-mode__table.eureka__server-side {
+  table.eureka__table > thead > tr {
+    grid-template-columns: 2rem 16% 40% 8% auto auto !important;
+    grid-template-areas: "radio name media dimensions file-size edited-on" !important;
+    th {
+      &:nth-of-type(3) {
+        text-align: left !important;
+      }
+    }
+  }
+  table.eureka__table > tbody { // .eureka>.eureka__browse-content>.eureka__stage>.eureka__table-wrapper>div>table>
+   &:not(.empty) {
+     > tr:not(.empty) {
+       grid-template-columns: 2rem 16% 40% 8% auto auto !important;
+       grid-template-areas: "radio name media dimensions file-size edited-on" !important;
+       @supports (display:grid) {
+         > td {
+           /*&:nth-of-type(1) {
+             grid-area:media;
+           }
+           &:nth-of-type(2) {
+             grid-area:name;
+           }
+           &:nth-of-type(3) {
+             grid-area:actions;
+           }*/
+           &.eureka__td-filename {
+             text-align: left !important;
+           }
+           &:nth-of-type(4) {
+             grid-area:dimensions !important;
+           }
+           &:nth-of-type(5) {
+             grid-area:file-size !important;
+           }
+           &:nth-of-type(6) {
+             grid-area:edited-on !important;
+           }
+         }
+       }
+     }
+   }
+  }
+}
+
+
+
+
+
+.eureka-root {
+ padding:.5rem;
+ .eureka {
+   table > thead {
+     @include media($mobile) {
+       @include visually-hidden;
+     }
+   }
+   tbody > tr {
+     @include media($mobile) {
+       > td:not(.eureka__context-row) {
+         padding-right: .5rem;
+       }
+     }
+   }
+   &.eureka__choose-multiple {
+     &.eureka__view-mode__table, &.eureka__view-mode__list {
+       table {
+         > thead> tr, > tbody > tr {
+           grid-template-areas: "choose choose choose choose choose choose" "media media media media media media" "name name name name name name" "actions actions actions actions actions actions";
+           @include media($gtMobile) {
+             grid-template-areas: "choose media name dimensions file-size edited-on";
+             grid-template-columns: 2rem auto 24% 12% 12% 12%;
+           }
+         }
+       }
+     }
+     &.eureka__view-mode__thumb, &.eureka__view-mode__grid, &.eureka__view-mode__masonry {
+       table {
+         > thead> tr, > tbody > tr {
+           grid-template-areas: "choose choose choose choose choose choose" "media media media media media media";
+           @include media($gtMobile) {
+             //grid-template-areas: "choose media name dimensions file-size edited-on";
+             //grid-template-columns: 2rem auto 24% 12% 12% 12%;
+           }
+         }
+       }
+     }
+   }
+   &.eureka__view-mode__table, &.eureka__view-mode__list {
+     table { // .eureka__browse-content>.eureka__stage>.eureka__table-wrapper>div>
+       > thead > tr, > tbody > tr {
+         display:grid;
+
+         grid-gap:0;
+         @include media($gtMobile) {
+           grid-template-areas: "media name dimensions file-size edited-on";
+           grid-template-columns:40% 24% 12% 12% 12%;
+         }
+
+       }
+       /*> thead > tr {
+         grid-template-areas:"media name dimensions file-size edited-on";
+       }*/
+       > tbody > tr {
+         grid-template-areas: "media media media media media" "name name name name name" "actions actions actions actions actions";
+         @include media($gtMobile) {
+           grid-template-areas:"media name dimensions file-size edited-on" "actions actions actions actions actions";
+         }
+       }
+       > tbody.empty > tr {
+         display: block;
+       }
+     }
+     &.eureka__server-side {
+       .eureka__tree-toggle .eureka__upload-form label[for*="upload-form"] {
+         padding: 0.5em;
+         margin-right: 1rem;
+       }
+       table { // .eureka__browse-content>.eureka__stage>.eureka__table-wrapper>div>
+         > thead > tr, > tbody:not(.empty) > tr:not(.empty) {
+           @include media($gtMobile) {
+             grid-template-areas:"radio media name dimensions file-size edited-on";
+             grid-template-columns:2rem 40% 24% auto auto auto;
+             > td, > th {
+               &:nth-of-type(1) {
+                 grid-area:radio;
+               }
+               &:nth-of-type(2) {
+                 grid-area:media;
+                 text-align:left;
+               }
+               &:nth-of-type(3) {
+                 grid-area:name;
+               }
+               &:nth-of-type(5) {
+                 grid-area:dimensions;
+               }
+               &:nth-of-type(6) {
+                 grid-area:file-size;
+               }
+               &:nth-of-type(7) {
+                 grid-area:edited-on;
+               }
+             }
+           }
+         }
+         > thead > tr {
+           > th {
+             &:nth-of-type(1) {
+               grid-area:none;
+               @extend %visually-hidden;
+             }
+           }
+         }
+       }
+     }
+   }
+
+
+   &.eureka__view-mode__list {
+     table { // .eureka__browse-content>.eureka__stage>.eureka__table-wrapper>div>
+       > thead > tr, > tbody > tr {
+         td, th {
+           &:first-child {
+             padding-left: .5rem;
+           }
+         }
+       }
+       > tbody > tr {
+         grid-template-areas: "name name name name name" "actions actions actions actions actions";
+         margin-bottom: .5rem;
+         > td {
+           &.eureka__choose {
+             text-align: center;
+           }
+         }
+         @include media($gtMobile) {
+           grid-template-areas: "media name dimensions file-size edited-on" "actions actions actions actions actions";
+         }
+       }
+     }
+
+   }
+
+
+ }
+}
+
+.eureka-root {
+
+  .eureka__table {
+    img, embed, object, video, {
+      object-fit: contain;
+    }
+  }
+
+  @include media($gtMobile) {
+    /*display:grid;
+    grid-gap:0;
+    grid-template-columns:20vw auto;
+    grid-template-areas:"header header" "sidebar content" "footer footer";*/
+    display:flex;
+    flex: 1;
+    flex-direction: column;
+    .eureka {
+      display:flex;
+      flex-direction: column;
+      flex: 1;
+      > .eureka__browse-content {
+        display: flex;
+        flex: 1 1 100%;
+        //margin-bottom: .5rem;
+      }
+      &.eureka__view-mode__table {
+        /*@supports (display: grid) {
+        }*/
+      }
+      > .eureka__browse-content {
+        display:flex;
+        flex:1 1 100%;
+        //margin-bottom:0.5rem;
+        > .eureka__pathbrowser {
+          flex:0 0 14rem;
+          display:flex;
+          flex-direction:column;
+          flex-shrink:0;
+          flex-grow:0;
+          margin-right:.5rem;
+          &[hidden], &[aria-hidden="true"] {
+            display: none;
+          }
+        }
+        > .eureka__stage {
+          //flex:0 1 auto;
+          flex:1 1 100%;
+
+          display:flex;
+          flex-direction:column;
+          > .eureka__stage__filter-view {
+            flex-basis:auto;
+            flex-shrink:1;
+            flex-grow:0;
+            flex-direction:row;
+            > header {
+              flex-direction: row;
+              min-width:0;
+              min-height:0;
+              flex-wrap:nowrap;
+              display:flex;
+              margin-bottom:.5rem;
+              > h2 {
+                margin-bottom:0;
+                margin-right: auto;
+                form {
+                  float:right;
+                }
+              }
+            }
+          }
+          > .eureka__table-wrapper { // .eureka-root .eureka > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper
+            flex-basis:0;
+            flex-grow:1;
+            height:auto;
+            flex-shrink:0;
+            display:flex;
+            align-items:stretch;
+            justify-content:center;
+            flex-direction:column;
+            padding:0 .5rem .5rem 0; // removed padding-left .5rem
+            > div {
+              flex-basis:0;
+              flex-grow:1;
+              max-height:100%;
+              //padding-top:1rem;
+              height:100%;
+              align-items:stretch;
+              justify-content:center;
+              flex-direction:column;
+              flex-shrink:1;
+              display:flex;
+              max-width:100%;
+              > table {
+                flex-basis:0;
+                flex-grow:1;
+                max-height:100%;
+                //padding-top:1rem;
+                height:100%;
+                align-items:stretch;
+                justify-content:center;
+                flex-direction:column;
+                flex-shrink:1;
+                display:flex;
+                max-width:100%;
+              }
+            }
+          }
+        }
+      }
+      > .eureka__choose-bar {
+        flex:0 0 auto;
+        margin-top: .5rem;
+      }
+    }
+  }
+}
+
+.eureka-root .eureka.eureka__view-mode__masonry > .eureka__browse-content > .eureka__stage > .eureka__table-wrapper {
+  padding-left: .5rem;
+  @include media($mobile) {
+    padding-right: .5rem;
+  }
+}
+
+.eureka-root .eureka > .eureka__choose-bar > * {
+  @include media($mobile) {
+    margin-right: .5rem;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.eureka-root {
+  thead {
+    flex-basis:auto;
+    display:block;
+    justify-content:flex-end;
+    flex-shrink:0;
+    flex-grow:0;
+    &.eureka__tbody-scrolling {
+      padding-right:16px; // #janky consider scrollbar of tbody
+    }
+    &[hidden] {
+      display:none;
+    }
+    > tr {
+      display:block;
+      width:100%;
+
+      display:flex;
+      flex-wrap:wrap;
+      /*@supports (display: flex) and ( not (display: grid) ) {
+      }*/
+
+      > th {
+        flex:1 0 auto;
+        //outline:1px solid red;
+        @supports (display: flex) and ( not (display: grid) ) {
+
+        }
+        &.eureka__choose {
+          grid-area:choose;
+        }
+        &.eureka__th-media {
+          grid-area:media;
+        }
+        &.eureka__th-filename {
+          grid-area:name;
+        }
+        &.eureka__th-actions {
+          grid-area:none;
+        }
+        &.eureka__th-dimensions {
+          grid-area:dimensions;
+        }
+        &.eureka__th-file-size {
+          grid-area:file-size;
+        }
+        &.eureka__th-edited-on {
+          grid-area:edited-on;
+        }
+      }
+    }
+  }
+  tbody {
+    &.empty {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      > tr {
+        text-align:center;
+        display:block;
+        td {
+          margin:0 auto;
+          display:inline-block;
+        }
+      }
+    }
+  }
+  tbody {
+    flex-basis:0;
+    text-align:center;
+    display:block;
+    flex-wrap:no-wrap;
+    overflow-y:auto;
+    align-items:stretch;
+    flex-direction:row;
+    justify-content:center;
+    flex-shrink:1;
+    flex-grow:1;
+    max-width:100%;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+.eureka.eureka__choose-multiple:not(.eureka__view-mode__grid) {
+  .eureka__th-media, .eureka__td-media {
+    padding-left: 1rem;
+  }
+}
+
+.eureka__media-directory-selector {
+  @include media($gtMobile) {
+
+    form {
+      display:inline-block;
+    }
+    > div {
+      display:inline-block;
+      margin-left:.5em;
+    }
+  }
+}
+
+.eureka__sort-select {
+  select {
+    margin-bottom: 1rem;
+  }
+  @include media($gtMobile) {
+    margin-left: auto;
+    margin-right: auto;
+    label {
+      margin-right: .5rem;
+    }
+    select {
+      margin-right: 1rem;
+      margin-bottom: 0;
+    }
+  }
+
+}
+
+.eureka__tree-toggle {
+  @include media($gtMobile) {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    padding-bottom: .5rem; // incase wrapping happens
+    > * {
+      &:first-child {
+        margin-right:auto;
+      }
+    }
+    .eureka__upload-form {
+      margin-right:auto;
+      @include media($gtMobile) { // this is kinda weird
+        //display:flex;
+        form {
+          display:flex;
+        }
+        .eureka & {
+          label[for*="upload-form"] {
+            padding-top: 0;
+            padding-bottom: 0;
+            line-height: 2.2;
+          }
+        }
+      }
+      .eureka__server-side & {
+        margin-right:0;
+      }
+    }
+  }
+}
+
+.eureka__media-source-selector {
+  @include media($gtMobile) {
+
+  }
+}
+
+.eureka {
+  &.eureka__view-mode__table {
+    .eureka__table {
+      img {
+        //max-width: none;
+        @include media($gtMobile) {
+          max-height:20vh;
+        }
+      }
+      label {
+        @include media($gtMobile) {
+
+        }
+      }
+      thead {
+        th {
+          &:first-child {
+            padding-left:.5rem;
+          }
+          &:last-child {
+            padding-right:.5rem;
+          }
+        }
+      }
+      tr[contextmenu] {
+        td {
+          &:first-child {
+            padding-left:.5rem;
+          }
+          &:last-child {
+            padding-right:.5rem;
+          }
+        }
+      }
+      tr {
+        td,th {
+          text-align:center;
+          @include media($gtMobile) {
+            text-align:right;
+            &.eureka__th-media {
+              text-align: left;
+            }
+          }
+          &.eureka__th-media {
+            text-align:left;
+          }
+        }
+      }
+    }
+
+    /*@include media($gtMobile) {
+    }*/
+
+    &.eureka__enlarge-focused-rows {
+      .eureka__table {
+        img {
+          max-height:20vh;
+        }
+        tr:focus {
+          img {
+            max-height:30vh;
+          }
+        }
+      }
+    }
+  }
+
+  &.eureka__view-mode__thumb, &.eureka__view-mode__grid, &.eureka__view-mode__masonry {
+    .eureka__table {
+      thead {
+        //@extend %visually-hidden;
+        display:none !important;
+      }
+      td {
+        &:not(.eureka__td-media):not(.eureka__choose) {
+          //@extend %visually-hidden;
+          display:none;
+        }
+        &[colspan] {
+          display:block;
+        }
+      }
+      tbody {
+        @include media($gtMobile) {
+          display: flex !important;
+        }
+        flex-wrap: wrap;
+        justify-content: center;
+        tr[tabindex] {
+          @include media($gtMobile) {
+            display:inline-block;
+          }
+          td {
+            display: block;
+          }
+          margin:0 .5rem .5rem 0;
+          flex-basis:42vw;
+          width:100%;
+          @include media($gtMobile) {
+            flex-basis:16vw;
+          }
+        }
+        .eureka__context-row {
+          display:none;
+        }
+      }
+    }
+  }
+
+  &.eureka__view-mode__thumb {
+    .eureka__table tbody {
+      @include media($mobile) {
+        display: flex;
+      }
+    }
+  }
+
+  &.eureka__view-mode__grid, &.eureka__view-mode__masonry {
+    .eureka__table {
+      tbody {
+        tr[tabindex] {
+          //flex-basis:60vw;
+          @include media($mobile) {
+            margin-bottom: 0;
+          }
+          @include media($gtMobile) {
+            flex-basis:25vw;
+          }
+          > td:not(.eureka__context-row) {
+            @include media($mobile) {
+              padding-right: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &.eureka__view-mode__masonry {
+    .eureka__table {
+      tbody {
+        @include media($gtMobile) {
+          //padding-right: 1rem;
+        }
+        tr[tabindex] {
+
+          @include media($mobile) {
+
+          }
+          @include media($gtMobile) {
+            max-width:20%;
+            margin: 0;
+            padding: 0 .25rem;
+          }
+          > td:not(.eureka__context-row) {
+            @include media($mobile) {
+
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .eureka__tree {
+    @include media($gtMobile) {
+      flex-basis:0;
+      flex-grow:1;
+    }
+  }
+
+  &.eureka__view-mode__table {
+    .eureka__context-row {
+      margin-top: .5rem;
+    }
+  }
+
+  .eureka__context-row {
+    @include media($gtMobile) {
+      margin-top: 0;
+      width: 100%;
+      display: block;
+      &[hidden] {
+        display:none !important;
+      }
+
+      display: flex;
+      order:10;
+      width: 100%;
+      //grid-area:"media name dimensions file-size edited-on"
+      .eureka__context-buttons {
+        width:100%;
+      }
+
+      /*> td[colspan] {
+      }*/
+    }
+  }
+
+  .eureka__tree-bar {
+    @extend %flex-bar;
+    text-align: center;
+
+  }
+
+  &.eureka__view-mode__grid, &.eureka__view-mode__masonry {
+    .eureka__td-media {
+      margin: 0 auto;
+      display: inline-block;
+    }
+  }
+
+  &.eureka__view-mode__list {
+    .eureka__table {
+      thead {
+        th {
+          &:first-child {
+            @include media($mobile) {
+              display:none;
+            }
+          }
+          &:nth-of-type(2) {
+            @include media($mobile) {
+              text-align:left;
+              padding-left:.5rem;
+            }
+          }
+          &:last-child {
+            padding-right:.5rem;
+          }
+
+        }
+      }
+      thead,tr[contextmenu] {
+        td,th {
+          text-align:right;
+          &.eureka__td-media, &.eureka__th-media {
+            text-align:left;
+            @supports(display:grid) {
+              display: block;
+            }
+            @include media($mobile) {
+              display:none;
+            }
+          }
+          &.eureka__td-filename {
+            @include media($mobile) {
+              text-align:center;
+              padding-top:.5rem;
+              padding-bottom:.5rem;
+            }
+          }
+        }
+      }
+
+      tbody {
+        @include media($mobile) {
+          line-height:2;
+        }
+        .eureka__td-media {
+          img,video,embed {
+            max-width:10vh;
+            max-height:10vh;
+          }
+        }
+        tr[contextmenu] {
+          padding-top:0;
+          padding-bottom:0;
+
+          > td {
+            &:nth-of-type(2) {
+              padding-left:.5rem;
+            }
+            &:last-child {
+              padding-right:.5rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.eureka {
+  .eureka__crop-btn {
+    @include media($mobile) {
+      display: none;
+    }
+  }
+  .flex-bar {
+    fieldset {
+      margin:0;
+      padding:0;
+      label {
+        margin-bottom:0;
+      }
+    }
+  }
+  .eureka__invert-horz {
+    transform: scaleX(-1);
+  }
+  .eureka__td-media {
+    display: flex;
+    align-items: center;
+  }
+  .eureka__show-for-mobile-up {
+    p, textarea {
+      @include media($gtMobile) {
+        max-height: 3em;
+        overflow-y: auto;
+        display: block;
+        width: 100%;
+      }
+    }
+  }
+  .eureka__pathbar {
+    textarea {
+      resize: none;
+    }
+  }
+
+  label[for="eureka__crop_show-adv-controls"] {
+    position:absolute;
+    top:.75em;
+    right:1em;
+  }
+
+  .eureka__crop-modal {
+    &.eureka__modal .eureka__modal-panel .eureka__button-bar {
+      //margin-top: 2rem;
+      //justify-content: flex-end;
+      > * {
+        //max-width: 18em;
+        //flex: 0 0 18em;
+      }
+    }
+    .icon-bar {
+      margin-top: 1em;
+      font-size: 1rem;
+      label[for="eureka__crop-drag-mode-move"] {
+        border-top-left-radius: 3px;
+        border-bottom-left-radius: 3px;
+      }
+      button, .button {
+        border-radius: 0;
+        &:first-child {
+          border-top-left-radius: 3px;
+          border-bottom-left-radius: 3px;
+        }
+        &:last-child {
+          border-top-right-radius: 3px;
+          border-bottom-right-radius: 3px;
+        }
+      }
+      &.flex-bar {
+        > * {
+          margin-right: 0;
+        }
+      }
+      button {
+        font-size: 1rem;
+      }
+    }
+    .wrappable.flex-bar {
+      justify-content: space-around;
+      margin-bottom: 2rem;
+      > * {
+        padding-left:1rem;
+        padding-right:1rem;
+      }
+      summary {
+        margin-bottom:.5rem;
+      }
+    }
+  }
+
+  .eureka__modal .eureka__modal-panel .eureka__crop-bounding-box {
+    margin-top: 1rem;
+    label {
+      margin-bottom:0;
+    }
+    label[for="eureka__crop-aspect-ratio"] {
+      line-height: 2;
+    }
+    input[type="number"] {
+      width:5em;
+    }
+    input[id*="eureka__crop-scale"] {
+      width:4em;
+    }
+    summary {
+      @include media($gtMobile) {
+        display: flex;
+      }
+    }
+    > div, > details > div {
+      @include media($gtMobile) {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        > * {
+          margin-right:.5rem;
+        }
+        &:last-child {
+          margin-right:0;
+        }
+      }
+    }
+  }
+  [hidden] {
+    display: none !important;
+  }
+  .eureka__crop-save-as-checkbox {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .eureka__crop-as {
+    padding-right:1rem;
+    input[type="text"] {
+      flex-grow:1;
+    }
+  }
+
+  label[for="eureka__crop-save-as-name"] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  label[for="eureka__crop-aspect-ratio-remember"] {
+    line-height: 2;
+  }
+
+  label[for="eureka__crop-rotate"] {
+    + input[type="range"] {
+      min-width:14em;
+    }
+  }
+
+  .eureka__choose-multile > label {
+    display:block;
+    height:100%;
+  }
+
+}

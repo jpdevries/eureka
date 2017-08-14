@@ -1,0 +1,30 @@
+[
+  {
+    "id": "layout.masonry",
+    "defaultMessage": "Masonry Layout"
+  },
+  {
+    "id": "layout.fullscreenMode",
+    "defaultMessage": "Fullscreen Mode"
+  },
+  {
+    "id": "layout.viewMode",
+    "defaultMessage": "View Mode"
+  },
+  {
+    "id": "layout.table",
+    "defaultMessage": "Table Layout"
+  },
+  {
+    "id": "layout.thumb",
+    "defaultMessage": "Thumbnail Layout"
+  },
+  {
+    "id": "layout.grid",
+    "defaultMessage": "Grid Layout"
+  },
+  {
+    "id": "layout.list",
+    "defaultMessage": "List Layout"
+  }
+]

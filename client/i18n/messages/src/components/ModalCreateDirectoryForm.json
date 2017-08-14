@@ -1,0 +1,18 @@
+[
+  {
+    "id": "cancel",
+    "defaultMessage": "Cancel"
+  },
+  {
+    "id": "directory.cancelCreating",
+    "defaultMessage": "creating directory {cd}"
+  },
+  {
+    "id": "create",
+    "defaultMessage": "Create"
+  },
+  {
+    "id": "directory",
+    "defaultMessage": "directory"
+  }
+]

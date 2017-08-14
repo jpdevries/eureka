@@ -1,0 +1,16 @@
+language: node_js
+node_js:
+ - "6"
+deploy:
+  provider: heroku
+  api_key:
+    secure: sgbowaUrgNLjctC0b2Ld9Ruqx14PIKq149c7Rb7l0o7SuqLp/W/8NS8NnDzvSPOqzYfDw+fAidWlds1b2Lfbjx+7bYDFUz+zmPIQTTTR1oW0klOXD6h9gDHaV068t1JsbyCr4nvCCy38b+whw2Z+syzWUFwqmlfkSE4tmL6zSNmfB8yd84OWtQ9UoCwMCqiIORPoQUudOqCD5Ve6c1wJKQjftgYeEiit+UJK8dy2rpU5ElNHggDK4RFWf8M8ZlrFvTk9RR86ZUbdIrehXiZ1xIQJDsixDiu44f9XwnS0/c+txywLSKtIXUIPbaA8ftEk3jt4m8PXTxXVp+UQGTPhtjMr0YNBx3VdSEbFHm2zxBhopRgDR3HAyQ4DhDs3N22YkXugkpr8S0z+Vb/KlEf+WjXllVB9mVk5T2CdxVZ4feWDxrguHWP70JAEr1PqXUU2pJ3GKntAIbnfQDr1VJS4WnjxDGx6PVHGeQfmVdr5t9zCYt76z0s/dVhfWnVgTirZ3yAHf5osTnM0cS+/pBC6vMpoyUu+3x3SaBMxR2DhLNGUhGqwbcxndgfKFUeru6noxEBm87S+aFWQ6y3BKs4PRqrBU8bLEky39S1DMkMlHqXnFNwgmwKQbwZ2LCQ4X54hToT9fNWWQHH0zkWUoCoc85h6+9Ai9/TPsGwFXWXxHLo=
+  app: reacteureka
+  on:
+    repo: jpdevries/eureka
+    branch: release-2.0
+
+# safelist
+branches:
+  only:
+  - release-2.0

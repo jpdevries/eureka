@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+
+    <base href="%PUBLIC_URL%/" />
+
+    <style type="text/css">
+      html {
+        box-sizing: border-box;
+      }
+
+      @media screen and (min-width: 40.0625em) {
+        [class*="modal-section"], [class*="eureka-wrapper"] {
+          height: 100vh;
+          max-height: 100vh;
+        }
+        [class*="modal-section"] { /* iPad hack #130 */
+          position: absolute;
+          top: 0;
+          left:0;
+          right: 0;
+          bottom: 0;
+          height: auto;
+        }
+      }
+
+      @media screen and (min-width: 40.0625em) {
+        html {
+          overflow-y: hidden;
+        }
+      }
+
+      *, *::after, *::before {
+        box-sizing: inherit;
+      }
+
+      svg.icon {
+        max-width: 1em;
+        display: inline;
+        max-height: 1em;
+      }
+    </style>
+
+    <link rel="stylesheet" type="text/css" href="assets/css/main.css">
+
+    <style type="text/css">
+      @media screen and (-ms-high-contrast: active) {
+        .eureka-root {
+          /* black on white */
+          --panel-border-color:rgb(8,8,8);
+          --light-bg:white;
+          --border-width:2px;
+          --button-color:rgb(20,20,20);
+          --subtle:rgb(20,20,20);
+          --border-style:solid;
+          --border-color:rgb(8,8,8);
+          --very-subtle:rgb(40,40,40);
+          --very-subtle-icon-opacity:1;
+        }
+      }
+      @media screen and (-ms-high-contrast: black-on-white) {
+        .eureka-root {
+          /* black on white */
+          --panel-border-color:rgb(8,8,8);
+          --light-bg:white;
+          --border-width:2px;
+          --button-color:rgb(20,20,20);
+          --subtle:rgb(20,20,20);
+          --border-style:solid;
+          --border-color:rgb(8,8,8);
+          --very-subtle:rgb(40,40,40);
+          --very-subtle-icon-opacity:1;
+        }
+      }
+      @media screen and (-ms-high-contrast: white-on-black) {
+        .eureka-root {
+          /* white on black */
+          background:var(--light-bg, rgb(8,8,8));
+          color:var(--color, white);
+          --panel-border-color:white;
+          --light-bg:rgb(8,8,8);
+          --border-width:2px;
+          --button-bg:transparent;
+          --button-color:rgb(220,220,220);
+          --subtle:rgb(220,220,220);
+          --border-style:solid;
+          --border-color:white;
+          --very-subtle:rgb(120,120,120);
+          --active:yellow;
+          --dangerous:red;
+          --link-color:yellow;
+          --very-subtle-icon-opacity:1;
+        }
+      }
+
+      body.black-on-white {
+        /* black on white */
+        --panel-border-color:rgb(8,8,8);
+        --light-bg:white;
+        --border-width:2px;
+        --button-color:rgb(20,20,20);
+        --subtle:rgb(20,20,20);
+        --border-style:solid;
+        --border-color:rgb(8,8,8);
+        --very-subtle:rgb(40,40,40);
+        --very-subtle-icon-opacity:1;
+      }
+
+      body.white-on-black {
+        /* white on black */
+        background:var(--light-bg, rgb(8,8,8));
+        color:var(--color, white);
+        --panel-border-color:white;
+        --light-bg:rgb(8,8,8);
+        --border-width:2px;
+        --button-bg:transparent;
+        --button-color:rgb(220,220,220);
+        --subtle:rgb(220,220,220);
+        --border-style:solid;
+        --border-color:white;
+        --very-subtle:rgb(120,120,120);
+        --active:yellow;
+        --dangerous:red;
+        --link-color:yellow;
+        --very-subtle-icon-opacity:1;
+      }
+
+      body {
+        background: #ececec;
+        font: 400 .8125em/1.375em "Helvetica Neue",Helvetica,Arial,Tahoma,sans-serif;
+        color: #081922;
+        margin: 0;
+        padding: 8px;
+        padding: 8px;
+        padding: .5rem;
+      }
+
+
+
+    </style>
+
+    <!--
+      Notice the use of %PUBLIC_URL% in the tag above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title data-site-name="Eureka Media Browser">Eureka Media Browser</title>
+  </head>
+  <body class="modal-section">
+    <div id="root" class="eureka-root"></div>
+
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Intl.~locale.en"></script>
+
+    <script>
+      try {
+        new URLSearchParams()
+      } catch (e) {
+        document.write('<script src="assets/js/vendor/url-search-params/url-search-params.js"><\/script>')
+      }
+    </script>
+
+    <script>
+      if (!HTMLCanvasElement.prototype.toBlob) {
+       Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
+        value: function (callback, type, quality) {
+
+          var binStr = atob( this.toDataURL(type, quality).split(',')[1] ),
+              len = binStr.length,
+              arr = new Uint8Array(len);
+
+          for (var i = 0; i < len; i++ ) {
+           arr[i] = binStr.charCodeAt(i);
+          }
+
+          callback( new Blob( [arr], {type: type || 'image/png'} ) );
+        }
+       });
+      }
+    </script>
+
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start`.
+      To create a production bundle, use `npm run build`.
+    -->
+  </body>
+</html>

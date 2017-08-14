@@ -1,0 +1,118 @@
+[
+  {
+    "id": "cropAs",
+    "defaultMessage": "Crop as"
+  },
+  {
+    "id": "crop",
+    "defaultMessage": "Crop"
+  },
+  {
+    "id": "saveAs",
+    "defaultMessage": "Save As"
+  },
+  {
+    "id": "showAdvControls",
+    "defaultMessage": "Show Advanced Controls"
+  },
+  {
+    "id": "dragMode",
+    "defaultMessage": "Drag Mode"
+  },
+  {
+    "id": "crop.move",
+    "defaultMessage": "Move"
+  },
+  {
+    "id": "crop.showGuides",
+    "defaultMessage": "Show Guides"
+  },
+  {
+    "id": "crop.zoomIn",
+    "defaultMessage": "Zoom In"
+  },
+  {
+    "id": "crop.zoomOut",
+    "defaultMessage": "Zoom Out"
+  },
+  {
+    "id": "crop.moveLeft",
+    "defaultMessage": "Move Left"
+  },
+  {
+    "id": "crop.moveRight",
+    "defaultMessage": "Move Right"
+  },
+  {
+    "id": "crop.moveUp",
+    "defaultMessage": "Move Up"
+  },
+  {
+    "id": "crop.moveDown",
+    "defaultMessage": "Move Down"
+  },
+  {
+    "id": "crop.download",
+    "defaultMessage": "Download Cropped Image"
+  },
+  {
+    "id": "crop.uploadImage",
+    "defaultMessage": "Upload Image"
+  },
+  {
+    "id": "crop.boundingBox",
+    "defaultMessage": "Bounding Box (px)"
+  },
+  {
+    "id": "crop.X",
+    "defaultMessage": "X"
+  },
+  {
+    "id": "crop.Y",
+    "defaultMessage": "Y"
+  },
+  {
+    "id": "crop.width",
+    "defaultMessage": "Width"
+  },
+  {
+    "id": "crop.height",
+    "defaultMessage": "Height"
+  },
+  {
+    "id": "crop.aspectRatio",
+    "defaultMessage": "Aspect Ratio"
+  },
+  {
+    "id": "crop.free",
+    "defaultMessage": "Free"
+  },
+  {
+    "id": "rememberAspectRatio",
+    "defaultMessage": "Remember Ratio"
+  },
+  {
+    "id": "crop.scaleRotate",
+    "defaultMessage": "Scale & Rotate"
+  },
+  {
+    "id": "crop.rotate",
+    "defaultMessage": "Rotate"
+  },
+  {
+    "id": "crop.scale",
+    "defaultMessage": "Scale"
+  },
+  {
+    "id": "cancel",
+    "defaultMessage": "Cancel"
+  },
+  {
+    "id": "directory.cancelCreating",
+    "defaultMessage": "Cancel creating directory {cd}"
+  },
+  {
+    "id": "reset",
+    "defaultMessage": "Reset"
+  }
+]
