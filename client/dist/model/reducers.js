@@ -345,16 +345,17 @@ var initialTreeReducer = function () {
 }();
 
 function doIt(children, cd, open) {
+  console.log(children, cd, open);
   for (var i = 0; i < children.length; i++) {
     var child = children[i];
-    console.log(child);
+    console.log(child.cd, cd);
     if (child.cd === cd) {
       console.log('match', child.cd, cd);
       children[i] = Object.assign({}, child, {
         open: open
       });
       break;
-    } else if (child.children) doIt(child.children);
+    } else if (child.children) doIt(child.children, cd, open);
   }
   return children;
 }
@@ -372,10 +373,8 @@ var treeReducer = function treeReducer(state, action) {
         console.log('UPDATE_TREE_NODE_STATUS!!!', action);
         console.log(state);
 
-        doIt(state, action.cd, action.open);
-
         return {
-          v: state
+          v: doIt(state, action.cd, action.open)
         };
         break;
 
@@ -383,6 +382,21 @@ var treeReducer = function treeReducer(state, action) {
         console.log('UPDATE_SOURCE_TREE_SUCCESS!!!');
         //let newState = (gotTreeDataFromServer) ? state.slice(0) : [];
         var newState = state.slice(0);
+
+        var recursivelyFindStuffThatIsOpen = function recursivelyFindStuffThatIsOpen(children) {
+          for (var i = 0; i < children.length; i++) {
+            var child = children[i];
+            if (child.open) openChildren.push(child.cd);
+            if (child.children) {
+              recursivelyFindStuffThatIsOpen(child.children);
+            }
+          }
+        };
+
+        var openChildren = [];
+        recursivelyFindStuffThatIsOpen(state);
+
+        console.log('openChildren', openChildren);
 
         var directoryInState = function directoryInState(directory) {
           for (var i = 0; i < newState.length; i++) {
@@ -423,6 +437,7 @@ var treeReducer = function treeReducer(state, action) {
         var actionContents = action.contents;
 
         console.log('actionContents', actionContents);
+        console.log('state', state);
 
         var recursivelyGetDirectoryChildren = function recursivelyGetDirectoryChildren(cd, contents) {
           console.log('recursivelyGetDirectoryChildren', cd, contents);
@@ -475,6 +490,7 @@ var treeReducer = function treeReducer(state, action) {
             return directory !== undefined;
           }).map(function (directory) {
             console.log(directory, directory.children);
+            var open = openChildren.includes(directory.cd);
             if (!directory.children) {
               console.log('the server didn\'t tell us if ' + directory.cd + ' has children');
               if (directory && directory.cd) {
@@ -482,7 +498,8 @@ var treeReducer = function treeReducer(state, action) {
                 console.log('children', children);
                 if (children && children.length) {
                   return Object.assign({}, directory, {
-                    children: children
+                    children: children,
+                    open: open
                   });
                 } else {
                   return directory;
@@ -490,10 +507,10 @@ var treeReducer = function treeReducer(state, action) {
               }
             } else {
               if (directory) {
-                if (directory.children) return Object.assign({}, directory, {
-                  children: loopIt(directory.children)
+                return Object.assign({}, directory, {
+                  children: directory.children ? loopIt(directory.children) : undefined,
+                  open: open
                 });
-                return directory;
               }
             }
           });
