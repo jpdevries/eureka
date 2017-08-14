@@ -90,7 +90,18 @@ const updateConfig = function(config) {
 
 
 
+const UPDATE_TREE_NODE_STATUS = 'update_tree_node_status';
+const updateTreeNodeStatus = function(cd, open) {
+  //console.log('updateConfig', config);
+  return {
+    type: UPDATE_TREE_NODE_STATUS,
+    cd,
+    open
+  }
+}
 
+exports.UPDATE_TREE_NODE_STATUS = UPDATE_TREE_NODE_STATUS;
+exports.updateTreeNodeStatus = updateTreeNodeStatus;
 
 
 
@@ -478,7 +489,7 @@ exports.deleteMediaItems = deleteMediaItems;
 
 const NOTIFICATION = 'notification';
 const notify = function(message, notificationType, learnMore, dismissAfter, sticky = true, archived = false) {
-  console.log('notify', message); 
+  console.log('notify', message);
   return {
     type: NOTIFICATION,
     message: message,

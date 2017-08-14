@@ -93,6 +93,19 @@ var updateConfig = function updateConfig(config) {
   };
 };
 
+var UPDATE_TREE_NODE_STATUS = 'update_tree_node_status';
+var updateTreeNodeStatus = function updateTreeNodeStatus(cd, open) {
+  //console.log('updateConfig', config);
+  return {
+    type: UPDATE_TREE_NODE_STATUS,
+    cd: cd,
+    open: open
+  };
+};
+
+exports.UPDATE_TREE_NODE_STATUS = UPDATE_TREE_NODE_STATUS;
+exports.updateTreeNodeStatus = updateTreeNodeStatus;
+
 /*const downloadMediaItems = (source, customHeaders = {}) => (
   (dispatch) => (
     fetch(`/assets/components/eureka/media/attachments/${source}`, {

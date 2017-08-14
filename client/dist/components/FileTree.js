@@ -133,8 +133,14 @@ var FileTree = function FileTree(props) {
       _react2.default.createElement(
         'details',
         { onToggle: function onToggle(event) {
-            console.log('TOGGLE!!!', item);
-            console.log(event.target.hasAttribute('open'));
+            event.stopPropagation();
+            var isOpen = event.target.hasAttribute('open');
+            console.log('TOGGLE!!', item.cd, isOpen);
+
+            _store2.default.dispatch(_actions2.default.updateTreeNodeStatus(item.cd, isOpen));
+
+            //console.log(event.target.hasAttribute('open'));
+            //console.log()
           }, key: props.source.currentSource + '__' + item.cd, open: shouldBeOpen(item) },
         _react2.default.createElement(
           'summary',

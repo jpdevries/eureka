@@ -292,16 +292,42 @@ var initialTreeReducer = (() => {
   }
 })();
 
+function doIt(children, cd, open) {
+  for(let i = 0; i < children.length; i++) {
+    const child = children[i];
+    console.log(child);
+    if(child.cd === cd) children[i] = Object.assign({}, child, {
+      open
+    });
+    if(child.children) doIt(child.children);
+  }
+  return children;
+}
+
+
 let cd = '';
 let gotTreeDataFromServer = false;
 var treeReducer = function(state, action) {
   state = state || initialTreeReducer;
 
-  console.log('treeReducer', action);
+  console.log('treeReducer!!', action, state);
   switch(action.type) {
+    case actions.UPDATE_TREE_NODE_STATUS:
+    console.log('UPDATE_TREE_NODE_STATUS!!!', action);
+    console.log(state);
+
+    doIt(state, action.cd, action.open);
+
+
+
+
+    return state;
+    break;
+
     case actions.UPDATE_SOURCE_TREE_SUCCESS:
     console.log('UPDATE_SOURCE_TREE_SUCCESS!!!');
-    let newState = (gotTreeDataFromServer) ? state.slice(0) : [];
+    //let newState = (gotTreeDataFromServer) ? state.slice(0) : [];
+    let newState = state.slice(0);
 
     function directoryInState(directory) {
       for(let i = 0; i < newState.length; i++) {
@@ -343,15 +369,14 @@ var treeReducer = function(state, action) {
 
     console.log('actionContents', actionContents);
 
-    /*function recursivelyGetDirectoryChildren(cd, contents) {
+    function recursivelyGetDirectoryChildren(cd, contents) {
       console.log('recursivelyGetDirectoryChildren',cd,contents);
       for(let i = 0; i < contents.length; i++) {
         const directory = contents[i];
         console.log(i);
         if(directory) {
-          console.log('directory',directory,cd);
+          console.log('directory',directory.cd == cd,directory,cd);
           if(directory.cd == cd) return (() => {
-            console.log('found some shit');
             try {
               return directory.children || []
             } catch (e) {
@@ -359,20 +384,24 @@ var treeReducer = function(state, action) {
               return []
             }
           })();
-          if(directory.children) return recursivelyGetDirectoryChildren(cd, directory.children);
+
+          if(directory.children && directory.children.length) {
+            const wouldReturn = recursivelyGetDirectoryChildren(cd, directory.children);
+            if(wouldReturn.length) return wouldReturn;
+          }
         }
       }
       return [];
-    }*/
+    }
 
-    function recursivelyGetDirectoryChildren(cd, contents) {
+    /*function recursivelyGetDirectoryChildren(cd, contents) {
       console.log('recursivelyGetDirectoryChildren',cd,contents);
       for(let i =0; i < contents.length; i++) {
         const directory = contents[i];
         console.log(directory);
       }
       return [];
-    }
+    }*/
 
     function loopIt(contents) {
       //console.log('loopIt', contents);
@@ -381,10 +410,9 @@ var treeReducer = function(state, action) {
         if(!directory.children) {
           console.log(`the server didn't tell us if ${directory.cd} has children`);
           if(directory && directory.cd) {
-            //console.log('here we fuckin go',directory.cd, newState);
             const children = recursivelyGetDirectoryChildren(directory.cd, newState);
+            console.log('children', children);
             if(children && children.length) {
-              console.log('gonna return some shit!', children);
               return Object.assign({}, directory, {
                 children
               })
@@ -394,7 +422,9 @@ var treeReducer = function(state, action) {
           }
         } else {
           if(directory) {
-            if(directory.children) loopIt(directory.children);
+            if(directory.children) return Object.assign({}, directory, {
+              children: loopIt(directory.children)
+            });
             return directory;
           }
         }
@@ -408,7 +438,7 @@ var treeReducer = function(state, action) {
 
     console.log('---------');
 
-    console.log('actionContents', actionContents);
+    console.log('actionContents r', r, newState);
 
     gotTreeDataFromServer = true;
 

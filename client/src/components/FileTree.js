@@ -86,8 +86,14 @@ const FileTree = (props) => {
     return tree.map((item, index) => (
       (item.children || true) ? // still deciding if we need this disabled for now
       <details onToggle={(event) => {
-          console.log('TOGGLE!!!', item);
-          console.log(event.target.hasAttribute('open'));
+          event.stopPropagation();
+          const isOpen = event.target.hasAttribute('open');
+          console.log('TOGGLE!!', item.cd, isOpen);
+
+          store.dispatch(actions.updateTreeNodeStatus(item.cd, isOpen));
+
+          //console.log(event.target.hasAttribute('open'));
+          //console.log()
         }} key={`${props.source.currentSource}__${item.cd}`} open={shouldBeOpen(item)}>
         <summary role="treeitem" contextMenu={`context_menu__${item.cd.replace(/^[^a-z]+|[^\w:.-]+/gi, "")}`} className={(props.content.cd === item.cd) ? 'active' : undefined}>
           <Icon {...props} icon="folder" />

@@ -344,18 +344,42 @@ var initialTreeReducer = function () {
   }
 }();
 
+function doIt(children, cd, open) {
+  for (var i = 0; i < children.length; i++) {
+    var child = children[i];
+    console.log(child);
+    if (child.cd === cd) children[i] = Object.assign({}, child, {
+      open: open
+    });
+    if (child.children) doIt(child.children);
+  }
+  return children;
+}
+
 var cd = '';
 var gotTreeDataFromServer = false;
 var treeReducer = function treeReducer(state, action) {
   state = state || initialTreeReducer;
 
-  console.log('treeReducer', action);
+  console.log('treeReducer!!', action, state);
 
   var _ret2 = function () {
     switch (action.type) {
+      case actions.UPDATE_TREE_NODE_STATUS:
+        console.log('UPDATE_TREE_NODE_STATUS!!!', action);
+        console.log(state);
+
+        doIt(state, action.cd, action.open);
+
+        return {
+          v: state
+        };
+        break;
+
       case actions.UPDATE_SOURCE_TREE_SUCCESS:
         console.log('UPDATE_SOURCE_TREE_SUCCESS!!!');
-        var newState = gotTreeDataFromServer ? state.slice(0) : [];
+        //let newState = (gotTreeDataFromServer) ? state.slice(0) : [];
+        var newState = state.slice(0);
 
         var directoryInState = function directoryInState(directory) {
           for (var i = 0; i < newState.length; i++) {
@@ -397,36 +421,51 @@ var treeReducer = function treeReducer(state, action) {
 
         console.log('actionContents', actionContents);
 
-        /*function recursivelyGetDirectoryChildren(cd, contents) {
-          console.log('recursivelyGetDirectoryChildren',cd,contents);
-          for(let i = 0; i < contents.length; i++) {
-            const directory = contents[i];
-            console.log(i);
-            if(directory) {
-              console.log('directory',directory,cd);
-              if(directory.cd == cd) return (() => {
-                console.log('found some shit');
-                try {
-                  return directory.children || []
-                } catch (e) {
-                  //console.log(e);
-                  return []
-                }
-              })();
-              if(directory.children) return recursivelyGetDirectoryChildren(cd, directory.children);
-            }
-          }
-          return [];
-        }*/
-
         var recursivelyGetDirectoryChildren = function recursivelyGetDirectoryChildren(cd, contents) {
           console.log('recursivelyGetDirectoryChildren', cd, contents);
-          for (var i = 0; i < contents.length; i++) {
+
+          var _loop = function _loop(i) {
             var directory = contents[i];
-            console.log(directory);
+            console.log(i);
+            if (directory) {
+              console.log('directory', directory.cd == cd, directory, cd);
+              if (directory.cd == cd) return {
+                  v: function () {
+                    console.log('found some shit', directory, cd);
+                    try {
+                      return directory.children || [];
+                    } catch (e) {
+                      //console.log(e);
+                      return [];
+                    }
+                  }()
+                };
+
+              if (directory.children && directory.children.length) {
+                var wouldReturn = recursivelyGetDirectoryChildren(cd, directory.children);
+                if (wouldReturn.length) return {
+                    v: wouldReturn
+                  };
+              }
+            }
+          };
+
+          for (var i = 0; i < contents.length; i++) {
+            var _ret3 = _loop(i);
+
+            if ((typeof _ret3 === 'undefined' ? 'undefined' : _typeof(_ret3)) === "object") return _ret3.v;
           }
           return [];
         };
+
+        /*function recursivelyGetDirectoryChildren(cd, contents) {
+          console.log('recursivelyGetDirectoryChildren',cd,contents);
+          for(let i =0; i < contents.length; i++) {
+            const directory = contents[i];
+            console.log(directory);
+          }
+          return [];
+        }*/
 
         var loopIt = function loopIt(contents) {
           //console.log('loopIt', contents);
@@ -437,8 +476,9 @@ var treeReducer = function treeReducer(state, action) {
             if (!directory.children) {
               console.log('the server didn\'t tell us if ' + directory.cd + ' has children');
               if (directory && directory.cd) {
-                //console.log('here we fuckin go',directory.cd, newState);
+                console.log('here we fuckin go', directory, directory.cd, newState);
                 var children = recursivelyGetDirectoryChildren(directory.cd, newState);
+                console.log('children', children);
                 if (children && children.length) {
                   console.log('gonna return some shit!', children);
                   return Object.assign({}, directory, {
@@ -450,7 +490,9 @@ var treeReducer = function treeReducer(state, action) {
               }
             } else {
               if (directory) {
-                if (directory.children) loopIt(directory.children);
+                if (directory.children) return Object.assign({}, directory, {
+                  children: loopIt(directory.children)
+                });
                 return directory;
               }
             }
@@ -464,7 +506,7 @@ var treeReducer = function treeReducer(state, action) {
 
         console.log('---------');
 
-        console.log('actionContents', actionContents);
+        console.log('actionContents r', r, newState);
 
         gotTreeDataFromServer = true;
 
@@ -722,7 +764,7 @@ var directoryReducer = function directoryReducer(state, action) {
 
   var foldersToAdd = [];
 
-  var _ret3 = function () {
+  var _ret4 = function () {
     switch (action.type) {
       case actions.UPDATE_SOURCE:
         cs = action.source;
@@ -803,7 +845,7 @@ var directoryReducer = function directoryReducer(state, action) {
     }
   }();
 
-  if ((typeof _ret3 === 'undefined' ? 'undefined' : _typeof(_ret3)) === "object") return _ret3.v;
+  if ((typeof _ret4 === 'undefined' ? 'undefined' : _typeof(_ret4)) === "object") return _ret4.v;
   return state;
 };
 

@@ -159,6 +159,7 @@ var Eureka = function (_Component) {
     };
 
     _this.decoratedActions = props.decoratedActions ? Object.assign({}, _actions2.default, props.decoratedActions) : _actions2.default;
+    console.log('this.decoratedActions', _this.decoratedActions);
     return _this;
   }
 
@@ -278,6 +279,8 @@ var Eureka = function (_Component) {
           formatMessage = _props$intl.formatMessage,
           formatPlural = _props$intl.formatPlural;
 
+
+      console.log('decoratedActions', decoratedActions);
 
       this.assignKeyboardListeners();
 

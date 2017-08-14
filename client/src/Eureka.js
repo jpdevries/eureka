@@ -64,6 +64,7 @@ class Eureka extends Component {
     };
 
     this.decoratedActions = props.decoratedActions ? Object.assign({}, actions, props.decoratedActions) : actions;
+    console.log('this.decoratedActions', this.decoratedActions);
   }
 
   componentWillUnmount() {
@@ -340,6 +341,8 @@ class Eureka extends Component {
     const props = this.props,
     decoratedActions = this.decoratedActions,
     { formatMessage, formatPlural } = props.intl;
+
+    console.log('decoratedActions', decoratedActions);
 
     this.assignKeyboardListeners();
 
