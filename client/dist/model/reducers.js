@@ -348,10 +348,13 @@ function doIt(children, cd, open) {
   for (var i = 0; i < children.length; i++) {
     var child = children[i];
     console.log(child);
-    if (child.cd === cd) children[i] = Object.assign({}, child, {
-      open: open
-    });
-    if (child.children) doIt(child.children);
+    if (child.cd === cd) {
+      console.log('match', child.cd, cd);
+      children[i] = Object.assign({}, child, {
+        open: open
+      });
+      break;
+    } else if (child.children) doIt(child.children);
   }
   return children;
 }
