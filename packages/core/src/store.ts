@@ -1,5 +1,5 @@
 // The instance store (07). Pure transitions, no framework, no effects.
-import { normalizePath, parentPath } from './paths.js';
+import { ancestors, normalizePath, parentPath } from './paths.js';
 import { visibleFiles } from './sort-filter.js';
 import { isFile, type ChooseMode, type Config, type DialogKind, type DisplayRecord, type Entry, type FileEntry, type Notification, type Sort, type SortBy, type SortDir, type Source, type SourceId, type Status, type TreeNode, type ViewMode } from './types.js';
 
@@ -11,7 +11,7 @@ export interface State {
   selection: { focused: string | null; checked: string[]; inverted: boolean };
   view: { mode: ViewMode; sort: Sort; filter: string; panelOpen: boolean; chooseMode: ChooseMode; fullscreen: boolean };
   pending: { uploading: boolean; deleting: string[]; renaming: string | null; creating: boolean; cropping: boolean };
-  dialog: null | { kind: DialogKind; target?: string };
+  dialog: null | { kind: DialogKind; target?: string; input?: string };
   notifications: Notification[];
   locale: { tag: string; catalogStatus: Status };
 }
@@ -48,7 +48,8 @@ export type Event =
   | { type: 'items/renameFailed'; error: string }
   | { type: 'directory/created'; path: string }
   | { type: 'dialog/open'; kind: DialogKind; target?: string }
-  | { type: 'dialog/close' }
+  | { type: "dialog/close" }
+  | { type: 'dialog/input'; value: string }
   | { type: 'notification/push'; message: string; kind?: 'info' | 'danger'; sticky?: boolean; learnMore?: string; id?: string }
   | { type: 'notification/dismiss'; id: string }
   | { type: 'locale/changed'; tag: string }
@@ -77,7 +78,7 @@ export function initialState({ config, locale = config.lang ?? 'en', persisted, 
   return {
     config,
     sources: hydrated?.sources ?? { all: [], current: source, status: 'idle' },
-    tree: hydrated?.tree ?? { bySource: {}, open: persisted?.treeOpen ?? [], status: 'idle' },
+    tree: hydrated?.tree ?? { bySource: {}, open: openWith(persisted?.treeOpen ?? [], path), status: 'idle' },
     listing: { source, path, entries: [], records: {}, status: 'idle', requestId: 0, ...(hydrated?.listing ?? {}) },
     selection: { focused: null, checked: [], inverted: false },
     view,
@@ -90,6 +91,8 @@ export function initialState({ config, locale = config.lang ?? 'en', persisted, 
 
 let notificationSeq = 0;
 const clearedSelection = (): State['selection'] => ({ focused: null, checked: [], inverted: false });
+/** The tree disclosures that must be open to show `path` (its ancestors and itself), merged into `open`. */
+const openWith = (open: string[], path: string): string[] => [...new Set([...open, ...ancestors(path)])];
 
 export function reduce(s: State, e: Event): State {
   switch (e.type) {
@@ -111,6 +114,7 @@ export function reduce(s: State, e: Event): State {
       const source = e.source ?? s.listing.source;
       return { ...s, sources: e.source !== undefined ? { ...s.sources, current: e.source } : s.sources,
         listing: { ...s.listing, source, path: normalizePath(e.path), status: 'loading', error: undefined, requestId: s.listing.requestId + 1 },
+        tree: { ...s.tree, open: openWith(s.tree.open, e.path) },
         selection: clearedSelection(), view: { ...s.view, filter: '' }, dialog: null };
     }
     case 'listing/loaded': {
@@ -179,6 +183,7 @@ export function reduce(s: State, e: Event): State {
     }
     case 'dialog/open': return { ...s, dialog: { kind: e.kind, ...(e.target !== undefined ? { target: e.target } : {}) } };
     case 'dialog/close': return s.dialog === null ? s : { ...s, dialog: null };
+    case 'dialog/input': return s.dialog === null ? s : { ...s, dialog: { ...s.dialog, input: e.value } };
     case 'notification/push': {
       const n: Notification = { id: e.id ?? `n${++notificationSeq}`, message: e.message, kind: e.kind ?? 'info', sticky: e.sticky ?? false, createdAt: Date.now(), ...(e.learnMore ? { learnMore: e.learnMore } : {}) };
       return { ...s, notifications: [...s.notifications, n] };
@@ -192,7 +197,17 @@ export function reduce(s: State, e: Event): State {
 }
 
 // ---- selectors (07 §3) ---------------------------------------------------------
-export const selectVisibleFiles = (s: State): FileEntry[] => visibleFiles(s.listing.entries, s.view, s.locale.tag, s.listing.records);
+// Sorting 5,000 entries with a collator costs tens of milliseconds, and the listing is re-read on every render,
+// so the visible list is cached per entries array for the last (sort, filter, locale, records) seen (10 PERF-02).
+const visibleCache = new WeakMap<Entry[], { key: string; records: Record<string, DisplayRecord>; result: FileEntry[] }>();
+export const selectVisibleFiles = (s: State): FileEntry[] => {
+  const key = `${s.view.sort.by}|${s.view.sort.dir}|${s.view.filter}|${s.locale.tag}`;
+  const hit = visibleCache.get(s.listing.entries);
+  if (hit && hit.key === key && hit.records === s.listing.records) return hit.result;
+  const result = visibleFiles(s.listing.entries, s.view, s.locale.tag, s.listing.records);
+  visibleCache.set(s.listing.entries, { key, records: s.listing.records, result });
+  return result;
+};
 export const selectFiles = (s: State): FileEntry[] => s.listing.entries.filter(isFile);
 export const selectFolders = (s: State): Entry[] => s.listing.entries.filter((e) => !isFile(e));
 export const selectFocused = (s: State): FileEntry | null => (s.selection.focused ? (selectFiles(s).find((f) => f.path === s.selection.focused) ?? null) : null);

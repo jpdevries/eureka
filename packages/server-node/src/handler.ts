@@ -21,6 +21,8 @@ export interface PageContext {
   basePath: string;
   /** Set after a no-JS upload, for a notice. */
   uploaded?: string[];
+  /** True when the location came from the request (POST navigate, ?path=), not the default (07 STATE-40). */
+  locationRequested?: boolean;
 }
 export interface ChooseContext { source: MediaSource; path: string; filename: string; entry: Entry | undefined; lang: string }
 
@@ -108,15 +110,15 @@ export function createEurekaHandler(opts: HandlerOptions): NodeHandler {
     } catch (err) { return fail(res, err); }
   }
 
-  async function page(req: IncomingMessage, res: ServerResponse, url: URL, state: { sourceId?: string; path: string; uploaded?: string[] }): Promise<void> {
+  async function page(req: IncomingMessage, res: ServerResponse, url: URL, state: { sourceId?: string; path: string; uploaded?: string[]; requested?: boolean }): Promise<void> {
     const source = (state.sourceId !== undefined ? bySourceId(state.sourceId) : undefined) ?? opts.sources[0];
     if (!source || !opts.renderPage) return json(res, { error: 'not found' }, 404);
     const lang = url.searchParams.get('ln') ?? (req.headers['accept-language'] ?? 'en').split(',')[0]!.trim() ?? 'en';
     try {
       const [entries, tree] = await Promise.all([source.listDirectory(state.path), source.listTree()]);
-      const body = await opts.renderPage({ sources: sourceList(), source, path: normalizePath(state.path), entries, tree, lang, basePath, ...(state.uploaded ? { uploaded: state.uploaded } : {}) });
+      const body = await opts.renderPage({ sources: sourceList(), source, path: normalizePath(state.path), entries, tree, lang, basePath, locationRequested: state.requested ?? false, ...(state.uploaded ? { uploaded: state.uploaded } : {}) });
       return html(res, body);
-    } catch (err) { if (err instanceof PathError && err.status === 404) return page(req, res, url, { sourceId: state.sourceId, path: '/' }); return fail(res, err); }
+    } catch (err) { if (err instanceof PathError && err.status === 404) return page(req, res, url, { sourceId: state.sourceId, path: '/', requested: false }); return fail(res, err); }
   }
 
   /** The Level 0 POST (03 NOJS-30..33). */
@@ -139,7 +141,7 @@ export function createEurekaHandler(opts: HandlerOptions): NodeHandler {
     }
     const browsing = Object.entries(fields).find(([k]) => /^eureka__media-browser_.*__browsing$/.test(k))?.[1]?.[0];
     const target = browsing ? splitSourcePath(browsing) : { sourceId: String(source.id), path: uploadDir };
-    return page(req, res, url, { sourceId: target.sourceId, path: target.path, ...(uploaded ? { uploaded } : {}) });
+    return page(req, res, url, { sourceId: target.sourceId, path: target.path, requested: true, ...(uploaded ? { uploaded } : {}) });
   }
 
   async function serveStatic(res: ServerResponse, url: URL): Promise<boolean> {
@@ -176,7 +178,7 @@ export function createEurekaHandler(opts: HandlerOptions): NodeHandler {
       }
       if (url.pathname === basePath || url.pathname === basePath + '/') {
         if (req.method === 'POST') { await formPost(req, res, url); return true; }
-        if (opts.renderPage) { await page(req, res, url, { sourceId: url.searchParams.get('source') ?? undefined, path: url.searchParams.get('path') ?? '/' }); return true; }
+        if (opts.renderPage) { await page(req, res, url, { sourceId: url.searchParams.get('source') ?? undefined, path: url.searchParams.get('path') ?? '/', requested: url.searchParams.has('path') || url.searchParams.has('source') }); return true; }
       }
       return await serveStatic(res, url);
     } catch (err) { fail(res, err); return true; }

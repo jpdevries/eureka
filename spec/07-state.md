@@ -110,11 +110,17 @@ Event names are `area/verb`. Payloads in `schema/state.json#/$defs/events`.
 ## 6. Hydration
 
 - **STATE-40** When the server embeds `<script type="application/json"
-  id="{p}state">` (03 NOJS-41) the store initialises from it
-  (`sources`, `tree`, `listing`, `view.mode`) and skips the initial
-  fetches. Without it, the store initialises from persisted keys and
-  fetches sources, tree and listing in that order, rendering the cached
-  listing meanwhile.
+  id="{p}state">` (03 NOJS-41) the store initialises `sources` and
+  `tree` from it and skips those fetches. The embedded `listing` is used
+  when its `location` is `"requested"` (the page answered a POST
+  navigate or a `?path=` query), or when nothing is persisted, or when it
+  matches the persisted location; otherwise the visitor's persisted
+  location wins and is fetched, because a default server location must not
+  override where they left off. The embedded `view` is informative only;
+  view preferences come from configuration and persistence (CON-11).
+  Without the script, the store initialises from persisted keys and fetches
+  sources, tree and listing in that order, rendering the cached listing
+  meanwhile.
 
 ## 7. Host integration
 

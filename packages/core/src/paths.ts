@@ -66,3 +66,11 @@ export function splitSourcePath(value: string, delimiter = '||'): { sourceId: st
   if (i < 0) return { sourceId: value, path: '/' };
   return { sourceId: value.slice(0, i), path: normalizePath(value.slice(i + delimiter.length)) };
 }
+
+/** Every directory on the way to `p`, including `p` itself: "a/b/c" → ["a", "a/b", "a/b/c"]; "/" → []. */
+export function ancestors(p: string): string[] {
+  const n = normalizePath(p);
+  if (n === '/') return [];
+  const parts = n.split('/');
+  return parts.map((_, i) => parts.slice(0, i + 1).join('/'));
+}

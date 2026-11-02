@@ -4,16 +4,24 @@ import { attr, classes, html, type Raw } from '../html.js';
 import type { Ctx } from '../model.js';
 import { hidden, icon } from './icon.js';
 
+/**
+ * One directory (HTML-32): the disclosure (<details> holding only its <summary>) and the
+ * navigation button are siblings, so no interactive control nests inside the summary;
+ * the children list follows and is shown while the disclosure is open.
+ */
 function node(ctx: Ctx, n: TreeNode, depth: number): Raw {
-  const { state, ids } = ctx;
+  const { state, t, ids } = ctx;
   const cd = normalizePath(n.cd);
   const current = state.listing.path === cd;
-  const open = cd === '/' || state.tree.open.includes(cd) || (state.listing.path !== '/' && (state.listing.path + '/').startsWith(cd + '/'));
+  const open = cd === '/' || state.tree.open.includes(cd); // ancestors of the current directory are added to tree.open by the store
   const children = n.children ?? [];
-  return html`<details class="eureka__tree-node" data-cd="${cd}"${attr('open', open)}>
-    <summary class="${classes({ active: current })}"${attr('aria-current', current ? 'page' : null)}>${icon(ctx, 'folder', 'eureka__icon-closed')}${icon(ctx, 'folder-open', 'eureka__icon-open')} <button type="button" class="eureka__tree-link" id="${ids.item('tree', cd)}" data-action="navigate" data-cd="${cd}" data-source="${String(state.listing.source ?? '')}">${n.name}</button></summary>
-    <div class="eureka__tree-children" style="--depth: ${depth + 1}">${children.map((c) => node(ctx, c, depth + 1))}</div>
-  </details>`;
+  const toggle = children.length
+    ? html`<details class="eureka__tree-toggle" data-cd="${cd}"${attr('open', open)}><summary>${icon(ctx, 'folder', 'eureka__icon-closed')}${icon(ctx, 'folder-open', 'eureka__icon-open')}${hidden(t('tree.toggle', { name: n.name }))}</summary></details>`
+    : html`<span class="eureka__tree-leaf">${icon(ctx, current ? 'folder-open' : 'folder')}</span>`;
+  return html`<div class="${classes('eureka__tree-node', { 'eureka__tree-node--open': open || !children.length, active: current })}" data-cd="${cd}" style="--depth: ${depth}">
+    <div class="eureka__tree-row">${toggle}<button type="button" class="eureka__tree-link" id="${ids.item('tree', cd)}" data-action="navigate" data-cd="${cd}" data-source="${String(state.listing.source ?? '')}"${attr('aria-current', current ? 'page' : null)}>${n.name}</button></div>
+    ${children.length ? html`<div class="eureka__tree-children">${children.map((c) => node(ctx, c, depth + 1))}</div>` : ''}
+  </div>`;
 }
 
 export function sourcePanel(ctx: Ctx): Raw {
@@ -29,7 +37,7 @@ export function sourcePanel(ctx: Ctx): Raw {
       <select id="${ids.id('source-select')}" name="eureka__media-source" data-control="source">${state.sources.all.map((s) => html`<option value="${s.id}"${attr('selected', String(s.id) === String(state.listing.source))}>${s.name}</option>`)}</select>
     </div>
     <nav class="eureka__tree" aria-label="${t('tree.label')}">${node(ctx, root, 0)}</nav>
-    ${state.config.allowUploads && state.config.doDragNDrop ? html`<div class="eureka__drop-area" tabindex="0" aria-label="${t('pastImageFromClipboardMessage')}" title="${t(state.pending.uploading ? 'upload.dragFilesUploading' : 'upload.dragFilestoUpload', { cd })}" data-drop-zone><div class="eureka__drop-area-zone">${icon(ctx, state.pending.uploading ? 'circle-o-notch' : 'upload')}</div></div>` : ''}
+    ${state.config.allowUploads && state.config.doDragNDrop ? html`<button type="button" class="eureka__drop-area" data-action="upload" aria-label="${t(state.pending.uploading ? 'upload.dragFilesUploading' : 'upload.dragFilestoUpload', { cd })}. ${t('pastImageFromClipboardMessage')}" data-drop-zone><span class="eureka__drop-area-zone">${icon(ctx, state.pending.uploading ? 'circle-o-notch' : 'upload')}</span></button>` : ''}
     <div class="eureka__tree-bar flex-bar">
       <button type="button" title="${t('directory.createNewIn', { cd })}" data-action="create-directory">${hidden(t('directory.createNewIn', { cd }))}${icon(ctx, 'plus-square')}</button>
       ${createFile ? html`<a class="button eureka__create-file-button" href="${createFile.href}"${attr('target', createFile.target)} title="${t('upload.createFileIn', { cd })}" data-action="create-file">${hidden(t('upload.createFileIn', { cd }))}${icon(ctx, 'file-text-o')}</a>` : ''}

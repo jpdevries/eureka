@@ -1,5 +1,5 @@
 // The instance root: Level 0 form (03) or the enhanced <div> (02 §1-2).
-import { classes, html, jsonForScript, type Raw } from '../html.js';
+import { attr, classes, html, jsonForScript, type Raw } from '../html.js';
 import { hydrationState, type Ctx } from '../model.js';
 import { notifications, pathBar, chooseBar } from './bars.js';
 import { dialogs } from './dialogs.js';
@@ -12,7 +12,7 @@ export function instance(ctx: Ctx): Raw {
   const { state, t, ids, level } = ctx;
   const mode = state.view.mode;
   const cls = classes('eureka', `eureka__view-mode__${mode}`, { 'eureka__choose-multiple': level > 0 && state.view.chooseMode === 'multiple', 'eureka__server-side': level === 0, 'eureka__enlarge-focused-rows': state.config.enlargeFocusedRows, 'eureka__uploading': state.pending.uploading });
-  const body = html`<div class="eureka__browse-content">
+  const body = html`<div class="eureka__browse-content"${attr('inert', level > 0 && state.dialog !== null)}>
       ${level > 0 ? sourcePanel(ctx) : ''}
       <div class="eureka__stage">
         ${stageHeader(ctx)}
@@ -29,9 +29,9 @@ export function instance(ctx: Ctx): Raw {
       ${body}
       ${chooseBar(ctx)}
     </form>
-    <script type="application/json" id="${ids.id('state')}">${jsonForScript(hydrationState(state))}</script>`;
+    <script type="application/json" id="${ids.id('state')}">${jsonForScript(hydrationState(state, { requested: ctx.locationRequested ?? false }))}</script>`;
   }
-  return html`<div class="${cls}" lang="${state.locale.tag}" data-view="${mode}" data-choose="${state.view.chooseMode}" data-level="1" role="region" aria-label="${t('media.browser')}">
+  return html`<div class="${cls}" lang="${state.locale.tag}" data-view="${mode}" data-choose="${state.view.chooseMode}" data-level="1" tabindex="-1" role="region" aria-label="${t('media.browser')}">
     ${notifications(ctx)}
     ${body}
     ${pathBar(ctx)}

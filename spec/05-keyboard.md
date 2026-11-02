@@ -39,9 +39,12 @@ around it.
   its place (the next row, or the previous one for the last row, or the
   empty-state message when none remain).
 - **KEY-B4** After a rename, focus returns to the renamed row. After a
-  directory change, focus moves to the first row, or to the empty state
-  message, unless the change was made from the tree, in which case focus
-  stays in the tree.
+  directory change, focus stays on the control that caused it (the
+  directory selector, a tree button, a tree bar button) and the first row
+  becomes the listing's tab stop; the item focus in state is cleared, so
+  the path bar empties and Choose is disabled until a row is focused. (An
+  earlier draft moved focus to the first row; that made every navigation
+  also a selection and pulled focus away from the tree.)
 - **KEY-B5** Opening a dialog moves focus into it; closing it returns
   focus to the control that opened it (native `<dialog>` behaviour).
   Escape closes the topmost dialog.

@@ -1,5 +1,5 @@
 // Level 1: the listing, sorting and filtering (spec/02 §6, §5).
-import { test, expect, openDirectory, rows, rowNamed, listing, filterBox, v3only, baselineDefect } from '../helpers.mjs';
+import { test, expect, openDirectory, rows, rowNamed, listing, filterBox, v3only, baselineDefect, TARGET } from '../helpers.mjs';
 
 test.beforeEach(async ({ page }) => { await openDirectory(page, 'assets/img'); });
 
@@ -28,7 +28,7 @@ test('HTML-64 rows expose the generated description', async ({ page }) => {
 test('HTML-65,69 cells carry dimensions, human size and short date', async ({ page }) => {
   const row = rowNamed(page, 'schildpad.jpg');
   await expect(row).toContainText('336x125');
-  await expect(row).toContainText(/37(\.\d+)? KB/);
+  await expect(row).toContainText(/37(\.\d+)?[ \u00a0]KB/); // v3 separates the unit with a non-breaking space (I18N-21)
   await expect(row).toContainText(/04\/0?1\/17|2017/);
 });
 
@@ -69,9 +69,10 @@ test('HTML-45 sorting by name is alphabetical and reversible', async ({ page }) 
   const names = async () => (await rows(page).allInnerTexts()).map(t => t.trim().split('\n')[0]);
   await page.getByLabel('Sort by').selectOption('filename');
   await page.getByLabel('Sort Direction').selectOption('ascending');
-  await expect(rows(page).first()).toHaveAccessibleName(/^Wide Banner/); // v2 compares raw strings: uppercase first
+  // v2 compared raw strings (uppercase first); v3 uses Intl.Collator (I18N-22), so "animation" sorts before "Wide Banner"
+  await expect(rows(page).first()).toHaveAccessibleName(TARGET === 'v2' ? /^Wide Banner/ : /^animation\.gif/);
   await page.getByLabel('Sort Direction').selectOption('descending');
-  await expect(rows(page).first()).toHaveAccessibleName(/^theme\.mp3/);
+  await expect(rows(page).first()).toHaveAccessibleName(TARGET === 'v2' ? /^theme\.mp3/ : /^Wide Banner/);
 });
 
 test('HTML-43 the filter narrows rows across name, dimensions, size and date', async ({ page }) => {

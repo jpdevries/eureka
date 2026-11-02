@@ -78,6 +78,7 @@ test('HTML-92 crop opens a dialog named for the item', async ({ page }) => {
 });
 
 test('HTML-20 notifications are announced from a live region with a dismiss control', async ({ page }) => {
+  await page.evaluate(() => localStorage.clear()); // the welcome shows once per visitor (STATE-30 "welcomed"); beforeEach dismissed it
   await page.goto('/');
   const note = page.getByText('Welcome to Eureka. You found it.');
   await expect(note).toBeVisible();
@@ -89,6 +90,7 @@ test('HTML-20 notifications are announced from a live region with a dismiss cont
 
 test('HTML-21 the dismiss control is exposed to assistive technology', async ({ page }) => {
   baselineDefect('v2 sets aria-hidden="true" on the dismiss button');
+  await page.evaluate(() => localStorage.clear());
   await page.goto('/');
   await expect(page.getByRole('button', { name: 'Dismiss Notification' })).toBeVisible();
 });

@@ -147,7 +147,19 @@ const data = {
   "sort.descending": "Descending",
   "details": "Details",
   "selectedPaths": "Selected Paths",
-  "directory.untitled": "untitled folder"
+  "directory.untitled": "untitled folder",
+  "directory.exists": "A directory named {name} already exists here",
+  "rename.exists": "An item named {name} already exists here",
+  "upload.failed": "Upload failed: {error}",
+  "delete.failed": "Could not delete {filename}: {error}",
+  "rename.failed": "Could not rename {filename}: {error}",
+  "directory.createFailed": "Could not create the directory: {error}",
+  "listing.failed": "Could not load {cd}: {error}",
+  "cropped.saved": "Saved {filename}",
+  "crop.failed": "Could not crop {filename}: {error}",
+  "shortcuts": "Keyboard shortcuts",
+  "created.directory": "Created directory {name}",
+  "tree.toggle": "Toggle {name}"
 } as const;
 export default data;
 export type MessagesEn = typeof data;

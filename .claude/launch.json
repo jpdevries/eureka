@@ -16,12 +16,14 @@
       "port": 3101
     },
     {
-      "name": "v3-level0",
+      "name": "v3",
       "runtimeExecutable": "node",
       "runtimeArgs": [
         "spec/conformance/fixture-server.mjs",
         "--port",
         "3102",
+        "--static",
+        "packages/element/demo",
         "--render",
         "v3"
       ],

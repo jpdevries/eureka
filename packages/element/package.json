@@ -1,0 +1,29 @@
+{
+  "name": "@eureka/element",
+  "version": "3.0.0-alpha.0",
+  "description": "<eureka-browser>: the Eureka media browser as a framework-free custom element in light DOM, enhancing the server-rendered Level 0 form",
+  "license": "BSD-3-Clause",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" },
+    "./define": { "types": "./dist/define.d.ts", "default": "./dist/define.js" },
+    "./eureka-browser.js": "./dist/eureka-browser.js",
+    "./eureka-worker.js": "./dist/eureka-worker.js"
+  },
+  "files": ["dist", "src", "demo"],
+  "sideEffects": ["./dist/define.js", "./dist/eureka-browser.js", "./dist/eureka-worker.js"],
+  "scripts": {
+    "build": "tsc -b && node build.mjs",
+    "test": "vitest run --root ../.."
+  },
+  "dependencies": {
+    "@eureka/core": "3.0.0-alpha.0",
+    "@eureka/css": "3.0.0-alpha.0",
+    "@eureka/html": "3.0.0-alpha.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.0"
+  }
+}

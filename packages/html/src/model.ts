@@ -22,7 +22,16 @@ export interface Ctx {
   iconSprite: string;
   /** Rendered on the server for a notice after a no-JS upload. */
   uploaded?: string[];
+  /** True when the page location came from the request (a POST navigate or a query), not the server default (07 STATE-40). */
+  locationRequested?: boolean;
+  /**
+   * Row markup memo for incremental client renders (10 PERF-11): `previous` holds the markup of each row
+   * as last rendered, keyed by path; the listing fills `next` and emits a keep-placeholder
+   * (`<tr id data-eureka-keep>`) for rows whose markup is unchanged, which the morph leaves untouched.
+   */
+  rowMemo?: RowMemo;
 }
+export interface RowMemo { previous: ReadonlyMap<string, string>; next: Map<string, string> }
 
 export interface PageInput {
   sources: Source[];
@@ -33,6 +42,7 @@ export interface PageInput {
   lang: string;
   basePath: string;
   uploaded?: string[];
+  locationRequested?: boolean;
   config?: PartialConfig;
   timeZone?: string;
 }
@@ -48,12 +58,13 @@ export function contextFromPage(input: PageInput, level: Level = 0): Ctx {
   state = reduce(state, { type: 'tree/loaded', source: input.source.id, nodes: input.tree });
   const records = Object.fromEntries(input.entries.map((e) => [e.path, buildDisplayRecord(e, { locale: input.lang, timeZone: input.timeZone, t })]));
   state = reduce(state, { type: 'listing/loaded', source: input.source.id, path: input.path, entries: input.entries, records });
-  return { state, t, ids: createIds(config.storagePrefix), level, iconSprite: `${config.assetsBasePath.replace(/\/+$/, '')}/img/icons.svg`, ...(input.uploaded ? { uploaded: input.uploaded } : {}) };
+  return { state, t, ids: createIds(config.storagePrefix), level, iconSprite: `${config.assetsBasePath.replace(/\/+$/, '')}/img/icons.svg`, ...(input.uploaded ? { uploaded: input.uploaded } : {}), ...(input.locationRequested ? { locationRequested: true } : {}) };
 }
 
 /** The part of state a server embeds for hydration (03 NOJS-41, 07 STATE-40). */
-export function hydrationState(state: State): Record<string, unknown> {
+export function hydrationState(state: State, { requested = false }: { requested?: boolean } = {}): Record<string, unknown> {
   return {
+    location: requested ? 'requested' : 'default',
     sources: { all: state.sources.all, current: state.sources.current, status: 'ready' },
     tree: { bySource: { [String(state.listing.source)]: selectCurrentTree(state) }, open: state.tree.open, status: 'ready' },
     listing: { source: state.listing.source, path: state.listing.path, entries: state.listing.entries, status: 'ready' },

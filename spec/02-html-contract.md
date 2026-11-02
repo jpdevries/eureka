@@ -14,7 +14,10 @@ listed in section 9, but a test never depends on them.
 - **HTML-01** An instance has one root element with class `eureka`. At
   Level 0 the root is the `<form>` described in 03. At Level 1+ the root
   is a `<div>` (the form is replaced because the enhanced layer uses many
-  independent forms inside it).
+  independent forms inside it) with `role="region"`, the accessible name
+  "Media Browser", and `tabindex="-1"`: a click anywhere inside gives the
+  root programmatic focus so instance-scoped shortcuts (05 KEY-A2) work
+  without first tabbing to a control. The root is not in the tab order.
 - **HTML-02** The root MUST carry the current view mode as
   `data-view="table|thumb|grid|list|masonry"` and the choose mode as
   `data-choose="single|multiple"`. v2 used the classes
@@ -74,18 +77,27 @@ DOM order is the reading order and the tab order.
   (visible text) whose options are the media sources (`name`, value `id`).
   A visually-hidden prefix "Choose a" completes the label.
 - **HTML-32** The directory tree is a `<nav>` labelled "Directories"
-  built from nested `<details>`/`<summary>` elements, one per directory,
-  with the root rendered as `./`. The directory name inside `<summary>` is
-  the activation target that navigates into the directory; toggling the
-  disclosure only expands or collapses. The current directory's summary
-  carries `aria-current="page"` (v2: class `active`).
+  built from one node per directory, the root rendered as `./`. A node is
+  a row holding a `<details>` disclosure whose `<summary>` (folder icon,
+  visually-hidden "Toggle {name}") only expands or collapses, followed by a
+  sibling `<button>` with the directory name that navigates into it; the
+  node's children list follows the row and is shown while the disclosure is
+  open. The two controls are siblings, never nested, so the summary contains
+  no interactive content (axe `nested-interactive`). Directories without
+  subdirectories render a static folder icon in place of the disclosure. The
+  current directory's button carries `aria-current="page"` (v2: class
+  `active` on a link).
 - **HTML-33** Open state of tree nodes MUST persist across renders and
   reloads (07, persistence).
 - **HTML-34** The drop area, when drag and drop uploads are enabled, is a
-  focusable element with accessible name "Paste images from the clipboard
-  to upload" and a title "Drag files here to be uploaded to {cd}". When
-  an upload is in progress its icon changes to a spinner and its name to
-  "Uploading files…".
+  `<button>` whose accessible name is "Drag files here to be uploaded to
+  {cd}. Paste images from the clipboard to upload"; activating it opens the
+  file picker, and files dropped on it (or anywhere in the instance) or
+  pasted while focus is inside the instance are uploaded to the current
+  directory. When an upload is in progress its icon changes to a spinner
+  and its name starts with "Uploading files…". v2 used a `div` with
+  `tabindex="0"` and an `aria-label`, which is not a permitted
+  combination.
 - **HTML-35** The tree bar contains icon buttons, each with visually-hidden
   text and `title`: "Create a new Directory in {cd}", "Create File in
   {cd}" (a link, only when the host supplies a createFile handler), and

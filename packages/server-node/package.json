@@ -22,6 +22,7 @@
     "image-size": "^1.2.0",
     "yazl": "^3.3.1",
     "@eureka/html": "3.0.0-alpha.0",
+    "@eureka/element": "3.0.0-alpha.0",
     "@eureka/css": "3.0.0-alpha.0"
   },
   "devDependencies": {

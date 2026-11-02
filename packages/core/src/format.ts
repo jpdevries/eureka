@@ -43,12 +43,28 @@ const UNITS = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
  * familiar KB/MB labels ("37 KB" for 37,888 bytes, "95.7 KB", "11.44 MB", "812 B"),
  * localised digits, non-breaking space before the unit (09 I18N-21).
  */
+// Intl formatters are expensive to construct (hundreds of microseconds each); a 5,000-item
+// directory needs 20,000 of them, so cache per locale/options (10 PERF-01).
+const formatterCache = new Map<string, Intl.NumberFormat | Intl.DateTimeFormat>();
+function numberFormat(locale: string, options: Intl.NumberFormatOptions): Intl.NumberFormat {
+  const key = 'n|' + locale + '|' + JSON.stringify(options);
+  let f = formatterCache.get(key) as Intl.NumberFormat | undefined;
+  if (!f) { f = new Intl.NumberFormat(locale, options); formatterCache.set(key, f); }
+  return f;
+}
+function dateFormat(locale: string, options: Intl.DateTimeFormatOptions): Intl.DateTimeFormat {
+  const key = 'd|' + locale + '|' + JSON.stringify(options);
+  let f = formatterCache.get(key) as Intl.DateTimeFormat | undefined;
+  if (!f) { f = new Intl.DateTimeFormat(locale, options); formatterCache.set(key, f); }
+  return f;
+}
+
 export function formatFileSize(bytes: number, locale: string, { round = 2 }: { round?: number } = {}): string {
   if (!Number.isFinite(bytes) || bytes < 0) bytes = 0;
   let value = bytes, unit = 0;
   while (value >= 1024 && unit < UNITS.length - 1) { value /= 1024; unit++; }
   const digits = unit === 0 ? 0 : round;
-  const num = new Intl.NumberFormat(locale, { maximumFractionDigits: digits, minimumFractionDigits: 0 }).format(value);
+  const num = numberFormat(locale, { maximumFractionDigits: digits, minimumFractionDigits: 0 }).format(value);
   return `${num} ${UNITS[unit]}`;
 }
 
@@ -63,9 +79,9 @@ export function formatDates(editedOn: number | string, locale: string, timeZone?
   const d = toDate(editedOn);
   const tz = timeZone ? { timeZone } : {};
   return {
-    short: new Intl.DateTimeFormat(locale, { year: '2-digit', month: '2-digit', day: '2-digit', ...tz }).format(d),
-    long: new Intl.DateTimeFormat(locale, { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long', ...tz }).format(d),
-    verbose: new Intl.DateTimeFormat(locale, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', ...tz }).format(d),
+    short: dateFormat(locale, { year: '2-digit', month: '2-digit', day: '2-digit', ...tz }).format(d),
+    long: dateFormat(locale, { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', timeZoneName: 'long', ...tz }).format(d),
+    verbose: dateFormat(locale, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', ...tz }).format(d),
     iso: d.toISOString()
   };
 }

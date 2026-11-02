@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eureka Media Browser (client-only demo)</title>
+<meta name="color-scheme" content="light dark">
+<link rel="stylesheet" href="/assets/css/eureka.css">
+<style>
+  html, body { margin: 0; background: #ececec; }
+  main { display: flex; flex-direction: column; }
+  @media (min-width: 40em) {
+    html, body, main { block-size: 100%; }
+    .eureka-root { flex: 1 1 auto; min-block-size: 0; display: flex; flex-direction: column; overflow: hidden; }
+  }
+</style>
+</head>
+<body class="modal-section">
+<main>
+<h1 class="visually-hidden">Eureka Media Browser</h1>
+<div id="root" class="eureka-root">
+  <!-- No server-rendered form here: the element fetches sources, tree and listing itself (07 STATE-40). -->
+  <eureka-browser api="/assets/components/eureka/" assets="/assets/"></eureka-browser>
+</div>
+</main>
+<script type="module">
+  // Host integration (07 STATE-50): events, or callbacks through the config property.
+  const el = document.querySelector('eureka-browser');
+  el.config = {
+    callbacks: {
+      choose: (items) => alert(JSON.stringify(items)),
+      close: () => alert('close')
+    }
+  };
+  el.addEventListener('eureka-navigate', (e) => console.debug('navigate', e.detail));
+  el.addEventListener('eureka-error', (e) => console.error('eureka-error', e.detail));
+</script>
+<script type="module" src="/assets/js/eureka-browser.js"></script>
+</body>
+</html>

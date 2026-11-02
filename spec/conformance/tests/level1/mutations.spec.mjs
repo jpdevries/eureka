@@ -82,7 +82,7 @@ test('HTML-35,92 create directory from the tree bar', async ({ page }) => {
   await page.getByRole('button', { name: 'Media Source Panel' }).click();
   await page.getByRole('button', { name: /Create a new Directory in assets\/img/ }).click();
   const dialog = page.getByRole('dialog');
-  const input = dialog.getByLabel(/Create a new directory in \/assets\/img/i);
+  const input = dialog.getByLabel(/Create a new directory in \/?assets\/img/i);
   await expect(input).toBeFocused();
   await expect(dialog.getByRole('button', { name: /^Create/ })).toBeDisabled();
   await input.fill('newdir');

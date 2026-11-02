@@ -67,7 +67,7 @@ test('KEY-23 rename shortcut opens the rename dialog for the focused row', async
 
 test('KEY-25..28 arrow keys move between rows with a roving tabindex', async ({ page }) => {
   v3only('arrow-key row navigation');
-  await focusRow(page, 'Wide Banner (final).jpg');
+  await rows(page).first().focus();
   await page.keyboard.press(chord('nextRow'));
   await expect(rows(page).nth(1)).toBeFocused();
   await page.keyboard.press(chord('lastRow'));

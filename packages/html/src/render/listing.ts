@@ -1,6 +1,6 @@
 // The listing table (02 §6) with its header and empty states.
-import { selectVisibleFiles, type SortBy } from '@eureka/core';
-import { attr, classes, html, type Raw } from '../html.js';
+import { selectVisibleFiles, type FileEntry, type SortBy } from '@eureka/core';
+import { attr, classes, html, raw, type Raw } from '../html.js';
 import type { Ctx } from '../model.js';
 import { hidden, icon } from './icon.js';
 import { row } from './row.js';
@@ -38,6 +38,16 @@ function emptyState(ctx: Ctx, colSpan: number): Raw {
   return html`<tr class="eureka__empty-row"><td colspan="${colSpan}" class="comfortable"><p class="alert-info eureka__notice" role="status">${body}</p></td></tr>`;
 }
 
+/** A row, or a keep-placeholder when its markup is unchanged since the previous render (Ctx.rowMemo). */
+function memoRow(ctx: Ctx, f: FileEntry, i: number): Raw {
+  const memo = ctx.rowMemo;
+  if (!memo) return row(ctx, f, i);
+  const markup = row(ctx, f, i).value;
+  memo.next.set(f.path, markup);
+  if (memo.previous.get(f.path) === markup) return html`<tr id="${ctx.ids.item('row', f.filename)}" data-eureka-keep></tr>`;
+  return raw(markup);
+}
+
 export function listing(ctx: Ctx): Raw {
   const { state, t, ids, level } = ctx;
   const files = selectVisibleFiles(state);
@@ -46,6 +56,6 @@ export function listing(ctx: Ctx): Raw {
   return html`<table class="eureka__table" id="${ids.id('table')}" data-count="${files.length}">
     <caption class="visually-hidden" id="${ids.id('caption')}">${t('listing.caption', { cd: state.listing.path })}, ${t('listing.count', { n: files.length })}</caption>
     ${header(ctx)}
-    <tbody class="${classes({ empty: files.length === 0 })}">${files.length ? files.map((f, i) => row(ctx, f, i)) : emptyState(ctx, colSpan)}</tbody>
+    <tbody class="${classes({ empty: files.length === 0 })}">${files.length ? files.map((f, i) => memoRow(ctx, f, i)) : emptyState(ctx, colSpan)}</tbody>
   </table>`;
 }

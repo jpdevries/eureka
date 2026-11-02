@@ -63,12 +63,13 @@ export async function dismissNotification(page) {
   await btn.click({ timeout: TARGET === 'v2' ? 5000 : 1500 }).catch(() => {});
 }
 
-/** Select a view mode. v2's icon radios are visually hidden inputs, so the baseline clicks their labels. */
+/** Select a view mode. The icon radios are visually hidden inputs behind icon labels (v2 and v3 alike), so click the label. */
 export async function setView(page, mode) {
-  if (TARGET === 'v2') await page.locator(`label[for="eureka__view-${mode}"]`).click();
-  else await viewRadio(page, mode).check();
+  await page.locator(`label[for$="view-${mode}"]`).click();
   await expect(viewRadio(page, mode)).toBeChecked();
 }
+/** The media source <select> ("Choose a Media Source"); by role, since the panel itself is labelled "Media Source Panel". */
+export const sourceSelect = page => page.getByRole('combobox', { name: 'Media Source' });
 
 /** True when an element is removed from the visual layout (display:none or clipped to 1px), whatever its a11y exposure. */
 export async function isVisuallyHidden(locator) {

@@ -33,7 +33,7 @@ const data = {
       "description": "Panel background"
     },
     "--link-color": {
-      "default": "#3697cd",
+      "default": "#1f6aa5",
       "documented": true,
       "description": "Anchor text colour"
     },

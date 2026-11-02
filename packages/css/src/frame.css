@@ -1,6 +1,9 @@
 @layer eureka.layout {
   /* Wide frame (04 LAY-10..13): the instance fills its container's block size; the listing body scrolls. */
+  /* The custom element host is a transparent flex link between .eureka-root and .eureka. */
+  eureka-browser { display: flex; flex-direction: column; flex: 1 1 auto; min-block-size: 0; min-inline-size: 0; }
   .eureka { display: flex; flex-direction: column; min-block-size: 0; }
+  .eureka:focus { outline: none; } /* the root takes programmatic focus (tabindex=-1) so shortcuts work after a click inside */
   .eureka > .eureka__browse-content { display: flex; flex-direction: column; gap: 0.5rem; min-block-size: 0; flex: 1 1 auto; }
   .eureka__stage { display: flex; flex-direction: column; min-inline-size: 0; min-block-size: 0; flex: 1 1 100%; }
   .eureka__stage__filter-view { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.5rem 1rem; margin-block-end: 0.5rem; }
@@ -11,7 +14,7 @@
   .eureka__table-wrapper { display: flex; flex-direction: column; min-block-size: 0; flex: 1 1 auto; }
 
   @container eureka (min-width: 40em) {
-    .eureka-root:has(> .eureka) { display: flex; flex-direction: column; }
+    .eureka-root:has(> .eureka), .eureka-root:has(> eureka-browser) { display: flex; flex-direction: column; }
     .eureka { flex: 1 1 auto; min-block-size: 0; }
     .eureka > .eureka__browse-content { flex-direction: row; }
     .eureka__pathbrowser { flex: 0 0 14rem; display: flex; flex-direction: column; min-block-size: 0; }

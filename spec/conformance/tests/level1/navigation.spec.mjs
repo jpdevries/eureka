@@ -1,5 +1,5 @@
 // Level 1: source panel, tree, directory selector, view modes, persistence (spec/02 §2, §4, §5).
-import { test, expect, openDirectory, rows, sourcePanelToggle, directoryTree, viewRadio, viewRadioName, setView, baselineDefect, v3only, dismissNotification } from '../helpers.mjs';
+import { test, expect, openDirectory, rows, sourcePanelToggle, sourceSelect, directoryTree, viewRadio, viewRadioName, setView, baselineDefect, v3only, dismissNotification, TARGET } from '../helpers.mjs';
 
 test('HTML-10 the source panel toggle exposes and controls its state', async ({ page }) => {
   await openDirectory(page);
@@ -9,7 +9,7 @@ test('HTML-10 the source panel toggle exposes and controls its state', async ({ 
   await toggle.click();
   await expect(toggle).toHaveAttribute('aria-expanded', 'true');
   await expect(directoryTree(page)).toBeVisible();
-  await expect(page.getByLabel('Media Source')).toBeVisible();
+  await expect(sourceSelect(page)).toBeVisible();
   await toggle.click();
   await expect(directoryTree(page)).toBeHidden();
 });
@@ -26,7 +26,8 @@ test('HTML-32 the tree is built from disclosure widgets and navigates on activat
   await sourcePanelToggle(page).click();
   const tree = directoryTree(page);
   await expect(tree.locator('details')).not.toHaveCount(0);
-  await expect(tree.locator('summary', { hasText: 'img' })).toBeVisible();
+  // v2 put the directory name inside the summary; v3 renders it as a sibling button (HTML-32)
+  await expect(TARGET === 'v2' ? tree.locator('summary', { hasText: 'img' }) : tree.getByRole('button', { name: 'img', exact: true })).toBeVisible();
   await tree.getByText('redwoods', { exact: true }).click();
   await expect(rows(page)).toHaveCount(24);
   await expect(page.getByRole('row', { name: /^redwood-01\.jpg/ })).toHaveCount(1);
@@ -42,8 +43,8 @@ test('HTML-32 the current directory is marked in the tree', async ({ page }) => 
 test('HTML-31 switching media source reloads the tree and listing', async ({ page }) => {
   await openDirectory(page);
   await sourcePanelToggle(page).click();
-  await page.getByLabel('Media Source').selectOption('1');
-  await expect(page.getByLabel('Media Source')).toHaveValue('1');
+  await sourceSelect(page).selectOption('1');
+  await expect(sourceSelect(page)).toHaveValue('1');
 });
 
 test('HTML-47 the view chooser offers the five modes and keeps the rows', async ({ page }) => {

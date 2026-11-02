@@ -97,7 +97,8 @@ describe('enhanced render (02)', () => {
     expect(out).toContain('aria-expanded="false"');
   });
   it('uses a roving tabindex and sortable header buttons', () => {
-    expect(out.match(/tabindex="0"/g)!.length).toBe(1 + 1); // first row + drop area
+    expect(out.match(/tabindex="0"/g)!.length).toBe(1); // the first row only; the root is a programmatic focus target (tabindex="-1")
+    expect(out).toContain('data-level="1" tabindex="-1"');
     expect(out).toContain('<th scope="col" class="eureka__th-filename" aria-sort="ascending">');
     expect(out).toContain('data-sort-by="fileSize" aria-pressed="false"');
   });

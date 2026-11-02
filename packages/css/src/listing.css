@@ -24,21 +24,21 @@
   /* Table and list modes: wide (LAY-20) */
   @container eureka (min-width: 40em) {
     .eureka:is([data-view="table"], [data-view="list"]) .eureka__table > :is(thead, tbody) > tr {
-      grid-template-columns: 40% 24% 12% 12% 12%;
+      grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) var(--eureka-col-dimensions, 6.5rem) var(--eureka-col-size, 6rem) var(--eureka-col-date, 6rem);
       grid-template-areas: "media name dimensions file-size edited-on";
     }
     .eureka:is([data-view="table"], [data-view="list"]) .eureka__table > tbody > tr {
       grid-template-areas: "media name dimensions file-size edited-on" "actions actions actions actions actions";
     }
     .eureka:is([data-view="table"], [data-view="list"])[data-choose="multiple"] .eureka__table > :is(thead, tbody) > tr {
-      grid-template-columns: 2rem auto 24% 12% 12% 12%;
+      grid-template-columns: 2rem minmax(0, 5fr) minmax(0, 3fr) var(--eureka-col-dimensions, 6.5rem) var(--eureka-col-size, 6rem) var(--eureka-col-date, 6rem);
       grid-template-areas: "choose media name dimensions file-size edited-on";
     }
     .eureka:is([data-view="table"], [data-view="list"])[data-choose="multiple"] .eureka__table > tbody > tr {
       grid-template-areas: "choose media name dimensions file-size edited-on" "actions actions actions actions actions actions";
     }
     .eureka[data-level="0"]:is([data-view="table"], [data-view="list"]) .eureka__table > :is(thead, tbody) > tr {
-      grid-template-columns: 2rem 40% 24% auto auto auto;
+      grid-template-columns: 2rem minmax(0, 5fr) minmax(0, 3fr) var(--eureka-col-dimensions, 6.5rem) var(--eureka-col-size, 6rem) var(--eureka-col-date, 6rem);
       grid-template-areas: "radio media name dimensions file-size edited-on";
     }
     .eureka:is([data-view="table"], [data-view="list"]) .eureka__table :is(td, th):not(.eureka__td-media, .eureka__th-media, .eureka__choose, .eureka__select, .eureka__context-row) { text-align: end; }

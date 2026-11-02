@@ -57,6 +57,19 @@ assert those names.
   v2 and v3 bindings both resolve from `data/keymap.json`.
 - Every test gets fresh fixture data (`POST /__reset` runs before each).
 
+## v3 results (2026-11-02)
+
+`npm run conformance:v3` (after `npm run build`): 104 passed, 1 skipped
+(LAY-12 in the narrow project, by design), 0 failures, about 1.2 minutes.
+axe-core reports no violations in any of the eight checked states (Level 0
+light and dark, enhanced table light and dark, focused row, grid mode,
+multiple choice with the panel open, rename dialog). The `v3` target runs
+the fixture server with `--render v3`, which serves the server-rendered
+form inside `<eureka-browser>` with the element bundle at `/`; the Level 0
+project loads the same pages with JavaScript disabled. Run the v2 and v3
+suites one after the other: both write to `results/`, and concurrent runs
+delete each other's traces.
+
 ## Baseline results (Eureka 2.0, v0.0.129, 2026-11-01)
 
 `npm run test:v2`: 78 passed, 18 expected failures (the documented v2

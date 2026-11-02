@@ -20,8 +20,9 @@
     "build": "npm run build --workspaces --if-present",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc -b packages/core packages/html packages/server-node",
+    "typecheck": "tsc -b packages/core packages/html packages/element packages/server-node",
     "conformance": "npm run test:v2 --workspace spec/conformance",
+    "conformance:v3": "npm run test:v3 --workspace spec/conformance",
     "validate:schemas": "npm run validate:schemas --workspace spec/conformance",
     "sync:spec-data": "node scripts/sync-spec-data.mjs"
   },
@@ -29,6 +30,7 @@
     "@types/node": "^22.10.0",
     "ajv": "^8.20.0",
     "ajv-formats": "^3.0.1",
+    "happy-dom": "^21.0.4",
     "typescript": "^5.7.0",
     "vitest": "^3.0.0"
   }

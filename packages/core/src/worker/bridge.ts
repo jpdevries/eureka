@@ -3,8 +3,12 @@
 import { createEngine, type Engine, type EngineOptions } from './engine.js';
 import type { EngineRequest, EngineResponse, EngineResultFor } from './protocol.js';
 
+type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
+/** A request as the UI sends it: the envelope fields (id, locale, headers) are filled in by the client. */
+export type ClientRequest = DistributiveOmit<EngineRequest, 'id' | 'locale' | 'headers'> & Partial<{ locale: string; headers: Record<string, string> }>;
+
 export interface EngineClient {
-  request<T extends EngineRequest['type']>(req: Omit<Extract<EngineRequest, { type: T }>, 'id' | 'locale' | 'headers'> & Partial<Pick<EngineRequest, 'locale' | 'headers'>>): Promise<{ result: EngineResultFor<T>; fromCache: boolean }>;
+  request<R extends ClientRequest>(req: R): Promise<{ result: EngineResultFor<R['type']>; fromCache: boolean }>;
   readonly mode: 'worker' | 'inline';
   terminate(): void;
 }

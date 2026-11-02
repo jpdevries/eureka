@@ -362,5 +362,49 @@ Taken on 2026-11-01:
   what `CONFORMANCE_TARGET=v3` drives. Level 0 conformance and the Level 0
   axe check pass on v3 with zero violations (after fixing two contrast
   tokens and the Cancel button's name that the check caught).
-- Next: Phase 4, the `<eureka-browser>` element on top of html + core, then
-  the enhanced conformance projects against it.
+### Phase 4 progress
+
+- `packages/element`: `<eureka-browser>`, a light-DOM custom element that
+  enhances the server-rendered Level 0 form (hydrating from the embedded
+  state) or renders from the API, re-renders the instance markup from state
+  through a keyed DOM morph (focus, scroll, typed text and media playback
+  survive), and wires every interaction: navigation (selector, tree, source),
+  sorting, filtering, view and choose modes, selection, roving-tabindex rows
+  with the full keymap, native dialogs (rename, create directory, confirm
+  delete, crop by bounds), upload (control, drag and drop, paste), bulk
+  delete and zip download, fullscreen, notifications, persistence, the
+  host events and methods of 07 §7. Fetching, normalising, sorting and
+  filtering run in the worker bundle; inline when unavailable. Configured
+  by attributes, a JSON child or the `config` property. esbuild bundles:
+  27.8 kB gzip element + 4.3 kB worker (PERF-25 budget is 30 kB for both;
+  the English catalog is most of the overage, to be trimmed when catalogs
+  move to files in the i18n phase). 9 unit tests (morph, config) under
+  happy-dom.
+- Fixture server `--render v3` now serves the enhanced page at `/`
+  (Level 0 form inside the element plus the bundle, the progressive
+  enhancement path) and the client-only demo at `/index.html`; the
+  reference server gained `--enhance`.
+- Conformance at `CONFORMANCE_TARGET=v3`: all three projects pass (104
+  passed, 1 skipped by design), axe clean in all 8 checked states. The
+  v2 baseline suite still passes. Things the suite caught in the element
+  layer: the tree's navigate button nested inside `<summary>` (axe
+  nested-interactive; the node is now a disclosure and a sibling button,
+  HTML-32 updated), `aria-label` on a `div` drop area (now a button,
+  HTML-34 updated), link colour 3.24:1 on white (token default moved to
+  `#1f6aa5`), and three tests that had encoded v2 behaviour (raw string
+  sort order, a leading slash, the welcome shown on every load).
+- Spec amendments from building it: HTML-01 (root `tabindex="-1"` so
+  shortcuts work after a click inside), KEY-B4 (focus stays on the control
+  that changed the directory), STATE-40 (a default server location yields
+  to the persisted one; a requested location wins).
+- Performance with the 5,000-item fixture: Intl formatters are now cached
+  (building 5,000 display records went from seconds to ~50 ms); row markup
+  is memoised so a re-render serialises and parses only changed rows (the
+  morph keeps the rest via placeholders, PERF-11); the visible list is
+  cached per entries array. Loading `large` takes ~1 s wall-clock with no
+  task ≥ 50 ms observed, and focus, filter and sort interactions on 5,000
+  rows record no long tasks. Not yet done: windowing (PERF-12), the engine's
+  sort/filter order is computed but the renderer still sorts via the cached
+  selector, and PERF-20..24 are not yet measured by the suite itself.
+- Next: Phase 5, the React adapter and demo site; a pointer-driven crop
+  marquee; the shortcuts reference (KEY-A5); message catalog files.
