@@ -30,11 +30,15 @@ jobs:
       - run: npm test
       - run: npm run build
       - name: Refuse to publish with pending changesets
+        # In pre-release mode applied changesets stay in .changeset/ and are listed in pre.json; anything else is pending.
         run: |
-          if ls .changeset/*.md 2>/dev/null | grep -v README.md | grep -q .; then
-            echo "Pending changesets found; merge the version pull request first." >&2
-            exit 1
-          fi
+          node -e '
+            const fs = require("fs");
+            const applied = new Set((fs.existsSync(".changeset/pre.json") ? JSON.parse(fs.readFileSync(".changeset/pre.json", "utf8")).changesets : []) ?? []);
+            const pending = fs.readdirSync(".changeset").filter((f) => f.endsWith(".md") && f !== "README.md" && !applied.has(f.slice(0, -3)));
+            if (pending.length) { console.error("Pending changesets: " + pending.join(", ") + ". Merge the version pull request first."); process.exit(1); }
+            console.log("No pending changesets.");
+          '
       - run: npx changeset publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -3,6 +3,12 @@
 The `@eureka/*` packages version together (a Changesets `fixed` group) and
 publish from the `v3` branch. Node 22, npm workspaces.
 
+`@changesets/cli` is pinned to the 2.x line: 3.x moves applied changesets
+into `.changeset/pre/` during pre-release mode, which `changesets/action`
+cannot read yet (it treats the folder as a legacy changeset and fails).
+With 2.x, applied changesets stay in `.changeset/` and `pre.json` lists
+them; they feed the aggregated changelog when the line leaves alpha.
+
 ## Every change
 
 1. Make the change, with its spec amendment and tests.

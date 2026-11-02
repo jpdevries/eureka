@@ -1,4 +1,17 @@
 {
   "mode": "pre",
-  "tag": "alpha"
+  "tag": "alpha",
+  "initialVersions": {
+    "@eureka/core": "3.0.0-alpha.0",
+    "@eureka/css": "3.0.0-alpha.0",
+    "@eureka/element": "3.0.0-alpha.0",
+    "@eureka/html": "3.0.0-alpha.0",
+    "@eureka/react": "3.0.0-alpha.0",
+    "@eureka/server-node": "3.0.0-alpha.0",
+    "@eureka/demo": "3.0.0-alpha.0",
+    "@eureka/spec-conformance": "3.0.0-draft.1"
+  },
+  "changesets": [
+    "first-alpha-of-eureka-3"
+  ]
 }
