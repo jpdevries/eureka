@@ -1,24 +1,36 @@
 #!/usr/bin/env node
-// Eureka fixture server: implements the Eureka REST API over in-memory fixture
-// data and serves placeholder media, so any implementation (v2 baseline, v3
-// element, a React wrapper) can be driven by the conformance suite without a
-// real filesystem source.
+// Eureka fixture server.
 //
-//   node fixture-server.mjs --port 3101 --static ../../client/build --index ./index.html
+// Implements the Eureka REST API (spec/api/openapi.yaml) over in-memory
+// fixture data and serves placeholder media, so any implementation (the v2
+// baseline build, the v3 element, a wrapper) can be driven by the
+// conformance suite without a real filesystem source. Zero dependencies.
 //
+//   node fixture-server.mjs --port 3101 --static ../../client/build --nojs ../fixtures/snapshots/v2-nojs-table.html
+//
+// --port    default 3101
 // --static  directory served at /            (the page under test)
-// --index   file served for GET /            (overrides <static>/index.html)
+// --index   file served for GET /            (default <static>/index.html)
+// --nojs    HTML fragment injected into #root for GET /nojs (the Level 0 page)
 // --api     API prefix, default /assets/components/eureka/media
+//
+// Dev endpoints (never part of the spec):
+//   POST /__reset                 restore fixture data
+//   GET  /__fixtures/listings     dump listings
+//   POST /__snapshot?name=x       save request body to ../fixtures/snapshots/x.html
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const args = Object.fromEntries(process.argv.slice(2).map((a, i, arr) => a.startsWith('--') ? [a.slice(2), arr[i + 1] ?? true] : []).filter(Boolean));
+const argv = process.argv.slice(2);
+const args = {};
+for (let i = 0; i < argv.length; i++) if (argv[i].startsWith('--')) args[argv[i].slice(2)] = argv[i + 1] && !argv[i + 1].startsWith('--') ? argv[++i] : true;
 const PORT = Number(args.port ?? process.env.PORT ?? 3101);
 const STATIC = args.static ? path.resolve(args.static) : null;
 const INDEX = args.index ? path.resolve(args.index) : null;
+const NOJS = args.nojs ? path.resolve(args.nojs) : null;
 const API = args.api ?? '/assets/components/eureka/media';
 
 // ---- fixture data -----------------------------------------------------------
@@ -27,11 +39,11 @@ const sources = [
   { name: 'cloud', id: 1 }
 ];
 
-// directory -> entries. `directory` is the containing dir; folders carry foldername, files filename.
 const DAY = 86400000;
-const t0 = Date.UTC(2017, 3, 2, 14, 25); // 2017-04-02
+const t0 = Date.UTC(2017, 3, 2, 14, 25); // 2017-04-02T14:25Z
+const join = (dir, name) => (dir === '/' ? name : path.posix.join(dir, name));
 function file(dir, filename, fileSize, dimensions, daysAgo) {
-  const p = dir === '/' ? filename : path.posix.join(dir, filename);
+  const p = join(dir, filename);
   return {
     filename, directory: dir, path: p,
     absoluteURL: `/sources/filesystem/${p}`,
@@ -40,85 +52,186 @@ function file(dir, filename, fileSize, dimensions, daysAgo) {
   };
 }
 function folder(dir, name) {
-  const p = dir === '/' ? name : path.posix.join(dir, name);
+  const p = join(dir, name);
   return { foldername: name, directory: p, path: p, absoluteURL: `/sources/filesystem/${p}`, absolutePreviewURL: `/sources/filesystem/${p}`, editedOn: t0, fileSize: 4096 };
 }
-const listings = {
-  '/': [folder('/', 'assets'), folder('/', 'uploads'), file('/', 'readme.txt', 1204, undefined, 40)],
-  'assets': [folder('assets', 'img'), folder('assets', 'docs'), file('assets', 'logo.svg', 3321, [120, 120], 12)],
-  'assets/img': [
-    folder('assets/img', 'redwoods'),
-    file('assets/img', 'schildpad.jpg', 37888, [336, 125], 1),
-    file('assets/img', 'hawaii-sunset.jpg', 1240000, [1920, 1080], 3),
-    file('assets/img', 'tall-tree.png', 420000, [600, 1400], 5),
-    file('assets/img', 'icon-16.png', 812, [16, 16], 8),
-    file('assets/img', 'Wide Banner (final).jpg', 98000, [2400, 400], 9),
-    file('assets/img', 'animation.gif', 220000, [320, 240], 14),
-    file('assets/img', 'clip.mp4', 8400000, undefined, 20),
-    file('assets/img', 'theme.mp3', 3100000, undefined, 21),
-    file('assets/img', 'brochure.pdf', 540000, undefined, 30),
-    file('assets/img', 'notes.txt', 90, undefined, 60),
-    file('assets/img', 'archive.zip', 12000000, undefined, 90)
-  ],
-  'assets/img/redwoods': Array.from({ length: 24 }, (_, i) => file('assets/img/redwoods', `redwood-${String(i + 1).padStart(2, '0')}.jpg`, 200000 + i * 7919, [800 + (i % 3) * 200, 600 + (i % 4) * 150], i)),
-  'assets/docs': [file('assets/docs', 'spec.pdf', 150000, undefined, 2), file('assets/docs', 'budget.xlsx', 44000, undefined, 4)],
-  'uploads': []
-};
+function makeListings() {
+  return {
+    '/': [folder('/', 'assets'), folder('/', 'uploads'), folder('/', 'large'), file('/', 'readme.txt', 1204, undefined, 40)],
+    'assets': [folder('assets', 'img'), folder('assets', 'docs'), file('assets', 'logo.svg', 3321, [120, 120], 12)],
+    'assets/img': [
+      folder('assets/img', 'redwoods'),
+      file('assets/img', 'schildpad.jpg', 37888, [336, 125], 1),
+      file('assets/img', 'hawaii-sunset.jpg', 1240000, [1920, 1080], 3),
+      file('assets/img', 'tall-tree.png', 420000, [600, 1400], 5),
+      file('assets/img', 'icon-16.png', 812, [16, 16], 8),
+      file('assets/img', 'Wide Banner (final).jpg', 98000, [2400, 400], 9),
+      file('assets/img', 'animation.gif', 220000, [320, 240], 14),
+      file('assets/img', 'clip.mp4', 8400000, undefined, 20),
+      file('assets/img', 'theme.mp3', 3100000, undefined, 21),
+      file('assets/img', 'brochure.pdf', 540000, undefined, 30),
+      file('assets/img', 'notes.txt', 90, undefined, 60),
+      file('assets/img', 'archive.zip', 12000000, undefined, 90)
+    ],
+    'assets/img/redwoods': Array.from({ length: 24 }, (_, i) => file('assets/img/redwoods', `redwood-${String(i + 1).padStart(2, '0')}.jpg`, 200000 + i * 7919, [800 + (i % 3) * 200, 600 + (i % 4) * 150], i)),
+    'assets/docs': [file('assets/docs', 'spec.pdf', 150000, undefined, 2), file('assets/docs', 'budget.xlsx', 44000, undefined, 4)],
+    'uploads': [],
+    // 5,000 mixed files for the performance budget (spec/10-performance.md)
+    'large': Array.from({ length: 5000 }, (_, i) => {
+      const ext = ['jpg', 'png', 'gif', 'pdf', 'mp4', 'txt'][i % 6];
+      const dims = ext === 'jpg' || ext === 'png' || ext === 'gif' ? [200 + (i * 37) % 1800, 150 + (i * 53) % 1200] : undefined;
+      return file('large', `item-${String(i).padStart(4, '0')}.${ext}`, 1000 + (i * 7919) % 9000000, dims, i % 365);
+    })
+  };
+}
+let listings = makeListings();
+
 function tree(dir = '/') {
   return (listings[dir] ?? []).filter(e => e.foldername).map(e => ({ name: e.foldername, cd: e.path, children: tree(e.path) }));
 }
-function norm(p) { p = (p ?? '/').replace(/\/+$/, ''); return p === '' ? '/' : p.replace(/^\//, '') || '/'; }
+function norm(p) { p = (p ?? '/').replace(/\/+$/, ''); return p === '' || p === '/' ? '/' : p.replace(/^\//, ''); }
+function parentOf(p) { const d = path.posix.dirname(p); return d === '.' || d === '/' ? '/' : d; }
+function guessDims(name) { return /\.(jpe?g|png|gif|webp|avif|bmp)$/i.test(name) ? [640, 480] : undefined; }
+function findItem(p) { for (const dir of Object.keys(listings)) { const hit = listings[dir].find(e => e.path === p); if (hit) return hit; } }
 
 // ---- placeholder media --------------------------------------------------------
 function placeholder(item) {
   const [w, h] = item.dimensions ?? [320, 240];
   const hue = [...item.filename].reduce((a, c) => a + c.charCodeAt(0), 0) % 360;
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><rect width="100%" height="100%" fill="hsl(${hue} 50% 70%)"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="${Math.max(12, Math.min(w, h) / 8)}" fill="#223">${item.filename} ${w}x${h}</text></svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><rect width="100%" height="100%" fill="hsl(${hue} 50% 70%)"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="${Math.max(12, Math.min(w, h) / 8)}" fill="#223">${esc(item.filename)} ${w}x${h}</text></svg>`;
 }
-function findItem(p) { for (const dir of Object.keys(listings)) { const hit = listings[dir].find(e => e.path === p); if (hit) return hit; } }
+function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]); }
+
+// ---- multipart ---------------------------------------------------------------
+function readBody(req) { return new Promise(r => { const c = []; req.on('data', d => c.push(d)); req.on('end', () => r(Buffer.concat(c))); }); }
+function parseMultipart(buf, contentType) {
+  const m = /boundary=(?:"([^"]+)"|([^;]+))/i.exec(contentType ?? '');
+  const fields = {}, files = [];
+  if (!m) return { fields, files };
+  const boundary = Buffer.from(`--${m[1] ?? m[2]}`);
+  let start = buf.indexOf(boundary) + boundary.length;
+  while (start < buf.length) {
+    if (buf.slice(start, start + 2).toString() === '--') break;
+    const end = buf.indexOf(boundary, start);
+    if (end < 0) break;
+    const part = buf.slice(start + 2, end - 2); // strip leading CRLF and trailing CRLF
+    const sep = part.indexOf('\r\n\r\n');
+    const head = part.slice(0, sep).toString('utf8');
+    const body = part.slice(sep + 4);
+    const name = /name="([^"]*)"/i.exec(head)?.[1] ?? '';
+    const filename = /filename="([^"]*)"/i.exec(head)?.[1];
+    if (filename !== undefined) { if (filename) files.push({ field: name, filename, data: body }); }
+    else (fields[name] ??= []).push(body.toString('utf8'));
+    start = end + boundary.length;
+  }
+  return { fields, files };
+}
+const first = v => (Array.isArray(v) ? v[0] : v);
+
+// ---- HTML pages ---------------------------------------------------------------
+const stripDeadScripts = html => html.replace(/<script[^>]*cdn\.polyfill\.io[^>]*><\/script>/g, '');
+function indexHtml() { const f = INDEX ?? path.join(STATIC, 'index.html'); return stripDeadScripts(fs.readFileSync(f, 'utf8')); }
+function nojsHtml(fragment) {
+  // The Level 0 page: the index shell with every script removed and the server-rendered form in #root.
+  return indexHtml().replace(/<script[\s\S]*?<\/script>/g, '').replace('<div id="root" class="eureka-root"></div>', `<div id="root" class="eureka-root">${fragment}</div>`);
+}
+function echoPage(title, data) {
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>${esc(title)}</title></head><body><h1>${esc(title)}</h1><pre id="echo">${esc(JSON.stringify(data, null, 2))}</pre></body></html>`;
+}
 
 // ---- server -----------------------------------------------------------------
-const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.json': 'application/json', '.png': 'image/png', '.ico': 'image/x-icon', '.map': 'application/json' };
+const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg', '.ico': 'image/x-icon', '.map': 'application/json', '.woff2': 'font/woff2' };
 function json(res, body, status = 200) { res.writeHead(status, { 'content-type': 'application/json', 'access-control-allow-origin': '*' }); res.end(JSON.stringify(body)); }
-function readBody(req) { return new Promise(r => { const c = []; req.on('data', d => c.push(d)); req.on('end', () => r(Buffer.concat(c))); }); }
+function html(res, body, status = 200) { res.writeHead(status, { 'content-type': 'text/html; charset=utf-8' }); res.end(body); }
+
+async function handleApi(req, res, url) {
+  const rest = url.pathname.slice(API.length + 1).replace(/\/$/, '');
+  const [kind, id] = rest.split('/');
+  if (kind === 'sources' && id === undefined) return json(res, sources);
+  if (kind === 'sources') {
+    const rawDir = url.searchParams.get('path') ?? url.searchParams.get('dir');
+    if (req.method === 'GET') return json(res, rawDir !== null ? (listings[norm(rawDir)] ?? []) : tree('/'));
+    if (req.method === 'PUT') {
+      const d = norm(rawDir); const name = url.searchParams.get('name');
+      if (name) { // rename
+        const parent = parentOf(d); const e = (listings[parent] ?? []).find(x => x.path === d);
+        if (!e) return json(res, { error: `no such item ${d}` }, 404);
+        const np = join(parent, name);
+        if (e.filename) { e.filename = name; e.path = np; e.absoluteURL = e.absolutePreviewURL = `/sources/filesystem/${np}`; }
+        else { e.foldername = name; e.path = e.directory = np; if (listings[d]) { listings[np] = listings[d]; delete listings[d]; } }
+        return json(res, listings[parent]);
+      }
+      const parent = parentOf(d); // create
+      if (!listings[d]) { (listings[parent] ??= []).push(folder(parent, path.posix.basename(d))); listings[d] = []; }
+      return json(res, true);
+    }
+    if (req.method === 'POST') { // upload
+      if (rawDir === null) return json(res, { error: 'Missing required parameter `path`' }, 400);
+      const d = norm(rawDir); const { files } = parseMultipart(await readBody(req), req.headers['content-type']);
+      for (const f of files) { listings[d] ??= []; listings[d] = listings[d].filter(e => e.filename !== f.filename); listings[d].push(file(d, f.filename, f.data.length, guessDims(f.filename), 0)); }
+      return json(res, listings[d]);
+    }
+    if (req.method === 'DELETE') {
+      if (rawDir !== null) { const d = norm(rawDir); const parent = parentOf(d); listings[parent] = (listings[parent] ?? []).filter(e => e.path !== d); for (const k of Object.keys(listings)) if (k === d || k.startsWith(d + '/')) delete listings[k]; return json(res, true); }
+      const { fields } = parseMultipart(await readBody(req), req.headers['content-type']);
+      const d = norm(first(fields.cd)); const names = fields['delete_file[]'] ?? [];
+      listings[d] = (listings[d] ?? []).filter(e => !names.includes(e.filename));
+      return json(res, listings[d]);
+    }
+  }
+  if (kind === 'attachments' && req.method === 'POST') {
+    const { fields } = parseMultipart(await readBody(req), req.headers['content-type']);
+    res.writeHead(200, { 'content-type': 'application/zip', 'content-disposition': `attachment; filename="eureka-${esc(id)}.zip"`, 'x-eureka-zipped': String((fields['zip_file[]'] ?? []).length) });
+    return res.end(Buffer.from('504b0506' + '00'.repeat(18), 'hex')); // empty zip
+  }
+  return json(res, { error: 'not found' }, 404);
+}
 
 http.createServer(async (req, res) => {
-  const url = new URL(req.url, `http://localhost:${PORT}`);
-  const p = url.pathname;
-  if (p.startsWith(API + '/')) {
-    const rest = p.slice(API.length + 1).replace(/\/$/, '');
-    const [kind, id] = rest.split('/');
-    if (kind === 'sources' && id === undefined) return json(res, sources);
-    if (kind === 'sources') {
-      const dir = url.searchParams.get('path') ?? url.searchParams.get('dir');
-      if (req.method === 'GET') return json(res, dir ? (listings[norm(dir)] ?? []) : tree('/'));
-      if (req.method === 'PUT') { // create or rename
-        const name = url.searchParams.get('name'); const d = norm(dir);
-        if (name) { const parent = path.posix.dirname(d) === '.' ? '/' : path.posix.dirname(d); const e = (listings[parent] ?? []).find(x => x.path === d); if (e) { e.filename && (e.filename = name); e.foldername && (e.foldername = name); e.path = path.posix.join(parent, name); } return json(res, listings[parent] ?? []); }
-        const parent = path.posix.dirname(d) === '.' ? '/' : path.posix.dirname(d); (listings[parent] ??= []).push(folder(parent, path.posix.basename(d))); listings[d] = []; return json(res, true);
-      }
-      if (req.method === 'POST') { await readBody(req); const d = norm(dir); (listings[d] ??= []).push(file(d, `upload-${Date.now()}.png`, 1234, [100, 100], 0)); return json(res, listings[d]); }
-      if (req.method === 'DELETE') { if (dir) { const d = norm(dir); const parent = path.posix.dirname(d) === '.' ? '/' : path.posix.dirname(d); listings[parent] = (listings[parent] ?? []).filter(e => e.path !== d); delete listings[d]; return json(res, true); } await readBody(req); return json(res, []); }
+  try {
+    const url = new URL(req.url, `http://localhost:${PORT}`);
+    const p = url.pathname;
+    if (p.startsWith(API + '/')) return await handleApi(req, res, url);
+    if (p.startsWith('/sources/filesystem/')) {
+      const item = findItem(decodeURIComponent(p.slice('/sources/filesystem/'.length)));
+      if (!item) { res.writeHead(404); return res.end(); }
+      res.writeHead(200, { 'content-type': 'image/svg+xml' }); return res.end(placeholder(item));
     }
-    if (kind === 'attachments') { await readBody(req); res.writeHead(200, { 'content-type': 'application/zip', 'content-disposition': 'attachment; filename="eureka.zip"' }); return res.end(Buffer.alloc(22)); }
-    return json(res, { error: 'not found' }, 404);
+    // dev endpoints
+    if (p === '/__reset' && req.method === 'POST') { listings = makeListings(); return json(res, { reset: true }); }
+    if (p === '/__fixtures/listings') return json(res, listings);
+    if (p === '/__snapshot' && req.method === 'POST') {
+      const name = (url.searchParams.get('name') ?? 'snapshot').replace(/[^a-z0-9_-]/gi, '_');
+      const body = (await readBody(req)).toString('utf8').replace(/></g, '>\n<');
+      const out = path.join(here, '..', 'fixtures', 'snapshots', `${name}.html`);
+      fs.writeFileSync(out, body); return json(res, { saved: out, bytes: body.length });
+    }
+    // Level 0 page and its POST protocol (spec/03-no-js-protocol.md)
+    if (p === '/nojs' && req.method === 'GET') {
+      if (!NOJS) return html(res, echoPage('No --nojs fragment configured', {}), 404);
+      return html(res, nojsHtml(fs.readFileSync(NOJS, 'utf8')));
+    }
+    if (p === '/' && req.method === 'POST') {
+      const { fields, files } = parseMultipart(await readBody(req), req.headers['content-type']);
+      const uploadDir = norm(first(fields['eureka__upload-dir']));
+      for (const f of files) if (f.field === 'eureka__uploadFiles') { listings[uploadDir] ??= []; listings[uploadDir].push(file(uploadDir, f.filename, f.data.length, guessDims(f.filename), 0)); }
+      const browsing = first(Object.entries(fields).find(([k]) => /^eureka__media-browser_.*__browsing$/.test(k))?.[1]);
+      const [cs, ...cdParts] = (browsing ?? '').split('||'); const cd = cdParts.join('||');
+      const chosen = first(fields.eureka__chosen_item);
+      // The v2 reference server re-rendered the form here (NOJS-32). This
+      // fixture server cannot render an implementation, so it echoes what it
+      // understood; the Level 0 tests assert on this echo.
+      if (chosen) return html(res, echoPage('Eureka!', { action: 'choose', source: first(fields.eureka__mediaSourceId), directory: uploadDir, chosen, uploaded: files.map(f => f.filename) }));
+      return html(res, echoPage('Eureka', { action: 'navigate', source: cs, directory: cd, uploaded: files.map(f => f.filename), fields }));
+    }
+    if (STATIC) {
+      if (p === '/') return html(res, indexHtml());
+      let f = path.join(STATIC, decodeURIComponent(p));
+      if (!f.startsWith(STATIC) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) return html(res, indexHtml());
+      res.writeHead(200, { 'content-type': MIME[path.extname(f)] ?? 'application/octet-stream' }); return fs.createReadStream(f).pipe(res);
+    }
+    res.writeHead(404); res.end();
+  } catch (err) {
+    console.error(err); json(res, { error: String(err?.message ?? err) }, 500);
   }
-  if (p.startsWith('/sources/filesystem/')) {
-    const item = findItem(decodeURIComponent(p.slice('/sources/filesystem/'.length)));
-    if (!item) { res.writeHead(404); return res.end(); }
-    res.writeHead(200, { 'content-type': 'image/svg+xml' }); return res.end(placeholder(item));
-  }
-  if (p === '/__fixtures/listings') return json(res, listings);
-  if (p === '/__snapshot' && req.method === 'POST') { // dev aid: page POSTs its DOM, saved under spec/fixtures/snapshots/<name>.html
-    const name = (url.searchParams.get('name') ?? 'snapshot').replace(/[^a-z0-9_-]/gi, '_');
-    const body = (await readBody(req)).toString('utf8').replace(/></g, '>\n<');
-    const out = path.join(here, '..', 'fixtures', 'snapshots', `${name}.html`);
-    fs.writeFileSync(out, body); return json(res, { saved: out, bytes: body.length });
-  }
-  if (STATIC) {
-    let f = p === '/' ? (INDEX ?? path.join(STATIC, 'index.html')) : path.join(STATIC, decodeURIComponent(p));
-    if (!fs.existsSync(f) || fs.statSync(f).isDirectory()) f = path.join(STATIC, 'index.html');
-    res.writeHead(200, { 'content-type': MIME[path.extname(f)] ?? 'application/octet-stream' }); return fs.createReadStream(f).pipe(res);
-  }
-  res.writeHead(404); res.end();
-}).listen(PORT, () => console.log(`eureka fixture server http://localhost:${PORT}/  api=${API} static=${STATIC ?? '(none)'}`));
+}).listen(PORT, () => console.log(`eureka fixture server http://localhost:${PORT}/  api=${API} static=${STATIC ?? '(none)'} nojs=${NOJS ?? '(none)'}`));

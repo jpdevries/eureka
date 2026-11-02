@@ -69,7 +69,8 @@ fixture server (`conformance/fixture-server.mjs`), loads a page that
 embeds the implementation under test, and asserts through the
 accessibility tree (`getByRole`, `getByLabel`), never through class names.
 Level 0 runs with JavaScript disabled. Every state is checked with axe.
-The suite is not yet written in this draft; the fixture server is.
+See [conformance/README.md](conformance/README.md) for running it and for
+how known v2 defects are recorded as expected failures.
 
 ### Running the Eureka 2.0 baseline
 
@@ -87,11 +88,35 @@ request body to `fixtures/snapshots/x.html`; that is how the
 produced by rendering `client/dist/main.js` with React 15 on Node 22
 (`renderToStaticMarkup`) against the same fixture server.
 
-Known v2 baseline defects observed while capturing, which the suite must
-not enshrine: masonry mode throws (React invariant 149, string ref in
-react-masonry-component) and unmounts the whole component; the multiple
-choice checkboxes remain rendered after switching back to single;
-column sorting is a click handler on `<th>` with no keyboard path.
+### Known v2 baseline defects
+
+The suite records these as expected failures (`baselineDefect`), so they
+are measured on every run and must pass for v3. None of them is to be
+carried forward.
+
+| Requirement | v2 behaviour |
+|---|---|
+| NOJS-17 | Every no-JS radio is named "Choose media item" (`aria-labelledby` points at the Choose button) instead of its filename |
+| NOJS-19 | Expand links are named "Open  in a new tab"; the filename interpolation reads an undefined property |
+| HTML-21 | The notification dismiss button is `aria-hidden="true"` |
+| HTML-41 | Choose-mode radios are a `div role="radiogroup"` with a stray `<legend>`; both radios are named "Choose Items:" |
+| HTML-41 | Switching to multiple choice shows no checkboxes until some row has been focused (`MediaRow.shouldComponentUpdate`) |
+| HTML-44 | The toolbar is `role="menubar"` without menu keyboard behaviour |
+| HTML-47 | Every view-mode radio is named "View Mode" (`aria-labelledby` the legend) |
+| HTML-47 | Entering masonry mode throws React invariant 149 (string ref in react-masonry-component) and unmounts the component |
+| HTML-60 | The table is `role="grid"` without grid keyboard navigation |
+| HTML-63 | Every row is `tabindex="0"`, so a listing is one tab stop per row |
+| HTML-68 | Row actions are `role="listbox"` with `role="option"` buttons |
+| HTML-70 | Empty and no-results notices are `<p aria-live="assertive">` with no status role; the `tbody` itself is a live region |
+| HTML-71 | Obsolete `<menu type="context">` elements are rendered per row |
+| HTML-91 | Dialog siblings get `aria-hidden` rather than `inert`; the dialog is a `div role="dialog"` |
+| HTML-92 | Opening Crop unmounts the component in this build against the fixture server (not verified with real JPEGs) |
+| KEY-07 | The filter shortcut is ctrl+f, which Chromium claims for find-in-page |
+| KEY-10 | Sorting by shortcut replaces the sort object with `{by}` only, dropping the direction and the `aria-sort` attribute |
+
+Also observed but not a spec requirement: the v2 header sort is a click
+handler on `<th>` with no keyboard path (HTML-61 is v3-only and skipped
+on the baseline).
 
 ## Versioning
 

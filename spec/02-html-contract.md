@@ -168,6 +168,16 @@ DOM order is the reading order and the tab order.
   `<audio controls>`, for PDF an `<embed>` (v3 MAY use `<object>`), for
   anything else a type icon followed by the filename. Double-click or
   double-tap on the media cell chooses the item.
+- **HTML-66a** When the entry carries `renditions` (API schema), the
+  image MUST be rendered as a `<picture>`: one `<source>` per modern
+  format offered (`image/avif`, `image/webp`) with a `srcset` of that
+  format's renditions, and the `<img>` with a `srcset` of the fallback
+  format plus a `sizes` attribute matching the current mode's item width
+  (04: table thumbnails up to 40% of the instance, thumb 16cqi, grid
+  25cqi, masonry 20cqi, list 10vh, narrow layouts 100cqi). Without
+  `renditions` a plain `<img>` is used. v2 had neither; its server chose
+  one size per request from the `Save-Data` header, which servers MAY
+  still honour.
 - **HTML-67** Name cell: the filename with a `<wbr>` after every 8
   characters so long names wrap. When renaming inline it becomes
   editable; Enter commits, Escape cancels, empty names are rejected.

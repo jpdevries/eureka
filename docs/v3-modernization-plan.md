@@ -324,5 +324,10 @@ Taken on 2026-11-01:
   `04-layout-modes.md`, `05-keyboard.md` + `data/keymap.json`,
   `08-theming.md` + `data/theme-tokens.json`, `10-performance.md`,
   `api/openapi.yaml`.
+- `spec/conformance/`: Playwright + axe conformance suite, ~100 tests over
+  three projects (Level 0 with JavaScript disabled, enhanced desktop,
+  enhanced narrow). Runs green against the v2 build with known v2 defects
+  recorded as expected failures (`spec/README.md`, "Known v2 baseline
+  defects") and v3-only requirements skipped.
 - Not yet written: `01-concepts.md`, `06-accessibility.md`, `07-state.md`,
-  `09-i18n.md`, JSON schemas, the Playwright conformance suite.
+  `09-i18n.md`, JSON schemas.

@@ -4,7 +4,7 @@
     {
       "name": "v2-baseline",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["spec/conformance/fixture-server.mjs", "--port", "3101", "--static", "client/build", "--index", "/private/tmp/claude-501/-Users-jpdevries-Sites-jpdevries-eureka/060884b6-09a4-40e7-9a5b-10304b0381c9/scratchpad/v2-index.html"],
+      "runtimeArgs": ["spec/conformance/fixture-server.mjs", "--port", "3101", "--static", "client/build", "--nojs", "spec/fixtures/snapshots/v2-nojs-table.html"],
       "port": 3101
     }
   ]

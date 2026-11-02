@@ -254,6 +254,17 @@ components:
           description: "[width, height] in CSS pixels for images and video; omitted otherwise."
         fileSize: { type: integer, description: 'Bytes.' }
         alt: { type: string, description: 'Alternative text for the media. When absent the client generates a description from the other fields.' }
+        renditions:
+          type: array
+          description: 'Optional alternative encodings and sizes of an image, for responsive `<picture>` markup (HTML-66a). Order is free; the client groups by `type` and sorts by `width`.'
+          items:
+            type: object
+            required: [url, width]
+            properties:
+              url: { type: string, format: uri-reference }
+              width: { type: integer, description: 'Intrinsic width in CSS pixels.' }
+              height: { type: integer }
+              type: { type: string, description: 'MIME type, e.g. image/avif. Defaults to the type of absoluteURL.' }
     Error:
       type: object
       required: [error]
