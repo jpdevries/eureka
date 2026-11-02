@@ -5,6 +5,7 @@ import path from 'node:path';
 import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
 import { createFilesystemSource, createEurekaHandler, startServer, type PageContext } from '../src/index.js';
+import { requestLanguage } from '../src/handler.js';
 
 const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==', 'base64');
 const specDir = path.resolve(__dirname, '../../../spec/schema');
@@ -171,3 +172,13 @@ describe('text thumbnails (02 HTML-66c)', async () => {
   });
 });
 
+describe('request language (09 I18N-10)', () => {
+  it('ignores wildcard and malformed Accept-Language tags instead of passing them to Intl', () => {
+    expect(requestLanguage(null, '*')).toBe('en');                       // what fetch() sends by default
+    expect(requestLanguage(null, 'fr-CH;q=0.9, en;q=0.8')).toBe('fr-CH');
+    expect(requestLanguage(null, '*, de')).toBe('de');
+    expect(requestLanguage('not a tag!', 'nl')).toBe('nl');
+    expect(requestLanguage('pt-BR', undefined)).toBe('pt-BR');
+    expect(requestLanguage(null, undefined)).toBe('en');
+  });
+});

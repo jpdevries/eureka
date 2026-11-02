@@ -113,7 +113,7 @@ export function createEurekaHandler(opts: HandlerOptions): NodeHandler {
   async function page(req: IncomingMessage, res: ServerResponse, url: URL, state: { sourceId?: string; path: string; uploaded?: string[]; requested?: boolean }): Promise<void> {
     const source = (state.sourceId !== undefined ? bySourceId(state.sourceId) : undefined) ?? opts.sources[0];
     if (!source || !opts.renderPage) return json(res, { error: 'not found' }, 404);
-    const lang = url.searchParams.get('ln') ?? (req.headers['accept-language'] ?? 'en').split(',')[0]!.trim() ?? 'en';
+    const lang = requestLanguage(url.searchParams.get('ln'), req.headers['accept-language']);
     try {
       const [entries, tree] = await Promise.all([source.listDirectory(state.path), source.listTree()]);
       const body = await opts.renderPage({ sources: sourceList(), source, path: normalizePath(state.path), entries, tree, lang, basePath, locationRequested: state.requested ?? false, ...(state.uploaded ? { uploaded: state.uploaded } : {}) });
@@ -198,3 +198,10 @@ export function createEurekaHandler(opts: HandlerOptions): NodeHandler {
 }
 
 export function escapeHtml(s: string): string { return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!); }
+
+/** `?ln=` or the first well-formed tag of Accept-Language (weights and `*` dropped), else `en`; a bad tag never reaches Intl (09 I18N-10). */
+export function requestLanguage(ln: string | null, acceptLanguage: string | undefined): string {
+  const candidates = [ln ?? '', ...(acceptLanguage ?? '').split(',').map((part) => part.split(';')[0]!.trim())].filter((t) => t && t !== '*');
+  for (const tag of candidates) { try { const [canonical] = Intl.getCanonicalLocales(tag); if (canonical) return canonical; } catch { /* malformed tag */ } }
+  return 'en';
+}

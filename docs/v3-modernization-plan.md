@@ -343,7 +343,7 @@ Taken on 2026-11-01:
   filter, the store with events and selectors, persistence, keymap, ICU
   i18n, REST client, worker engine with inline fallback. 37 unit tests.
   Spec data is synced into `src/data` by `scripts/sync-spec-data.mjs`.
-- `packages/server-node`: filesystem media source and HTTP handler
+- `packages/server-node`: filesystem and S3-compatible media sources and HTTP handler
   implementing the OpenAPI document and the Level 0 protocol with a
   pluggable `renderPage`; CLI. 11 contract tests validating responses
   against the spec schemas.
@@ -599,6 +599,27 @@ Taken on 2026-11-01:
   server serves text contents with Range and the thumbnail route, and a
   `/__previews` switch lets the client-mode test drop the preview URLs.
   No canvas, no highlighter dependency anywhere.
+- Media sources, spec 11: the backend contract behind the API written
+  down (`spec/11-media-sources.md`, MS-01..MS-08 common, MS-10..12
+  filesystem, MS-20..33 object storage, MS-40..44 proposed for cloud
+  drives) and a second driver, `createS3Source`, over any S3-compatible
+  store (AWS, R2, MinIO, B2, Spaces, Wasabi, Tigris, Supabase, GCS
+  interop). Directories are key prefixes with zero-byte markers, rename
+  is copy + delete, the tree is one key scan cached 30 s, `dimensions`
+  and `animated` come from a 64 KB head read per image cached by ETag,
+  objects proxy through `/sources/{name}/{path}` with `Range` unless a
+  `publicBaseUrl` points at the bucket or its CDN. The signer is a
+  40-line SigV4 over `node:crypto` with the S3 developer guide's examples
+  as known-answer tests; the contract suite runs again over an in-memory
+  S3 that re-derives each request's signature from what arrived. No AWS
+  SDK. CLI: `--s3-bucket --s3-region --s3-endpoint --s3-prefix
+  --s3-public-url --s3-name --s3-path-style --s3-no-probe` with `AWS_*`
+  credentials; the demo adds a third source when `EUREKA_S3_BUCKET` is
+  set. Google Drive, Dropbox and Box are designed (identity, auth,
+  listing, trash, lazy tree) but not built; Dropbox would be the cheapest
+  first. Found on the way: `Accept-Language: *` (what `fetch()` sends)
+  crashed the page renderer in Intl; the handler now picks the first
+  well-formed tag.
 - Package names: the `@eureka` npm scope belongs to an existing npm user,
   so the packages are `@mrktps/eureka` (the element, what most people
   install) and `@mrktps/eureka-core`, `-html`, `-css`, `-react`,
@@ -607,5 +628,7 @@ Taken on 2026-11-01:
   moving; GitHub redirects the old address after the transfer.
 - Not done: the first actual publish, the pointer-driven crop marquee, a
   host-supplied API client (STATE-51), windowing and the PERF-20..24
-  measurements, the PERF-25 decision, and the React demo bundle is
-  100 kB gzip because it carries React itself.
+  measurements, the PERF-25 decision, live verification of the S3 driver
+  against R2/MinIO, the lazy `tree=` query (MS-43), the cloud-drive
+  drivers, and the React demo bundle is 100 kB gzip because it carries
+  React itself.

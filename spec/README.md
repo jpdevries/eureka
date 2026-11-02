@@ -35,9 +35,10 @@ React wrapper, a server-rendered PHP page or anything else can conform too.
 | 08 | [theming.md](08-theming.md) | Custom property registry (normative data in `data/theme-tokens.json`) |
 | 09 | [i18n.md](09-i18n.md) | Message catalog, ICU, locale loading |
 | 10 | [performance.md](10-performance.md) | Worker contract, rendering budgets |
+| 11 | [media-sources.md](11-media-sources.md) | Backend contract: filesystem, S3-compatible storage, cloud drives |
 | — | [api/openapi.yaml](api/openapi.yaml) | The REST API |
 
-All ten documents exist in draft. Normative data: `data/keymap.json`,
+All eleven documents exist in draft. Normative data: `data/keymap.json`,
 `data/theme-tokens.json`, `api/openapi.yaml`, `schema/*.json` (validated by
 `spec/conformance/validate-schemas.mjs`, run with `npm run validate:schemas`).
 

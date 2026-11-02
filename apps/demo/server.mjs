@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { createEurekaHandler, createFilesystemSource, cssAssets, elementAssets, escapeHtml, i18nAssets, loadCatalog } from '@mrktps/eureka-server';
+import { createEurekaHandler, createFilesystemSource, createS3Source, cssAssets, elementAssets, escapeHtml, i18nAssets, loadCatalog } from '@mrktps/eureka-server';
 import { renderLevel0 } from '@mrktps/eureka-html';
 import { MEDIA_ROOT, seed } from './scripts/seed-media.mjs';
 
@@ -55,11 +55,24 @@ ${nav('/browser/')}
 `;
 }
 
+const sources = [
+  createFilesystemSource({ id: 0, name: 'library', root: MEDIA_ROOT }),
+  createFilesystemSource({ id: 1, name: 'uploads', root: path.join(MEDIA_ROOT, 'uploads') })
+];
+// A third source over an S3-compatible bucket when the environment names one (spec 11), e.g. for R2:
+//   EUREKA_S3_BUCKET=media EUREKA_S3_ENDPOINT=https://ACCOUNT.r2.cloudflarestorage.com AWS_ACCESS_KEY_ID=… AWS_SECRET_ACCESS_KEY=… npm start
+const { EUREKA_S3_BUCKET, EUREKA_S3_ENDPOINT, EUREKA_S3_REGION, EUREKA_S3_PREFIX, EUREKA_S3_PUBLIC_URL, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN } = process.env;
+if (EUREKA_S3_BUCKET && AWS_ACCESS_KEY_ID && AWS_SECRET_ACCESS_KEY) {
+  sources.push(createS3Source({
+    id: 2, name: 'bucket', bucket: EUREKA_S3_BUCKET,
+    credentials: { accessKeyId: AWS_ACCESS_KEY_ID, secretAccessKey: AWS_SECRET_ACCESS_KEY, ...(AWS_SESSION_TOKEN ? { sessionToken: AWS_SESSION_TOKEN } : {}) },
+    ...(EUREKA_S3_ENDPOINT ? { endpoint: EUREKA_S3_ENDPOINT } : {}), ...(EUREKA_S3_REGION ? { region: EUREKA_S3_REGION } : {}),
+    ...(EUREKA_S3_PREFIX ? { prefix: EUREKA_S3_PREFIX } : {}), ...(EUREKA_S3_PUBLIC_URL ? { publicBaseUrl: EUREKA_S3_PUBLIC_URL } : {})
+  }));
+}
+
 const eureka = createEurekaHandler({
-  sources: [
-    createFilesystemSource({ id: 0, name: 'library', root: MEDIA_ROOT }),
-    createFilesystemSource({ id: 1, name: 'uploads', root: path.join(MEDIA_ROOT, 'uploads') })
-  ],
+  sources,
   basePath: BASE,
   renderPage,
   staticDir: PUBLIC,
