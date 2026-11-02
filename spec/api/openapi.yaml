@@ -58,14 +58,29 @@ paths:
       summary: Directory tree of a source, or listing of one directory
       description: |
         Without `path`: the directory tree of the source (folders only,
-        nested). With `path`: the contents of that directory (files and
-        immediate subfolders).
+        nested), `depth` levels deep from the folder named by `tree` (the
+        root by default). A node at the cut-off omits `children`; a node
+        with no subfolders has `children: []`. Clients fetch a deeper branch
+        with `tree={cd}` when a node is opened (spec 11 MS-43). With `path`:
+        the contents of that directory (files and immediate subfolders).
       parameters:
         - name: path
           in: query
           required: false
           schema: { type: string }
           example: assets/img
+        - name: tree
+          in: query
+          required: false
+          description: Folder whose subfolders to return (tree requests only). Default the root.
+          schema: { type: string }
+          example: assets
+        - name: depth
+          in: query
+          required: false
+          description: How many nested levels to include (tree requests only). Default 3, the server's `treeDepth`.
+          schema: { type: integer, minimum: 1 }
+          example: 3
       responses:
         '200':
           description: Tree (no `path`) or listing (with `path`).

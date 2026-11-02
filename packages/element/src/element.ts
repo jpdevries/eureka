@@ -4,7 +4,7 @@
 // re-renders the instance markup from state through a keyed morph, so focus,
 // scroll position and media playback survive updates.
 import {
-  ancestors, basename, buildDisplayRecord, catalogCandidates, createEngineClient, createKeymap, createStore, createTranslator, initialState, joinPath, loadPersisted, markWelcomed, normalizePath, persist, resolveLocale, selectChosen, selectFocused, selectVisibleFiles, splitSourcePath, VIEW_MODES,
+  ancestors, basename, buildDisplayRecord, catalogCandidates, createEngineClient, createKeymap, createStore, createTranslator, findTreeNode, initialState, joinPath, loadPersisted, markWelcomed, normalizePath, persist, resolveLocale, selectChosen, selectFocused, selectVisibleFiles, splitSourcePath, VIEW_MODES,
   type Catalog, type Config, type DialogKind, type DisplayRecord, type EngineClient, type Entry, type Event as EurekaEvent, type FileEntry, type Keymap, type PartialConfig, type SortBy, type SortDir, type SourceId, type State, type Store, type Translator, type ViewMode
 } from '@mrktps/eureka-core';
 import { createIds, instance, type Ctx, type Ids } from '@mrktps/eureka-html';
@@ -52,6 +52,7 @@ export class EurekaBrowser extends HTMLElement {
   #playing = new Set<string>(); // animated items the user asked to play (02 HTML-66b)
   #textThumbs = new Map<string, string>(); // worker-rendered text thumbnails, path → blob URL (02 HTML-66c, thumbnails: 'client')
   #thumbPending = new Set<string>();
+  #branchesLoading = new Set<string>(); // tree branches being fetched (11 MS-43)
   #thumbObserver: IntersectionObserver | null = null;
   #mediaBound = new WeakSet<Element>();
   #contextOrigin: { x: number; y: number } | null = null; // pointer position for engines without anchor positioning
@@ -164,7 +165,7 @@ export class EurekaBrowser extends HTMLElement {
     if (!init?.sources) await this.#loadSources();
     const source = this.#store.getState().listing.source;
     if (source === null) return;
-    if (!init?.tree) void this.#loadTree(source);
+    if (!init?.tree) void this.#loadTree(source); else void this.#ensureTreePath(source, this.#store.getState().listing.path);
     if (!init?.listing) await this.#loadDirectory(source, this.#store.getState().listing.path);
   }
 
@@ -389,6 +390,7 @@ export class EurekaBrowser extends HTMLElement {
     if (!cd || cd === '/') return;
     const open = this.#store.getState().tree.open.includes(cd);
     if (open !== d.open) this.#store.dispatch({ type: 'tree/toggle', path: cd, open: d.open });
+    if (d.open) { const l = this.#store.getState().listing; if (l.source !== null) void this.#loadBranch(l.source, cd); } // past the loaded depth: fetch (11 MS-43)
   }
 
   #onDialogClose(e: Event): void {
@@ -716,9 +718,33 @@ export class EurekaBrowser extends HTMLElement {
   async #loadTree(source: SourceId): Promise<void> {
     this.#store.dispatch({ type: 'tree/loading' });
     try {
-      const { result } = await this.#engine.request({ type: 'listTree', source });
+      const { result } = await this.#engine.request({ type: 'listTree', source, depth: this.#config.treeDepth });
       this.#store.dispatch({ type: 'tree/loaded', source, nodes: result });
+      await this.#ensureTreePath(source, this.#store.getState().listing.path);
     } catch (err) { this.#fail(errorMessage(err), err); }
+  }
+  /** Fetch the children of one node that the server cut off (11 MS-43); a no-op when loaded or already in flight. */
+  async #loadBranch(source: SourceId, cd: string): Promise<void> {
+    const key = `${String(source)}:${cd}`;
+    const node = findTreeNode(this.#store.getState().tree.bySource[String(source)] ?? [], cd);
+    if (!node || node.children || this.#branchesLoading.has(key)) return;
+    this.#branchesLoading.add(key);
+    try {
+      const { result } = await this.#engine.request({ type: 'listTree', source, cd, depth: this.#config.treeDepth });
+      this.#store.dispatch({ type: 'tree/branchLoaded', source, cd, nodes: result });
+    } catch (err) { this.#fail(errorMessage(err), err); } finally { this.#branchesLoading.delete(key); }
+  }
+  /** Load every cut-off node along `path` so the tree shows the branch to the current directory. */
+  async #ensureTreePath(source: SourceId, path: string): Promise<void> {
+    const p = normalizePath(path);
+    if (p === '/') return;
+    const segs = p.split('/');
+    for (let i = 0; i < segs.length; i++) {
+      const at = segs.slice(0, i + 1).join('/');
+      const node = findTreeNode(this.#store.getState().tree.bySource[String(source)] ?? [], at);
+      if (!node) return;
+      if (!node.children) await this.#loadBranch(source, at);
+    }
   }
   async #loadDirectory(source: SourceId, path: string): Promise<void> {
     const p = normalizePath(path);
@@ -730,6 +756,7 @@ export class EurekaBrowser extends HTMLElement {
       if (this.#store.getState().listing.requestId !== requestId) return; // superseded (STATE-20)
       this.#store.dispatch({ type: 'listing/loaded', source, path: p, entries: result.entries, records: result.records });
       this.#announceCount();
+      void this.#ensureTreePath(source, p);
     } catch (err) {
       if (this.#store.getState().listing.requestId !== requestId) return;
       this.#store.dispatch({ type: 'listing/failed', error: this.#t('listing.failed', { cd: p, error: errorMessage(err) }) });

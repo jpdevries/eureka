@@ -39,10 +39,13 @@ Everything below holds for every driver.
   host turn it off. Text-like files (`isTextLike`) SHOULD set
   `absolutePreviewURL` to the thumbnail route `/sources/{name}/__thumb/{path}`
   unless the host supplies a preview URL (02 HTML-66c).
-- **MS-05** `listTree()` returns the nested folders of the whole source
-  (`tree-node.json`). A driver whose backend cannot enumerate folders
-  cheaply MAY cache the tree for a short, documented time and MUST drop
-  that cache after its own mutations.
+- **MS-05** `listTree(cd, depth)` returns the subfolders of `cd` (default
+  the root) `depth` levels deep (`tree-node.json`); the handler's
+  `treeDepth` (default 3) applies when the request names none. A node at
+  the cut-off omits `children`; a node with no subfolders has
+  `children: []`. A driver whose backend cannot enumerate folders cheaply
+  MAY cache levels for a short, documented time and MUST drop that cache
+  after its own mutations. `cd` that does not exist is 404.
 - **MS-06** Mutations: `upload(dir, files)` writes each file under its
   sanitised basename and returns the fresh listing of `dir`;
   `createDirectory(dir)` is idempotent; `rename(path, name)` keeps the
@@ -61,7 +64,8 @@ Everything below holds for every driver.
 
 - **MS-10** The root is a directory; paths resolve with `path.resolve`
   and are checked against the root after resolution (symlinks inside the
-  root are followed, which the host accepts by placing them).
+  root are followed, which the host accepts by placing them). The tree is
+  a `readdir` walk cut at `depth`.
 - **MS-11** `editedOn` is the mtime in ms; `dimensions` comes from the
   image header (`image-size`); `animated` from the first 4 MB (SVG SMIL or
   CSS animation, more than one GIF graphic control extension, APNG `acTL`,
@@ -88,13 +92,13 @@ AWS console and every S3 file manager use.
   1 000 keys with `prefix` = the directory and `delimiter` = `/`: common
   prefixes are the folders, contents are the files, the marker is
   skipped. A directory other than the root that yields neither is 404.
-- **MS-22 Tree.** `listTree` is one key scan of the whole prefix without
-  a delimiter; every `/`-separated ancestor of every key is a folder. The
-  result is cached (`treeTtl`, default 30 s) and dropped by every
-  mutation. Cost: ⌈keys / 1000⌉ requests per cold tree, which is why the
-  cache exists; a bucket of a million objects should either be confined
-  by `prefix` or front the tree with the host's own index (future
-  `tree=` query, see §5).
+- **MS-22 Tree.** `listTree(cd, depth)` is one delimiter listing per
+  folder, breadth first, four in flight, `depth` levels down; never a
+  scan of every key. Levels are cached by `cd` and `depth` (`treeTtl`,
+  default 30 s) and the cache is dropped by every mutation. Cost: one
+  request per folder within reach of `depth` (plus continuation pages
+  past 1 000 entries), independent of how many objects the bucket holds,
+  which is what makes a million-object bucket browsable.
 - **MS-23 Probing.** ListObjects reports neither dimensions nor
   animation, so by default the driver reads the first 64 KB of each
   image once (`GetObject` with `Range`), caches the result by key and
@@ -206,11 +210,17 @@ What follows from the table, as proposed rules for those drivers:
 - **MS-42** Delete uses the provider's trash where one exists (Drive,
   Box) rather than permanent deletion; the API's `DELETE` remains
   `remove`.
-- **MS-43** The tree is built lazily: `listTree` returns the top-level
-  folders with `children` absent, and a `tree={cd}` query on the source
-  (API addition) returns one level. This is the one place the API needs
-  to grow; the S3 driver's full scan (MS-22) is the reason the same
-  addition helps buckets too.
+- **MS-43** (built, for every driver) The tree is loaded by level.
+  `GET sources/{id}?depth=n` returns `n` levels from the root (default
+  the server's `treeDepth`, 3, the number MODX settled on) and
+  `GET sources/{id}?tree={cd}&depth=n` the levels below one folder. A
+  node past the cut-off omits `children`; the client renders it
+  expandable and fetches its level when it is opened
+  (`tree/branchLoaded`, 07 §4), and after every navigation loads the
+  branch down to the current directory. The server-rendered page does the
+  same before rendering (`treeAlong`), so Level 0 always shows the branch
+  to where the visitor is. `Config.treeDepth` (element attribute
+  `tree-depth`) sets the client's `n`.
 - **MS-44** Tokens are refreshed by the driver and stored by the host
   (the driver takes `getToken(): Promise<string>`), never written by the
   reference server to disk.
@@ -222,8 +232,8 @@ model with unique names. None is scheduled.
 
 ## 5. Open items
 
-- `tree={cd}` lazy tree query (MS-43) and the client's support for nodes
-  without `children`.
+- The tree's polling interval (`intervals.updateSourceTree`) re-fetches
+  the root levels only; branches opened by hand are not refreshed.
 - A browser/Worker build of the SigV4 signer (WebCrypto instead of
   `node:crypto`) so a host-supplied API client (07 STATE-51) can talk to
   a bucket directly with scoped, short-lived STS credentials; the

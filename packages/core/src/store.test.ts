@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { createStore, initialState, reduce, selectChosen, selectVisibleFiles, selectCurrentTree, type State } from './store.js';
+import { createStore, initialState, reduce, selectChosen, selectVisibleFiles, selectCurrentTree, type State, findTreeNode, graftBranch } from './store.js';
 import { resolveConfig, type Entry } from './types.js';
 import { loadPersisted, persist } from './persistence.js';
 
@@ -89,6 +89,17 @@ describe('store', () => {
     s = reduce(s, { type: 'directory/created', path: 'd/new' });
     expect(selectCurrentTree(s)[0]!.children!.map((c) => c.cd)).toEqual(['d/new']);
     expect(s.listing.entries.some((e) => e.foldername === 'new')).toBe(true);
+  });
+  it('tree/branchLoaded grafts the children of one cut-off node (11 MS-43)', () => {
+    let s = loaded();
+    s = reduce(s, { type: 'tree/loaded', source: 0, nodes: [{ name: 'a', cd: 'a', children: [{ name: 'b', cd: 'a/b' }] }, { name: 'z', cd: 'z', children: [] }] });
+    expect(findTreeNode(selectCurrentTree(s), 'a/b')).toEqual({ name: 'b', cd: 'a/b' });
+    expect(findTreeNode(selectCurrentTree(s), 'a/b/c')).toBeUndefined(); // not loaded yet
+    s = reduce(s, { type: 'tree/branchLoaded', source: 0, cd: 'a/b', nodes: [{ name: 'c', cd: 'a/b/c' }] });
+    expect(findTreeNode(selectCurrentTree(s), 'a/b')!.children).toEqual([{ name: 'c', cd: 'a/b/c' }]);
+    expect(selectCurrentTree(s)[1]).toEqual({ name: 'z', cd: 'z', children: [] }); // untouched
+    expect(reduce(s, { type: 'tree/branchLoaded', source: 7, cd: 'a', nodes: [] })).toBe(s); // unknown source: no-op
+    expect(graftBranch([{ name: 'a', cd: 'a' }], 'a/missing', [])).toEqual([{ name: 'a', cd: 'a' }]); // ancestor not loaded: unchanged
   });
   it('notifications push and dismiss', () => {
     let s = loaded();

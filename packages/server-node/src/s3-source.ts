@@ -1,13 +1,13 @@
 // A media source backed by an S3-compatible bucket (AWS S3, Cloudflare R2, MinIO, Backblaze B2, DigitalOcean Spaces, …).
 // Spec 11 (media sources): directories are key prefixes ending in "/", a folder with no objects is a zero-byte marker
-// object named "{prefix}/"; rename is copy + delete; listing is ListObjectsV2 with a delimiter.
+// object named "{prefix}/"; rename is copy + delete; listing and the tree are ListObjectsV2 with a delimiter, one per folder.
 import path from 'node:path';
 import { Readable } from 'node:stream';
 import { imageSize } from 'image-size';
 import { ZipFile } from 'yazl';
 import { encodePathForURL, normalizePath, joinPath, parentPath, basename, mediaKind, isTextLike, looksBinary, renderTextThumbnail } from '@mrktps/eureka-core';
 import type { Entry, Source, TreeNode } from '@mrktps/eureka-core';
-import { ANIMATABLE, MIME, PathError, sniffAnimated, type MediaSource } from './fs-source.js';
+import { ANIMATABLE, DEFAULT_TREE_DEPTH, MIME, PathError, clampDepth, sniffAnimated, type MediaSource } from './fs-source.js';
 import { sanitizeFilename } from './multipart.js';
 import { S3Client, type S3Credentials, type S3Object } from './s3/client.js';
 
@@ -38,7 +38,7 @@ export interface S3SourceOptions {
   probe?: boolean;
   /** Hide keys whose last segment starts with "." (default true). */
   hideDotfiles?: boolean;
-  /** How long a listing of the folder tree is reused, in ms (default 30 000); mutations drop it anyway. */
+  /** How long a folder-tree level is reused, in ms (default 30 000); mutations drop the cache anyway. */
   treeTtl?: number;
   fetch?: typeof fetch;
 }
@@ -56,7 +56,7 @@ export function createS3Source(opts: S3SourceOptions): MediaSource {
   const treeTtl = opts.treeTtl ?? 30_000;
   const probes = new Map<string, { dimensions?: [number, number]; animated?: boolean }>(); // by key + etag, LRU
   const thumbs = new Map<string, { svg: string; etag: string }>();
-  let treeCache: { at: number; nodes: TreeNode[] } | null = null;
+  const treeCache = new Map<string, { at: number; nodes: TreeNode[] }>(); // by cd and depth
 
   /** Source-relative path → confined key (01 CON-02). The root maps to the bare prefix. */
   function resolve(p: string): { rel: string; key: string } {
@@ -114,22 +114,27 @@ export function createS3Source(opts: S3SourceOptions): MediaSource {
     return entries.sort((a, b) => { const x = a.filename ?? a.foldername ?? '', y = b.filename ?? b.foldername ?? ''; return x < y ? -1 : x > y ? 1 : 0; }); // code-point order, like the filesystem source
   }
 
-  /** The folder tree from one full key scan: every "/"-separated ancestor of every key is a directory. */
-  async function listTree(): Promise<TreeNode[]> {
-    if (treeCache && Date.now() - treeCache.at < treeTtl) return treeCache.nodes;
-    const { objects } = await client.list(rootPrefix);
-    const dirs = new Set<string>();
-    for (const o of objects) {
-      const rel = o.key.slice(rootPrefix.length);
-      const segs = rel.split('/').filter(Boolean); if (!o.key.endsWith('/')) segs.pop();
-      for (let i = 1; i <= segs.length; i++) { const d = segs.slice(0, i).join('/'); if (d) dirs.add(d); }
-    }
-    const build = (parent: string): TreeNode[] => [...dirs].filter((d) => parentPath(d) === parent && !hidden(basename(d))).sort((a, b) => a.localeCompare(b)).map((cd) => ({ name: basename(cd), cd, children: build(cd) }));
-    const nodes = build('/');
-    treeCache = { at: Date.now(), nodes };
+  /** The subfolders of `cd`, `depth` levels deep, one delimiter listing per folder (four in flight), cached `treeTtl` (11 MS-22). */
+  async function listTree(cd = '/', depth = DEFAULT_TREE_DEPTH): Promise<TreeNode[]> {
+    const { rel } = resolve(cd);
+    const d = clampDepth(depth);
+    const cacheKey = `${rel}:${d}`;
+    const hit = treeCache.get(cacheKey);
+    if (hit && Date.now() - hit.at < treeTtl) return hit.nodes;
+    if (rel !== '/') { const { objects, prefixes } = await client.list(dirKey(rel), '/'); if (!objects.length && !prefixes.length) throw new PathError(`no such directory: ${rel}`, 404); }
+    const level = async (parent: string, remaining: number): Promise<TreeNode[]> => {
+      const { prefixes } = await client.list(dirKey(parent), '/');
+      const cds = prefixes.map((p) => relOf(p)).filter((r) => !hidden(basename(r))).sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+      const nodes: TreeNode[] = [];
+      for (let i = 0; i < cds.length; i += 4) nodes.push(...await Promise.all(cds.slice(i, i + 4).map(async (r): Promise<TreeNode> => (remaining > 1 ? { name: basename(r), cd: r, children: await level(r, remaining - 1) } : { name: basename(r), cd: r }))));
+      return nodes;
+    };
+    const nodes = await level(rel, d);
+    treeCache.set(cacheKey, { at: Date.now(), nodes });
+    if (treeCache.size > 200) treeCache.delete(treeCache.keys().next().value as string);
     return nodes;
   }
-  const invalidate = () => { treeCache = null; };
+  const invalidate = () => { treeCache.clear(); };
 
   /** Every key at or under a path: the object itself, or the marker and all descendants of a folder. */
   async function keysUnder(rel: string): Promise<string[]> {

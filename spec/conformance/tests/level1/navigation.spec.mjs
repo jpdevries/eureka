@@ -33,6 +33,36 @@ test('HTML-32 the tree is built from disclosure widgets and navigates on activat
   await expect(page.getByRole('row', { name: /^redwood-01\.jpg/ })).toHaveCount(1);
 });
 
+test('MS-43 folders past tree-depth load when their disclosure opens', async ({ page }) => {
+  v3only('lazy tree branches (11 MS-43)');
+  const treeRequests = [];
+  page.on('request', (r) => { const u = new URL(r.url()); if (u.pathname.endsWith('/sources/0') && !u.searchParams.has('path')) treeRequests.push(u.search); });
+  await page.goto('/index.html');
+  await page.locator('eureka-browser').evaluate((el) => { el.setAttribute('tree-depth', '1'); });
+  await dismissNotification(page);
+  await sourcePanelToggle(page).click();
+  const tree = directoryTree(page);
+  const assets = tree.locator('.eureka__tree-node[data-cd="assets"]');
+  await expect(assets).toHaveClass(/eureka__tree-node--unloaded/);
+  await expect(assets.locator('details')).toHaveCount(1); // expandable although nothing is loaded under it
+  await expect(tree.getByRole('button', { name: 'img', exact: true })).toHaveCount(0);
+  await assets.locator('summary').click();
+  await expect(tree.getByRole('button', { name: 'img', exact: true })).toBeVisible();
+  await expect(assets).not.toHaveClass(/eureka__tree-node--unloaded/);
+  expect(treeRequests.some((q) => q.includes('tree=assets') && q.includes('depth=1'))).toBe(true);
+  await expect(tree.getByRole('button', { name: 'redwoods', exact: true })).toHaveCount(0); // one level, not the whole subtree
+});
+
+test('MS-43 navigating below the loaded depth fetches the branch to the current directory', async ({ page }) => {
+  v3only('lazy tree branches (11 MS-43)');
+  await page.goto('/index.html');
+  // attribute changes restart the instance; no-storage keeps the remembered location from overriding `path`
+  await page.locator('eureka-browser').evaluate((el) => { el.setAttribute('no-storage', ''); el.setAttribute('tree-depth', '1'); el.setAttribute('path', 'assets/img/redwoods'); });
+  await dismissNotification(page);
+  await sourcePanelToggle(page).click();
+  await expect(directoryTree(page).locator('[aria-current="page"]')).toHaveText(/redwoods/);
+});
+
 test('HTML-32 the current directory is marked in the tree', async ({ page }) => {
   v3only('aria-current="page" on the current directory (v2 used a class)');
   await openDirectory(page);

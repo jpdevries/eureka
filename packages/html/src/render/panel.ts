@@ -16,10 +16,11 @@ function node(ctx: Ctx, n: TreeNode, depth: number): Raw {
   const current = state.listing.path === cd;
   const open = cd === '/' || state.tree.open.includes(cd); // ancestors of the current directory are added to tree.open by the store
   const children = n.children ?? [];
-  const toggle = children.length
+  const unloaded = cd !== '/' && n.children === undefined; // past the depth the server returned: expandable, fetched on open (11 MS-43)
+  const toggle = children.length || unloaded
     ? html`<details class="eureka__tree-toggle" data-cd="${cd}"${attr('open', open)}><summary>${icon(ctx, 'folder', 'eureka__icon-closed')}${icon(ctx, 'folder-open', 'eureka__icon-open')}${hidden(t('tree.toggle', { name: n.name }))}</summary></details>`
     : html`<span class="eureka__tree-leaf">${icon(ctx, current ? 'folder-open' : 'folder')}</span>`;
-  return html`<div class="${classes('eureka__tree-node', { 'eureka__tree-node--open': open || !children.length, active: current })}" data-cd="${cd}" style="--depth: ${depth}">
+  return html`<div class="${classes('eureka__tree-node', { 'eureka__tree-node--open': open || (!children.length && !unloaded), 'eureka__tree-node--unloaded': unloaded, active: current })}" data-cd="${cd}" style="--depth: ${depth}">
     <div class="eureka__tree-row">${toggle}<button type="button" class="eureka__tree-link" id="${ids.item('tree', cd)}" data-action="navigate" data-cd="${cd}" data-source="${String(state.listing.source ?? '')}"${attr('aria-current', current ? 'page' : null)}>${n.name}</button></div>
     ${children.length ? html`<div class="eureka__tree-children">${children.map((c) => node(ctx, c, depth + 1))}</div>` : ''}
   </div>`;

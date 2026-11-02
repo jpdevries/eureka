@@ -44,7 +44,15 @@ describe('REST API (api/openapi.yaml)', () => {
   it('returns the tree without path and the listing with path, hiding dotfiles', async () => {
     const tree = await j(await fetch(api('/sources/0')));
     expect(validTree(tree.body)).toBe(true);
-    expect(tree.body).toEqual([{ name: 'assets', cd: 'assets', children: [{ name: 'img', cd: 'assets/img', children: [{ name: 'redwoods', cd: 'assets/img/redwoods', children: [] }] }] }, { name: 'uploads', cd: 'uploads', children: [] }]);
+    // three levels by default; a node at the cut-off omits children, a childless node within reach has [] (11 MS-43)
+    expect(tree.body).toEqual([{ name: 'assets', cd: 'assets', children: [{ name: 'img', cd: 'assets/img', children: [{ name: 'redwoods', cd: 'assets/img/redwoods' }] }] }, { name: 'uploads', cd: 'uploads', children: [] }]);
+    expect((await j(await fetch(api('/sources/0?depth=1')))).body).toEqual([{ name: 'assets', cd: 'assets' }, { name: 'uploads', cd: 'uploads' }]);
+    const branch = await j(await fetch(api('/sources/0?tree=assets')));
+    expect(validTree(branch.body)).toBe(true);
+    expect(branch.body).toEqual([{ name: 'img', cd: 'assets/img', children: [{ name: 'redwoods', cd: 'assets/img/redwoods', children: [] }] }]);
+    expect((await j(await fetch(api('/sources/0?tree=assets%2Fimg&depth=1')))).body).toEqual([{ name: 'redwoods', cd: 'assets/img/redwoods' }]);
+    expect((await j(await fetch(api('/sources/0?tree=nope')))).status).toBe(404);
+    expect((await j(await fetch(api('/sources/0?tree=..%2F..')))).status).toBe(400);
     const listing = await j(await fetch(api('/sources/0?path=assets%2Fimg')));
     expect(listing.status).toBe(200); expect(validEntries(listing.body), JSON.stringify(validEntries.errors)).toBe(true);
     const names = (listing.body as Array<{ filename?: string; foldername?: string }>).map((e) => e.filename ?? e.foldername);
@@ -169,6 +177,19 @@ describe('text thumbnails (02 HTML-66c)', async () => {
       expect(ranged.headers.get('content-range')).toBe('bytes 0-4/25');
       expect(await ranged.text()).toBe('hello');
     } finally { await srv.close(); await fs.rm(root, { recursive: true, force: true }); }
+  });
+});
+
+describe('page tree (11 MS-43)', () => {
+  it('expands the branch to the current directory past the default depth', async () => {
+    rendered.length = 0;
+    const r = await fetch(`${origin}/assets/components/eureka/?path=assets%2Fimg%2Fredwoods`);
+    expect(r.status).toBe(200);
+    const ctx = rendered.at(-1)!;
+    expect(ctx.path).toBe('assets/img/redwoods');
+    const redwoods = ctx.tree.find((n) => n.cd === 'assets')!.children!.find((n) => n.cd === 'assets/img')!.children!.find((n) => n.cd === 'assets/img/redwoods')!;
+    expect(redwoods.children).toEqual([]); // loaded because it is the current directory; the API alone would have omitted it
+    expect(ctx.tree.find((n) => n.cd === 'uploads')!.children).toEqual([]);
   });
 });
 

@@ -21,7 +21,7 @@ export function mergeConfig(...parts: Array<PartialConfig | null | undefined>): 
 const sourceId = (v: string) => (/^\d+$/.test(v) ? Number(v) : v);
 
 /** Attributes understood by the element (kebab-case). Boolean `no-*` attributes switch features off. */
-export const ATTRIBUTES = ['api', 'lang', 'source', 'path', 'mode', 'storage-prefix', 'uid', 'assets', 'base-path', 'worker', 'i18n', 'tree-open', 'no-storage', 'no-uploads', 'no-dnd', 'no-rename', 'no-delete', 'no-download', 'no-crop', 'no-masonry', 'no-fullscreen', 'no-welcome', 'no-choose', 'no-choose-multiple', 'confirm-delete', 'always-welcome', 'learn-more', 'thumbnails'] as const;
+export const ATTRIBUTES = ['api', 'lang', 'source', 'path', 'mode', 'storage-prefix', 'uid', 'assets', 'base-path', 'worker', 'i18n', 'tree-open', 'no-storage', 'no-uploads', 'no-dnd', 'no-rename', 'no-delete', 'no-download', 'no-crop', 'no-masonry', 'no-fullscreen', 'no-welcome', 'no-choose', 'no-choose-multiple', 'confirm-delete', 'always-welcome', 'learn-more', 'thumbnails', 'tree-depth'] as const;
 
 export function configFromAttributes(el: Element): PartialConfig {
   const c: PartialConfig = {};
@@ -57,6 +57,7 @@ export function configFromAttributes(el: Element): PartialConfig {
   if (has('confirm-delete')) c.confirmBeforeDelete = true;
   if (has('always-welcome')) c.alwaysWelcome = true;
   const thumbs = get('thumbnails'); if (thumbs === 'server' || thumbs === 'client' || thumbs === 'none') c.thumbnails = thumbs;
+  const depth = Number(get('tree-depth')); if (Number.isInteger(depth) && depth >= 1) c.treeDepth = depth;
   return c;
 }
 

@@ -5,7 +5,7 @@ interface Base { id: string; locale: string; headers: Record<string, string>; ba
 
 export type EngineRequest =
   | (Base & { type: 'listSources' })
-  | (Base & { type: 'listTree'; source: SourceId })
+  | (Base & { type: 'listTree'; source: SourceId; cd?: string; depth?: number })
   | (Base & { type: 'listDirectory'; source: SourceId; path: string; preferCache?: boolean })
   | (Base & { type: 'sort'; by: SortBy; dir: SortDir })
   | (Base & { type: 'filter'; text: string; sort?: Sort })

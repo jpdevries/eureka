@@ -73,10 +73,13 @@ describe('S3 media source over a fake bucket (spec 11 MS-20..MS-27)', () => {
   });
   afterAll(async () => { await close(); await s3.close(); });
 
-  it('lists the tree from one key scan and a directory with a delimiter, hiding dotfiles and markers', async () => {
+  it('lists the tree level by level and a directory with a delimiter, hiding dotfiles and markers', async () => {
     const tree = await j(await fetch(api('/sources/0')));
     expect(tree.status).toBe(200); expect(validTree(tree.body)).toBe(true);
-    expect(tree.body).toEqual([{ name: 'assets', cd: 'assets', children: [{ name: 'img', cd: 'assets/img', children: [{ name: 'redwoods', cd: 'assets/img/redwoods', children: [] }] }] }, { name: 'uploads', cd: 'uploads', children: [] }]);
+    expect(tree.body).toEqual([{ name: 'assets', cd: 'assets', children: [{ name: 'img', cd: 'assets/img', children: [{ name: 'redwoods', cd: 'assets/img/redwoods' }] }] }, { name: 'uploads', cd: 'uploads', children: [] }]);
+    expect((await j(await fetch(api('/sources/0?tree=assets&depth=1')))).body).toEqual([{ name: 'img', cd: 'assets/img' }]);
+    expect((await j(await fetch(api('/sources/0?tree=assets%2Fimg')))).body).toEqual([{ name: 'redwoods', cd: 'assets/img/redwoods', children: [] }]);
+    expect((await j(await fetch(api('/sources/0?tree=nope')))).status).toBe(404);
     const listing = await j(await fetch(api('/sources/0?path=assets%2Fimg')));
     expect(listing.status).toBe(200); expect(validEntries(listing.body), JSON.stringify(validEntries.errors)).toBe(true);
     expect(names(listing.body)).toEqual(['Wide Banner (final).png', 'loop.gif', 'notes.txt', 'pixel.png', 'redwoods']);
@@ -99,7 +102,8 @@ describe('S3 media source over a fake bucket (spec 11 MS-20..MS-27)', () => {
       const tree = await j(await fetch(api('/sources/0')));
       expect(validTree(tree.body)).toBe(true);
       expect((tree.body as Array<{ name: string }>).map((n) => n.name)).toEqual(['assets', 'uploads']);
-      expect(s3.requests.filter((r) => r.includes('continuation-token=')).length).toBeGreaterThan(1);
+      expect(s3.requests.filter((r) => r.includes('continuation-token=')).length).toBeGreaterThanOrEqual(1);
+      expect(s3.requests.every((r) => r.includes('delimiter=%2F'))).toBe(true); // no full key scan
     } finally { s3.pageSize = 1000; }
   });
   it('proxies objects at absoluteURL with Range, or links to the public base URL', async () => {

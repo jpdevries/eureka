@@ -109,8 +109,9 @@ function makeListings() {
 }
 let listings = makeListings();
 
-function tree(dir = '/') {
-  return (listings[dir] ?? []).filter(e => e.foldername).map(e => ({ name: e.foldername, cd: e.path, children: tree(e.path) }));
+/** Subfolders of `dir`, `depth` levels deep; a node at the cut-off omits children (11 MS-43). */
+function tree(dir = '/', depth = 3) {
+  return (listings[dir] ?? []).filter(e => e.foldername).map(e => (depth > 1 ? { name: e.foldername, cd: e.path, children: tree(e.path, depth - 1) } : { name: e.foldername, cd: e.path }));
 }
 function norm(p) { p = (p ?? '/').replace(/\/+$/, ''); return p === '' || p === '/' ? '/' : p.replace(/^\//, ''); }
 function parentOf(p) { const d = path.posix.dirname(p); return d === '.' || d === '/' ? '/' : d; }
@@ -187,7 +188,12 @@ async function handleApi(req, res, url) {
   if (kind === 'sources' && id === undefined) return json(res, sources);
   if (kind === 'sources') {
     const rawDir = url.searchParams.get('path') ?? url.searchParams.get('dir');
-    if (req.method === 'GET') return json(res, rawDir !== null ? withPreviews(listings[norm(rawDir)] ?? []) : tree('/'));
+    if (req.method === 'GET') {
+      if (rawDir !== null) return json(res, withPreviews(listings[norm(rawDir)] ?? []));
+      const at = norm(url.searchParams.get('tree') ?? '/'); const depth = Number(url.searchParams.get('depth')) || 3;
+      if (at !== '/' && !listings[at]) return json(res, { error: 'not found' }, 404);
+      return json(res, tree(at, depth));
+    }
     if (req.method === 'PUT') {
       const d = norm(rawDir); const name = url.searchParams.get('name');
       if (name) { // rename

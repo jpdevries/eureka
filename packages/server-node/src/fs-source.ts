@@ -10,7 +10,8 @@ import type { Entry, Source, TreeNode } from '@mrktps/eureka-core';
 import { sanitizeFilename } from './multipart.js';
 
 export interface MediaSource extends Source {
-  listTree(): Promise<TreeNode[]>;
+  /** The subfolders of `cd` (default the root), `depth` levels deep; a node at the cut-off omits `children` (11 MS-43). */
+  listTree(cd?: string, depth?: number): Promise<TreeNode[]>;
   listDirectory(dir: string): Promise<Entry[]>;
   upload(dir: string, files: Array<{ filename: string; data: Buffer; contentType?: string }>): Promise<Entry[]>;
   createDirectory(dir: string): Promise<void>;
@@ -66,6 +67,10 @@ export async function isAnimated(abs: string, name: string): Promise<boolean> {
   return sniffAnimated(buf, name);
 }
 
+/** Default levels of the folder tree a source returns (11 MS-43; MODX shipped 3). */
+export const DEFAULT_TREE_DEPTH = 3;
+export const clampDepth = (d: number | undefined): number => (Number.isFinite(d) && (d as number) >= 1 ? Math.min(Math.floor(d as number), 64) : DEFAULT_TREE_DEPTH);
+
 export class PathError extends Error { constructor(message: string, public readonly status: number) { super(message); this.name = 'PathError'; } }
 
 export function createFilesystemSource(opts: FilesystemSourceOptions): MediaSource {
@@ -111,20 +116,25 @@ export function createFilesystemSource(opts: FilesystemSourceOptions): MediaSour
     return entries.filter((e): e is Entry => e !== null);
   }
 
-  async function tree(rel: string): Promise<TreeNode[]> {
+  /** Subfolders of `rel`, `depth` levels deep; at the cut-off `children` is left out (11 MS-43). */
+  async function tree(rel: string, depth: number): Promise<TreeNode[]> {
     const abs = rel === '/' ? root : path.join(root, rel);
     let dirents; try { dirents = await fs.readdir(abs, { withFileTypes: true }); } catch { return []; }
     const nodes: TreeNode[] = [];
     for (const d of dirents.filter((d) => d.isDirectory() && !(hideDot && d.name.startsWith('.'))).sort((a, b) => a.name.localeCompare(b.name))) {
       const cd = joinPath(rel, d.name);
-      nodes.push({ name: d.name, cd, children: await tree(cd) });
+      nodes.push(depth > 1 ? { name: d.name, cd, children: await tree(cd, depth - 1) } : { name: d.name, cd });
     }
     return nodes;
   }
 
   return {
     id: opts.id, name: opts.name,
-    listTree: () => tree('/'),
+    async listTree(cd = '/', depth = DEFAULT_TREE_DEPTH) {
+      const { rel, abs } = resolve(cd);
+      if (rel !== '/') { let st; try { st = await fs.stat(abs); } catch { throw new PathError(`no such directory: ${rel}`, 404); } if (!st.isDirectory()) throw new PathError(`no such directory: ${rel}`, 404); }
+      return tree(rel, clampDepth(depth));
+    },
     listDirectory: (dir) => listDirectory(dir),
     async upload(dir, files) {
       const { rel, abs } = resolve(dir);

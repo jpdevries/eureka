@@ -7,7 +7,7 @@ import { createReadStream } from 'node:fs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { normalizePath, splitSourcePath, type Entry, type Source, type TreeNode } from '@mrktps/eureka-core';
-import { PathError, type MediaSource } from './fs-source.js';
+import { PathError, clampDepth, DEFAULT_TREE_DEPTH, type MediaSource } from './fs-source.js';
 import { first, parseMultipart, readBody } from './multipart.js';
 
 export interface PageContext {
@@ -41,6 +41,8 @@ export interface HandlerOptions {
   /** Individual files served at fixed URL paths, e.g. { '/assets/css/eureka.css': '/abs/path/eureka.css' }. */
   assetFiles?: Record<string, string>;
   maxUploadBytes?: number;
+  /** Levels of the folder tree returned by default and used when rendering the page (default 3; 11 MS-43). */
+  treeDepth?: number;
   /** Extra headers on API responses (CORS for a separate front end, for example). */
   responseHeaders?: Record<string, string>;
   log?: (line: string) => void;
@@ -53,6 +55,7 @@ const MIME: Record<string, string> = { '.html': 'text/html; charset=utf-8', '.js
 export function createEurekaHandler(opts: HandlerOptions): NodeHandler {
   const basePath = '/' + (opts.basePath ?? '/').replace(/^\/+|\/+$/g, '');
   const apiRoot = (basePath === '/' ? '' : basePath) + '/' + (opts.mediaPath ?? 'media').replace(/^\/+|\/+$/g, '');
+  const treeDepth = clampDepth(opts.treeDepth ?? DEFAULT_TREE_DEPTH);
   const maxUpload = opts.maxUploadBytes ?? 256 * 1024 * 1024;
   const log = opts.log ?? (() => {});
   const bySourceId = (id: string) => opts.sources.find((s) => String(s.id) === id);
@@ -77,7 +80,11 @@ export function createEurekaHandler(opts: HandlerOptions): NodeHandler {
     const pathParam = url.searchParams.get('path') ?? url.searchParams.get('dir');
     try {
       if (kind === 'sources') {
-        if (method === 'GET') return json(res, pathParam === null ? await source.listTree() : await source.listDirectory(pathParam));
+        if (method === 'GET') {
+          if (pathParam !== null) return json(res, await source.listDirectory(pathParam));
+          const depthRaw = url.searchParams.get('depth');
+          return json(res, await source.listTree(url.searchParams.get('tree') ?? '/', depthRaw === null ? treeDepth : clampDepth(Number(depthRaw))));
+        }
         if (method === 'PUT') {
           if (pathParam === null) return json(res, { error: 'Missing required parameter `path`' }, 400);
           const name = url.searchParams.get('name');
@@ -115,7 +122,7 @@ export function createEurekaHandler(opts: HandlerOptions): NodeHandler {
     if (!source || !opts.renderPage) return json(res, { error: 'not found' }, 404);
     const lang = requestLanguage(url.searchParams.get('ln'), req.headers['accept-language']);
     try {
-      const [entries, tree] = await Promise.all([source.listDirectory(state.path), source.listTree()]);
+      const [entries, tree] = await Promise.all([source.listDirectory(state.path), treeAlong(source, normalizePath(state.path), treeDepth)]);
       const body = await opts.renderPage({ sources: sourceList(), source, path: normalizePath(state.path), entries, tree, lang, basePath, locationRequested: state.requested ?? false, ...(state.uploaded ? { uploaded: state.uploaded } : {}) });
       return html(res, body);
     } catch (err) { if (err instanceof PathError && err.status === 404) return page(req, res, url, { sourceId: state.sourceId, path: '/', requested: false }); return fail(res, err); }
@@ -204,4 +211,23 @@ export function requestLanguage(ln: string | null, acceptLanguage: string | unde
   const candidates = [ln ?? '', ...(acceptLanguage ?? '').split(',').map((part) => part.split(';')[0]!.trim())].filter((t) => t && t !== '*');
   for (const tag of candidates) { try { const [canonical] = Intl.getCanonicalLocales(tag); if (canonical) return canonical; } catch { /* malformed tag */ } }
   return 'en';
+}
+
+/**
+ * The tree for a page at `cd`: the root `depth` levels deep, then every unloaded node along `cd` expanded
+ * `depth` more levels, so the branch to the current directory is always present (11 MS-43).
+ */
+export async function treeAlong(source: MediaSource, cd: string, depth: number): Promise<TreeNode[]> {
+  const root = await source.listTree('/', depth);
+  if (cd === '/') return root;
+  const segs = cd.split('/');
+  let nodes = root;
+  for (let i = 0; i < segs.length; i++) {
+    const at = segs.slice(0, i + 1).join('/');
+    const node = nodes.find((n) => normalizePath(n.cd) === at);
+    if (!node) break;
+    if (!node.children) { try { node.children = await source.listTree(at, depth); } catch { break; } }
+    nodes = node.children;
+  }
+  return root;
 }

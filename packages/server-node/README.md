@@ -57,7 +57,10 @@ await startServer({
   and what it costs.
 - `createEurekaHandler` is a `(req, res) => Promise<boolean>` you can mount
   in any Node server. It owns `{basePath}/media/...`, `/sources/{name}/...`,
-  and, when `renderPage` is given, `GET`/`POST {basePath}`.
+  and, when `renderPage` is given, `GET`/`POST {basePath}`. Trees are
+  returned `treeDepth` levels at a time (default 3; `?depth=` and
+  `?tree={cd}` fetch more, spec 11 MS-43) and the rendered page always
+  carries the branch to the current directory.
 - Errors are JSON `{ error }` with 4xx/5xx status codes.
 - `createDefaultRenderer({ enhance })` renders the Level 0 page in the
   request locale (`?ln=` or `Accept-Language`) from the catalogs in

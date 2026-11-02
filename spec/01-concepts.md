@@ -69,6 +69,7 @@ defaults live in `schema/config.json`; the table is the human index.
 | `mode` | `"table"` | Initial layout mode |
 | `sort` | `{by:"filename",dir:"ascending"}` | Initial sort |
 | `treeHidden` | `true` | Source panel initially collapsed |
+| `treeDepth` | `3` | Levels of the folder tree fetched at once; deeper folders load when opened (11 MS-43) |
 | `useLocalStorage` | `true` | Persist view preferences and remember location |
 | `allowChoose` | `true` | Offer Choose |
 | `allowChooseMultiple` | `true` | Offer the Single/Multiple switch |

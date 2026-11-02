@@ -76,6 +76,8 @@ export interface Config {
   mode: ViewMode;
   sort: Sort;
   treeHidden: boolean;
+  /** Levels of the folder tree requested at once; deeper nodes load when opened (11 MS-43). */
+  treeDepth: number;
   useLocalStorage: boolean;
   allowChoose: boolean;
   allowChooseMultiple: boolean;
@@ -117,6 +119,7 @@ export const defaultConfig: Config = Object.freeze({
   mode: 'table',
   sort: { by: 'filename', dir: 'ascending' },
   treeHidden: true,
+  treeDepth: 3,
   useLocalStorage: true,
   allowChoose: true,
   allowChooseMultiple: true,

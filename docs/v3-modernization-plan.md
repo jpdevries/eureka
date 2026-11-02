@@ -620,6 +620,19 @@ Taken on 2026-11-01:
   first. Found on the way: `Accept-Language: *` (what `fetch()` sends)
   crashed the page renderer in Intl; the handler now picks the first
   well-formed tag.
+- Lazy tree (MS-43, built): `GET sources/{id}?depth=n` and
+  `?tree={cd}&depth=n`; default depth 3 (`treeDepth` on the handler,
+  `Config.treeDepth` / `tree-depth` on the element, `treeDepth` React
+  prop), what MODX shipped. A node past the cut-off omits `children`; the
+  panel renders it expandable (`eureka__tree-node--unloaded`) and the
+  element fetches its level on open (`tree/branchLoaded`) and, after each
+  navigation, the branch down to the current directory; the handler does
+  the same before rendering Level 0 (`treeAlong`). The filesystem walk is
+  cut at the depth; the S3 driver lists one prefix per folder instead of
+  scanning every key, so its cost no longer grows with the bucket. Two
+  conformance tests (navigation.spec.mjs) drive it against the fixture
+  server, which learnt `tree=`/`depth=`. The collapsed-panel directory
+  selector now lists loaded folders only.
 - Package names: the `@eureka` npm scope belongs to an existing npm user,
   so the packages are `@mrktps/eureka` (the element, what most people
   install) and `@mrktps/eureka-core`, `-html`, `-css`, `-react`,
@@ -629,6 +642,5 @@ Taken on 2026-11-01:
 - Not done: the first actual publish, the pointer-driven crop marquee, a
   host-supplied API client (STATE-51), windowing and the PERF-20..24
   measurements, the PERF-25 decision, live verification of the S3 driver
-  against R2/MinIO, the lazy `tree=` query (MS-43), the cloud-drive
-  drivers, and the React demo bundle is 100 kB gzip because it carries
+  against R2/MinIO, the cloud-drive drivers, and the React demo bundle is 100 kB gzip because it carries
   React itself.

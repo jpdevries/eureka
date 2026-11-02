@@ -22,6 +22,7 @@ export type Event =
   | { type: 'source/select'; id: SourceId }
   | { type: 'tree/loading' }
   | { type: 'tree/loaded'; source: SourceId; nodes: TreeNode[] }
+  | { type: 'tree/branchLoaded'; source: SourceId; cd: string; nodes: TreeNode[] }
   | { type: 'tree/toggle'; path: string; open: boolean }
   | { type: 'directory/navigate'; source?: SourceId; path: string }
   | { type: 'listing/loaded'; source: SourceId; path: string; entries: Entry[]; records?: Record<string, DisplayRecord>; fromCache?: boolean }
@@ -108,6 +109,12 @@ export function reduce(s: State, e: Event): State {
       return { ...s, sources: { ...s.sources, current: e.id }, listing: { ...s.listing, source: e.id, path: '/', entries: [], records: {}, status: 'loading', requestId: s.listing.requestId + 1 }, selection: clearedSelection(), view: { ...s.view, filter: '' }, dialog: null };
     case 'tree/loading': return { ...s, tree: { ...s.tree, status: 'loading' } };
     case 'tree/loaded': return { ...s, tree: { ...s.tree, bySource: { ...s.tree.bySource, [String(e.source)]: e.nodes }, status: 'ready' } };
+    case 'tree/branchLoaded': { // the children of one node, fetched when it was opened (11 MS-43)
+      const src = String(e.source), cd = normalizePath(e.cd);
+      const nodes = s.tree.bySource[src];
+      if (!nodes) return s;
+      return { ...s, tree: { ...s.tree, bySource: { ...s.tree.bySource, [src]: cd === '/' ? e.nodes : graftBranch(nodes, cd, e.nodes) } } };
+    }
     case 'tree/toggle': {
       const p = normalizePath(e.path); const open = s.tree.open.filter((x) => x !== p);
       return { ...s, tree: { ...s.tree, open: e.open ? [...open, p] : open } };
@@ -224,6 +231,25 @@ export function selectChosen(s: State): FileEntry[] {
 }
 export const selectIsChecked = (s: State, path: string): boolean => s.selection.inverted !== s.selection.checked.includes(path);
 export const selectCurrentTree = (s: State): TreeNode[] => s.tree.bySource[String(s.listing.source)] ?? [];
+
+/** The node at `cd` in a tree, or undefined (also when an ancestor has not been loaded). */
+export function findTreeNode(nodes: TreeNode[], cd: string): TreeNode | undefined {
+  const target = normalizePath(cd);
+  for (const n of nodes) {
+    const ncd = normalizePath(n.cd);
+    if (ncd === target) return n;
+    if (n.children && (target + '/').startsWith(ncd + '/')) return findTreeNode(n.children, target);
+  }
+  return undefined;
+}
+/** `nodes` with the children of the node at `cd` replaced; other branches untouched. */
+export function graftBranch(nodes: TreeNode[], cd: string, children: TreeNode[]): TreeNode[] {
+  return nodes.map((n) => {
+    const ncd = normalizePath(n.cd);
+    if (ncd === cd) return { ...n, children };
+    return n.children && (cd + '/').startsWith(ncd + '/') ? { ...n, children: graftBranch(n.children, cd, children) } : n;
+  });
+}
 export const selectRecord = (s: State, path: string): DisplayRecord | undefined => s.listing.records[path];
 
 // ---- store -------------------------------------------------------------------------

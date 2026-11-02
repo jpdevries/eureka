@@ -26,6 +26,8 @@ export interface EurekaBrowserAttributes {
   i18n?: string;
   learnMore?: string;
   treeOpen?: boolean;
+  /** Levels of the folder tree fetched at once; deeper folders load when opened (default 3). */
+  treeDepth?: number;
   noStorage?: boolean;
   noUploads?: boolean;
   noDnd?: boolean;

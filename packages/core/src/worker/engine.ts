@@ -62,7 +62,7 @@ export function createEngine(options: EngineOptions = {}): Engine {
     const api = apiFor(req);
     switch (req.type) {
       case 'listSources': return { result: await api.listSources() };
-      case 'listTree': return { result: await api.listTree(req.source) };
+      case 'listTree': return { result: await api.listTree(req.source, { ...(req.cd ? { cd: req.cd } : {}), ...(req.depth ? { depth: req.depth } : {}) }) };
       case 'listDirectory': {
         const key = cacheKey(req.source, req.path);
         const cached = req.preferCache ? await options.cache?.get(key) : undefined;

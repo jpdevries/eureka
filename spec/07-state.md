@@ -67,6 +67,7 @@ Event names are `area/verb`. Payloads in `schema/state.json#/$defs/events`.
 | `sources/loaded {sources}` | set `sources.all`; if `current` is null pick `config.mediaSource` or the first |
 | `source/select {id}` | set `current`; reset listing to `/` of that source; clear selection and filter |
 | `tree/loaded {source, nodes}` | replace `tree.bySource[source]`, preserving `open` |
+| `tree/branchLoaded {source, cd, nodes}` | set `children` of the node at `cd` (fetched when a cut-off node opens or the current directory lies below the loaded depth, 11 MS-43); other branches untouched |
 | `tree/toggle {path, open}` | add/remove in `tree.open` |
 | `directory/navigate {source?, path}` | set `listing.source/path`, `status: loading`; clear selection, filter and `dialog`; keep sort and mode |
 | `listing/loaded {source, path, entries}` | ignored unless it matches the current `listing` request; set entries, `status: ready` |

@@ -87,9 +87,13 @@ DOM order is the reading order and the tab order.
   node's children list follows the row and is shown while the disclosure is
   open. The two controls are siblings, never nested, so the summary contains
   no interactive content (axe `nested-interactive`). Directories without
-  subdirectories render a static folder icon in place of the disclosure. The
+  subdirectories render a static folder icon in place of the disclosure. A
+  directory the server has not expanded (no `children`, past `treeDepth`;
+  11 MS-43) renders the disclosure anyway, with class
+  `eureka__tree-node--unloaded`, and opening it fetches that level. The
   current directory's button carries `aria-current="page"` (v2: class
-  `active` on a link).
+  `active` on a link). The directory selector shown while the panel is
+  closed lists the loaded folders only.
 - **HTML-33** Open state of tree nodes MUST persist across renders and
   reloads (07, persistence).
 - **HTML-34** The drop area, when drag and drop uploads are enabled, is a

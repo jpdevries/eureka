@@ -4,10 +4,12 @@ import { encodePathForURL, normalizePath } from '../paths.js';
 import type { Entry, Source, SourceId, TreeNode } from '../types.js';
 
 export interface RequestOptions { signal?: AbortSignal }
+export interface TreeOptions extends RequestOptions { cd?: string; depth?: number }
 
 export interface EurekaApi {
   listSources(opts?: RequestOptions): Promise<Source[]>;
-  listTree(source: SourceId, opts?: RequestOptions): Promise<TreeNode[]>;
+  /** Subfolders of `cd` (default the root), `depth` levels deep; a node at the cut-off has no `children` (11 MS-43). */
+  listTree(source: SourceId, opts?: TreeOptions): Promise<TreeNode[]>;
   listDirectory(source: SourceId, path: string, opts?: RequestOptions): Promise<Entry[]>;
   upload(source: SourceId, path: string, files: Iterable<File> | FormData, opts?: RequestOptions): Promise<Entry[]>;
   createDirectory(source: SourceId, path: string, opts?: RequestOptions): Promise<Entry[] | true>;
@@ -59,7 +61,11 @@ export function createRestApi({ basePath = '/', headers = {}, fetch: f = globalT
 
   return {
     listSources: (o) => call<Source[]>('GET', url('sources/'), o).then((x) => (Array.isArray(x) ? x : [])),
-    listTree: (source, o) => call<TreeNode[]>('GET', url(`sources/${encodeURIComponent(String(source))}`), o).then((x) => (Array.isArray(x) ? x : [])),
+    listTree: (source, o = {}) => {
+      const cd = normalizePath(o.cd);
+      const params: Record<string, string> = { ...(cd !== '/' ? { tree: cd } : {}), ...(o.depth ? { depth: String(o.depth) } : {}) };
+      return call<TreeNode[]>('GET', url(`sources/${encodeURIComponent(String(source))}`, params), o).then((x) => (Array.isArray(x) ? x : []));
+    },
     listDirectory: (source, path, o) => call<unknown>('GET', url(`sources/${encodeURIComponent(String(source))}`, dirParam(path)), o).then(asEntries),
     upload: (source, path, files, o) => call<unknown>('POST', url(`sources/${encodeURIComponent(String(source))}`, dirParam(path)), { body: toFormData(files), ...o }).then(asEntries),
     createDirectory: (source, path, o) => call<Entry[] | true>('PUT', url(`sources/${encodeURIComponent(String(source))}`, dirParam(path)), o).then((x) => (Array.isArray(x) ? x : true)),
