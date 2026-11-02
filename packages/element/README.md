@@ -1,14 +1,14 @@
-# @eureka/element
+# @mrktps/eureka
 
 `<eureka-browser>`: the Eureka media browser as a framework-free custom
 element in light DOM. It is the reference implementation of the spec at
-Levels 1 and 2, built on [`@eureka/core`](../core) (state, API client,
-worker engine) and [`@eureka/html`](../html) (markup from state).
+Levels 1 and 2, built on [`@mrktps/eureka-core`](../core) (state, API client,
+worker engine) and [`@mrktps/eureka-html`](../html) (markup from state).
 
 ## How it works
 
 - **Enhances the server's form.** Wrap the Level 0 `<form>` that
-  `@eureka/html` or the reference server rendered in `<eureka-browser>`
+  `@mrktps/eureka-html` or the reference server rendered in `<eureka-browser>`
   and load the bundle. On connect the element reads the embedded state
   (`<script type="application/json" id="{p}state">`), builds the store and
   replaces the form with the enhanced markup. Without JavaScript the form
@@ -44,7 +44,7 @@ server-rendered page may embed its catalog instead, see spec 09), `tree-open`, a
 `no-choose`, `no-choose-multiple`, `confirm-delete`, `always-welcome`.
 
 Anything else, including functions, goes through the `config` property
-(the `PartialConfig` of `@eureka/core`) or a
+(the `PartialConfig` of `@mrktps/eureka-core`) or a
 `<script type="application/json" data-eureka-config>` child:
 
 ```js

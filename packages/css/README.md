@@ -1,4 +1,4 @@
-# @eureka/css
+# @mrktps/eureka-css
 
 The stylesheet (`dist/eureka.css`) and icon sprite (`assets/icons.svg`).
 Built by `node build.mjs`, which generates the token defaults block from

@@ -1,7 +1,7 @@
 > **Eureka 3 is being built on the `v3` branch.** The plan is in
 > [docs/v3-modernization-plan.md](docs/v3-modernization-plan.md), the
 > framework-agnostic specification in [spec/](spec/README.md), the code
-> in [packages/](packages/) (`@eureka/core`, `html`, `css`, `element`,
+> in [packages/](packages/) (`@mrktps/eureka-core`, `html`, `css`, `element`,
 > `react`, `server-node`), the demo site in [apps/demo/](apps/demo/README.md)
 > (`npm run demo`), the upgrade path in
 > [docs/migrating-from-v2.md](docs/migrating-from-v2.md), and the release

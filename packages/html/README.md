@@ -1,8 +1,8 @@
-# @eureka/html
+# @mrktps/eureka-html
 
 > Client renders can pass `rowMemo` in the context: the listing then emits a
 > keep-placeholder for every row whose markup is unchanged since the previous
-> render, and `@eureka/element`'s morph leaves those rows untouched (10 PERF-11).
+> render, and `@mrktps/eureka`'s morph leaves those rows untouched (10 PERF-11).
 
 The HTML layer: pure functions from state to markup, used by the server for
 the Level 0 form (spec 03) and by the element for the enhanced DOM (spec 02).
@@ -10,7 +10,7 @@ No DOM APIs; output is a string, so it runs in Node, in a worker, or in the
 page.
 
 ```ts
-import { renderLevel0, renderEnhanced, renderDocument } from '@eureka/html';
+import { renderLevel0, renderEnhanced, renderDocument } from '@mrktps/eureka-html';
 
 const body = renderLevel0({ sources, source, path: 'assets/img', entries, tree, lang: 'en-US', basePath: '/' });
 const page = renderDocument({ lang: 'en-US', body, stylesheets: ['/assets/css/eureka.css'] });

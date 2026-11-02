@@ -1,5 +1,5 @@
 // What every render function receives, and how to build it on the server.
-import { buildDisplayRecord, cssSafe, createTranslator, initialState, reduce, resolveConfig, selectCurrentTree, type Config, type Entry, type PartialConfig, type Source, type State, type TreeNode, type Translator, type Keymap, type Catalog } from '@eureka/core';
+import { buildDisplayRecord, cssSafe, createTranslator, initialState, reduce, resolveConfig, selectCurrentTree, type Config, type Entry, type PartialConfig, type Source, type State, type TreeNode, type Translator, type Keymap, type Catalog } from '@mrktps/eureka-core';
 
 export type Level = 0 | 1;
 
@@ -55,7 +55,7 @@ export interface PageInput {
   catalog?: Catalog;
 }
 
-/** Build a render context from server-side inputs (what @eureka/server-node's renderPage receives). */
+/** Build a render context from server-side inputs (what @mrktps/eureka-server's renderPage receives). */
 export function contextFromPage(input: PageInput, level: Level = 0): Ctx {
   const config: Config = resolveConfig({ basePath: input.basePath, currentDirectory: input.path, mediaSource: input.source.id, lang: input.lang, ...(input.config ?? {}) });
   const t = createTranslator(input.lang, input.catalog ?? {}, input.timeZone ? { timeZone: input.timeZone } : {});

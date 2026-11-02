@@ -1,10 +1,10 @@
 ---
-"@eureka/core": patch
-"@eureka/css": patch
-"@eureka/html": patch
-"@eureka/element": patch
-"@eureka/react": patch
-"@eureka/server-node": patch
+"@mrktps/eureka-core": patch
+"@mrktps/eureka-css": patch
+"@mrktps/eureka-html": patch
+"@mrktps/eureka": patch
+"@mrktps/eureka-react": patch
+"@mrktps/eureka-server": patch
 ---
 
 First published alpha of Eureka 3: the framework-free core, the HTML

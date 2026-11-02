@@ -1,4 +1,4 @@
-# @eureka/react
+# @mrktps/eureka-react
 
 ## 3.0.0-alpha.1
 
@@ -15,5 +15,5 @@
   built-in shortcuts reference, message catalogs as files, and a React 19
   adapter. See `docs/migrating-from-v2.md`.
 - Updated dependencies []:
-  - @eureka/core@3.0.0-alpha.1
-  - @eureka/element@3.0.0-alpha.1
+  - @mrktps/eureka-core@3.0.0-alpha.1
+  - @mrktps/eureka@3.0.0-alpha.1

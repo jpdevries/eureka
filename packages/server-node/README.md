@@ -1,4 +1,4 @@
-# @eureka/server-node
+# @mrktps/eureka-server
 
 Reference implementation of the Eureka REST API (`spec/api/openapi.yaml`)
 over directories on disk, plus the Level 0 form protocol (`spec/03`) with a
@@ -11,7 +11,7 @@ eureka-server --root ./media --name filesystem --port 3000 --base-path / --stati
 Programmatic:
 
 ```ts
-import { createFilesystemSource, startServer } from '@eureka/server-node';
+import { createFilesystemSource, startServer } from '@mrktps/eureka-server';
 
 await startServer({
   sources: [createFilesystemSource({ id: 0, name: 'filesystem', root: './media' })],
@@ -31,7 +31,7 @@ await startServer({
 - Errors are JSON `{ error }` with 4xx/5xx status codes.
 - `createDefaultRenderer({ enhance })` renders the Level 0 page in the
   request locale (`?ln=` or `Accept-Language`) from the catalogs in
-  `@eureka/core/i18n`, embeds a non-English catalog for the element and
+  `@mrktps/eureka-core/i18n`, embeds a non-English catalog for the element and
   sets `lang` on the element host (spec 09 I18N-12). `cssAssets()`,
   `elementAssets()` and `i18nAssets()` give the asset paths to serve
   (`/assets/css/eureka.css`, `/assets/js/eureka-browser.js`,

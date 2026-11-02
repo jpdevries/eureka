@@ -12,7 +12,7 @@
 // --static  directory served at /            (the page under test)
 // --index   file served for GET /            (default <static>/index.html)
 // --nojs    HTML fragment injected into #root for GET /nojs (the Level 0 page)
-// --render  "v3": render /nojs and the POST / protocol live with @eureka/html (needs `npm run build`);
+// --render  "v3": render /nojs and the POST / protocol live with @mrktps/eureka-html (needs `npm run build`);
 //           GET / then serves the same Level 0 page inside <eureka-browser> with the element bundle
 //           (the progressive-enhancement path) and /index.html the client-only demo from --static
 // --api     API prefix, default /assets/components/eureka/media
@@ -35,7 +35,7 @@ const STATIC = args.static ? path.resolve(args.static) : null;
 const INDEX = args.index ? path.resolve(args.index) : null;
 const NOJS = args.nojs ? path.resolve(args.nojs) : null;
 const API = args.api ?? '/assets/components/eureka/media';
-const RENDER = args.render === 'v3' ? await import('@eureka/html').catch((e) => { console.error('cannot load @eureka/html; run `npm run build` first:', e.message); process.exit(1); }) : null;
+const RENDER = args.render === 'v3' ? await import('@mrktps/eureka-html').catch((e) => { console.error('cannot load @mrktps/eureka-html; run `npm run build` first:', e.message); process.exit(1); }) : null;
 const cssPkg = RENDER ? path.resolve(here, '../../packages/css') : null;
 const elementPkg = RENDER ? path.resolve(here, '../../packages/element') : null;
 const corePkg = RENDER ? path.resolve(here, '../../packages/core') : null;

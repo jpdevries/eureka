@@ -39,7 +39,7 @@
     "emphasisFocusedMediaItem": { "type": "boolean", "default": true },
     "welcome": { "type": "boolean", "default": true },
     "alwaysWelcome": { "type": "boolean", "default": false },
-    "learnMore": { "type": "string", "format": "uri-reference", "default": "https://github.com/jpdevries/eureka" },
+    "learnMore": { "type": "string", "format": "uri-reference", "default": "https://github.com/mrktps/eureka" },
     "headers": { "type": "object", "additionalProperties": { "type": "string" }, "default": {} },
     "endpoints": { "type": "object", "properties": { "i18n": { "type": "string" } }, "additionalProperties": { "type": "string" } },
     "assetsBasePath": { "type": "string", "default": "./assets/" },

@@ -1,4 +1,4 @@
-# @eureka/core
+# @mrktps/eureka-core
 
 The framework-free core of the Eureka media browser. No DOM, no framework;
 the `<eureka-browser>` element and any adapter are built on it.
@@ -20,11 +20,11 @@ the `<eureka-browser>` element and any adapter are built on it.
 spec files, not the generated ones.
 
 ```ts
-import { resolveConfig, initialState, createStore, createEngineClient, selectVisibleFiles } from '@eureka/core';
+import { resolveConfig, initialState, createStore, createEngineClient, selectVisibleFiles } from '@mrktps/eureka-core';
 
 const config = resolveConfig({ basePath: '/assets/components/eureka/' });
 const store = createStore(initialState({ config, locale: 'en-US' }));
-const engine = createEngineClient({ locale: 'en-US', basePath: config.basePath, workerUrl: new URL('@eureka/core/worker', import.meta.url) });
+const engine = createEngineClient({ locale: 'en-US', basePath: config.basePath, workerUrl: new URL('@mrktps/eureka-core/worker', import.meta.url) });
 
 const { result } = await engine.request({ type: 'listDirectory', source: 0, path: 'assets/img' });
 store.dispatch({ type: 'listing/loaded', source: 0, path: 'assets/img', entries: result.entries, records: result.records });

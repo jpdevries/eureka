@@ -131,7 +131,7 @@ export const defaultConfig: Config = Object.freeze({
   emphasisFocusedMediaItem: true,
   welcome: true,
   alwaysWelcome: false,
-  learnMore: 'https://github.com/jpdevries/eureka',
+  learnMore: 'https://github.com/mrktps/eureka',
   headers: {},
   endpoints: {},
   assetsBasePath: './assets/',

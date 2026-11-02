@@ -1,5 +1,5 @@
 // Notifications, the path bar and the choose bar (02 §3, §7, §8).
-import { selectChosen, selectFocused, type FileEntry } from '@eureka/core';
+import { selectChosen, selectFocused, type FileEntry } from '@mrktps/eureka-core';
 import { attr, html, raw, type Raw } from '../html.js';
 import type { Ctx } from '../model.js';
 import { hidden, icon } from './icon.js';

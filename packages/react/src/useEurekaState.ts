@@ -1,5 +1,5 @@
 import { useCallback, useRef, useSyncExternalStore } from 'react';
-import type { State } from '@eureka/core';
+import type { State } from '@mrktps/eureka-core';
 import type { EurekaBrowserElement } from './define.js';
 import type { RefObject } from 'react';
 

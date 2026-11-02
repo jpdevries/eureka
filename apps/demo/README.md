@@ -1,7 +1,7 @@
 # Eureka demo site
 
 The pages behind the plan's "demo site": the reference server from
-`@eureka/server-node` serving generated sample media, with one page per
+`@mrktps/eureka-server` serving generated sample media, with one page per
 way of using Eureka 3.
 
 ```bash
@@ -17,7 +17,7 @@ Or from this directory: `npm run build && npm start [-- --port 3100]`.
 | `/` | Landing page: the three levels, install snippets |
 | `/browser/` | Server-rendered Level 0 form wrapped in `<eureka-browser>` and enhanced by the bundle. Works with JavaScript disabled (`?path=photos` navigates; the form posts back). |
 | `/client.html` | An empty `<eureka-browser api="/browser/">` that fetches everything itself |
-| `/react.html` | `@eureka/react`: `<EurekaBrowser>` with a side panel driven by `useEurekaState`, the element's methods, and prop changes that restart the instance |
+| `/react.html` | `@mrktps/eureka-react`: `<EurekaBrowser>` with a side panel driven by `useEurekaState`, the element's methods, and prop changes that restart the instance |
 | `/embed.html` | The editor pattern: the browser inside a host `<dialog>`, inserting what was chosen |
 
 The REST API is at `/browser/media/` (two sources: `library`, the

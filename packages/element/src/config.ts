@@ -1,6 +1,6 @@
 // Host configuration for <eureka-browser>: attributes, a JSON child, or the
 // `config` property, merged in that order (later wins) over the defaults.
-import { resolveConfig, type Config, type PartialConfig } from '@eureka/core';
+import { resolveConfig, type Config, type PartialConfig } from '@mrktps/eureka-core';
 
 type Dict = Record<string, unknown>;
 const NESTED = new Set(['sort', 'headers', 'endpoints', 'intervals', 'callbacks', 'handlers', 'keymap']);

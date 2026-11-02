@@ -1,5 +1,5 @@
 {
-  "name": "@eureka/server-node",
+  "name": "@mrktps/eureka-server",
   "version": "3.0.0-alpha.1",
   "description": "Reference Node implementation of the Eureka REST API over a filesystem media source",
   "keywords": [
@@ -20,14 +20,14 @@
     "email": "mail@devries.jp",
     "url": "https://devries.jp/"
   },
-  "homepage": "https://github.com/jpdevries/eureka/tree/v3/packages/server-node#readme",
+  "homepage": "https://github.com/mrktps/eureka/tree/v3/packages/server-node#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jpdevries/eureka.git",
+    "url": "git+https://github.com/mrktps/eureka.git",
     "directory": "packages/server-node"
   },
   "bugs": {
-    "url": "https://github.com/jpdevries/eureka/issues"
+    "url": "https://github.com/mrktps/eureka/issues"
   },
   "type": "module",
   "main": "./dist/index.js",
@@ -63,10 +63,10 @@
   "dependencies": {
     "image-size": "^1.2.0",
     "yazl": "^3.3.1",
-    "@eureka/core": "3.0.0-alpha.1",
-    "@eureka/html": "3.0.0-alpha.1",
-    "@eureka/element": "3.0.0-alpha.1",
-    "@eureka/css": "3.0.0-alpha.1"
+    "@mrktps/eureka-core": "3.0.0-alpha.1",
+    "@mrktps/eureka-html": "3.0.0-alpha.1",
+    "@mrktps/eureka": "3.0.0-alpha.1",
+    "@mrktps/eureka-css": "3.0.0-alpha.1"
   },
   "devDependencies": {
     "@types/yazl": "^2.4.6"

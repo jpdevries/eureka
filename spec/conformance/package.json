@@ -1,5 +1,5 @@
 {
-  "name": "@eureka/spec-conformance",
+  "name": "@mrktps/eureka-spec-conformance",
   "version": "3.0.0-draft.1",
   "private": true,
   "description": "Executable conformance suite for the Eureka media browser specification",

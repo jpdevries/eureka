@@ -1,12 +1,32 @@
 {
   "$schema": "https://unpkg.com/@changesets/config@2.3.1/schema.json",
-  "changelog": ["@changesets/changelog-github", { "repo": "jpdevries/eureka" }],
+  "changelog": [
+    "@changesets/changelog-github",
+    {
+      "repo": "mrktps/eureka"
+    }
+  ],
   "commit": false,
-  "fixed": [["@eureka/*"]],
+  "fixed": [
+    [
+      "@mrktps/eureka",
+      "@mrktps/eureka-core",
+      "@mrktps/eureka-html",
+      "@mrktps/eureka-css",
+      "@mrktps/eureka-react",
+      "@mrktps/eureka-server"
+    ]
+  ],
   "linked": [],
   "access": "public",
   "baseBranch": "v3",
   "updateInternalDependencies": "patch",
-  "ignore": ["@eureka/demo", "@eureka/spec-conformance"],
-  "privatePackages": { "version": false, "tag": false }
+  "ignore": [
+    "@mrktps/eureka-demo",
+    "@mrktps/eureka-spec-conformance"
+  ],
+  "privatePackages": {
+    "version": false,
+    "tag": false
+  }
 }

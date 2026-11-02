@@ -6,7 +6,7 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import { createReadStream } from 'node:fs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { normalizePath, splitSourcePath, type Entry, type Source, type TreeNode } from '@eureka/core';
+import { normalizePath, splitSourcePath, type Entry, type Source, type TreeNode } from '@mrktps/eureka-core';
 import { PathError, type MediaSource } from './fs-source.js';
 import { first, parseMultipart, readBody } from './multipart.js';
 

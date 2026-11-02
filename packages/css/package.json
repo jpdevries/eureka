@@ -1,5 +1,5 @@
 {
-  "name": "@eureka/css",
+  "name": "@mrktps/eureka-css",
   "version": "3.0.0-alpha.1",
   "description": "Stylesheet and icon sprite of the Eureka media browser: cascade layers, container queries, the five layout modes, themes",
   "keywords": [
@@ -20,14 +20,14 @@
     "email": "mail@devries.jp",
     "url": "https://devries.jp/"
   },
-  "homepage": "https://github.com/jpdevries/eureka/tree/v3/packages/css#readme",
+  "homepage": "https://github.com/mrktps/eureka/tree/v3/packages/css#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jpdevries/eureka.git",
+    "url": "git+https://github.com/mrktps/eureka.git",
     "directory": "packages/css"
   },
   "bugs": {
-    "url": "https://github.com/jpdevries/eureka/issues"
+    "url": "https://github.com/mrktps/eureka/issues"
   },
   "type": "module",
   "exports": {

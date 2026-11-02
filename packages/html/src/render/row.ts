@@ -1,5 +1,5 @@
 // One listing row (02 HTML-62..69).
-import { extname, iconForExtension, isCroppable, mediaKind, selectIsChecked, selectRecord, type FileEntry } from '@eureka/core';
+import { extname, iconForExtension, isCroppable, mediaKind, selectIsChecked, selectRecord, type FileEntry } from '@mrktps/eureka-core';
 import { attr, classes, html, raw, type Raw } from '../html.js';
 import type { Ctx } from '../model.js';
 import { hidden, icon } from './icon.js';

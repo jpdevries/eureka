@@ -1,7 +1,7 @@
 name: Publish to npm
 
 # Changesets flow, second half: started by hand from the Actions tab (or `gh
-# workflow run publish.yml --ref v3`). Publishes every @eureka/* package whose
+# workflow run publish.yml --ref v3`). Publishes every @mrktps/eureka* package whose
 # version is not on npm yet, with provenance, and pushes the release tags.
 on:
   workflow_dispatch:

@@ -1,5 +1,5 @@
 // Dialogs (02 HTML-91/92, 06 A11Y-70): native <dialog>, rendered only when open.
-import { basename, defaultKeymap, parseChord, selectFolders, selectFiles, type FileEntry, type Translator } from '@eureka/core';
+import { basename, defaultKeymap, parseChord, selectFolders, selectFiles, type FileEntry, type Translator } from '@mrktps/eureka-core';
 import { attr, html, type Raw } from '../html.js';
 import type { Ctx } from '../model.js';
 import { hidden } from './icon.js';

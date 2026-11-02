@@ -1,5 +1,5 @@
 import { createElement, useEffect, useImperativeHandle, useRef } from 'react';
-import type { PartialConfig } from '@eureka/core';
+import type { PartialConfig } from '@mrktps/eureka-core';
 import { defineEurekaBrowser, type EurekaBrowserElement } from './define.js';
 import type { EurekaBrowserAttributes, EurekaBrowserProps } from './types.js';
 

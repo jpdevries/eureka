@@ -1,8 +1,8 @@
-import type { FileEntry, PartialConfig, SourceId, State, ViewMode } from '@eureka/core';
+import type { FileEntry, PartialConfig, SourceId, State, ViewMode } from '@mrktps/eureka-core';
 import type { CSSProperties, ReactNode, Ref } from 'react';
 import type { EurekaBrowserElement } from './define.js';
 
-/** Attribute-backed options of `<eureka-browser>` (see @eureka/element). Changing one restarts the instance. */
+/** Attribute-backed options of `<eureka-browser>` (see @mrktps/eureka). Changing one restarts the instance. */
 export interface EurekaBrowserAttributes {
   /** Base URL of the REST API; `media/` is appended. */
   api?: string;
@@ -56,7 +56,7 @@ export interface EurekaBrowserProps extends EurekaBrowserAttributes {
   /** Once per render of the browser (`eureka-statechange`). Prefer `useEurekaState` for reading state. */
   onStateChange?: (state: State, event: CustomEvent<{ state: State }>) => void;
   /**
-   * Server-rendered Level 0 markup to enhance (the string `renderLevel0` of @eureka/html returns).
+   * Server-rendered Level 0 markup to enhance (the string `renderLevel0` of @mrktps/eureka-html returns).
    * Keep it referentially stable; React resets the element's children whenever it changes.
    */
   markup?: string;

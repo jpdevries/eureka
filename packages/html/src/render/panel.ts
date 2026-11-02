@@ -1,5 +1,5 @@
 // The source panel: source selector, directory tree, drop area, tree bar (02 §4).
-import { normalizePath, selectCurrentTree, type TreeNode } from '@eureka/core';
+import { normalizePath, selectCurrentTree, type TreeNode } from '@mrktps/eureka-core';
 import { attr, classes, html, type Raw } from '../html.js';
 import type { Ctx } from '../model.js';
 import { hidden, icon } from './icon.js';

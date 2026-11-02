@@ -3,8 +3,8 @@
 // methods. Bundled by build.mjs into public/assets/js/react-demo.js.
 import { StrictMode, useCallback, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import type { FileEntry, ViewMode } from '@eureka/core';
-import { EurekaBrowser, useEurekaState, type EurekaBrowserElement } from '@eureka/react';
+import type { FileEntry, ViewMode } from '@mrktps/eureka-core';
+import { EurekaBrowser, useEurekaState, type EurekaBrowserElement } from '@mrktps/eureka-react';
 
 const MODES: ViewMode[] = ['table', 'thumb', 'grid', 'list', 'masonry'];
 

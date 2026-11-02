@@ -1,4 +1,4 @@
-# @eureka/react
+# @mrktps/eureka-react
 
 A typed React 19 wrapper over the [`<eureka-browser>`](../element) custom
 element. It is thin on purpose (decision 1 of the plan): the element does
@@ -6,7 +6,7 @@ the work, React gets props, handler callbacks and a hook.
 
 ```tsx
 import { useRef } from 'react';
-import { EurekaBrowser, useEurekaState, type EurekaBrowserElement } from '@eureka/react';
+import { EurekaBrowser, useEurekaState, type EurekaBrowserElement } from '@mrktps/eureka-react';
 
 function Picker({ onPick }: { onPick: (url: string) => void }) {
   const ref = useRef<EurekaBrowserElement>(null);
@@ -21,7 +21,7 @@ function Picker({ onPick }: { onPick: (url: string) => void }) {
 }
 ```
 
-Load the stylesheet (`@eureka/css/eureka.css`) on the page and wrap the
+Load the stylesheet (`@mrktps/eureka-css/eureka.css`) on the page and wrap the
 component in an element with `class="eureka-root"` that gives it a height.
 
 ## `<EurekaBrowser>`
@@ -33,7 +33,7 @@ component in an element with `class="eureka-root"` that gives it a height.
   `noCrop`, `noMasonry`, `noFullscreen`, `noWelcome`, `noChoose`,
   `noChooseMultiple`, `confirmDelete`, `alwaysWelcome`. Changing one
   restarts the instance (the element re-reads its configuration).
-- **`config`**: the `PartialConfig` of `@eureka/core` for anything else
+- **`config`**: the `PartialConfig` of `@mrktps/eureka-core` for anything else
   (headers, intervals, handlers, keymap overrides). It is set as a
   property. Memoize it; a new object restarts the instance.
 - **Handlers** for the element's events (spec 07 STATE-50): `onChoose(items,
@@ -42,7 +42,7 @@ component in an element with `class="eureka-root"` that gives it a height.
   latest handler is always the one called; re-rendering with a new arrow
   function does not re-bind.
 - **`markup`**: a server-rendered Level 0 form (the string
-  `renderLevel0()` of `@eureka/html` returns) to enhance, rendered through
+  `renderLevel0()` of `@mrktps/eureka-html` returns) to enhance, rendered through
   `dangerouslySetInnerHTML` so it hydrates. Keep it referentially stable:
   React resets the element's children when the string changes. Without it,
   `children` show until the element starts; with neither, the element
@@ -50,7 +50,7 @@ component in an element with `class="eureka-root"` that gives it a height.
 - **`ref`** gives the element, with its methods (STATE-52) `navigate(source,
   path)`, `setView(mode)`, `refresh()`, `choose()`, and the `state`,
   `store`, `engineMode` getters.
-- **`define`** (default `true`) imports `@eureka/element` and registers the
+- **`define`** (default `true`) imports `@mrktps/eureka` and registers the
   tag the first time a component mounts. Pass `false` when the page loads
   `eureka-browser.js` itself. `tag` selects another registered name.
 - `id`, `className`, `style`, `hidden` pass through.
@@ -69,9 +69,9 @@ Without a selector, the whole `State`.
 
 ## Server rendering
 
-`@eureka/react` imports nothing DOM-bound at module level; the element is
+`@mrktps/eureka-react` imports nothing DOM-bound at module level; the element is
 imported dynamically in an effect. Render the Level 0 form on the server
-with `@eureka/html` and pass it as `markup`:
+with `@mrktps/eureka-html` and pass it as `markup`:
 
 ```tsx
 const markup = renderLevel0({ sources, source, path, entries, tree, lang: 'en', basePath: '/media-api/' });

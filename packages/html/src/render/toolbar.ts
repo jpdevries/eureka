@@ -1,5 +1,5 @@
 // Stage header (heading, choose mode, filter) and the listing toolbar (02 §5).
-import { combineSourcePath, selectFiles, VIEW_MODES, type ViewMode } from '@eureka/core';
+import { combineSourcePath, selectFiles, VIEW_MODES, type ViewMode } from '@mrktps/eureka-core';
 import { attr, classes, html, type Raw } from '../html.js';
 import type { Ctx } from '../model.js';
 import { hidden, icon } from './icon.js';

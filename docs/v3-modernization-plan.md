@@ -411,7 +411,7 @@ Taken on 2026-11-01:
 
 ### Phase 5 progress
 
-- `packages/react`: `@eureka/react`, the typed React 19 wrapper.
+- `packages/react`: `@mrktps/eureka-react`, the typed React 19 wrapper.
   `<EurekaBrowser>` renders the element, maps its attributes from
   camelCased props, sets `config` as a property, binds the five events to
   handler props (always calling the latest handler), accepts a
@@ -430,17 +430,17 @@ Taken on 2026-11-01:
   any `<dialog>`, which silenced the keyboard when a host puts the whole
   browser in a modal (the embed pattern); the guard is now scoped to the
   element's own dialogs, with a test.
-- `apps/demo`: the demo site, served by `@eureka/server-node` over sample
+- `apps/demo`: the demo site, served by `@mrktps/eureka-server` over sample
   media generated on first start (`scripts/seed-media.mjs`: SVG photos in
   six aspect ratios, logos, a Markdown, JSON, PDF and WAV file, two
   sources). Pages: a landing page, `/browser/` (server-rendered form
   enhanced by the bundle; works with JavaScript off, verified by GET
   `?path=` and the POST navigate and choose protocol), `/client.html`
-  (the element alone), `/react.html` (`@eureka/react` with a host panel on
+  (the element alone), `/react.html` (`@mrktps/eureka-react` with a host panel on
   `useEurekaState`, the methods, and props that restart the instance) and
   `/embed.html` (the browser inside a host `<dialog>` inserting Markdown
   into an editor). `npm run demo`; `.claude/launch.json` has a `demo`
-  entry. The `@eureka/css` and `@eureka/element` package exports now
+  entry. The `@mrktps/eureka-css` and `@mrktps/eureka` package exports now
   expose `package.json`, which the server's asset helpers resolve.
 - `docs/migrating-from-v2.md`: migration notes for `eureka-browser` 0.0.x
   users (packages, mounting, options, shortcuts, markup, SSR, browser
@@ -500,9 +500,9 @@ Taken on 2026-11-01:
   wants English compiled in (I18N-04, I18N-11), so the catalog stays.
   Decision needed on PERF-25: raise it to the measured 34 kB, or spend
   effort on the renderers (the largest share).
-- Release prep: every `@eureka/*` package carries `publishConfig`
+- Release prep: every `@mrktps/eureka*` package carries `publishConfig`
   (public, provenance), repository, homepage, bugs, keywords, engines,
-  its LICENSE and README in `files`; `@eureka/server-node` gained an
+  its LICENSE and README in `files`; `@mrktps/eureka-server` gained an
   exports map. Changesets is set up as one `fixed` group in alpha
   pre-release mode with the first changeset applied: all packages are
   `3.0.0-alpha.1` with `CHANGELOG.md` files. GitHub Actions: `ci.yml`
@@ -515,6 +515,12 @@ Taken on 2026-11-01:
   npm scope is available (the registry lists no packages in it, but
   npmjs.com could not be queried for an owner); if it is taken, the
   scope is a find-and-replace away.
+- Package names: the `@eureka` npm scope belongs to an existing npm user,
+  so the packages are `@mrktps/eureka` (the element, what most people
+  install) and `@mrktps/eureka-core`, `-html`, `-css`, `-react`,
+  `-server`, under the markup.tips org, whose scope was free. The
+  repository links point at `mrktps/eureka`, where the repository is
+  moving; GitHub redirects the old address after the transfer.
 - Not done: the first actual publish, the pointer-driven crop marquee, a
   host-supplied API client (STATE-51), windowing and the PERF-20..24
   measurements, the PERF-25 decision, and the React demo bundle is

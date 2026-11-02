@@ -1,4 +1,4 @@
-// Module worker entry: `new Worker(new URL('@eureka/core/worker', import.meta.url), { type: 'module' })`.
+// Module worker entry: `new Worker(new URL('@mrktps/eureka-core/worker', import.meta.url), { type: 'module' })`.
 import { createEngine } from './engine.js';
 import type { EngineRequest } from './protocol.js';
 

@@ -1,5 +1,5 @@
 // The listing table (02 §6) with its header and empty states.
-import { selectVisibleFiles, type FileEntry, type SortBy } from '@eureka/core';
+import { selectVisibleFiles, type FileEntry, type SortBy } from '@mrktps/eureka-core';
 import { attr, classes, html, raw, type Raw } from '../html.js';
 import type { Ctx } from '../model.js';
 import { hidden, icon } from './icon.js';

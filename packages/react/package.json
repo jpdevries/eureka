@@ -1,5 +1,5 @@
 {
-  "name": "@eureka/react",
+  "name": "@mrktps/eureka-react",
   "version": "3.0.0-alpha.1",
   "description": "Typed React wrapper over the <eureka-browser> custom element: props, events as handlers, and a hook that reads the browser's state",
   "keywords": [
@@ -19,14 +19,14 @@
     "email": "mail@devries.jp",
     "url": "https://devries.jp/"
   },
-  "homepage": "https://github.com/jpdevries/eureka/tree/v3/packages/react#readme",
+  "homepage": "https://github.com/mrktps/eureka/tree/v3/packages/react#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jpdevries/eureka.git",
+    "url": "git+https://github.com/mrktps/eureka.git",
     "directory": "packages/react"
   },
   "bugs": {
-    "url": "https://github.com/jpdevries/eureka/issues"
+    "url": "https://github.com/mrktps/eureka/issues"
   },
   "type": "module",
   "main": "./dist/index.js",
@@ -60,8 +60,8 @@
     "test": "vitest run --root ../.."
   },
   "dependencies": {
-    "@eureka/core": "3.0.0-alpha.1",
-    "@eureka/element": "3.0.0-alpha.1"
+    "@mrktps/eureka-core": "3.0.0-alpha.1",
+    "@mrktps/eureka": "3.0.0-alpha.1"
   },
   "peerDependencies": {
     "react": ">=19.0.0"

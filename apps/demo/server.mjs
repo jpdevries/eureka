@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 // The demo site. Static pages from ./public, the REST API and the
-// server-rendered browser under /browser/ from @eureka/server-node, sample
+// server-rendered browser under /browser/ from @mrktps/eureka-server, sample
 // media generated on first start. `node server.mjs [--port 3100]`.
 import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { createEurekaHandler, createFilesystemSource, cssAssets, elementAssets, escapeHtml, i18nAssets, loadCatalog } from '@eureka/server-node';
-import { renderLevel0 } from '@eureka/html';
+import { createEurekaHandler, createFilesystemSource, cssAssets, elementAssets, escapeHtml, i18nAssets, loadCatalog } from '@mrktps/eureka-server';
+import { renderLevel0 } from '@mrktps/eureka-html';
 import { MEDIA_ROOT, seed } from './scripts/seed-media.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -23,7 +23,7 @@ fs.mkdirSync(path.join(MEDIA_ROOT, 'uploads'), { recursive: true });
 
 const nav = (active) => {
   const items = [['/', 'Home'], ['/browser/', 'Server-rendered'], ['/client.html', 'Client-only'], ['/react.html', 'React'], ['/embed.html', 'Embed']];
-  return `<nav class="demo-nav" aria-label="Demo pages"><a class="demo-brand" href="/">Eureka 3</a><ul>${items.map(([href, label]) => `<li><a href="${href}"${href === active ? ' aria-current="page"' : ''}>${label}</a></li>`).join('')}</ul><a class="demo-nav-link" href="https://github.com/jpdevries/eureka/tree/v3">Source</a></nav>`;
+  return `<nav class="demo-nav" aria-label="Demo pages"><a class="demo-brand" href="/">Eureka 3</a><ul>${items.map(([href, label]) => `<li><a href="${href}"${href === active ? ' aria-current="page"' : ''}>${label}</a></li>`).join('')}</ul><a class="demo-nav-link" href="https://github.com/mrktps/eureka/tree/v3">Source</a></nav>`;
 };
 
 /** The server-rendered page: the Level 0 form inside the demo shell, wrapped in <eureka-browser> so the bundle enhances it. */

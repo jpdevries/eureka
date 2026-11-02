@@ -3,8 +3,8 @@
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import fs from 'node:fs';
-import { escapeHtml, renderDocument, renderLevel0 } from '@eureka/html';
-import { catalogCandidates, type Catalog } from '@eureka/core';
+import { escapeHtml, renderDocument, renderLevel0 } from '@mrktps/eureka-html';
+import { catalogCandidates, type Catalog } from '@mrktps/eureka-core';
 import type { PageContext } from './handler.js';
 
 export interface DefaultRendererOptions {
@@ -18,7 +18,7 @@ export interface DefaultRendererOptions {
   enhance?: boolean;
   /** Attributes for the <eureka-browser> host when enhancing, e.g. { api: '/' }. */
   elementAttributes?: Record<string, string>;
-  /** Catalog for a request locale (09 I18N-12). Default: the files in @eureka/core/i18n; English needs none. */
+  /** Catalog for a request locale (09 I18N-12). Default: the files in @mrktps/eureka-core/i18n; English needs none. */
   catalog?: (lang: string) => Catalog | undefined;
 }
 
@@ -41,12 +41,12 @@ export function createDefaultRenderer(o: DefaultRendererOptions = {}) {
 }
 
 const catalogCache = new Map<string, Catalog | undefined>();
-/** Directory of the catalog files shipped with @eureka/core (`i18n/{lang}.json`). */
+/** Directory of the catalog files shipped with @mrktps/eureka-core (`i18n/{lang}.json`). */
 export function i18nDir(): string {
   const require = createRequire(import.meta.url);
-  return path.join(path.dirname(require.resolve('@eureka/core/package.json')), 'i18n');
+  return path.join(path.dirname(require.resolve('@mrktps/eureka-core/package.json')), 'i18n');
 }
-/** The catalog for a locale from @eureka/core/i18n (full tag, then language; 09 I18N-10), or undefined for English and unknown locales. Cached. */
+/** The catalog for a locale from @mrktps/eureka-core/i18n (full tag, then language; 09 I18N-10), or undefined for English and unknown locales. Cached. */
 export function loadCatalog(lang: string): Catalog | undefined {
   if (lang.toLowerCase().startsWith('en')) return undefined;
   if (catalogCache.has(lang)) return catalogCache.get(lang);
@@ -65,16 +65,16 @@ export function i18nAssets(): Record<string, string> {
   return Object.fromEntries(files.map((f) => [`/assets/i18n/${f}`, path.join(dir, f)]));
 }
 
-/** Paths of the built stylesheet and icon sprite from @eureka/css, resolved from this package. */
+/** Paths of the built stylesheet and icon sprite from @mrktps/eureka-css, resolved from this package. */
 export function cssAssets(): Record<string, string> {
   const require = createRequire(import.meta.url);
-  const pkg = path.dirname(require.resolve('@eureka/css/package.json'));
+  const pkg = path.dirname(require.resolve('@mrktps/eureka-css/package.json'));
   return { '/assets/css/eureka.css': path.join(pkg, 'dist', 'eureka.css'), '/assets/img/icons.svg': path.join(pkg, 'assets', 'icons.svg') };
 }
 
-/** Paths of the element and worker bundles from @eureka/element (built with `npm run build`). */
+/** Paths of the element and worker bundles from @mrktps/eureka (built with `npm run build`). */
 export function elementAssets(): Record<string, string> {
   const require = createRequire(import.meta.url);
-  const dist = path.join(path.dirname(require.resolve('@eureka/element/package.json')), 'dist');
+  const dist = path.join(path.dirname(require.resolve('@mrktps/eureka/package.json')), 'dist');
   return Object.fromEntries(['eureka-browser.js', 'eureka-browser.js.map', 'eureka-worker.js', 'eureka-worker.js.map'].map((f) => [`/assets/js/${f}`, path.join(dist, f)]));
 }

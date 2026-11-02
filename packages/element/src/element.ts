@@ -1,4 +1,4 @@
-// <eureka-browser>: light-DOM custom element over @eureka/core and @eureka/html.
+// <eureka-browser>: light-DOM custom element over @mrktps/eureka-core and @mrktps/eureka-html.
 // It enhances the server-rendered Level 0 form (hydrating from the embedded
 // state) or renders itself from the API when there is none, and from then on
 // re-renders the instance markup from state through a keyed morph, so focus,
@@ -6,8 +6,8 @@
 import {
   ancestors, basename, buildDisplayRecord, catalogCandidates, createEngineClient, createKeymap, createStore, createTranslator, initialState, joinPath, loadPersisted, markWelcomed, normalizePath, persist, resolveLocale, selectChosen, selectFocused, selectVisibleFiles, splitSourcePath, VIEW_MODES,
   type Catalog, type Config, type DialogKind, type DisplayRecord, type EngineClient, type Entry, type Event as EurekaEvent, type FileEntry, type Keymap, type PartialConfig, type SortBy, type SortDir, type SourceId, type State, type Store, type Translator, type ViewMode
-} from '@eureka/core';
-import { createIds, instance, type Ctx, type Ids } from '@eureka/html';
+} from '@mrktps/eureka-core';
+import { createIds, instance, type Ctx, type Ids } from '@mrktps/eureka-html';
 import { ATTRIBUTES, buildConfig } from './config.js';
 import { fragmentFrom, morphChildren } from './morph.js';
 

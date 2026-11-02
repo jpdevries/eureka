@@ -1,4 +1,4 @@
-# @eureka/css
+# @mrktps/eureka-css
 
 ## 3.0.0-alpha.1
 

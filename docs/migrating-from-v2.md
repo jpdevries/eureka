@@ -10,11 +10,11 @@ and a thin React wrapper instead of a React 15 component with Redux.
 
 | 2.0 | 3.0 | Notes |
 |---|---|---|
-| `eureka-browser` (React component, UMD bundle) | `@eureka/element` | `<eureka-browser>` custom element, ES module bundle `eureka-browser.js` + `eureka-worker.js` |
-| `EurekaMediaBrowser` React component | `@eureka/react` | `<EurekaBrowser>` wrapping the element; `useEurekaState` hook |
-| `client/build/assets/css/eureka.*.css` | `@eureka/css` | `eureka.css` and `icons.svg` |
-| the Express testing server | `@eureka/server-node` | reference REST implementation, filesystem source, Level 0 page renderer, `eureka-server` CLI |
-| (none) | `@eureka/core`, `@eureka/html` | state, API client, worker engine; HTML rendering from state (for servers in other languages, the contract is in `spec/`) |
+| `eureka-browser` (React component, UMD bundle) | `@mrktps/eureka` | `<eureka-browser>` custom element, ES module bundle `eureka-browser.js` + `eureka-worker.js` |
+| `EurekaMediaBrowser` React component | `@mrktps/eureka-react` | `<EurekaBrowser>` wrapping the element; `useEurekaState` hook |
+| `client/build/assets/css/eureka.*.css` | `@mrktps/eureka-css` | `eureka.css` and `icons.svg` |
+| the Express testing server | `@mrktps/eureka-server` | reference REST implementation, filesystem source, Level 0 page renderer, `eureka-server` CLI |
+| (none) | `@mrktps/eureka-core`, `@mrktps/eureka-html` | state, API client, worker engine; HTML rendering from state (for servers in other languages, the contract is in `spec/`) |
 
 Bower and the UMD build are gone. Everything is an ES module and works
 with any bundler or none.
@@ -41,7 +41,7 @@ ReactDOM.render(<EurekaMediaBrowser basePath="/" mediaSource="0" />, document.ge
 3.0, React 19:
 
 ```tsx
-import { EurekaBrowser } from '@eureka/react';
+import { EurekaBrowser } from '@mrktps/eureka-react';
 <EurekaBrowser api="/" source={0} assets="/assets/" onChoose={(items) => …} />
 ```
 
@@ -116,15 +116,15 @@ integration test may notice:
 The no-JavaScript protocol is unchanged (field names `eureka__mediaSourceId`,
 `eureka__upload-dir`, `eureka__media-browser_{uid}__browsing`,
 `eureka__uploadFiles`, `eureka__chosen_item`; spec 03). What the server
-renders comes from `@eureka/html`:
+renders comes from `@mrktps/eureka-html`:
 
 ```js
-import { renderLevel0 } from '@eureka/html';
+import { renderLevel0 } from '@mrktps/eureka-html';
 const form = renderLevel0({ sources, source, path, entries, tree, lang, basePath: '/' });
 ```
 
 Wrap it in `<eureka-browser api="/">` and load the bundle to enhance it.
-`@eureka/server-node` does all of this (`eureka-server --root ./media
+`@mrktps/eureka-server` does all of this (`eureka-server --root ./media
 --render --enhance`). A server in another language renders the same
 markup; the contract and the conformance suite in `spec/conformance`
 check it.

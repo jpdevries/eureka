@@ -1,6 +1,6 @@
 # Releasing Eureka 3
 
-The `@eureka/*` packages version together (a Changesets `fixed` group) and
+The `@mrktps/eureka*` packages version together (a Changesets `fixed` group) and
 publish from the `v3` branch. Node 22, npm workspaces.
 
 `@changesets/cli` is pinned to the 2.x line: 3.x moves applied changesets
@@ -37,7 +37,8 @@ Two workflows, so a push never publishes by itself:
   npm yet (with provenance, tagged `alpha` while in pre mode) and pushes
   the git tags.
 
-Setup once: an npm org or user that owns the `@eureka` scope; an npm
+Setup once: the `mrktps` npm org (the `@mrktps` scope was unclaimed on
+2026-11-02); an npm
 granular access token with publish rights on it, stored as the
 `NPM_TOKEN` secret in a GitHub environment named `npm` (the publish job
 uses that environment, so required reviewers can be added there);
@@ -64,15 +65,15 @@ npx changeset             # a major changeset for the 3.0.0 release notes
 npm run version-packages  # 3.0.0-alpha.N -> 3.0.0
 ```
 
-Then `npm dist-tag add @eureka/element@3.0.0 latest` is not needed:
+Then `npm dist-tag add @mrktps/eureka@3.0.0 latest` is not needed:
 `changeset publish` tags non-prerelease versions `latest` and prerelease
 versions `alpha`.
 
 ## What ships
 
 Each package's `files` list: built `dist/`, the TypeScript `src/`, and
-for `@eureka/core` the `i18n/` catalogs, for `@eureka/css` the `assets/`
-icon sprite, for `@eureka/element` the `demo/` page. `dist/` is gitignored
+for `@mrktps/eureka-core` the `i18n/` catalogs, for `@mrktps/eureka-css` the `assets/`
+icon sprite, for `@mrktps/eureka` the `demo/` page. `dist/` is gitignored
 and produced by `npm run build`, so publishing always runs the build first.
 `npm pack --dry-run -w packages/element` shows the exact file list.
 

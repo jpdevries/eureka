@@ -8,16 +8,16 @@
 <link rel="stylesheet" href="/assets/demo.css">
 </head>
 <body class="demo-page">
-<nav class="demo-nav" aria-label="Demo pages"><a class="demo-brand" href="/">Eureka 3</a><ul><li><a href="/" aria-current="page">Home</a></li><li><a href="/browser/">Server-rendered</a></li><li><a href="/client.html">Client-only</a></li><li><a href="/react.html">React</a></li><li><a href="/embed.html">Embed</a></li></ul><a class="demo-nav-link" href="https://github.com/jpdevries/eureka/tree/v3">Source</a></nav>
+<nav class="demo-nav" aria-label="Demo pages"><a class="demo-brand" href="/">Eureka 3</a><ul><li><a href="/" aria-current="page">Home</a></li><li><a href="/browser/">Server-rendered</a></li><li><a href="/client.html">Client-only</a></li><li><a href="/react.html">React</a></li><li><a href="/embed.html">Embed</a></li></ul><a class="demo-nav-link" href="https://github.com/mrktps/eureka/tree/v3">Source</a></nav>
 <main class="demo-main demo-prose">
 <h1>Eureka 🌲 the progressively enhanced media browser</h1>
-<p>Eureka connects to your media sources through a small REST API and lets people browse directories, upload, rename, delete, crop and choose files. Version 3 is a <a href="https://github.com/jpdevries/eureka/tree/v3/spec">written specification</a> with a framework-free reference implementation: a custom element, a stylesheet, a Node server, and a React wrapper over the element.</p>
+<p>Eureka connects to your media sources through a small REST API and lets people browse directories, upload, rename, delete, crop and choose files. Version 3 is a <a href="https://github.com/mrktps/eureka/tree/v3/spec">written specification</a> with a framework-free reference implementation: a custom element, a stylesheet, a Node server, and a React wrapper over the element.</p>
 
 <h2>Try it</h2>
 <ul class="demo-cards">
   <li><h3><a href="/browser/">Server-rendered</a></h3><p>The server returns a working HTML form. The element takes over when the script arrives. Turn JavaScript off and it still browses, uploads and chooses.</p></li>
   <li><h3><a href="/client.html">Client-only</a></h3><p>An empty <code>&lt;eureka-browser api="…"&gt;</code> that fetches sources, tree and listing itself.</p></li>
-  <li><h3><a href="/react.html">React</a></h3><p><code>&lt;EurekaBrowser&gt;</code> from <code>@eureka/react</code> with a side panel reading the browser's state through a hook.</p></li>
+  <li><h3><a href="/react.html">React</a></h3><p><code>&lt;EurekaBrowser&gt;</code> from <code>@mrktps/eureka-react</code> with a side panel reading the browser's state through a hook.</p></li>
   <li><h3><a href="/embed.html">Embed</a></h3><p>The modal pattern: a text editor opens the browser in a dialog and inserts what was chosen.</p></li>
 </ul>
 <p>The sample library is generated on first start, so uploading, renaming and deleting are safe to try. The <strong>uploads</strong> source starts empty.</p>
@@ -33,17 +33,17 @@
 </table>
 
 <h2>Use it</h2>
-<p>Everything is published as <code>@eureka/*</code> packages. The element works with any server that speaks the <a href="https://github.com/jpdevries/eureka/blob/v3/spec/api/openapi.yaml">REST API</a>; the reference server does over a directory on disk.</p>
+<p>Everything is published as <code>@mrktps/eureka*</code> packages. The element works with any server that speaks the <a href="https://github.com/mrktps/eureka/blob/v3/spec/api/openapi.yaml">REST API</a>; the reference server does over a directory on disk.</p>
 <pre><code>&lt;link rel="stylesheet" href="/assets/css/eureka.css"&gt;
 &lt;div class="eureka-root"&gt;
   &lt;eureka-browser api="/media-api/" assets="/assets/"&gt;&lt;/eureka-browser&gt;
 &lt;/div&gt;
 &lt;script type="module" src="/assets/js/eureka-browser.js"&gt;&lt;/script&gt;</code></pre>
-<pre><code>import { EurekaBrowser, useEurekaState } from '@eureka/react';
+<pre><code>import { EurekaBrowser, useEurekaState } from '@mrktps/eureka-react';
 
 &lt;EurekaBrowser api="/media-api/" assets="/assets/" onChoose={(items) =&gt; insert(items)} /&gt;</code></pre>
 <pre><code>npx eureka-server --root ./media --render --enhance</code></pre>
-<p>Keyboard users: press <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd> (or <kbd>/</kbd>) to filter, arrow keys to move between items, <kbd>Enter</kbd> to choose, <kbd>F2</kbd> to rename. The full map is in the <a href="https://github.com/jpdevries/eureka/blob/v3/spec/05-keyboard.md">keyboard spec</a>.</p>
+<p>Keyboard users: press <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd> (or <kbd>/</kbd>) to filter, arrow keys to move between items, <kbd>Enter</kbd> to choose, <kbd>F2</kbd> to rename. The full map is in the <a href="https://github.com/mrktps/eureka/blob/v3/spec/05-keyboard.md">keyboard spec</a>.</p>
 </main>
 </body>
 </html>

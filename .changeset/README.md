@@ -1,6 +1,6 @@
 # Changesets
 
-Versioning and changelogs for the `@eureka/*` packages, which release in
+Versioning and changelogs for the `@mrktps/eureka*` packages, which release in
 lockstep (one `fixed` group). See [docs/releasing.md](../docs/releasing.md).
 
 - `npx changeset` records what changed and how to bump (one file per change).

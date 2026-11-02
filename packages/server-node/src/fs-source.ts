@@ -5,8 +5,8 @@ import path from 'node:path';
 import { imageSize } from 'image-size';
 import { ZipFile } from 'yazl';
 import type { Readable } from 'node:stream';
-import { encodePathForURL, normalizePath, isWithin, joinPath, parentPath, basename, mediaKind } from '@eureka/core';
-import type { Entry, Source, TreeNode } from '@eureka/core';
+import { encodePathForURL, normalizePath, isWithin, joinPath, parentPath, basename, mediaKind } from '@mrktps/eureka-core';
+import type { Entry, Source, TreeNode } from '@mrktps/eureka-core';
 import { sanitizeFilename } from './multipart.js';
 
 export interface MediaSource extends Source {

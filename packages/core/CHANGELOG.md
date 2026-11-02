@@ -1,4 +1,4 @@
-# @eureka/core
+# @mrktps/eureka-core
 
 ## 3.0.0-alpha.1
 

@@ -22,7 +22,7 @@ await build({
   legalComments: 'none',
   logLevel: 'warning',
   define: { 'process.env.NODE_ENV': '"production"' },
-  alias: { '@eureka/react': pkg('react'), '@eureka/element': pkg('element'), '@eureka/core': pkg('core'), '@eureka/html': pkg('html') }
+  alias: { '@mrktps/eureka-react': pkg('react'), '@mrktps/eureka': pkg('element'), '@mrktps/eureka-core': pkg('core'), '@mrktps/eureka-html': pkg('html') }
 });
 const out = path.join(here, 'public/assets/js/react-demo.js');
 const buf = fs.readFileSync(out);
