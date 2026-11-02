@@ -27,6 +27,19 @@ describe('SigV4 (spec 11 MS-30..MS-32)', () => {
     const auth = signV4({ method: 'GET', url: new URL('https://examplebucket.s3.amazonaws.com/?max-keys=2&prefix=J'), headers: {}, payloadHash: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', region: 'us-east-1', credentials: { accessKeyId: 'AKIAIOSFODNN7EXAMPLE', secretAccessKey: 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY' }, date: new Date('2013-05-24T00:00:00Z') });
     expect(auth).toContain('Signature=34b48302e7b5fa45bde8084f4b7868a86f0a534bc59db6670ed5711ef69dc6f7');
   });
+  it('moves to the region AWS names in x-amz-bucket-region and re-signs there, once', async () => {
+    const seen: string[] = [];
+    const fakeFetch: typeof fetch = async (input, init) => {
+      const url = new URL(String(input)); seen.push(url.host + ' ' + /Credential=[^/]+\/\d+\/([^/]+)/.exec(String((init?.headers as Record<string, string>).authorization))?.[1]);
+      if (url.host.includes('us-east-1')) return new Response('', { status: 301, headers: { 'x-amz-bucket-region': 'eu-central-1' } });
+      return new Response('', { status: 200, headers: { 'content-length': '3', 'last-modified': 'Sun, 02 Nov 2026 12:00:00 GMT', etag: '"x"' } });
+    };
+    const c = new S3Client({ bucket: 'b', credentials: FAKE_CREDENTIALS, fetch: fakeFetch });
+    expect(await c.head('k')).toMatchObject({ size: 3 });
+    expect(seen).toEqual(['b.s3.us-east-1.amazonaws.com us-east-1', 'b.s3.eu-central-1.amazonaws.com eu-central-1']);
+    expect(c.region).toBe('eu-central-1');
+    seen.length = 0; await c.head('k'); expect(seen).toEqual(['b.s3.eu-central-1.amazonaws.com eu-central-1']); // remembered
+  });
   it('builds virtual-hosted URLs for AWS and path-style URLs for a custom endpoint, RFC 3986-encoded', () => {
     const aws = new S3Client({ bucket: 'b', region: 'eu-west-1', credentials: FAKE_CREDENTIALS });
     expect(aws.objectUrl("dir/Wide Banner (final)'s*.png").toString()).toBe("https://b.s3.eu-west-1.amazonaws.com/dir/Wide%20Banner%20%28final%29%27s%2A.png");

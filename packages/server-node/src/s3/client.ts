@@ -7,7 +7,7 @@ export interface S3Credentials { accessKeyId: string; secretAccessKey: string; s
 
 export interface S3ClientOptions {
   bucket: string;
-  /** Signing region (default `us-east-1`; R2 and most compatibles accept `auto` or `us-east-1`). */
+  /** Signing region (default `us-east-1`; R2 and most compatibles accept `auto` or `us-east-1`). On AWS a wrong region is corrected from the bucket's redirect. */
   region?: string;
   /** Service endpoint (default `https://s3.{region}.amazonaws.com`). Required for anything that is not AWS. */
   endpoint?: string;
@@ -77,8 +77,9 @@ const xmlOne = (xml: string, tag: string) => xmlAll(xml, tag)[0];
 
 export class S3Client {
   readonly bucket: string;
-  readonly region: string;
-  private readonly base: URL;
+  region: string;
+  private base: URL;
+  private readonly aws: boolean;
   private readonly pathStyle: boolean;
   private readonly creds: S3Credentials;
   private readonly fetchImpl: typeof fetch;
@@ -88,6 +89,7 @@ export class S3Client {
     this.bucket = opts.bucket;
     this.region = opts.region ?? 'us-east-1';
     const custom = !!opts.endpoint;
+    this.aws = !custom;
     this.base = new URL(opts.endpoint ?? `https://s3.${this.region}.amazonaws.com`);
     this.pathStyle = opts.forcePathStyle ?? custom;
     this.creds = opts.credentials;
@@ -113,6 +115,13 @@ export class S3Client {
     if (init.body) headers['content-length'] = String(init.body.length);
     headers['authorization'] = signV4({ method, url, headers, payloadHash, region: this.region, credentials: this.creds, date: this.now() });
     const res = await this.fetchImpl(url, { method, headers, ...(init.body ? { body: new Uint8Array(init.body) } : {}), redirect: 'manual' });
+    // AWS answers a request signed for the wrong region with 301/400 and the right one in x-amz-bucket-region: move there once
+    const hint = res.headers.get('x-amz-bucket-region');
+    if (this.aws && hint && hint !== this.region && (res.status === 301 || res.status === 400 || res.status === 403)) {
+      await res.body?.cancel();
+      this.region = hint; this.base = new URL(`https://s3.${hint}.amazonaws.com`);
+      return this.request(method, key, init);
+    }
     if (!res.ok && res.status !== 206 && res.status !== 304 && res.status !== 404 && res.status !== 416) {
       const text = await res.text().catch(() => '');
       throw new S3Error(`S3 ${method} ${key || '/'}: ${res.status} ${xmlOne(text, 'Code') ?? ''} ${xmlOne(text, 'Message') ?? ''}`.trim(), res.status >= 500 ? 502 : res.status === 403 ? 403 : 502, xmlOne(text, 'Code'));
