@@ -35,7 +35,7 @@ worker engine) and [`@eureka/html`](../html) (markup from state).
 
 Attributes (all optional): `api` (base URL of the REST API, `media/` is
 appended), `assets` (base of the stylesheet's icon sprite), `lang`,
-`source`, `path`, `mode`, `prefix` (storage and id prefix), `uid`,
+`source`, `path`, `mode`, `storage-prefix` (storage and id prefix), `uid`,
 `worker` (`inline` to force the main-thread engine, or a worker URL),
 `i18n` (base URL for message catalogs), `tree-open`, and the switches
 `no-storage`, `no-uploads`, `no-dnd`, `no-rename`, `no-delete`,

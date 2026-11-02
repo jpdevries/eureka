@@ -408,3 +408,50 @@ Taken on 2026-11-01:
   selector, and PERF-20..24 are not yet measured by the suite itself.
 - Next: Phase 5, the React adapter and demo site; a pointer-driven crop
   marquee; the shortcuts reference (KEY-A5); message catalog files.
+
+### Phase 5 progress
+
+- `packages/react`: `@eureka/react`, the typed React 19 wrapper.
+  `<EurekaBrowser>` renders the element, maps its attributes from
+  camelCased props, sets `config` as a property, binds the five events to
+  handler props (always calling the latest handler), accepts a
+  server-rendered Level 0 form as `markup` for hydration, forwards `ref`
+  to the element, and registers the element on first mount through a
+  dynamic import (nothing DOM-bound at module level, so it renders on the
+  server). `useEurekaState(ref, selector?)` reads the store with
+  `useSyncExternalStore` over `eureka-statechange` (decision 5: no
+  Context). 7 tests under happy-dom, including one that runs the real
+  element inside React over a mocked `fetch`.
+- Two element fixes the adapter and the demo surfaced. React 19 writes a
+  prop as a property when the element has one of that name, and
+  `Element.prototype.prefix` is a read-only getter, so the `prefix`
+  attribute became `storage-prefix`; a test now asserts no attribute name
+  shadows a DOM property. And the element ignored every key press inside
+  any `<dialog>`, which silenced the keyboard when a host puts the whole
+  browser in a modal (the embed pattern); the guard is now scoped to the
+  element's own dialogs, with a test.
+- `apps/demo`: the demo site, served by `@eureka/server-node` over sample
+  media generated on first start (`scripts/seed-media.mjs`: SVG photos in
+  six aspect ratios, logos, a Markdown, JSON, PDF and WAV file, two
+  sources). Pages: a landing page, `/browser/` (server-rendered form
+  enhanced by the bundle; works with JavaScript off, verified by GET
+  `?path=` and the POST navigate and choose protocol), `/client.html`
+  (the element alone), `/react.html` (`@eureka/react` with a host panel on
+  `useEurekaState`, the methods, and props that restart the instance) and
+  `/embed.html` (the browser inside a host `<dialog>` inserting Markdown
+  into an editor). `npm run demo`; `.claude/launch.json` has a `demo`
+  entry. The `@eureka/css` and `@eureka/element` package exports now
+  expose `package.json`, which the server's asset helpers resolve.
+- `docs/migrating-from-v2.md`: migration notes for `eureka-browser` 0.0.x
+  users (packages, mounting, options, shortcuts, markup, SSR, browser
+  support).
+- Verification: typecheck clean (the demo's TSX included), 80 unit tests,
+  v3 conformance 104 passed / 1 skipped by design after the element
+  changes, the demo pages exercised in the browser at desktop and phone
+  widths.
+- Not done in this phase: publishing (the packages are `3.0.0-alpha.0`
+  with no `publishConfig` yet; Changesets and a GitHub Actions workflow
+  are still to be set up), the pointer-driven crop marquee, the shortcuts
+  reference (KEY-A5), message catalog files, a host-supplied API client
+  (STATE-51), and the React demo bundle is 99 kB gzip because it carries
+  React itself (the element alone stays at 27.8 kB).

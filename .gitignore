@@ -43,3 +43,7 @@ prod/client/i18n
 __snapshots__
 
 /i18n
+
+# demo site: generated media and bundles
+apps/demo/media
+apps/demo/public/assets/js

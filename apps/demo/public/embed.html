@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Embed · Eureka 3 demo</title>
+<meta name="color-scheme" content="light dark">
+<link rel="stylesheet" href="/assets/css/eureka.css">
+<link rel="stylesheet" href="/assets/demo.css">
+</head>
+<body class="demo-page">
+<nav class="demo-nav" aria-label="Demo pages"><a class="demo-brand" href="/">Eureka 3</a><ul><li><a href="/">Home</a></li><li><a href="/browser/">Server-rendered</a></li><li><a href="/client.html">Client-only</a></li><li><a href="/react.html">React</a></li><li><a href="/embed.html" aria-current="page">Embed</a></li></ul><a class="demo-nav-link" href="https://github.com/jpdevries/eureka/tree/v3">Source</a></nav>
+<main class="demo-main demo-prose">
+<h1>Embedding in an editor</h1>
+<p>The pattern a CMS uses: the browser lives in a <code>&lt;dialog&gt;</code>, opens on demand, and hands back what was chosen through <code>eureka-choose</code> (or the <code>choose</code> callback). <code>eureka-close</code> closes the dialog.</p>
+<form class="demo-editor" onsubmit="return false">
+  <label for="body">Post body (Markdown)</label>
+  <textarea id="body" name="body"># Field notes
+
+The redwoods series starts here.
+</textarea>
+  <div class="demo-actions">
+    <button type="button" class="primary" id="insert">Insert media…</button>
+    <button type="button" id="insert-one">Insert one image…</button>
+  </div>
+  <div class="demo-preview" id="preview" aria-live="polite"></div>
+</form>
+<dialog class="demo-modal" id="picker" aria-label="Choose media">
+  <div class="eureka-root">
+    <eureka-browser api="/browser/" assets="/assets/" storage-prefix="eureka_embed__" no-welcome no-fullscreen></eureka-browser>
+  </div>
+</dialog>
+</main>
+<script type="module">
+  const dialog = document.getElementById('picker');
+  const picker = dialog.querySelector('eureka-browser');
+  const body = document.getElementById('body');
+  const preview = document.getElementById('preview');
+  let opener = null;
+
+  function open(single) {
+    opener = document.activeElement;
+    picker.toggleAttribute('no-choose-multiple', single);
+    dialog.showModal();
+  }
+  function close() { if (dialog.open) dialog.close(); }
+  function insert(items) {
+    const md = items.map((i) => (i.dimensions ? `![${i.filename}](${i.absoluteURL})` : `[${i.filename}](${i.absoluteURL})`)).join('\n');
+    const { selectionStart: s, selectionEnd: e, value } = body;
+    body.value = `${value.slice(0, s)}${md}\n${value.slice(e)}`;
+    preview.innerHTML = items.filter((i) => i.dimensions).map((i) => `<img src="${i.absolutePreviewURL ?? i.absoluteURL}" alt="${i.filename}" width="${i.dimensions[0]}" height="${i.dimensions[1]}" loading="lazy">`).join(' ');
+  }
+
+  document.getElementById('insert').addEventListener('click', () => open(false));
+  document.getElementById('insert-one').addEventListener('click', () => open(true));
+  picker.addEventListener('eureka-choose', (e) => { insert(e.detail.items); close(); });
+  picker.addEventListener('eureka-close', close);
+  dialog.addEventListener('close', () => { opener?.focus(); body.focus(); });
+</script>
+<script type="module" src="/assets/js/eureka-browser.js"></script>
+</body>
+</html>

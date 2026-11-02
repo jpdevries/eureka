@@ -29,6 +29,17 @@
       ],
       "port": 3102,
       "url": "http://localhost:3102"
+    },
+    {
+      "name": "demo",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "apps/demo/server.mjs",
+        "--port",
+        "3100"
+      ],
+      "port": 3100,
+      "url": "http://localhost:3100"
     }
   ]
 }

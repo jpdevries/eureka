@@ -1,0 +1,56 @@
+/* The demo site's own chrome. The browser itself is styled by eureka.css. */
+:root { color-scheme: light dark; --demo-bg: #ececec; --demo-fg: #081922; --demo-accent: #1f6aa5; --demo-nav-bg: #1f4d2b; --demo-nav-fg: #f1faee; --demo-card: #fff; --demo-border: #cfd6dc; }
+@media (prefers-color-scheme: dark) { :root { --demo-bg: #15191c; --demo-fg: #e6ebee; --demo-accent: #8ec5ff; --demo-nav-bg: #0f2a18; --demo-card: #1e2429; --demo-border: #38434b; } }
+html, body { margin: 0; }
+body.demo-page { background: var(--demo-bg); color: var(--demo-fg); font: 400 1rem/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; min-block-size: 100%; display: flex; flex-direction: column; }
+.demo-nav { display: flex; align-items: center; gap: 1rem; padding: .5rem 1rem; background: var(--demo-nav-bg); color: var(--demo-nav-fg); flex: 0 0 auto; flex-wrap: wrap; }
+.demo-nav ul { display: flex; gap: .25rem; list-style: none; margin: 0; padding: 0; flex-wrap: wrap; }
+.demo-nav a { color: inherit; text-decoration: none; padding: .35rem .6rem; border-radius: .35rem; display: inline-block; min-block-size: 24px; }
+.demo-nav a:hover, .demo-nav a:focus-visible { background: #ffffff22; }
+.demo-nav a[aria-current="page"] { background: #ffffff33; font-weight: 600; }
+.demo-nav a:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.demo-brand { font-weight: 700; font-size: 1.1rem; }
+.demo-nav-link { margin-inline-start: auto; }
+.demo-main { display: flex; flex-direction: column; flex: 1 1 auto; min-block-size: 0; }
+.demo-page--browser .eureka-root { flex: 1 1 auto; min-block-size: 0; display: flex; flex-direction: column; overflow: hidden; }
+@media (min-width: 40em) { html, body.demo-page--browser, body.demo-page--browser .demo-main { block-size: 100%; } }
+.demo-prose { max-inline-size: 46rem; padding: 1.5rem 1rem 3rem; margin-inline: auto; inline-size: 100%; box-sizing: border-box; }
+.demo-prose h1 { font-size: 2rem; line-height: 1.15; margin: .5rem 0 1rem; }
+.demo-prose h2 { font-size: 1.35rem; margin-block: 2rem .5rem; }
+.demo-prose a { color: var(--demo-accent); }
+.demo-prose pre { background: var(--demo-card); border: 1px solid var(--demo-border); border-radius: .5rem; padding: .85rem 1rem; overflow: auto; font-size: .9rem; }
+.demo-prose code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.demo-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1rem; padding: 0; list-style: none; margin: 1rem 0; }
+.demo-cards li { background: var(--demo-card); border: 1px solid var(--demo-border); border-radius: .5rem; padding: 1rem; }
+.demo-cards h3 { margin: 0 0 .35rem; font-size: 1.05rem; }
+.demo-cards p { margin: 0 0 .5rem; font-size: .95rem; }
+.demo-levels { border-collapse: collapse; inline-size: 100%; font-size: .95rem; }
+.demo-levels th, .demo-levels td { text-align: start; padding: .5rem .6rem; border-block-end: 1px solid var(--demo-border); vertical-align: top; }
+/* react page */
+.demo-app { display: grid; grid-template-columns: minmax(0, 1fr); flex: 1 1 auto; min-block-size: 0; }
+@media (min-width: 60em) { .demo-app { grid-template-columns: minmax(0, 1fr) 20rem; } }
+.demo-app .eureka-root { display: flex; flex-direction: column; min-block-size: 24rem; overflow: hidden; }
+@media (min-width: 60em) { .demo-app .eureka-root { min-block-size: 0; } }
+.demo-side { padding: 1rem; border-inline-start: 1px solid var(--demo-border); background: var(--demo-card); overflow: auto; font-size: .95rem; }
+.demo-side h2 { font-size: 1rem; margin: 0 0 .5rem; }
+.demo-side dl { display: grid; grid-template-columns: auto 1fr; gap: .25rem .75rem; margin: 0 0 1rem; }
+.demo-side dt { color: #5c6b73; } @media (prefers-color-scheme: dark) { .demo-side dt { color: #a9b6bf; } }
+.demo-side dd { margin: 0; overflow-wrap: anywhere; }
+.demo-side fieldset { border: 1px solid var(--demo-border); border-radius: .4rem; margin: 0 0 1rem; padding: .5rem .75rem .75rem; }
+.demo-side label { display: inline-flex; align-items: center; gap: .35rem; margin: .2rem .75rem .2rem 0; min-block-size: 24px; }
+.demo-side button { font: inherit; padding: .35rem .7rem; border-radius: .35rem; border: 1px solid var(--demo-border); background: var(--demo-bg); color: inherit; min-block-size: 24px; }
+.demo-side button[aria-pressed="true"] { background: var(--demo-accent); color: #fff; border-color: var(--demo-accent); }
+.demo-chosen { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(4.5rem, 1fr)); gap: .5rem; }
+.demo-chosen li { font-size: .75rem; overflow-wrap: anywhere; }
+.demo-chosen img { inline-size: 100%; aspect-ratio: 1; object-fit: cover; border-radius: .3rem; display: block; background: var(--demo-bg); }
+/* embed page */
+.demo-editor { display: grid; gap: .75rem; max-inline-size: 46rem; }
+.demo-editor textarea { font: inherit; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; min-block-size: 14rem; padding: .75rem; border-radius: .5rem; border: 1px solid var(--demo-border); background: var(--demo-card); color: inherit; }
+.demo-editor .demo-actions { display: flex; gap: .5rem; flex-wrap: wrap; }
+.demo-editor button { font: inherit; padding: .5rem .9rem; border-radius: .4rem; border: 1px solid var(--demo-border); background: var(--demo-card); color: inherit; min-block-size: 24px; }
+.demo-editor button.primary { background: var(--demo-accent); border-color: var(--demo-accent); color: #fff; }
+dialog.demo-modal { inline-size: min(96vw, 72rem); block-size: min(92vh, 48rem); padding: 0; border: 1px solid var(--demo-border); border-radius: .75rem; background: var(--demo-bg); color: var(--demo-fg); }
+dialog.demo-modal::backdrop { background: #0008; }
+dialog.demo-modal .eureka-root { block-size: 100%; display: flex; flex-direction: column; overflow: hidden; }
+.demo-preview img { max-inline-size: 100%; block-size: auto; }
+.visually-hidden { position: absolute !important; inline-size: 1px; block-size: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }

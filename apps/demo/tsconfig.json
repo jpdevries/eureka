@@ -1,0 +1,6 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": { "noEmit": true, "composite": false, "declaration": false, "declarationMap": false, "jsx": "react-jsx", "lib": ["ES2023", "DOM", "DOM.Iterable"], "types": [] },
+  "include": ["src/**/*.tsx", "src/**/*.ts"],
+  "references": [{ "path": "../../packages/core" }, { "path": "../../packages/react" }]
+}

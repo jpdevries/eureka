@@ -1,0 +1,26 @@
+{
+  "name": "@eureka/demo",
+  "version": "3.0.0-alpha.0",
+  "private": true,
+  "description": "The Eureka demo site: server-rendered and enhanced pages, the client-only element, the React adapter and an embed example, served by @eureka/server-node over generated sample media",
+  "license": "BSD-3-Clause",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "seed": "node scripts/seed-media.mjs",
+    "start": "node server.mjs"
+  },
+  "dependencies": {
+    "@eureka/core": "3.0.0-alpha.0",
+    "@eureka/css": "3.0.0-alpha.0",
+    "@eureka/element": "3.0.0-alpha.0",
+    "@eureka/html": "3.0.0-alpha.0",
+    "@eureka/react": "3.0.0-alpha.0",
+    "@eureka/server-node": "3.0.0-alpha.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.0"
+  }
+}

@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { describe, expect, it } from 'vitest';
-import { buildConfig, configFromAttributes, mergeConfig } from '../src/config.js';
+import { ATTRIBUTES, buildConfig, configFromAttributes, mergeConfig } from '../src/config.js';
 
 describe('element configuration', () => {
   it('maps attributes to config', () => {
@@ -28,5 +28,14 @@ describe('element configuration', () => {
   });
   it('mergeConfig lets a later part replace scalars and merge groups', () => {
     expect(mergeConfig({ mode: 'table', sort: { by: 'filename', dir: 'ascending' } }, { mode: 'grid', sort: { dir: 'descending' } })).toEqual({ mode: 'grid', sort: { by: 'filename', dir: 'descending' } });
+  });
+});
+
+describe('attribute names', () => {
+  it('never shadow a DOM property, so frameworks that prefer properties (React 19, Vue) keep writing attributes', () => {
+    const el = document.createElement('eureka-browser');
+    // `lang` is the one deliberate exception: HTMLElement.lang reflects the attribute, so setting the property is equivalent.
+    const shadowed = [...ATTRIBUTES].filter((name) => name !== 'lang' && name in el);
+    expect(shadowed).toEqual([]);
   });
 });

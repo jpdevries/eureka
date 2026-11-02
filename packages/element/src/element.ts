@@ -360,7 +360,7 @@ export class EurekaBrowser extends HTMLElement {
 
   #onKeyDown(e: KeyboardEvent): void {
     const target = e.target as HTMLElement;
-    if (target.closest('dialog')) return; // dialogs own their keys; Escape is native
+    if (target.closest('dialog.eureka__modal')) return; // our dialogs own their keys; Escape is native. A host dialog around the whole browser does not count
     const row = target.closest<HTMLTableRowElement>('tr[data-path]');
     const toolbar = target.closest<HTMLElement>('[data-row-actions]');
     if (toolbar && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) { // KEY-B2

@@ -1,0 +1,38 @@
+{
+  "name": "@eureka/react",
+  "version": "3.0.0-alpha.0",
+  "description": "Typed React wrapper over the <eureka-browser> custom element: props, events as handlers, and a hook that reads the browser's state",
+  "license": "BSD-3-Clause",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "sideEffects": [
+    "./dist/jsx.js",
+    "./src/jsx.ts"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "test": "vitest run --root ../.."
+  },
+  "dependencies": {
+    "@eureka/core": "3.0.0-alpha.0",
+    "@eureka/element": "3.0.0-alpha.0"
+  },
+  "peerDependencies": {
+    "react": ">=19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0"
+  }
+}

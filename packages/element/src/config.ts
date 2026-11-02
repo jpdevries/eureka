@@ -21,7 +21,7 @@ export function mergeConfig(...parts: Array<PartialConfig | null | undefined>): 
 const sourceId = (v: string) => (/^\d+$/.test(v) ? Number(v) : v);
 
 /** Attributes understood by the element (kebab-case). Boolean `no-*` attributes switch features off. */
-export const ATTRIBUTES = ['api', 'lang', 'source', 'path', 'mode', 'prefix', 'uid', 'assets', 'base-path', 'worker', 'i18n', 'tree-open', 'no-storage', 'no-uploads', 'no-dnd', 'no-rename', 'no-delete', 'no-download', 'no-crop', 'no-masonry', 'no-fullscreen', 'no-welcome', 'no-choose', 'no-choose-multiple', 'confirm-delete', 'always-welcome', 'learn-more'] as const;
+export const ATTRIBUTES = ['api', 'lang', 'source', 'path', 'mode', 'storage-prefix', 'uid', 'assets', 'base-path', 'worker', 'i18n', 'tree-open', 'no-storage', 'no-uploads', 'no-dnd', 'no-rename', 'no-delete', 'no-download', 'no-crop', 'no-masonry', 'no-fullscreen', 'no-welcome', 'no-choose', 'no-choose-multiple', 'confirm-delete', 'always-welcome', 'learn-more'] as const;
 
 export function configFromAttributes(el: Element): PartialConfig {
   const c: PartialConfig = {};
@@ -36,7 +36,7 @@ export function configFromAttributes(el: Element): PartialConfig {
   const source = get('source'); if (source !== null && source !== '') c.mediaSource = sourceId(source);
   const path = get('path'); if (path) c.currentDirectory = path;
   const mode = get('mode'); if (mode) c.mode = mode as Config['mode'];
-  const prefix = get('prefix'); if (prefix) c.storagePrefix = prefix;
+  const prefix = get('storage-prefix'); if (prefix) c.storagePrefix = prefix;
   const uid = get('uid'); if (uid) c.uid = uid;
   const assets = get('assets'); if (assets) c.assetsBasePath = assets;
   const basePath = get('base-path'); if (basePath) c.basePath = basePath;

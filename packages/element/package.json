@@ -7,13 +7,28 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" },
-    "./define": { "types": "./dist/define.d.ts", "default": "./dist/define.js" },
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./define": {
+      "types": "./dist/define.d.ts",
+      "default": "./dist/define.js"
+    },
     "./eureka-browser.js": "./dist/eureka-browser.js",
-    "./eureka-worker.js": "./dist/eureka-worker.js"
+    "./eureka-worker.js": "./dist/eureka-worker.js",
+    "./package.json": "./package.json"
   },
-  "files": ["dist", "src", "demo"],
-  "sideEffects": ["./dist/define.js", "./dist/eureka-browser.js", "./dist/eureka-worker.js"],
+  "files": [
+    "dist",
+    "src",
+    "demo"
+  ],
+  "sideEffects": [
+    "./dist/define.js",
+    "./dist/eureka-browser.js",
+    "./dist/eureka-worker.js"
+  ],
   "scripts": {
     "build": "tsc -b && node build.mjs",
     "test": "vitest run --root ../.."
