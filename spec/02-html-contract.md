@@ -282,8 +282,9 @@ DOM order is the reading order and the tab order.
   row a `<th scope="row">` description and a cell of `<kbd>` keys joined
   by "+", several chords separated by commas, runs of more than four
   chords shown as "first to last". A single Close button. Opened by the
-  `?` binding or the toolbar's "Keyboard shortcuts" button
-  (`button.eureka__help-button[aria-haspopup="dialog"]`, visible text "?").
+  `?` binding or the "Keyboard shortcuts" button beside the "Media Content"
+  heading (`.eureka__heading > button.eureka__help-button[aria-haspopup="dialog"]`,
+  visible text "?"), Level 1+ only.
 - **HTML-92** Create directory form: a text input labelled "Create a new
   Directory in {cd}". Rename form: a text input labelled "New name"
   prefilled with the current name. Crop form: see 06 for its controls;

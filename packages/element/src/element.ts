@@ -111,7 +111,8 @@ export class EurekaBrowser extends HTMLElement {
     const persisted = loadPersisted(this.#storage, prefix);
     const hydrated = this.#readHydration(prefix);
     const locale = resolveLocale(config.lang, document.documentElement.lang, navigator.languages);
-    this.#t = createTranslator(locale);
+    const embedded = this.#readEmbeddedCatalog(prefix, locale); // the server's catalog for its locale (09 I18N-12)
+    this.#t = createTranslator(locale, embedded ?? {});
     this.#keymap = createKeymap(config.keymap ? { overrides: config.keymap } : {});
 
     // A default server location yields to the visitor's persisted one; a requested location (POST navigate, ?path=) wins (07 STATE-40).
@@ -142,13 +143,21 @@ export class EurekaBrowser extends HTMLElement {
     if (init?.listing) this.#store.dispatch({ type: 'listing/records', records: this.#recordsFor(init.listing.entries, locale) });
     if (config.welcome && (config.alwaysWelcome || !persisted.welcomed)) this.#notify(`${this.#t('welcomeToEureka')} ${this.#t('shortcuts.hint')}`, 'info', { sticky: true, learnMore: config.learnMore, id: 'welcome' });
 
-    void this.#loadCatalog(locale);
+    if (embedded) this.#store.dispatch({ type: 'locale/catalogLoaded' }); else void this.#loadCatalog(locale);
     state = this.#store.getState();
     if (!init?.sources) await this.#loadSources();
     const source = this.#store.getState().listing.source;
     if (source === null) return;
     if (!init?.tree) void this.#loadTree(source);
     if (!init?.listing) await this.#loadDirectory(source, this.#store.getState().listing.path);
+  }
+
+  #readEmbeddedCatalog(prefix: string, locale: string): Catalog | null {
+    const script = this.querySelector<HTMLScriptElement>(`script[type="application/json"]#${CSS.escape(prefix + 'catalog')}`);
+    if (!script?.textContent) return null;
+    const lang = script.getAttribute('lang') ?? '';
+    if (lang && lang.toLowerCase().split('-')[0] !== locale.toLowerCase().split('-')[0]) return null;
+    try { const v = JSON.parse(script.textContent) as Catalog; return v && typeof v === 'object' ? v : null; } catch { return null; }
   }
 
   #readHydration(prefix: string): Hydrated | null {
@@ -178,7 +187,7 @@ export class EurekaBrowser extends HTMLElement {
         return;
       } catch { /* try the next candidate */ }
     }
-    this.#store.dispatch({ type: 'locale/catalogLoaded' });
+    this.#store.dispatch({ type: 'locale/catalogMissing' });
   }
 
   // ---- rendering ---------------------------------------------------------------------

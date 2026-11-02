@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Copies the spec's normative data files into packages/core/src/data as
 // TypeScript modules, so the core imports the spec rather than restating it.
-// Run after editing anything under spec/data or spec/fixtures/locale-*.json.
+// Run after editing anything under spec/data (keymap, theme tokens, message catalogs).
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -15,86 +15,16 @@ const emit = (name, src, value, typeName) => {
 };
 emit('keymap', 'spec/data/keymap.json', JSON.parse(fs.readFileSync(path.join(root, 'spec/data/keymap.json'), 'utf8')), 'KeymapData');
 emit('theme-tokens', 'spec/data/theme-tokens.json', JSON.parse(fs.readFileSync(path.join(root, 'spec/data/theme-tokens.json'), 'utf8')), 'ThemeTokensData');
-const en = JSON.parse(fs.readFileSync(path.join(root, 'spec/fixtures/locale-en.json'), 'utf8'));
-// v3 additions and corrections (09 I18N-05, I18N-06); ids are stable, defaults fixed.
-Object.assign(en, {
-  'rename.item': 'Rename Item {item}',
-  'file.openInNewTab': 'Open {filename} in a new tab',
-  'pluralChoose': '{n, plural, one {item} other {items}}',
-  'item.description': '{filename} displays at {width}x{height}, weighs {size}, and was edited on {date}',
-  'item.descriptionNoDimensions': '{filename} weighs {size}, and was edited on {date}',
-  'listing.caption': 'Contents of {cd}',
-  'listing.count': '{n, plural, =0 {No items} one {# item} other {# items}}',
-  'actions.for': 'Actions for {filename}',
-  'toolbar.listingControls': 'Listing controls',
-  'tree.label': 'Directories',
-  'notification.dismiss': 'Dismiss Notification',
-  'choose.nItems': 'Choose {n, plural, one {# item} other {# items}}',
-  'delete.nItems': 'Delete {n, plural, one {# item} other {# items}}',
-  'download.nItems': 'Download {n, plural, one {# item} other {# items}}',
-  'deleted.nItems': 'Deleted {n, plural, one {# item} other {# items}}',
-  'uploaded.nFiles': 'Uploaded {n, plural, one {# file} other {# files}} to {cd}',
-  'renamed.item': 'Renamed {from} to {to}',
-  'media.browser': 'Media Browser',
-  'chooseItems': 'Choose Items',
-  'choose.single': 'Single',
-  'choose.multiple': 'Multiple',
-  'invert': 'Invert',
-  'selection': 'Selection',
-  'sort.direction': 'Sort Direction',
-  'sort.ascending': 'Ascending',
-  'sort.descending': 'Descending',
-  'details': 'Details',
-  'selectedPaths': 'Selected Paths',
-  'directory.untitled': 'untitled folder',
-  'directory.exists': 'A directory named {name} already exists here',
-  'rename.exists': 'An item named {name} already exists here',
-  'upload.failed': 'Upload failed: {error}',
-  'delete.failed': 'Could not delete {filename}: {error}',
-  'rename.failed': 'Could not rename {filename}: {error}',
-  'directory.createFailed': 'Could not create the directory: {error}',
-  'listing.failed': 'Could not load {cd}: {error}',
-  'cropped.saved': 'Saved {filename}',
-  'crop.failed': 'Could not crop {filename}: {error}',
-  'shortcuts': 'Keyboard shortcuts',
-  'created.directory': 'Created directory {name}',
-  'tree.toggle': 'Toggle {name}',
-  'panel.toggle': 'Toggle Source Panel', // the toggle button; the panel itself keeps the noun (mediaSourceTree)
-  'listing.instructions': 'Use the up and down arrow keys to move between items, the right arrow key for an item\'s actions, and Enter to choose.',
-  // the shortcuts reference (05 KEY-A5): one description per keymap action, key names for the chords
-  'shortcuts.hint': 'Press ? for keyboard shortcuts.',
-  'shortcuts.intro': 'Shortcuts work anywhere inside the media browser except in text fields. Item shortcuts need a focused item.',
-  'shortcuts.scope.instance': 'Anywhere in the browser',
-  'shortcuts.scope.row': 'With an item focused',
-  'shortcuts.close': 'Close',
-  'shortcut.toggleSourcePanel': 'Show or hide the source panel',
-  'shortcut.setView': 'Switch the view mode (table, thumbnails, grid, list, masonry)',
-  'shortcut.setSource': 'Switch to media source 0 to 9',
-  'shortcut.upload': 'Upload files',
-  'shortcut.createDirectory': 'Create a directory',
-  'shortcut.createFile': 'Create a file',
-  'shortcut.focusFilter': 'Filter the listing',
-  'shortcut.sortAscending': 'Sort ascending',
-  'shortcut.sortDescending': 'Sort descending',
-  'shortcut.sortBy': 'Sort by name, dimensions, file size or date',
-  'shortcut.chooseSingle': 'Choose one item at a time',
-  'shortcut.chooseMultiple': 'Choose several items',
-  'shortcut.invertSelection': 'Invert the selection',
-  'shortcut.deselectAll': 'Clear the selection',
-  'shortcut.showShortcuts': 'Show this reference',
-  'shortcut.chooseItem': 'Choose the item',
-  'shortcut.expandItem': 'Open the item in a new tab',
-  'shortcut.deleteItem': 'Delete the item',
-  'shortcut.renameItem': 'Rename the item',
-  'shortcut.toggleItemChecked': 'Check or uncheck the item (when choosing several)',
-  'shortcut.nextRow': 'Next item',
-  'shortcut.previousRow': 'Previous item',
-  'shortcut.firstRow': 'First item',
-  'shortcut.lastRow': 'Last item',
-  'shortcut.rowActions': 'Into the item\'s actions, then between them',
-  'key.control': 'Control', 'key.alt': 'Alt', 'key.option': 'Option', 'key.shift': 'Shift', 'key.meta': 'Meta', 'key.command': 'Command',
-  'key.space': 'Space', 'key.enter': 'Enter', 'key.escape': 'Escape', 'key.backspace': 'Backspace', 'key.delete': 'Delete',
-  'key.home': 'Home', 'key.end': 'End', 'key.arrowUp': 'Up arrow', 'key.arrowDown': 'Down arrow', 'key.arrowLeft': 'Left arrow', 'key.arrowRight': 'Right arrow',
-  'key.to': 'to'
-});
-emit('messages.en', 'spec/fixtures/locale-en.json (+ v3 additions in this script)', en, 'MessagesEn');
+// Message catalogs (09 I18N-04): spec/data/messages.{lang}.json is normative; English is also compiled in (the fallback),
+// every catalog is copied to packages/core/i18n for serving at {endpoints.i18n}{lang}.json.
+const en = JSON.parse(fs.readFileSync(path.join(root, 'spec/data/messages.en.json'), 'utf8'));
+emit('messages.en', 'spec/data/messages.en.json', en, 'MessagesEn');
+const i18nOut = path.join(root, 'packages/core/i18n');
+fs.mkdirSync(i18nOut, { recursive: true });
+for (const f of fs.readdirSync(path.join(root, 'spec/data')).filter((f) => /^messages\.[A-Za-z0-9-]+\.json$/.test(f))) {
+  const lang = f.slice('messages.'.length, -'.json'.length);
+  const catalog = JSON.parse(fs.readFileSync(path.join(root, 'spec/data', f), 'utf8'));
+  const missing = lang === 'en' ? [] : Object.keys(en).filter((k) => !(k in catalog));
+  fs.writeFileSync(path.join(i18nOut, `${lang}.json`), JSON.stringify(catalog, null, 2) + '\n');
+  console.log(`wrote packages/core/i18n/${lang}.json (${Object.keys(catalog).length} messages${missing.length ? `, ${missing.length} fall back to English` : ''})`);
+}

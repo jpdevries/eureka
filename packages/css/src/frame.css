@@ -7,7 +7,8 @@
   .eureka > .eureka__browse-content { display: flex; flex-direction: column; gap: 0.5rem; min-block-size: 0; flex: 1 1 auto; }
   .eureka__stage { display: flex; flex-direction: column; min-inline-size: 0; min-block-size: 0; flex: 1 1 100%; }
   .eureka__stage__filter-view { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.5rem 1rem; margin-block-end: 0.5rem; }
-  .eureka__stage__filter-view > h2 { margin: 0; margin-inline-end: auto; }
+  .eureka__stage__filter-view > .eureka__heading { display: flex; align-items: center; gap: 0.5rem; margin-inline-end: auto; }
+  .eureka__stage__filter-view h2 { margin: 0; }
   .eureka__toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; padding-block-end: 0.5rem; }
   .eureka__toolbar > .eureka__layout-chooser { margin-inline-start: auto; }
   /* flex-basis auto + min-size 0: fills and scrolls inside a bounded root, grows with content in an unbounded one */
@@ -37,6 +38,6 @@
     .eureka__toolbar label { display: block; margin-block-end: 0.25rem; }
     .eureka__toolbar select, .eureka__toolbar input[type="search"] { inline-size: 100%; }
     .eureka__toolbar > .eureka__layout-chooser { margin-inline-start: 0; }
-    .eureka__stage__filter-view > h2 { flex-basis: 100%; }
+    .eureka__stage__filter-view > .eureka__heading { flex-basis: 100%; }
   }
 }

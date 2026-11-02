@@ -3,7 +3,7 @@
 // --render serves the Level 0 page (and its stylesheet) at --base-path; --enhance adds the <eureka-browser> element bundle.
 import { createFilesystemSource } from './fs-source.js';
 import { startServer } from './server.js';
-import { createDefaultRenderer, cssAssets, elementAssets } from './render.js';
+import { createDefaultRenderer, cssAssets, elementAssets, i18nAssets } from './render.js';
 
 const argv = process.argv.slice(2);
 const args: Record<string, string | true> = {};
@@ -17,7 +17,7 @@ const { port } = await startServer({
   host: String(args.host ?? '127.0.0.1'),
   basePath: String(args['base-path'] ?? '/'),
   ...(typeof args.static === 'string' ? { staticDir: args.static } : {}),
-  ...(args.render || args.enhance ? { renderPage: createDefaultRenderer({ enhance: !!args.enhance }), assetFiles: { ...cssAssets(), ...(args.enhance ? elementAssets() : {}) } } : {}),
+  ...(args.render || args.enhance ? { renderPage: createDefaultRenderer({ enhance: !!args.enhance }), assetFiles: { ...cssAssets(), ...i18nAssets(), ...(args.enhance ? elementAssets() : {}) } } : {}),
   log: (l) => console.error(l)
 });
 console.log(`eureka reference server on http://127.0.0.1:${port}  sources: ${sources.map((s) => `${s.id}=${s.name}`).join(', ')}`);

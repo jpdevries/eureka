@@ -37,7 +37,8 @@ Attributes (all optional): `api` (base URL of the REST API, `media/` is
 appended), `assets` (base of the stylesheet's icon sprite), `lang`,
 `source`, `path`, `mode`, `storage-prefix` (storage and id prefix), `uid`,
 `worker` (`inline` to force the main-thread engine, or a worker URL),
-`i18n` (base URL for message catalogs), `tree-open`, and the switches
+`i18n` (base URL for message catalogs, default `{assets}i18n/`; a
+server-rendered page may embed its catalog instead, see spec 09), `tree-open`, and the switches
 `no-storage`, `no-uploads`, `no-dnd`, `no-rename`, `no-delete`,
 `no-download`, `no-crop`, `no-masonry`, `no-fullscreen`, `no-welcome`,
 `no-choose`, `no-choose-multiple`, `confirm-delete`, `always-welcome`.
@@ -52,7 +53,7 @@ el.config = { callbacks: { choose: (items) => insert(items), close: () => modal.
 ```
 
 Press `?` anywhere in the browser (outside text fields), or use the
-toolbar's "Keyboard shortcuts" button, for the shortcuts reference; it is
+"Keyboard shortcuts" button beside the heading, for the shortcuts reference; it is
 generated from `spec/data/keymap.json` plus any `config.keymap` overrides.
 
 Events (07 STATE-50): `eureka-choose` (`detail.items`), `eureka-close`,

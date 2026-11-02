@@ -98,3 +98,6 @@ fields are present, in this order:
   it does not refetch on load. v3 embeds it as a `<script type="application/json" id="{p}state">`
   block following the schema in `schema/state.json`. v2 relied on
   `localStorage` instead; both are acceptable, embedding is preferred.
+  When the page locale is not English the server also embeds the catalog
+  it rendered with as `<script type="application/json" id="{p}catalog"
+  lang="{tag}">` (09 I18N-12).

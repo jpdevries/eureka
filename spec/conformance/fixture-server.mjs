@@ -38,6 +38,11 @@ const API = args.api ?? '/assets/components/eureka/media';
 const RENDER = args.render === 'v3' ? await import('@eureka/html').catch((e) => { console.error('cannot load @eureka/html; run `npm run build` first:', e.message); process.exit(1); }) : null;
 const cssPkg = RENDER ? path.resolve(here, '../../packages/css') : null;
 const elementPkg = RENDER ? path.resolve(here, '../../packages/element') : null;
+const corePkg = RENDER ? path.resolve(here, '../../packages/core') : null;
+// Catalogs (09): the real ones from packages/core/i18n, plus `xx`, a pseudo-locale that brackets every English message so
+// tests can tell a translated string from the fallback without a real translation.
+const pseudoCatalog = RENDER ? Object.fromEntries(Object.entries(JSON.parse(fs.readFileSync(path.join(corePkg, 'i18n/en.json'), 'utf8'))).map(([k, v]) => [k, `[${v}]`])) : null;
+const catalogFor = (lang) => (lang === 'xx' ? pseudoCatalog : null);
 
 // ---- fixture data -----------------------------------------------------------
 const sources = [
@@ -147,9 +152,10 @@ function nojsHtml(fragment) {
 function renderV3Page({ sourceId = '0', dir = '/', lang = 'en', uploaded, requested = false, enhanced = false } = {}) {
   const source = sources.find((s) => String(s.id) === String(sourceId)) ?? sources[0];
   const entries = listings[norm(dir)] ?? [];
-  const form = RENDER.renderLevel0({ sources, source, path: norm(dir), entries, tree: tree('/'), lang, basePath: '/', timeZone: 'UTC', config: { assetsBasePath: '/assets/' }, locationRequested: requested, ...(uploaded ? { uploaded } : {}) });
+  const catalog = catalogFor(lang);
+  const form = RENDER.renderLevel0({ sources, source, path: norm(dir), entries, tree: tree('/'), lang, basePath: '/', timeZone: 'UTC', config: { assetsBasePath: '/assets/' }, locationRequested: requested, ...(uploaded ? { uploaded } : {}), ...(catalog ? { catalog } : {}) });
   // Enhanced: the same form wrapped in the element, plus the demo's host integration (choose/close report through alert(), as the v2 demo did).
-  const body = enhanced ? `<eureka-browser api="${API.replace(/\/media$/, '/')}" assets="/assets/">${form}</eureka-browser>` : form;
+  const body = enhanced ? `<eureka-browser api="${API.replace(/\/media$/, '/')}" assets="/assets/" lang="${esc(lang)}">${form}</eureka-browser>` : form;
   const head = enhanced ? `<script type="module">const el = document.querySelector('eureka-browser'); el.config = { callbacks: { choose: (items) => alert(JSON.stringify(items)), close: () => alert('close') } };</script>` : '';
   return RENDER.renderDocument({ lang, title: 'Eureka Media Browser', stylesheets: ['/assets/css/eureka.css'], scripts: enhanced ? ['/assets/js/eureka-browser.js'] : [], head, bodyClass: 'modal-section', body });
 }
@@ -232,7 +238,12 @@ http.createServer(async (req, res) => {
       if (!fs.existsSync(f)) return html(res, echoPage('element bundle missing; run npm run build', { file: f }), 404);
       res.writeHead(200, { 'content-type': p.endsWith('.map') ? 'application/json' : 'text/javascript' }); return fs.createReadStream(f).pipe(res);
     }
-    if (RENDER && p === '/' && req.method === 'GET' && !INDEX) return html(res, renderV3Page({ dir: url.searchParams.get('path') ?? '/', sourceId: url.searchParams.get('source') ?? '0', requested: url.searchParams.has('path') || url.searchParams.has('source'), enhanced: true }));
+    if (RENDER && /^\/assets\/i18n\/([a-z]{2,3}(?:-[A-Za-z0-9]+)*)\.json$/.test(p)) {
+      const lang = p.slice('/assets/i18n/'.length, -'.json'.length);
+      const catalog = catalogFor(lang) ?? (fs.existsSync(path.join(corePkg, 'i18n', `${lang}.json`)) ? JSON.parse(fs.readFileSync(path.join(corePkg, 'i18n', `${lang}.json`), 'utf8')) : null);
+      return catalog ? json(res, catalog) : json(res, { error: 'no catalog' }, 404);
+    }
+    if (RENDER && p === '/' && req.method === 'GET' && !INDEX) return html(res, renderV3Page({ dir: url.searchParams.get('path') ?? '/', sourceId: url.searchParams.get('source') ?? '0', lang: url.searchParams.get('ln') ?? 'en', requested: url.searchParams.has('path') || url.searchParams.has('source'), enhanced: true }));
     if (p === '/nojs' && req.method === 'GET') {
       if (RENDER) return html(res, renderV3Page({ dir: url.searchParams.get('path') ?? 'assets/img', lang: url.searchParams.get('ln') ?? 'en', requested: url.searchParams.has('path') }));
       if (!NOJS) return html(res, echoPage('No --nojs fragment configured', {}), 404);

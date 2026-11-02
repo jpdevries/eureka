@@ -124,6 +124,21 @@ describe('enhanced render (02)', () => {
     expect(open).not.toContain('Create a file'); // no createFile handler configured
     expect(open).not.toContain('context menu');
   });
+  it('renders the request locale from a catalog and embeds it for the element (09 I18N-12)', () => {
+    const catalog = { 'media.contents': '[Media Content]', 'listing.caption': '[Contents of {cd}]' };
+    const out = renderLevel0({ ...input, lang: 'xx', catalog });
+    expect(out).toContain('lang="xx"');
+    expect(out).toContain('[Media Content]</h2>');
+    expect(out).toContain('[Contents of assets/img]');
+    expect(out).toContain('Dimensions'); // missing messages fall back to English (I18N-03)
+    expect(out).toContain('<script type="application/json" id="eureka__catalog" lang="xx">{"media.contents":"[Media Content]"');
+    expect(renderLevel0(input)).not.toContain('eureka__catalog'); // English needs no catalog
+    expect(renderLevel0({ ...input, lang: 'nl' })).toContain('lang="en"'); // no catalog: the text is English, and says so
+  });
+  it('puts the shortcuts button beside the heading at Level 1 only', () => {
+    expect(renderEnhanced(input)).toContain('Media Content</h2><button type="button" class="eureka__help-button"');
+    expect(renderLevel0(input)).not.toContain('eureka__help-button');
+  });
   it('does not render Level 0 fields or obsolete elements', () => {
     expect(out).not.toContain('eureka__chosen_item');
     expect(out).not.toContain('<menu');

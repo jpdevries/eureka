@@ -67,5 +67,8 @@ export function configFromJsonChild(el: Element): PartialConfig {
 }
 
 export function buildConfig(el: Element, property: PartialConfig | undefined): Config {
-  return resolveConfig(mergeConfig(configFromJsonChild(el), configFromAttributes(el), property));
+  const config = resolveConfig(mergeConfig(configFromJsonChild(el), configFromAttributes(el), property));
+  // Catalogs default to {assets}i18n/{lang}.json (09 I18N-11), next to the stylesheet's assets.
+  if (!config.endpoints.i18n) config.endpoints = { ...config.endpoints, i18n: `${config.assetsBasePath.replace(/\/+$/, '')}/i18n/` };
+  return config;
 }

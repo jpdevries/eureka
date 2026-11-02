@@ -29,6 +29,13 @@ await startServer({
   in any Node server. It owns `{basePath}/media/...`, `/sources/{name}/...`,
   and, when `renderPage` is given, `GET`/`POST {basePath}`.
 - Errors are JSON `{ error }` with 4xx/5xx status codes.
+- `createDefaultRenderer({ enhance })` renders the Level 0 page in the
+  request locale (`?ln=` or `Accept-Language`) from the catalogs in
+  `@eureka/core/i18n`, embeds a non-English catalog for the element and
+  sets `lang` on the element host (spec 09 I18N-12). `cssAssets()`,
+  `elementAssets()` and `i18nAssets()` give the asset paths to serve
+  (`/assets/css/eureka.css`, `/assets/js/eureka-browser.js`,
+  `/assets/i18n/{lang}.json`); the CLI's `--render` and `--enhance` use them.
 
 `test/server.test.ts` is the contract test: it validates every response
 against the spec schemas and exercises the no-JS protocol.

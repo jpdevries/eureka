@@ -54,7 +54,8 @@ export type Event =
   | { type: 'notification/dismiss'; id: string }
   | { type: 'locale/changed'; tag: string }
   | { type: 'locale/catalogLoading' }
-  | { type: 'locale/catalogLoaded' };
+  | { type: 'locale/catalogLoaded' }
+  | { type: 'locale/catalogMissing' };
 
 export type EventType = Event['type'];
 
@@ -192,6 +193,7 @@ export function reduce(s: State, e: Event): State {
     case 'locale/changed': return { ...s, locale: { tag: e.tag, catalogStatus: e.tag.toLowerCase().startsWith('en') ? 'ready' : 'idle' } };
     case 'locale/catalogLoading': return { ...s, locale: { ...s.locale, catalogStatus: 'loading' } };
     case 'locale/catalogLoaded': return { ...s, locale: { ...s.locale, catalogStatus: 'ready' } };
+    case 'locale/catalogMissing': return { ...s, locale: { ...s.locale, catalogStatus: 'error' } }; // text stays English (09 I18N-03); formatting keeps the tag
     default: return s;
   }
 }

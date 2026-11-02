@@ -1,5 +1,5 @@
 // What every render function receives, and how to build it on the server.
-import { buildDisplayRecord, cssSafe, createTranslator, initialState, reduce, resolveConfig, selectCurrentTree, type Config, type Entry, type PartialConfig, type Source, type State, type TreeNode, type Translator, type Keymap } from '@eureka/core';
+import { buildDisplayRecord, cssSafe, createTranslator, initialState, reduce, resolveConfig, selectCurrentTree, type Config, type Entry, type PartialConfig, type Source, type State, type TreeNode, type Translator, type Keymap, type Catalog } from '@eureka/core';
 
 export type Level = 0 | 1;
 
@@ -28,6 +28,8 @@ export interface Ctx {
   keymap?: Keymap;
   /** Names modifier keys for the platform in the shortcuts reference ("Option" on a Mac). */
   platform?: 'mac' | 'other';
+  /** Non-English catalog the page was rendered with, embedded for the element (09 I18N-12). */
+  catalog?: Catalog;
   /**
    * Row markup memo for incremental client renders (10 PERF-11): `previous` holds the markup of each row
    * as last rendered, keyed by path; the listing fills `next` and emits a keep-placeholder
@@ -49,20 +51,23 @@ export interface PageInput {
   locationRequested?: boolean;
   config?: PartialConfig;
   timeZone?: string;
+  /** Catalog of the request locale (09 I18N-12); omitted for English, which is compiled in. Embedded in the page for hydration. */
+  catalog?: Catalog;
 }
 
 /** Build a render context from server-side inputs (what @eureka/server-node's renderPage receives). */
 export function contextFromPage(input: PageInput, level: Level = 0): Ctx {
   const config: Config = resolveConfig({ basePath: input.basePath, currentDirectory: input.path, mediaSource: input.source.id, lang: input.lang, ...(input.config ?? {}) });
-  const t = createTranslator(input.lang, {}, input.timeZone ? { timeZone: input.timeZone } : {});
+  const t = createTranslator(input.lang, input.catalog ?? {}, input.timeZone ? { timeZone: input.timeZone } : {});
   let state = initialState({ config, locale: input.lang });
+  if (!input.lang.toLowerCase().startsWith('en') && !(input.catalog && Object.keys(input.catalog).length)) state = reduce(state, { type: 'locale/catalogMissing' }); // rendered in English (09 I18N-03)
   state = reduce(state, { type: 'sources/loaded', sources: input.sources });
   state = reduce(state, { type: 'source/select', id: input.source.id });
   state = reduce(state, { type: 'directory/navigate', source: input.source.id, path: input.path });
   state = reduce(state, { type: 'tree/loaded', source: input.source.id, nodes: input.tree });
   const records = Object.fromEntries(input.entries.map((e) => [e.path, buildDisplayRecord(e, { locale: input.lang, timeZone: input.timeZone, t })]));
   state = reduce(state, { type: 'listing/loaded', source: input.source.id, path: input.path, entries: input.entries, records });
-  return { state, t, ids: createIds(config.storagePrefix), level, iconSprite: `${config.assetsBasePath.replace(/\/+$/, '')}/img/icons.svg`, ...(input.uploaded ? { uploaded: input.uploaded } : {}), ...(input.locationRequested ? { locationRequested: true } : {}) };
+  return { state, t, ids: createIds(config.storagePrefix), level, iconSprite: `${config.assetsBasePath.replace(/\/+$/, '')}/img/icons.svg`, ...(input.uploaded ? { uploaded: input.uploaded } : {}), ...(input.locationRequested ? { locationRequested: true } : {}), ...(input.catalog && Object.keys(input.catalog).length ? { catalog: input.catalog } : {}) };
 }
 
 /** The part of state a server embeds for hydration (03 NOJS-41, 07 STATE-40). */

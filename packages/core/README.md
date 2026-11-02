@@ -12,7 +12,7 @@ the `<eureka-browser>` element and any adapter are built on it.
 | `store` | 07 | state shape, events, pure `reduce`, selectors, `createStore` |
 | `persistence` | 07 §5 | validated `localStorage` read/write of view preferences and location |
 | `keymap` | 05 | bindings from `spec/data/keymap.json`, chord matching, host overrides, v2 legacy mode |
-| `i18n` | 09 | ICU MessageFormat subset, per-message English fallback, locale resolution |
+| `i18n` | 09 | ICU MessageFormat subset, per-message English fallback, locale resolution; catalogs ship as `i18n/{lang}.json` (from `spec/data/messages.*.json`) |
 | `api/client` | api/openapi.yaml | `EurekaApi` interface and the fetch-based REST client |
 | `worker/*` | 10 | the engine (fetch, normalise, cache, sort, filter, thumbnails, crop), its worker entry, and a bridge that falls back inline |
 

@@ -20,18 +20,20 @@ export function instance(ctx: Ctx): Raw {
         <div class="eureka__table-wrapper">${listing(ctx)}</div>
       </div>
     </div>`;
+  const textLang = state.locale.catalogStatus === 'error' ? 'en' : state.locale.tag; // the language of the text, not the formatting locale (09 I18N-11)
   if (level === 0) {
     const uploaded = ctx.uploaded?.length ? html`<p class="alert-info eureka__notice" role="status">${t('uploaded.nFiles', { n: ctx.uploaded.length, cd: state.listing.path })}</p>` : '';
-    return html`<form class="${cls}" method="post" action="${state.config.basePath}" enctype="multipart/form-data" lang="${state.locale.tag}" data-view="${mode}" data-choose="single" data-level="0">
+    return html`<form class="${cls}" method="post" action="${state.config.basePath}" enctype="multipart/form-data" lang="${textLang}" data-view="${mode}" data-choose="single" data-level="0">
       <input type="hidden" name="eureka__mediaSourceId" value="${String(state.listing.source ?? '')}">
       <input type="hidden" name="eureka__upload-dir" value="${state.listing.path}">
       ${uploaded}
       ${body}
       ${chooseBar(ctx)}
     </form>
-    <script type="application/json" id="${ids.id('state')}">${jsonForScript(hydrationState(state, { requested: ctx.locationRequested ?? false }))}</script>`;
+    <script type="application/json" id="${ids.id('state')}">${jsonForScript(hydrationState(state, { requested: ctx.locationRequested ?? false }))}</script>${ctx.catalog ? html`
+    <script type="application/json" id="${ids.id('catalog')}" lang="${state.locale.tag}">${jsonForScript(ctx.catalog)}</script>` : ''}`;
   }
-  return html`<div class="${cls}" lang="${state.locale.tag}" data-view="${mode}" data-choose="${state.view.chooseMode}" data-level="1" tabindex="-1" role="region" aria-label="${t('media.browser')}">
+  return html`<div class="${cls}" lang="${textLang}" data-view="${mode}" data-choose="${state.view.chooseMode}" data-level="1" tabindex="-1" role="region" aria-label="${t('media.browser')}">
     ${notifications(ctx)}
     ${body}
     ${pathBar(ctx)}

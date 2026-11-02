@@ -26,7 +26,7 @@ around it.
 - **KEY-A5** A shortcuts reference MUST be reachable from the UI and
   generated from the same data file, so overrides (KEY-A1) show up in it.
   v3: the `?` binding (KEY-15, not in text fields) and a "Keyboard
-  shortcuts" button in the toolbar open a dialog (02 HTML-95) listing
+  shortcuts" button beside the "Media Content" heading open a dialog (02 HTML-95) listing
   every active binding under "Anywhere in the browser" and "With an item
   focused", with the toolbar movement of KEY-B2 appended; bindings for
   features the host turned off, and `when`-conditional bindings whose

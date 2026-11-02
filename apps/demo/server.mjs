@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { createEurekaHandler, createFilesystemSource, cssAssets, elementAssets, escapeHtml } from '@eureka/server-node';
+import { createEurekaHandler, createFilesystemSource, cssAssets, elementAssets, escapeHtml, i18nAssets, loadCatalog } from '@eureka/server-node';
 import { renderLevel0 } from '@eureka/html';
 import { MEDIA_ROOT, seed } from './scripts/seed-media.mjs';
 
@@ -29,7 +29,8 @@ const nav = (active) => {
 /** The server-rendered page: the Level 0 form inside the demo shell, wrapped in <eureka-browser> so the bundle enhances it. */
 function renderPage(ctx) {
   const basePath = ctx.basePath.endsWith('/') ? ctx.basePath : ctx.basePath + '/';
-  const form = renderLevel0({ sources: ctx.sources, source: { id: ctx.source.id, name: ctx.source.name }, path: ctx.path, entries: ctx.entries, tree: ctx.tree, lang: ctx.lang, basePath, locationRequested: ctx.locationRequested ?? false, ...(ctx.uploaded ? { uploaded: ctx.uploaded } : {}), config: { assetsBasePath: '/assets/' } });
+  const catalog = loadCatalog(ctx.lang); // 09 I18N-12: the request locale, embedded for the element
+  const form = renderLevel0({ sources: ctx.sources, source: { id: ctx.source.id, name: ctx.source.name }, path: ctx.path, entries: ctx.entries, tree: ctx.tree, lang: ctx.lang, basePath, locationRequested: ctx.locationRequested ?? false, ...(ctx.uploaded ? { uploaded: ctx.uploaded } : {}), ...(catalog ? { catalog } : {}), config: { assetsBasePath: '/assets/' } });
   return `<!doctype html>
 <html lang="${escapeHtml(ctx.lang)}">
 <head>
@@ -45,7 +46,7 @@ ${nav('/browser/')}
 <main class="demo-main">
 <h1 class="visually-hidden">Eureka Media Browser</h1>
 <div id="root" class="eureka-root">
-<eureka-browser api="${escapeHtml(basePath)}" assets="/assets/">${form}</eureka-browser>
+<eureka-browser api="${escapeHtml(basePath)}" assets="/assets/" lang="${escapeHtml(ctx.lang)}">${form}</eureka-browser>
 </div>
 </main>
 <script type="module" src="/assets/js/eureka-browser.js"></script>
@@ -62,7 +63,7 @@ const eureka = createEurekaHandler({
   basePath: BASE,
   renderPage,
   staticDir: PUBLIC,
-  assetFiles: { ...cssAssets(), ...elementAssets() },
+  assetFiles: { ...cssAssets(), ...elementAssets(), ...i18nAssets() },
   log: (line) => console.error(line)
 });
 

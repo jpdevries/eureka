@@ -479,6 +479,27 @@ Taken on 2026-11-01:
   render test.) The element bundle is 29.6 kB gzip with the new strings,
   so moving the message catalog out of the bundle (spec 09) is next for
   the PERF-25 budget.
+- Message catalogs (spec 09): `spec/data/messages.en.json` is now the
+  normative catalog (210 messages) and the sync script compiles it into
+  core and copies every `messages.{lang}.json` to `packages/core/i18n/`,
+  exported and served by the reference server at `/assets/i18n/`. The
+  server renders the request locale from its catalog and embeds it in the
+  page (`{p}catalog`) with `lang` on the element host, so the enhanced
+  layer starts in that locale without a fetch; the element defaults
+  `endpoints.i18n` to `{assets}i18n/`, reads an embedded catalog first,
+  and otherwise fetches lazily with per-message English fallback. The
+  fixture server generates a bracketed pseudo-locale (`xx`) for the two
+  new conformance tests. No translations exist in the repository (v2's
+  lived on Crowdin), so the pipeline is ready but ships English only. The
+  `?` button moved beside the "Media Content" heading.
+- Bundle budget, measured: the element is 92.6 kB minified / 29.6 kB gzip,
+  of which the English catalog is 8.2 kB minified (about 2.5 kB gzip),
+  the state store 8.1 kB, the renderers 28.5 kB, the element 21.4 kB and
+  the inline engine 3.4 kB. Dropping the catalog from the bundle would not
+  bring element + worker (4.3 kB) under the 30 kB of PERF-25, and the spec
+  wants English compiled in (I18N-04, I18N-11), so the catalog stays.
+  Decision needed on PERF-25: raise it to the measured 34 kB, or spend
+  effort on the renderers (the largest share).
 - Not done in this phase: publishing (the packages are `3.0.0-alpha.0`
   with no `publishConfig` yet; Changesets and a GitHub Actions workflow
   are still to be set up), the pointer-driven crop marquee, the shortcuts

@@ -8,9 +8,11 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" },
-    "./worker": { "types": "./dist/worker/entry.d.ts", "default": "./dist/worker/entry.js" }
+    "./worker": { "types": "./dist/worker/entry.d.ts", "default": "./dist/worker/entry.js" },
+    "./i18n/*": "./i18n/*",
+    "./package.json": "./package.json"
   },
-  "files": ["dist", "src"],
+  "files": ["dist", "src", "i18n"],
   "sideEffects": false,
   "scripts": {
     "build": "tsc -b",
