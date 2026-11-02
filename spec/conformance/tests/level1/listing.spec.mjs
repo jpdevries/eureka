@@ -10,9 +10,12 @@ test('HTML-60 the listing is a table with the data columns', async ({ page }) =>
   }
 });
 
-test('HTML-60 the table does not claim the grid role', async ({ page }) => {
-  baselineDefect('v2 sets role="grid" without implementing grid keyboard navigation');
-  await expect(page.getByRole('grid')).toHaveCount(0);
+test('HTML-60 the enhanced listing is a grid that explains its keys', async ({ page }) => {
+  v3only('role="grid" with usage instructions; v2 set the role without the arrow-key navigation it implies');
+  const grid = page.getByRole('grid');
+  await expect(grid).toHaveCount(1);
+  await expect(grid).toHaveAccessibleDescription(/arrow keys to move between items/);
+  await expect(grid.getByRole('row').first()).toBeVisible();
 });
 
 test('HTML-62 one row per file, folders are not rows', async ({ page }) => {

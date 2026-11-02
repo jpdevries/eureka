@@ -50,7 +50,7 @@ DOM order is the reading order and the tab order.
 8. Modals (dialogs), rendered last in the root
 
 - **HTML-10** The source panel MUST be collapsible. When collapsed it is
-  `hidden`, and a "Media Source Panel" toggle button in the toolbar
+  `hidden`, and a "Toggle Source Panel" toggle button in the toolbar
   carries `aria-expanded` and `aria-controls` pointing at it.
 - **HTML-11** When the source panel is collapsed, the toolbar MUST show
   the directory selector (the same `<select>` as NOJS-12) so the directory
@@ -72,7 +72,10 @@ DOM order is the reading order and the tab order.
 ## 4. Source panel
 
 - **HTML-30** The source panel is an `<aside>` (`role="complementary"`)
-  with accessible name "Media Source Panel".
+  with accessible name "Media Source Panel". Its toggle button in the
+  toolbar reads "Toggle Source Panel" (HTML-10): a verb for the control, a
+  noun for the region. (Until 3.0.0-alpha.1 both said "Media Source
+  Panel".)
 - **HTML-31** The source selector is a `<select>` labelled "Media Source"
   (visible text) whose options are the media sources (`name`, value `id`).
   A visually-hidden prefix "Choose a" completes the label.
@@ -144,10 +147,18 @@ DOM order is the reading order and the tab order.
 ## 6. Listing
 
 - **HTML-60** The listing is a `<table>` with class `eureka__table` and a
-  visually-hidden `<caption>` "Contents of {cd}". It MUST NOT carry
-  `role="grid"` unless full grid keyboard navigation (arrow keys between
-  cells) is implemented. v2 set `role="grid"` without it; v3 drops it and
-  keeps native table semantics.
+  visually-hidden `<caption>` "Contents of {cd}, {n} items". At Level 0 it
+  is a plain table. At Level 1+ it carries `role="grid"` (so `tr` are rows
+  and `td` gridcells), `aria-multiselectable="true"` in multiple-choose
+  mode, and `aria-describedby` pointing at a visually-hidden sentence of
+  usage instructions ("Use the up and down arrow keys to move between
+  items, the right arrow key for an item's actions, and Enter to
+  choose."). Rationale: the rows are one tab stop navigated with arrow
+  keys (HTML-63, 05 KEY-B1/B2), which is the ARIA grid pattern; screen
+  readers switch to focus mode on a grid so those keys reach the browser
+  rather than the virtual cursor, and the description tells first-time
+  keyboard users what to press. (An earlier draft forbade `role="grid"`
+  because v2 set it without arrow-key navigation; v3 has the navigation.)
 - **HTML-61** `<thead>` has one row of `<th scope="col">`: Media, Name,
   Actions (visually hidden), Dimensions, File Size, Edited On. In multiple
   choice mode a leading "Choose" column (visually-hidden text) is added;
@@ -199,7 +210,11 @@ DOM order is the reading order and the tab order.
   raster images only), Rename (button), Delete (button, class
   `dangerous`), Download (link with `download` attribute). Each control's
   visible text is the verb and its accessible name is "{verb} {filename}".
-  The cell is `hidden` except for the focused row and rows containing
+  The toolbar is one tab stop (05 KEY-B2): at Level 1+ its first control
+  has `tabindex="0"` and the others `tabindex="-1"`; ArrowLeft/ArrowRight
+  move between them and move the tabindex along. (Until 3.0.0-alpha.1
+  every control was a tab stop, which made tabbing through a listing
+  slow.) The cell is `hidden` except for the focused row and rows containing
   focus (`:focus-within`), and in thumb/grid/masonry modes its contents
   are reachable via the path bar instead. v2 marked this group
   `role="listbox"` with `role="option"` children; v3 uses toolbar.

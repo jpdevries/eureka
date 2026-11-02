@@ -37,10 +37,14 @@ maps the axe findings on the v2 baseline to requirements.
 - **A11Y-10** Use native elements with their implicit roles: `<table>`,
   `<button>`, `<a href>`, `<select>`, `<details>`, `<dialog>`,
   `<fieldset>`. ARIA roles are added only to supply a role the element
-  lacks (`role="toolbar"`, `role="status"`). v2's `role="grid"` on the
-  table, `role="navigation"` on a `<select>`, `role="menuitem"` on a
-  `<label>`, `role="tree"`/`treeitem` on `<nav>`/`<summary>`, and
-  `role="listbox"`/`option` on button groups are all withdrawn (axe
+  lacks (`role="toolbar"`, `role="status"`) or to name the keyboard
+  pattern an element implements: the Level 1+ listing is a `<table
+  role="grid">` because its rows are one tab stop navigated with the
+  arrow keys (02 HTML-60), and that role is what makes screen readers
+  hand those keys to the page. v2's `role="navigation"` on a `<select>`,
+  `role="menuitem"` on a `<label>`, `role="tree"`/`treeitem` on
+  `<nav>`/`<summary>`, and `role="listbox"`/`option` on button groups
+  are all withdrawn (axe
   `aria-allowed-role`, `aria-required-children`, `aria-prohibited-attr`,
   `presentation-role-conflict` on v2).
 - **A11Y-11** Landmarks: the source panel is `complementary`, the filter
@@ -139,7 +143,7 @@ Covered by 05. In addition:
 Tabbing into an instance: "Media Browser, region" → "Browse Media
 Content, heading level 2" → "Choose Items, group: Single, radio, selected"
 → "Filter contents of assets/img by filename, filesize, dimensions or even
-modification date, combobox" → toolbar: "Media Source Panel, button,
+modification date, combobox" → toolbar: "Toggle Source Panel, button,
 collapsed" … "View Mode, group: Table Layout, radio, selected" → "Contents
 of assets/img, table, 11 rows" → first row: "Wide Banner (final).jpg
 displays at 2400x400, weighs 96 KB, and was edited on Friday, March 24,

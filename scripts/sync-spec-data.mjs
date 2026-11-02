@@ -58,6 +58,8 @@ Object.assign(en, {
   'crop.failed': 'Could not crop {filename}: {error}',
   'shortcuts': 'Keyboard shortcuts',
   'created.directory': 'Created directory {name}',
-  'tree.toggle': 'Toggle {name}'
+  'tree.toggle': 'Toggle {name}',
+  'panel.toggle': 'Toggle Source Panel', // the toggle button; the panel itself keeps the noun (mediaSourceTree)
+  'listing.instructions': 'Use the up and down arrow keys to move between items, the right arrow key for an item\'s actions, and Enter to choose.'
 });
 emit('messages.en', 'spec/fixtures/locale-en.json (+ v3 additions in this script)', en, 'MessagesEn');

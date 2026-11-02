@@ -13,7 +13,7 @@ async function fileDataTransfer(page, name) {
 }
 
 test('HTML-34 dropping files on the drop area uploads them', async ({ page }) => {
-  await page.getByRole('button', { name: 'Media Source Panel' }).click();
+  await page.getByRole('button', { name: /^(Media|Toggle) Source Panel$/ }).click();
   const zone = page.locator('.eureka__drop-area-zone');
   await expect(page.getByLabel('Paste images from the clipboard to upload')).toBeVisible();
   const dt = await fileDataTransfer(page, 'dropped.png');

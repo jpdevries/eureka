@@ -59,6 +59,30 @@ test('KEY-20 Enter on a focused row chooses it', async ({ page }) => {
   expect(msg).toContain('schildpad.jpg');
 });
 
+test('KEY-B2 a row toolbar is one tab stop; arrows move inside it', async ({ page }) => {
+  v3only('roving tabindex inside the actions toolbar');
+  const row = await focusRow(page, 'schildpad.jpg');
+  await page.keyboard.press('Tab');
+  const toolbar = row.getByRole('toolbar', { name: 'Actions for schildpad.jpg' });
+  await expect(toolbar.getByRole('link', { name: 'Expand schildpad.jpg' })).toBeFocused();
+  await page.keyboard.press('ArrowRight');
+  await expect(toolbar.getByRole('button', { name: 'Choose schildpad.jpg' })).toBeFocused();
+  await page.keyboard.press('End');
+  await expect(toolbar.getByRole('link', { name: 'Download schildpad.jpg' })).toBeFocused();
+  await page.keyboard.press('Home');
+  await expect(toolbar.getByRole('link', { name: 'Expand schildpad.jpg' })).toBeFocused();
+  await page.keyboard.press('ArrowLeft'); // from the first control back to the row, as between grid cells
+  await expect(row).toBeFocused();
+  await page.keyboard.press('ArrowRight'); // and from the row into its actions
+  await expect(toolbar.getByRole('link', { name: 'Expand schildpad.jpg' })).toBeFocused();
+  await expect(page.getByRole('grid')).toHaveAttribute('aria-describedby', /listing-help$/);
+  await page.keyboard.press('End');
+  await page.keyboard.press('Tab'); // leaves the toolbar in one step (the next stop may be a later row's media controls)
+  const focused = page.locator(':focus');
+  await expect(focused).not.toHaveAttribute('data-action', /.+/);
+  expect(await focused.evaluate((el) => !!el.closest('tr[data-path="assets/img/schildpad.jpg"]'))).toBe(false);
+});
+
 test('KEY-23 rename shortcut opens the rename dialog for the focused row', async ({ page }) => {
   await focusRow(page, 'notes.txt');
   await page.keyboard.press(chord('renameItem'));

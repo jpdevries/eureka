@@ -363,11 +363,17 @@ export class EurekaBrowser extends HTMLElement {
     if (target.closest('dialog.eureka__modal')) return; // our dialogs own their keys; Escape is native. A host dialog around the whole browser does not count
     const row = target.closest<HTMLTableRowElement>('tr[data-path]');
     const toolbar = target.closest<HTMLElement>('[data-row-actions]');
-    if (toolbar && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) { // KEY-B2
+    if (toolbar && (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Home' || e.key === 'End')) { // KEY-B2 (APG toolbar)
       const controls = Array.from(toolbar.querySelectorAll<HTMLElement>('a, button')).filter((c) => !c.hasAttribute('disabled'));
       const i = controls.indexOf(target);
-      const next = controls[(i + (e.key === 'ArrowRight' ? 1 : controls.length - 1)) % controls.length];
-      if (next) { e.preventDefault(); next.focus(); }
+      if (e.key === 'ArrowLeft' && i === 0 && row) { e.preventDefault(); row.focus(); return; } // back to the row, like moving to the previous cell
+      const next = e.key === 'Home' ? controls[0] : e.key === 'End' ? controls[controls.length - 1] : controls[(i + (e.key === 'ArrowRight' ? 1 : controls.length - 1)) % controls.length];
+      if (next) { e.preventDefault(); for (const c of controls) c.tabIndex = c === next ? 0 : -1; next.focus(); }
+      return;
+    }
+    if (row && target === row && e.key === 'ArrowRight') { // into the row's actions, like moving to the next cell (KEY-B2)
+      const first = row.querySelector<HTMLElement>('[data-row-actions] a, [data-row-actions] button');
+      if (first) { e.preventDefault(); first.focus(); }
       return;
     }
     const inTextField = target.matches(TEXT_FIELD);

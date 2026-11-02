@@ -104,23 +104,24 @@ column), `media`, `name`, `actions`, `dimensions`, `file-size`,
 
 ### Masonry without script
 
-- **LAY-34** Masonry MUST NOT require JavaScript layout. Three tiers,
-  each selected by `@supports`:
+- **LAY-34** Masonry MUST NOT require JavaScript layout. Two tiers,
+  selected by `@supports`:
   1. Native masonry where the engine supports either
-     `grid-template-rows: masonry` or `display: masonry`.
-  2. Otherwise a dense grid: `tbody` is `display: grid` with
-     `grid-template-columns: repeat(auto-fill, minmax(<item>, 1fr))`,
-     `grid-auto-rows: <unit>` (for example `8px`), `grid-auto-flow: dense`;
-     each row sets `--eureka-aspect: {h}/{w}` from the item's dimensions
-     and spans `round(up, <column width> * var(--eureka-aspect) / <unit>)`
-     rows. Items without dimensions span a square.
-  3. Engines without `round()` fall back to grid mode's layout.
-  DOM order is preserved in every tier, so visual order follows sort
-  order. v2's Masonry.js (shortest-column placement) did not guarantee
-  this and is withdrawn.
-
-## 4. Focus and interaction styling
-
+     `grid-template-rows: masonry` or `display: masonry`
+     (`repeat(auto-fill, minmax(<item>, 1fr))` tracks). Items keep DOM
+     order and are placed in the shortest track, so visual order follows
+     sort order.
+  2. Otherwise CSS multi-column layout: `tbody` is `display: block` with
+     `columns: <item>` (two columns below the 40em container breakpoint),
+     each row `display: block; break-inside: avoid`. Items keep their
+     aspect ratio and pack down each column, then the next; DOM order
+     (and therefore sort order and arrow-key order) runs down a column
+     rather than across. Media is never cropped to fit.
+  An earlier draft specified a dense grid with row spans computed from
+  the item's aspect ratio; it needed per-row style data, cropped media to
+  the guessed height, and depended on `round()` arithmetic that engines
+  rejected. v2's Masonry.js (shortest-column placement) did not guarantee
+  order either.
 - **LAY-40** Focused rows, the actions toolbar and the search input
   show a 1px outline in `--active`. `tr:target` outlines the media with
   `#32AB9A` 3px (used by in-page links to an item).

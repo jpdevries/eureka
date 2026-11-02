@@ -67,7 +67,7 @@ test('NOJS-19 expand link names include the filename', async ({ page }) => {
 test('NOJS-20 enhanced-only controls are absent', async ({ page }) => {
   await expect(page.getByRole('textbox', { name: /^Filter/ })).toHaveCount(0);
   await expect(page.getByRole('radio', { name: /Layout$/ })).toHaveCount(0);
-  await expect(page.getByRole('button', { name: 'Media Source Panel' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: /^(Media|Toggle) Source Panel$/ })).toHaveCount(0);
   await expect(page.getByRole('tree')).toHaveCount(0);
 });
 

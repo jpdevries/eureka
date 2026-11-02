@@ -38,16 +38,20 @@ export function media(ctx: Ctx, item: FileEntry, { controls = true, width, heigh
 }
 
 export function actions(ctx: Ctx, item: FileEntry, idPrefix = ''): Raw {
-  const { t, state: { config }, ids } = ctx;
+  const { t, state: { config }, ids, level } = ctx;
   const n = item.filename;
-  const btn = (kind: string, label: string, hiddenText: string, extra = '', cls = '') => html`<button type="button" class="${classes('eureka__action', cls)}" id="${ids.item(idPrefix + kind, item.filename)}" data-action="${kind}" data-path="${item.path}"${raw(extra)}>${label}${hidden(' ' + hiddenText)}</button>`;
+  // One tab stop per toolbar (05 KEY-B2): the first control is tabbable, the rest are reached with the arrow keys.
+  const roving = (i: number) => (level > 0 ? ` tabindex="${i === 0 ? 0 : -1}"` : '');
+  const controls: Array<(i: number) => Raw> = [];
+  const btn = (kind: string, label: string, hiddenText: string, cls = '') => (i: number) => html`<button type="button" class="${classes('eureka__action', cls)}" id="${ids.item(idPrefix + kind, item.filename)}" data-action="${kind}" data-path="${item.path}"${raw(roving(i))}>${label}${hidden(' ' + hiddenText)}</button>`;
+  controls.push((i) => html`<a class="button eureka__action" id="${ids.item(idPrefix + 'expand', item.filename)}" href="${item.absoluteURL}" target="_blank" rel="noopener" data-action="expand"${raw(roving(i))}>${t('expand')}${hidden(' ' + n)}</a>`);
+  if (config.allowChoose) controls.push(btn('choose', t('choose'), n));
+  if (config.allowCrop && isCroppable(n)) controls.push(btn('crop', t('crop'), n, 'eureka__crop-btn'));
+  if (config.allowRename) controls.push(btn('rename', t('rename'), n));
+  if (config.allowDelete) controls.push(btn('delete', t('delete'), n, 'dangerous'));
+  if (config.allowDownload) controls.push((i) => html`<a class="button eureka__action" id="${ids.item(idPrefix + 'download', item.filename)}" href="${item.absoluteURL}" download="${n}" data-action="download"${raw(roving(i))}>${t('download')}${hidden(' ' + n)}</a>`);
   return html`<div class="eureka__button-bar eureka__context-buttons" role="toolbar" aria-label="${t('actions.for', { filename: n })}" data-row-actions>
-    <a class="button eureka__action" id="${ids.item(idPrefix + 'expand', item.filename)}" href="${item.absoluteURL}" target="_blank" rel="noopener" data-action="expand">${t('expand')}${hidden(' ' + n)}</a>
-    ${config.allowChoose ? btn('choose', t('choose'), n) : ''}
-    ${config.allowCrop && isCroppable(n) ? btn('crop', t('crop'), n, '', 'eureka__crop-btn') : ''}
-    ${config.allowRename ? btn('rename', t('rename'), n) : ''}
-    ${config.allowDelete ? btn('delete', t('delete'), n, '', 'dangerous') : ''}
-    ${config.allowDownload ? html`<a class="button eureka__action" id="${ids.item(idPrefix + 'download', item.filename)}" href="${item.absoluteURL}" download="${n}" data-action="download">${t('download')}${hidden(' ' + n)}</a>` : ''}
+    ${controls.map((c, i) => c(i))}
   </div>`;
 }
 

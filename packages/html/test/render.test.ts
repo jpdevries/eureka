@@ -32,6 +32,8 @@ describe('Level 0 render (03)', () => {
     expect(out).toMatch(/^<form class="eureka eureka__view-mode__table eureka__server-side" method="post" action="\/assets\/components\/eureka\/" enctype="multipart\/form-data"/);
     expect(out).toContain('<input type="hidden" name="eureka__mediaSourceId" value="0">');
     expect(out).toContain('<input type="hidden" name="eureka__upload-dir" value="assets/img">');
+    expect(out).not.toContain('role="grid"'); // Level 0 is a plain table; the grid pattern needs the arrow keys (HTML-60)
+    expect(out).not.toContain('listing-help');
   });
   it('renders the directory selector with every source and directory, current selected', () => {
     expect(out).toContain('name="eureka__media-browser_0__browsing"');
@@ -83,6 +85,8 @@ describe('enhanced render (02)', () => {
     for (const marker of order) { const i = out.indexOf(marker); expect(i, marker).toBeGreaterThan(last); last = i; }
     expect(out).toContain('role="region" aria-label="Media Browser"');
     expect(out).toContain('aria-label="Media Source Panel" hidden');
+    expect(out).toMatch(/<table class="eureka__table" id="eureka__table" data-count="\d+" role="grid" aria-describedby="eureka__listing-help">/);
+    expect(out).toContain('id="eureka__listing-help">Use the up and down arrow keys');
     expect(out).toContain('<nav class="eureka__tree" aria-label="Directories">');
     expect(out).toContain('aria-current="page"');
     expect(out).toContain('<caption class="visually-hidden" id="eureka__caption">Contents of assets/img, 3 items</caption>');
@@ -97,7 +101,12 @@ describe('enhanced render (02)', () => {
     expect(out).toContain('aria-expanded="false"');
   });
   it('uses a roving tabindex and sortable header buttons', () => {
-    expect(out.match(/tabindex="0"/g)!.length).toBe(1); // the first row only; the root is a programmatic focus target (tabindex="-1")
+    expect(out.match(/<tr[^>]*tabindex="0"/g)!.length).toBe(1); // the first row only; the root is a programmatic focus target (tabindex="-1")
+    for (const toolbar of out.match(/<div class="eureka__button-bar eureka__context-buttons"[\s\S]*?<\/div>/g)!) expect(toolbar.match(/tabindex="0"/g)!.length).toBe(1); // one tab stop per toolbar (KEY-B2)
+    expect(out).toContain('data-action="toggle-panel">Toggle Source Panel</button>');
+    expect(out).toContain('aria-label="Media Source Panel" hidden');
+    expect(out).toMatch(/<table class="eureka__table" id="eureka__table" data-count="\d+" role="grid" aria-describedby="eureka__listing-help">/);
+    expect(out).toContain('id="eureka__listing-help">Use the up and down arrow keys');
     expect(out).toContain('data-level="1" tabindex="-1"');
     expect(out).toContain('<th scope="col" class="eureka__th-filename" aria-sort="ascending">');
     expect(out).toContain('data-sort-by="fileSize" aria-pressed="false"');
@@ -105,7 +114,7 @@ describe('enhanced render (02)', () => {
   it('does not render Level 0 fields or obsolete elements', () => {
     expect(out).not.toContain('eureka__chosen_item');
     expect(out).not.toContain('<menu');
-    expect(out).not.toContain('role="grid"');
+    expect(out).not.toContain('role="listbox"'); // v2's listbox toolbars; role="grid" on the listing is intentional at Level 1+ (HTML-60)
     expect(out).not.toContain('role="menubar"');
   });
 });

@@ -38,7 +38,7 @@ test('axe: grid mode', async ({ page }) => {
 test('axe: multiple choice with source panel open', async ({ page }) => {
   await openDirectory(page, 'assets/img');
   await chooseModeRadio(page, 'multiple').check();
-  await page.getByRole('button', { name: 'Media Source Panel' }).click();
+  await page.getByRole('button', { name: /^(Media|Toggle) Source Panel$/ }).click();
   await axeCheck(page, 'multiple-panel');
 });
 

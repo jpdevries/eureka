@@ -39,7 +39,7 @@ export const rowNamed = (page, filename) => page.getByRole('row', { name: new Re
 /** A control by accessible name regardless of whether it is a button, link or (v2) option. */
 export const control = (scope, name) => scope.getByRole('button', { name }).or(scope.getByRole('link', { name })).or(scope.getByRole('option', { name }));
 export const directoryTree = page => page.getByRole('tree').or(page.getByRole('navigation', { name: 'Directories' }));
-export const sourcePanelToggle = page => page.getByRole('button', { name: 'Media Source Panel' });
+export const sourcePanelToggle = page => page.getByRole('button', { name: TARGET === 'v2' ? 'Media Source Panel' : 'Toggle Source Panel' });
 export const viewRadioName = mode => `${{ table: 'Table', thumb: 'Thumbnail', grid: 'Grid', list: 'List', masonry: 'Masonry' }[mode]} Layout`;
 // v2 names every view radio "View Mode" (aria-labelledby the legend), so the baseline is located by value. HTML-47 has a defect test for this.
 export const viewRadio = (page, mode) => TARGET === 'v2' ? page.locator(`input[name="eureka__view"][value="${mode}"]`) : page.getByRole('radio', { name: viewRadioName(mode) });

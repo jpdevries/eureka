@@ -79,7 +79,7 @@ test('HTML-91 the rest of the page is inert while a dialog is open', async ({ pa
 });
 
 test('HTML-35,92 create directory from the tree bar', async ({ page }) => {
-  await page.getByRole('button', { name: 'Media Source Panel' }).click();
+  await page.getByRole('button', { name: /^(Media|Toggle) Source Panel$/ }).click();
   await page.getByRole('button', { name: /Create a new Directory in assets\/img/ }).click();
   const dialog = page.getByRole('dialog');
   const input = dialog.getByLabel(/Create a new directory in \/?assets\/img/i);

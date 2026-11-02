@@ -159,7 +159,9 @@ const data = {
   "crop.failed": "Could not crop {filename}: {error}",
   "shortcuts": "Keyboard shortcuts",
   "created.directory": "Created directory {name}",
-  "tree.toggle": "Toggle {name}"
+  "tree.toggle": "Toggle {name}",
+  "panel.toggle": "Toggle Source Panel",
+  "listing.instructions": "Use the up and down arrow keys to move between items, the right arrow key for an item's actions, and Enter to choose."
 } as const;
 export default data;
 export type MessagesEn = typeof data;

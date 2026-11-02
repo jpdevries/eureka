@@ -59,8 +59,10 @@ assert those names.
 
 ## v3 results (2026-11-02)
 
-`npm run conformance:v3` (after `npm run build`): 104 passed, 1 skipped
-(LAY-12 in the narrow project, by design), 0 failures, about 1.2 minutes.
+`npm run conformance:v3` (after `npm run build`): 107 passed, 1 skipped
+(LAY-12 in the narrow project, by design), 0 failures, about 1.1 minutes. The
+three newest tests cover the one-stop row toolbar (KEY-B2), the masonry
+fallback (LAY-34) and the grid role with its usage description (HTML-60).
 axe-core reports no violations in any of the eight checked states (Level 0
 light and dark, enhanced table light and dark, focused row, grid mode,
 multiple choice with the panel open, rename dialog). The `v3` target runs

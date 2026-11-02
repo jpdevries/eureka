@@ -53,7 +53,11 @@ export function listing(ctx: Ctx): Raw {
   const files = selectVisibleFiles(state);
   const multiple = level > 0 && state.view.chooseMode === 'multiple';
   const colSpan = COLUMNS.length - (level === 0 ? 1 : 0) + (multiple ? 1 : 0) + (level === 0 ? 1 : 0);
-  return html`<table class="eureka__table" id="${ids.id('table')}" data-count="${files.length}">
+  // Level 1+: the rows are a keyboard widget (arrow keys, one tab stop), which ARIA calls a grid (02 HTML-60). Screen readers
+  // switch to focus mode on a grid, so the arrow keys reach the browser instead of the virtual cursor.
+  const grid = level > 0 ? raw(` role="grid" aria-describedby="${ids.id('listing-help')}"${multiple ? ' aria-multiselectable="true"' : ''}`) : '';
+  const help = level > 0 ? html`<p class="visually-hidden" id="${ids.id('listing-help')}">${t('listing.instructions')}</p>` : '';
+  return html`${help}<table class="eureka__table" id="${ids.id('table')}" data-count="${files.length}"${grid}>
     <caption class="visually-hidden" id="${ids.id('caption')}">${t('listing.caption', { cd: state.listing.path })}, ${t('listing.count', { n: files.length })}</caption>
     ${header(ctx)}
     <tbody class="${classes({ empty: files.length === 0 })}">${files.length ? files.map((f, i) => memoRow(ctx, f, i)) : emptyState(ctx, colSpan)}</tbody>

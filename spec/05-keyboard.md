@@ -31,10 +31,20 @@ around it.
 - **KEY-B1** The listing rows form one tab stop with a roving tabindex
   (02 HTML-63). ArrowDown/ArrowUp move between rows, Home/End to the
   first/last row. Moving focus to a row updates the focused item in
-  state (and therefore the path bar and the Choose button).
+  state (and therefore the path bar and the Choose button). This is the
+  WAI-ARIA grid pattern, so the listing is exposed as a grid at Level 1+
+  (HTML-60) and carries a one-sentence description of these keys. v2 gave
+  every row `tabindex="0"`; v3 trades Tab-per-row for the arrow keys so a
+  5,000-item listing stays one stop.
 - **KEY-B2** From a focused row, Tab moves into that row's actions
-  toolbar (when visible), then out of the listing. Inside a toolbar,
-  ArrowLeft/ArrowRight move between controls. Shift+Tab reverses.
+  toolbar (when visible), then out of the listing. The toolbar is a single
+  tab stop with a roving tabindex: ArrowLeft/ArrowRight move between its
+  controls (wrapping), Home/End to the first/last control. As in a grid,
+  ArrowRight on the row itself moves into the first control and ArrowLeft
+  on the first control returns to the row; ArrowUp/ArrowDown from a
+  control move to the adjacent row. Shift+Tab reverses. So a listing costs at most two tab stops
+  (the current row and its toolbar) however many rows and actions it has;
+  every toolbar action also has a row-scoped shortcut (KEY-20..23).
 - **KEY-B3** After an item is deleted, focus moves to the row that took
   its place (the next row, or the previous one for the last row, or the
   empty-state message when none remain).

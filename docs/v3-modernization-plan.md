@@ -449,6 +449,27 @@ Taken on 2026-11-01:
   v3 conformance 104 passed / 1 skipped by design after the element
   changes, the demo pages exercised in the browser at desktop and phone
   widths.
+- Review feedback after Phase 5, applied the same day: the row actions
+  toolbar is now one tab stop with a roving tabindex, as KEY-B2 always
+  said (every control had been a tab stop, so a focused row cost up to
+  six Tabs; HTML-68 and KEY-B2 state it, a conformance test checks it).
+  Masonry's fallback tier was not masonry: rows never carried the aspect
+  variable and the row-span arithmetic was rejected, leaving a gapped
+  grid. The fallback is now CSS multi-column layout, which packs whole
+  images down each column (LAY-34 rewritten, test added); native masonry
+  remains the first tier. The panel toggle button reads "Toggle Source
+  Panel" while the panel region keeps "Media Source Panel" (HTML-10,
+  HTML-30, a new `panel.toggle` message). Testing the toolbar showed the
+  bigger surprise was the rows: since Phase 4 the listing has been one tab
+  stop (HTML-63), so Tab leaves it after the current row, which reads as
+  broken unless you know the arrow keys. Checked against the WAI-ARIA
+  grid and toolbar patterns, the keyboard model is right but the
+  semantics were missing: the Level 1+ listing is now `role="grid"` with
+  a visually-hidden usage sentence as its description (screen readers
+  enter focus mode on a grid, so the arrow keys reach the page), the
+  toolbar gained Home/End, ArrowRight on a row enters its actions and
+  ArrowLeft on the first action returns to the row (HTML-60, KEY-B1/B2,
+  A11Y-10 amended; render and conformance tests extended).
 - Not done in this phase: publishing (the packages are `3.0.0-alpha.0`
   with no `publishConfig` yet; Changesets and a GitHub Actions workflow
   are still to be set up), the pointer-driven crop marquee, the shortcuts

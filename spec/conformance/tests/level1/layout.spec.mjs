@@ -1,6 +1,6 @@
 // Level 1: layout modes at wide and narrow widths (spec/04). Runs in the
 // "enhanced" (desktop) and "enhanced-narrow" (phone) projects.
-import { test, expect, openDirectory, rows, rowNamed, focusRow, setView, control, isVisuallyHidden } from '../helpers.mjs';
+import { test, expect, openDirectory, rows, rowNamed, focusRow, setView, control, isVisuallyHidden, v3only } from '../helpers.mjs';
 
 test.beforeEach(async ({ page }) => { await openDirectory(page, 'assets/img'); });
 
@@ -20,6 +20,20 @@ test('LAY-30 thumb, grid and masonry hide everything but the media', async ({ pa
     await expect(row.getByText('336x125')).toBeHidden();
     expect(await isVisuallyHidden(page.getByRole('columnheader', { name: 'Name' }))).toBe(true);
   }
+});
+
+test('LAY-34 masonry packs items in columns without JavaScript', async ({ page }) => {
+  v3only('masonry tiers');
+  await setView(page, 'masonry');
+  const tbody = page.locator('.eureka__table > tbody');
+  const layout = await tbody.evaluate((el) => { const cs = getComputedStyle(el); return { display: cs.display, columnCount: cs.columnCount, columnWidth: cs.columnWidth, rows: cs.gridTemplateRows }; });
+  const native = layout.display === 'masonry' || layout.rows === 'masonry';
+  if (!native) expect(layout.columnWidth !== 'auto' || Number(layout.columnCount) > 1).toBe(true); // multi-column fallback
+  // whole images: the first two items have different heights (different aspect ratios), none is cropped
+  const boxes = await Promise.all(['schildpad.jpg', 'tall-tree.png'].map((n) => rowNamed(page, n).locator('img').boundingBox()));
+  expect(Math.abs(boxes[0].height - boxes[1].height)).toBeGreaterThan(20);
+  const fit = await rowNamed(page, 'tall-tree.png').locator('img').evaluate((img) => getComputedStyle(img).objectFit);
+  expect(fit).not.toBe('cover');
 });
 
 test('LAY-21 the actions row appears only on the focused row and spans the row', async ({ page }) => {

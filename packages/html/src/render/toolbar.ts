@@ -71,7 +71,7 @@ export function toolbar(ctx: Ctx): Raw {
   const { state, t, ids, level } = ctx;
   if (level === 0) return html`<div class="eureka__tree-toggle eureka__toolbar">${directorySelector(ctx)}${uploadControl(ctx)}</div>`;
   const open = state.view.panelOpen;
-  const toggle = html`<div><button type="button" id="${ids.id('tree-toggle')}" class="eureka__panel-toggle" aria-controls="${ids.id('pathbrowser')}" aria-expanded="${String(open)}" data-action="toggle-panel">${t('mediaSourceTree')}</button></div>`;
+  const toggle = html`<div><button type="button" id="${ids.id('tree-toggle')}" class="eureka__panel-toggle" aria-controls="${ids.id('pathbrowser')}" aria-expanded="${String(open)}" data-action="toggle-panel">${t('panel.toggle')}</button></div>`;
   const sort = html`<form class="eureka__sort-select" data-form="sort">
       <label for="${ids.id('sort-by')}">${t('sortBy')}:</label>
       <select id="${ids.id('sort-by')}" name="eureka__sort-by" data-control="sort-by">${(['filename', 'dimensions', 'fileSize', 'editedOn'] as const).map((k) => html`<option value="${k}"${attr('selected', state.view.sort.by === k)}>${t({ filename: 'name', dimensions: 'dimensions', fileSize: 'fileSize', editedOn: 'editedOn' }[k])}</option>`)}</select>
