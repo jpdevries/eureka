@@ -9,7 +9,7 @@ export interface State {
   tree: { bySource: Record<string, TreeNode[]>; open: string[]; status: Status };
   listing: { source: SourceId | null; path: string; entries: Entry[]; records: Record<string, DisplayRecord>; status: Status; error?: string; receivedAt?: number; requestId: number };
   selection: { focused: string | null; checked: string[]; inverted: boolean };
-  view: { mode: ViewMode; sort: Sort; filter: string; panelOpen: boolean; chooseMode: ChooseMode; fullscreen: boolean };
+  view: { mode: ViewMode; sort: Sort; filter: string; panelOpen: boolean; chooseMode: ChooseMode; fullscreen: boolean; animate: boolean };
   pending: { uploading: boolean; deleting: string[]; renaming: string | null; creating: boolean; cropping: boolean };
   dialog: null | { kind: DialogKind; target?: string; input?: string };
   notifications: Notification[];
@@ -33,6 +33,7 @@ export type Event =
   | { type: 'view/togglePanel'; open?: boolean }
   | { type: 'view/setChooseMode'; mode: ChooseMode }
   | { type: 'view/setFullscreen'; on: boolean }
+  | { type: 'view/setAnimate'; on: boolean }
   | { type: 'selection/focus'; path: string | null }
   | { type: 'selection/toggle'; path: string; checked: boolean }
   | { type: 'selection/invert'; on?: boolean }
@@ -70,7 +71,7 @@ export interface InitialStateOptions {
 export function initialState({ config, locale = config.lang ?? 'en', persisted, hydrated }: InitialStateOptions): State {
   // explicit host options beat persisted values (01 CON-11); we treat an option as explicit when it differs from the default
   const view: State['view'] = {
-    mode: config.mode, sort: { ...config.sort }, filter: '', panelOpen: !config.treeHidden, chooseMode: 'single', fullscreen: false,
+    mode: config.mode, sort: { ...config.sort }, filter: '', panelOpen: !config.treeHidden, chooseMode: 'single', fullscreen: false, animate: false,
     ...(persisted?.view ?? {}), ...(hydrated?.view ?? {})
   };
   if (config.allowMasonry === false && view.mode === 'masonry') view.mode = 'table';
@@ -133,6 +134,7 @@ export function reduce(s: State, e: Event): State {
       if (s.view.chooseMode === e.mode) return s;
       return { ...s, view: { ...s.view, chooseMode: e.mode }, selection: e.mode === 'single' ? { ...s.selection, checked: [], inverted: false } : s.selection };
     case 'view/setFullscreen': return { ...s, view: { ...s.view, fullscreen: e.on } };
+    case 'view/setAnimate': return { ...s, view: { ...s.view, animate: e.on } }; // every animated item plays (02 HTML-66b); persisted
     case 'selection/focus': return s.selection.focused === e.path ? s : { ...s, selection: { ...s.selection, focused: e.path } };
     case 'selection/toggle': {
       if (s.view.chooseMode !== 'multiple') return s;

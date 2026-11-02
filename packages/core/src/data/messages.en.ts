@@ -211,7 +211,12 @@ const data = {
   "key.arrowRight": "Right arrow",
   "key.to": "to",
   "shortcut.downloadItem": "Download the item",
-  "shortcut.openContextMenu": "Open the item menu (thumbnail, grid and masonry views)"
+  "shortcut.openContextMenu": "Open the item menu (thumbnail, grid and masonry views)",
+  "animation.play": "Play",
+  "animation.pause": "Pause",
+  "media.animated": "Animated",
+  "animate.previews": "Animate previews",
+  "shortcut.toggleAnimation": "Play or pause an animated item"
 } as const;
 export default data;
 export type MessagesEn = typeof data;

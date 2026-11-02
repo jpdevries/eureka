@@ -34,6 +34,8 @@ export interface Ctx {
   catalog?: Catalog;
   /** The row whose context menu is open (02 HTML-71); element-local, never in State. */
   contextMenu?: { path: string };
+  /** Animated items the user asked to play (02 HTML-66b); element-local. `view.animate` plays them all. */
+  playing?: ReadonlySet<string>;
   /**
    * Row markup memo for incremental client renders (10 PERF-11): `previous` holds the markup of each row
    * as last rendered, keyed by path; the listing fills `next` and emits a keep-placeholder

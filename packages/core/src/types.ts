@@ -20,6 +20,8 @@ export interface Entry {
   fileSize: number;
   alt?: string;
   renditions?: Rendition[];
+  /** The media moves on its own (SVG SMIL/CSS animation, multi-frame GIF/APNG/WebP); shown still until played (02 HTML-66b). */
+  animated?: boolean;
 }
 export type FileEntry = Entry & { filename: string };
 export type FolderEntry = Entry & { foldername: string };

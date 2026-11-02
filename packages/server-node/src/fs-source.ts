@@ -37,6 +37,25 @@ export interface FilesystemSourceOptions {
 
 const MIME: Record<string, string> = { '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.gif': 'image/gif', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.avif': 'image/avif', '.bmp': 'image/bmp', '.tiff': 'image/tiff', '.mp4': 'video/mp4', '.webm': 'video/webm', '.mov': 'video/quicktime', '.mp3': 'audio/mpeg', '.wav': 'audio/wav', '.ogg': 'audio/ogg', '.pdf': 'application/pdf', '.txt': 'text/plain; charset=utf-8', '.json': 'application/json', '.zip': 'application/zip' };
 
+const SNIFF_BYTES = 4 * 1024 * 1024;
+/**
+ * Does the image move on its own? SVG: SMIL elements or CSS animation declarations; GIF: more than one graphic
+ * control extension; APNG: an acTL chunk; WebP: an ANIM chunk. Reads at most 4 MB (API `animated`, 02 HTML-66b).
+ */
+export async function isAnimated(abs: string, name: string): Promise<boolean> {
+  const ext = path.extname(name).toLowerCase();
+  if (!['.svg', '.gif', '.png', '.webp'].includes(ext)) return false;
+  let buf: Buffer;
+  try {
+    const fh = await fs.open(abs, 'r');
+    try { const st = await fh.stat(); buf = Buffer.alloc(Math.min(st.size, SNIFF_BYTES)); await fh.read(buf, 0, buf.length, 0); } finally { await fh.close(); }
+  } catch { return false; }
+  if (ext === '.svg') return /<(animate|animateTransform|animateMotion|set)[\s>]|@keyframes|animation(?:-name)?\s*:/i.test(buf.toString('utf8'));
+  if (ext === '.gif') { let frames = 0; for (let i = 0; i < buf.length - 2 && frames < 2; i++) if (buf[i] === 0x21 && buf[i + 1] === 0xf9 && buf[i + 2] === 0x04) frames++; return frames > 1; }
+  if (ext === '.png') return buf.includes('acTL', 8, 'latin1');
+  return buf.includes('ANIM', 12, 'latin1'); // webp
+}
+
 export class PathError extends Error { constructor(message: string, public readonly status: number) { super(message); this.name = 'PathError'; } }
 
 export function createFilesystemSource(opts: FilesystemSourceOptions): MediaSource {
@@ -66,6 +85,7 @@ export function createFilesystemSource(opts: FilesystemSourceOptions): MediaSour
     const e: Entry = { ...base, filename: name };
     if (mediaKind(name) === 'image') {
       try { const d = imageSize(abs); if (d.width && d.height) e.dimensions = [d.width, d.height]; } catch { /* not a decodable image */ }
+      if (await isAnimated(abs, name)) e.animated = true;
     }
     e.absolutePreviewURL = opts.previewUrl ? opts.previewUrl(e, saveData) : e.absoluteURL;
     return e;

@@ -2,7 +2,7 @@ export { html, raw, attr, classes, escapeHtml, jsonForScript, Raw } from './html
 export { createIds, contextFromPage, hydrationState, type Ctx, type Ids, type Level, type PageInput } from './model.js';
 export { instance } from './render/instance.js';
 export { listing } from './render/listing.js';
-export { row, actions, rowActions, rowTargetName, media, breakableName, type RowAction } from './render/row.js';
+export { row, actions, rowActions, rowTargetName, media, isPlaying, breakableName, type RowAction } from './render/row.js';
 export { contextMenu } from './render/menu.js';
 export { sourcePanel } from './render/panel.js';
 export { stageHeader, toolbar, directorySelector, uploadControl } from './render/toolbar.js';

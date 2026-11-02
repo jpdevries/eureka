@@ -14,8 +14,11 @@ export function breakableName(name: string): Raw {
   return raw(parts.map((p) => html`${p}`.value).join('<wbr>'));
 }
 
+/** Is this animated item playing? Either asked for by the user or because every preview animates (view.animate). */
+export function isPlaying(ctx: Ctx, item: FileEntry): boolean { return !!item.animated && ctx.level > 0 && (ctx.state.view.animate || !!ctx.playing?.has(item.path)); }
+
 export function media(ctx: Ctx, item: FileEntry, { controls = true, width, height }: { controls?: boolean; width?: number; height?: number } = {}): Raw {
-  const { t, state } = ctx;
+  const { t, state, level } = ctx;
   const kind = mediaKind(item.filename);
   const src = item.absolutePreviewURL || item.absoluteURL;
   const alt = item.alt ?? '';
@@ -24,6 +27,12 @@ export function media(ctx: Ctx, item: FileEntry, { controls = true, width, heigh
     case 'image': {
       const rends = item.renditions ?? [];
       const img = html`<img src="${src}" alt="${alt}" loading="lazy" decoding="async"${raw(dims)}${rends.length ? attr('sizes', IMAGE_SIZES[state.view.mode] ?? '100cqi') : ''}${rends.length ? attr('srcset', rends.filter((r) => !r.type || r.type === rends[0]!.type).map((r) => `${r.url} ${r.width}w`).join(', ')) : ''}>`;
+      if (item.animated && level > 0) { // still until played (02 HTML-66b); the element pauses or plays what the markup declares
+        const playing = isPlaying(ctx, item);
+        const ratio = item.dimensions ? ` style="aspect-ratio: ${item.dimensions[0]} / ${item.dimensions[1]}"` : '';
+        if (extname(item.filename) === '.svg') return html`<object class="eureka__media-object" data="${src}" type="image/svg+xml" aria-hidden="true" tabindex="-1" data-animated data-playing="${String(playing)}"${raw(dims)}${raw(ratio)}>${img}</object>`;
+        return html`<span class="eureka__media-animated" data-playing="${String(playing)}"${raw(ratio)}>${img}${playing ? '' : html`<canvas class="eureka__media-still" aria-hidden="true"${raw(dims)}></canvas>`}</span>`;
+      }
       if (!rends.length) return img;
       const byType = new Map<string, typeof rends>();
       for (const r of rends) { const k = r.type ?? 'fallback'; byType.set(k, [...(byType.get(k) ?? []), r]); }
@@ -48,6 +57,7 @@ export function rowActions(ctx: Ctx, item: FileEntry): RowAction[] {
   const { t, state: { config } } = ctx;
   const n = item.filename;
   const list: RowAction[] = [{ kind: 'expand', label: t('expand'), action: 'expandItem', href: item.absoluteURL, target: rowTargetName(ctx, item) }];
+  if (item.animated && ctx.level > 0) list.push({ kind: 'play', label: t(isPlaying(ctx, item) ? 'animation.pause' : 'animation.play'), action: 'toggleAnimation', cls: 'eureka__play-btn' });
   if (config.allowChoose) list.push({ kind: 'choose', label: t('choose'), action: 'chooseItem' });
   if (config.allowCrop && isCroppable(n)) list.push({ kind: 'crop', label: t('crop'), cls: 'eureka__crop-btn' });
   if (config.allowRename) list.push({ kind: 'rename', label: t('rename'), action: 'renameItem' });
@@ -93,7 +103,9 @@ export function row(ctx: Ctx, item: FileEntry, index: number): Raw {
   return html`<tr id="${rowId}" class="${classes('eureka__row', { 'eureka__focused-media-item': focused, 'eureka__context-anchor': ctx.contextMenu?.path === item.path })}" aria-label="${description}" data-path="${item.path}" data-kind="${mediaKind(item.filename)}"${raw(tabindex)}${attr('aria-selected', multiple ? String(checked) : null)}>
     ${multiple ? html`<td class="eureka__choose"><input type="checkbox" id="${checkboxId}" name="eureka__chosen_items" value="${item.filename}" aria-label="${t('choose.item', { filename: item.filename })}"${attr('checked', checked)} data-path="${item.path}"></td>` : ''}
     ${level === 0 ? html`<td class="eureka__select"><input type="radio" id="${radioId}" name="eureka__chosen_item" value="${item.filename}" aria-describedby="${mediaId}"></td>` : ''}
-    <td class="eureka__td-media" id="${mediaId}">${mediaCell}</td>
+    <td class="eureka__td-media" id="${mediaId}">${mediaCell}${item.animated ? (level > 0
+      ? html`<button type="button" class="eureka__badge eureka__badge--animated" data-action="play" data-path="${item.path}" tabindex="-1" aria-pressed="${String(isPlaying(ctx, item))}" aria-label="${t(isPlaying(ctx, item) ? 'animation.pause' : 'animation.play')} ${item.filename}">${icon(ctx, isPlaying(ctx, item) ? 'pause' : 'caret-right')}</button>`
+      : html`<span class="eureka__badge eureka__badge--animated">${icon(ctx, 'caret-right')}${hidden(t('media.animated'))}</span>`) : ''}</td>
     <td class="eureka__td-filename" id="${nameId}">${level === 0 ? html`<label for="${radioId}">${breakableName(item.filename)}</label>` : breakableName(item.filename)}</td>
     ${level > 0 ? html`<td class="eureka__context-row"${attr('hidden', !focused)}>${actions(ctx, item)}</td>` : ''}
     <td class="eureka__dimensions">${rec?.dimensionsText ?? ''}</td>

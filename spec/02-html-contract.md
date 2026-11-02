@@ -206,6 +206,31 @@ DOM order is the reading order and the tab order.
   `renditions` a plain `<img>` is used. v2 had neither; its server chose
   one size per request from the `Save-Data` header, which servers MAY
   still honour.
+- **HTML-66b** Animated media (entries with `animated: true` in the API:
+  SVG with SMIL or CSS animation, multi-frame GIF, APNG or WebP) is shown
+  still until the user plays it, and the media cell carries a badge: at
+  Level 1+ a `button.eureka__badge--animated` with `data-action="play"`,
+  `tabindex="-1"` (a pointer affordance; keyboard users have the row's
+  Play action and KEY-31, so rows gain no tab stop), `aria-pressed` for
+  the playing state and the name "Play {filename}" or "Pause {filename}",
+  showing a play or pause glyph; at Level 0 a `span` with the play glyph
+  and the hidden text "Animated". A double-click on the badge does not
+  choose the item. At Level 1+ an animated SVG renders as `<object
+  type="image/svg+xml" class="eureka__media-object" aria-hidden="true"
+  tabindex="-1" data-animated data-playing="true|false">` with the `<img>`
+  as fallback content; the element pauses or unpauses the document's SMIL
+  and CSS animations to match `data-playing` (same-origin only; a
+  cross-origin file plays by its own `prefers-reduced-motion` rule). A
+  raster animation renders as `<span class="eureka__media-animated"
+  data-playing>` holding the `<img>` and, while paused, a `<canvas
+  class="eureka__media-still">` the element paints with the current
+  frame. Playback is per item (the row's Play/Pause action, HTML-68, and
+  KEY-31) or for every item through the toolbar's "Animate previews"
+  switch (`input[name="eureka__animate"]`, persisted as `view.animate`,
+  default off). Nothing autoplays, so a reduced-motion preference needs
+  no special case here; files SHOULD still gate their own animation on
+  `@media (prefers-reduced-motion: no-preference)` for every other
+  context they are shown in. Level 0 renders the plain `<img>`.
 - **HTML-67** Name cell: the filename with a `<wbr>` after every 8
   characters so long names wrap. When renaming inline it becomes
   editable; Enter commits, Escape cancels, empty names are rejected.
@@ -216,7 +241,8 @@ DOM order is the reading order and the tab order.
   tab instead of opening another; the name gets an `e` prefix in the
   unlikely case the id starts with `_`, which is reserved; no
   `rel="noopener"`, because a context opened with noopener is not
-  familiar to the page and could not be found again by name), Choose (button), Crop (button,
+  familiar to the page and could not be found again by name), Play or
+  Pause (button, animated items only, label by state; HTML-66b), Choose (button), Crop (button,
   raster images only), Rename (button), Delete (button, class
   `dangerous`), Download (link with `download` attribute). Each control's
   visible text is the verb and its accessible name is "{verb} {filename}".

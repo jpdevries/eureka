@@ -565,6 +565,24 @@ Taken on 2026-11-01:
   no `rel="noopener"` because a noopener context cannot be found again
   by name (HTML-68, KEY-B10). The conformance test opens the popup, then
   checks a second click and the shortcut add no page.
+- Animated media (HTML-66b, KEY-31, A11Y-53, STATE-41): the API gains
+  an optional `animated` flag that the filesystem source sets by sniffing
+  SVG (SMIL elements or CSS animation declarations), GIF (more than one
+  graphic control extension), APNG (`acTL`) and WebP (`ANIM`). Animated
+  items are still until played: an SVG renders as a same-origin `<object>`
+  whose SMIL and CSS animations the element pauses or unpauses to match
+  `data-playing` (an injected `animation-play-state: paused` style plus
+  `pauseAnimations()`), a raster animation shows a canvas snapshot of its
+  current frame while paused. A play badge marks them; the row toolbar and
+  context menu gain Play/Pause (`Alt+P`); the toolbar gains an "Animate
+  previews" switch persisted as `view.animate`, default off. Nothing
+  autoplays, which is how WCAG 2.2.2 is met without a timer, and the demo
+  and fixture files gate their own animation on
+  `@media (prefers-reduced-motion: no-preference)`: `bluff-trail.svg` is
+  now a seamless 24 s day → dusk → night → dawn loop (sun and moon, stars,
+  a night tint) whose reduced-motion render is the daytime scene. Not in
+  this iteration: scrubbing, true first-frame extraction for GIF (the
+  canvas holds whatever frame was current), controls in the crop preview.
 - Package names: the `@eureka` npm scope belongs to an existing npm user,
   so the packages are `@mrktps/eureka` (the element, what most people
   install) and `@mrktps/eureka-core`, `-html`, `-css`, `-react`,

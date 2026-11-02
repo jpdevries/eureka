@@ -124,6 +124,9 @@ Event names are `area/verb`. Payloads in `schema/state.json#/$defs/events`.
 
 ## 7. Host integration
 
+- **STATE-41** `view.animate` ("Animate previews", 02 HTML-66b) is part
+  of the persisted `view` object alongside mode, sort, panel and choose
+  mode; it defaults to false and is never set by hydration.
 - **STATE-50** The custom element mirrors `callbacks` as DOM events:
   `eureka-choose` (`detail.items`), `eureka-close`, plus
   `eureka-navigate` (`detail.{source, path}`), `eureka-error`

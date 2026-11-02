@@ -49,6 +49,8 @@ export class EurekaBrowser extends HTMLElement {
   #dragging = false;
   #keyboard = false; // keyboard navigation seen since the last pointer use (06 A11Y-55)
   #contextTarget: string | null = null; // row path whose popover menu is open (02 HTML-71)
+  #playing = new Set<string>(); // animated items the user asked to play (02 HTML-66b)
+  #mediaBound = new WeakSet<Element>();
   #contextOrigin: { x: number; y: number } | null = null; // pointer position for engines without anchor positioning
   #contextDismiss: AbortController | null = null;
   #storage: Storage | null = null;
@@ -210,7 +212,7 @@ export class EurekaBrowser extends HTMLElement {
     if (!this.#started) return;
     const state = this.#store.getState();
     const next = new Map<string, string>();
-    const ctx: Ctx = { state, t: this.#t, ids: this.#ids, level: 1, iconSprite: this.#iconSprite, rowMemo: { previous: this.#rowMarkup, next }, keymap: this.#keymap, platform: /Mac|iPhone|iPad/.test(navigator.platform) ? 'mac' : 'other', ...(this.#contextTarget ? { contextMenu: { path: this.#contextTarget } } : {}) };
+    const ctx: Ctx = { state, t: this.#t, ids: this.#ids, level: 1, iconSprite: this.#iconSprite, rowMemo: { previous: this.#rowMarkup, next }, keymap: this.#keymap, platform: /Mac|iPhone|iPad/.test(navigator.platform) ? 'mac' : 'other', ...(this.#contextTarget ? { contextMenu: { path: this.#contextTarget } } : {}), playing: this.#playing };
     const byId = new Map<string, string>();
     morphChildren(this, fragmentFrom(instance(ctx).value), { resolveKeep: (id) => { if (!byId.size) for (const [p, m] of next) byId.set(this.#ids.item('row', basename(p)), m); return byId.get(id); } });
     this.#rowMarkup = next;
@@ -219,6 +221,7 @@ export class EurekaBrowser extends HTMLElement {
 
   #afterRender(state: State): void {
     this.#applyKeyboard();
+    this.#syncAnimations();
     if (this.#contextTarget && !this.#menu()) this.#closeContextMenu(false); // the row left the listing
     const dialog = this.querySelector<HTMLDialogElement>('dialog.eureka__modal');
     if (dialog && !dialog.open) { try { dialog.showModal(); } catch { dialog.setAttribute('open', ''); } }
@@ -290,6 +293,7 @@ export class EurekaBrowser extends HTMLElement {
     switch (el.dataset.action) {
       case 'toggle-panel': this.#store.dispatch({ type: 'view/togglePanel' }); break;
       case 'shortcuts': this.#openDialog('shortcuts', undefined, el); break;
+      case 'play': { const p = el.dataset.path; if (p) this.#toggleAnimation(p); break; }
       case 'navigate': e.preventDefault(); void this.navigate(el.dataset.source ?? state.listing.source ?? '', el.dataset.cd ?? '/'); break;
       case 'create-directory': this.#openDialog('createDirectory', undefined, el); break;
       case 'upload': e.preventDefault(); this.#pickFiles(); break;
@@ -326,6 +330,7 @@ export class EurekaBrowser extends HTMLElement {
     if (t.name === this.#ids.id('choose-mode')) { if (t.checked) this.#store.dispatch({ type: 'view/setChooseMode', mode: t.value === 'multiple' ? 'multiple' : 'single' }); return; }
     if (t.id === this.#ids.id('invert')) { this.#store.dispatch({ type: 'selection/invert', on: t.checked }); return; }
     if (t.name === 'eureka__fullscreen') { this.#toggleFullscreen(t.checked); return; }
+    if (t.name === 'eureka__animate') { this.#store.dispatch({ type: 'view/setAnimate', on: t.checked }); return; }
     if (t.name === 'eureka__chosen_items') { if (t.dataset.path) this.#store.dispatch({ type: 'selection/toggle', path: t.dataset.path, checked: t.checked }); return; }
     if (t.name === 'eureka__uploadFiles') { const files = Array.from(t.files ?? []); t.value = ''; void this.#upload(files); return; }
   }
@@ -363,6 +368,7 @@ export class EurekaBrowser extends HTMLElement {
   }
 
   #onDblClick(e: MouseEvent): void {
+    if ((e.target as Element).closest('.eureka__badge--animated')) return; // the play badge toggles; it does not choose
     const cell = (e.target as Element).closest<HTMLElement>('.eureka__td-media');
     const row = cell?.closest<HTMLTableRowElement>('tr[data-path]');
     const item = this.#fileAt(row?.dataset.path);
@@ -432,6 +438,7 @@ export class EurekaBrowser extends HTMLElement {
       case 'chooseItem': if (item && target === row) this.#choose([item]); else handled = false; break;
       case 'expandItem': if (item) { const name = this.#ids.item('row', item.filename); window.open(item.absoluteURL, name.startsWith('_') ? `e${name}` : name); } else handled = false; break; // the row's named context (HTML-68): a repeat Expand reuses the tab, which `noopener` would prevent
       case 'openContextMenu': if (row && item && MENU_MODES.has(state.view.mode)) this.#openContextMenu(row); else handled = false; break;
+      case 'toggleAnimation': if (item?.animated) this.#toggleAnimation(item.path); else handled = false; break;
       case 'downloadItem': { const link = item && this.#config.allowDownload ? row?.querySelector<HTMLAnchorElement>('a[data-action="download"]') : null; if (link) link.click(); else handled = false; break; }
       case 'deleteItem': if (item && (target === row || !!toolbar)) this.#requestDelete([item.path], row); else handled = false; break;
       case 'renameItem': if (item) this.#openDialog('rename', item.path, row ?? target); else handled = false; break;
@@ -479,6 +486,35 @@ export class EurekaBrowser extends HTMLElement {
     void this.#upload(files.map((f, i) => (/^(image|file)\.\w+$/i.test(f.name) ? new File([f], `paste-image.${stamp}${files.length > 1 ? `-${i + 1}` : ''}.${f.name.split('.').pop()}`, { type: f.type }) : f)));
   }
   #setDragging(on: boolean): void { if (this.#dragging !== on) { this.#dragging = on; this.#applyDragging(on); } }
+  // ---- animated media (02 HTML-66b): still until played; the markup declares the state, this applies it ----
+  #toggleAnimation(path: string): void {
+    if (this.#playing.has(path)) this.#playing.delete(path); else this.#playing.add(path);
+    this.#render();
+  }
+  #syncAnimations(): void {
+    // SVG in an <object>: pause or unpause SMIL and CSS animations in the (same-origin) document. Cross-origin documents cannot be
+    // reached and play according to their own prefers-reduced-motion rule.
+    for (const obj of this.querySelectorAll<HTMLObjectElement>('object.eureka__media-object')) {
+      const apply = () => {
+        const doc = obj.contentDocument; const root = doc?.documentElement as (SVGSVGElement & { pauseAnimations?(): void; unpauseAnimations?(): void }) | null | undefined;
+        if (!doc || !root) return;
+        const playing = obj.dataset.playing === 'true';
+        const existing: Element | null = doc.getElementById('eureka-pause');
+        if (playing) { root.unpauseAnimations?.(); existing?.remove(); }
+        else { root.pauseAnimations?.(); if (!existing) { const style = doc.createElementNS('http://www.w3.org/2000/svg', 'style'); style.id = 'eureka-pause'; style.textContent = '* { animation-play-state: paused !important; }'; root.append(style); } }
+      };
+      if (!this.#mediaBound.has(obj)) { this.#mediaBound.add(obj); obj.addEventListener('load', apply); }
+      apply();
+    }
+    // Raster animations (GIF, APNG, WebP): a canvas snapshot of the current frame stands in while paused.
+    for (const wrap of this.querySelectorAll<HTMLElement>('.eureka__media-animated')) {
+      const img = wrap.querySelector('img'); const canvas = wrap.querySelector('canvas');
+      if (!img || !canvas || canvas.dataset.drawn) continue;
+      const draw = () => { if (!img.naturalWidth) return; canvas.width = img.naturalWidth; canvas.height = img.naturalHeight; canvas.getContext('2d')?.drawImage(img, 0, 0); canvas.dataset.drawn = 'true'; };
+      if (img.complete) draw(); else if (!this.#mediaBound.has(img)) { this.#mediaBound.add(img); img.addEventListener('load', draw, { once: true }); }
+    }
+  }
+
   // ---- context menu (02 HTML-71, 05 KEY-29): a manual popover anchored to the row ---------------
   #menu(): HTMLElement | null { return this.querySelector<HTMLElement>(`#${CSS.escape(this.#ids.id('context-menu'))}`); }
   #rowFor(path: string | null): HTMLTableRowElement | null { return path === null ? null : Array.from(this.#rows()).find((r) => r.dataset.path === path) ?? null; }

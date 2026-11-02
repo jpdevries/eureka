@@ -162,13 +162,14 @@ test('KEY-29 Shift+F10 opens the row menu as a popover; arrows, typeahead, Enter
   await page.keyboard.press('Escape');
   await expect(row).toBeFocused();
   // right-click opens it too, at the pointer
-  const box = await row.boundingBox();
+  await page.evaluate(() => addEventListener('contextmenu', (e) => { window.__cm = [e.clientX, e.clientY]; }, true));
   await row.click({ button: 'right', position: { x: 240, y: 12 } });
   const pointerMenu = page.getByRole('menu', { name: 'Actions for schildpad.jpg' });
   await expect(pointerMenu).toBeVisible();
+  const [cx, cy] = await page.evaluate(() => window.__cm);
   const mbox = await pointerMenu.boundingBox();
-  expect(Math.abs(mbox.x - (box.x + 240))).toBeLessThan(4);
-  expect(Math.abs(mbox.y - (box.y + 12))).toBeLessThan(4);
+  expect(Math.abs(mbox.x - cx)).toBeLessThan(4); // at the pointer (clamping only applies near the viewport edges)
+  expect(Math.abs(mbox.y - cy)).toBeLessThan(4);
   await page.mouse.click(5, 5); // pointer down outside closes
   await expect(page.getByRole('menu')).toHaveCount(0);
 });

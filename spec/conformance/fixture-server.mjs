@@ -71,7 +71,7 @@ function folder(dir, name) {
 function makeListings() {
   return {
     '/': [folder('/', 'assets'), folder('/', 'uploads'), folder('/', 'large'), file('/', 'readme.txt', 1204, undefined, 40)],
-    'assets': [folder('assets', 'img'), folder('assets', 'docs'), file('assets', 'logo.svg', 3321, [120, 120], 12)],
+    'assets': [folder('assets', 'img'), folder('assets', 'docs'), { ...file('assets', 'logo.svg', 3321, [120, 120], 12), animated: true }],
     'assets/img': [
       folder('assets/img', 'redwoods'),
       file('assets/img', 'schildpad.jpg', 37888, [336, 125], 1),
@@ -79,7 +79,7 @@ function makeListings() {
       file('assets/img', 'tall-tree.png', 420000, [600, 1400], 5),
       file('assets/img', 'icon-16.png', 812, [16, 16], 8),
       file('assets/img', 'Wide Banner (final).jpg', 98000, [2400, 400], 9),
-      file('assets/img', 'animation.gif', 220000, [320, 240], 14),
+      { ...file('assets/img', 'animation.gif', 220000, [320, 240], 14), animated: true },
       file('assets/img', 'clip.mp4', 8400000, undefined, 20),
       file('assets/img', 'theme.mp3', 3100000, undefined, 21),
       file('assets/img', 'brochure.pdf', 540000, undefined, 30),
@@ -111,7 +111,10 @@ function findItem(p) { for (const dir of Object.keys(listings)) { const hit = li
 function placeholder(item) {
   const [w, h] = item.dimensions ?? [320, 240];
   const hue = [...item.filename].reduce((a, c) => a + c.charCodeAt(0), 0) % 360;
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><rect width="100%" height="100%" fill="hsl(${hue} 50% 70%)"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="${Math.max(12, Math.min(w, h) / 8)}" fill="#223">${esc(item.filename)} ${w}x${h}</text></svg>`;
+  // Animated items get a moving placeholder: a CSS animation gated by prefers-reduced-motion (accessibility-first) plus a SMIL one, so
+  // tests can check both the still-by-default rendering and the element's pause control.
+  const motion = item.animated ? `<style>@media (prefers-reduced-motion: no-preference){.spin{animation:spin 4s linear infinite;transform-origin:50% 50%}@keyframes spin{to{transform:rotate(360deg)}}}</style><g class="spin"><rect x="${w / 2 - 8}" y="${h * 0.15}" width="16" height="${h * 0.35}" rx="4" fill="#223"/></g><circle cx="${w * 0.2}" cy="${h * 0.8}" r="10" fill="#223"><animate attributeName="cx" values="${w * 0.2};${w * 0.8};${w * 0.2}" dur="3s" repeatCount="indefinite"/></circle>` : '';
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><rect width="100%" height="100%" fill="hsl(${hue} 50% 70%)"/>${motion}<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="${Math.max(12, Math.min(w, h) / 8)}" fill="#223">${esc(item.filename)} ${w}x${h}</text></svg>`;
 }
 function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]); }
 

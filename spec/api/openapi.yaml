@@ -259,6 +259,7 @@ components:
           description: "[width, height] in CSS pixels for images and video; omitted otherwise."
         fileSize: { type: integer, description: 'Bytes.' }
         alt: { type: string, description: 'Alternative text for the media. When absent the client generates a description from the other fields.' }
+        animated: { type: boolean, description: 'True when the media moves on its own: an SVG with SMIL or CSS animation, or a multi-frame GIF, APNG or WebP. Clients render such items still until the user asks for playback (HTML-66b). Optional; absent means unknown and is treated as false.' }
         renditions:
           type: array
           description: 'Optional alternative encodings and sizes of an image, for responsive `<picture>` markup (HTML-66a). Order is free; the client groups by `type` and sorts by `width`.'

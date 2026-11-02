@@ -115,7 +115,7 @@ describe('persistence', () => {
     s = reduce(s, { type: 'view/setMode', mode: 'list' });
     s = reduce(s, { type: 'tree/toggle', path: 'd', open: true });
     persist(st, 'p__', s);
-    expect(loadPersisted(st, 'p__')).toEqual({ view: { mode: 'list', sort: { by: 'filename', dir: 'ascending' }, panelOpen: false, chooseMode: 'single' }, location: { source: 0, path: 'd' }, treeOpen: ['d'] });
+    expect(loadPersisted(st, 'p__')).toEqual({ view: { mode: 'list', sort: { by: 'filename', dir: 'ascending' }, panelOpen: false, chooseMode: 'single', animate: false }, location: { source: 0, path: 'd' }, treeOpen: ['d'] });
     st.setItem('p__view', '{"mode":"carousel","sort":{"by":"x"}}');
     expect(loadPersisted(st, 'p__').view).toBeUndefined();
     st.setItem('p__view', 'not json');

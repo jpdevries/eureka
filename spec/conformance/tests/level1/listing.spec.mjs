@@ -1,5 +1,5 @@
 // Level 1: the listing, sorting and filtering (spec/02 §6, §5).
-import { test, expect, openDirectory, rows, rowNamed, listing, filterBox, v3only, baselineDefect, TARGET } from '../helpers.mjs';
+import { test, expect, openDirectory, rows, rowNamed, listing, filterBox, v3only, baselineDefect, TARGET, setAnimatePreviews } from '../helpers.mjs';
 
 test.beforeEach(async ({ page }) => { await openDirectory(page, 'assets/img'); });
 
@@ -40,6 +40,51 @@ test('HTML-66 media cells render images lazily and other types by icon', async (
   await expect(img).toHaveAttribute('src', /schildpad\.jpg/);
   await expect(rowNamed(page, 'archive.zip').locator('img')).toHaveCount(0);
   await expect(rowNamed(page, 'archive.zip')).toContainText('archive.zip');
+});
+
+test('HTML-66b animated media is still until played; Alt+P and "Animate previews" play it', async ({ page }) => {
+  v3only('animated media');
+  await openDirectory(page, 'assets'); // logo.svg is the fixture's animated SVG; animation.gif (assets/img) its animated raster
+  const row = rowNamed(page, 'logo.svg');
+  const badge = row.locator('button.eureka__badge--animated');
+  await expect(badge).toHaveAccessibleName('Play logo.svg');
+  await expect(badge).toHaveAttribute('aria-pressed', 'false');
+  const object = row.locator('object.eureka__media-object');
+  await expect(object).toHaveAttribute('data-playing', 'false');
+  const paused = () => object.evaluate((o) => { const d = o.contentDocument?.documentElement; return d ? { smil: d.animationsPaused(), css: !!o.contentDocument.getElementById('eureka-pause') } : null; });
+  await expect.poll(paused).toEqual({ smil: true, css: true });
+  await row.focus();
+  await page.keyboard.press('Alt+P');
+  await expect(object).toHaveAttribute('data-playing', 'true');
+  await expect.poll(paused).toEqual({ smil: false, css: false });
+  await expect(row.getByRole('button', { name: 'Pause logo.svg' })).toHaveCount(2); // the toolbar action and the badge
+  await expect(badge).toHaveAttribute('aria-pressed', 'true');
+  await expect(badge).toHaveAccessibleName('Pause logo.svg');
+  await page.keyboard.press('Alt+P');
+  await expect(object).toHaveAttribute('data-playing', 'false');
+  await expect.poll(paused).toEqual({ smil: true, css: true });
+  // the listing-level switch plays every animated item and persists
+  await setAnimatePreviews(page, true);
+  await expect(object).toHaveAttribute('data-playing', 'true');
+  await page.reload();
+  await expect(rowNamed(page, 'logo.svg').locator('object.eureka__media-object')).toHaveAttribute('data-playing', 'true');
+  await openDirectory(page, 'assets/img');
+  await expect(rowNamed(page, 'animation.gif').locator('.eureka__media-animated')).toHaveAttribute('data-playing', 'true');
+  await setAnimatePreviews(page, false);
+});
+
+test('HTML-66b with reduced motion the animated SVG itself holds its CSS animation; the still is the default either way', async ({ page }) => {
+  v3only('animated media');
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await openDirectory(page, 'assets');
+  const object = rowNamed(page, 'logo.svg').locator('object.eureka__media-object');
+  await expect(object).toHaveAttribute('data-playing', 'false');
+  await setAnimatePreviews(page, true);
+  await expect(object).toHaveAttribute('data-playing', 'true');
+  // the file's own @media (prefers-reduced-motion: no-preference) gate keeps the CSS spinner static even while "playing"
+  const running = await object.evaluate((o) => { const el = o.contentDocument.querySelector('.spin'); return el ? getComputedStyle(el).animationName : null; });
+  expect(running).toBe('none');
+  await setAnimatePreviews(page, false);
 });
 
 test('HTML-66 images are lazy and decode asynchronously', async ({ page }) => {

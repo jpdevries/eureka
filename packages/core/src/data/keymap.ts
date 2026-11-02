@@ -328,6 +328,17 @@ const data = {
       "v2": [],
       "when": "allowDownload",
       "notes": "Alt+D sorts by dimensions (KEY-10), hence the Shift"
+    },
+    {
+      "id": "KEY-31",
+      "action": "toggleAnimation",
+      "scope": "row",
+      "keys": [
+        "Alt+P"
+      ],
+      "v2": [],
+      "when": "the item is animated",
+      "notes": "Plays or pauses an animated item (HTML-66b)"
     }
   ]
 } as const;

@@ -172,6 +172,26 @@ describe('enhanced render (02)', () => {
     expect(out).not.toContain('target="_blank"');
     expect(renderLevel0(input)).toContain('id="eureka__row__schildpad__002ejpg__radio"');
   });
+  it('shows animated media still until played, with a badge and a Play action (HTML-66b)', () => {
+    const anim = { ...input, entries: input.entries.map((e) => (e.filename === 'schildpad.jpg' ? { ...e, filename: 'loop.svg', path: 'assets/img/loop.svg', absoluteURL: '/x/loop.svg', animated: true } : e)) };
+    const out = renderEnhanced(anim);
+    expect(out).toMatch(/<object class="eureka__media-object" data="[^"]+" type="image\/svg\+xml" aria-hidden="true" tabindex="-1" data-animated data-playing="false" width="336" height="125" style="aspect-ratio: 336 \/ 125"><img /);
+    expect(out).toMatch(/<button type="button" class="eureka__badge eureka__badge--animated" data-action="play" data-path="assets\/img\/loop\.svg" tabindex="-1" aria-pressed="false" aria-label="Play loop\.svg"><svg[^>]*class="icon icon-caret-right"/);
+    expect(out).toMatch(/data-action="play"[^>]*aria-keyshortcuts="Alt\+P"[^>]*>Play<span class="visually-hidden"> loop\.svg<\/span><kbd class="eureka__kbd" aria-hidden="true">Alt\+P<\/kbd>/);
+    expect(out).toContain('name="eureka__animate"');
+    const ctx = contextFromPage(anim, 1);
+    const playing = instance({ ...ctx, playing: new Set(['assets/img/loop.svg']) }).value;
+    expect(playing).toContain('data-playing="true"');
+    expect(playing).toMatch(/data-action="play"[^>]*>Pause</);
+    expect(playing).toMatch(/eureka__badge--animated"[^>]*aria-pressed="true" aria-label="Pause loop\.svg"><svg[^>]*class="icon icon-pause"/);
+    const all = instance({ ...ctx, state: { ...ctx.state, view: { ...ctx.state.view, animate: true } } }).value;
+    expect(all).toContain('data-playing="true"');
+    expect(all).toContain('name="eureka__animate" checked');
+    const gif = renderEnhanced({ ...input, entries: input.entries.map((e) => (e.filename === 'schildpad.jpg' ? { ...e, filename: 'loop.gif', path: 'assets/img/loop.gif', absoluteURL: '/x/loop.gif', animated: true } : e)) });
+    expect(gif).toMatch(/<span class="eureka__media-animated" data-playing="false"[^>]*><img [^>]+><canvas class="eureka__media-still" aria-hidden="true"/);
+    expect(renderLevel0(anim)).not.toContain('<object'); // Level 0: the plain image
+    expect(renderLevel0(anim)).toContain('<span class="eureka__badge eureka__badge--animated">');
+  });
   it('puts the shortcuts button beside the heading at Level 1 only', () => {
     expect(renderEnhanced(input)).toContain('Media Content</h2><button type="button" class="eureka__help-button"');
     expect(renderEnhanced(input)).toMatch(/eureka__help-button[^>]*title="Keyboard Shortcuts"><span class="visually-hidden">Keyboard Shortcuts<\/span><svg[^>]*class="icon icon-keyboard"/);

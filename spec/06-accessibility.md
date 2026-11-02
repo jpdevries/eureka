@@ -112,7 +112,14 @@ Covered by 05. In addition:
 - **A11Y-52** Text spacing and 200% zoom: no fixed heights clip text;
   rows grow with content.
 - **A11Y-53** Motion: respects `prefers-reduced-motion` (04 LAY-41). No
-  content flashes.
+  content flashes. Animated media never autoplays (02 HTML-66b): it is
+  still until the user plays it or turns on "Animate previews", which
+  satisfies WCAG 2.2.2 (Pause, Stop, Hide) without a timer, and keeps a
+  5,000-item listing from moving. The browser's own transitions live
+  under `@media (prefers-reduced-motion: no-preference)` or are switched
+  off under `reduce`; demo and fixture SVGs are authored the same way, so
+  a reduced-motion user sees the still frame even where the file is shown
+  by an `<img>` the browser cannot pause.
 - **A11Y-54** Forced colors and high contrast themes: 08 THEME-03/04.
   State (checked, focused, current directory) is conveyed by borders,
   outlines or text, never by background colour alone.

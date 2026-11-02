@@ -83,6 +83,7 @@ export function toolbar(ctx: Ctx): Raw {
   const chooser = html`<form class="eureka__layout-chooser" data-form="view"><fieldset><legend class="visually-hidden">${t('layout.viewMode')}</legend><div class="eureka__icon-radio-btns">
       ${modes.map((m) => html`<div><input type="radio" id="${ids.id('view-' + m)}" name="eureka__view" value="${m}"${attr('checked', state.view.mode === m)}><label for="${ids.id('view-' + m)}" title="${t(MODE_TITLE[m])}">${icon(ctx, MODE_ICON[m])}${hidden(t(MODE_LABEL[m]))}</label></div>`)}
       ${state.config.allowFullscreen ? html`<div><input type="checkbox" id="${ids.id('fullscreen')}" name="eureka__fullscreen"${attr('checked', state.view.fullscreen)}><label for="${ids.id('fullscreen')}" class="${classes({ 'eureka__checked-active': state.view.fullscreen })}">${hidden(t('layout.fullscreenMode'))}${icon(ctx, state.view.fullscreen ? 'compress' : 'expand')}</label></div>` : ''}
+      <div class="eureka__animate-switch"><input type="checkbox" id="${ids.id('animate')}" name="eureka__animate"${attr('checked', state.view.animate)}><label for="${ids.id('animate')}" class="${classes({ 'eureka__checked-active': state.view.animate })}" title="${t('animate.previews')}">${hidden(t('animate.previews'))}${icon(ctx, 'caret-right')}</label></div>
     </div></fieldset></form>`;
   return html`<div class="eureka__tree-toggle eureka__toolbar" role="toolbar" aria-label="${t('toolbar.listingControls')}">
     ${toggle}

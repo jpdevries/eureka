@@ -34,6 +34,7 @@
     { "id": "KEY-27", "action": "firstRow",           "scope": "row", "keys": ["Home"],                                 "v2": [] },
     { "id": "KEY-28", "action": "lastRow",            "scope": "row", "keys": ["End"],                                  "v2": [] },
     { "id": "KEY-29", "action": "openContextMenu",    "scope": "row", "keys": ["Shift+F10", "ContextMenu"],             "v2": [], "notes": "Opens the row's popover menu in thumb, grid and masonry modes (HTML-71); right-click does the same; table and list have the inline toolbar" },
-    { "id": "KEY-30", "action": "downloadItem",       "scope": "row", "keys": ["Alt+Shift+D"],                          "v2": [], "when": "allowDownload", "notes": "Alt+D sorts by dimensions (KEY-10), hence the Shift" }
+    { "id": "KEY-30", "action": "downloadItem",       "scope": "row", "keys": ["Alt+Shift+D"],                          "v2": [], "when": "allowDownload", "notes": "Alt+D sorts by dimensions (KEY-10), hence the Shift" },
+    { "id": "KEY-31", "action": "toggleAnimation",    "scope": "row", "keys": ["Alt+P"],                                "v2": [], "when": "the item is animated", "notes": "Plays or pauses an animated item (HTML-66b)" }
   ]
 }

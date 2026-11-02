@@ -16,6 +16,7 @@
     "dimensions": { "type": "array", "items": { "type": "integer", "minimum": 0 }, "minItems": 2, "maxItems": 2 },
     "fileSize": { "type": "integer", "minimum": 0 },
     "alt": { "type": "string" },
+    "animated": { "type": "boolean", "description": "The media moves on its own (SMIL or CSS animation in an SVG, multi-frame GIF/APNG/WebP). Clients show it still until asked to play (02 HTML-66b)." },
     "renditions": {
       "type": "array",
       "items": {
