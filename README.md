@@ -1,3 +1,9 @@
+> **Eureka 3 is being built on the `v3` branch.** The plan is in
+> [docs/v3-modernization-plan.md](docs/v3-modernization-plan.md), the
+> framework-agnostic specification in [spec/](spec/README.md), and the code
+> in [packages/](packages/). Everything below describes Eureka 2.0
+> (`release-2.0`), which remains the published `eureka-browser` package.
+
 # Eureka 🌲
 [![Build Status](https://travis-ci.org/jpdevries/eureka.svg?branch=release-2.0)](https://travis-ci.org/jpdevries/eureka) [![npm version](https://badge.fury.io/js/eureka-browser.svg)](https://badge.fury.io/js/eureka-browser)
 

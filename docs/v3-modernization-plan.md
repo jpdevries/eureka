@@ -332,5 +332,21 @@ Taken on 2026-11-01:
 - All ten spec documents drafted, plus JSON schemas (source, tree node,
   entry, config, state and events, keymap, worker messages) with a
   validation script that checks data files, fixtures and the fixture
-  server's live output. Phase 1 is complete; Phase 2 (core + server) is
-  next.
+  server's live output. Phase 1 is complete.
+
+### Phase 2 progress
+
+- Root converted to an npm workspace (`packages/*`, `spec/conformance`);
+  TypeScript 5.9, Vitest 3. The v2 root `package.json`/`yarn.lock` are kept
+  as `legacy-v2-server.*` for reference.
+- `packages/core`: types and config defaults, paths, formatting, sort and
+  filter, the store with events and selectors, persistence, keymap, ICU
+  i18n, REST client, worker engine with inline fallback. 37 unit tests.
+  Spec data is synced into `src/data` by `scripts/sync-spec-data.mjs`.
+- `packages/server-node`: filesystem media source and HTTP handler
+  implementing the OpenAPI document and the Level 0 protocol with a
+  pluggable `renderPage`; CLI. 11 contract tests validating responses
+  against the spec schemas.
+- Next: Phase 3, the HTML layer (`packages/html`) and the stylesheet
+  (`packages/css`), rendered by the server's `renderPage` and checked by the
+  Level 0 conformance project.

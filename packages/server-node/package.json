@@ -1,0 +1,23 @@
+{
+  "name": "@eureka/server-node",
+  "version": "3.0.0-alpha.0",
+  "description": "Reference Node implementation of the Eureka REST API over a filesystem media source",
+  "license": "BSD-3-Clause",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": { "eureka-server": "./dist/cli.js" },
+  "files": ["dist", "src"],
+  "scripts": {
+    "build": "tsc -b",
+    "start": "node dist/cli.js",
+    "test": "vitest run --root ../.."
+  },
+  "dependencies": {
+    "image-size": "^1.2.0",
+    "yazl": "^3.3.1"
+  },
+  "devDependencies": {
+    "@types/yazl": "^2.4.6"
+  }
+}
