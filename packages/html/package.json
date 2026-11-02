@@ -1,14 +1,61 @@
 {
   "name": "@eureka/html",
-  "version": "3.0.0-alpha.0",
+  "version": "3.0.0-alpha.1",
   "description": "HTML layer of the Eureka media browser: pure functions from state to markup, for the server (Level 0) and the element",
+  "keywords": [
+    "eureka",
+    "media browser",
+    "file browser",
+    "media library",
+    "progressive enhancement",
+    "accessibility",
+    "custom element",
+    "web component"
+  ],
   "license": "BSD-3-Clause",
+  "author": {
+    "name": "JP de Vries",
+    "email": "mail@devries.jp",
+    "url": "https://devries.jp/"
+  },
+  "homepage": "https://github.com/jpdevries/eureka/tree/v3/packages/html#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jpdevries/eureka.git",
+    "directory": "packages/html"
+  },
+  "bugs": {
+    "url": "https://github.com/jpdevries/eureka/issues"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "exports": { ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" } },
-  "files": ["dist", "src"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "src",
+    "LICENSE",
+    "README.md"
+  ],
   "sideEffects": false,
-  "scripts": { "build": "tsc -b", "test": "vitest run --root ../.." },
-  "dependencies": { "@eureka/core": "3.0.0-alpha.0" }
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "test": "vitest run --root ../.."
+  },
+  "dependencies": {
+    "@eureka/core": "3.0.0-alpha.1"
+  }
 }

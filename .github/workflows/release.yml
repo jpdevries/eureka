@@ -1,0 +1,38 @@
+name: Version packages
+
+# Changesets flow, first half: on every push to v3 with pending changesets, open
+# or update the "Version packages" pull request. Publishing is a separate,
+# manually started workflow (publish.yml), so nothing reaches npm by accident.
+on:
+  push:
+    branches: [v3]
+
+concurrency: version-${{ github.ref }}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          registry-url: https://registry.npmjs.org
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - name: Open or update the version pull request
+        uses: changesets/action@v1
+        with:
+          version: npm run version-packages
+          title: 'Version packages'
+          commit: 'Version packages'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.1.1/schema.json",
+  "changelog": ["@changesets/changelog-github", { "repo": "jpdevries/eureka" }],
+  "commit": false,
+  "fixed": [["@eureka/*"]],
+  "linked": [],
+  "access": "public",
+  "baseBranch": "v3",
+  "updateInternalDependencies": "patch",
+  "ignore": ["@eureka/demo", "@eureka/spec-conformance", "eureka-monorepo"],
+  "privatePackages": { "version": false, "tag": false }
+}

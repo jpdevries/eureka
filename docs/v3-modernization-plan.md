@@ -500,9 +500,22 @@ Taken on 2026-11-01:
   wants English compiled in (I18N-04, I18N-11), so the catalog stays.
   Decision needed on PERF-25: raise it to the measured 34 kB, or spend
   effort on the renderers (the largest share).
-- Not done in this phase: publishing (the packages are `3.0.0-alpha.0`
-  with no `publishConfig` yet; Changesets and a GitHub Actions workflow
-  are still to be set up), the pointer-driven crop marquee, the shortcuts
-  reference (KEY-A5), message catalog files, a host-supplied API client
-  (STATE-51), and the React demo bundle is 99 kB gzip because it carries
-  React itself (the element alone stays at 27.8 kB).
+- Release prep: every `@eureka/*` package carries `publishConfig`
+  (public, provenance), repository, homepage, bugs, keywords, engines,
+  its LICENSE and README in `files`; `@eureka/server-node` gained an
+  exports map. Changesets is set up as one `fixed` group in alpha
+  pre-release mode with the first changeset applied: all packages are
+  `3.0.0-alpha.1` with `CHANGELOG.md` files. GitHub Actions: `ci.yml`
+  (typecheck, unit tests, build, schemas, dry-run pack, v3 conformance in
+  Chromium with results uploaded on failure) `release.yml` (the Changesets
+  version PR on push) and `publish.yml` (publish to npm, started by hand,
+  from a GitHub environment holding `NPM_TOKEN`).
+  `docs/releasing.md` describes the flow. Not verified here: a CI run
+  (nothing is pushed), the `NPM_TOKEN` secret, and whether the `@eureka`
+  npm scope is available (the registry lists no packages in it, but
+  npmjs.com could not be queried for an owner); if it is taken, the
+  scope is a find-and-replace away.
+- Not done: the first actual publish, the pointer-driven crop marquee, a
+  host-supplied API client (STATE-51), windowing and the PERF-20..24
+  measurements, the PERF-25 decision, and the React demo bundle is
+  100 kB gzip because it carries React itself.

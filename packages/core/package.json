@@ -1,19 +1,62 @@
 {
   "name": "@eureka/core",
-  "version": "3.0.0-alpha.0",
+  "version": "3.0.0-alpha.1",
   "description": "Framework-free core of the Eureka media browser: store, API client, worker engine, formatting, keymap, i18n",
+  "keywords": [
+    "eureka",
+    "media browser",
+    "file browser",
+    "media library",
+    "progressive enhancement",
+    "accessibility",
+    "custom element",
+    "web component"
+  ],
   "license": "BSD-3-Clause",
+  "author": {
+    "name": "JP de Vries",
+    "email": "mail@devries.jp",
+    "url": "https://devries.jp/"
+  },
+  "homepage": "https://github.com/jpdevries/eureka/tree/v3/packages/core#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jpdevries/eureka.git",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/jpdevries/eureka/issues"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" },
-    "./worker": { "types": "./dist/worker/entry.d.ts", "default": "./dist/worker/entry.js" },
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./worker": {
+      "types": "./dist/worker/entry.d.ts",
+      "default": "./dist/worker/entry.js"
+    },
     "./i18n/*": "./i18n/*",
     "./package.json": "./package.json"
   },
-  "files": ["dist", "src", "i18n"],
+  "files": [
+    "dist",
+    "src",
+    "i18n",
+    "LICENSE",
+    "README.md"
+  ],
   "sideEffects": false,
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "scripts": {
     "build": "tsc -b",
     "test": "vitest run --root ../.."

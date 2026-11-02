@@ -11,12 +11,12 @@
     "start": "node server.mjs"
   },
   "dependencies": {
-    "@eureka/core": "3.0.0-alpha.0",
-    "@eureka/css": "3.0.0-alpha.0",
-    "@eureka/element": "3.0.0-alpha.0",
-    "@eureka/html": "3.0.0-alpha.0",
-    "@eureka/react": "3.0.0-alpha.0",
-    "@eureka/server-node": "3.0.0-alpha.0",
+    "@eureka/core": "3.0.0-alpha.1",
+    "@eureka/css": "3.0.0-alpha.1",
+    "@eureka/element": "3.0.0-alpha.1",
+    "@eureka/html": "3.0.0-alpha.1",
+    "@eureka/react": "3.0.0-alpha.1",
+    "@eureka/server-node": "3.0.0-alpha.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

@@ -3,8 +3,10 @@
 > framework-agnostic specification in [spec/](spec/README.md), the code
 > in [packages/](packages/) (`@eureka/core`, `html`, `css`, `element`,
 > `react`, `server-node`), the demo site in [apps/demo/](apps/demo/README.md)
-> (`npm run demo`), and the upgrade path in
-> [docs/migrating-from-v2.md](docs/migrating-from-v2.md). Everything below
+> (`npm run demo`), the upgrade path in
+> [docs/migrating-from-v2.md](docs/migrating-from-v2.md), and the release
+> flow in [docs/releasing.md](docs/releasing.md). The packages are at
+> `3.0.0-alpha.1` and not yet on npm. Everything below
 > describes Eureka 2.0 (`release-2.0`), which remains the published
 > `eureka-browser` package.
 

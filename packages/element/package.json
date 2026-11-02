@@ -1,8 +1,32 @@
 {
   "name": "@eureka/element",
-  "version": "3.0.0-alpha.0",
+  "version": "3.0.0-alpha.1",
   "description": "<eureka-browser>: the Eureka media browser as a framework-free custom element in light DOM, enhancing the server-rendered Level 0 form",
+  "keywords": [
+    "eureka",
+    "media browser",
+    "file browser",
+    "media library",
+    "progressive enhancement",
+    "accessibility",
+    "custom element",
+    "web component"
+  ],
   "license": "BSD-3-Clause",
+  "author": {
+    "name": "JP de Vries",
+    "email": "mail@devries.jp",
+    "url": "https://devries.jp/"
+  },
+  "homepage": "https://github.com/jpdevries/eureka/tree/v3/packages/element#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jpdevries/eureka.git",
+    "directory": "packages/element"
+  },
+  "bugs": {
+    "url": "https://github.com/jpdevries/eureka/issues"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -22,21 +46,30 @@
   "files": [
     "dist",
     "src",
-    "demo"
+    "demo",
+    "LICENSE",
+    "README.md"
   ],
   "sideEffects": [
     "./dist/define.js",
     "./dist/eureka-browser.js",
     "./dist/eureka-worker.js"
   ],
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "scripts": {
     "build": "tsc -b && node build.mjs",
     "test": "vitest run --root ../.."
   },
   "dependencies": {
-    "@eureka/core": "3.0.0-alpha.0",
-    "@eureka/css": "3.0.0-alpha.0",
-    "@eureka/html": "3.0.0-alpha.0"
+    "@eureka/core": "3.0.0-alpha.1",
+    "@eureka/css": "3.0.0-alpha.1",
+    "@eureka/html": "3.0.0-alpha.1"
   },
   "devDependencies": {
     "esbuild": "^0.28.0"

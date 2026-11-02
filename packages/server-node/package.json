@@ -1,18 +1,60 @@
 {
   "name": "@eureka/server-node",
-  "version": "3.0.0-alpha.0",
+  "version": "3.0.0-alpha.1",
   "description": "Reference Node implementation of the Eureka REST API over a filesystem media source",
+  "keywords": [
+    "eureka",
+    "media browser",
+    "file browser",
+    "media library",
+    "progressive enhancement",
+    "accessibility",
+    "custom element",
+    "web component",
+    "rest api",
+    "node"
+  ],
   "license": "BSD-3-Clause",
+  "author": {
+    "name": "JP de Vries",
+    "email": "mail@devries.jp",
+    "url": "https://devries.jp/"
+  },
+  "homepage": "https://github.com/jpdevries/eureka/tree/v3/packages/server-node#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jpdevries/eureka.git",
+    "directory": "packages/server-node"
+  },
+  "bugs": {
+    "url": "https://github.com/jpdevries/eureka/issues"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
     "eureka-server": "./dist/cli.js"
   },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "dist",
-    "src"
+    "src",
+    "LICENSE",
+    "README.md"
   ],
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "scripts": {
     "build": "tsc -b",
     "start": "node dist/cli.js",
@@ -21,10 +63,10 @@
   "dependencies": {
     "image-size": "^1.2.0",
     "yazl": "^3.3.1",
-    "@eureka/core": "3.0.0-alpha.0",
-    "@eureka/html": "3.0.0-alpha.0",
-    "@eureka/element": "3.0.0-alpha.0",
-    "@eureka/css": "3.0.0-alpha.0"
+    "@eureka/core": "3.0.0-alpha.1",
+    "@eureka/html": "3.0.0-alpha.1",
+    "@eureka/element": "3.0.0-alpha.1",
+    "@eureka/css": "3.0.0-alpha.1"
   },
   "devDependencies": {
     "@types/yazl": "^2.4.6"
