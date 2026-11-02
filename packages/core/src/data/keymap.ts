@@ -317,6 +317,17 @@ const data = {
       ],
       "v2": [],
       "when": "a custom context menu is implemented (HTML-71)"
+    },
+    {
+      "id": "KEY-30",
+      "action": "downloadItem",
+      "scope": "row",
+      "keys": [
+        "Alt+Shift+D"
+      ],
+      "v2": [],
+      "when": "allowDownload",
+      "notes": "Alt+D sorts by dimensions (KEY-10), hence the Shift"
     }
   ]
 } as const;

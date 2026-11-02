@@ -26,13 +26,14 @@ around it.
 - **KEY-A5** A shortcuts reference MUST be reachable from the UI and
   generated from the same data file, so overrides (KEY-A1) show up in it.
   v3: the `?` binding (KEY-15, not in text fields) and a "Keyboard
-  shortcuts" button beside the "Media Content" heading open a dialog (02 HTML-95) listing
+  Shortcuts" button (keyboard icon) beside the "Media Content" heading open a dialog (02 HTML-95) listing
   every active binding under "Anywhere in the browser" and "With an item
   focused", with the toolbar movement of KEY-B2 appended; bindings for
   features the host turned off, and `when`-conditional bindings whose
   condition does not hold, are left out. The welcome notification ends
-  with "Press ? for keyboard shortcuts." Modifier names follow the
-  platform (Option on a Mac).
+  with "Press ? for keyboard shortcuts." Controls with a binding also show
+  it inline (02 HTML-96). Modifier names follow the platform (Option on a
+  Mac).
 
 ## 2. Focus management
 
@@ -69,6 +70,9 @@ around it.
 - **KEY-B6** Activating "Try another search" focuses the filter;
   activating "upload some files" opens the file picker; activating the
   source panel toggle leaves focus on the toggle.
+- **KEY-B8** Download (KEY-30, `Alt+Shift+D`, when `allowDownload`)
+  activates the focused row's Download link, so the browser's own
+  download handling applies (the `download` attribute, HTML-68).
 - **KEY-B7** Double-click or double-tap on a media cell chooses the item;
   Enter on the focused row does the same. There MUST be no action that
   is available only by double-click.

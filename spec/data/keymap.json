@@ -33,6 +33,7 @@
     { "id": "KEY-26", "action": "previousRow",        "scope": "row", "keys": ["ArrowUp"],                              "v2": [] },
     { "id": "KEY-27", "action": "firstRow",           "scope": "row", "keys": ["Home"],                                 "v2": [] },
     { "id": "KEY-28", "action": "lastRow",            "scope": "row", "keys": ["End"],                                  "v2": [] },
-    { "id": "KEY-29", "action": "openContextMenu",    "scope": "row", "keys": ["Shift+F10", "ContextMenu"],             "v2": [], "when": "a custom context menu is implemented (HTML-71)" }
+    { "id": "KEY-29", "action": "openContextMenu",    "scope": "row", "keys": ["Shift+F10", "ContextMenu"],             "v2": [], "when": "a custom context menu is implemented (HTML-71)" },
+    { "id": "KEY-30", "action": "downloadItem",       "scope": "row", "keys": ["Alt+Shift+D"],                          "v2": [], "when": "allowDownload", "notes": "Alt+D sorts by dimensions (KEY-10), hence the Shift" }
   ]
 }

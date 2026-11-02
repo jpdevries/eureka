@@ -157,7 +157,7 @@ const data = {
   "listing.failed": "Could not load {cd}: {error}",
   "cropped.saved": "Saved {filename}",
   "crop.failed": "Could not crop {filename}: {error}",
-  "shortcuts": "Keyboard shortcuts",
+  "shortcuts": "Keyboard Shortcuts",
   "created.directory": "Created directory {name}",
   "tree.toggle": "Toggle {name}",
   "panel.toggle": "Toggle Source Panel",
@@ -209,7 +209,8 @@ const data = {
   "key.arrowDown": "Down arrow",
   "key.arrowLeft": "Left arrow",
   "key.arrowRight": "Right arrow",
-  "key.to": "to"
+  "key.to": "to",
+  "shortcut.downloadItem": "Download the item"
 } as const;
 export default data;
 export type MessagesEn = typeof data;

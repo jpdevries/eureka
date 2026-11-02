@@ -105,6 +105,11 @@ export async function focusRow(page, filename) {
 // ---- axe -----------------------------------------------------------------------
 /** Run axe on the current page state. Fails for v3; reports for the v2 baseline. */
 export async function axeCheck(page, label) {
+  // Let CSS transitions finish first (the keyboard hints fade in on focus): axe measures the colours it sees, and a mid-fade frame is not a state.
+  await page.evaluate(async () => {
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))); // let a pending re-render start its transitions
+    await Promise.all(document.getAnimations().map((a) => a.finished.catch(() => {})));
+  });
   const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice']).analyze();
   const info = base.info();
   await info.attach(`axe-${label}.json`, { body: JSON.stringify(results.violations, null, 2), contentType: 'application/json' });

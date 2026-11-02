@@ -3,6 +3,7 @@ import { extname, iconForExtension, isCroppable, mediaKind, selectIsChecked, sel
 import { attr, classes, html, raw, type Raw } from '../html.js';
 import type { Ctx } from '../model.js';
 import { hidden, icon } from './icon.js';
+import { kbdHint, keyshortcuts } from './kbd.js';
 
 const IMAGE_SIZES: Record<string, string> = { table: '(min-width: 40em) 40cqi, 100cqi', list: '10vh', thumb: '(min-width: 40em) 16cqi, 42cqi', grid: '(min-width: 40em) 25cqi, 100cqi', masonry: '(min-width: 40em) 20cqi, 100cqi' };
 
@@ -43,13 +44,13 @@ export function actions(ctx: Ctx, item: FileEntry, idPrefix = ''): Raw {
   // One tab stop per toolbar (05 KEY-B2): the first control is tabbable, the rest are reached with the arrow keys.
   const roving = (i: number) => (level > 0 ? ` tabindex="${i === 0 ? 0 : -1}"` : '');
   const controls: Array<(i: number) => Raw> = [];
-  const btn = (kind: string, label: string, hiddenText: string, cls = '') => (i: number) => html`<button type="button" class="${classes('eureka__action', cls)}" id="${ids.item(idPrefix + kind, item.filename)}" data-action="${kind}" data-path="${item.path}"${raw(roving(i))}>${label}${hidden(' ' + hiddenText)}</button>`;
-  controls.push((i) => html`<a class="button eureka__action" id="${ids.item(idPrefix + 'expand', item.filename)}" href="${item.absoluteURL}" target="_blank" rel="noopener" data-action="expand"${raw(roving(i))}>${t('expand')}${hidden(' ' + n)}</a>`);
-  if (config.allowChoose) controls.push(btn('choose', t('choose'), n));
+  const btn = (kind: string, label: string, hiddenText: string, cls = '', action = '') => (i: number) => html`<button type="button" class="${classes('eureka__action', cls)}" id="${ids.item(idPrefix + kind, item.filename)}" data-action="${kind}" data-path="${item.path}"${raw(roving(i))}${action ? keyshortcuts(ctx, action) : ''}>${label}${hidden(' ' + hiddenText)}${action ? kbdHint(ctx, action) : ''}</button>`;
+  controls.push((i) => html`<a class="button eureka__action" id="${ids.item(idPrefix + 'expand', item.filename)}" href="${item.absoluteURL}" target="_blank" rel="noopener" data-action="expand"${raw(roving(i))}${keyshortcuts(ctx, 'expandItem')}>${t('expand')}${hidden(' ' + n)}${kbdHint(ctx, 'expandItem')}</a>`);
+  if (config.allowChoose) controls.push(btn('choose', t('choose'), n, '', 'chooseItem'));
   if (config.allowCrop && isCroppable(n)) controls.push(btn('crop', t('crop'), n, 'eureka__crop-btn'));
-  if (config.allowRename) controls.push(btn('rename', t('rename'), n));
-  if (config.allowDelete) controls.push(btn('delete', t('delete'), n, 'dangerous'));
-  if (config.allowDownload) controls.push((i) => html`<a class="button eureka__action" id="${ids.item(idPrefix + 'download', item.filename)}" href="${item.absoluteURL}" download="${n}" data-action="download"${raw(roving(i))}>${t('download')}${hidden(' ' + n)}</a>`);
+  if (config.allowRename) controls.push(btn('rename', t('rename'), n, '', 'renameItem'));
+  if (config.allowDelete) controls.push(btn('delete', t('delete'), n, 'dangerous', 'deleteItem'));
+  if (config.allowDownload) controls.push((i) => html`<a class="button eureka__action" id="${ids.item(idPrefix + 'download', item.filename)}" href="${item.absoluteURL}" download="${n}" data-action="download"${raw(roving(i))}${keyshortcuts(ctx, 'downloadItem')}>${t('download')}${hidden(' ' + n)}${kbdHint(ctx, 'downloadItem')}</a>`);
   return html`<div class="eureka__button-bar eureka__context-buttons" role="toolbar" aria-label="${t('actions.for', { filename: n })}" data-row-actions>
     ${controls.map((c, i) => c(i))}
   </div>`;

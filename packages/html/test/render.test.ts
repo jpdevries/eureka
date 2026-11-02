@@ -93,7 +93,7 @@ describe('enhanced render (02)', () => {
   });
   it('names controls by action and object', () => {
     expect(out).toContain('role="toolbar" aria-label="Actions for schildpad.jpg"');
-    expect(out).toContain('>Choose<span class="visually-hidden"> schildpad.jpg</span></button>');
+    expect(out).toContain('>Choose<span class="visually-hidden"> schildpad.jpg</span><kbd class="eureka__kbd" aria-hidden="true">Enter</kbd></button>');
     expect(out).toContain('download="schildpad.jpg"');
     expect(out).not.toContain('Crop<span class="visually-hidden"> archive.zip');
     expect(out).toContain('<legend>Choose Items</legend>');
@@ -103,7 +103,7 @@ describe('enhanced render (02)', () => {
   it('uses a roving tabindex and sortable header buttons', () => {
     expect(out.match(/<tr[^>]*tabindex="0"/g)!.length).toBe(1); // the first row only; the root is a programmatic focus target (tabindex="-1")
     for (const toolbar of out.match(/<div class="eureka__button-bar eureka__context-buttons"[\s\S]*?<\/div>/g)!) expect(toolbar.match(/tabindex="0"/g)!.length).toBe(1); // one tab stop per toolbar (KEY-B2)
-    expect(out).toContain('data-action="toggle-panel">Toggle Source Panel</button>');
+    expect(out).toMatch(/data-action="toggle-panel" aria-keyshortcuts="Control\+;">Toggle Source Panel<kbd class="eureka__kbd" aria-hidden="true">Ctrl\+;<\/kbd><\/button>/);
     expect(out).toContain('aria-label="Media Source Panel" hidden');
     expect(out).toMatch(/<table class="eureka__table" id="eureka__table" data-count="\d+" role="grid" aria-describedby="eureka__listing-help">/);
     expect(out).toContain('id="eureka__listing-help">Use the up and down arrow keys');
@@ -116,7 +116,7 @@ describe('enhanced render (02)', () => {
     expect(withDialog).toContain('data-action="shortcuts" aria-haspopup="dialog"');
     const ctx = contextFromPage(input, 1);
     const open = instance({ ...ctx, state: { ...ctx.state, dialog: { kind: 'shortcuts' } } }).value;
-    expect(open).toContain('<h2 id="eureka__dialog-title">Keyboard shortcuts</h2>');
+    expect(open).toContain('<h2 id="eureka__dialog-title">Keyboard Shortcuts</h2>');
     expect(open).toContain('<caption>Anywhere in the browser</caption>');
     expect(open).toContain('<th scope="row">Rename the item</th><td><span class="eureka__chord"><kbd>F2</kbd></span></td>');
     expect(open).toContain('<kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd>');
@@ -135,8 +135,22 @@ describe('enhanced render (02)', () => {
     expect(renderLevel0(input)).not.toContain('eureka__catalog'); // English needs no catalog
     expect(renderLevel0({ ...input, lang: 'nl' })).toContain('lang="en"'); // no catalog: the text is English, and says so
   });
+  it('hints the shortcut on controls with a binding, hidden from AT, and exposes it as aria-keyshortcuts (HTML-96)', () => {
+    const out = renderEnhanced(input);
+    expect(out).toMatch(/data-action="choose"[^>]*aria-keyshortcuts="Enter"[^>]*>Choose<span class="visually-hidden"> schildpad\.jpg<\/span><kbd class="eureka__kbd" aria-hidden="true">Enter<\/kbd><\/button>/);
+    expect(out).toMatch(/data-action="rename"[^>]*aria-keyshortcuts="F2"/);
+    expect(out).toMatch(/data-action="delete"[^>]*aria-keyshortcuts="Delete Backspace"[^>]*>Delete<span class="visually-hidden"> schildpad\.jpg<\/span><kbd class="eureka__kbd" aria-hidden="true">Del<\/kbd>/);
+    expect(out).toMatch(/data-action="expand"[^>]*aria-keyshortcuts="Alt\+Space"[^>]*>Expand<span class="visually-hidden"> schildpad\.jpg<\/span><kbd class="eureka__kbd" aria-hidden="true">Alt\+Space<\/kbd>/);
+    expect(out).toMatch(/data-action="toggle-panel" aria-keyshortcuts="Control\+;">Toggle Source Panel<kbd class="eureka__kbd" aria-hidden="true">Ctrl\+;<\/kbd>/);
+    expect(out).toMatch(/name="eureka__filter"[^>]*aria-keyshortcuts="Alt\+Shift\+S \/"/);
+    expect(out).toMatch(/data-action="download"[^>]*aria-keyshortcuts="Alt\+Shift\+D"[^>]*>Download<span class="visually-hidden"> schildpad\.jpg<\/span><kbd class="eureka__kbd" aria-hidden="true">Alt\+Shift\+D<\/kbd>/);
+    expect(out).not.toMatch(/data-action="crop"[^>]*aria-keyshortcuts/); // no binding, no hint
+    expect(renderLevel0(input)).not.toContain('eureka__kbd');
+    expect(renderLevel0(input)).not.toContain('aria-keyshortcuts');
+  });
   it('puts the shortcuts button beside the heading at Level 1 only', () => {
     expect(renderEnhanced(input)).toContain('Media Content</h2><button type="button" class="eureka__help-button"');
+    expect(renderEnhanced(input)).toMatch(/eureka__help-button[^>]*title="Keyboard Shortcuts"><span class="visually-hidden">Keyboard Shortcuts<\/span><svg[^>]*class="icon icon-keyboard"/);
     expect(renderLevel0(input)).not.toContain('eureka__help-button');
   });
   it('does not render Level 0 fields or obsolete elements', () => {

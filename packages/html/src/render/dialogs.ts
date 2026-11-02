@@ -84,6 +84,7 @@ function shortcuts(ctx: Ctx, footer: Raw): Raw {
   if (!config.allowUploads) hide.add('upload');
   if (!config.allowRename) hide.add('renameItem');
   if (!config.allowDelete) hide.add('deleteItem');
+  if (!config.allowDownload) hide.add('downloadItem');
   if (!config.allowChoose) { hide.add('chooseItem'); hide.add('chooseSingle'); }
   if (!config.allowChooseMultiple) { hide.add('chooseMultiple'); hide.add('invertSelection'); hide.add('toggleItemChecked'); }
   const chords = (keys: string[]) => keys.length > 4

@@ -19,6 +19,7 @@ interface Hydrated {
 }
 
 const AUTO_DISMISS_MS = 8000;
+const NAVIGATION_KEYS = new Set(['Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End', 'Enter', ' ', 'Escape', '?']);
 const TEXT_FIELD = 'input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=submit]):not([type=button]):not([type=reset]), textarea, select, [contenteditable=""], [contenteditable="true"]';
 
 function safeStorage(): Storage | null { try { return globalThis.localStorage ?? null; } catch { return null; } }
@@ -44,6 +45,7 @@ export class EurekaBrowser extends HTMLElement {
   #focusNext: (() => Element | null | undefined) | null = null;
   #announcement = '';
   #dragging = false;
+  #keyboard = false; // keyboard navigation seen since the last pointer use (06 A11Y-55)
   #storage: Storage | null = null;
   #restartQueued = false;
   #rowMarkup = new Map<string, string>(); // last rendered row markup by path (PERF-11)
@@ -210,6 +212,7 @@ export class EurekaBrowser extends HTMLElement {
   }
 
   #afterRender(state: State): void {
+    this.#applyKeyboard();
     const dialog = this.querySelector<HTMLDialogElement>('dialog.eureka__modal');
     if (dialog && !dialog.open) { try { dialog.showModal(); } catch { dialog.setAttribute('open', ''); } }
     if (this.#focusNext) {
@@ -239,6 +242,8 @@ export class EurekaBrowser extends HTMLElement {
     on('input', (e) => this.#onInput(e));
     on('submit', (e) => this.#onSubmit(e));
     on('focusin', (e) => this.#onFocusIn(e));
+    on('keydown', (e) => { if (NAVIGATION_KEYS.has(e.key)) this.#setKeyboard(true); }, { capture: true });
+    on('pointerdown', () => this.#setKeyboard(false), { capture: true });
     on('keydown', (e) => this.#onKeyDown(e));
     on('dblclick', (e) => this.#onDblClick(e));
     on('toggle', (e) => this.#onToggle(e), { capture: true });
@@ -416,6 +421,7 @@ export class EurekaBrowser extends HTMLElement {
       // row scope
       case 'chooseItem': if (item && target === row) this.#choose([item]); else handled = false; break;
       case 'expandItem': if (item) window.open(item.absoluteURL, '_blank', 'noopener'); else handled = false; break;
+      case 'downloadItem': { const link = item && this.#config.allowDownload ? row?.querySelector<HTMLAnchorElement>('a[data-action="download"]') : null; if (link) link.click(); else handled = false; break; }
       case 'deleteItem': if (item && (target === row || !!toolbar)) this.#requestDelete([item.path], row); else handled = false; break;
       case 'renameItem': if (item) this.#openDialog('rename', item.path, row ?? target); else handled = false; break;
       case 'toggleItemChecked':
@@ -462,6 +468,8 @@ export class EurekaBrowser extends HTMLElement {
     void this.#upload(files.map((f, i) => (/^(image|file)\.\w+$/i.test(f.name) ? new File([f], `paste-image.${stamp}${files.length > 1 ? `-${i + 1}` : ''}.${f.name.split('.').pop()}`, { type: f.type }) : f)));
   }
   #setDragging(on: boolean): void { if (this.#dragging !== on) { this.#dragging = on; this.#applyDragging(on); } }
+  #setKeyboard(on: boolean): void { if (this.#keyboard !== on) { this.#keyboard = on; this.#applyKeyboard(); } }
+  #applyKeyboard(): void { const root = this.#root(); if (!root) return; if (this.#keyboard) root.setAttribute('data-keyboard', 'true'); else root.removeAttribute('data-keyboard'); }
   #applyDragging(on: boolean): void {
     this.#root()?.classList.toggle('eureka__dragover', on);
     this.querySelector('.eureka__drop-area')?.classList.toggle('eureka__drop-area--active', on);

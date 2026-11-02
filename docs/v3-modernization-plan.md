@@ -515,6 +515,33 @@ Taken on 2026-11-01:
   npm scope is available (the registry lists no packages in it, but
   npmjs.com could not be queried for an owner); if it is taken, the
   scope is a find-and-replace away.
+- The shortcuts button became a keyboard icon labelled "Keyboard
+  Shortcuts" (new `icon-keyboard` sprite symbol) and now rests knocked
+  back, fading to full opacity on hover, focus and the first keyboard
+  navigation (the element sets `data-keyboard` on the root, cleared on
+  pointer use). The resting level is a token, `--hint-opacity`, set from
+  measured contrast so the icon never drops under WCAG 1.4.11's 3:1:
+  0.65 in the light scheme (3.27:1), 0.5 in the dark scheme (3.58:1);
+  high-contrast themes and forced colors show it at full opacity
+  (A11Y-55, element and conformance tests).
+- Shortcut hints on controls (HTML-96), borrowed from Pantry Host's
+  `<kbd>` pattern: Expand, Choose, Rename, Delete, the upload and
+  new-directory controls, the filter and the panel toggle show their
+  first chord as an `aria-hidden` `<kbd>` and expose every chord as
+  `aria-keyshortcuts`; the name stays the verb. Platform-compact labels
+  (⌥⇧U on a Mac). They rest at `--hint-text-opacity` (0.82 light, 0.65
+  dark: text, so 4.5:1 rather than the icon's 3:1, measured as axe does,
+  blended over the control), fade in with keyboard
+  use, hover or focus, are not rendered until something in the
+  instance has visible focus (`:has(:focus-visible)`, so a pointer tap
+  does not count) or the instance has seen the keyboard, fading in and
+  out of `display: none` via `@starting-style` and a discrete `display`
+  transition where supported, and are hidden on narrow layouts. Tree rows pack
+  tighter (`--tree-line-height` 1.6, smaller chevrons) and grow to 44px
+  targets under `(pointer: coarse)`. A download binding was added
+  (KEY-30, `Alt+Shift+D`, row scope, when downloads are allowed): it
+  activates the row's Download link so the browser's download handling
+  applies.
 - Package names: the `@eureka` npm scope belongs to an existing npm user,
   so the packages are `@mrktps/eureka` (the element, what most people
   install) and `@mrktps/eureka-core`, `-html`, `-css`, `-react`,

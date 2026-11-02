@@ -108,7 +108,7 @@ const data = {
       "description": "Line height of tree nodes"
     },
     "--tree-course-line-height": {
-      "default": "1.8",
+      "default": "2.75",
       "documented": false,
       "description": "Line height of tree nodes in coarse-pointer (touch) mode"
     },
@@ -131,6 +131,16 @@ const data = {
       "default": "#247fad",
       "documented": false,
       "description": "Notification dismiss button hover and focus colour"
+    },
+    "--hint-opacity": {
+      "default": "0.65",
+      "documented": false,
+      "description": "Resting opacity of keyboard hints such as the Keyboard Shortcuts button (06 A11Y-55): knocked back until keyboard use, hover or focus, but never below 3:1 for the icon (the light default needs 0.62; the dark scheme sets 0.5)"
+    },
+    "--hint-text-opacity": {
+      "default": "0.82",
+      "documented": false,
+      "description": "Resting opacity of textual keyboard hints (the <kbd> shortcut labels on controls, 02 HTML-96): knocked back until keyboard use, hover or focus, but never below 4.5:1 for the text blended over its control (axe-measured; the light default needs 0.81; the dark scheme sets 0.65)"
     }
   },
   "variants": {

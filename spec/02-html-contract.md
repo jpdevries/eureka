@@ -276,15 +276,33 @@ DOM order is the reading order and the tab order.
   plus `aria-hidden` on siblings and a scrim `div role="button"`; v3 uses
   the native dialog and Escape closes it.
 - **HTML-95** Shortcuts dialog (05 KEY-A5): `<dialog class="eureka__modal
-  eureka__shortcuts-modal">` titled "Keyboard shortcuts", an introductory
+  eureka__shortcuts-modal">` titled "Keyboard Shortcuts", an introductory
   sentence, then one `<table class="eureka__shortcuts">` per scope with a
   `<caption>` ("Anywhere in the browser", "With an item focused"), each
   row a `<th scope="row">` description and a cell of `<kbd>` keys joined
   by "+", several chords separated by commas, runs of more than four
   chords shown as "first to last". A single Close button. Opened by the
-  `?` binding or the "Keyboard shortcuts" button beside the "Media Content"
-  heading (`.eureka__heading > button.eureka__help-button[aria-haspopup="dialog"]`,
-  visible text "?"), Level 1+ only.
+  `?` binding or the "Keyboard Shortcuts" button beside the "Media Content"
+  heading (`.eureka__heading > button.eureka__help-button[aria-haspopup="dialog"]`:
+  the `keyboard` sprite icon, a visually-hidden label and a `title`), Level
+  1+ only. The button rests knocked back and fades in on keyboard use (06
+  A11Y-55); the root carries `data-keyboard="true"` while the instance is
+  being driven from the keyboard.
+- **HTML-96** Shortcut hints (Level 1+): controls whose action has a
+  keymap binding carry `aria-keyshortcuts` with every chord ("Enter",
+  "Alt+Shift+U", "Alt+Space") and end with `<kbd class="eureka__kbd"
+  aria-hidden="true">` showing the first chord compactly ("⌥⇧U" on a Mac,
+  "Alt+Shift+U" elsewhere; "Del", "Esc", arrows as glyphs). The hint is
+  hidden from assistive technology so the accessible name stays the verb
+  plus its object; the binding is exposed through `aria-keyshortcuts` and
+  the shortcuts dialog. Hinted controls: the row's Expand, Choose, Rename
+  and Delete; the upload control and the panel's upload and new-directory
+  buttons; the filter (hint in its label); the panel toggle. Hints are
+  not rendered until something in the instance has visible focus or the
+  instance has seen keyboard use, rest knocked back under visible focus
+  that did not come through the instance's own keys (the first Tab in
+  from the page), come to full opacity with keyboard use (06 A11Y-55), and
+  are not shown on narrow layouts.
 - **HTML-92** Create directory form: a text input labelled "Create a new
   Directory in {cd}". Rename form: a text input labelled "New name"
   prefilled with the current name. Crop form: see 06 for its controls;

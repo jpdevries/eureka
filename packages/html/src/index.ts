@@ -8,6 +8,7 @@ export { stageHeader, toolbar, directorySelector, uploadControl } from './render
 export { notifications, pathBar, chooseBar } from './render/bars.js';
 export { dialogs } from './render/dialogs.js';
 export { icon, hidden } from './render/icon.js';
+export { kbdHint, keyshortcuts, shortLabel } from './render/kbd.js';
 export { renderDocument, type DocumentOptions } from './document.js';
 
 import { contextFromPage, type PageInput } from './model.js';

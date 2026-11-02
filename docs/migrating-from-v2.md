@@ -86,6 +86,7 @@ defaults (spec 05, `spec/data/keymap.json`):
 | New file | `ctrl+shift+n` | `Alt+Shift+F` |
 | Upload | `ctrl+u` | `Alt+Shift+U` |
 | Rename | `ctrl+r` | `F2` |
+| Download | (none) | `Alt+Shift+D` |
 | Toggle sidebar, view modes, sources, Enter, Backspace, Alt+Space | unchanged | unchanged |
 | Move between items | (none) | ArrowUp/ArrowDown, Home/End; Space checks an item in multiple mode |
 

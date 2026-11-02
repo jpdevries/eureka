@@ -65,7 +65,10 @@ newest tests cover the one-stop row toolbar (KEY-B2), the masonry fallback
 (LAY-34), the grid role with its usage description (HTML-60), the
 shortcuts reference (KEY-A5) and catalog loading with the fixture's
 bracketed pseudo-locale `xx` (I18N-11, I18N-12).
-axe-core reports no violations in any of the eight checked states (Level 0
+`axeCheck` waits for running CSS animations and transitions to finish
+before auditing, since the keyboard hints fade in on focus and axe
+measures whatever colour is on screen at that instant. axe-core reports no
+violations in any of the eight checked states (Level 0
 light and dark, enhanced table light and dark, focused row, grid mode,
 multiple choice with the panel open, rename dialog). The `v3` target runs
 the fixture server with `--render v3`, which serves the server-rendered

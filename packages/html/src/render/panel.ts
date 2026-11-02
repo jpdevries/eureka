@@ -3,6 +3,7 @@ import { normalizePath, selectCurrentTree, type TreeNode } from '@mrktps/eureka-
 import { attr, classes, html, type Raw } from '../html.js';
 import type { Ctx } from '../model.js';
 import { hidden, icon } from './icon.js';
+import { kbdHint, keyshortcuts } from './kbd.js';
 
 /**
  * One directory (HTML-32): the disclosure (<details> holding only its <summary>) and the
@@ -39,9 +40,9 @@ export function sourcePanel(ctx: Ctx): Raw {
     <nav class="eureka__tree" aria-label="${t('tree.label')}">${node(ctx, root, 0)}</nav>
     ${state.config.allowUploads && state.config.doDragNDrop ? html`<button type="button" class="eureka__drop-area" data-action="upload" aria-label="${t(state.pending.uploading ? 'upload.dragFilesUploading' : 'upload.dragFilestoUpload', { cd })}. ${t('pastImageFromClipboardMessage')}" data-drop-zone><span class="eureka__drop-area-zone">${icon(ctx, state.pending.uploading ? 'circle-o-notch' : 'upload')}</span></button>` : ''}
     <div class="eureka__tree-bar flex-bar">
-      <button type="button" title="${t('directory.createNewIn', { cd })}" data-action="create-directory">${hidden(t('directory.createNewIn', { cd }))}${icon(ctx, 'plus-square')}</button>
+      <button type="button" title="${t('directory.createNewIn', { cd })}" data-action="create-directory"${keyshortcuts(ctx, 'createDirectory')}>${hidden(t('directory.createNewIn', { cd }))}${icon(ctx, 'plus-square')}${kbdHint(ctx, 'createDirectory')}</button>
       ${createFile ? html`<a class="button eureka__create-file-button" href="${createFile.href}"${attr('target', createFile.target)} title="${t('upload.createFileIn', { cd })}" data-action="create-file">${hidden(t('upload.createFileIn', { cd }))}${icon(ctx, 'file-text-o')}</a>` : ''}
-      ${state.config.allowUploads ? html`<button type="button" title="${t('upload.filesTo', { cd })}" data-action="upload">${hidden(t('upload.filesTo', { cd }))}${icon(ctx, 'upload')}</button>` : ''}
+      ${state.config.allowUploads ? html`<button type="button" title="${t('upload.filesTo', { cd })}" data-action="upload"${keyshortcuts(ctx, 'upload')}>${hidden(t('upload.filesTo', { cd }))}${icon(ctx, 'upload')}${kbdHint(ctx, 'upload')}</button>` : ''}
     </div>
   </aside>`;
 }

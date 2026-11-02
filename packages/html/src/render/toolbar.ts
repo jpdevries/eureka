@@ -3,6 +3,7 @@ import { combineSourcePath, selectFiles, VIEW_MODES, type ViewMode } from '@mrkt
 import { attr, classes, html, type Raw } from '../html.js';
 import type { Ctx } from '../model.js';
 import { hidden, icon } from './icon.js';
+import { kbdHint, keyshortcuts } from './kbd.js';
 
 const MODE_LABEL: Record<ViewMode, string> = { table: 'layout.table', thumb: 'layout.thumb', grid: 'layout.grid', list: 'layout.list', masonry: 'layout.masonry' };
 const MODE_TITLE: Record<ViewMode, string> = { table: 'layout.tabular', thumb: 'layout.thumbnail', grid: 'layout.grid', list: 'layout.list', masonry: 'layout.masonry' };
@@ -18,12 +19,12 @@ export function stageHeader(ctx: Ctx): Raw {
       ${multiple && state.config.allowInvertSelection ? html`<input type="checkbox" id="${ids.id('invert')}" name="${ids.id('invert')}"${attr('checked', state.selection.inverted)}><label for="${ids.id('invert')}">${t('invert')}${hidden(' ' + t('selection'))}</label>` : ''}
     </fieldset>` : '';
   const filter = level > 0 ? html`<search><form class="eureka__search-bar" role="search" data-form="filter">
-      <label for="${ids.id('filter')}">${t('filter')}${hidden(' ' + t('contents.ofby', { cd }))}:</label>
-      <input type="search" id="${ids.id('filter')}" name="eureka__filter" list="${ids.id('datalist')}" autocomplete="off" value="${state.view.filter}"${attr('placeholder', placeholder(ctx))}>
+      <label for="${ids.id('filter')}">${t('filter')}${hidden(' ' + t('contents.ofby', { cd }))}:${kbdHint(ctx, 'focusFilter')}</label>
+      <input type="search" id="${ids.id('filter')}" name="eureka__filter" list="${ids.id('datalist')}" autocomplete="off" value="${state.view.filter}"${attr('placeholder', placeholder(ctx))}${keyshortcuts(ctx, 'focusFilter')}>
       <datalist id="${ids.id('datalist')}">${selectFiles(state).map((f) => html`<option value="${f.filename}"></option>`)}</datalist>
     </form></search>` : '';
   return html`<header class="eureka__stage__filter-view">
-    <div class="eureka__heading"><h2 id="${ids.id('heading')}">${hidden(t('media.browse') + ' ')}${t('media.contents')}</h2>${level > 0 ? html`<button type="button" class="eureka__help-button" id="${ids.id('shortcuts')}" data-action="shortcuts" aria-haspopup="dialog">${hidden(t('shortcuts'))}<kbd aria-hidden="true">?</kbd></button>` : ''}</div>
+    <div class="eureka__heading"><h2 id="${ids.id('heading')}">${hidden(t('media.browse') + ' ')}${t('media.contents')}</h2>${level > 0 ? html`<button type="button" class="eureka__help-button" id="${ids.id('shortcuts')}" data-action="shortcuts" aria-haspopup="dialog" title="${t('shortcuts')}">${hidden(t('shortcuts'))}${icon(ctx, 'keyboard')}</button>` : ''}</div>
     ${chooseRadios}
     ${filter}
   </header>`;
@@ -61,8 +62,8 @@ export function uploadControl(ctx: Ctx): Raw {
   if (!state.config.allowUploads) return html``;
   const cd = state.listing.path;
   const uploading = state.pending.uploading;
-  const input = html`<input type="file" id="${ids.id('upload')}" name="eureka__uploadFiles" multiple${attr('disabled', uploading)}>`;
-  const label = html`<label for="${ids.id('upload')}">${uploading ? html`<span class="spinner">${icon(ctx, 'circle-o-notch')}</span>${t('upload.dragFilesUploading')}` : t('upload.files')}${hidden(' ' + t('grammar.to') + ' ' + cd)}${level === 0 ? ':' : ''}</label>`;
+  const input = html`<input type="file" id="${ids.id('upload')}" name="eureka__uploadFiles" multiple${attr('disabled', uploading)}${keyshortcuts(ctx, 'upload')}>`;
+  const label = html`<label for="${ids.id('upload')}">${uploading ? html`<span class="spinner">${icon(ctx, 'circle-o-notch')}</span>${t('upload.dragFilesUploading')}` : t('upload.files')}${hidden(' ' + t('grammar.to') + ' ' + cd)}${level === 0 ? ':' : ''}${uploading ? '' : kbdHint(ctx, 'upload')}</label>`;
   if (level === 0) return html`<div class="eureka__upload-form"><div>${label} ${input} <button type="submit" name="eureka__action" value="upload">${t('upload.files')}</button></div></div>`;
   return html`<div class="eureka__upload-form"><form enctype="multipart/form-data" method="post" data-form="upload">${input}${label}</form></div>`;
 }
@@ -71,7 +72,7 @@ export function toolbar(ctx: Ctx): Raw {
   const { state, t, ids, level } = ctx;
   if (level === 0) return html`<div class="eureka__tree-toggle eureka__toolbar">${directorySelector(ctx)}${uploadControl(ctx)}</div>`;
   const open = state.view.panelOpen;
-  const toggle = html`<div><button type="button" id="${ids.id('tree-toggle')}" class="eureka__panel-toggle" aria-controls="${ids.id('pathbrowser')}" aria-expanded="${String(open)}" data-action="toggle-panel">${t('panel.toggle')}</button></div>`;
+  const toggle = html`<div><button type="button" id="${ids.id('tree-toggle')}" class="eureka__panel-toggle" aria-controls="${ids.id('pathbrowser')}" aria-expanded="${String(open)}" data-action="toggle-panel"${keyshortcuts(ctx, 'toggleSourcePanel')}>${t('panel.toggle')}${kbdHint(ctx, 'toggleSourcePanel')}</button></div>`;
   const sort = html`<form class="eureka__sort-select" data-form="sort">
       <label for="${ids.id('sort-by')}">${t('sortBy')}:</label>
       <select id="${ids.id('sort-by')}" name="eureka__sort-by" data-control="sort-by">${(['filename', 'dimensions', 'fileSize', 'editedOn'] as const).map((k) => html`<option value="${k}"${attr('selected', state.view.sort.by === k)}>${t({ filename: 'name', dimensions: 'dimensions', fileSize: 'fileSize', editedOn: 'editedOn' }[k])}</option>`)}</select>

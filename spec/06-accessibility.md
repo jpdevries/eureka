@@ -116,6 +116,27 @@ Covered by 05. In addition:
 - **A11Y-54** Forced colors and high contrast themes: 08 THEME-03/04.
   State (checked, focused, current directory) is conveyed by borders,
   outlines or text, never by background colour alone.
+- **A11Y-55** Keyboard hints rest at reduced opacity and return to full
+  opacity on hover, on focus, while the shortcuts dialog is open, and as
+  soon as the instance sees keyboard navigation (Tab, arrows, Home/End,
+  Enter, Space, Escape or `?`): the element sets `data-keyboard="true"`
+  on the root and clears it on the next pointer use. Two resting levels,
+  both tokens: `--hint-opacity` for non-text hints such as the Keyboard
+  Shortcuts icon (HTML-95), which MUST keep 3:1 against the button (WCAG
+  2.2 1.4.11; default 0.65 measured at 3.3:1, dark scheme 0.5 at 3.6:1),
+  and `--hint-text-opacity` for the `<kbd>` labels (HTML-96), which are
+  text and MUST keep 4.5:1 (1.4.3) with the text blended over its own
+  control, which is how axe measures it (default 0.82 at 4.6:1, dark
+  scheme 0.65 at 4.8:1). The `<kbd>` labels use the body text colour on the panel background
+  (`--color` on `--light-bg`) rather than inheriting the control's, so a
+  muted label cannot pull them under the floor. They go further: until
+  something inside the instance has visible focus (`:has(:focus-visible)`
+  on the root; a pointer tap focuses without showing focus, so it does not
+  count) or the instance has seen the keyboard, they are not rendered
+  (`display: none`), except on the control under the pointer, so a
+  pointer-only session never shows them; engines with discrete `display`
+  transitions fade them in and out of that state. The high contrast themes and forced colors show
+  hints at full opacity; the transition honours `prefers-reduced-motion`.
 
 ## 7. Timing
 

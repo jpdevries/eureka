@@ -53,7 +53,7 @@ el.config = { callbacks: { choose: (items) => insert(items), close: () => modal.
 ```
 
 Press `?` anywhere in the browser (outside text fields), or use the
-"Keyboard shortcuts" button beside the heading, for the shortcuts reference; it is
+"Keyboard Shortcuts" button (the keyboard icon) beside the heading, for the shortcuts reference; it is
 generated from `spec/data/keymap.json` plus any `config.keymap` overrides.
 
 Events (07 STATE-50): `eureka-choose` (`detail.items`), `eureka-close`,

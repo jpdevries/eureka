@@ -41,6 +41,21 @@ describe('<eureka-browser>', () => {
     expect(chosen).toEqual([['a.svg']]);
   });
 
+  it('marks the root while the keyboard is in use and clears it on pointer use (A11Y-55)', async () => {
+    const el = mount();
+    await until(() => el.querySelectorAll('tr[data-path]').length === 2);
+    expect(el.querySelector('.eureka')!.hasAttribute('data-keyboard')).toBe(false);
+    const row = el.querySelector<HTMLElement>('tr[data-path="a.svg"]')!;
+    row.focus();
+    row.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true }));
+    expect(el.querySelector('.eureka')!.getAttribute('data-keyboard')).toBe('true');
+    el.setView('grid'); // survives a re-render
+    await new Promise((r) => setTimeout(r, 20));
+    expect(el.querySelector('.eureka')!.getAttribute('data-keyboard')).toBe('true');
+    el.querySelector('.eureka')!.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+    expect(el.querySelector('.eureka')!.hasAttribute('data-keyboard')).toBe(false);
+  });
+
   it('keeps its keyboard shortcuts when a host puts the whole browser inside a <dialog>', async () => {
     const el = mount((e) => { const d = document.createElement('dialog'); d.append(e); return d; });
     await until(() => el.querySelectorAll('tr[data-path]').length === 2);

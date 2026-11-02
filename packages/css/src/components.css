@@ -45,16 +45,17 @@
   .eureka__tree { line-height: var(--tree-line-height); color: var(--subtle); }
   .eureka__tree-row { display: flex; align-items: center; gap: 0.25rem; min-inline-size: 0; }
   .eureka__tree-toggle, .eureka__tree-leaf { flex: none; display: inline-flex; align-items: center; }
-  .eureka__tree-leaf { padding-inline-start: calc(0.6em + 0.5rem); } /* the width of a disclosure marker, so leaves line up */
+  .eureka__tree-leaf { padding-inline-start: calc(0.45em + 0.5rem); } /* the width of a disclosure marker, so leaves line up */
   .eureka__tree summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 0.25rem; padding-inline-end: 0.125rem; }
   .eureka__tree summary::-webkit-details-marker { display: none; }
-  .eureka__tree summary::before { content: ""; inline-size: 0.6em; block-size: 0.6em; border-inline-end: 2px solid currentColor; border-block-end: 2px solid currentColor; transform: rotate(-45deg); margin-inline-end: 0.25rem; flex: none; transition: transform 120ms; }
-  .eureka__tree details[open] > summary::before { transform: rotate(45deg); }
+  .eureka__tree summary::before { content: ""; inline-size: 0.45em; block-size: 0.45em; border-inline-end: 1.5px solid currentColor; border-block-end: 1.5px solid currentColor; transform: translateY(-15%) rotate(-45deg); margin-inline-end: 0.25rem; flex: none; transition: transform 120ms; } /* a small chevron; the 24px/44px target comes from the summary */
+  .eureka__tree details[open] > summary::before { transform: translateY(-25%) rotate(45deg); }
   .eureka__tree details:not([open]) > summary .eureka__icon-open, .eureka__tree details[open] > summary .eureka__icon-closed { display: none; }
   /* children follow the open state of their disclosure (the store mirrors it in tree.open) */
   .eureka__tree-node:has(> .eureka__tree-row > details:not([open])) > .eureka__tree-children { display: none; }
   .eureka__tree-children { padding-inline-start: 1rem; }
-  .eureka .eureka__tree-link { background: none; border: 0; box-shadow: none; padding: 0.25em 0.35em; color: inherit; font: inherit; min-block-size: 24px; min-inline-size: 24px; text-align: start; overflow-wrap: anywhere; } /* 24px targets (KEY-C1, WCAG 2.5.8) */
+  .eureka .eureka__tree-link { background: none; border: 0; box-shadow: none; padding: 0.1em 0.35em; color: inherit; font: inherit; min-block-size: 24px; min-inline-size: 24px; text-align: start; overflow-wrap: anywhere; } /* 24px targets (KEY-C1, WCAG 2.5.8); rows pack at --tree-line-height (1.6), coarse pointers get 44px rows */
+  @media (pointer: coarse) { .eureka .eureka__tree-link, .eureka__tree summary { min-block-size: 44px; } }
   .eureka .eureka__tree-link:hover { color: var(--link-color); background: none; box-shadow: none; }
   .eureka .eureka__tree-link[aria-current="page"] { color: var(--link-color); font-weight: 700; } /* link colour: AA on the panel background in every theme */
   .eureka button.eureka__drop-area { border: 2px dashed var(--very-subtle); border-radius: 0.25rem; display: grid; place-items: center; min-block-size: 6rem; font-size: 3rem; color: var(--very-subtle); background: transparent; box-shadow: none; padding: 0.5rem; inline-size: 100%; }
@@ -104,8 +105,31 @@
   .eureka__shortcuts th, .eureka__shortcuts td { text-align: start; padding: 0.3rem 0.5rem 0.3rem 0; border-block-end: 1px solid var(--very-subtle); vertical-align: top; font-weight: 400; }
   .eureka__shortcuts td { white-space: nowrap; text-align: end; padding-inline-end: 0; }
   .eureka kbd { display: inline-block; font: 0.875em ui-monospace, SFMono-Regular, Menlo, monospace; line-height: 1.4; padding: 0 0.35em; border: 1px solid var(--subtle); border-block-end-width: 2px; border-radius: 0.25em; background: var(--button-bg, transparent); color: inherit; }
-  .eureka .eureka__help-button { min-inline-size: 24px; min-block-size: 24px; padding: 0 0.4rem; }
-  .eureka .eureka__help-button kbd { border: 0; background: transparent; font-size: 1em; font-weight: 700; padding: 0; }
+  .eureka .eureka__help-button { min-inline-size: 24px; min-block-size: 24px; padding: 0 0.4rem; display: inline-flex; align-items: center; }
+  .eureka .eureka__help-button .icon { inline-size: 1.25em; block-size: 1.25em; }
+  /* Keyboard hint knock-back (06 A11Y-55): resting opacity stays at or above 3:1 for the icon against the button (WCAG 1.4.11);
+     full opacity as soon as the keyboard is used (the element sets data-keyboard on the root), on hover and on focus. */
+  .eureka .eureka__help-button { opacity: var(--hint-opacity, 0.65); transition: opacity 300ms ease; }
+  .eureka[data-keyboard="true"] .eureka__help-button, .eureka .eureka__help-button:hover, .eureka .eureka__help-button:focus-visible, .eureka:has(dialog.eureka__shortcuts-modal) .eureka__help-button { opacity: 1; }
+  .black-on-white .eureka__help-button, .white-on-black .eureka__help-button { opacity: 1; }
+  @media (forced-colors: active) { .eureka .eureka__help-button { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .eureka .eureka__help-button { transition: none; } }
+  /* <kbd> shortcut hints on controls (02 HTML-96): text, so the resting level keeps 4.5:1 (WCAG 1.4.3). */
+  .eureka kbd.eureka__kbd { display: inline-block; font-size: 0.8em; line-height: 1.3; padding: 0 0.3em; margin-inline-start: 0.5em; vertical-align: 0.1em; color: var(--color); background: var(--light-bg); border-color: var(--subtle); opacity: var(--hint-text-opacity, 0.82); transition: opacity 300ms ease, display 300ms allow-discrete; } /* its own colours (body text on the panel background), so the resting contrast does not depend on the control's text colour */
+  .eureka[data-keyboard="true"] kbd.eureka__kbd, .eureka :is(button, .button, label):hover > kbd.eureka__kbd, .eureka :is(button, .button):focus-visible > kbd.eureka__kbd { opacity: 1; }
+  /* Until something inside the instance has *visible* focus (keyboard focus, not a pointer tap: there is no :focus-visible-within, but
+     :has(:focus-visible) on the root is the same thing), or the instance has seen the keyboard, the hints are not rendered at all; hovering a
+     control still reveals its own. opacity: 0 alongside display: none lets the discrete display transition hold the box until the fade-out ends. */
+  .eureka:not(:has(:focus-visible)):not([data-keyboard="true"]) :is(button, .button, label):not(:hover) > kbd.eureka__kbd { display: none; opacity: 0; }
+  /* Fade in from display: none where the engine supports discrete display transitions. @starting-style rules cascade with the normal rules by specificity and
+     source order, so this block repeats the selectors of every visible state and comes after them; earlier in the file it lost to them. */
+  @starting-style {
+    .eureka kbd.eureka__kbd, .eureka[data-keyboard="true"] kbd.eureka__kbd, .eureka :is(button, .button, label):hover > kbd.eureka__kbd, .eureka :is(button, .button):focus-visible > kbd.eureka__kbd { opacity: 0; }
+  }
+  .black-on-white kbd.eureka__kbd, .white-on-black kbd.eureka__kbd { opacity: 1; }
+  @media (forced-colors: active) { .eureka kbd.eureka__kbd { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .eureka kbd.eureka__kbd { transition: none; } }
+  @container eureka (max-width: 40em) { .eureka kbd.eureka__kbd { display: none; } } /* no room, and rarely a keyboard, on narrow layouts */
   .eureka__crop-stage { min-block-size: 40vh; background: #222; display: grid; place-items: center; }
   .eureka__crop-stage img { max-block-size: 60vh; }
 
