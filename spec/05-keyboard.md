@@ -83,6 +83,9 @@ around it.
 - **KEY-B8** Download (KEY-30, `Alt+Shift+D`, when `allowDownload`)
   activates the focused row's Download link, so the browser's own
   download handling applies (the `download` attribute, HTML-68).
+- **KEY-B10** Expand (KEY-21) opens the item in the row's named browsing
+  context, the same name the Expand link targets (02 HTML-68), so the
+  keyboard and the link share one tab per item.
 - **KEY-B7** Double-click or double-tap on a media cell chooses the item;
   Enter on the focused row does the same. There MUST be no action that
   is available only by double-click.

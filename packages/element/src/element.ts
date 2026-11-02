@@ -430,7 +430,7 @@ export class EurekaBrowser extends HTMLElement {
         this.#store.dispatch({ type: 'selection/clear' }); break;
       // row scope
       case 'chooseItem': if (item && target === row) this.#choose([item]); else handled = false; break;
-      case 'expandItem': if (item) window.open(item.absoluteURL, '_blank', 'noopener'); else handled = false; break;
+      case 'expandItem': if (item) { const name = this.#ids.item('row', item.filename); window.open(item.absoluteURL, name.startsWith('_') ? `e${name}` : name); } else handled = false; break; // the row's named context (HTML-68): a repeat Expand reuses the tab, which `noopener` would prevent
       case 'openContextMenu': if (row && item && MENU_MODES.has(state.view.mode)) this.#openContextMenu(row); else handled = false; break;
       case 'downloadItem': { const link = item && this.#config.allowDownload ? row?.querySelector<HTMLAnchorElement>('a[data-action="download"]') : null; if (link) link.click(); else handled = false; break; }
       case 'deleteItem': if (item && (target === row || !!toolbar)) this.#requestDelete([item.path], row); else handled = false; break;

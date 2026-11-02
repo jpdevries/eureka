@@ -557,6 +557,14 @@ Taken on 2026-11-01:
   close it; a dialog opened from the menu returns focus to the row. Spec
   HTML-71 (MUST at Level 1+), KEY-B9, A11Y-75; conformance test and an
   axe state. KEY-29 lost its `when`, so the shortcuts dialog lists it.
+- Row ids and Expand targets: everything inside a row now appends to the
+  row's id (`{rowId}__media`, `__expand`, …; the useId rule, HTML-64)
+  instead of deriving a fresh id per kind, and Expand targets the row's
+  id as a named browsing context, so expanding the same item again
+  reuses its tab; the keyboard Expand opens the same name, and there is
+  no `rel="noopener"` because a noopener context cannot be found again
+  by name (HTML-68, KEY-B10). The conformance test opens the popup, then
+  checks a second click and the shortcut add no page.
 - Package names: the `@eureka` npm scope belongs to an existing npm user,
   so the packages are `@mrktps/eureka` (the element, what most people
   install) and `@mrktps/eureka-core`, `-html`, `-css`, `-react`,

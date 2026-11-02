@@ -39,12 +39,15 @@ export function media(ctx: Ctx, item: FileEntry, { controls = true, width, heigh
 }
 
 /** One action a row offers (HTML-68): the toolbar and the context menu (HTML-71) render the same list. */
-export interface RowAction { kind: string; label: string; action?: string; cls?: string; href?: string; external?: boolean; download?: boolean }
+export interface RowAction { kind: string; label: string; action?: string; cls?: string; href?: string; target?: string; download?: boolean }
+
+/** The row's named browsing context for Expand (HTML-68): its id, which is a valid name because it never starts with "_". */
+export function rowTargetName(ctx: Ctx, item: FileEntry): string { const id = ctx.ids.item('row', item.filename); return id.startsWith('_') ? `e${id}` : id; }
 
 export function rowActions(ctx: Ctx, item: FileEntry): RowAction[] {
   const { t, state: { config } } = ctx;
   const n = item.filename;
-  const list: RowAction[] = [{ kind: 'expand', label: t('expand'), action: 'expandItem', href: item.absoluteURL, external: true }];
+  const list: RowAction[] = [{ kind: 'expand', label: t('expand'), action: 'expandItem', href: item.absoluteURL, target: rowTargetName(ctx, item) }];
   if (config.allowChoose) list.push({ kind: 'choose', label: t('choose'), action: 'chooseItem' });
   if (config.allowCrop && isCroppable(n)) list.push({ kind: 'crop', label: t('crop'), cls: 'eureka__crop-btn' });
   if (config.allowRename) list.push({ kind: 'rename', label: t('rename'), action: 'renameItem' });
@@ -61,7 +64,7 @@ export function actions(ctx: Ctx, item: FileEntry, idPrefix = ''): Raw {
   const controls = rowActions(ctx, item).map((a, i) => {
     const keys = a.action ? keyshortcuts(ctx, a.action) : '';
     const body = html`${a.label}${hidden(' ' + n)}${a.action ? kbdHint(ctx, a.action) : ''}`;
-    if (a.href) return html`<a class="button eureka__action" id="${ids.item(idPrefix + a.kind, item.filename)}" href="${a.href}"${attr('target', a.external ? '_blank' : null)}${attr('rel', a.external ? 'noopener' : null)}${attr('download', a.download ? n : null)} data-action="${a.kind}"${raw(roving(i))}${keys}>${body}</a>`;
+    if (a.href) return html`<a class="button eureka__action" id="${ids.item(idPrefix + a.kind, item.filename)}" href="${a.href}"${attr('target', a.target ?? null)}${attr('download', a.download ? n : null)} data-action="${a.kind}"${raw(roving(i))}${keys}>${body}</a>`;
     return html`<button type="button" class="${classes('eureka__action', a.cls)}" id="${ids.item(idPrefix + a.kind, item.filename)}" data-action="${a.kind}" data-path="${item.path}"${raw(roving(i))}${keys}>${body}</button>`;
   });
   return html`<div class="eureka__button-bar eureka__context-buttons" role="toolbar" aria-label="${t('actions.for', { filename: n })}" data-row-actions>

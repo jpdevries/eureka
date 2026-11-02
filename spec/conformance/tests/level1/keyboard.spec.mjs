@@ -173,6 +173,27 @@ test('KEY-29 Shift+F10 opens the row menu as a popover; arrows, typeahead, Enter
   await expect(page.getByRole('menu')).toHaveCount(0);
 });
 
+test('HTML-68 Expand opens the item in a named tab per row, and a second Expand reuses it', async ({ page }) => {
+  v3only('named browsing context per row');
+  const row = await focusRow(page, 'schildpad.jpg');
+  const expand = row.getByRole('link', { name: 'Expand schildpad.jpg' });
+  await expect(expand).toHaveAttribute('target', await row.getAttribute('id'));
+  const [popup] = await Promise.all([page.waitForEvent('popup'), expand.click()]);
+  await popup.waitForLoadState();
+  expect(popup.url()).toContain('schildpad.jpg');
+  const pages = page.context().pages().length;
+  await focusRow(page, 'schildpad.jpg');
+  await expand.click();
+  await page.waitForTimeout(500);
+  expect(page.context().pages().length).toBe(pages); // same named context: no second tab
+  // the keyboard binding targets the same name
+  await focusRow(page, 'schildpad.jpg');
+  await page.keyboard.press(chord('expandItem'));
+  await page.waitForTimeout(500);
+  expect(page.context().pages().length).toBe(pages);
+  await popup.close();
+});
+
 test('KEY-30 the download shortcut downloads the focused item', async ({ page }) => {
   v3only('download binding');
   await focusRow(page, 'schildpad.jpg');

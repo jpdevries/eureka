@@ -43,8 +43,8 @@ describe('Level 0 render (03)', () => {
     expect(out).toContain('>Set Directory</button>');
   });
   it('renders one radio per file, labelled by the filename cell, and no actions column', () => {
-    expect(out.match(/type="radio" id="eureka__radio__[^"]+" name="eureka__chosen_item"/g)).toHaveLength(3);
-    expect(out).toContain('<label for="eureka__radio__schildpad__002ejpg">schildpa<wbr>d.jpg</label>');
+    expect(out.match(/type="radio" id="eureka__row__[^"]+__radio" name="eureka__chosen_item"/g)).toHaveLength(3);
+    expect(out).toContain('<label for="eureka__row__schildpad__002ejpg__radio">schildpa<wbr>d.jpg</label>');
     expect(out).toContain('value="Wide Banner &lt;final&gt;.jpg"');
     expect(out).not.toContain('eureka__context-row');
     expect(out).not.toContain('eureka__th-actions');
@@ -153,11 +153,24 @@ describe('enhanced render (02)', () => {
     expect(instance(ctx).value).not.toContain('popover=');
     const open = instance({ ...ctx, contextMenu: { path: 'assets/img/schildpad.jpg' } }).value;
     expect(open).toContain('<div popover="manual" role="menu" id="eureka__context-menu" class="eureka__context-menu" aria-label="Actions for schildpad.jpg" data-context-for="assets/img/schildpad.jpg">');
-    expect(open).toMatch(/<a role="menuitem" tabindex="-1" class="eureka__menuitem" data-action="expand" data-path="assets\/img\/schildpad\.jpg" aria-keyshortcuts="Alt\+Space" href="[^"]+" target="_blank" rel="noopener">/);
+    expect(open).toMatch(/<a role="menuitem" tabindex="-1" class="eureka__menuitem" data-action="expand" data-path="assets\/img\/schildpad\.jpg" aria-keyshortcuts="Alt\+Space" href="[^"]+" target="eureka__row__schildpad__002ejpg">/);
+    expect(open).not.toContain('rel="noopener"');
     expect(open).toMatch(/<button type="button" role="menuitem" tabindex="-1" class="eureka__menuitem dangerous" data-action="delete" data-path="assets\/img\/schildpad\.jpg" aria-keyshortcuts="Delete Backspace">/);
     expect(open).toContain('class="eureka__row eureka__context-anchor"');
     expect(open).toContain('<span class="eureka__menuitem-label">Rename<span class="visually-hidden"> schildpad.jpg</span></span><kbd class="eureka__kbd" aria-hidden="true">F2</kbd>');
     expect(instance({ ...contextFromPage(input, 0), contextMenu: { path: 'assets/img/schildpad.jpg' } }).value).not.toContain('popover='); // Level 0 has no menu
+  });
+  it('names everything in a row by appending to the row id, and Expand targets that name (HTML-64, HTML-68)', () => {
+    const out = renderEnhanced(input);
+    expect(out).toContain('<tr id="eureka__row__schildpad__002ejpg"');
+    expect(out).toContain('id="eureka__row__schildpad__002ejpg__media"');
+    expect(out).toContain('id="eureka__row__schildpad__002ejpg__filename"');
+    expect(out).toMatch(/<a class="button eureka__action" id="eureka__row__schildpad__002ejpg__expand" href="[^"]+" target="eureka__row__schildpad__002ejpg" data-action="expand"/);
+    const ctx = contextFromPage(input, 1);
+    const focused = instance({ ...ctx, state: { ...ctx.state, selection: { ...ctx.state.selection, focused: 'assets/img/schildpad.jpg' } } }).value;
+    expect(focused).toContain('id="eureka__row__schildpad__002ejpg__pathbar-expand"');
+    expect(out).not.toContain('target="_blank"');
+    expect(renderLevel0(input)).toContain('id="eureka__row__schildpad__002ejpg__radio"');
   });
   it('puts the shortcuts button beside the heading at Level 1 only', () => {
     expect(renderEnhanced(input)).toContain('Media Content</h2><button type="button" class="eureka__help-button"');

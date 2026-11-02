@@ -19,7 +19,7 @@ export function contextMenu(ctx: Ctx): Raw {
     const common = html`role="menuitem" tabindex="-1" class="${classes('eureka__menuitem', a.cls)}" data-action="${a.kind}" data-path="${item.path}"${a.action ? keyshortcuts(ctx, a.action) : ''}`;
     const body = html`<span class="eureka__menuitem-label">${a.label}${hidden(' ' + n)}</span>${a.action ? kbdHint(ctx, a.action) : ''}`;
     return a.href
-      ? html`<a ${common} href="${a.href}"${attr('target', a.external ? '_blank' : null)}${attr('rel', a.external ? 'noopener' : null)}${attr('download', a.download ? n : null)}>${body}</a>`
+      ? html`<a ${common} href="${a.href}"${attr('target', a.target ?? null)}${attr('download', a.download ? n : null)}>${body}</a>`
       : html`<button type="button" ${common}>${body}</button>`;
   });
   return html`<div popover="manual" role="menu" id="${ids.id('context-menu')}" class="eureka__context-menu" aria-label="${t('actions.for', { filename: n })}" data-context-for="${item.path}">${items}</div>`;

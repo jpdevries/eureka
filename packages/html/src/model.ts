@@ -10,7 +10,9 @@ export interface Ids {
   item(kind: string, path: string): string;
 }
 export function createIds(prefix: string): Ids {
-  return { p: prefix, id: (s) => prefix + s, item: (kind, path) => `${prefix}${kind}__${cssSafe(path)}` };
+  // Row-scoped ids append to the row's own id (02 HTML-64, the useId() rule: derive, never re-create), so one valid id per row
+  // names everything inside it: {p}row__{safe}, {p}row__{safe}__media, {p}row__{safe}__expand. Tree nodes keep their own kind.
+  return { p: prefix, id: (s) => prefix + s, item: (kind, path) => (kind === 'row' || kind === 'tree' ? `${prefix}${kind}__${cssSafe(path)}` : `${prefix}row__${cssSafe(path)}__${kind}`) };
 }
 
 export interface Ctx {

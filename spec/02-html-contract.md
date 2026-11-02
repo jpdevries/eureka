@@ -173,7 +173,12 @@ DOM order is the reading order and the tab order.
   `tabindex="0"`, all others `tabindex="-1"`, Arrow Up/Down move between
   rows. v2 gave every row `tabindex="0"`; v3 adopts roving tabindex so a
   5,000 row listing is one tab stop.
-- **HTML-64** Each row's id is `{p}row__{cssSafe(filename)}`. Its
+- **HTML-64** Each row's id is `{p}row__{cssSafe(filename)}`, a valid
+  HTML id (the prefix defaults to `eureka__`, so it starts with a letter).
+  Everything inside the row that needs an id appends to it rather than
+  deriving a fresh one: `{rowId}__media`, `{rowId}__filename`,
+  `{rowId}__check`, `{rowId}__expand`, `{rowId}__choose`, …, and the
+  path bar's copies `{rowId}__pathbar-expand` and so on. Its
   accessible description (exposed via `aria-describedby` to a
   visually-hidden element, or via `aria-label` as v2 did) MUST follow the
   message `item.description`: "{filename} displays at {w}x{h}, weighs
@@ -206,7 +211,12 @@ DOM order is the reading order and the tab order.
   editable; Enter commits, Escape cancels, empty names are rejected.
 - **HTML-68** Actions cell: a `role="toolbar"` labelled "Actions for
   {filename}" containing, in order and each only when allowed: Expand
-  (link to `absoluteURL`, new context), Choose (button), Crop (button,
+  (link to `absoluteURL` with `target` set to the row's id, a named
+  browsing context per item, so expanding the same item again reuses its
+  tab instead of opening another; the name gets an `e` prefix in the
+  unlikely case the id starts with `_`, which is reserved; no
+  `rel="noopener"`, because a context opened with noopener is not
+  familiar to the page and could not be found again by name), Choose (button), Crop (button,
   raster images only), Rename (button), Delete (button, class
   `dangerous`), Download (link with `download` attribute). Each control's
   visible text is the verb and its accessible name is "{verb} {filename}".
