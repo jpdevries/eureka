@@ -1,0 +1,11 @@
+[{
+  "name":"assets",
+  "cd":"assets",
+  "children":[{
+    "name":"img",
+    "cd":"assets/img"
+  }]
+},{
+  "name":"uploads",
+  "cd":"uploads"
+}]

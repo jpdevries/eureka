@@ -1,0 +1,7 @@
+extends:
+  - recommended
+rules:
+  # `/media/sources/` with the trailing slash is the literal v2 path; keep it.
+  no-path-trailing-slash: off
+  # error responses are host-defined; v2 returned `[]` or `{error}` with 200
+  operation-4xx-response: off

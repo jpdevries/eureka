@@ -1,0 +1,37 @@
+{
+  "$schema": "../schema/keymap.schema.json",
+  "version": "3.0.0-draft.1",
+  "notes": [
+    "`keys` is normative for v3. `v2` is the Eureka 2.0 binding, informative.",
+    "Chords use the W3C KeyboardEvent.key names joined with '+'; 'Mod' means Control on Windows/Linux and Meta on macOS.",
+    "scope 'instance' bindings fire only while focus is inside the instance; scope 'row' bindings fire only while a listing row or its actions toolbar has focus.",
+    "v2 used Control for everything, which on Windows and Linux collides with Find, New window, View source and Reload. v3 moves those to Alt+Shift."
+  ],
+  "bindings": [
+    { "id": "KEY-01", "action": "toggleSourcePanel",  "scope": "instance", "keys": ["Control+;"],                       "v2": ["ctrl+;"] },
+    { "id": "KEY-02", "action": "setView",            "scope": "instance", "keys": ["Control+Alt+1", "Control+Alt+2", "Control+Alt+3", "Control+Alt+4", "Control+Alt+5"], "args": ["table", "thumb", "grid", "list", "masonry"], "v2": ["ctrl+alt+1", "ctrl+alt+2", "ctrl+alt+3", "ctrl+alt+4"] },
+    { "id": "KEY-03", "action": "setSource",          "scope": "instance", "keys": ["Alt+0", "Alt+1", "Alt+2", "Alt+3", "Alt+4", "Alt+5", "Alt+6", "Alt+7", "Alt+8", "Alt+9"], "args": "source id equals the digit", "v2": ["alt+0 … alt+9"] },
+    { "id": "KEY-04", "action": "upload",             "scope": "instance", "keys": ["Alt+Shift+U"],                     "v2": ["ctrl+u"] },
+    { "id": "KEY-05", "action": "createDirectory",    "scope": "instance", "keys": ["Alt+Shift+N"],                     "v2": ["ctrl+n"] },
+    { "id": "KEY-06", "action": "createFile",         "scope": "instance", "keys": ["Alt+Shift+F"],                     "v2": ["ctrl+shift+n"], "when": "host supplies a createFile handler" },
+    { "id": "KEY-07", "action": "focusFilter",        "scope": "instance", "keys": ["Alt+Shift+S", "/"],                "v2": ["ctrl+f"], "notes": "'/' only when focus is not in a text field" },
+    { "id": "KEY-08", "action": "sortAscending",      "scope": "instance", "keys": ["Alt+ArrowUp"],                     "v2": ["alt+up"] },
+    { "id": "KEY-09", "action": "sortDescending",     "scope": "instance", "keys": ["Alt+ArrowDown"],                   "v2": ["alt+down"] },
+    { "id": "KEY-10", "action": "sortBy",             "scope": "instance", "keys": ["Alt+N", "Alt+D", "Alt+F", "Alt+E"], "args": ["filename", "dimensions", "fileSize", "editedOn"], "v2": ["alt+n", "alt+d", "alt+f", "alt+e"] },
+    { "id": "KEY-11", "action": "chooseSingle",       "scope": "instance", "keys": ["Alt+S"],                           "v2": ["alt+s"] },
+    { "id": "KEY-12", "action": "chooseMultiple",     "scope": "instance", "keys": ["Alt+M"],                           "v2": ["alt+m"] },
+    { "id": "KEY-13", "action": "invertSelection",    "scope": "instance", "keys": ["Alt+I"],                           "v2": ["alt+i"], "when": "multiple choice active" },
+    { "id": "KEY-14", "action": "deselectAll",        "scope": "instance", "keys": ["Alt+Z", "Escape"],                 "v2": ["alt+z"], "notes": "Escape deselects only when no dialog is open and the filter is empty" },
+
+    { "id": "KEY-20", "action": "chooseItem",         "scope": "row", "keys": ["Enter"],                                "v2": ["enter"] },
+    { "id": "KEY-21", "action": "expandItem",         "scope": "row", "keys": ["Alt+ "],                                "v2": ["alt+space"], "notes": "Space alone toggles the checkbox in multiple mode" },
+    { "id": "KEY-22", "action": "deleteItem",         "scope": "row", "keys": ["Delete", "Backspace"],                  "v2": ["backspace"] },
+    { "id": "KEY-23", "action": "renameItem",         "scope": "row", "keys": ["F2"],                                   "v2": ["ctrl+r"] },
+    { "id": "KEY-24", "action": "toggleItemChecked",  "scope": "row", "keys": [" "],                                    "v2": [], "when": "multiple choice active" },
+    { "id": "KEY-25", "action": "nextRow",            "scope": "row", "keys": ["ArrowDown"],                            "v2": [] },
+    { "id": "KEY-26", "action": "previousRow",        "scope": "row", "keys": ["ArrowUp"],                              "v2": [] },
+    { "id": "KEY-27", "action": "firstRow",           "scope": "row", "keys": ["Home"],                                 "v2": [] },
+    { "id": "KEY-28", "action": "lastRow",            "scope": "row", "keys": ["End"],                                  "v2": [] },
+    { "id": "KEY-29", "action": "openContextMenu",    "scope": "row", "keys": ["Shift+F10", "ContextMenu"],             "v2": [], "when": "a custom context menu is implemented (HTML-71)" }
+  ]
+}

@@ -1,0 +1,261 @@
+openapi: 3.1.0
+info:
+  title: Eureka Media Browser REST API
+  version: 3.0.0-draft.1
+  description: |
+    The API a media source server exposes to the Eureka browser. Seeded
+    from the Eureka 2.0 reference server (`server.js`) and the wiki.
+
+    All paths are relative to the configured `basePath` (v2 default
+    `/assets/components/eureka/`). Every request may carry additional
+    headers configured on the instance (`headers`); the server MUST
+    ignore headers it does not know. Servers SHOULD honour the `Save-Data`
+    request header by returning smaller `absolutePreviewURL`s.
+
+    Paths (`path`, `cd`, `directory`) are relative to the media source
+    root, use `/` separators, carry no leading slash, and the root is `/`.
+    v2 accepted `dir` as an alias of the `path` query parameter on DELETE;
+    v3 servers SHOULD accept both and clients MUST send `path`.
+
+    Mutating endpoints return the refreshed listing of the affected
+    directory so the client can update without a second request.
+servers:
+  - url: /assets/components/eureka
+security: []
+# Authentication is the host's concern: Eureka sends whatever cookies the
+# page has plus the configured `headers`. No scheme is mandated here.
+tags:
+  - name: sources
+  - name: listing
+  - name: items
+  - name: attachments
+paths:
+  /media/sources/:
+    get:
+      tags: [sources]
+      operationId: listSources
+      summary: List media sources
+      responses:
+        '200':
+          description: The media sources the current user may browse, in display order. The first is the default.
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Source' }
+              example: [{ "id": 0, "name": "filesystem" }, { "id": 1, "name": "cloud" }]
+  /media/sources/{source}:
+    parameters:
+      - $ref: '#/components/parameters/source'
+    get:
+      tags: [listing]
+      operationId: listDirectoryOrTree
+      summary: Directory tree of a source, or listing of one directory
+      description: |
+        Without `path`: the directory tree of the source (folders only,
+        nested). With `path`: the contents of that directory (files and
+        immediate subfolders).
+      parameters:
+        - name: path
+          in: query
+          required: false
+          schema: { type: string }
+          example: assets/img
+      responses:
+        '200':
+          description: Tree (no `path`) or listing (with `path`).
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: array
+                    items: { $ref: '#/components/schemas/TreeNode' }
+                  - type: array
+                    items: { $ref: '#/components/schemas/Entry' }
+    post:
+      tags: [items]
+      operationId: uploadFiles
+      summary: Upload files into a directory
+      parameters:
+        - name: path
+          in: query
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                eureka__uploadFiles:
+                  type: array
+                  items: { type: string, format: binary }
+              required: [eureka__uploadFiles]
+      responses:
+        '200':
+          $ref: '#/components/responses/Listing'
+        '400':
+          $ref: '#/components/responses/Error'
+    put:
+      tags: [items]
+      operationId: createOrRename
+      summary: Create a directory, or rename a file or directory
+      description: |
+        `path` alone creates that directory (every missing segment).
+        `path` plus `name` renames the file or directory at `path` to
+        `name` within the same parent.
+      parameters:
+        - name: path
+          in: query
+          required: true
+          schema: { type: string }
+        - name: name
+          in: query
+          required: false
+          schema: { type: string }
+      responses:
+        '200':
+          description: |
+            Create: `true`. Rename: the refreshed listing of the parent
+            directory. (v2 returned `true` for create; v3 servers SHOULD
+            return the parent listing for both.)
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: boolean
+                  - type: array
+                    items: { $ref: '#/components/schemas/Entry' }
+        '400':
+          $ref: '#/components/responses/Error'
+    delete:
+      tags: [items]
+      operationId: deleteItems
+      summary: Delete one item by path, or several by multipart body
+      description: |
+        With `path`: delete that file or directory (recursively).
+        Without `path`: a multipart body with `cd` (directory) and
+        repeated `delete_file[]` (filenames in `cd`) deletes several files.
+      parameters:
+        - name: path
+          in: query
+          required: false
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                cd: { type: string }
+                cs: { type: string, description: 'media source id, redundant with the path parameter' }
+                'delete_file[]':
+                  type: array
+                  items: { type: string }
+      responses:
+        '200':
+          description: |
+            Single delete: `true` (v2) or the refreshed listing of the
+            parent (v3 SHOULD). Multiple delete: the refreshed listing of `cd`.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: boolean
+                  - type: array
+                    items: { $ref: '#/components/schemas/Entry' }
+  /media/attachments/{source}:
+    parameters:
+      - $ref: '#/components/parameters/source'
+    post:
+      tags: [attachments]
+      operationId: downloadZip
+      summary: Download several files as one zip
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [cd, 'zip_file[]']
+              properties:
+                cd: { type: string }
+                cs: { type: string }
+                'zip_file[]':
+                  type: array
+                  items: { type: string }
+      responses:
+        '200':
+          description: 'A zip archive; `Content-Disposition: attachment; filename="eureka-{source}.zip"`.'
+          content:
+            application/zip:
+              schema: { type: string, format: binary }
+components:
+  parameters:
+    source:
+      name: source
+      in: path
+      required: true
+      schema: { type: string }
+      description: Media source id as returned by listSources.
+  responses:
+    Listing:
+      description: The refreshed listing of the affected directory.
+      content:
+        application/json:
+          schema:
+            type: array
+            items: { $ref: '#/components/schemas/Entry' }
+    Error:
+      description: Error.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+  schemas:
+    Source:
+      type: object
+      required: [id, name]
+      properties:
+        id:
+          oneOf: [{ type: integer }, { type: string }]
+          description: 'Stable identifier. Used in URLs and in the `{id}||{dir}` no-JS select value, so it MUST NOT contain `|`.'
+        name: { type: string }
+    TreeNode:
+      type: object
+      required: [name, cd]
+      properties:
+        name: { type: string, description: 'Folder display name' }
+        cd: { type: string, description: 'Folder path relative to the source root' }
+        children:
+          type: array
+          items: { $ref: '#/components/schemas/TreeNode' }
+          description: 'Omitted when the server has not expanded this node; empty array when the folder has no subfolders.'
+    Entry:
+      type: object
+      description: A file (has `filename`) or a folder (has `foldername`) inside a listing. Exactly one of the two is present.
+      required: [directory, path, absoluteURL, editedOn, fileSize]
+      properties:
+        filename: { type: string }
+        foldername: { type: string }
+        directory: { type: string, description: "For files, the containing directory. For folders, the folder's own path (v2 behaviour, kept)." }
+        path: { type: string, description: 'Source-relative path of the entry; the value sent back on rename and delete.' }
+        absoluteURL: { type: string, format: uri-reference, description: 'Where the file can be fetched or opened.' }
+        absolutePreviewURL: { type: string, format: uri-reference, description: 'A smaller rendition for thumbnails. Defaults to absoluteURL.' }
+        editedOn:
+          oneOf: [{ type: integer }, { type: string, format: date-time }]
+          description: 'Last modification time, epoch milliseconds (v2) or ISO 8601 (v3 MAY).'
+        dimensions:
+          type: array
+          items: { type: integer }
+          minItems: 2
+          maxItems: 2
+          description: "[width, height] in CSS pixels for images and video; omitted otherwise."
+        fileSize: { type: integer, description: 'Bytes.' }
+        alt: { type: string, description: 'Alternative text for the media. When absent the client generates a description from the other fields.' }
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error: { type: string }

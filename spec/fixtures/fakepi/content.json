@@ -1,0 +1,18 @@
+[
+  {
+    "filename":"boo.jpg",
+    "directory":"assets/images",
+    "path":"http://placehold.it/350x150",
+    "dimensions":[350,150],
+    "fileSize":24800,
+    "editedOn":1487107348619
+  },
+  {
+    "filename":"bar.jpg",
+    "directory":"assets/images",
+    "path":"http://placehold.it/300x150",
+    "dimensions":[300,150],
+    "fileSize":24800,
+    "editedOn":1487107348619
+  }
+]

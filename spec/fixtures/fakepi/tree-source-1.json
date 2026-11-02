@@ -1,0 +1,8 @@
+[{
+  "name":"assets",
+  "cd":"assets",
+  "children":[{
+    "name":"img",
+    "cd":"assets/img"
+  }]
+}]

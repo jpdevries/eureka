@@ -1,0 +1,61 @@
+# 05. Keyboard
+
+Status: draft. The binding table is normative data in
+[`data/keymap.json`](data/keymap.json); this document states the rules
+around it.
+
+## 1. Bindings
+
+- **KEY-A1** Implementations MUST import `data/keymap.json` and honour
+  every binding whose `when` condition holds. Hosts MAY override
+  individual bindings through configuration; an override replaces the
+  `keys` array for that action.
+- **KEY-A2** Instance-scoped bindings fire only when focus is inside the
+  instance root. Row-scoped bindings fire only when a listing row, or a
+  control inside its actions toolbar, has focus. Nothing is bound on
+  `document` or `window`. v2 bound every shortcut globally through
+  Mousetrap and additionally bound Enter, Backspace, Alt+Space and Ctrl+R
+  once per mounted row; v3 binds once per instance.
+- **KEY-A3** Bindings MUST NOT fire while focus is in a text input,
+  textarea, contenteditable or `<select>`, except `Escape` and the
+  explicit `focusFilter` chord.
+- **KEY-A4** The v2 Control-based chords (`ctrl+f`, `ctrl+n`, `ctrl+u`,
+  `ctrl+r`, `ctrl+shift+n`) collide with browser commands on Windows and
+  Linux. v3 defaults move them to `Alt+Shift` and `F2` as listed in the
+  data file. A host MAY restore the v2 chords for macOS-only audiences.
+- **KEY-A5** A shortcuts reference MUST be reachable from the UI (a "?"
+  binding or a help link) and generated from the same data file.
+
+## 2. Focus management
+
+- **KEY-B1** The listing rows form one tab stop with a roving tabindex
+  (02 HTML-63). ArrowDown/ArrowUp move between rows, Home/End to the
+  first/last row. Moving focus to a row updates the focused item in
+  state (and therefore the path bar and the Choose button).
+- **KEY-B2** From a focused row, Tab moves into that row's actions
+  toolbar (when visible), then out of the listing. Inside a toolbar,
+  ArrowLeft/ArrowRight move between controls. Shift+Tab reverses.
+- **KEY-B3** After an item is deleted, focus moves to the row that took
+  its place (the next row, or the previous one for the last row, or the
+  empty-state message when none remain).
+- **KEY-B4** After a rename, focus returns to the renamed row. After a
+  directory change, focus moves to the first row, or to the empty state
+  message, unless the change was made from the tree, in which case focus
+  stays in the tree.
+- **KEY-B5** Opening a dialog moves focus into it; closing it returns
+  focus to the control that opened it (native `<dialog>` behaviour).
+  Escape closes the topmost dialog.
+- **KEY-B6** Activating "Try another search" focuses the filter;
+  activating "upload some files" opens the file picker; activating the
+  source panel toggle leaves focus on the toggle.
+- **KEY-B7** Double-click or double-tap on a media cell chooses the item;
+  Enter on the focused row does the same. There MUST be no action that
+  is available only by double-click.
+
+## 3. Visible focus
+
+- **KEY-C1** Every focusable element has a visible focus indicator with
+  at least 3:1 contrast against adjacent colours in every theme (08),
+  including forced-colors mode where the system `Highlight` colour is
+  used. v2 relied on `outline: 1px solid var(--active)`; v3 uses
+  `:focus-visible` and a 2px outline with offset.

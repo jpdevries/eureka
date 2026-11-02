@@ -1,0 +1,95 @@
+{
+  "version": "3.0.0-draft.1",
+  "notes": [
+    "Normative registry of the CSS custom properties an implementation's stylesheet MUST read, with the default used when a host sets nothing.",
+    "Defaults are the Eureka 2.0 compiled values. `documented` marks tokens that were in the v2 README theming table; the others were used by the v2 stylesheet without being documented.",
+    "Themes are complete sets of overrides. `forced-colors` lists the system colour each token maps to under `@media (forced-colors: active)`."
+  ],
+  "tokens": {
+    "--active":                     { "default": "#3697cd",      "documented": true,  "description": "Highlight colour for active or focused components, links, the drop area" },
+    "--active-darker":              { "default": "#297aa7",      "documented": false, "description": "Hover state derived from --active" },
+    "--bg-color":                   { "default": "#ececec",      "documented": false, "description": "Instance background, used in fullscreen" },
+    "--color":                      { "default": "#081922",      "documented": true,  "description": "Default text colour" },
+    "--light-bg":                   { "default": "white",        "documented": true,  "description": "Panel background" },
+    "--link-color":                 { "default": "#3697cd",      "documented": true,  "description": "Anchor text colour" },
+    "--border-width":               { "default": "1px",          "documented": true,  "description": "Border width for panels, components, inputs" },
+    "--border-style":               { "default": "solid",        "documented": true,  "description": "Border style for panels, components, inputs" },
+    "--border-color":               { "default": "#e4e4e4",      "documented": true,  "description": "Border colour for components and inputs" },
+    "--border-shadow-color":        { "default": "#e4e4e4",      "documented": false, "description": "Box-shadow colour used to draw button borders; pressed state uses a darker value" },
+    "--border-color-dangerous":     { "default": "#b80000",      "documented": false, "description": "Border for destructive controls on hover and focus" },
+    "--panel-border-color":         { "default": "#dddddd",      "documented": true,  "description": "Border colour of panels" },
+    "--button-bg":                  { "default": "white",        "documented": true,  "description": "Button background" },
+    "--button-color":               { "default": "#555555",      "documented": true,  "description": "Button text colour" },
+    "--dangerous":                  { "default": "red",          "documented": true,  "description": "Colour for warnings, errors, destructive buttons" },
+    "--subtle":                     { "default": "#556c88",      "documented": true,  "description": "Subtle text colour, used in the source panel and secondary labels" },
+    "--very-subtle":                { "default": "#dddddd",      "documented": true,  "description": "Very subtle colour, used for the drop zone border" },
+    "--very-subtle-icon-opacity":   { "default": "0.42",         "documented": true,  "description": "Opacity of very subtle icons (drop zone)" },
+    "--media-cell-background":      { "default": "transparent",  "documented": false, "description": "Background behind thumbnails" },
+    "--tree-line-height":           { "default": "1.6",          "documented": false, "description": "Line height of tree nodes" },
+    "--tree-course-line-height":    { "default": "1.8",          "documented": false, "description": "Line height of tree nodes in coarse-pointer (touch) mode" },
+    "--notification-background":    { "default": "#d9edf7",      "documented": false, "description": "Notification background (info)" },
+    "--notification-color":         { "default": "#1d6e95",      "documented": false, "description": "Notification text (info)" },
+    "--notification-border-color":  { "default": "var(--notification-color)", "documented": false, "description": "Notification border" },
+    "--notification-focus-color":   { "default": "#247fad",      "documented": false, "description": "Notification dismiss button hover and focus colour" }
+  },
+  "variants": {
+    "notification-dangerous": {
+      "description": "Applied on `.eureka__notification-wrapper .eureka__dangerous`",
+      "--notification-background": "#f7a2a2",
+      "--notification-color": "#911912",
+      "--notification-border-color": "#911912",
+      "--notification-focus-color": "#911912"
+    }
+  },
+  "themes": {
+    "black-on-white": {
+      "selector": ".black-on-white",
+      "description": "High contrast, dark text on light. Also the mapping v2 applied under -ms-high-contrast: black-on-white.",
+      "--panel-border-color": "rgb(8,8,8)",
+      "--light-bg": "white",
+      "--border-width": "2px",
+      "--button-color": "rgb(20,20,20)",
+      "--subtle": "rgb(20,20,20)",
+      "--border-style": "solid",
+      "--border-color": "rgb(8,8,8)",
+      "--very-subtle": "rgb(40,40,40)",
+      "--very-subtle-icon-opacity": "1"
+    },
+    "white-on-black": {
+      "selector": ".white-on-black",
+      "description": "High contrast, light text on dark. Also the mapping v2 applied under -ms-high-contrast: white-on-black.",
+      "--bg-color": "rgb(8,8,8)",
+      "--color": "white",
+      "--panel-border-color": "white",
+      "--light-bg": "rgb(8,8,8)",
+      "--border-width": "2px",
+      "--button-bg": "transparent",
+      "--button-color": "rgb(220,220,220)",
+      "--subtle": "rgb(220,220,220)",
+      "--border-style": "solid",
+      "--border-color": "white",
+      "--very-subtle": "rgb(120,120,120)",
+      "--active": "yellow",
+      "--dangerous": "red",
+      "--link-color": "yellow",
+      "--very-subtle-icon-opacity": "1"
+    }
+  },
+  "forced-colors": {
+    "description": "Under @media (forced-colors: active) the stylesheet MUST set these tokens to system colours and MUST NOT rely on background colour alone to convey state.",
+    "--color": "CanvasText",
+    "--bg-color": "Canvas",
+    "--light-bg": "Canvas",
+    "--button-bg": "ButtonFace",
+    "--button-color": "ButtonText",
+    "--border-color": "ButtonBorder",
+    "--panel-border-color": "CanvasText",
+    "--active": "Highlight",
+    "--link-color": "LinkText",
+    "--dangerous": "CanvasText",
+    "--subtle": "GrayText",
+    "--very-subtle": "GrayText",
+    "--very-subtle-icon-opacity": "1",
+    "--border-width": "2px"
+  }
+}

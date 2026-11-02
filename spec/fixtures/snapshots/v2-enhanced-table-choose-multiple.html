@@ -1,0 +1,913 @@
+<div id="root" class="eureka-root">
+<div lang="en-US" class="eureka eureka__view-mode__table eureka__choose-multiple">
+<div class="" aria-live="assertive" aria-relevant="additions" aria-atomic="true">
+</div>
+<div aria-hidden="false" class="eureka__browse-content">
+<div aria-hidden="false" id="eureka__pathbrowser" class="eureka__pathbrowser">
+<div class="eureka__media-source-selector" role="complementary">
+<h2>
+<label for="media-source-selector__select">
+<span class="visually-hidden">
+<span>Choose</span> <span>a</span> </span>
+<span>Media Source</span>
+</label>
+</h2>
+<select id="media-source-selector__select">
+<option value="0">filesystem</option>
+<option value="1">cloud</option>
+</select>
+</div>
+<nav class="eureka__tree" role="tree">
+<details open="">
+<summary role="treeitem" contextmenu="context_menu__">
+<svg aria-hidden="true" class="icon icon-folder">
+<use xlink:href="assets/img/icons.0.0.129.min.svg#icon-folder">
+</use>
+</svg>
+<svg aria-hidden="true" class="icon icon-folder-open">
+<use xlink:href="assets/img/icons.0.0.129.min.svg#icon-folder-open">
+</use>
+</svg>
+<span contenteditable="false">./</span>
+<menu hidden="" type="context" id="context_menu__">
+<menuitem label="Create Directory Here">
+</menuitem>
+<menuitem label="Rename">
+</menuitem>
+<hr>
+<menuitem label="Create File">
+</menuitem>
+<menuitem label="Delete Directory">
+</menuitem>
+</menu>
+</summary>
+<div>
+<details open="">
+<summary role="treeitem" contextmenu="context_menu__assets">
+<svg aria-hidden="true" class="icon icon-folder">
+<use xlink:href="assets/img/icons.0.0.129.min.svg#icon-folder">
+</use>
+</svg>
+<svg aria-hidden="true" class="icon icon-folder-open">
+<use xlink:href="assets/img/icons.0.0.129.min.svg#icon-folder-open">
+</use>
+</svg>
+<span contenteditable="false">assets</span>
+<menu hidden="" type="context" id="context_menu__assets">
+<menuitem label="Create Directory Here">
+</menuitem>
+<menuitem label="Rename">
+</menuitem>
+<hr>
+<menuitem label="Create File">
+</menuitem>
+<menuitem label="Delete Directory">
+</menuitem>
+</menu>
+</summary>
+<div>
+<details open="">
+<summary role="treeitem" contextmenu="context_menu__assetsimg" class="active">
+<svg aria-hidden="true" class="icon icon-folder">
+<use xlink:href="assets/img/icons.0.0.129.min.svg#icon-folder">
+</use>
+</svg>
+<svg aria-hidden="true" class="icon icon-folder-open">
+<use xlink:href="assets/img/icons.0.0.129.min.svg#icon-folder-open">
+</use>
+</svg>
+<span contenteditable="false">img</span>
+<menu hidden="" type="context" id="context_menu__assetsimg">
+<menuitem label="Create Directory Here">
+</menuitem>
+<menuitem label="Rename">
+</menuitem>
+<menuitem label="Refresh Directory">
+</menuitem>
+<hr>
+<menuitem label="Create File">
+</menuitem>
+<menuitem label="Delete Directory">
+</menuitem>
+</menu>
+</summary>
+<div>
+<details>
+<summary role="treeitem" contextmenu="context_menu__assetsimgredwoods">
+<svg aria-hidden="true" class="icon icon-folder">
+<use xlink:href="assets/img/icons.0.0.129.min.svg#icon-folder">
+</use>
+</svg>
+<svg aria-hidden="true" class="icon icon-folder-open">
+<use xlink:href="assets/img/icons.0.0.129.min.svg#icon-folder-open">
+</use>
+</svg>
+<span contenteditable="false">redwoods</span>
+<menu hidden="" type="context" id="context_menu__assetsimgredwoods">
+<menuitem label="Create Directory Here">
+</menuitem>
+<menuitem label="Rename">
+</menuitem>
+<hr>
+<menuitem label="Create File">
+</menuitem>
+<menuitem label="Delete Directory">
+</menuitem>
+</menu>
+</summary>
+<div>
+</div>
+</details>
+</div>
+</details>
+<details>
+<summary role="treeitem" contextmenu="context_menu__assetsdocs">
+<svg aria-hidden="true" class="icon icon-folder">
+<use xlink:href="assets/img/icons.0.0.129.min.svg#icon-folder">
+</use>
+</svg>
+<svg aria-hidden="true" class="icon icon-folder-open">
+<use xlink:href="assets/img/icons.0.0.129.min.svg#icon-folder-open">
+</use>
+</svg>
+<span contenteditable="false">docs</span>
+<menu hidden="" type="context" id="context_menu__assetsdocs">
+<menuitem label="Create Directory Here">
+</menuitem>
+<menuitem label="Rename">
+</menuitem>
+<hr>
+<menuitem label="Create File">
+</menuitem>
+<menuitem label="Delete Directory">
+</menuitem>
+</menu>
+</summary>
+<div>
+</div>
+</details>
+</div>
+</details>
+<details>
+<summary role="treeitem" contextmenu="context_menu__uploads">
+<svg aria-hidden="true" class="icon icon-folder">
+<use xlink:href="assets/img/icons.0.0.129.min.svg#icon-folder">
+</use>
+</svg>
+<svg aria-hidden="true" class="icon icon-folder-open">
+<use xlink:href="assets/img/icons.0.0.129.min.svg#icon-folder-open">
+</use>
+</svg>
+<span contenteditable="false">uploads</span>
+<menu hidden="" type="context" id="context_menu__uploads">
+<menuitem label="Create Directory Here">
+</menuitem>
+<menuitem label="Rename">
+</menuitem>
+<hr>
+<menuitem label="Create File">
+</menuitem>
+<menuitem label="Delete Directory">
+</menuitem>
+</menu>
+</summary>
+<div>
+</div>
+</details>
+</div>
+</details>
+</nav>
+<div tabindex="0" aria-label="Paste images from the clipboard to upload" class="eureka__drop-area" title="Drag files here to be uploaded to assets/img">
+<div class="eureka__drop-area-zone">
+<svg aria-hidden="true" class="icon icon-upload">
+<use xlink:href="assets/img/icons.0.0.129.min.svg#icon-upload">
+</use>
+</svg>
+<input type="file" multiple="" style="display: none;">
+</div>
+</div>
+<div class="eureka__tree-bar">
+<button title="Create a new Directory in assets/img">
+<span class="visually-hidden">Create a new Directory in assets/img</span>
+<svg aria-hidden="true" class="icon icon-plus-square">
+<use xlink:href="assets/img/icons.0.0.129.min.svg#icon-plus-square">
+</use>
+</svg>
+</button>
+<a href="javascript:alert(&quot;create a file in assets/img of media source 0&quot;)" target="_blank" class="button eureka__create-file-button" title="Create File in assets/img">
+<span class="visually-hidden">Create File in assets/img</span>
+<svg aria-hidden="true" class="icon icon-file-text-o">
+<use xlink:href="assets/img/icons.0.0.129.min.svg#icon-file-text-o">
+</use>
+</svg>
+</a>
+<button title="Upload File to assets/img">
+<span class="visually-hidden">Upload File to assets/img</span>
+<svg aria-hidden="true" class="icon icon-upload">
+<use xlink:href="assets/img/icons.0.0.129.min.svg#icon-upload">
+</use>
+</svg>
+</button>
+</div>
+</div>
+<div class="eureka__stage">
+<div class="eureka__stage__filter-view">
+<header>
+<h2>
+<span class="visually-hidden">
+<span>Browse</span> </span>
+<span>Media Content</span>
+</h2>
+<div class="eureka__choose-radio">
+<div>
+<div role="radiogroup" class="eureka__fieldset">
+<legend id="eureka__choose-radio-legend">Choose Items: </legend>
+<input type="radio" aria-labelledby="eureka__choose-radio-legend" name="eureka____choose_items" id="eureka____choose_item" value="on">
+<label for="eureka____choose_item"> Single </label>
+<input type="radio" aria-labelledby="eureka__choose-radio-legend" name="eureka____choose_items" id="eureka____choose_items" value="on">
+<label for="eureka____choose_items"> Multiple</label>
+</div>
+</div>
+<label for="eureka__invert_selection"> <input type="checkbox" id="eureka__invert_selection" name="eureka__invert_selection" value="on"> Invert<span class="visually-hidden"> Selection</span> </label>
+</div>
+<form role="search" class="eureka__search-bar">
+<label for="eureka__filter" title="Filter contents of assets/img by filename, filesize, dimensions or even modification date">
+<span>Filter</span>
+<span class="visually-hidden"> contents of assets/img by filename, filesize, dimensions or even modification date</span>: </label>
+<input type="text" list="eureka____datalist" name="eureka__filter" id="eureka__filter" placeholder="Friday, March 3, 2017 at 06:25:00 AM">
+<datalist id="eureka____datalist">
+<option value="Wide Banner (final).jpg">
+</option>
+<option value="animation.gif">
+</option>
+<option value="archive.zip">
+</option>
+<option value="brochure.pdf">
+</option>
+<option value="clip.mp4">
+</option>
+<option value="hawaii-sunset.jpg">
+</option>
+<option value="icon-16.png">
+</option>
+<option value="notes.txt">
+</option>
+<option value="schildpad.jpg">
+</option>
+<option value="tall-tree.png">
+</option>
+<option value="theme.mp3">
+</option>
+</datalist>
+</form>
+</header>
+<div role="menubar" class="eureka__tree-toggle">
+<div>
+<button role="button" id="eureka__tree-toggle__button" aria-controls="eureka__pathbrowser" aria-pressed="true" aria-expanded="true">Media Source Panel</button>
+</div>
+<form class="eureka__sort-select">
+<label for="eureka__sort-select">
+<span>Sort by</span>:</label>
+<select name="eureka__sort-select" id="eureka__sort-select">
+<option value="filename">Name</option>
+<option value="dimensions">Dimensions</option>
+<option value="fileSize">File Size</option>
+<option value="editedOn">Edited On</option>
+</select>
+<label for="eureka__sort-direction">Sort Direction:</label>
+<select name="eureka__sort-direction" id="eureka__sort-direction">
+<option value="ascending">Ascending</option>
+<option value="descending">Descending</option>
+</select>
+</form>
+<form class="eureka__layout-chooser">
+<fieldset>
+<legend>Choose a Layout Mode</legend>
+<div class="eureka__icon-radio-btns" role="radiogroup">
+<legend class="visually-hidden" id="eureka__view-mode-legend">
+<span>View Mode</span>
+</legend>
+<div>
+<input type="radio" aria-labelledby="eureka__view-mode-legend" id="eureka__view-table" name="eureka__view" value="table"> <label for="eureka__view-table" title="Tabular Layout displays image thumbnails along with Name, Description, File Size and Edited On columns">
+<svg aria-hidden="true" class="icon icon-th-list">
+<use xlink:href="assets/img/icons.0.0.129.min.svg#icon-th-list">
+</use>
+</svg>
+<span class="visually-hidden">
+<span>Table Layout</span>
+</span>
+</label>
+</div>
+<div>
+<input type="radio" aria-labelledby="eureka__view-mode-legend" id="eureka__view-thumb" name="eureka__view" value="thumb"> <label for="eureka__view-thumb" title="Thumbnail layout displays a grid of medium sized thumbnails">
+<svg aria-hidden="true" class="icon icon-th-large">
+<use xlink:href="assets/img/icons.0.0.129.min.svg#icon-th-large">
+</use>
+</svg>
+<span class="visually-hidden">
+<span>Thumbnail Layout</span>
+</span>
+</label>
+</div>
+<div>
+<input type="radio" aria-labelledby="eureka__view-mode-legend" id="eureka__view-grid" name="eureka__view" value="grid"> <label for="eureka__view-grid" title="Grid Layout">
+<svg aria-hidden="true" class="icon icon-square">
+<use xlink:href="assets/img/icons.0.0.129.min.svg#icon-square">
+</use>
+</svg>
+<span class="visually-hidden">
+<span>Grid Layout</span>
+</span>
+</label>
+</div>
+<div>
+<input type="radio" aria-labelledby="eureka__view-mode-legend" id="eureka__view-masonry" name="eureka__view" value="masonry"> <label for="eureka__view-masonry" title="Masonry Layout">
+<svg aria-hidden="true" class="icon icon-masonry">
+<use xlink:href="assets/img/icons.0.0.129.min.svg#icon-masonry">
+</use>
+</svg>
+<span class="visually-hidden">
+<span>Masonry Layout</span>
+</span>
+</label>
+</div>
+<div>
+<input type="radio" aria-labelledby="eureka__view-mode-legend" id="eureka__view-list" name="eureka__view" value="list"> <label for="eureka__view-list" title="List Layout">
+<svg aria-hidden="true" class="icon icon-list">
+<use xlink:href="assets/img/icons.0.0.129.min.svg#icon-list">
+</use>
+</svg>
+<span class="visually-hidden">
+<span>List Layout</span>
+</span>
+</label>
+</div>
+<div>
+<input type="checkbox" id="eureka__fullscreen-toggle" name="eureka__fullscreen-toggle" value="1">
+<label class="" for="eureka__fullscreen-toggle">
+<span class="visually-hidden">
+<span>Fullscreen Mode</span>
+</span>
+<svg aria-hidden="true" class="icon icon-expand">
+<use xlink:href="assets/img/icons.0.0.129.min.svg#icon-expand">
+</use>
+</svg>
+</label>
+</div>
+</div>
+</fieldset>
+</form>
+</div>
+</div>
+<div class="eureka__table-wrapper">
+<div class="">
+<table class="eureka__table" cellspacing="0" cellpadding="0" role="grid">
+<thead class="">
+<tr>
+<th scope="col" role="columnheader" class="eureka__choose">
+<span class="visually-hidden">
+<span>Choose</span>
+</span>
+</th>
+<th role="columnheader" scope="col" class="eureka__th-media">
+<span>Media</span>
+</th>
+<th class="eureka__th-filename" aria-sort="ascending" role="columnheader" scope="col">
+<span>Name</span> <svg aria-hidden="true" class="icon icon-sort">
+<use xlink:href="assets/img/icons.0.0.129.min.svg#icon-sort">
+</use>
+</svg>
+</th>
+<th role="columnheader" scope="col" class="visually-hidden eureka__th-actions">Actions</th>
+<th class="eureka__th-dimensions" role="columnheader" scope="col">
+<span>Dimensions</span> <svg aria-hidden="true" class="icon icon-sort">
+<use xlink:href="assets/img/icons.0.0.129.min.svg#icon-sort">
+</use>
+</svg>
+</th>
+<th class="eureka__th-file-size" role="columnheader" scope="col">
+<span>File Size</span> <svg aria-hidden="true" class="icon icon-sort">
+<use xlink:href="assets/img/icons.0.0.129.min.svg#icon-sort">
+</use>
+</svg>
+</th>
+<th class="eureka__th-edited-on" role="columnheader" scope="col">
+<span>Edited On</span> <svg aria-hidden="true" class="icon icon-sort">
+<use xlink:href="assets/img/icons.0.0.129.min.svg#icon-sort">
+</use>
+</svg>
+</th>
+</tr>
+</thead>
+<tbody role="rowgroup" aria-live="polite" class="">
+<tr role="row" class="" id="wide-banner-__0028final__0029__002ejpg" aria-label="Wide Banner (final).jpg displays at 2400x400, weighs 96 KB, and was edited on Friday, March 24, 2017 at Pacific Daylight Time" tabindex="0" contextmenu="context_menu__tbody-0">
+<td role="gridcell" class="eureka__choose eureka__choose-multile">
+<label for="eureka__choose_multiple_wide-banner-__0028final__0029__002ejpg">
+<input type="checkbox" value="chosen" aria-label="Choose Wide Banner (final).jpg" name="eureka__chose_multiple" id="eureka__choose_multiple_wide-banner-__0028final__0029__002ejpg">
+</label>
+</td>
+<td role="gridcell" id="eureka____media__wide-banner-__0028final__0029__002ejpg" title="Wide Banner (final).jpg displays at 2400x400, weighs 96 KB, and was edited on Friday, March 24, 2017 at Pacific Daylight Time" class="eureka__td-media">
+<img src="/sources/filesystem/assets/img/Wide Banner (final).jpg" alt="">
+</td>
+<td role="gridcell" id="eureka__filename__wide-banner-__0028final__0029__002ejpg" class="eureka__td-filename" contenteditable="false">Wide Ban<wbr>ner (fin<wbr>al).jpg<wbr>
+</td>
+<td class="eureka__context-row" hidden="">
+<div class="eureka__button-bar eureka__context-buttons" role="listbox" aria-label="Perform Actions such as Expand or Choose on Wide Banner (final).jpg" tabindex="0" aria-activedescendant="expand__wide-banner-__0028final__0029__002ejpg">
+<a role="option" id="expand__wide-banner-__0028final__0029__002ejpg" href="/sources/filesystem/assets/img/Wide Banner (final).jpg" target="_/sources/filesystem/assets/img/Wide%20Banner%20(final).jpg" class="button" title="Expand Wide Banner (final).jpg">Expand<span class="visually-hidden"> Wide Banner (final).jpg</span>
+</a>
+<button role="option" id="choose__wide-banner-__0028final__0029__002ejpg" title="Choose Wide Banner (final).jpg">Choose<span class="visually-hidden"> Wide Banner (final).jpg</span>
+</button>
+<button class="eureka__crop-btn" role="option" id="crop__wide-banner-__0028final__0029__002ejpg" title="Choose Wide Banner (final).jpg">Crop<span class="visually-hidden"> Wide Banner (final).jpg</span>
+</button>
+<button id="eureka__rename__wide-banner-__0028final__0029__002ejpg" role="option" title="Rename Item Wide Banner (final).jpg">Rename<span class="visually-hidden"> Wide Banner (final).jpg</span>
+</button>
+<button id="eureka__delete__wide-banner-__0028final__0029__002ejpg" role="option" title="Delete Wide Banner (final).jpg" class="dangerous">Delete<span class="visually-hidden"> Wide Banner (final).jpg</span>
+</button>
+<a download="Wide Banner (final).jpg" href="/sources/filesystem/assets/img/Wide Banner (final).jpg" id="eureka__download__wide-banner-__0028final__0029__002ejpg" class="button" target="_eureka__download__wide-banner-__0028final__0029__002ejpg" title="Download Wide Banner (final).jpg">Download<span class="visually-hidden"> Wide Banner (final).jpg</span>
+</a>
+</div>
+</td>
+<td class="eureka__dimensions" role="gridcell">2400x400</td>
+<td class="eureka__file-size" role="gridcell">95.7 KB</td>
+<td class="eureka__edited-on" role="gridcell" title="Friday, March 24, 2017 at Pacific Daylight Time">03/24/17</td>
+</tr>
+<tr role="row" class="" id="animation__002egif" aria-label="animation.gif displays at 320x240, weighs 215 KB, and was edited on Sunday, March 19, 2017 at Pacific Daylight Time" tabindex="0" contextmenu="context_menu__tbody-1">
+<td role="gridcell" class="eureka__choose eureka__choose-multile">
+<label for="eureka__choose_multiple_animation__002egif">
+<input type="checkbox" value="chosen" aria-label="Choose animation.gif" name="eureka__chose_multiple" id="eureka__choose_multiple_animation__002egif">
+</label>
+</td>
+<td role="gridcell" id="eureka____media__animation__002egif" title="animation.gif displays at 320x240, weighs 215 KB, and was edited on Sunday, March 19, 2017 at Pacific Daylight Time" class="eureka__td-media">
+<img src="/sources/filesystem/assets/img/animation.gif" alt="">
+</td>
+<td role="gridcell" id="eureka__filename__animation__002egif" class="eureka__td-filename" contenteditable="false">animatio<wbr>n.gif<wbr>
+</td>
+<td class="eureka__context-row" hidden="">
+<div class="eureka__button-bar eureka__context-buttons" role="listbox" aria-label="Perform Actions such as Expand or Choose on animation.gif" tabindex="0" aria-activedescendant="expand__animation__002egif">
+<a role="option" id="expand__animation__002egif" href="/sources/filesystem/assets/img/animation.gif" target="_/sources/filesystem/assets/img/animation.gif" class="button" title="Expand animation.gif">Expand<span class="visually-hidden"> animation.gif</span>
+</a>
+<button role="option" id="choose__animation__002egif" title="Choose animation.gif">Choose<span class="visually-hidden"> animation.gif</span>
+</button>
+<button class="eureka__crop-btn" role="option" id="crop__animation__002egif" title="Choose animation.gif">Crop<span class="visually-hidden"> animation.gif</span>
+</button>
+<button id="eureka__rename__animation__002egif" role="option" title="Rename Item animation.gif">Rename<span class="visually-hidden"> animation.gif</span>
+</button>
+<button id="eureka__delete__animation__002egif" role="option" title="Delete animation.gif" class="dangerous">Delete<span class="visually-hidden"> animation.gif</span>
+</button>
+<a download="animation.gif" href="/sources/filesystem/assets/img/animation.gif" id="eureka__download__animation__002egif" class="button" target="_eureka__download__animation__002egif" title="Download animation.gif">Download<span class="visually-hidden"> animation.gif</span>
+</a>
+</div>
+</td>
+<td class="eureka__dimensions" role="gridcell">320x240</td>
+<td class="eureka__file-size" role="gridcell">214.84 KB</td>
+<td class="eureka__edited-on" role="gridcell" title="Sunday, March 19, 2017 at Pacific Daylight Time">03/19/17</td>
+</tr>
+<tr role="row" class="" id="archive__002ezip" aria-label="archive.zip weighs 11 MB, and was edited on Monday, January 02, 2017 at Pacific Standard Time" tabindex="0" contextmenu="context_menu__tbody-2">
+<td role="gridcell" class="eureka__choose eureka__choose-multile">
+<label for="eureka__choose_multiple_archive__002ezip">
+<input type="checkbox" value="chosen" aria-label="Choose archive.zip" name="eureka__chose_multiple" id="eureka__choose_multiple_archive__002ezip">
+</label>
+</td>
+<td role="gridcell" id="eureka____media__archive__002ezip" title="archive.zip weighs 11 MB, and was edited on Monday, January 02, 2017 at Pacific Standard Time" class="eureka__td-media">
+<p>
+<svg aria-hidden="true" class="icon icon-file-archive-o">
+<use xlink:href="assets/img/icons.0.0.129.min.svg#icon-file-archive-o">
+</use>
+</svg> /sources/filesystem/assets/img/archive.zip</p>
+</td>
+<td role="gridcell" id="eureka__filename__archive__002ezip" class="eureka__td-filename" contenteditable="false">archive.<wbr>zip<wbr>
+</td>
+<td class="eureka__context-row" hidden="">
+<div class="eureka__button-bar eureka__context-buttons" role="listbox" aria-label="Perform Actions such as Expand or Choose on archive.zip" tabindex="0" aria-activedescendant="expand__archive__002ezip">
+<a role="option" id="expand__archive__002ezip" href="/sources/filesystem/assets/img/archive.zip" target="_/sources/filesystem/assets/img/archive.zip" class="button" title="Expand archive.zip">Expand<span class="visually-hidden"> archive.zip</span>
+</a>
+<button role="option" id="choose__archive__002ezip" title="Choose archive.zip">Choose<span class="visually-hidden"> archive.zip</span>
+</button>
+<button id="eureka__rename__archive__002ezip" role="option" title="Rename Item archive.zip">Rename<span class="visually-hidden"> archive.zip</span>
+</button>
+<button id="eureka__delete__archive__002ezip" role="option" title="Delete archive.zip" class="dangerous">Delete<span class="visually-hidden"> archive.zip</span>
+</button>
+<a download="archive.zip" href="/sources/filesystem/assets/img/archive.zip" id="eureka__download__archive__002ezip" class="button" target="_eureka__download__archive__002ezip" title="Download archive.zip">Download<span class="visually-hidden"> archive.zip</span>
+</a>
+</div>
+</td>
+<td class="eureka__dimensions" role="gridcell">
+</td>
+<td class="eureka__file-size" role="gridcell">11.44 MB</td>
+<td class="eureka__edited-on" role="gridcell" title="Monday, January 02, 2017 at Pacific Standard Time">01/02/17</td>
+</tr>
+<tr role="row" class="" id="brochure__002epdf" aria-label="brochure.pdf weighs 527 KB, and was edited on Friday, March 03, 2017 at Pacific Standard Time" tabindex="0" contextmenu="context_menu__tbody-3">
+<td role="gridcell" class="eureka__choose eureka__choose-multile">
+<label for="eureka__choose_multiple_brochure__002epdf">
+<input type="checkbox" value="chosen" aria-label="Choose brochure.pdf" name="eureka__chose_multiple" id="eureka__choose_multiple_brochure__002epdf">
+</label>
+</td>
+<td role="gridcell" id="eureka____media__brochure__002epdf" title="brochure.pdf weighs 527 KB, and was edited on Friday, March 03, 2017 at Pacific Standard Time" class="eureka__td-media">
+<embed src="/sources/filesystem/assets/img/brochure.pdf" width="320" height="240">
+</td>
+<td role="gridcell" id="eureka__filename__brochure__002epdf" class="eureka__td-filename" contenteditable="false">brochure<wbr>.pdf<wbr>
+</td>
+<td class="eureka__context-row" hidden="">
+<div class="eureka__button-bar eureka__context-buttons" role="listbox" aria-label="Perform Actions such as Expand or Choose on brochure.pdf" tabindex="0" aria-activedescendant="expand__brochure__002epdf">
+<a role="option" id="expand__brochure__002epdf" href="/sources/filesystem/assets/img/brochure.pdf" target="_/sources/filesystem/assets/img/brochure.pdf" class="button" title="Expand brochure.pdf">Expand<span class="visually-hidden"> brochure.pdf</span>
+</a>
+<button role="option" id="choose__brochure__002epdf" title="Choose brochure.pdf">Choose<span class="visually-hidden"> brochure.pdf</span>
+</button>
+<button id="eureka__rename__brochure__002epdf" role="option" title="Rename Item brochure.pdf">Rename<span class="visually-hidden"> brochure.pdf</span>
+</button>
+<button id="eureka__delete__brochure__002epdf" role="option" title="Delete brochure.pdf" class="dangerous">Delete<span class="visually-hidden"> brochure.pdf</span>
+</button>
+<a download="brochure.pdf" href="/sources/filesystem/assets/img/brochure.pdf" id="eureka__download__brochure__002epdf" class="button" target="_eureka__download__brochure__002epdf" title="Download brochure.pdf">Download<span class="visually-hidden"> brochure.pdf</span>
+</a>
+</div>
+</td>
+<td class="eureka__dimensions" role="gridcell">
+</td>
+<td class="eureka__file-size" role="gridcell">527.34 KB</td>
+<td class="eureka__edited-on" role="gridcell" title="Friday, March 03, 2017 at Pacific Standard Time">03/03/17</td>
+</tr>
+<tr role="row" class="" id="clip__002emp4" aria-label="clip.mp4 weighs 8 MB, and was edited on Monday, March 13, 2017 at Pacific Daylight Time" tabindex="0" contextmenu="context_menu__tbody-4">
+<td role="gridcell" class="eureka__choose eureka__choose-multile">
+<label for="eureka__choose_multiple_clip__002emp4">
+<input type="checkbox" value="chosen" aria-label="Choose clip.mp4" name="eureka__chose_multiple" id="eureka__choose_multiple_clip__002emp4">
+</label>
+</td>
+<td role="gridcell" id="eureka____media__clip__002emp4" title="clip.mp4 weighs 8 MB, and was edited on Monday, March 13, 2017 at Pacific Daylight Time" class="eureka__td-media">
+<video width="320" height="240" controls="">
+<source src="/sources/filesystem/assets/img/clip.mp4" type="video/mp4">
+<span>Your browser does not support HTML5 Video.</span>
+</video>
+</td>
+<td role="gridcell" id="eureka__filename__clip__002emp4" class="eureka__td-filename" contenteditable="false">clip.mp4<wbr>
+</td>
+<td class="eureka__context-row" hidden="">
+<div class="eureka__button-bar eureka__context-buttons" role="listbox" aria-label="Perform Actions such as Expand or Choose on clip.mp4" tabindex="0" aria-activedescendant="expand__clip__002emp4">
+<a role="option" id="expand__clip__002emp4" href="/sources/filesystem/assets/img/clip.mp4" target="_/sources/filesystem/assets/img/clip.mp4" class="button" title="Expand clip.mp4">Expand<span class="visually-hidden"> clip.mp4</span>
+</a>
+<button role="option" id="choose__clip__002emp4" title="Choose clip.mp4">Choose<span class="visually-hidden"> clip.mp4</span>
+</button>
+<button id="eureka__rename__clip__002emp4" role="option" title="Rename Item clip.mp4">Rename<span class="visually-hidden"> clip.mp4</span>
+</button>
+<button id="eureka__delete__clip__002emp4" role="option" title="Delete clip.mp4" class="dangerous">Delete<span class="visually-hidden"> clip.mp4</span>
+</button>
+<a download="clip.mp4" href="/sources/filesystem/assets/img/clip.mp4" id="eureka__download__clip__002emp4" class="button" target="_eureka__download__clip__002emp4" title="Download clip.mp4">Download<span class="visually-hidden"> clip.mp4</span>
+</a>
+</div>
+</td>
+<td class="eureka__dimensions" role="gridcell">
+</td>
+<td class="eureka__file-size" role="gridcell">8.01 MB</td>
+<td class="eureka__edited-on" role="gridcell" title="Monday, March 13, 2017 at Pacific Daylight Time">03/13/17</td>
+</tr>
+<tr role="row" class="" id="hawaii__002dsunset__002ejpg" aria-label="hawaii-sunset.jpg displays at 1920x1080, weighs 1 MB, and was edited on Thursday, March 30, 2017 at Pacific Daylight Time" tabindex="0" contextmenu="context_menu__tbody-5">
+<td role="gridcell" class="eureka__choose eureka__choose-multile">
+<label for="eureka__choose_multiple_hawaii__002dsunset__002ejpg">
+<input type="checkbox" value="chosen" aria-label="Choose hawaii-sunset.jpg" name="eureka__chose_multiple" id="eureka__choose_multiple_hawaii__002dsunset__002ejpg">
+</label>
+</td>
+<td role="gridcell" id="eureka____media__hawaii__002dsunset__002ejpg" title="hawaii-sunset.jpg displays at 1920x1080, weighs 1 MB, and was edited on Thursday, March 30, 2017 at Pacific Daylight Time" class="eureka__td-media">
+<img src="/sources/filesystem/assets/img/hawaii-sunset.jpg" alt="">
+</td>
+<td role="gridcell" id="eureka__filename__hawaii__002dsunset__002ejpg" class="eureka__td-filename" contenteditable="false">hawaii-s<wbr>unset.jp<wbr>g<wbr>
+</td>
+<td class="eureka__context-row" hidden="">
+<div class="eureka__button-bar eureka__context-buttons" role="listbox" aria-label="Perform Actions such as Expand or Choose on hawaii-sunset.jpg" tabindex="0" aria-activedescendant="expand__hawaii__002dsunset__002ejpg">
+<a role="option" id="expand__hawaii__002dsunset__002ejpg" href="/sources/filesystem/assets/img/hawaii-sunset.jpg" target="_/sources/filesystem/assets/img/hawaii-sunset.jpg" class="button" title="Expand hawaii-sunset.jpg">Expand<span class="visually-hidden"> hawaii-sunset.jpg</span>
+</a>
+<button role="option" id="choose__hawaii__002dsunset__002ejpg" title="Choose hawaii-sunset.jpg">Choose<span class="visually-hidden"> hawaii-sunset.jpg</span>
+</button>
+<button class="eureka__crop-btn" role="option" id="crop__hawaii__002dsunset__002ejpg" title="Choose hawaii-sunset.jpg">Crop<span class="visually-hidden"> hawaii-sunset.jpg</span>
+</button>
+<button id="eureka__rename__hawaii__002dsunset__002ejpg" role="option" title="Rename Item hawaii-sunset.jpg">Rename<span class="visually-hidden"> hawaii-sunset.jpg</span>
+</button>
+<button id="eureka__delete__hawaii__002dsunset__002ejpg" role="option" title="Delete hawaii-sunset.jpg" class="dangerous">Delete<span class="visually-hidden"> hawaii-sunset.jpg</span>
+</button>
+<a download="hawaii-sunset.jpg" href="/sources/filesystem/assets/img/hawaii-sunset.jpg" id="eureka__download__hawaii__002dsunset__002ejpg" class="button" target="_eureka__download__hawaii__002dsunset__002ejpg" title="Download hawaii-sunset.jpg">Download<span class="visually-hidden"> hawaii-sunset.jpg</span>
+</a>
+</div>
+</td>
+<td class="eureka__dimensions" role="gridcell">1920x1080</td>
+<td class="eureka__file-size" role="gridcell">1.18 MB</td>
+<td class="eureka__edited-on" role="gridcell" title="Thursday, March 30, 2017 at Pacific Daylight Time">03/30/17</td>
+</tr>
+<tr role="row" class="" id="icon__002d16__002epng" aria-label="icon-16.png displays at 16x16, weighs 812 B, and was edited on Saturday, March 25, 2017 at Pacific Daylight Time" tabindex="0" contextmenu="context_menu__tbody-6">
+<td role="gridcell" class="eureka__choose eureka__choose-multile">
+<label for="eureka__choose_multiple_icon__002d16__002epng">
+<input type="checkbox" value="chosen" aria-label="Choose icon-16.png" name="eureka__chose_multiple" id="eureka__choose_multiple_icon__002d16__002epng">
+</label>
+</td>
+<td role="gridcell" id="eureka____media__icon__002d16__002epng" title="icon-16.png displays at 16x16, weighs 812 B, and was edited on Saturday, March 25, 2017 at Pacific Daylight Time" class="eureka__td-media">
+<img src="/sources/filesystem/assets/img/icon-16.png" alt="">
+</td>
+<td role="gridcell" id="eureka__filename__icon__002d16__002epng" class="eureka__td-filename" contenteditable="false">icon-16.<wbr>png<wbr>
+</td>
+<td class="eureka__context-row" hidden="">
+<div class="eureka__button-bar eureka__context-buttons" role="listbox" aria-label="Perform Actions such as Expand or Choose on icon-16.png" tabindex="0" aria-activedescendant="expand__icon__002d16__002epng">
+<a role="option" id="expand__icon__002d16__002epng" href="/sources/filesystem/assets/img/icon-16.png" target="_/sources/filesystem/assets/img/icon-16.png" class="button" title="Expand icon-16.png">Expand<span class="visually-hidden"> icon-16.png</span>
+</a>
+<button role="option" id="choose__icon__002d16__002epng" title="Choose icon-16.png">Choose<span class="visually-hidden"> icon-16.png</span>
+</button>
+<button class="eureka__crop-btn" role="option" id="crop__icon__002d16__002epng" title="Choose icon-16.png">Crop<span class="visually-hidden"> icon-16.png</span>
+</button>
+<button id="eureka__rename__icon__002d16__002epng" role="option" title="Rename Item icon-16.png">Rename<span class="visually-hidden"> icon-16.png</span>
+</button>
+<button id="eureka__delete__icon__002d16__002epng" role="option" title="Delete icon-16.png" class="dangerous">Delete<span class="visually-hidden"> icon-16.png</span>
+</button>
+<a download="icon-16.png" href="/sources/filesystem/assets/img/icon-16.png" id="eureka__download__icon__002d16__002epng" class="button" target="_eureka__download__icon__002d16__002epng" title="Download icon-16.png">Download<span class="visually-hidden"> icon-16.png</span>
+</a>
+</div>
+</td>
+<td class="eureka__dimensions" role="gridcell">16x16</td>
+<td class="eureka__file-size" role="gridcell">812 B</td>
+<td class="eureka__edited-on" role="gridcell" title="Saturday, March 25, 2017 at Pacific Daylight Time">03/25/17</td>
+</tr>
+<tr role="row" class="" id="notes__002etxt" aria-label="notes.txt weighs 90 B, and was edited on Wednesday, February 01, 2017 at Pacific Standard Time" tabindex="0" contextmenu="context_menu__tbody-7">
+<td role="gridcell" class="eureka__choose eureka__choose-multile">
+<label for="eureka__choose_multiple_notes__002etxt">
+<input type="checkbox" value="chosen" aria-label="Choose notes.txt" name="eureka__chose_multiple" id="eureka__choose_multiple_notes__002etxt">
+</label>
+</td>
+<td role="gridcell" id="eureka____media__notes__002etxt" title="notes.txt weighs 90 B, and was edited on Wednesday, February 01, 2017 at Pacific Standard Time" class="eureka__td-media">
+<p>
+<svg aria-hidden="true" class="icon icon-file-text-o">
+<use xlink:href="assets/img/icons.0.0.129.min.svg#icon-file-text-o">
+</use>
+</svg> /sources/filesystem/assets/img/notes.txt</p>
+</td>
+<td role="gridcell" id="eureka__filename__notes__002etxt" class="eureka__td-filename" contenteditable="false">notes.tx<wbr>t<wbr>
+</td>
+<td class="eureka__context-row" hidden="">
+<div class="eureka__button-bar eureka__context-buttons" role="listbox" aria-label="Perform Actions such as Expand or Choose on notes.txt" tabindex="0" aria-activedescendant="expand__notes__002etxt">
+<a role="option" id="expand__notes__002etxt" href="/sources/filesystem/assets/img/notes.txt" target="_/sources/filesystem/assets/img/notes.txt" class="button" title="Expand notes.txt">Expand<span class="visually-hidden"> notes.txt</span>
+</a>
+<button role="option" id="choose__notes__002etxt" title="Choose notes.txt">Choose<span class="visually-hidden"> notes.txt</span>
+</button>
+<button id="eureka__rename__notes__002etxt" role="option" title="Rename Item notes.txt">Rename<span class="visually-hidden"> notes.txt</span>
+</button>
+<button id="eureka__delete__notes__002etxt" role="option" title="Delete notes.txt" class="dangerous">Delete<span class="visually-hidden"> notes.txt</span>
+</button>
+<a download="notes.txt" href="/sources/filesystem/assets/img/notes.txt" id="eureka__download__notes__002etxt" class="button" target="_eureka__download__notes__002etxt" title="Download notes.txt">Download<span class="visually-hidden"> notes.txt</span>
+</a>
+</div>
+</td>
+<td class="eureka__dimensions" role="gridcell">
+</td>
+<td class="eureka__file-size" role="gridcell">90 B</td>
+<td class="eureka__edited-on" role="gridcell" title="Wednesday, February 01, 2017 at Pacific Standard Time">02/01/17</td>
+</tr>
+<tr role="row" class="" id="schildpad__002ejpg" aria-label="schildpad.jpg displays at 336x125, weighs 37 KB, and was edited on Saturday, April 01, 2017 at Pacific Daylight Time" tabindex="0" contextmenu="context_menu__tbody-8">
+<td role="gridcell" class="eureka__choose eureka__choose-multile">
+<label for="eureka__choose_multiple_schildpad__002ejpg">
+<input type="checkbox" value="chosen" aria-label="Choose schildpad.jpg" name="eureka__chose_multiple" id="eureka__choose_multiple_schildpad__002ejpg">
+</label>
+</td>
+<td role="gridcell" id="eureka____media__schildpad__002ejpg" title="schildpad.jpg displays at 336x125, weighs 37 KB, and was edited on Saturday, April 01, 2017 at Pacific Daylight Time" class="eureka__td-media">
+<img src="/sources/filesystem/assets/img/schildpad.jpg" alt="">
+</td>
+<td role="gridcell" id="eureka__filename__schildpad__002ejpg" class="eureka__td-filename" contenteditable="false">schildpa<wbr>d.jpg<wbr>
+</td>
+<td class="eureka__context-row" hidden="">
+<div class="eureka__button-bar eureka__context-buttons" role="listbox" aria-label="Perform Actions such as Expand or Choose on schildpad.jpg" tabindex="0" aria-activedescendant="expand__schildpad__002ejpg">
+<a role="option" id="expand__schildpad__002ejpg" href="/sources/filesystem/assets/img/schildpad.jpg" target="_/sources/filesystem/assets/img/schildpad.jpg" class="button" title="Expand schildpad.jpg">Expand<span class="visually-hidden"> schildpad.jpg</span>
+</a>
+<button role="option" id="choose__schildpad__002ejpg" title="Choose schildpad.jpg">Choose<span class="visually-hidden"> schildpad.jpg</span>
+</button>
+<button class="eureka__crop-btn" role="option" id="crop__schildpad__002ejpg" title="Choose schildpad.jpg">Crop<span class="visually-hidden"> schildpad.jpg</span>
+</button>
+<button id="eureka__rename__schildpad__002ejpg" role="option" title="Rename Item schildpad.jpg">Rename<span class="visually-hidden"> schildpad.jpg</span>
+</button>
+<button id="eureka__delete__schildpad__002ejpg" role="option" title="Delete schildpad.jpg" class="dangerous">Delete<span class="visually-hidden"> schildpad.jpg</span>
+</button>
+<a download="schildpad.jpg" href="/sources/filesystem/assets/img/schildpad.jpg" id="eureka__download__schildpad__002ejpg" class="button" target="_eureka__download__schildpad__002ejpg" title="Download schildpad.jpg">Download<span class="visually-hidden"> schildpad.jpg</span>
+</a>
+</div>
+</td>
+<td class="eureka__dimensions" role="gridcell">336x125</td>
+<td class="eureka__file-size" role="gridcell">37 KB</td>
+<td class="eureka__edited-on" role="gridcell" title="Saturday, April 01, 2017 at Pacific Daylight Time">04/01/17</td>
+</tr>
+<tr role="row" class="" id="tall__002dtree__002epng" aria-label="tall-tree.png displays at 600x1400, weighs 410 KB, and was edited on Tuesday, March 28, 2017 at Pacific Daylight Time" tabindex="0" contextmenu="context_menu__tbody-9">
+<td role="gridcell" class="eureka__choose eureka__choose-multile">
+<label for="eureka__choose_multiple_tall__002dtree__002epng">
+<input type="checkbox" value="chosen" aria-label="Choose tall-tree.png" name="eureka__chose_multiple" id="eureka__choose_multiple_tall__002dtree__002epng">
+</label>
+</td>
+<td role="gridcell" id="eureka____media__tall__002dtree__002epng" title="tall-tree.png displays at 600x1400, weighs 410 KB, and was edited on Tuesday, March 28, 2017 at Pacific Daylight Time" class="eureka__td-media">
+<img src="/sources/filesystem/assets/img/tall-tree.png" alt="">
+</td>
+<td role="gridcell" id="eureka__filename__tall__002dtree__002epng" class="eureka__td-filename" contenteditable="false">tall-tre<wbr>e.png<wbr>
+</td>
+<td class="eureka__context-row" hidden="">
+<div class="eureka__button-bar eureka__context-buttons" role="listbox" aria-label="Perform Actions such as Expand or Choose on tall-tree.png" tabindex="0" aria-activedescendant="expand__tall__002dtree__002epng">
+<a role="option" id="expand__tall__002dtree__002epng" href="/sources/filesystem/assets/img/tall-tree.png" target="_/sources/filesystem/assets/img/tall-tree.png" class="button" title="Expand tall-tree.png">Expand<span class="visually-hidden"> tall-tree.png</span>
+</a>
+<button role="option" id="choose__tall__002dtree__002epng" title="Choose tall-tree.png">Choose<span class="visually-hidden"> tall-tree.png</span>
+</button>
+<button class="eureka__crop-btn" role="option" id="crop__tall__002dtree__002epng" title="Choose tall-tree.png">Crop<span class="visually-hidden"> tall-tree.png</span>
+</button>
+<button id="eureka__rename__tall__002dtree__002epng" role="option" title="Rename Item tall-tree.png">Rename<span class="visually-hidden"> tall-tree.png</span>
+</button>
+<button id="eureka__delete__tall__002dtree__002epng" role="option" title="Delete tall-tree.png" class="dangerous">Delete<span class="visually-hidden"> tall-tree.png</span>
+</button>
+<a download="tall-tree.png" href="/sources/filesystem/assets/img/tall-tree.png" id="eureka__download__tall__002dtree__002epng" class="button" target="_eureka__download__tall__002dtree__002epng" title="Download tall-tree.png">Download<span class="visually-hidden"> tall-tree.png</span>
+</a>
+</div>
+</td>
+<td class="eureka__dimensions" role="gridcell">600x1400</td>
+<td class="eureka__file-size" role="gridcell">410.16 KB</td>
+<td class="eureka__edited-on" role="gridcell" title="Tuesday, March 28, 2017 at Pacific Daylight Time">03/28/17</td>
+</tr>
+<tr role="row" class="" id="theme__002emp3" aria-label="theme.mp3 weighs 3 MB, and was edited on Sunday, March 12, 2017 at Pacific Daylight Time" tabindex="0" contextmenu="context_menu__tbody-10">
+<td role="gridcell" class="eureka__choose eureka__choose-multile">
+<label for="eureka__choose_multiple_theme__002emp3">
+<input type="checkbox" value="chosen" aria-label="Choose theme.mp3" name="eureka__chose_multiple" id="eureka__choose_multiple_theme__002emp3">
+</label>
+</td>
+<td role="gridcell" id="eureka____media__theme__002emp3" title="theme.mp3 weighs 3 MB, and was edited on Sunday, March 12, 2017 at Pacific Daylight Time" class="eureka__td-media">
+<audio controls="">
+<source src="/sources/filesystem/assets/img/theme.mp3" type="audio/mpeg">
+<span>Your browser does not support HTML5 Audio.</span>
+</audio>
+</td>
+<td role="gridcell" id="eureka__filename__theme__002emp3" class="eureka__td-filename" contenteditable="false">theme.mp<wbr>3<wbr>
+</td>
+<td class="eureka__context-row" hidden="">
+<div class="eureka__button-bar eureka__context-buttons" role="listbox" aria-label="Perform Actions such as Expand or Choose on theme.mp3" tabindex="0" aria-activedescendant="expand__theme__002emp3">
+<a role="option" id="expand__theme__002emp3" href="/sources/filesystem/assets/img/theme.mp3" target="_/sources/filesystem/assets/img/theme.mp3" class="button" title="Expand theme.mp3">Expand<span class="visually-hidden"> theme.mp3</span>
+</a>
+<button role="option" id="choose__theme__002emp3" title="Choose theme.mp3">Choose<span class="visually-hidden"> theme.mp3</span>
+</button>
+<button id="eureka__rename__theme__002emp3" role="option" title="Rename Item theme.mp3">Rename<span class="visually-hidden"> theme.mp3</span>
+</button>
+<button id="eureka__delete__theme__002emp3" role="option" title="Delete theme.mp3" class="dangerous">Delete<span class="visually-hidden"> theme.mp3</span>
+</button>
+<a download="theme.mp3" href="/sources/filesystem/assets/img/theme.mp3" id="eureka__download__theme__002emp3" class="button" target="_eureka__download__theme__002emp3" title="Download theme.mp3">Download<span class="visually-hidden"> theme.mp3</span>
+</a>
+</div>
+</td>
+<td class="eureka__dimensions" role="gridcell">
+</td>
+<td class="eureka__file-size" role="gridcell">2.96 MB</td>
+<td class="eureka__edited-on" role="gridcell" title="Sunday, March 12, 2017 at Pacific Daylight Time">03/12/17</td>
+</tr>
+</tbody>
+</table>
+<menu hidden="" type="context" id="context_menu__tbody-0">
+<menuitem label="Expand Wide Banner (final).jpg">
+</menuitem>
+<menuitem label="Choose Wide Banner (final).jpg">
+</menuitem>
+<menuitem label="Rename ItemWide Banner (final).jpg">
+</menuitem>
+<menuitem label="Delete Wide Banner (final).jpg">
+</menuitem>
+<menuitem label="Download Wide Banner (final).jpg">
+</menuitem>
+</menu>
+<menu hidden="" type="context" id="context_menu__tbody-1">
+<menuitem label="Expand animation.gif">
+</menuitem>
+<menuitem label="Choose animation.gif">
+</menuitem>
+<menuitem label="Rename Itemanimation.gif">
+</menuitem>
+<menuitem label="Delete animation.gif">
+</menuitem>
+<menuitem label="Download animation.gif">
+</menuitem>
+</menu>
+<menu hidden="" type="context" id="context_menu__tbody-2">
+<menuitem label="Expand archive.zip">
+</menuitem>
+<menuitem label="Choose archive.zip">
+</menuitem>
+<menuitem label="Rename Itemarchive.zip">
+</menuitem>
+<menuitem label="Delete archive.zip">
+</menuitem>
+<menuitem label="Download archive.zip">
+</menuitem>
+</menu>
+<menu hidden="" type="context" id="context_menu__tbody-3">
+<menuitem label="Expand brochure.pdf">
+</menuitem>
+<menuitem label="Choose brochure.pdf">
+</menuitem>
+<menuitem label="Rename Itembrochure.pdf">
+</menuitem>
+<menuitem label="Delete brochure.pdf">
+</menuitem>
+<menuitem label="Download brochure.pdf">
+</menuitem>
+</menu>
+<menu hidden="" type="context" id="context_menu__tbody-4">
+<menuitem label="Expand clip.mp4">
+</menuitem>
+<menuitem label="Choose clip.mp4">
+</menuitem>
+<menuitem label="Rename Itemclip.mp4">
+</menuitem>
+<menuitem label="Delete clip.mp4">
+</menuitem>
+<menuitem label="Download clip.mp4">
+</menuitem>
+</menu>
+<menu hidden="" type="context" id="context_menu__tbody-5">
+<menuitem label="Expand hawaii-sunset.jpg">
+</menuitem>
+<menuitem label="Choose hawaii-sunset.jpg">
+</menuitem>
+<menuitem label="Rename Itemhawaii-sunset.jpg">
+</menuitem>
+<menuitem label="Delete hawaii-sunset.jpg">
+</menuitem>
+<menuitem label="Download hawaii-sunset.jpg">
+</menuitem>
+</menu>
+<menu hidden="" type="context" id="context_menu__tbody-6">
+<menuitem label="Expand icon-16.png">
+</menuitem>
+<menuitem label="Choose icon-16.png">
+</menuitem>
+<menuitem label="Rename Itemicon-16.png">
+</menuitem>
+<menuitem label="Delete icon-16.png">
+</menuitem>
+<menuitem label="Download icon-16.png">
+</menuitem>
+</menu>
+<menu hidden="" type="context" id="context_menu__tbody-7">
+<menuitem label="Expand notes.txt">
+</menuitem>
+<menuitem label="Choose notes.txt">
+</menuitem>
+<menuitem label="Rename Itemnotes.txt">
+</menuitem>
+<menuitem label="Delete notes.txt">
+</menuitem>
+<menuitem label="Download notes.txt">
+</menuitem>
+</menu>
+<menu hidden="" type="context" id="context_menu__tbody-8">
+<menuitem label="Expand schildpad.jpg">
+</menuitem>
+<menuitem label="Choose schildpad.jpg">
+</menuitem>
+<menuitem label="Rename Itemschildpad.jpg">
+</menuitem>
+<menuitem label="Delete schildpad.jpg">
+</menuitem>
+<menuitem label="Download schildpad.jpg">
+</menuitem>
+</menu>
+<menu hidden="" type="context" id="context_menu__tbody-9">
+<menuitem label="Expand tall-tree.png">
+</menuitem>
+<menuitem label="Choose tall-tree.png">
+</menuitem>
+<menuitem label="Rename Itemtall-tree.png">
+</menuitem>
+<menuitem label="Delete tall-tree.png">
+</menuitem>
+<menuitem label="Download tall-tree.png">
+</menuitem>
+</menu>
+<menu hidden="" type="context" id="context_menu__tbody-10">
+<menuitem label="Expand theme.mp3">
+</menuitem>
+<menuitem label="Choose theme.mp3">
+</menuitem>
+<menuitem label="Rename Itemtheme.mp3">
+</menuitem>
+<menuitem label="Delete theme.mp3">
+</menuitem>
+<menuitem label="Download theme.mp3">
+</menuitem>
+</menu>
+<input type="file" multiple="" style="display: none;">
+</div>
+</div>
+</div>
+</div>
+<div aria-hidden="false" class="eureka__button-bar eureka__choose-bar">
+<button class="dangerous" aria-label="Close Media Browser">Cancel</button>
+<form enctype="multipart/form-data" method="POST" action="/assets/components/eureka/media/attachments/0">
+<input type="hidden" name="cd" value="assets/img">
+<input type="hidden" name="cs" value="0">
+<input type="hidden" name="zip_file[]" value="Wide Banner (final).jpg">
+<input type="hidden" name="zip_file[]" value="archive.zip">
+<button class="eureka__gratious">
+<span>Download</span> 2 items</button>
+</form>
+<form enctype="multipart/form-data">
+<input type="hidden" name="cd" value="assets/img">
+<input type="hidden" name="cs" value="0">
+<input type="hidden" name="delete_file[]" value="Wide Banner (final).jpg">
+<input type="hidden" name="delete_file[]" value="archive.zip">
+<button class="dangerous">
+<span>Delete</span> 2 items</button>
+</form>
+<button aria-describedby="eureka__selected_file_names" id="eureka__choose-button" class="eureka__primary" disabled="">Choose 2 items</button>
+</div>
+</div>
+</div>
