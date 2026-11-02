@@ -96,6 +96,16 @@
   .eureka__modal-panel input[type="text"] { inline-size: 100%; }
   .eureka__modal-panel .flex-bar > .growable { flex: 1 1 0; }
   .eureka__modal label.dangerous { color: var(--dangerous); }
+  /* shortcuts reference (05 KEY-A5) */
+  .eureka__modal.eureka__shortcuts-modal { inline-size: min(40rem, 92vw); max-block-size: 90vh; }
+  .eureka__shortcuts-modal .eureka__modal-panel { max-block-size: calc(90vh - 2 * var(--border-width, 1px)); overflow: auto; box-sizing: border-box; }
+  .eureka__shortcuts { inline-size: 100%; border-collapse: collapse; font-size: 0.9375em; }
+  .eureka__shortcuts caption { text-align: start; font-weight: 700; padding-block: 0.5rem 0.25rem; }
+  .eureka__shortcuts th, .eureka__shortcuts td { text-align: start; padding: 0.3rem 0.5rem 0.3rem 0; border-block-end: 1px solid var(--very-subtle); vertical-align: top; font-weight: 400; }
+  .eureka__shortcuts td { white-space: nowrap; text-align: end; padding-inline-end: 0; }
+  .eureka kbd { display: inline-block; font: 0.875em ui-monospace, SFMono-Regular, Menlo, monospace; line-height: 1.4; padding: 0 0.35em; border: 1px solid var(--subtle); border-block-end-width: 2px; border-radius: 0.25em; background: var(--button-bg, transparent); color: inherit; }
+  .eureka .eureka__help-button { min-inline-size: 24px; min-block-size: 24px; padding: 0 0.4rem; }
+  .eureka .eureka__help-button kbd { border: 0; background: transparent; font-size: 1em; font-weight: 700; padding: 0; }
   .eureka__crop-stage { min-block-size: 40vh; background: #222; display: grid; place-items: center; }
   .eureka__crop-stage img { max-block-size: 60vh; }
 

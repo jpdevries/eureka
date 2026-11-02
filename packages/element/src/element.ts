@@ -140,7 +140,7 @@ export class EurekaBrowser extends HTMLElement {
     this.#store.subscribe((s) => { this.#queueRender(); persist(this.#storage, prefix, s); });
 
     if (init?.listing) this.#store.dispatch({ type: 'listing/records', records: this.#recordsFor(init.listing.entries, locale) });
-    if (config.welcome && (config.alwaysWelcome || !persisted.welcomed)) this.#notify(this.#t('welcomeToEureka'), 'info', { sticky: true, learnMore: config.learnMore, id: 'welcome' });
+    if (config.welcome && (config.alwaysWelcome || !persisted.welcomed)) this.#notify(`${this.#t('welcomeToEureka')} ${this.#t('shortcuts.hint')}`, 'info', { sticky: true, learnMore: config.learnMore, id: 'welcome' });
 
     void this.#loadCatalog(locale);
     state = this.#store.getState();
@@ -193,7 +193,7 @@ export class EurekaBrowser extends HTMLElement {
     if (!this.#started) return;
     const state = this.#store.getState();
     const next = new Map<string, string>();
-    const ctx: Ctx = { state, t: this.#t, ids: this.#ids, level: 1, iconSprite: this.#iconSprite, rowMemo: { previous: this.#rowMarkup, next } };
+    const ctx: Ctx = { state, t: this.#t, ids: this.#ids, level: 1, iconSprite: this.#iconSprite, rowMemo: { previous: this.#rowMarkup, next }, keymap: this.#keymap, platform: /Mac|iPhone|iPad/.test(navigator.platform) ? 'mac' : 'other' };
     const byId = new Map<string, string>();
     morphChildren(this, fragmentFrom(instance(ctx).value), { resolveKeep: (id) => { if (!byId.size) for (const [p, m] of next) byId.set(this.#ids.item('row', basename(p)), m); return byId.get(id); } });
     this.#rowMarkup = next;
@@ -266,6 +266,7 @@ export class EurekaBrowser extends HTMLElement {
     const state = this.#store.getState();
     switch (el.dataset.action) {
       case 'toggle-panel': this.#store.dispatch({ type: 'view/togglePanel' }); break;
+      case 'shortcuts': this.#openDialog('shortcuts', undefined, el); break;
       case 'navigate': e.preventDefault(); void this.navigate(el.dataset.source ?? state.listing.source ?? '', el.dataset.cd ?? '/'); break;
       case 'create-directory': this.#openDialog('createDirectory', undefined, el); break;
       case 'upload': e.preventDefault(); this.#pickFiles(); break;
@@ -391,6 +392,7 @@ export class EurekaBrowser extends HTMLElement {
       case 'setSource': { const s = state.sources.all.find((x) => String(x.id) === m.arg); if (s) void this.navigate(s.id, '/'); else handled = false; break; }
       case 'upload': if (this.#config.allowUploads) this.#pickFiles(); else handled = false; break;
       case 'createDirectory': this.#openDialog('createDirectory', undefined, target); break;
+      case 'showShortcuts': this.#openDialog('shortcuts', undefined, target); break;
       case 'createFile': { const h = this.#config.handlers.createFile; const r = h?.(state.listing.source ?? '', state.listing.path); if (r?.onClick) r.onClick(state.listing.source ?? '', state.listing.path); else if (r?.href) window.open(r.href, r.target ?? '_self'); else handled = false; break; }
       case 'focusFilter': { const f = this.#filterInput(); if (f) { f.focus(); f.select(); } else handled = false; break; }
       case 'sortAscending': this.#setSort(undefined, 'ascending'); break;

@@ -470,6 +470,15 @@ Taken on 2026-11-01:
   toolbar gained Home/End, ArrowRight on a row enters its actions and
   ArrowLeft on the first action returns to the row (HTML-60, KEY-B1/B2,
   A11Y-10 amended; render and conformance tests extended).
+- Shortcuts reference (KEY-A5), the first of the follow-ups: `?`
+  (KEY-15) and a "Keyboard shortcuts" toolbar button open a dialog
+  generated from the keymap the instance runs on, grouped by scope, with
+  platform modifier names, bindings for disabled features left out, and
+  the KEY-B2 toolbar movement appended; the welcome notification now ends
+  with "Press ? for keyboard shortcuts." (HTML-95, conformance KEY-A5,
+  render test.) The element bundle is 29.6 kB gzip with the new strings,
+  so moving the message catalog out of the bundle (spec 09) is next for
+  the PERF-25 budget.
 - Not done in this phase: publishing (the packages are `3.0.0-alpha.0`
   with no `publishConfig` yet; Changesets and a GitHub Actions workflow
   are still to be set up), the pointer-driven crop marquee, the shortcuts

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { html, raw, escapeHtml, jsonForScript, renderLevel0, renderEnhanced, renderDocument, type PageInput } from '../src/index.js';
+import { html, raw, escapeHtml, jsonForScript, renderLevel0, renderEnhanced, renderDocument, contextFromPage, instance, type PageInput } from '../src/index.js';
 
 const t0 = Date.UTC(2017, 3, 2, 14, 25);
 const file = (dir: string, filename: string, fileSize: number, dims?: [number, number], daysAgo = 0) => ({ filename, directory: dir, path: `${dir}/${filename}`, absoluteURL: `/sources/filesystem/${dir}/${encodeURIComponent(filename)}`, editedOn: t0 - daysAgo * 86400000, dimensions: dims, fileSize });
@@ -110,6 +110,19 @@ describe('enhanced render (02)', () => {
     expect(out).toContain('data-level="1" tabindex="-1"');
     expect(out).toContain('<th scope="col" class="eureka__th-filename" aria-sort="ascending">');
     expect(out).toContain('data-sort-by="fileSize" aria-pressed="false"');
+  });
+  it('renders the shortcuts reference from the keymap when that dialog is open', () => {
+    const withDialog = renderEnhanced(input).replace(/$/, '');
+    expect(withDialog).toContain('data-action="shortcuts" aria-haspopup="dialog"');
+    const ctx = contextFromPage(input, 1);
+    const open = instance({ ...ctx, state: { ...ctx.state, dialog: { kind: 'shortcuts' } } }).value;
+    expect(open).toContain('<h2 id="eureka__dialog-title">Keyboard shortcuts</h2>');
+    expect(open).toContain('<caption>Anywhere in the browser</caption>');
+    expect(open).toContain('<th scope="row">Rename the item</th><td><span class="eureka__chord"><kbd>F2</kbd></span></td>');
+    expect(open).toContain('<kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd>');
+    expect(open).toContain('<kbd>Alt</kbd>+<kbd>0</kbd></span> to <span class="eureka__chord"><kbd>Alt</kbd>+<kbd>9</kbd>');
+    expect(open).not.toContain('Create a file'); // no createFile handler configured
+    expect(open).not.toContain('context menu');
   });
   it('does not render Level 0 fields or obsolete elements', () => {
     expect(out).not.toContain('eureka__chosen_item');

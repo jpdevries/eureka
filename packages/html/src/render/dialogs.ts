@@ -1,5 +1,5 @@
 // Dialogs (02 HTML-91/92, 06 A11Y-70): native <dialog>, rendered only when open.
-import { basename, selectFolders, selectFiles, type FileEntry } from '@eureka/core';
+import { basename, defaultKeymap, parseChord, selectFolders, selectFiles, type FileEntry, type Translator } from '@eureka/core';
 import { attr, html, type Raw } from '../html.js';
 import type { Ctx } from '../model.js';
 import { hidden } from './icon.js';
@@ -14,6 +14,7 @@ export function dialogs(ctx: Ctx): Raw {
   const shell = (cls: string, title: string, body: Raw) => html`<dialog class="eureka__modal ${cls}" id="${ids.id('dialog')}" aria-labelledby="${titleId}" data-dialog="${d.kind}"><div class="eureka__modal-panel"><h2 id="${titleId}">${title}</h2>${body}</div></dialog>`;
   const buttons = (primary: Raw) => html`<div class="flex-bar eureka__button-bar">${html`<button type="button" class="growable" data-action="dialog-cancel">${t('cancel')}</button>`}${primary}</div>`;
   switch (d.kind) {
+    case 'shortcuts': return shell('eureka__shortcuts-modal', t('shortcuts'), shortcuts(ctx, html`<div class="flex-bar eureka__button-bar"><button type="button" class="growable eureka__primary" data-action="dialog-cancel" autofocus>${t('shortcuts.close')}</button></div>`));
     case 'createDirectory': {
       const existing = selectFolders(state).map((f) => f.foldername ?? '');
       const value = (d.input ?? '').trim();
@@ -57,4 +58,41 @@ export function dialogs(ctx: Ctx): Raw {
         ${buttons(html`<button type="submit" class="growable eureka__primary"${attr('disabled', state.pending.cropping)}>${t('crop')}</button>`)}</form>`);
     }
   }
+}
+
+const KEY_NAMES: Record<string, string> = { ' ': 'key.space', Enter: 'key.enter', Escape: 'key.escape', Backspace: 'key.backspace', Delete: 'key.delete', Home: 'key.home', End: 'key.end', ArrowUp: 'key.arrowUp', ArrowDown: 'key.arrowDown', ArrowLeft: 'key.arrowLeft', ArrowRight: 'key.arrowRight' };
+
+/** A chord as <kbd> elements with platform key names ("Alt+Shift+S" → Alt Shift S; Option on a Mac). */
+export function chordLabel(chord: string, t: Translator, mac = false): Raw {
+  const c = parseChord(chord);
+  const parts: string[] = [];
+  if (c.ctrl) parts.push(t('key.control'));
+  if (c.alt) parts.push(t(mac ? 'key.option' : 'key.alt'));
+  if (c.shift) parts.push(t('key.shift'));
+  if (c.meta) parts.push(t(mac ? 'key.command' : 'key.meta'));
+  parts.push(KEY_NAMES[c.key] ? t(KEY_NAMES[c.key]!) : c.key.length === 1 ? c.key.toUpperCase() : c.key);
+  return html`<span class="eureka__chord">${parts.map((p, i) => html`${i ? '+' : ''}<kbd>${p}</kbd>`)}</span>`;
+}
+
+/** The shortcuts reference (05 KEY-A5), generated from the keymap data the instance runs on. */
+function shortcuts(ctx: Ctx, footer: Raw): Raw {
+  const { state: { config }, t } = ctx;
+  const mac = ctx.platform === 'mac';
+  const keymap = ctx.keymap ?? defaultKeymap;
+  const hide = new Set<string>(['openContextMenu']); // not implemented (HTML-71)
+  if (!config.handlers.createFile) hide.add('createFile');
+  if (!config.allowUploads) hide.add('upload');
+  if (!config.allowRename) hide.add('renameItem');
+  if (!config.allowDelete) hide.add('deleteItem');
+  if (!config.allowChoose) { hide.add('chooseItem'); hide.add('chooseSingle'); }
+  if (!config.allowChooseMultiple) { hide.add('chooseMultiple'); hide.add('invertSelection'); hide.add('toggleItemChecked'); }
+  const chords = (keys: string[]) => keys.length > 4
+    ? html`${chordLabel(keys[0]!, t, mac)} ${t('key.to')} ${chordLabel(keys[keys.length - 1]!, t, mac)}`
+    : html`${keys.map((k, i) => html`${i ? html`<span class="eureka__chord-or">, </span>` : ''}${chordLabel(k, t, mac)}`)}`;
+  const rowsFor = (scope: 'instance' | 'row') => keymap.describe().filter((b) => b.scope === scope && !hide.has(b.action)).map((b) => html`<tr><th scope="row">${t('shortcut.' + b.action)}</th><td>${chords(b.chords)}</td></tr>`);
+  const extra = html`<tr><th scope="row">${t('shortcut.rowActions')}</th><td>${chordLabel('ArrowRight', t, mac)}<span class="eureka__chord-or">, </span>${chordLabel('ArrowLeft', t, mac)}</td></tr>`; // KEY-B2 focus movement, not a keymap binding
+  return html`<p>${t('shortcuts.intro')}</p>
+    <table class="eureka__shortcuts"><caption>${t('shortcuts.scope.instance')}</caption><tbody>${rowsFor('instance')}</tbody></table>
+    <table class="eureka__shortcuts"><caption>${t('shortcuts.scope.row')}</caption><tbody>${rowsFor('row')}${extra}</tbody></table>
+    ${footer}`;
 }

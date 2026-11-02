@@ -267,13 +267,23 @@ DOM order is the reading order and the tab order.
   bar). Choose is disabled until an item is focused or selected. Its
   text is "Choose" plus a visually-hidden object ("media item" or the
   filename) or, with several selected, "Choose {n} items".
-- **HTML-91** Modals (create directory, rename, crop) are `<dialog>`
+- **HTML-91** Modals (create directory, rename, crop, confirm delete,
+  shortcuts) are `<dialog>`
   elements opened with `showModal()`, with an `<h2>` title, a form, and
   Cancel plus a primary action button whose names include their object
   ("Create directory {name}", "Rename {old} to {new}"). While a dialog is
   open the rest of the instance is `inert`. v2 used a `div role="dialog"`
   plus `aria-hidden` on siblings and a scrim `div role="button"`; v3 uses
   the native dialog and Escape closes it.
+- **HTML-95** Shortcuts dialog (05 KEY-A5): `<dialog class="eureka__modal
+  eureka__shortcuts-modal">` titled "Keyboard shortcuts", an introductory
+  sentence, then one `<table class="eureka__shortcuts">` per scope with a
+  `<caption>` ("Anywhere in the browser", "With an item focused"), each
+  row a `<th scope="row">` description and a cell of `<kbd>` keys joined
+  by "+", several chords separated by commas, runs of more than four
+  chords shown as "first to last". A single Close button. Opened by the
+  `?` binding or the toolbar's "Keyboard shortcuts" button
+  (`button.eureka__help-button[aria-haspopup="dialog"]`, visible text "?").
 - **HTML-92** Create directory form: a text input labelled "Create a new
   Directory in {cd}". Rename form: a text input labelled "New name"
   prefilled with the current name. Crop form: see 06 for its controls;

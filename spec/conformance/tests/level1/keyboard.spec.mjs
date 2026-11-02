@@ -83,6 +83,28 @@ test('KEY-B2 a row toolbar is one tab stop; arrows move inside it', async ({ pag
   expect(await focused.evaluate((el) => !!el.closest('tr[data-path="assets/img/schildpad.jpg"]'))).toBe(false);
 });
 
+test('KEY-A5 ? and the help button open the shortcuts reference generated from the keymap', async ({ page }) => {
+  v3only('shortcuts reference');
+  await page.keyboard.press(chord('showShortcuts'));
+  const dialog = page.getByRole('dialog', { name: 'Keyboard shortcuts' });
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByRole('row', { name: /Rename the item/ })).toContainText('F2');
+  await expect(dialog.getByRole('row', { name: /Filter the listing/ })).toContainText(/(Alt|Option)\+Shift\+S/); // modifier names follow the platform
+  await expect(dialog.getByRole('button', { name: 'Close' })).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(dialog).toHaveCount(0);
+  const help = page.getByRole('button', { name: 'Keyboard shortcuts' });
+  await help.click();
+  await expect(page.getByRole('dialog', { name: 'Keyboard shortcuts' })).toBeVisible();
+  await page.getByRole('dialog', { name: 'Keyboard shortcuts' }).getByRole('button', { name: 'Close' }).click();
+  await expect(help).toBeFocused(); // KEY-B5: focus returns to the opener
+  // not in text fields (KEY-A3)
+  await filterBox(page).focus();
+  await page.keyboard.type('?');
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await expect(filterBox(page)).toHaveValue('?');
+});
+
 test('KEY-23 rename shortcut opens the rename dialog for the focused row', async ({ page }) => {
   await focusRow(page, 'notes.txt');
   await page.keyboard.press(chord('renameItem'));

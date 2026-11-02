@@ -58,7 +58,7 @@ export interface DisplayRecord {
   haystack: string;
 }
 
-export type DialogKind = 'createDirectory' | 'rename' | 'crop' | 'confirmDelete';
+export type DialogKind = 'createDirectory' | 'rename' | 'crop' | 'confirmDelete' | 'shortcuts';
 
 export interface Intervals { fetchDirectoryContents: false | number; updateSourceTree: false | number; searchBarPlaceholder: false | number }
 

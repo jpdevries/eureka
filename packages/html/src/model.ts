@@ -1,5 +1,5 @@
 // What every render function receives, and how to build it on the server.
-import { buildDisplayRecord, cssSafe, createTranslator, initialState, reduce, resolveConfig, selectCurrentTree, type Config, type Entry, type PartialConfig, type Source, type State, type TreeNode, type Translator } from '@eureka/core';
+import { buildDisplayRecord, cssSafe, createTranslator, initialState, reduce, resolveConfig, selectCurrentTree, type Config, type Entry, type PartialConfig, type Source, type State, type TreeNode, type Translator, type Keymap } from '@eureka/core';
 
 export type Level = 0 | 1;
 
@@ -24,6 +24,10 @@ export interface Ctx {
   uploaded?: string[];
   /** True when the page location came from the request (a POST navigate or a query), not the server default (07 STATE-40). */
   locationRequested?: boolean;
+  /** The instance's keymap (with host overrides) for the shortcuts reference (05 KEY-A5); the default keymap when absent. */
+  keymap?: Keymap;
+  /** Names modifier keys for the platform in the shortcuts reference ("Option" on a Mac). */
+  platform?: 'mac' | 'other';
   /**
    * Row markup memo for incremental client renders (10 PERF-11): `previous` holds the markup of each row
    * as last rendered, keyed by path; the listing fills `next` and emits a keep-placeholder

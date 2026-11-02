@@ -22,6 +22,7 @@
     { "id": "KEY-12", "action": "chooseMultiple",     "scope": "instance", "keys": ["Alt+M"],                           "v2": ["alt+m"] },
     { "id": "KEY-13", "action": "invertSelection",    "scope": "instance", "keys": ["Alt+I"],                           "v2": ["alt+i"], "when": "multiple choice active" },
     { "id": "KEY-14", "action": "deselectAll",        "scope": "instance", "keys": ["Alt+Z", "Escape"],                 "v2": ["alt+z"], "notes": "Escape deselects only when no dialog is open and the filter is empty" },
+    { "id": "KEY-15", "action": "showShortcuts",      "scope": "instance", "keys": ["?"],                               "v2": [], "notes": "Opens the shortcuts reference generated from this file (KEY-A5); not in text fields" },
 
     { "id": "KEY-20", "action": "chooseItem",         "scope": "row", "keys": ["Enter"],                                "v2": ["enter"] },
     { "id": "KEY-21", "action": "expandItem",         "scope": "row", "keys": ["Alt+ "],                                "v2": ["alt+space"], "notes": "Space alone toggles the checkbox in multiple mode" },

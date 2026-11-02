@@ -206,6 +206,16 @@ const data = {
       "notes": "Escape deselects only when no dialog is open and the filter is empty"
     },
     {
+      "id": "KEY-15",
+      "action": "showShortcuts",
+      "scope": "instance",
+      "keys": [
+        "?"
+      ],
+      "v2": [],
+      "notes": "Opens the shortcuts reference generated from this file (KEY-A5); not in text fields"
+    },
+    {
       "id": "KEY-20",
       "action": "chooseItem",
       "scope": "row",

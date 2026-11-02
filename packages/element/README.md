@@ -51,6 +51,10 @@ const el = document.querySelector('eureka-browser');
 el.config = { callbacks: { choose: (items) => insert(items), close: () => modal.close() } };
 ```
 
+Press `?` anywhere in the browser (outside text fields), or use the
+toolbar's "Keyboard shortcuts" button, for the shortcuts reference; it is
+generated from `spec/data/keymap.json` plus any `config.keymap` overrides.
+
 Events (07 STATE-50): `eureka-choose` (`detail.items`), `eureka-close`,
 `eureka-navigate` (`detail.{source, path}`), `eureka-error`
 (`detail.{message, cause}`), `eureka-statechange` (`detail.state`, once

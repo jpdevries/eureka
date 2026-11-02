@@ -23,8 +23,16 @@ around it.
   `ctrl+r`, `ctrl+shift+n`) collide with browser commands on Windows and
   Linux. v3 defaults move them to `Alt+Shift` and `F2` as listed in the
   data file. A host MAY restore the v2 chords for macOS-only audiences.
-- **KEY-A5** A shortcuts reference MUST be reachable from the UI (a "?"
-  binding or a help link) and generated from the same data file.
+- **KEY-A5** A shortcuts reference MUST be reachable from the UI and
+  generated from the same data file, so overrides (KEY-A1) show up in it.
+  v3: the `?` binding (KEY-15, not in text fields) and a "Keyboard
+  shortcuts" button in the toolbar open a dialog (02 HTML-95) listing
+  every active binding under "Anywhere in the browser" and "With an item
+  focused", with the toolbar movement of KEY-B2 appended; bindings for
+  features the host turned off, and `when`-conditional bindings whose
+  condition does not hold, are left out. The welcome notification ends
+  with "Press ? for keyboard shortcuts." Modifier names follow the
+  platform (Option on a Mac).
 
 ## 2. Focus management
 
