@@ -114,6 +114,9 @@ export class S3Client {
     const payloadHash = init.body ? sha256(init.body) : EMPTY_SHA256;
     if (init.body) headers['content-length'] = String(init.body.length);
     headers['authorization'] = signV4({ method, url, headers, payloadHash, region: this.region, credentials: this.creds, date: this.now() });
+    // Unsigned, after signing: without it Node's fetch asks for gzip, inflates the body and drops Content-Length, so a
+    // JSON object from R2 came back with size 0 and a Range answer would not be the bytes the client asked for.
+    headers['accept-encoding'] = 'identity';
     const res = await this.fetchImpl(url, { method, headers, ...(init.body ? { body: new Uint8Array(init.body) } : {}), redirect: 'manual' });
     // AWS answers a request signed for the wrong region with 301/400 and the right one in x-amz-bucket-region: move there once
     const hint = res.headers.get('x-amz-bucket-region');

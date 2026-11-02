@@ -1,5 +1,5 @@
 // One listing row (02 HTML-62..69).
-import { extname, iconForExtension, isCroppable, mediaKind, selectIsChecked, selectRecord, type FileEntry } from '@mrktps/eureka-core';
+import { extname, iconForExtension, isCroppable, mediaKind, selectIsChecked, selectRecord, type FileEntry, selectCan } from '@mrktps/eureka-core';
 import { attr, classes, html, raw, type Raw } from '../html.js';
 import type { Ctx } from '../model.js';
 import { hidden, icon } from './icon.js';
@@ -61,13 +61,14 @@ export function rowTargetName(ctx: Ctx, item: FileEntry): string { const id = ct
 
 export function rowActions(ctx: Ctx, item: FileEntry): RowAction[] {
   const { t, state: { config } } = ctx;
+  const can = selectCan(ctx.state);
   const n = item.filename;
   const list: RowAction[] = [{ kind: 'expand', label: t('expand'), action: 'expandItem', href: item.absoluteURL, target: rowTargetName(ctx, item) }];
   if (item.animated && ctx.level > 0) list.push({ kind: 'play', label: t(isPlaying(ctx, item) ? 'animation.pause' : 'animation.play'), action: 'toggleAnimation', cls: 'eureka__play-btn' });
   if (config.allowChoose) list.push({ kind: 'choose', label: t('choose'), action: 'chooseItem' });
   if (config.allowCrop && isCroppable(n)) list.push({ kind: 'crop', label: t('crop'), cls: 'eureka__crop-btn' });
-  if (config.allowRename) list.push({ kind: 'rename', label: t('rename'), action: 'renameItem' });
-  if (config.allowDelete) list.push({ kind: 'delete', label: t('delete'), action: 'deleteItem', cls: 'dangerous' });
+  if (can.rename) list.push({ kind: 'rename', label: t('rename'), action: 'renameItem' });
+  if (can.delete) list.push({ kind: 'delete', label: t('delete'), action: 'deleteItem', cls: 'dangerous' });
   if (config.allowDownload) list.push({ kind: 'download', label: t('download'), action: 'downloadItem', href: item.absoluteURL, download: true });
   return list;
 }

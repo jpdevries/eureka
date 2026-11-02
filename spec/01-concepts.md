@@ -12,8 +12,8 @@ configuration surface of an instance.
   has a `uid` and an id prefix `{p}` (02 HTML-04) and its own state and
   persistence namespace.
 - **Media source.** A named root the host exposes through the API
-  (`Source`: `id`, `name`). Ids appear in URLs and in no-JS form values and
-  MUST NOT contain `|` or `/`.
+  (`Source`: `id`, `name`, optional `capabilities`). Ids appear in URLs
+  and in no-JS form values and MUST NOT contain `|` or `/`.
 - **Directory.** A path inside a source, relative to the source root, `/`
   separated, with no leading slash; the root is `/`. The **current
   directory** (`cd`) is the one being listed.
@@ -99,6 +99,16 @@ defaults live in `schema/config.json`; the table is the human index.
 | `handlers.createFile(sourceId, cd)` | optional | Returns `{href, target, onClick?}` for a "Create File" affordance |
 | `api` | REST client | Optional adapter replacing the REST calls (07 §7); supersedes v2 "decorated actions" |
 
+- **CON-04** A source MAY declare `capabilities` (`upload`,
+  `createDirectory`, `rename`, `delete`; a field left out means allowed;
+  schema `source.json`). What the instance offers for the current source
+  is the instance option AND the source capability: `allowDelete: true`
+  with a source whose `delete` is `false` shows no Delete control, bulk
+  delete, context menu entry or shortcut, in Level 0 as in Level 2. The
+  server refuses a declared-unavailable mutation with 403 before touching
+  the backend (11 MS-09), and a client that receives 403 for a mutation
+  re-reads the source list so capabilities a backend discovered late
+  take effect without a reload.
 - **CON-10** Unknown options MUST be ignored, not rejected, so hosts can
   share one configuration object across spec versions.
 - **CON-11** When `useLocalStorage` is on, persisted view state wins over

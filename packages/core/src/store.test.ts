@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { createStore, initialState, reduce, selectChosen, selectVisibleFiles, selectCurrentTree, type State, findTreeNode, graftBranch } from './store.js';
+import { createStore, initialState, reduce, selectChosen, selectVisibleFiles, selectCurrentTree, type State, findTreeNode, graftBranch, selectCan } from './store.js';
 import { resolveConfig, type Entry } from './types.js';
 import { loadPersisted, persist } from './persistence.js';
 
@@ -100,6 +100,17 @@ describe('store', () => {
     expect(selectCurrentTree(s)[1]).toEqual({ name: 'z', cd: 'z', children: [] }); // untouched
     expect(reduce(s, { type: 'tree/branchLoaded', source: 7, cd: 'a', nodes: [] })).toBe(s); // unknown source: no-op
     expect(graftBranch([{ name: 'a', cd: 'a' }], 'a/missing', [])).toEqual([{ name: 'a', cd: 'a' }]); // ancestor not loaded: unchanged
+  });
+  it('selectCan is the instance config AND the current source capabilities (01 CON-04)', () => {
+    let s = loaded();
+    s = reduce(s, { type: 'sources/loaded', sources: [{ id: 0, name: 'rw' }, { id: 1, name: 'ro', capabilities: { upload: false, createDirectory: false, rename: false, delete: false } }, { id: 2, name: 'no-delete', capabilities: { delete: false } }] });
+    expect(selectCan(s)).toEqual({ upload: true, createDirectory: true, rename: true, delete: true });
+    s = reduce(s, { type: 'source/select', id: 1 });
+    expect(selectCan(s)).toEqual({ upload: false, createDirectory: false, rename: false, delete: false });
+    s = reduce(s, { type: 'source/select', id: 2 });
+    expect(selectCan(s)).toEqual({ upload: true, createDirectory: true, rename: true, delete: false });
+    const noUploads = reduce(initialState({ config: resolveConfig({ allowUploads: false }) }), { type: 'sources/loaded', sources: [{ id: 0, name: 'rw' }] });
+    expect(selectCan(noUploads).upload).toBe(false);
   });
   it('notifications push and dismiss', () => {
     let s = loaded();

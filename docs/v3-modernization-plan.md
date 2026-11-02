@@ -633,6 +633,23 @@ Taken on 2026-11-01:
   conformance tests (navigation.spec.mjs) drive it against the fixture
   server, which learnt `tree=`/`depth=`. The collapsed-panel directory
   selector now lists loaded folders only.
+- S3 driver verified live on Cloudflare R2 (the Pantry Host videos
+  bucket, read-only token scoped to it) and AWS S3: one finding, Node's
+  fetch negotiating gzip and dropping Content-Length, fixed by asking for
+  identity encoding (MS-31a). The demo builds one S3 source per env file
+  (`apps/demo/.env`, `.env.r2`, …), so the turtles bucket on AWS and the
+  Pantry Host posters on R2 sit beside the two directories.
+- Source capabilities (CON-04, HTML-34a, NOJS-19, MS-09): `Source` gains
+  optional `capabilities` (`upload`, `createDirectory`, `rename`,
+  `delete`), the store's `selectCan` is instance option AND current
+  source, and every mutation control, menu entry, bulk form, shortcut
+  hint and keyboard handler reads it, Level 0 included. The handler lists
+  capabilities with the sources and refuses a declared-unavailable
+  mutation with 403 before the driver runs; both drivers take
+  `readOnly`/`capabilities`; the S3 driver flips to read-only by itself
+  after a 403 from the bucket, and the element re-reads the source list
+  after any 403 on a mutation so the controls follow. Prompted by the
+  read-only R2 token: the demo's pantry source now shows no Delete.
 - Package names: the `@eureka` npm scope belongs to an existing npm user,
   so the packages are `@mrktps/eureka` (the element, what most people
   install) and `@mrktps/eureka-core`, `-html`, `-css`, `-react`,

@@ -40,6 +40,13 @@ describe('SigV4 (spec 11 MS-30..MS-32)', () => {
     expect(c.region).toBe('eu-central-1');
     seen.length = 0; await c.head('k'); expect(seen).toEqual(['b.s3.eu-central-1.amazonaws.com eu-central-1']); // remembered
   });
+  it('asks for identity encoding so sizes and ranges are the stored bytes (seen on R2)', async () => {
+    let sent: Record<string, string> = {};
+    const c = new S3Client({ bucket: 'b', endpoint: 'http://x', credentials: FAKE_CREDENTIALS, fetch: (async (_u: unknown, init?: RequestInit) => { sent = init?.headers as Record<string, string>; return new Response('', { status: 200, headers: { 'content-length': '0' } }); }) as typeof fetch });
+    await c.head('k');
+    expect(sent['accept-encoding']).toBe('identity');
+    expect(/SignedHeaders=([^,]+)/.exec(sent.authorization!)![1]).not.toContain('accept-encoding');
+  });
   it('builds virtual-hosted URLs for AWS and path-style URLs for a custom endpoint, RFC 3986-encoded', () => {
     const aws = new S3Client({ bucket: 'b', region: 'eu-west-1', credentials: FAKE_CREDENTIALS });
     expect(aws.objectUrl("dir/Wide Banner (final)'s*.png").toString()).toBe("https://b.s3.eu-west-1.amazonaws.com/dir/Wide%20Banner%20%28final%29%27s%2A.png");
@@ -169,6 +176,34 @@ describe('S3 media source over a fake bucket (spec 11 MS-20..MS-27)', () => {
     const buf = Buffer.from(await r.arrayBuffer());
     expect(buf.subarray(0, 4).toString('hex')).toBe('504b0304'); expect(buf.includes(Buffer.from('notes.txt'))).toBe(true); expect(buf.includes(Buffer.from('pixel.png'))).toBe(true);
     expect(buf.toString('latin1').split('PK\u0003\u0004').length - 1).toBe(2); // two local file headers, the missing one skipped
+  });
+  it('lists declared capabilities and refuses the mutation before asking the bucket (MS-09)', async () => {
+    const ro = createS3Source({ id: 'ro', name: 'ro', bucket: 'media', endpoint: s3.origin, prefix: 'lib', credentials: FAKE_CREDENTIALS, readOnly: true });
+    const started = await startServer({ sources: [ro], port: 0, basePath: '/' });
+    try {
+      const list = await j(await fetch(`http://127.0.0.1:${started.port}/media/sources/`));
+      expect(list.body).toEqual([{ id: 'ro', name: 'ro', capabilities: { upload: false, createDirectory: false, rename: false, delete: false } }]);
+      s3.requests.length = 0;
+      const r = await j(await fetch(`http://127.0.0.1:${started.port}/media/sources/ro?path=uploads%2Fx`, { method: 'PUT' }));
+      expect(r.status).toBe(403); expect(r.body.error).toMatch(/does not allow createDirectory/);
+      expect(s3.requests.filter((q) => q.startsWith('PUT'))).toEqual([]); // never reached the bucket
+      expect((await j(await fetch(`http://127.0.0.1:${started.port}/media/sources/ro?path=assets%2Fimg`))).status).toBe(200); // reading is fine
+    } finally { await started.close(); }
+  });
+  it('turns read-only after the bucket refuses a write with 403 (MS-09, retroactive)', async () => {
+    const src = createS3Source({ id: 'flip', name: 'flip', bucket: 'media', endpoint: s3.origin, prefix: 'lib', credentials: FAKE_CREDENTIALS });
+    expect(src.capabilities).toBeUndefined();
+    s3.readOnly = true;
+    try {
+      await expect(src.createDirectory('uploads/nope')).rejects.toMatchObject({ status: 403 });
+      expect(src.capabilities).toEqual({ upload: false, createDirectory: false, rename: false, delete: false });
+      expect(s3.objects.has('lib/uploads/nope/')).toBe(false);
+    } finally { s3.readOnly = false; }
+    const started = await startServer({ sources: [src], port: 0, basePath: '/' });
+    try {
+      expect((await j(await fetch(`http://127.0.0.1:${started.port}/media/sources/`))).body[0].capabilities).toEqual({ upload: false, createDirectory: false, rename: false, delete: false });
+      expect((await j(await fetch(`http://127.0.0.1:${started.port}/media/sources/flip?path=uploads`, { method: 'DELETE' }))).status).toBe(403); // now refused up front
+    } finally { await started.close(); }
   });
   it('turns provider errors into 5xx JSON without leaking them', async () => {
     const bad = createS3Source({ id: 9, name: 'bad', bucket: 'nope', endpoint: s3.origin, credentials: FAKE_CREDENTIALS });

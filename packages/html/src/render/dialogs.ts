@@ -1,5 +1,5 @@
 // Dialogs (02 HTML-91/92, 06 A11Y-70): native <dialog>, rendered only when open.
-import { basename, defaultKeymap, parseChord, selectFolders, selectFiles, type FileEntry, type Translator } from '@mrktps/eureka-core';
+import { basename, defaultKeymap, parseChord, selectFolders, selectFiles, type FileEntry, type Translator, selectCan } from '@mrktps/eureka-core';
 import { attr, html, type Raw } from '../html.js';
 import type { Ctx } from '../model.js';
 import { hidden } from './icon.js';
@@ -81,9 +81,11 @@ function shortcuts(ctx: Ctx, footer: Raw): Raw {
   const keymap = ctx.keymap ?? defaultKeymap;
   const hide = new Set<string>();
   if (!config.handlers.createFile) hide.add('createFile');
-  if (!config.allowUploads) hide.add('upload');
-  if (!config.allowRename) hide.add('renameItem');
-  if (!config.allowDelete) hide.add('deleteItem');
+  const can = selectCan(ctx.state);
+  if (!can.upload) hide.add('upload');
+  if (!can.rename) hide.add('renameItem');
+  if (!can.delete) hide.add('deleteItem');
+  if (!can.createDirectory) hide.add('createDirectory');
   if (!config.allowDownload) hide.add('downloadItem');
   if (!config.allowChoose) { hide.add('chooseItem'); hide.add('chooseSingle'); }
   if (!config.allowChooseMultiple) { hide.add('chooseMultiple'); hide.add('invertSelection'); hide.add('toggleItemChecked'); }

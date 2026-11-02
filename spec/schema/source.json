@@ -4,10 +4,46 @@
   "title": "Source",
   "description": "A media source exposed by the host (api/openapi.yaml, 01 CON).",
   "type": "object",
-  "required": ["id", "name"],
+  "required": [
+    "id",
+    "name"
+  ],
   "properties": {
-    "id": { "oneOf": [{ "type": "integer" }, { "type": "string", "pattern": "^[^|/]+$" }], "description": "Stable id; appears in URLs and in `{id}||{dir}` form values." },
-    "name": { "type": "string", "minLength": 1 }
+    "id": {
+      "oneOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "string",
+          "pattern": "^[^|/]+$"
+        }
+      ],
+      "description": "Stable id; appears in URLs and in `{id}||{dir}` form values."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "capabilities": {
+      "type": "object",
+      "description": "What the source lets clients change (01 CON-04, 11 MS-09). A field left out means allowed. Clients hide the controls for anything false; the server refuses it with 403.",
+      "properties": {
+        "upload": {
+          "type": "boolean"
+        },
+        "createDirectory": {
+          "type": "boolean"
+        },
+        "rename": {
+          "type": "boolean"
+        },
+        "delete": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    }
   },
   "additionalProperties": true
 }

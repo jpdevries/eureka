@@ -1,7 +1,7 @@
 // The instance store (07). Pure transitions, no framework, no effects.
 import { ancestors, normalizePath, parentPath } from './paths.js';
 import { visibleFiles } from './sort-filter.js';
-import { isFile, type ChooseMode, type Config, type DialogKind, type DisplayRecord, type Entry, type FileEntry, type Notification, type Sort, type SortBy, type SortDir, type Source, type SourceId, type Status, type TreeNode, type ViewMode } from './types.js';
+import { isFile, sourceAllows, type SourceCapabilities, type ChooseMode, type Config, type DialogKind, type DisplayRecord, type Entry, type FileEntry, type Notification, type Sort, type SortBy, type SortDir, type Source, type SourceId, type Status, type TreeNode, type ViewMode } from './types.js';
 
 export interface State {
   config: Config;
@@ -231,6 +231,17 @@ export function selectChosen(s: State): FileEntry[] {
 }
 export const selectIsChecked = (s: State, path: string): boolean => s.selection.inverted !== s.selection.checked.includes(path);
 export const selectCurrentTree = (s: State): TreeNode[] => s.tree.bySource[String(s.listing.source)] ?? [];
+export const selectCurrentSource = (s: State): Source | undefined => s.sources.all.find((x) => String(x.id) === String(s.listing.source));
+/** The mutations offered right now: the instance's config AND the current source's capabilities (01 CON-04). */
+export function selectCan(s: State): Readonly<Required<SourceCapabilities>> {
+  const src = selectCurrentSource(s), c = s.config;
+  return {
+    upload: c.allowUploads && sourceAllows(src, 'upload'),
+    createDirectory: sourceAllows(src, 'createDirectory'),
+    rename: c.allowRename && sourceAllows(src, 'rename'),
+    delete: c.allowDelete && sourceAllows(src, 'delete')
+  };
+}
 
 /** The node at `cd` in a tree, or undefined (also when an ancestor has not been loaded). */
 export function findTreeNode(nodes: TreeNode[], cd: string): TreeNode | undefined {

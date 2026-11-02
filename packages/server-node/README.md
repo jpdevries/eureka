@@ -55,6 +55,10 @@ await startServer({
   every mutation; `dimensions` and `animated` come from the first 64 KB of
   each image, once per ETag. See `spec/11-media-sources.md` for the model
   and what it costs.
+- Both sources take `readOnly: true` (or `capabilities: { delete: false, … }`),
+  listed with the source so clients drop the controls (spec 01 CON-04);
+  the handler answers 403 to anything a source does not allow. The S3
+  source also turns read-only by itself after the bucket's first 403.
 - `createEurekaHandler` is a `(req, res) => Promise<boolean>` you can mount
   in any Node server. It owns `{basePath}/media/...`, `/sources/{name}/...`,
   and, when `renderPage` is given, `GET`/`POST {basePath}`. Trees are

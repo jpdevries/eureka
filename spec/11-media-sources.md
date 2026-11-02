@@ -55,6 +55,13 @@ Everything below holds for every driver.
   deletes what exists, ignores what does not, and returns the listing.
 - **MS-07** `zip(dir, names)` streams a zip of the named files (folders
   and missing names skipped) without buffering whole files in memory.
+- **MS-09** A source carries `capabilities` (01 CON-04) when it cannot
+  offer every mutation: declared by the host (`readOnly: true`, or the
+  fields one by one) or learnt. A driver whose backend refuses a write
+  with 403 MUST set every capability to `false` from then on, so the next
+  source list, and with it the controls, reflect what the credentials can
+  do; the handler refuses a declared-unavailable mutation with 403 and a
+  message naming the source and the action, without asking the backend.
 - **MS-08** Backend failures surface as errors with an HTTP `status`
   (400s for the client's mistakes, 502 for a provider that misbehaved,
   403 for refused credentials) and a message that does not include the
@@ -133,7 +140,9 @@ AWS console and every S3 file manager use.
   SSO; a host wanting those resolves them and passes the pair (rotating
   by constructing a new source). The pair needs `s3:ListBucket` on the
   bucket and `s3:GetObject`, `PutObject`, `DeleteObject` on the prefix;
-  a read-only key makes a read-only source whose mutations fail with 403.
+  a read-only key makes a read-only source: declare it with `readOnly`
+  so the controls never appear, or let the first 403 flip the
+  capabilities (MS-09). The demo's env files take `EUREKA_S3_READ_ONLY=1`.
 
 ### 3.1 Transport and signing
 
@@ -147,6 +156,10 @@ AWS console and every S3 file manager use.
   path and in `x-amz-copy-source`; query strings are built the same way
   rather than with `URLSearchParams`, whose `+` for space S3 reads
   differently from what was signed.
+- **MS-31a** Requests ask for `Accept-Encoding: identity`. A runtime's
+  fetch otherwise negotiates gzip, inflates the body and drops
+  `Content-Length`, so an object's size reads as 0 and a `Range` answer
+  is no longer the stored bytes; seen on R2 with a JSON object.
 - **MS-32** Addressing is virtual-hosted (`{bucket}.s3.{region}.amazonaws.com`)
   for AWS and path-style (`{endpoint}/{bucket}/{key}`) whenever an
   `endpoint` is given, because R2, MinIO and most compatibles expect it;
@@ -158,13 +171,16 @@ AWS console and every S3 file manager use.
 
 ### 3.2 Provider notes (informative)
 
-Tested against the in-memory fake; the rows come from each provider's
-documentation and have not yet been exercised against a live bucket.
+Verified live: AWS S3 (region discovered from the redirect, probing,
+Range, text thumbnails) and Cloudflare R2 (`pantry-host-videos`: tree,
+58 root objects and 28 posters with probed dimensions, Range on video,
+thumbnails, 404s, and a read-only token refusing `PutObject` with 403 as
+MS-27 says). The other rows come from each provider's documentation.
 
 | Provider | `endpoint` | `region` | Notes |
 |---|---|---|---|
-| AWS S3 | (none) | the bucket's | virtual-hosted; `publicBaseUrl` for a public bucket or CloudFront |
-| Cloudflare R2 | `https://{account}.r2.cloudflarestorage.com` | `auto` | no egress fees; `publicBaseUrl` = the `r2.dev` or custom domain |
+| AWS S3 (verified) | (none) | the bucket's, or blank: corrected from the redirect | virtual-hosted; `publicBaseUrl` for a public bucket or CloudFront |
+| Cloudflare R2 (verified) | `https://{account}.r2.cloudflarestorage.com` | `auto` | no egress fees; `publicBaseUrl` = the `r2.dev` or custom domain; token scoped per bucket, Object Read only for a browse-only source |
 | MinIO | `http://host:9000` | any | self-hosted; the local development target |
 | Backblaze B2 | `https://s3.{region}.backblazeb2.com` | e.g. `us-west-004` | folder markers are supported |
 | DigitalOcean Spaces | `https://{region}.digitaloceanspaces.com` | e.g. `nyc3` | CDN endpoint as `publicBaseUrl` |
@@ -238,6 +254,6 @@ model with unique names. None is scheduled.
   `node:crypto`) so a host-supplied API client (07 STATE-51) can talk to
   a bucket directly with scoped, short-lived STS credentials; the
   `thumbnails: "client"` path already covers previews in that setup.
-- Live verification of §3.2 against R2 and MinIO.
+- Live verification of §3.2 against MinIO (R2 and AWS done).
 - Google Cloud Storage lacks `DeleteObjects`: fall back per key when the
   provider answers 400/501.

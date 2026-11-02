@@ -4,8 +4,8 @@
 // re-renders the instance markup from state through a keyed morph, so focus,
 // scroll position and media playback survive updates.
 import {
-  ancestors, basename, buildDisplayRecord, catalogCandidates, createEngineClient, createKeymap, createStore, createTranslator, findTreeNode, initialState, joinPath, loadPersisted, markWelcomed, normalizePath, persist, resolveLocale, selectChosen, selectFocused, selectVisibleFiles, splitSourcePath, VIEW_MODES,
-  type Catalog, type Config, type DialogKind, type DisplayRecord, type EngineClient, type Entry, type Event as EurekaEvent, type FileEntry, type Keymap, type PartialConfig, type SortBy, type SortDir, type SourceId, type State, type Store, type Translator, type ViewMode
+  ancestors, basename, buildDisplayRecord, catalogCandidates, createEngineClient, createKeymap, createStore, createTranslator, findTreeNode, initialState, selectCan, joinPath, loadPersisted, markWelcomed, normalizePath, persist, resolveLocale, selectChosen, selectFocused, selectVisibleFiles, splitSourcePath, VIEW_MODES,
+  type Catalog, type Config, type DialogKind, type DisplayRecord, type EngineClient, type Entry, type Event as EurekaEvent, type FileEntry, type Keymap, type MutationKind, type PartialConfig, type SortBy, type SortDir, type SourceId, type State, type Store, type Translator, type ViewMode
 } from '@mrktps/eureka-core';
 import { createIds, instance, type Ctx, type Ids } from '@mrktps/eureka-html';
 import { ATTRIBUTES, buildConfig } from './config.js';
@@ -429,7 +429,7 @@ export class EurekaBrowser extends HTMLElement {
       case 'toggleSourcePanel': this.#store.dispatch({ type: 'view/togglePanel' }); break;
       case 'setView': { const mode = m.arg as ViewMode | undefined; if (mode && (mode !== 'masonry' || this.#config.allowMasonry)) this.#store.dispatch({ type: 'view/setMode', mode }); else handled = false; break; }
       case 'setSource': { const s = state.sources.all.find((x) => String(x.id) === m.arg); if (s) void this.navigate(s.id, '/'); else handled = false; break; }
-      case 'upload': if (this.#config.allowUploads) this.#pickFiles(); else handled = false; break;
+      case 'upload': if (this.#can('upload')) this.#pickFiles(); else handled = false; break;
       case 'createDirectory': this.#openDialog('createDirectory', undefined, target); break;
       case 'showShortcuts': this.#openDialog('shortcuts', undefined, target); break;
       case 'createFile': { const h = this.#config.handlers.createFile; const r = h?.(state.listing.source ?? '', state.listing.path); if (r?.onClick) r.onClick(state.listing.source ?? '', state.listing.path); else if (r?.href) window.open(r.href, r.target ?? '_self'); else handled = false; break; }
@@ -471,7 +471,7 @@ export class EurekaBrowser extends HTMLElement {
   }
 
   // ---- drag and drop, paste (HTML-34, Level 2) -----------------------------------------
-  #canDrop(): boolean { return this.#config.allowUploads && this.#config.doDragNDrop && !this.#store.getState().pending.uploading; }
+  #canDrop(): boolean { return this.#can('upload') && this.#config.doDragNDrop && !this.#store.getState().pending.uploading; }
   #hasFiles(dt: DataTransfer | null): boolean { return !!dt && Array.from(dt.types ?? []).includes('Files'); }
   #onDrag(e: DragEvent): void {
     if (!this.#canDrop() || !this.#hasFiles(e.dataTransfer)) return;
@@ -660,7 +660,8 @@ export class EurekaBrowser extends HTMLElement {
   }
   #announceCount(): void { this.#announce(this.#t('listing.count', { n: selectVisibleFiles(this.#store.getState()).length })); }
   #openDialog(kind: DialogKind, target: string | undefined, opener: Element | null | undefined): void {
-    if (kind === 'rename' && !this.#config.allowRename) return;
+    if (kind === 'rename' && !this.#can('rename')) return;
+    if (kind === 'createDirectory' && !this.#can('createDirectory')) return;
     if (kind === 'crop' && !this.#config.allowCrop) return;
     if (opener?.closest('.eureka__context-menu')) opener = this.#rowFor(this.#contextTarget) ?? opener; // the menu closes; focus returns to its row
     this.#dialogOpener = opener ?? document.activeElement;
@@ -681,7 +682,7 @@ export class EurekaBrowser extends HTMLElement {
     this.dispatchEvent(new CustomEvent('eureka-error', { detail: { message, cause: err }, bubbles: true }));
   }
   #pickFiles(): void {
-    if (!this.#config.allowUploads) return;
+    if (!this.#can('upload')) return;
     const existing = this.querySelector<HTMLInputElement>('input[name="eureka__uploadFiles"]');
     if (existing) { existing.click(); return; }
     const input = document.createElement('input');
@@ -709,6 +710,9 @@ export class EurekaBrowser extends HTMLElement {
   }
 
   // ---- effects: loading ----------------------------------------------------------------------
+  #can(kind: MutationKind): boolean { return selectCan(this.#store.getState())[kind]; }
+  /** A 403 on a mutation: the backend is read-only after all (11 MS-09). Re-read the sources so their capabilities, and the controls, follow. */
+  #refusedMutation(err: unknown): void { if ((err as { status?: number })?.status === 403) void this.#loadSources(); }
   async #loadSources(): Promise<void> {
     try {
       const { result } = await this.#engine.request({ type: 'listSources' });
@@ -770,7 +774,7 @@ export class EurekaBrowser extends HTMLElement {
 
   async #upload(files: File[]): Promise<void> {
     const at = this.#current();
-    if (!files.length || !at || !this.#config.allowUploads) return;
+    if (!files.length || !at || !this.#can('upload')) return;
     this.#store.dispatch({ type: 'items/uploading', files: files.map((f) => f.name) });
     try {
       const { result } = await this.#engine.request({ type: 'upload', source: at.source, path: at.path, files });
@@ -781,11 +785,12 @@ export class EurekaBrowser extends HTMLElement {
     } catch (err) {
       this.#store.dispatch({ type: 'items/uploadFailed', error: errorMessage(err) });
       this.#fail(this.#t('upload.failed', { error: errorMessage(err) }), err);
+      this.#refusedMutation(err);
     }
   }
 
   #requestDelete(paths: string[], opener: Element | null | undefined): void {
-    if (!this.#config.allowDelete || !paths.length) return;
+    if (!this.#can('delete') || !paths.length) return;
     if (this.#config.confirmBeforeDelete) { this.#openDialog('confirmDelete', paths.length === 1 ? paths[0] : undefined, opener); return; }
     void this.#delete(paths);
   }
@@ -810,12 +815,13 @@ export class EurekaBrowser extends HTMLElement {
     } catch (err) {
       this.#store.dispatch({ type: 'items/deleteFailed', paths, entries: previous, error: errorMessage(err) });
       this.#fail(this.#t('delete.failed', { filename: names.join(', '), error: errorMessage(err) }), err);
+      this.#refusedMutation(err);
     }
   }
 
   async #rename(path: string, name: string): Promise<void> {
     const at = this.#current();
-    if (!at || !this.#config.allowRename) return;
+    if (!at || !this.#can('rename')) return;
     const to = joinPath(at.path, name);
     this.#store.dispatch({ type: 'items/renaming', path });
     try {
@@ -827,18 +833,20 @@ export class EurekaBrowser extends HTMLElement {
     } catch (err) {
       this.#store.dispatch({ type: 'items/renameFailed', error: errorMessage(err) });
       this.#fail(this.#t('rename.failed', { filename: basename(path), error: errorMessage(err) }), err);
+      this.#refusedMutation(err);
     }
   }
 
   async #createDirectory(name: string): Promise<void> {
     const at = this.#current();
-    if (!at) return;
+    if (!at || !this.#can('createDirectory')) return;
     const path = joinPath(at.path, name);
     try {
       await this.#engine.request({ type: 'createDirectory', source: at.source, path });
       this.#store.dispatch({ type: 'directory/created', path });
       this.#notify(this.#t('created.directory', { name }));
-    } catch (err) { this.#fail(this.#t('directory.createFailed', { error: errorMessage(err) }), err); }
+    } catch (err) {
+      this.#refusedMutation(err); this.#fail(this.#t('directory.createFailed', { error: errorMessage(err) }), err); }
   }
 
   async #crop(form: HTMLFormElement): Promise<void> {

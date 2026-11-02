@@ -55,6 +55,9 @@ names and MAY accept prefixed ones.
 - **NOJS-19** The media cell of an image row MUST wrap the image in a link
   to `absoluteURL` opening in a new browsing context, so "expand" works
   without script. Non-image rows show a type icon and the URL as text.
+- **NOJS-19** The page is rendered from the source list with capabilities,
+  so a read-only source gets no upload form, create-directory form, rename
+  or delete controls (01 CON-04); a POST that tries anyway is answered 403.
 - **NOJS-20** The source panel, tree, filter, sort controls, view chooser,
   context actions and modals MUST NOT be rendered in the Level 0 form.
   They have no synchronous equivalent. Sorting and filtering MAY be

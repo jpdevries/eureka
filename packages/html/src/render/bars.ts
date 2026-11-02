@@ -1,5 +1,5 @@
 // Notifications, the path bar and the choose bar (02 §3, §7, §8).
-import { selectChosen, selectFocused, type FileEntry } from '@mrktps/eureka-core';
+import { selectChosen, selectFocused, type FileEntry, selectCan } from '@mrktps/eureka-core';
 import { attr, html, raw, type Raw } from '../html.js';
 import type { Ctx } from '../model.js';
 import { hidden, icon } from './icon.js';
@@ -53,7 +53,7 @@ export function chooseBar(ctx: Ctx): Raw {
   return html`<div class="eureka__button-bar eureka__choose-bar">
     ${level === 0 || config.callbacks.close ? html`<button type="${level === 0 ? 'reset' : 'button'}" class="dangerous" data-action="close">${t('cancel')}${hidden(': ' + t('close.mediaBrowser'))}</button>` : ''}
     ${many && config.allowDownloadMultiple ? bulkForm('download', 'zip_file[]', t('download.nItems', { n }), 'eureka__gratious') : ''}
-    ${many && config.allowDelete ? bulkForm('delete', 'delete_file[]', t('delete.nItems', { n }), 'dangerous') : ''}
+    ${many && selectCan(state).delete ? bulkForm('delete', 'delete_file[]', t('delete.nItems', { n }), 'dangerous') : ''}
     ${config.allowChoose ? html`<button type="${level === 0 ? 'submit' : 'button'}" class="eureka__primary" id="${ids.id('choose-button')}" aria-describedby="${ids.id('selected_file_names')}"${attr('disabled', level > 0 && n === 0)} data-action="choose"${level === 0 ? raw(' name="eureka__action" value="choose"') : ''}>${chooseLabel}</button>` : ''}
   </div>`;
 }

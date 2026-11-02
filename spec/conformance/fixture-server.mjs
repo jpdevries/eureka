@@ -54,8 +54,9 @@ const textFor = (item) => TEXT_CONTENT[item.filename] ?? `# ${item.filename}\n\n
 // ---- fixture data -----------------------------------------------------------
 const sources = [
   { name: 'filesystem', id: 0 },
-  { name: 'cloud', id: 1 }
+  { name: 'cloud', id: 1, capabilities: { upload: false, createDirectory: false, rename: false, delete: false } } // read-only (01 CON-04, 11 MS-09)
 ];
+const readOnly = (id) => sources.find((s) => String(s.id) === String(id))?.capabilities?.upload === false;
 
 const DAY = 86400000;
 const t0 = Date.UTC(2017, 3, 2, 14, 25); // 2017-04-02T14:25Z
@@ -194,6 +195,7 @@ async function handleApi(req, res, url) {
       if (at !== '/' && !listings[at]) return json(res, { error: 'not found' }, 404);
       return json(res, tree(at, depth));
     }
+    if (req.method !== 'GET' && readOnly(id)) return json(res, { error: 'the cloud source does not allow changes' }, 403);
     if (req.method === 'PUT') {
       const d = norm(rawDir); const name = url.searchParams.get('name');
       if (name) { // rename
@@ -277,7 +279,7 @@ http.createServer(async (req, res) => {
     }
     if (RENDER && p === '/' && req.method === 'GET' && !INDEX) return html(res, renderV3Page({ dir: url.searchParams.get('path') ?? '/', sourceId: url.searchParams.get('source') ?? '0', lang: url.searchParams.get('ln') ?? 'en', requested: url.searchParams.has('path') || url.searchParams.has('source'), enhanced: true }));
     if (p === '/nojs' && req.method === 'GET') {
-      if (RENDER) return html(res, renderV3Page({ dir: url.searchParams.get('path') ?? 'assets/img', lang: url.searchParams.get('ln') ?? 'en', requested: url.searchParams.has('path') }));
+      if (RENDER) return html(res, renderV3Page({ dir: url.searchParams.get('path') ?? 'assets/img', sourceId: url.searchParams.get('source') ?? '0', lang: url.searchParams.get('ln') ?? 'en', requested: url.searchParams.has('path') || url.searchParams.has('source') }));
       if (!NOJS) return html(res, echoPage('No --nojs fragment configured', {}), 404);
       return html(res, nojsHtml(fs.readFileSync(NOJS, 'utf8')));
     }

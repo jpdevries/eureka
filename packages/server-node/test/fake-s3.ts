@@ -6,7 +6,7 @@ import { createHash } from 'node:crypto';
 import { signV4 } from '../src/s3/client.js';
 
 export interface FakeObject { body: Buffer; contentType: string; lastModified: Date; etag: string }
-export interface FakeS3 { origin: string; objects: Map<string, FakeObject>; requests: string[]; pageSize: number; close(): Promise<void> }
+export interface FakeS3 { origin: string; objects: Map<string, FakeObject>; requests: string[]; pageSize: number; /** Refuse every write with 403, like a read-only token. */ readOnly: boolean; close(): Promise<void> }
 
 const CREDS = { accessKeyId: 'AKIAFAKEFAKEFAKEFAKE', secretAccessKey: 'fake/secret/key' };
 export const FAKE_CREDENTIALS = CREDS;
@@ -17,7 +17,7 @@ const etagOf = (b: Buffer) => `"${createHash('md5').update(b).digest('hex')}"`;
 export async function startFakeS3(bucket: string, seed: Record<string, string | Buffer> = {}): Promise<FakeS3> {
   const objects = new Map<string, FakeObject>();
   const requests: string[] = [];
-  const state: FakeS3 = { origin: '', objects, requests, pageSize: 1000, close: async () => {} };
+  const state: FakeS3 = { origin: '', objects, requests, pageSize: 1000, readOnly: false, close: async () => {} };
   const putObject = (key: string, body: Buffer, contentType: string) => objects.set(key, { body, contentType, lastModified: new Date('2026-11-02T12:00:00Z'), etag: etagOf(body) });
   for (const [k, v] of Object.entries(seed)) putObject(k, Buffer.isBuffer(v) ? v : Buffer.from(v), 'application/octet-stream');
 
@@ -61,6 +61,7 @@ export async function startFakeS3(bucket: string, seed: Record<string, string | 
       const xml = `<?xml version="1.0" encoding="UTF-8"?><ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Name>${bucket}</Name><Prefix>${xmlEscape(prefix)}</Prefix><KeyCount>${page.length}</KeyCount><MaxKeys>${state.pageSize}</MaxKeys><IsTruncated>${next ? 'true' : 'false'}</IsTruncated>${next ? `<NextContinuationToken>${xmlEscape(next.k)}</NextContinuationToken>` : ''}${page.map((x) => x.kind === 'c' ? `<Contents><Key>${xmlEscape(x.k)}</Key><LastModified>${objects.get(x.k)!.lastModified.toISOString()}</LastModified><ETag>${xmlEscape(objects.get(x.k)!.etag)}</ETag><Size>${objects.get(x.k)!.body.length}</Size><StorageClass>STANDARD</StorageClass></Contents>` : `<CommonPrefixes><Prefix>${xmlEscape(x.k)}</Prefix></CommonPrefixes>`).join('')}</ListBucketResult>`;
       res.writeHead(200, { 'content-type': 'application/xml' }); return res.end(xml);
     }
+    if (state.readOnly && (req.method === 'PUT' || req.method === 'DELETE' || req.method === 'POST')) return error(403, 'AccessDenied');
     if (req.method === 'POST' && key === '' && url.searchParams.has('delete')) {
       if (!req.headers['content-md5']) return error(400, 'InvalidRequest');
       for (const m of body.toString().matchAll(/<Key>([\s\S]*?)<\/Key>/g)) objects.delete(m[1]!.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"'));

@@ -2,7 +2,14 @@
 
 export type SourceId = number | string;
 
-export interface Source { id: SourceId; name: string }
+/** What a source lets clients change (01 CON-04, 11 MS-09). A field left out means allowed; `readOnly` is every field false. */
+export interface SourceCapabilities { upload?: boolean; createDirectory?: boolean; rename?: boolean; delete?: boolean }
+export type MutationKind = keyof SourceCapabilities;
+export const MUTATIONS: readonly MutationKind[] = ['upload', 'createDirectory', 'rename', 'delete'];
+export const READ_ONLY: Readonly<Required<SourceCapabilities>> = Object.freeze({ upload: false, createDirectory: false, rename: false, delete: false });
+export interface Source { id: SourceId; name: string; capabilities?: SourceCapabilities }
+/** Does the source allow this mutation? Absent capabilities allow everything. */
+export const sourceAllows = (source: Source | undefined, kind: MutationKind): boolean => source?.capabilities?.[kind] !== false;
 
 export interface TreeNode { name: string; cd: string; children?: TreeNode[]; open?: boolean }
 

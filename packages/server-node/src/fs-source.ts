@@ -6,10 +6,13 @@ import { imageSize } from 'image-size';
 import { ZipFile } from 'yazl';
 import type { Readable } from 'node:stream';
 import { encodePathForURL, normalizePath, isWithin, joinPath, parentPath, basename, mediaKind, isTextLike, looksBinary, renderTextThumbnail } from '@mrktps/eureka-core';
-import type { Entry, Source, TreeNode } from '@mrktps/eureka-core';
+import type { Entry, Source, SourceCapabilities, TreeNode } from '@mrktps/eureka-core';
+import { READ_ONLY } from '@mrktps/eureka-core';
 import { sanitizeFilename } from './multipart.js';
 
 export interface MediaSource extends Source {
+  /** What clients may change (11 MS-09); the handler refuses anything false with 403 and lists it with the source. Drivers may set it later (the S3 source does after a 403). */
+  capabilities?: SourceCapabilities;
   /** The subfolders of `cd` (default the root), `depth` levels deep; a node at the cut-off omits `children` (11 MS-43). */
   listTree(cd?: string, depth?: number): Promise<TreeNode[]>;
   listDirectory(dir: string): Promise<Entry[]>;
@@ -36,6 +39,9 @@ export interface FilesystemSourceOptions {
   hideDotfiles?: boolean;
   /** Build a preview URL for an image entry (for example a thumbnail service). Default: the file itself. */
   previewUrl?: (entry: Entry, saveData: boolean) => string;
+  /** Offer no mutations (11 MS-09). */
+  readOnly?: boolean;
+  capabilities?: SourceCapabilities;
 }
 
 export const MIME: Record<string, string> = { '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.gif': 'image/gif', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.avif': 'image/avif', '.bmp': 'image/bmp', '.tiff': 'image/tiff', '.mp4': 'video/mp4', '.webm': 'video/webm', '.mov': 'video/quicktime', '.mp3': 'audio/mpeg', '.wav': 'audio/wav', '.ogg': 'audio/ogg', '.pdf': 'application/pdf', '.txt': 'text/plain; charset=utf-8', '.json': 'application/json', '.zip': 'application/zip' };
@@ -130,6 +136,7 @@ export function createFilesystemSource(opts: FilesystemSourceOptions): MediaSour
 
   return {
     id: opts.id, name: opts.name,
+    ...(opts.readOnly ? { capabilities: { ...READ_ONLY } } : opts.capabilities ? { capabilities: { ...opts.capabilities } } : {}),
     async listTree(cd = '/', depth = DEFAULT_TREE_DEPTH) {
       const { rel, abs } = resolve(cd);
       if (rel !== '/') { let st; try { st = await fs.stat(abs); } catch { throw new PathError(`no such directory: ${rel}`, 404); } if (!st.isDirectory()) throw new PathError(`no such directory: ${rel}`, 404); }

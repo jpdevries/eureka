@@ -105,6 +105,11 @@ DOM order is the reading order and the tab order.
   and its name starts with "Uploading files…". v2 used a `div` with
   `tabindex="0"` and an `aria-label`, which is not a permitted
   combination.
+- **HTML-34a** Every mutation control (upload control and link, drop
+  area, create directory, Rename, Delete, bulk delete, their menu entries
+  and shortcut hints) is absent, not disabled, when the instance option or
+  the current source's capability says no (01 CON-04). Choose, Download,
+  Expand and navigation remain.
 - **HTML-35** The tree bar contains icon buttons, each with visually-hidden
   text and `title`: "Create a new Directory in {cd}", "Create File in
   {cd}" (a link, only when the host supplies a createFile handler), and

@@ -1,5 +1,5 @@
 // The listing table (02 §6) with its header and empty states.
-import { selectVisibleFiles, type FileEntry, type SortBy } from '@mrktps/eureka-core';
+import { selectVisibleFiles, type FileEntry, type SortBy, selectCan } from '@mrktps/eureka-core';
 import { attr, classes, html, raw, type Raw } from '../html.js';
 import type { Ctx } from '../model.js';
 import { hidden, icon } from './icon.js';
@@ -34,7 +34,7 @@ function emptyState(ctx: Ctx, colSpan: number): Raw {
   if (state.listing.status === 'loading') body = html`<span class="spinner">${icon(ctx, 'circle-o-notch')}</span><br>${t('contents.fetchingContents', { cd })}`;
   else if (state.listing.status === 'error') body = html`${state.listing.error ?? 'Error'}`;
   else if (state.view.filter) body = html`${t('search.noResults', { filter: state.view.filter })}. <a href="#${ids.id('filter')}" data-action="focus-filter">${t('search.tryAnother')}</a> ${t('grammar.or')} <a href="#${ids.id('filter')}" data-action="clear-filter">${t('search.clearFilter')}</a>.`;
-  else body = html`${t('directory.appearsToBeEmpty', { cd })}${ctx.level > 0 && state.config.allowUploads ? html`<br>${t('perhapsYouWouldLikeTo')} <a href="#${ids.id('upload')}" data-action="upload">${t('upload.someFiles')}${hidden(' ' + t('grammar.to') + ' ' + cd)}</a>?` : ''}`;
+  else body = html`${t('directory.appearsToBeEmpty', { cd })}${ctx.level > 0 && selectCan(state).upload ? html`<br>${t('perhapsYouWouldLikeTo')} <a href="#${ids.id('upload')}" data-action="upload">${t('upload.someFiles')}${hidden(' ' + t('grammar.to') + ' ' + cd)}</a>?` : ''}`;
   return html`<tr class="eureka__empty-row"><td colspan="${colSpan}" class="comfortable"><p class="alert-info eureka__notice" role="status">${body}</p></td></tr>`;
 }
 

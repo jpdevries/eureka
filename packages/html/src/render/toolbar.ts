@@ -1,5 +1,5 @@
 // Stage header (heading, choose mode, filter) and the listing toolbar (02 §5).
-import { combineSourcePath, selectFiles, VIEW_MODES, type ViewMode } from '@mrktps/eureka-core';
+import { combineSourcePath, selectFiles, VIEW_MODES, type ViewMode, selectCan } from '@mrktps/eureka-core';
 import { attr, classes, html, type Raw } from '../html.js';
 import type { Ctx } from '../model.js';
 import { hidden, icon } from './icon.js';
@@ -59,7 +59,7 @@ export function directorySelector(ctx: Ctx): Raw {
 
 export function uploadControl(ctx: Ctx): Raw {
   const { state, t, ids, level } = ctx;
-  if (!state.config.allowUploads) return html``;
+  if (!selectCan(state).upload) return html``;
   const cd = state.listing.path;
   const uploading = state.pending.uploading;
   const input = html`<input type="file" id="${ids.id('upload')}" name="eureka__uploadFiles" multiple${attr('disabled', uploading)}${keyshortcuts(ctx, 'upload')}>`;

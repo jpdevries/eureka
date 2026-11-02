@@ -6,10 +6,11 @@ import { Readable } from 'node:stream';
 import { imageSize } from 'image-size';
 import { ZipFile } from 'yazl';
 import { encodePathForURL, normalizePath, joinPath, parentPath, basename, mediaKind, isTextLike, looksBinary, renderTextThumbnail } from '@mrktps/eureka-core';
-import type { Entry, Source, TreeNode } from '@mrktps/eureka-core';
+import type { Entry, Source, SourceCapabilities, TreeNode } from '@mrktps/eureka-core';
+import { READ_ONLY } from '@mrktps/eureka-core';
 import { ANIMATABLE, DEFAULT_TREE_DEPTH, MIME, PathError, clampDepth, sniffAnimated, type MediaSource } from './fs-source.js';
 import { sanitizeFilename } from './multipart.js';
-import { S3Client, type S3Credentials, type S3Object } from './s3/client.js';
+import { S3Client, S3Error, type S3Credentials, type S3Object } from './s3/client.js';
 
 export interface S3SourceOptions {
   id: Source['id'];
@@ -38,6 +39,9 @@ export interface S3SourceOptions {
   probe?: boolean;
   /** Hide keys whose last segment starts with "." (default true). */
   hideDotfiles?: boolean;
+  /** Offer no mutations (11 MS-09): the token can only read. Without it the source still turns read-only after the first 403. */
+  readOnly?: boolean;
+  capabilities?: SourceCapabilities;
   /** How long a folder-tree level is reused, in ms (default 30 000); mutations drop the cache anyway. */
   treeTtl?: number;
   fetch?: typeof fetch;
@@ -145,23 +149,28 @@ export function createS3Source(opts: S3SourceOptions): MediaSource {
     return keys;
   }
 
-  return {
+  /** A write refused with 403 means the credentials are read-only: say so from now on (11 MS-09, "retroactive"). */
+  const refused = (err: unknown): never => { if (err instanceof S3Error && err.status === 403) source.capabilities = { ...READ_ONLY }; throw err; };
+  const guarded = <A extends unknown[], R>(fn: (...a: A) => Promise<R>) => async (...a: A): Promise<R> => { try { return await fn(...a); } catch (err) { return refused(err); } };
+
+  const source: MediaSource = {
     id: opts.id, name: opts.name,
+    ...(opts.readOnly ? { capabilities: { ...READ_ONLY } } : opts.capabilities ? { capabilities: { ...opts.capabilities } } : {}),
     listTree,
     listDirectory: (dir) => listDirectory(dir),
-    async upload(dir, files) {
+    upload: guarded(async (dir, files) => {
       const { rel } = resolve(dir);
       for (const f of files) { const name = sanitizeFilename(f.filename); await client.put(dirKey(rel) + name, f.data, f.contentType && f.contentType !== 'application/octet-stream' ? f.contentType : contentTypeFor(name)); }
       invalidate();
       return listDirectory(rel);
-    },
-    async createDirectory(dir) {
+    }),
+    createDirectory: guarded(async (dir) => {
       const { rel } = resolve(dir);
       if (rel === '/') return;
       await client.put(dirKey(rel), Buffer.alloc(0), 'application/x-directory');
       invalidate();
-    },
-    async rename(p, name) {
+    }),
+    rename: guarded(async (p, name) => {
       const { rel, key } = resolve(p);
       if (rel === '/') throw new PathError('refusing to rename the source root', 400);
       const clean = sanitizeFilename(name);
@@ -182,23 +191,23 @@ export function createS3Source(opts: S3SourceOptions): MediaSource {
       }
       invalidate();
       return listDirectory(parentPath(rel));
-    },
-    async remove(p) {
+    }),
+    remove: guarded(async (p) => {
       const { rel, key } = resolve(p);
       if (rel === '/') throw new PathError('refusing to delete the source root', 400);
       const keys = (await client.head(key)) ? [key] : await keysUnder(rel);
       if (keys.length === 0) throw new PathError(`no such file or directory: ${rel}`, 404);
       await client.deleteMany(keys);
       invalidate();
-    },
-    async removeMany(dir, filenames) {
+    }),
+    removeMany: guarded(async (dir, filenames) => {
       const { rel } = resolve(dir);
       const keys: string[] = [];
       for (const n of filenames) { const child = resolve(joinPath(rel, sanitizeFilename(n))); keys.push(...((await client.head(child.key)) ? [child.key] : await keysUnder(child.rel))); }
       if (keys.length) await client.deleteMany(keys);
       invalidate();
       return listDirectory(rel);
-    },
+    }),
     async zip(dir, filenames) {
       const { rel } = resolve(dir);
       const zip = new ZipFile();
@@ -245,6 +254,7 @@ export function createS3Source(opts: S3SourceOptions): MediaSource {
       return entry;
     }
   };
+  return source;
 }
 
 function decodeURIComponentSafe(s: string): string { try { return decodeURIComponent(s); } catch { return s; } }

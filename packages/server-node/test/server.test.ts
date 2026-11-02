@@ -180,6 +180,26 @@ describe('text thumbnails (02 HTML-66c)', async () => {
   });
 });
 
+describe('source capabilities (01 CON-04, 11 MS-09)', () => {
+  it('a read-only filesystem source lists its capabilities and refuses writes with 403, including the no-JS upload', async () => {
+    const ro = createFilesystemSource({ id: 'ro', name: 'ro', root, readOnly: true });
+    const started = await startServer({ sources: [ro], port: 0, basePath: '/', renderPage: async (ctx) => `<p>${ctx.sources.map((s) => JSON.stringify(s.capabilities ?? null)).join('|')}</p>` });
+    const o = `http://127.0.0.1:${started.port}`;
+    try {
+      expect((await j(await fetch(`${o}/media/sources/`))).body[0].capabilities).toEqual({ upload: false, createDirectory: false, rename: false, delete: false });
+      expect((await j(await fetch(`${o}/media/sources/ro?path=uploads%2Fx`, { method: 'PUT' }))).status).toBe(403);
+      expect((await j(await fetch(`${o}/media/sources/ro?path=readme.txt&name=x.txt`, { method: 'PUT' }))).status).toBe(403);
+      expect((await j(await fetch(`${o}/media/sources/ro?path=readme.txt`, { method: 'DELETE' }))).status).toBe(403);
+      const fd = new FormData(); fd.append('eureka__uploadFiles', new File(['x'], 'x.txt'));
+      expect((await j(await fetch(`${o}/media/sources/ro?path=uploads`, { method: 'POST', body: fd }))).status).toBe(403);
+      const form = new FormData(); form.append('eureka__mediaSourceId', 'ro'); form.append('eureka__uploadDirectory', 'uploads'); form.append('eureka__uploadFiles', new File(['x'], 'x.txt'));
+      expect((await fetch(`${o}/`, { method: 'POST', body: form })).status).toBe(403);
+      await expect(fs.access(path.join(root, 'uploads/x.txt'))).rejects.toThrow();
+      expect(await (await fetch(`${o}/`)).text()).toContain('"upload":false'); // the page renderer sees the capabilities too
+    } finally { await started.close(); }
+  });
+});
+
 describe('page tree (11 MS-43)', () => {
   it('expands the branch to the current directory past the default depth', async () => {
     rendered.length = 0;

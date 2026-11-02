@@ -1,5 +1,5 @@
 // The source panel: source selector, directory tree, drop area, tree bar (02 §4).
-import { normalizePath, selectCurrentTree, type TreeNode } from '@mrktps/eureka-core';
+import { normalizePath, selectCan, selectCurrentTree, type TreeNode } from '@mrktps/eureka-core';
 import { attr, classes, html, type Raw } from '../html.js';
 import type { Ctx } from '../model.js';
 import { hidden, icon } from './icon.js';
@@ -28,6 +28,7 @@ function node(ctx: Ctx, n: TreeNode, depth: number): Raw {
 
 export function sourcePanel(ctx: Ctx): Raw {
   const { state, t, ids } = ctx;
+  const can = selectCan(state); // instance config AND the current source's capabilities (01 CON-04)
   const cd = state.listing.path;
   const open = state.view.panelOpen;
   const tree = selectCurrentTree(state);
@@ -39,11 +40,11 @@ export function sourcePanel(ctx: Ctx): Raw {
       <select id="${ids.id('source-select')}" name="eureka__media-source" data-control="source">${state.sources.all.map((s) => html`<option value="${s.id}"${attr('selected', String(s.id) === String(state.listing.source))}>${s.name}</option>`)}</select>
     </div>
     <nav class="eureka__tree" aria-label="${t('tree.label')}">${node(ctx, root, 0)}</nav>
-    ${state.config.allowUploads && state.config.doDragNDrop ? html`<button type="button" class="eureka__drop-area" data-action="upload" aria-label="${t(state.pending.uploading ? 'upload.dragFilesUploading' : 'upload.dragFilestoUpload', { cd })}. ${t('pastImageFromClipboardMessage')}" data-drop-zone><span class="eureka__drop-area-zone">${icon(ctx, state.pending.uploading ? 'circle-o-notch' : 'upload')}</span></button>` : ''}
+    ${can.upload && state.config.doDragNDrop ? html`<button type="button" class="eureka__drop-area" data-action="upload" aria-label="${t(state.pending.uploading ? 'upload.dragFilesUploading' : 'upload.dragFilestoUpload', { cd })}. ${t('pastImageFromClipboardMessage')}" data-drop-zone><span class="eureka__drop-area-zone">${icon(ctx, state.pending.uploading ? 'circle-o-notch' : 'upload')}</span></button>` : ''}
     <div class="eureka__tree-bar flex-bar">
-      <button type="button" title="${t('directory.createNewIn', { cd })}" data-action="create-directory"${keyshortcuts(ctx, 'createDirectory')}>${hidden(t('directory.createNewIn', { cd }))}${icon(ctx, 'plus-square')}${kbdHint(ctx, 'createDirectory')}</button>
+      ${can.createDirectory ? html`<button type="button" title="${t('directory.createNewIn', { cd })}" data-action="create-directory"${keyshortcuts(ctx, 'createDirectory')}>${hidden(t('directory.createNewIn', { cd }))}${icon(ctx, 'plus-square')}${kbdHint(ctx, 'createDirectory')}</button>` : ''}
       ${createFile ? html`<a class="button eureka__create-file-button" href="${createFile.href}"${attr('target', createFile.target)} title="${t('upload.createFileIn', { cd })}" data-action="create-file">${hidden(t('upload.createFileIn', { cd }))}${icon(ctx, 'file-text-o')}</a>` : ''}
-      ${state.config.allowUploads ? html`<button type="button" title="${t('upload.filesTo', { cd })}" data-action="upload"${keyshortcuts(ctx, 'upload')}>${hidden(t('upload.filesTo', { cd }))}${icon(ctx, 'upload')}${kbdHint(ctx, 'upload')}</button>` : ''}
+      ${can.upload ? html`<button type="button" title="${t('upload.filesTo', { cd })}" data-action="upload"${keyshortcuts(ctx, 'upload')}>${hidden(t('upload.filesTo', { cd }))}${icon(ctx, 'upload')}${kbdHint(ctx, 'upload')}</button>` : ''}
     </div>
   </aside>`;
 }

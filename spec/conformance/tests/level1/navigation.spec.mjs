@@ -1,5 +1,5 @@
 // Level 1: source panel, tree, directory selector, view modes, persistence (spec/02 §2, §4, §5).
-import { test, expect, openDirectory, rows, sourcePanelToggle, sourceSelect, directoryTree, viewRadio, viewRadioName, setView, baselineDefect, v3only, dismissNotification, TARGET } from '../helpers.mjs';
+import { test, expect, openDirectory, rows, control, sourcePanelToggle, sourceSelect, directoryTree, viewRadio, viewRadioName, setView, baselineDefect, v3only, dismissNotification, TARGET } from '../helpers.mjs';
 
 test('HTML-10 the source panel toggle exposes and controls its state', async ({ page }) => {
   await openDirectory(page);
@@ -75,6 +75,37 @@ test('HTML-31 switching media source reloads the tree and listing', async ({ pag
   await sourcePanelToggle(page).click();
   await sourceSelect(page).selectOption('1');
   await expect(sourceSelect(page)).toHaveValue('1');
+});
+
+test('CON-04 a read-only source offers no upload, create, rename or delete controls', async ({ page }) => {
+  v3only('source capabilities (01 CON-04, 11 MS-09)');
+  await openDirectory(page);
+  await sourcePanelToggle(page).click();
+  await expect(page.getByRole('button', { name: /Create a new Directory/ })).toHaveCount(1);
+  await rows(page).first().focus();
+  await expect(control(rows(page).first(), /^Rename/)).toBeVisible();
+  await sourceSelect(page).selectOption('1'); // "cloud" declares every capability false
+  await expect(sourceSelect(page)).toHaveValue('1');
+  await expect(rows(page).first()).toBeVisible();
+  await expect(page.getByRole('button', { name: /Create a new Directory/ })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: /Upload File/ })).toHaveCount(0);
+  await expect(page.locator('.eureka__drop-area')).toHaveCount(0);
+  await expect(page.getByLabel(/Upload files/)).toHaveCount(0);
+  await rows(page).first().focus();
+  await expect(control(rows(page).first(), /^Choose/)).toBeVisible(); // reading actions stay
+  await expect(page.getByRole('button', { name: /^Rename|^Delete/ })).toHaveCount(0);
+  await expect(directoryTree(page)).toBeVisible(); // browsing is unaffected
+});
+
+test('CON-04 the no-script page of a read-only source renders without mutation controls', async ({ page }) => {
+  v3only('source capabilities (01 CON-04, 11 MS-09)');
+  await page.goto('/nojs?source=1&path=/');
+  await expect(page.locator('input[name="eureka__mediaSourceId"]')).toHaveValue('1');
+  await expect(page.locator('input[name="eureka__uploadFiles"]')).toHaveCount(0);
+  await expect(page.locator('[data-action="create-directory"], [data-action="renameItem"], [data-action="deleteItem"], .eureka__drop-area')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: /^Choose/ })).toHaveCount(1); // the choose bar stays
+  await page.goto('/nojs?source=0&path=/');
+  await expect(page.locator('input[name="eureka__uploadFiles"]')).toHaveCount(1); // the writable source keeps its upload control
 });
 
 test('HTML-47 the view chooser offers the five modes and keeps the rows', async ({ page }) => {

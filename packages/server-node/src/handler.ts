@@ -6,7 +6,7 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import { createReadStream } from 'node:fs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { normalizePath, splitSourcePath, type Entry, type Source, type TreeNode } from '@mrktps/eureka-core';
+import { normalizePath, sourceAllows, splitSourcePath, type Entry, type MutationKind, type Source, type TreeNode } from '@mrktps/eureka-core';
 import { PathError, clampDepth, DEFAULT_TREE_DEPTH, type MediaSource } from './fs-source.js';
 import { first, parseMultipart, readBody } from './multipart.js';
 
@@ -59,7 +59,9 @@ export function createEurekaHandler(opts: HandlerOptions): NodeHandler {
   const maxUpload = opts.maxUploadBytes ?? 256 * 1024 * 1024;
   const log = opts.log ?? (() => {});
   const bySourceId = (id: string) => opts.sources.find((s) => String(s.id) === id);
-  const sourceList = (): Source[] => opts.sources.map((s) => ({ id: s.id, name: s.name }));
+  const sourceList = (): Source[] => opts.sources.map((s) => ({ id: s.id, name: s.name, ...(s.capabilities ? { capabilities: s.capabilities } : {}) }));
+  /** The source declared it does not allow this (11 MS-09): refuse before the driver is asked. */
+  const allow = (source: MediaSource, kind: MutationKind) => { if (!sourceAllows(source, kind)) throw new PathError(`the ${source.name} source does not allow ${kind}`, 403); };
 
   const json = (res: ServerResponse, body: unknown, status = 200) => { res.writeHead(status, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', ...opts.responseHeaders }); res.end(JSON.stringify(body)); };
   const html = (res: ServerResponse, body: string, status = 200) => { res.writeHead(status, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' }); res.end(body); };
@@ -88,16 +90,19 @@ export function createEurekaHandler(opts: HandlerOptions): NodeHandler {
         if (method === 'PUT') {
           if (pathParam === null) return json(res, { error: 'Missing required parameter `path`' }, 400);
           const name = url.searchParams.get('name');
-          if (name) return json(res, await source.rename(pathParam, name));
+          if (name) { allow(source, 'rename'); return json(res, await source.rename(pathParam, name)); }
+          allow(source, 'createDirectory');
           await source.createDirectory(pathParam);
           return json(res, await source.listDirectory(normalizePath(pathParam).split('/').slice(0, -1).join('/') || '/'));
         }
         if (method === 'POST') {
           if (pathParam === null) return json(res, { error: 'Missing required parameter `path`' }, 400);
+          allow(source, 'upload');
           const { files } = parseMultipart(await readBody(req, maxUpload), req.headers['content-type']);
           return json(res, await source.upload(pathParam, files.filter((f) => f.field === 'eureka__uploadFiles' || files.length === 1)));
         }
         if (method === 'DELETE') {
+          allow(source, 'delete');
           if (pathParam !== null) { await source.remove(pathParam); return json(res, await source.listDirectory(normalizePath(pathParam).split('/').slice(0, -1).join('/') || '/')); }
           const { fields } = parseMultipart(await readBody(req, 1024 * 1024), req.headers['content-type']);
           const cd = first(fields.cd); if (cd === undefined) return json(res, { error: 'Missing `cd` or `path`' }, 400);
@@ -137,7 +142,7 @@ export function createEurekaHandler(opts: HandlerOptions): NodeHandler {
     if (!source) return json(res, { error: 'no sources' }, 500);
     let uploaded: string[] | undefined;
     const uploads = files.filter((f) => f.field === 'eureka__uploadFiles');
-    if (uploads.length) { await source.upload(uploadDir, uploads); uploaded = uploads.map((f) => f.filename); }
+    if (uploads.length) { allow(source, 'upload'); await source.upload(uploadDir, uploads); uploaded = uploads.map((f) => f.filename); }
     const chosen = first(fields.eureka__chosen_item);
     if (chosen) {
       const entries = await source.listDirectory(uploadDir);

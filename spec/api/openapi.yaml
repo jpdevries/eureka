@@ -242,6 +242,14 @@ components:
           oneOf: [{ type: integer }, { type: string }]
           description: 'Stable identifier. Used in URLs and in the `{id}||{dir}` no-JS select value, so it MUST NOT contain `|`.'
         name: { type: string }
+        capabilities:
+          type: object
+          description: 'What the source lets clients change (spec 11 MS-09). A field left out means allowed; clients hide the controls for anything false and the server answers 403 to the call.'
+          properties:
+            upload: { type: boolean }
+            createDirectory: { type: boolean }
+            rename: { type: boolean }
+            delete: { type: boolean }
     TreeNode:
       type: object
       required: [name, cd]
