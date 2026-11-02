@@ -120,7 +120,9 @@
   .eureka .eureka__context-menu:not(:popover-open) { display: none; opacity: 0; }
   @supports (anchor-name: --a) {
     .eureka .eureka__context-menu { position-anchor: --eureka-context-row; position-area: block-end span-inline-end; position-try-fallbacks: flip-block, flip-inline; margin-block-start: 0.25rem; margin-inline-start: 1rem; }
+    .eureka .eureka__context-menu--placed { position-anchor: none; position-area: none; position-try-fallbacks: none; margin: 0; } /* opened by pointer: the element sets left/top */
   }
+  .eureka .eureka__context-menu--placed { position: fixed; inset: auto; margin: 0; }
   .eureka .eureka__context-menu .eureka__menuitem { display: flex; align-items: center; justify-content: space-between; gap: 1rem; inline-size: 100%; box-sizing: border-box; text-align: start; background: none; border: 0; box-shadow: none; border-radius: 0.25rem; padding: 0.4rem 0.6rem; color: inherit; font: inherit; text-decoration: none; min-block-size: 24px; cursor: default; }
   .eureka .eureka__context-menu .eureka__menuitem:is(:hover, :focus-visible) { background: var(--button-bg); outline: 2px solid var(--active); outline-offset: -2px; }
   .eureka .eureka__context-menu .eureka__menuitem.dangerous { color: var(--dangerous); }

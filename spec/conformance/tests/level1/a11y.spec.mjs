@@ -32,6 +32,7 @@ test('axe: focused row with actions', async ({ page }) => {
 test('axe: row context menu open (HTML-71)', async ({ page }) => {
   v3only('popover context menu');
   await openDirectory(page, 'assets/img');
+  await setView(page, 'grid');
   await focusRow(page, 'schildpad.jpg');
   await page.keyboard.press('Shift+F10');
   await expect(page.getByRole('menu')).toBeVisible();

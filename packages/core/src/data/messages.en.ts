@@ -211,7 +211,7 @@ const data = {
   "key.arrowRight": "Right arrow",
   "key.to": "to",
   "shortcut.downloadItem": "Download the item",
-  "shortcut.openContextMenu": "Open the item menu"
+  "shortcut.openContextMenu": "Open the item menu (thumbnail, grid and masonry views)"
 } as const;
 export default data;
 export type MessagesEn = typeof data;

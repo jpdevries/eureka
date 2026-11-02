@@ -19,6 +19,8 @@ interface Hydrated {
 }
 
 const AUTO_DISMISS_MS = 8000;
+/** View modes without the inline row toolbar (HTML-68): the popover menu stands in for it there (HTML-71). */
+const MENU_MODES = new Set<ViewMode>(['thumb', 'grid', 'masonry']);
 const NAVIGATION_KEYS = new Set(['Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End', 'Enter', ' ', 'Escape', '?']);
 const TEXT_FIELD = 'input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=submit]):not([type=button]):not([type=reset]), textarea, select, [contenteditable=""], [contenteditable="true"]';
 
@@ -429,7 +431,7 @@ export class EurekaBrowser extends HTMLElement {
       // row scope
       case 'chooseItem': if (item && target === row) this.#choose([item]); else handled = false; break;
       case 'expandItem': if (item) window.open(item.absoluteURL, '_blank', 'noopener'); else handled = false; break;
-      case 'openContextMenu': if (row && item) this.#openContextMenu(row); else handled = false; break;
+      case 'openContextMenu': if (row && item && MENU_MODES.has(state.view.mode)) this.#openContextMenu(row); else handled = false; break;
       case 'downloadItem': { const link = item && this.#config.allowDownload ? row?.querySelector<HTMLAnchorElement>('a[data-action="download"]') : null; if (link) link.click(); else handled = false; break; }
       case 'deleteItem': if (item && (target === row || !!toolbar)) this.#requestDelete([item.path], row); else handled = false; break;
       case 'renameItem': if (item) this.#openDialog('rename', item.path, row ?? target); else handled = false; break;
@@ -487,6 +489,7 @@ export class EurekaBrowser extends HTMLElement {
     if (target.closest('.eureka__context-menu') || target.matches(TEXT_FIELD)) return;
     const row = target.closest<HTMLTableRowElement>('tr[data-path]');
     if (!row || !this.#fileAt(row.dataset.path)) return;
+    if (!MENU_MODES.has(this.#store.getState().view.mode)) return; // table and list show the toolbar on the row; the native menu stays
     e.preventDefault();
     row.focus();
     this.#openContextMenu(row, { x: e.clientX, y: e.clientY });
@@ -500,13 +503,22 @@ export class EurekaBrowser extends HTMLElement {
     this.#render();
     const menu = this.#menu();
     if (!menu || typeof menu.showPopover !== 'function') { this.#contextTarget = null; return; }
-    if (!CSS.supports('anchor-name', '--eureka-context-row')) { // place it by hand where the engine cannot anchor
-      const rect = row.getBoundingClientRect();
-      const x = origin?.x ?? rect.left + 16; const y = origin?.y ?? rect.bottom;
-      menu.style.insetInlineStart = `${Math.max(8, Math.min(x, window.innerWidth - 240))}px`;
-      menu.style.insetBlockStart = `${Math.max(8, Math.min(y, window.innerHeight - 8 - 48 * Math.max(1, this.#menuItems().length)))}px`;
-    }
+    // A pointer-opened menu sits at the pointer, like a native one; a keyboard-opened menu anchors to its row (CSS anchor
+    // positioning), or is placed under the row's start where the engine cannot anchor.
+    const place = (x: number, y: number) => {
+      menu.classList.add('eureka__context-menu--placed');
+      menu.style.left = `${x}px`; menu.style.top = `${y}px`;
+    };
+    const rect = row.getBoundingClientRect();
+    if (origin) place(origin.x, origin.y);
+    else if (!CSS.supports('anchor-name', '--eureka-context-row')) place(rect.left + 16, rect.bottom);
     menu.showPopover();
+    if (menu.classList.contains('eureka__context-menu--placed')) { // keep it inside the viewport now that it has a size
+      const m = menu.getBoundingClientRect();
+      const x = Math.max(8, Math.min(parseFloat(menu.style.left), window.innerWidth - m.width - 8));
+      const y = Math.max(8, Math.min(parseFloat(menu.style.top), window.innerHeight - m.height - 8));
+      menu.style.left = `${x}px`; menu.style.top = `${y}px`;
+    }
     this.#menuItems()[0]?.focus();
     this.#contextDismiss = new AbortController();
     const signal = this.#contextDismiss.signal;

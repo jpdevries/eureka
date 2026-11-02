@@ -71,7 +71,10 @@ around it.
   activating "upload some files" opens the file picker; activating the
   source panel toggle leaves focus on the toggle.
 - **KEY-B9** The row menu (KEY-29, Shift+F10 or the ContextMenu key;
-  right-click does the same): opens with focus on the first item;
+  right-click does the same) exists in the thumb, grid and masonry modes,
+  where the row toolbar is not shown (HTML-71); in table and list the
+  toolbar is one ArrowRight away and the binding does nothing. It opens
+  with focus on the first item;
   ArrowUp/ArrowDown move with wrap, Home/End jump, a letter moves to the
   next item starting with it, Enter and Space activate, Escape and Tab
   close and return focus to the row. An item that opens a dialog returns

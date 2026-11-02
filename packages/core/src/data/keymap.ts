@@ -316,7 +316,7 @@ const data = {
         "ContextMenu"
       ],
       "v2": [],
-      "notes": "Opens the row's popover menu (HTML-71); right-click does the same"
+      "notes": "Opens the row's popover menu in thumb, grid and masonry modes (HTML-71); right-click does the same; table and list have the inline toolbar"
     },
     {
       "id": "KEY-30",

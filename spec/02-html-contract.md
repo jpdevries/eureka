@@ -232,9 +232,10 @@ DOM order is the reading order and the tab order.
   that opens the file picker. The `<tbody>` itself MUST NOT be a live
   region (v2 set `aria-live="polite"` on it, which announces every
   re-render).
-- **HTML-71** Context menu (Level 1+): v2 rendered `<menu type="context">`
-  per row; the API was removed from browsers and MUST NOT be rendered. v3
-  renders one `<div popover="manual" role="menu" id="{p}context-menu"
+- **HTML-71** Context menu (Level 1+, thumb, grid and masonry modes only:
+  table and list show the row toolbar inline, HTML-68, and keep the
+  browser's own menu): v2 rendered `<menu type="context">` per row; the
+  API was removed from browsers and MUST NOT be rendered. v3 renders one `<div popover="manual" role="menu" id="{p}context-menu"
   class="eureka__context-menu">` per instance, after the dialogs, only
   while a row's menu is open, labelled "Actions for {filename}" and
   carrying `data-context-for="{path}"`. Its children are the row's
@@ -243,10 +244,12 @@ DOM order is the reading order and the tab order.
   Crop, Rename and Delete, `<a>` for Expand and Download, each with the
   same `data-action`, `data-path`, `aria-keyshortcuts` and `<kbd>` hint
   as the toolbar (shown at full opacity in the menu). It opens on
-  `contextmenu` over a row and on KEY-29 from a focused row, anchored to
-  the row with CSS anchor positioning (the row carries
-  `anchor-name` via class `eureka__context-anchor`) or placed at the
-  pointer where anchoring is unsupported. Being `popover="manual"` it
+  `contextmenu` over a row, placed at the pointer like a native menu and
+  kept inside the viewport (class `eureka__context-menu--placed`, inline
+  `left`/`top`), and on KEY-29 from a focused row, anchored to the row
+  with CSS anchor positioning (the row carries `anchor-name` via class
+  `eureka__context-anchor`) or placed under the row's start where
+  anchoring is unsupported. Being `popover="manual"` it
   has no light dismiss; the element closes it on pointer down outside,
   on Escape and Tab (returning focus to the row), after any item acts,
   on resize, and when the row leaves the listing. Level 0 has no menu.

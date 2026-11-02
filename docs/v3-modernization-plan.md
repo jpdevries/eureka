@@ -543,13 +543,15 @@ Taken on 2026-11-01:
   (KEY-30, `Alt+Shift+D`, row scope, when downloads are allowed): it
   activates the row's Download link so the browser's download handling
   applies.
-- Row context menu (HTML-71, KEY-29), handed over from a side session:
-  one `popover="manual"` `role="menu"` per instance, rendered only while
+- Row context menu (HTML-71, KEY-29), handed over from a side session,
+  for the thumb, grid and masonry modes (table and list keep their inline
+  toolbar and the browser's own menu): one `popover="manual"`
+  `role="menu"` per instance, rendered only while
   open for the row the element marks as its target, with the row's
   actions as menuitems (shared `rowActions()` list with the toolbar, same
   `data-action`/`data-path`, `aria-keyshortcuts` and hints). Opens on
-  right-click or Shift+F10, anchored to the row with CSS anchor
-  positioning (pointer position where unsupported), fades through
+  right-click at the pointer (clamped to the viewport) or on Shift+F10
+  anchored to the row with CSS anchor positioning, fades through
   `@starting-style`; arrows wrap, Home/End, typeahead, Escape and Tab
   return focus to the row, outside pointer-down, resize and navigation
   close it; a dialog opened from the menu returns focus to the row. Spec

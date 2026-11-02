@@ -1,5 +1,5 @@
 // Level 1: shortcuts from data/keymap.json and focus management (spec/05).
-import { test, expect, openDirectory, rows, rowNamed, focusRow, sourcePanelToggle, viewRadio, chooseModeRadio, filterBox, chord, dialogMessage, v3only, baselineDefect } from '../helpers.mjs';
+import { test, expect, openDirectory, rows, rowNamed, focusRow, setView, sourcePanelToggle, viewRadio, chooseModeRadio, filterBox, chord, dialogMessage, v3only, baselineDefect } from '../helpers.mjs';
 
 test.beforeEach(async ({ page }) => {
   await openDirectory(page, 'assets/img');
@@ -130,6 +130,11 @@ test('KEY-A5 ? and the help button open the shortcuts reference generated from t
 
 test('KEY-29 Shift+F10 opens the row menu as a popover; arrows, typeahead, Enter and Escape work', async ({ page }) => {
   v3only('popover context menu');
+  // table mode has the inline toolbar: the binding does nothing there (HTML-71)
+  await focusRow(page, 'schildpad.jpg');
+  await page.keyboard.press(chord('openContextMenu'));
+  await expect(page.getByRole('menu')).toHaveCount(0);
+  await setView(page, 'grid');
   const row = await focusRow(page, 'schildpad.jpg');
   await page.keyboard.press(chord('openContextMenu'));
   const menu = page.getByRole('menu', { name: 'Actions for schildpad.jpg' });
@@ -156,9 +161,14 @@ test('KEY-29 Shift+F10 opens the row menu as a popover; arrows, typeahead, Enter
   await expect(page.getByRole('menu')).toHaveCount(0);
   await page.keyboard.press('Escape');
   await expect(row).toBeFocused();
-  // right-click opens it too
-  await row.click({ button: 'right' });
-  await expect(page.getByRole('menu', { name: 'Actions for schildpad.jpg' })).toBeVisible();
+  // right-click opens it too, at the pointer
+  const box = await row.boundingBox();
+  await row.click({ button: 'right', position: { x: 240, y: 12 } });
+  const pointerMenu = page.getByRole('menu', { name: 'Actions for schildpad.jpg' });
+  await expect(pointerMenu).toBeVisible();
+  const mbox = await pointerMenu.boundingBox();
+  expect(Math.abs(mbox.x - (box.x + 240))).toBeLessThan(4);
+  expect(Math.abs(mbox.y - (box.y + 12))).toBeLessThan(4);
   await page.mouse.click(5, 5); // pointer down outside closes
   await expect(page.getByRole('menu')).toHaveCount(0);
 });
