@@ -9,10 +9,13 @@
     "test:v2": "CONFORMANCE_TARGET=v2 playwright test",
     "test:headed": "playwright test --headed --project=enhanced",
     "report": "playwright show-report results/html",
-    "server": "node fixture-server.mjs --port 3101 --static ../../client/build --nojs ../fixtures/snapshots/v2-nojs-table.html"
+    "server": "node fixture-server.mjs --port 3101 --static ../../client/build --nojs ../fixtures/snapshots/v2-nojs-table.html",
+    "validate:schemas": "node validate-schemas.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.2",
-    "@playwright/test": "^1.57.0"
+    "@playwright/test": "^1.57.0",
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1"
   }
 }

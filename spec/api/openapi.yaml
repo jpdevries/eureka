@@ -19,6 +19,11 @@ info:
 
     Mutating endpoints return the refreshed listing of the affected
     directory so the client can update without a second request.
+
+    `absoluteURL`, `absolutePreviewURL` and rendition URLs are valid URI
+    references: path segments are percent-encoded (`Wide%20Banner.jpg`).
+    The v2 reference server emitted raw spaces; clients SHOULD tolerate
+    that, servers MUST NOT rely on it.
 servers:
   - url: /assets/components/eureka
 security: []

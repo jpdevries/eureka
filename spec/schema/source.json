@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eureka.markup.tips/spec/3/schema/source.json",
+  "title": "Source",
+  "description": "A media source exposed by the host (api/openapi.yaml, 01 CON).",
+  "type": "object",
+  "required": ["id", "name"],
+  "properties": {
+    "id": { "oneOf": [{ "type": "integer" }, { "type": "string", "pattern": "^[^|/]+$" }], "description": "Stable id; appears in URLs and in `{id}||{dir}` form values." },
+    "name": { "type": "string", "minLength": 1 }
+  },
+  "additionalProperties": true
+}

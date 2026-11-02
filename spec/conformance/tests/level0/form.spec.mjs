@@ -52,7 +52,7 @@ test('NOJS-18 choose bar has Choose and Cancel', async ({ page }) => {
 test('NOJS-19 image rows link to the file for expand', async ({ page }) => {
   const links = page.getByRole('link', { name: /in a new tab/ });
   await expect(links).toHaveCount(6); // jpg, jpg, png, png, jpg, gif
-  await expect(links.first()).toHaveAttribute('href', /schildpad|Wide Banner|hawaii|tall-tree|icon-16|animation/);
+  await expect(links.first()).toHaveAttribute('href', /schildpad|Wide( |%20)Banner|hawaii|tall-tree|icon-16|animation/);
   await expect(links.first()).toHaveAttribute('target', /./);
 });
 

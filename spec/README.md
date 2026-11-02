@@ -1,6 +1,6 @@
 # Eureka Media Browser Specification
 
-Version: 3.0.0-draft.1 (2026-11-01). Status: seeded from Eureka 2.0 (v0.0.129).
+Version: 3.0.0-draft.2 (2026-11-01). Status: complete first draft, seeded from Eureka 2.0 (v0.0.129).
 
 This specification describes the Eureka media browser independently of any
 UI framework. An implementation conforms if it produces the HTML described
@@ -37,7 +37,9 @@ React wrapper, a server-rendered PHP page or anything else can conform too.
 | 10 | [performance.md](10-performance.md) | Worker contract, rendering budgets |
 | — | [api/openapi.yaml](api/openapi.yaml) | The REST API |
 
-Documents not yet written in this draft: 01, 06, 07, 09.
+All ten documents exist in draft. Normative data: `data/keymap.json`,
+`data/theme-tokens.json`, `api/openapi.yaml`, `schema/*.json` (validated by
+`spec/conformance/validate-schemas.mjs`, run with `npm run validate:schemas`).
 
 ## Conformance levels
 

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eureka.markup.tips/spec/3/schema/tree-node.json",
+  "title": "TreeNode",
+  "description": "A folder in a source's directory tree.",
+  "type": "object",
+  "required": ["name", "cd"],
+  "properties": {
+    "name": { "type": "string", "minLength": 1 },
+    "cd": { "type": "string", "description": "Source-relative path, no leading slash; `/` for the root." },
+    "children": { "type": "array", "items": { "$ref": "#" }, "description": "Omitted when not expanded by the server; [] when the folder has no subfolders." },
+    "open": { "type": "boolean", "description": "Client-side only: disclosure state." }
+  },
+  "additionalProperties": true
+}

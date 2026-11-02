@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eureka.markup.tips/spec/3/schema/config.json",
+  "title": "Config",
+  "description": "Instance configuration (01 §3). Every property is optional; defaults are given here and are normative.",
+  "type": "object",
+  "properties": {
+    "basePath": { "type": "string", "default": "/" },
+    "uid": { "type": "string", "default": "0" },
+    "storagePrefix": { "type": "string", "default": "eureka__" },
+    "lang": { "type": "string", "description": "BCP 47 tag. Default: document language." },
+    "mediaSource": { "oneOf": [{ "type": "integer" }, { "type": "string" }], "description": "Default: first source." },
+    "currentDirectory": { "type": "string", "default": "/" },
+    "mode": { "type": "string", "enum": ["table", "thumb", "grid", "list", "masonry"], "default": "table" },
+    "sort": {
+      "type": "object",
+      "properties": {
+        "by": { "type": "string", "enum": ["filename", "dimensions", "fileSize", "editedOn"], "default": "filename" },
+        "dir": { "type": "string", "enum": ["ascending", "descending"], "default": "ascending" }
+      },
+      "additionalProperties": false
+    },
+    "treeHidden": { "type": "boolean", "default": true },
+    "useLocalStorage": { "type": "boolean", "default": true },
+    "allowChoose": { "type": "boolean", "default": true },
+    "allowChooseMultiple": { "type": "boolean", "default": true },
+    "allowInvertSelection": { "type": "boolean", "default": true },
+    "allowUploads": { "type": "boolean", "default": true },
+    "doDragNDrop": { "type": "boolean", "default": true },
+    "allowRename": { "type": "boolean", "default": true },
+    "allowDelete": { "type": "boolean", "default": true },
+    "confirmBeforeDelete": { "type": "boolean", "default": false },
+    "allowDownload": { "type": "boolean", "default": true },
+    "allowDownloadMultiple": { "type": "boolean", "default": true },
+    "allowCrop": { "type": "boolean", "default": true },
+    "allowMasonry": { "type": "boolean", "default": true },
+    "allowFullscreen": { "type": "boolean", "default": true },
+    "enlargeFocusedRows": { "type": "boolean", "default": false },
+    "emphasisFocusedMediaItem": { "type": "boolean", "default": true },
+    "welcome": { "type": "boolean", "default": true },
+    "alwaysWelcome": { "type": "boolean", "default": false },
+    "learnMore": { "type": "string", "format": "uri-reference", "default": "https://github.com/jpdevries/eureka" },
+    "headers": { "type": "object", "additionalProperties": { "type": "string" }, "default": {} },
+    "endpoints": { "type": "object", "properties": { "i18n": { "type": "string" } }, "additionalProperties": { "type": "string" } },
+    "assetsBasePath": { "type": "string", "default": "./assets/" },
+    "iconSVG": { "type": "string", "default": "./img/icons.svg" },
+    "intervals": {
+      "type": "object",
+      "properties": {
+        "fetchDirectoryContents": { "oneOf": [{ "const": false }, { "type": "integer", "minimum": 1000 }], "default": false },
+        "updateSourceTree": { "oneOf": [{ "const": false }, { "type": "integer", "minimum": 1000 }], "default": false },
+        "searchBarPlaceholder": { "oneOf": [{ "const": false }, { "type": "integer", "minimum": 1000 }], "default": false }
+      },
+      "additionalProperties": false
+    },
+    "callbacks": { "type": "object", "description": "Functions: choose(items), close(). Not JSON; validated by presence only." },
+    "handlers": { "type": "object", "description": "Functions: createFile(sourceId, cd) -> {href, target, onClick?}." },
+    "api": { "description": "Optional REST client replacement (07 STATE-51)." },
+    "keymap": { "type": "object", "description": "Overrides keyed by action id; each value replaces that action's `keys` (05 KEY-A1).", "additionalProperties": { "type": "array", "items": { "type": "string" } } }
+  },
+  "additionalProperties": true
+}

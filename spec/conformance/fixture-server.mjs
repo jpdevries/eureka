@@ -42,18 +42,20 @@ const sources = [
 const DAY = 86400000;
 const t0 = Date.UTC(2017, 3, 2, 14, 25); // 2017-04-02T14:25Z
 const join = (dir, name) => (dir === '/' ? name : path.posix.join(dir, name));
+// URLs are percent-encoded per segment (01 CON-03); the v2 server emitted raw spaces, which is not a valid URI reference.
+const urlFor = p => '/sources/filesystem/' + p.split('/').map(encodeURIComponent).join('/');
 function file(dir, filename, fileSize, dimensions, daysAgo) {
   const p = join(dir, filename);
   return {
     filename, directory: dir, path: p,
-    absoluteURL: `/sources/filesystem/${p}`,
-    absolutePreviewURL: `/sources/filesystem/${p}`,
+    absoluteURL: urlFor(p),
+    absolutePreviewURL: urlFor(p),
     editedOn: t0 - daysAgo * DAY, dimensions, fileSize
   };
 }
 function folder(dir, name) {
   const p = join(dir, name);
-  return { foldername: name, directory: p, path: p, absoluteURL: `/sources/filesystem/${p}`, absolutePreviewURL: `/sources/filesystem/${p}`, editedOn: t0, fileSize: 4096 };
+  return { foldername: name, directory: p, path: p, absoluteURL: urlFor(p), absolutePreviewURL: urlFor(p), editedOn: t0, fileSize: 4096 };
 }
 function makeListings() {
   return {
@@ -157,7 +159,7 @@ async function handleApi(req, res, url) {
         const parent = parentOf(d); const e = (listings[parent] ?? []).find(x => x.path === d);
         if (!e) return json(res, { error: `no such item ${d}` }, 404);
         const np = join(parent, name);
-        if (e.filename) { e.filename = name; e.path = np; e.absoluteURL = e.absolutePreviewURL = `/sources/filesystem/${np}`; }
+        if (e.filename) { e.filename = name; e.path = np; e.absoluteURL = e.absolutePreviewURL = urlFor(np); }
         else { e.foldername = name; e.path = e.directory = np; if (listings[d]) { listings[np] = listings[d]; delete listings[d]; } }
         return json(res, listings[parent]);
       }

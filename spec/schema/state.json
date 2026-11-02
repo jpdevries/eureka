@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eureka.markup.tips/spec/3/schema/state.json",
+  "title": "State",
+  "description": "Instance store shape (07 §2) and event payloads (07 §4). Also the shape of the embedded hydration script (03 NOJS-41), which may omit any branch.",
+  "type": "object",
+  "properties": {
+    "config": { "$ref": "config.json" },
+    "sources": {
+      "type": "object",
+      "properties": {
+        "all": { "type": "array", "items": { "$ref": "source.json" } },
+        "current": { "oneOf": [{ "type": "integer" }, { "type": "string" }, { "type": "null" }] },
+        "status": { "$ref": "#/$defs/status" }
+      }
+    },
+    "tree": {
+      "type": "object",
+      "properties": {
+        "bySource": { "type": "object", "additionalProperties": { "type": "array", "items": { "$ref": "tree-node.json" } } },
+        "open": { "type": "array", "items": { "type": "string" } },
+        "status": { "$ref": "#/$defs/status" }
+      }
+    },
+    "listing": {
+      "type": "object",
+      "properties": {
+        "source": { "oneOf": [{ "type": "integer" }, { "type": "string" }, { "type": "null" }] },
+        "path": { "type": "string" },
+        "entries": { "type": "array", "items": { "$ref": "entry.json" } },
+        "status": { "$ref": "#/$defs/status" },
+        "error": { "type": "string" },
+        "receivedAt": { "type": "integer" }
+      }
+    },
+    "selection": {
+      "type": "object",
+      "properties": {
+        "focused": { "type": ["string", "null"] },
+        "checked": { "type": "array", "items": { "type": "string" } },
+        "inverted": { "type": "boolean" }
+      }
+    },
+    "view": {
+      "type": "object",
+      "properties": {
+        "mode": { "enum": ["table", "thumb", "grid", "list", "masonry"] },
+        "sort": { "type": "object", "properties": { "by": { "enum": ["filename", "dimensions", "fileSize", "editedOn"] }, "dir": { "enum": ["ascending", "descending"] } } },
+        "filter": { "type": "string" },
+        "panelOpen": { "type": "boolean" },
+        "chooseMode": { "enum": ["single", "multiple"] },
+        "fullscreen": { "type": "boolean" }
+      }
+    },
+    "pending": {
+      "type": "object",
+      "properties": {
+        "uploading": { "type": "boolean" },
+        "deleting": { "type": "array", "items": { "type": "string" } },
+        "renaming": { "type": ["string", "null"] },
+        "creating": { "type": "boolean" },
+        "cropping": { "type": "boolean" }
+      }
+    },
+    "dialog": {
+      "oneOf": [
+        { "type": "null" },
+        { "type": "object", "required": ["kind"], "properties": { "kind": { "enum": ["createDirectory", "rename", "crop", "confirmDelete"] }, "target": { "type": "string" } } }
+      ]
+    },
+    "notifications": { "type": "array", "items": { "$ref": "#/$defs/notification" } },
+    "locale": { "type": "object", "properties": { "tag": { "type": "string" }, "catalogStatus": { "$ref": "#/$defs/status" } } }
+  },
+  "$defs": {
+    "status": { "enum": ["idle", "loading", "ready", "error"] },
+    "notification": {
+      "type": "object",
+      "required": ["id", "message", "kind", "sticky"],
+      "properties": {
+        "id": { "type": "string" },
+        "message": { "type": "string" },
+        "kind": { "enum": ["info", "danger"] },
+        "sticky": { "type": "boolean" },
+        "learnMore": { "type": "string", "format": "uri-reference" },
+        "createdAt": { "type": "integer" }
+      }
+    },
+    "events": {
+      "description": "Discriminated by `type` (07 §4).",
+      "oneOf": [
+        { "type": "object", "required": ["type", "sources"], "properties": { "type": { "const": "sources/loaded" }, "sources": { "type": "array", "items": { "$ref": "source.json" } } } },
+        { "type": "object", "required": ["type", "id"], "properties": { "type": { "const": "source/select" }, "id": {} } },
+        { "type": "object", "required": ["type", "source", "nodes"], "properties": { "type": { "const": "tree/loaded" }, "source": {}, "nodes": { "type": "array", "items": { "$ref": "tree-node.json" } } } },
+        { "type": "object", "required": ["type", "path", "open"], "properties": { "type": { "const": "tree/toggle" }, "path": { "type": "string" }, "open": { "type": "boolean" } } },
+        { "type": "object", "required": ["type", "path"], "properties": { "type": { "const": "directory/navigate" }, "source": {}, "path": { "type": "string" } } },
+        { "type": "object", "required": ["type", "source", "path", "entries"], "properties": { "type": { "const": "listing/loaded" }, "source": {}, "path": { "type": "string" }, "entries": { "type": "array", "items": { "$ref": "entry.json" } } } },
+        { "type": "object", "required": ["type", "error"], "properties": { "type": { "const": "listing/failed" }, "error": { "type": "string" } } },
+        { "type": "object", "required": ["type", "mode"], "properties": { "type": { "const": "view/setMode" }, "mode": { "enum": ["table", "thumb", "grid", "list", "masonry"] } } },
+        { "type": "object", "required": ["type"], "properties": { "type": { "const": "view/setSort" }, "by": { "enum": ["filename", "dimensions", "fileSize", "editedOn"] }, "dir": { "enum": ["ascending", "descending"] } } },
+        { "type": "object", "required": ["type", "text"], "properties": { "type": { "const": "view/setFilter" }, "text": { "type": "string" } } },
+        { "type": "object", "required": ["type"], "properties": { "type": { "const": "view/togglePanel" }, "open": { "type": "boolean" } } },
+        { "type": "object", "required": ["type", "mode"], "properties": { "type": { "const": "view/setChooseMode" }, "mode": { "enum": ["single", "multiple"] } } },
+        { "type": "object", "required": ["type", "on"], "properties": { "type": { "const": "view/setFullscreen" }, "on": { "type": "boolean" } } },
+        { "type": "object", "required": ["type", "path"], "properties": { "type": { "const": "selection/focus" }, "path": { "type": ["string", "null"] } } },
+        { "type": "object", "required": ["type", "path", "checked"], "properties": { "type": { "const": "selection/toggle" }, "path": { "type": "string" }, "checked": { "type": "boolean" } } },
+        { "type": "object", "required": ["type"], "properties": { "type": { "const": "selection/invert" }, "on": { "type": "boolean" } } },
+        { "type": "object", "required": ["type"], "properties": { "type": { "const": "selection/clear" } } },
+        { "type": "object", "required": ["type", "files"], "properties": { "type": { "const": "items/uploading" }, "files": { "type": "array", "items": { "type": "string" } } } },
+        { "type": "object", "required": ["type", "entries"], "properties": { "type": { "const": "items/uploaded" }, "entries": { "type": "array", "items": { "$ref": "entry.json" } } } },
+        { "type": "object", "required": ["type", "error"], "properties": { "type": { "const": "items/uploadFailed" }, "error": { "type": "string" } } },
+        { "type": "object", "required": ["type", "paths"], "properties": { "type": { "const": "items/deleting" }, "paths": { "type": "array", "items": { "type": "string" } } } },
+        { "type": "object", "required": ["type", "paths"], "properties": { "type": { "const": "items/deleted" }, "paths": { "type": "array", "items": { "type": "string" } }, "entries": { "type": "array", "items": { "$ref": "entry.json" } } } },
+        { "type": "object", "required": ["type", "path"], "properties": { "type": { "const": "items/renaming" }, "path": { "type": "string" } } },
+        { "type": "object", "required": ["type", "from", "to", "entries"], "properties": { "type": { "const": "items/renamed" }, "from": { "type": "string" }, "to": { "type": "string" }, "entries": { "type": "array", "items": { "$ref": "entry.json" } } } },
+        { "type": "object", "required": ["type", "path"], "properties": { "type": { "const": "directory/created" }, "path": { "type": "string" } } },
+        { "type": "object", "required": ["type", "kind"], "properties": { "type": { "const": "dialog/open" }, "kind": { "enum": ["createDirectory", "rename", "crop", "confirmDelete"] }, "target": { "type": "string" } } },
+        { "type": "object", "required": ["type"], "properties": { "type": { "const": "dialog/close" } } },
+        { "type": "object", "required": ["type", "message", "kind"], "properties": { "type": { "const": "notification/push" }, "message": { "type": "string" }, "kind": { "enum": ["info", "danger"] }, "sticky": { "type": "boolean" }, "learnMore": { "type": "string" } } },
+        { "type": "object", "required": ["type", "id"], "properties": { "type": { "const": "notification/dismiss" }, "id": { "type": "string" } } },
+        { "type": "object", "required": ["type", "tag"], "properties": { "type": { "const": "locale/changed" }, "tag": { "type": "string" } } },
+        { "type": "object", "required": ["type"], "properties": { "type": { "const": "locale/catalogLoaded" } } }
+      ]
+    }
+  }
+}

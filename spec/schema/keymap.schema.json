@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eureka.markup.tips/spec/3/schema/keymap.schema.json",
+  "title": "Keymap",
+  "description": "Shape of data/keymap.json (05).",
+  "type": "object",
+  "required": ["version", "bindings"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": { "type": "string" },
+    "notes": { "type": "array", "items": { "type": "string" } },
+    "bindings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "action", "scope", "keys", "v2"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^KEY-[0-9]{2}$" },
+          "action": { "type": "string", "pattern": "^[a-zA-Z]+$" },
+          "scope": { "enum": ["instance", "row"] },
+          "keys": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+          "args": { "oneOf": [{ "type": "array" }, { "type": "string" }] },
+          "v2": { "type": "array", "items": { "type": "string" } },
+          "when": { "type": "string" },
+          "notes": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

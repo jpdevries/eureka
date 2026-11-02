@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eureka.markup.tips/spec/3/schema/entry.json",
+  "title": "Entry",
+  "description": "One entry of a directory listing: a file (filename) or a folder (foldername). Exactly one of the two is present.",
+  "type": "object",
+  "required": ["directory", "path", "absoluteURL", "editedOn", "fileSize"],
+  "properties": {
+    "filename": { "type": "string", "minLength": 1 },
+    "foldername": { "type": "string", "minLength": 1 },
+    "directory": { "type": "string" },
+    "path": { "type": "string", "minLength": 1 },
+    "absoluteURL": { "type": "string", "format": "uri-reference" },
+    "absolutePreviewURL": { "type": "string", "format": "uri-reference" },
+    "editedOn": { "oneOf": [{ "type": "integer", "minimum": 0 }, { "type": "string", "format": "date-time" }] },
+    "dimensions": { "type": "array", "items": { "type": "integer", "minimum": 0 }, "minItems": 2, "maxItems": 2 },
+    "fileSize": { "type": "integer", "minimum": 0 },
+    "alt": { "type": "string" },
+    "renditions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["url", "width"],
+        "properties": {
+          "url": { "type": "string", "format": "uri-reference" },
+          "width": { "type": "integer", "minimum": 1 },
+          "height": { "type": "integer", "minimum": 1 },
+          "type": { "type": "string", "pattern": "^image/" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "oneOf": [
+    { "required": ["filename"], "not": { "required": ["foldername"] } },
+    { "required": ["foldername"], "not": { "required": ["filename"] } }
+  ],
+  "additionalProperties": true
+}

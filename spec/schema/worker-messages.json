@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eureka.markup.tips/spec/3/schema/worker-messages.json",
+  "title": "WorkerMessages",
+  "description": "Request/response protocol between the instance and its worker, or its main-thread twin (10 PERF-04). Every request carries `id`, `locale` and `headers`; every response echoes `id`.",
+  "$defs": {
+    "base": { "type": "object", "required": ["id", "type", "locale", "headers"], "properties": { "id": { "type": "string" }, "type": { "type": "string" }, "locale": { "type": "string" }, "headers": { "type": "object", "additionalProperties": { "type": "string" } }, "basePath": { "type": "string" } } },
+    "displayRecord": {
+      "type": "object",
+      "required": ["path", "sizeText", "dateShort", "dateLong", "haystack", "icon"],
+      "properties": {
+        "path": { "type": "string" },
+        "sizeText": { "type": "string" },
+        "dimensionsText": { "type": "string" },
+        "dateShort": { "type": "string" },
+        "dateLong": { "type": "string" },
+        "description": { "type": "string" },
+        "haystack": { "type": "string", "description": "Lower-cased concatenation used by the filter." },
+        "icon": { "type": "string" }
+      }
+    },
+    "request": {
+      "oneOf": [
+        { "allOf": [{ "$ref": "#/$defs/base" }, { "properties": { "type": { "const": "listSources" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/base" }, { "required": ["source"], "properties": { "type": { "const": "listTree" }, "source": {} } }] },
+        { "allOf": [{ "$ref": "#/$defs/base" }, { "required": ["source", "path"], "properties": { "type": { "const": "listDirectory" }, "source": {}, "path": { "type": "string" }, "preferCache": { "type": "boolean" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/base" }, { "required": ["by", "dir"], "properties": { "type": { "const": "sort" }, "by": { "enum": ["filename", "dimensions", "fileSize", "editedOn"] }, "dir": { "enum": ["ascending", "descending"] } } }] },
+        { "allOf": [{ "$ref": "#/$defs/base" }, { "required": ["text"], "properties": { "type": { "const": "filter" }, "text": { "type": "string" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/base" }, { "required": ["source", "path", "files"], "properties": { "type": { "const": "upload" }, "source": {}, "path": { "type": "string" }, "files": { "type": "array" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/base" }, { "required": ["source", "paths"], "properties": { "type": { "const": "delete" }, "source": {}, "paths": { "type": "array", "items": { "type": "string" } }, "cd": { "type": "string" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/base" }, { "required": ["source", "path", "name"], "properties": { "type": { "const": "rename" }, "source": {}, "path": { "type": "string" }, "name": { "type": "string" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/base" }, { "required": ["source", "path"], "properties": { "type": { "const": "createDirectory" }, "source": {}, "path": { "type": "string" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/base" }, { "required": ["url", "width"], "properties": { "type": { "const": "decodeThumbnail" }, "url": { "type": "string" }, "width": { "type": "integer" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/base" }, { "required": ["url", "crop"], "properties": { "type": { "const": "crop" }, "url": { "type": "string" }, "crop": { "type": "object", "required": ["x", "y", "width", "height"], "properties": { "x": { "type": "number" }, "y": { "type": "number" }, "width": { "type": "number" }, "height": { "type": "number" }, "rotate": { "type": "number" }, "scaleX": { "type": "number" }, "scaleY": { "type": "number" } } }, "mimeType": { "type": "string" }, "quality": { "type": "number" } } }] }
+      ]
+    },
+    "response": {
+      "oneOf": [
+        { "type": "object", "required": ["id", "ok", "result"], "properties": { "id": { "type": "string" }, "ok": { "const": true }, "result": {} , "fromCache": { "type": "boolean" } } },
+        { "type": "object", "required": ["id", "ok", "error"], "properties": { "id": { "type": "string" }, "ok": { "const": false }, "error": { "type": "object", "required": ["message"], "properties": { "message": { "type": "string" }, "status": { "type": "integer" } } } } }
+      ]
+    }
+  },
+  "oneOf": [{ "$ref": "#/$defs/request" }, { "$ref": "#/$defs/response" }]
+}

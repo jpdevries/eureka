@@ -329,5 +329,8 @@ Taken on 2026-11-01:
   enhanced narrow). Runs green against the v2 build with known v2 defects
   recorded as expected failures (`spec/README.md`, "Known v2 baseline
   defects") and v3-only requirements skipped.
-- Not yet written: `01-concepts.md`, `06-accessibility.md`, `07-state.md`,
-  `09-i18n.md`, JSON schemas.
+- All ten spec documents drafted, plus JSON schemas (source, tree node,
+  entry, config, state and events, keymap, worker messages) with a
+  validation script that checks data files, fixtures and the fixture
+  server's live output. Phase 1 is complete; Phase 2 (core + server) is
+  next.
