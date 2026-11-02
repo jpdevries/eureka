@@ -164,10 +164,22 @@ export function createEurekaHandler(opts: HandlerOptions): NodeHandler {
       // files of each source, at their urlPrefix
       for (const s of opts.sources) {
         const prefix = `/sources/${encodeURIComponent(s.name)}/`;
+        if (url.pathname.startsWith(prefix + '__thumb/')) { // text thumbnails (02 HTML-66c)
+          const thumb = s.thumbnail ? await s.thumbnail(url.pathname.slice((prefix + '__thumb/').length)) : null;
+          if (!thumb) { json(res, { error: 'not found' }, 404); return true; }
+          if (req.headers['if-none-match'] === thumb.etag) { res.writeHead(304, { etag: thumb.etag }); res.end(); return true; }
+          res.writeHead(200, { 'content-type': 'image/svg+xml', 'content-length': Buffer.byteLength(thumb.svg), etag: thumb.etag, 'cache-control': 'private, max-age=3600', 'x-content-type-options': 'nosniff' });
+          res.end(thumb.svg); return true;
+        }
         if (url.pathname.startsWith(prefix)) {
-          const file = await s.open(url.pathname.slice(prefix.length));
+          const m = /^bytes=(\d*)-(\d*)$/.exec(req.headers.range ?? '');
+          const range = m && (m[1] || m[2]) ? { start: m[1] ? Number(m[1]) : 0, ...(m[2] ? { end: Number(m[2]) } : {}) } : undefined;
+          const file = await s.open(url.pathname.slice(prefix.length), range);
           if (!file) { json(res, { error: 'not found' }, 404); return true; }
-          res.writeHead(200, { 'content-type': file.contentType, 'content-length': file.size, 'cache-control': 'private, max-age=60' });
+          if (range && file.start !== undefined && file.end !== undefined) {
+            if (file.end < file.start) { res.writeHead(416, { 'content-range': `bytes */${file.size}` }); res.end(); return true; }
+            res.writeHead(206, { 'content-type': file.contentType, 'content-length': file.end - file.start + 1, 'content-range': `bytes ${file.start}-${file.end}/${file.size}`, 'accept-ranges': 'bytes', 'cache-control': 'private, max-age=60' });
+          } else res.writeHead(200, { 'content-type': file.contentType, 'content-length': file.size, 'accept-ranges': 'bytes', 'cache-control': 'private, max-age=60' });
           file.stream.pipe(res); return true;
         }
       }

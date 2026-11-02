@@ -40,6 +40,8 @@ export interface EurekaBrowserAttributes {
   noChooseMultiple?: boolean;
   confirmDelete?: boolean;
   alwaysWelcome?: boolean;
+  /** Text thumbnails: 'server' (previews the API supplies), 'client' (also rendered in the worker), 'none'. */
+  thumbnails?: 'server' | 'client' | 'none';
 }
 
 export interface EurekaNavigateDetail { source: SourceId; path: string }

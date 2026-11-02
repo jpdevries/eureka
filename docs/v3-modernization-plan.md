@@ -583,6 +583,22 @@ Taken on 2026-11-01:
   a night tint) whose reduced-motion render is the daytime scene. Not in
   this iteration: scrubbing, true first-frame extraction for GIF (the
   canvas holds whatever frame was current), controls in the crop preview.
+- Text thumbnails (HTML-66c, PERF-28): one dependency-free text-to-SVG
+  renderer in core (`renderTextThumbnail`, a regex tokenizer per language,
+  themed through media queries inside the SVG, a `<title>`), run in three
+  places. The reference server serves it at
+  `/sources/{name}/__thumb/{path}` from the first 8 KB of text-like files,
+  cached by size and mtime with an ETag and 304s, and sets
+  `absolutePreviewURL` on text entries so Level 0 gets thumbnails too; the
+  source now honours `Range` on files. With `thumbnails: "client"` the
+  element renders missing previews in the worker from a Range request,
+  only near the viewport, four at a time, never under reduced data,
+  keeping SVG blobs rather than bitmaps, which is the path for sources
+  without a server (an S3 adapter via STATE-51, still to be built). A
+  bucket pipeline can also pre-render with the same module. The fixture
+  server serves text contents with Range and the thumbnail route, and a
+  `/__previews` switch lets the client-mode test drop the preview URLs.
+  No canvas, no highlighter dependency anywhere.
 - Package names: the `@eureka` npm scope belongs to an existing npm user,
   so the packages are `@mrktps/eureka` (the element, what most people
   install) and `@mrktps/eureka-core`, `-html`, `-css`, `-react`,

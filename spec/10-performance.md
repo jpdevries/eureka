@@ -72,6 +72,7 @@ mixed types) on a throttled CPU (4× slowdown) in Chromium.
 | PERF-24 | Scroll frame time, grid mode, 5,000 items | no frame > 32 ms over a 5 s scroll |
 | PERF-25 | Shipped size, gzip: core + element + worker | ≤ 30 kB |
 | PERF-26 | Shipped size, gzip: stylesheet | ≤ 12 kB (v2: 7.8 kB) |
+| PERF-28 | Text thumbnails (02 HTML-66c): no client dependency, lazy (viewport-near only), at most 4 renders in flight, each result a few KB of SVG held as a blob, never a bitmap; the server caches by size and mtime and answers conditional requests with 304 | required |
 | PERF-27 | Shipped size, gzip: icon sprite | ≤ 10 kB (v2: 7.9 kB) |
 
 The fixture server will grow a `?count=` option on the listing endpoint

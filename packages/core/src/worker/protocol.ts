@@ -14,6 +14,7 @@ export type EngineRequest =
   | (Base & { type: 'rename'; source: SourceId; path: string; name: string })
   | (Base & { type: 'createDirectory'; source: SourceId; path: string })
   | (Base & { type: 'decodeThumbnail'; url: string; width: number })
+  | (Base & { type: 'textThumbnail'; url: string; filename: string; maxBytes?: number })
   | (Base & { type: 'crop'; url: string; crop: { x: number; y: number; width: number; height: number; rotate?: number; scaleX?: number; scaleY?: number }; mimeType?: string; quality?: number });
 
 export interface ListingResult { source: SourceId; path: string; entries: Entry[]; records: Record<string, DisplayRecord>; order: string[] }
@@ -26,6 +27,7 @@ export type EngineResultFor<T extends EngineRequest['type']> =
   T extends 'upload' | 'rename' | 'delete' ? ListingResult :
   T extends 'createDirectory' ? { path: string } :
   T extends 'decodeThumbnail' ? ImageBitmap :
+  T extends 'textThumbnail' ? { svg: string } :
   T extends 'crop' ? Blob :
   never;
 

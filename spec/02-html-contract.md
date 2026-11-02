@@ -231,6 +231,29 @@ DOM order is the reading order and the tab order.
   no special case here; files SHOULD still gate their own animation on
   `@media (prefers-reduced-motion: no-preference)` for every other
   context they are shown in. Level 0 renders the plain `<img>`.
+- **HTML-66c** Text files (`.txt`, `.md`, `.json`, `.css`, `.js`, `.ts`,
+  `.html`, `.xml`, `.yaml`, `.sh`, `.py` and the rest of the list in
+  `@mrktps/eureka-core`'s `isTextLike`) preview as a rendered page of
+  their first lines. The API supplies it: a text entry's
+  `absolutePreviewURL`, when it differs from `absoluteURL`, is an image
+  (the reference server renders an SVG at `/sources/{name}/__thumb/{path}`
+  from the first 8 KB, cached by size and mtime, with an ETag). The media
+  cell shows it as `<img class="eureka__media-text" alt="" loading="lazy"
+  decoding="async" width="320" height="400">`; the row already names the
+  file, so the image is decorative (WCAG 1.4.5 is satisfied by the file
+  itself being one Expand away). Without a preview the cell shows the
+  type icon and filename (`p.eureka__text-placeholder`). With
+  `thumbnails: "client"` the element renders missing previews itself,
+  in the worker, from a `Range` request for the file's first 8 KB,
+  only once the row is near the viewport, at most four at a time, never
+  under `prefers-reduced-data` or `saveData`, keeping the result as a
+  small SVG blob rather than a bitmap; `thumbnails: "none"` shows icons
+  only. The renderer is one module (`renderTextThumbnail`): the same SVG
+  comes from the server, the worker, or a pipeline that writes
+  thumbnails next to the files and points `absolutePreviewURL` at them,
+  which is the shape for a bucket-backed source. Its colours follow
+  `prefers-color-scheme` and forced colors from inside the SVG, and it
+  carries a `<title>` ("Preview of {filename}") for direct viewing.
 - **HTML-67** Name cell: the filename with a `<wbr>` after every 8
   characters so long names wrap. When renaming inline it becomes
   editable; Enter commits, Escape cancels, empty names are rejected.

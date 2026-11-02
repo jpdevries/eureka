@@ -87,6 +87,40 @@ test('HTML-66b with reduced motion the animated SVG itself holds its CSS animati
   await setAnimatePreviews(page, false);
 });
 
+test('HTML-66c text files preview as server-rendered SVG thumbnails', async ({ page }) => {
+  v3only('text thumbnails');
+  const img = rowNamed(page, 'notes.txt').locator('img.eureka__media-text');
+  await expect(img).toHaveAttribute('src', /\/sources\/filesystem\/__thumb\/assets\/img\/notes\.txt$/);
+  await expect(img).toHaveAttribute('alt', '');
+  const res = await page.request.get(await img.getAttribute('src'));
+  expect(res.status()).toBe(200);
+  expect(res.headers()['content-type']).toContain('image/svg+xml');
+  const svg = await res.text();
+  expect(svg).toContain('<title>Preview of notes.txt</title>');
+  expect(svg).toContain('Shot list for the redwoods series.');
+  expect(svg).toContain('<tspan class="link">https://example.test/notes</tspan>');
+  expect(svg).toContain('@media (prefers-color-scheme: dark)');
+});
+
+test('HTML-66c with thumbnails="client" the worker renders previews the API does not supply', async ({ page }) => {
+  v3only('worker-rendered text thumbnails');
+  await page.request.post('/__previews', { data: { text: false } });
+  try {
+    await page.goto('/index.html');
+    await page.locator('eureka-browser').evaluate((el) => { el.setAttribute('thumbnails', 'client'); });
+    const row = rowNamed(page, 'notes.txt');
+    await expect(row.locator('.eureka__text-placeholder[data-text-path]').or(row.locator('img.eureka__media-text'))).toHaveCount(1);
+    await row.scrollIntoViewIfNeeded();
+    const img = row.locator('img.eureka__media-text');
+    await expect(img).toHaveAttribute('src', /^blob:/, { timeout: 10000 });
+    const svg = await img.evaluate(async (el) => (await fetch(el.src)).text());
+    expect(svg).toContain('<title>Preview of notes.txt</title>');
+    expect(svg).toContain('Shot list');
+  } finally {
+    await page.request.post('/__previews', { data: { text: true } });
+  }
+});
+
 test('HTML-66 images are lazy and decode asynchronously', async ({ page }) => {
   v3only('loading=lazy and decoding=async on thumbnails');
   const img = rowNamed(page, 'schildpad.jpg').locator('img');

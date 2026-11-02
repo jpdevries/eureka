@@ -192,6 +192,20 @@ describe('enhanced render (02)', () => {
     expect(renderLevel0(anim)).not.toContain('<object'); // Level 0: the plain image
     expect(renderLevel0(anim)).toContain('<span class="eureka__badge eureka__badge--animated">');
   });
+  it('shows text files as rendered previews when the API supplies one, the icon otherwise (HTML-66c)', () => {
+    const asText = (preview?: string) => ({ ...input, entries: input.entries.map((e) => (e.filename === 'schildpad.jpg' ? { ...e, filename: 'notes.txt', path: 'assets/img/notes.txt', absoluteURL: '/x/notes.txt', absolutePreviewURL: preview ?? '/x/notes.txt', dimensions: undefined } : e)) });
+    const withPreview = asText('/sources/x/__thumb/assets/img/notes.txt');
+    expect(renderEnhanced(withPreview)).toContain('<img class="eureka__media-text" src="/sources/x/__thumb/assets/img/notes.txt" alt="" loading="lazy" decoding="async" width="320" height="400">');
+    expect(renderLevel0(withPreview)).toContain('class="eureka__media-text"'); // Level 0 shows it too
+    const plain = renderEnhanced(asText()); // previews as itself: no image, the icon
+    expect(plain).toMatch(/<p class="eureka__file-placeholder eureka__text-placeholder">.*notes\.txt/);
+    expect(plain).not.toContain('data-text-path');
+    const clientInput = { ...asText(), config: { ...(input.config ?? {}), thumbnails: 'client' as const } };
+    expect(renderEnhanced(clientInput)).toContain('data-text-path="assets/img/notes.txt"');
+    const ctx = contextFromPage(clientInput, 1);
+    expect(instance({ ...ctx, textThumbnails: new Map([['assets/img/notes.txt', 'blob:x']]) }).value).toContain('class="eureka__media-text" src="blob:x"');
+    expect(renderEnhanced({ ...withPreview, config: { ...(input.config ?? {}), thumbnails: 'none' as const } })).not.toContain('eureka__media-text');
+  });
   it('puts the shortcuts button beside the heading at Level 1 only', () => {
     expect(renderEnhanced(input)).toContain('Media Content</h2><button type="button" class="eureka__help-button"');
     expect(renderEnhanced(input)).toMatch(/eureka__help-button[^>]*title="Keyboard Shortcuts"><span class="visually-hidden">Keyboard Shortcuts<\/span><svg[^>]*class="icon icon-keyboard"/);

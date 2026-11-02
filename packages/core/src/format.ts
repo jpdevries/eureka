@@ -1,5 +1,6 @@
 // Display formatting (09 I18N-20..22, 02 HTML-64/66/69). Pure functions over Intl.
 import { extname } from './paths.js';
+import { isTextLike } from './thumbs/kinds.js';
 import type { DisplayRecord, Entry, MediaKind } from './types.js';
 
 export type Translate = (id: string, values?: Record<string, unknown>) => string;
@@ -15,6 +16,7 @@ export function mediaKind(nameOrUrl: string): MediaKind {
   if (VIDEO.has(ext)) return 'video';
   if (AUDIO.has(ext)) return 'audio';
   if (ext === '.pdf') return 'pdf';
+  if (isTextLike(nameOrUrl)) return 'text';
   return 'other';
 }
 /** Raster images are the ones the crop tool accepts (02 HTML-68). */

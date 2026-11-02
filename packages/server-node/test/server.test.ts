@@ -138,3 +138,36 @@ describe('handler as a plain function', () => {
     expect(await handle({ url: '/somewhere/else', method: 'GET', headers: {} } as never, res)).toBe(false);
   });
 });
+
+describe('text thumbnails (02 HTML-66c)', async () => {
+  const { it, expect } = await import('vitest');
+  const fs = await import('node:fs/promises');
+  const os = await import('node:os');
+  const path = await import('node:path');
+  const { createFilesystemSource, startServer } = await import('../src/index.js');
+  it('serves an SVG preview with an ETag, answers 304, and honours Range on the file', async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), 'eureka-thumb-'));
+    await fs.writeFile(path.join(root, 'notes.txt'), 'hello world\nconst a = 1;\n');
+    await fs.writeFile(path.join(root, 'blob.bin'), Buffer.from([0, 1, 2, 3]));
+    const srv = await startServer({ sources: [createFilesystemSource({ id: 0, name: 'fs', root })], port: 0 });
+    try {
+      const base = `http://127.0.0.1:${srv.port}`;
+      const listing = await (await fetch(`${base}/media/sources/0?path=/`)).json();
+      const notes = listing.find((e) => e.filename === 'notes.txt');
+      expect(notes.absolutePreviewURL).toBe('/sources/fs/__thumb/notes.txt');
+      const thumb = await fetch(base + notes.absolutePreviewURL);
+      expect(thumb.status).toBe(200);
+      expect(thumb.headers.get('content-type')).toBe('image/svg+xml');
+      const etag = thumb.headers.get('etag');
+      expect(etag).toMatch(/^"t-/);
+      expect(await thumb.text()).toContain('<title>Preview of notes.txt</title>');
+      expect((await fetch(base + notes.absolutePreviewURL, { headers: { 'if-none-match': etag } })).status).toBe(304);
+      expect((await fetch(`${base}/sources/fs/__thumb/blob.bin`)).status).toBe(404);
+      const ranged = await fetch(`${base}/sources/fs/notes.txt`, { headers: { range: 'bytes=0-4' } });
+      expect(ranged.status).toBe(206);
+      expect(ranged.headers.get('content-range')).toBe('bytes 0-4/25');
+      expect(await ranged.text()).toBe('hello');
+    } finally { await srv.close(); await fs.rm(root, { recursive: true, force: true }); }
+  });
+});
+

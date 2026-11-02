@@ -1,5 +1,6 @@
 // The engine: fetch, normalise, cache, sort and filter off the main thread
 // (10 PERF-01..03). The same code runs inline when no Worker is available.
+import { looksBinary } from '../thumbs/kinds.js';
 import { buildDisplayRecord, type Translate } from '../format.js';
 import { normalizePath } from '../paths.js';
 import { filterEntries, sortEntries } from '../sort-filter.js';
@@ -13,6 +14,8 @@ export interface EngineOptions {
   translateFor?: (locale: string) => Translate | undefined;
   /** Optional listing cache (IndexedDB in the worker, PERF-05). */
   cache?: ListingCache;
+  /** Text thumbnail renderer (02 HTML-66c). The worker entry supplies renderTextThumbnail; the inline twin leaves it out so the element bundle stays small, and text files keep their icon there. */
+  renderText?: (text: string, filename: string) => string;
 }
 export interface ListingCache {
   get(key: string): Promise<Entry[] | undefined>;
@@ -91,6 +94,16 @@ export function createEngine(options: EngineOptions = {}): Engine {
         const blob = await res.blob();
         if (typeof createImageBitmap !== 'function') throw new Error('createImageBitmap unavailable');
         return { result: await createImageBitmap(blob, { resizeWidth: req.width, resizeQuality: 'medium' }) };
+      }
+      case 'textThumbnail': { // 02 HTML-66c, for sources that serve no preview: the first bytes, rendered here, off the main thread
+        const max = req.maxBytes ?? 8192;
+        const res = await fetch(req.url, { headers: { ...req.headers, Range: `bytes=0-${max - 1}` } });
+        if (!res.ok && res.status !== 206) throw new Error(`fetch ${res.status}`);
+        const bytes = new Uint8Array(await res.arrayBuffer());
+        if (looksBinary(bytes)) throw new Error('binary');
+        const text = new TextDecoder('utf-8', { fatal: false }).decode(bytes.subarray(0, max));
+        if (!options.renderText) throw new Error('text thumbnails need the worker');
+        return { result: { svg: options.renderText(text, req.filename) } };
       }
       case 'crop': {
         if (typeof OffscreenCanvas === 'undefined') throw new Error('OffscreenCanvas unavailable');

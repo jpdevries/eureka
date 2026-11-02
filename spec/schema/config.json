@@ -34,6 +34,7 @@
     "allowDownloadMultiple": { "type": "boolean", "default": true },
     "allowCrop": { "type": "boolean", "default": true },
     "allowMasonry": { "type": "boolean", "default": true },
+    "thumbnails": { "type": "string", "enum": ["server", "client", "none"], "default": "server", "description": "Text thumbnails (02 HTML-66c): previews the API supplies; 'client' also renders them in the worker for text files without one; 'none' shows icons" },
     "allowFullscreen": { "type": "boolean", "default": true },
     "enlargeFocusedRows": { "type": "boolean", "default": false },
     "emphasisFocusedMediaItem": { "type": "boolean", "default": true },

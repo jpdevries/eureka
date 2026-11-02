@@ -114,6 +114,10 @@
   .black-on-white .eureka__help-button, .white-on-black .eureka__help-button { opacity: 1; }
   @media (forced-colors: active) { .eureka .eureka__help-button { opacity: 1; } }
   @media (prefers-reduced-motion: reduce) { .eureka .eureka__help-button { transition: none; } }
+  /* Text thumbnails (02 HTML-66c): a rendered page of the file; it follows the colour scheme from inside the SVG. */
+  .eureka .eureka__media-text { display: block; inline-size: 100%; block-size: auto; background: var(--light-bg); border: 1px solid var(--very-subtle); border-radius: 0.25rem; object-fit: cover; object-position: top; }
+  .eureka:is([data-view="table"], [data-view="list"]) .eureka__media-text { max-block-size: 10rem; inline-size: auto; aspect-ratio: 4 / 5; }
+
   /* Animated media (02 HTML-66b): still until played. Nothing here moves by itself; motion comes from the file, which should gate
      its own animation on prefers-reduced-motion, and from the user's explicit play. */
   .eureka__table td.eureka__td-media { position: relative; }

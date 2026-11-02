@@ -35,7 +35,7 @@ export type SortDir = 'ascending' | 'descending';
 export interface Sort { by: SortBy; dir: SortDir }
 export type ChooseMode = 'single' | 'multiple';
 export type Status = 'idle' | 'loading' | 'ready' | 'error';
-export type MediaKind = 'image' | 'video' | 'audio' | 'pdf' | 'other';
+export type MediaKind = 'image' | 'video' | 'audio' | 'pdf' | 'text' | 'other';
 
 export interface Notification {
   id: string;
@@ -89,6 +89,8 @@ export interface Config {
   allowDownloadMultiple: boolean;
   allowCrop: boolean;
   allowMasonry: boolean;
+  /** Text thumbnails (02 HTML-66c): 'server' shows previews the API supplies; 'client' also renders them in the worker for text files without one; 'none' shows icons. */
+  thumbnails: 'server' | 'client' | 'none';
   allowFullscreen: boolean;
   enlargeFocusedRows: boolean;
   emphasisFocusedMediaItem: boolean;
@@ -128,6 +130,7 @@ export const defaultConfig: Config = Object.freeze({
   allowDownloadMultiple: true,
   allowCrop: true,
   allowMasonry: true,
+  thumbnails: 'server',
   allowFullscreen: true,
   enlargeFocusedRows: false,
   emphasisFocusedMediaItem: true,

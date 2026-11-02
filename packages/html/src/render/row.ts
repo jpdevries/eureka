@@ -43,6 +43,12 @@ export function media(ctx: Ctx, item: FileEntry, { controls = true, width, heigh
     case 'video': return html`<video${attr('width', width ?? 320)}${attr('height', height ?? 240)}${attr('controls', controls)} preload="metadata"><source src="${src}">${t('support.noVideo')}</video>`;
     case 'audio': return html`<audio${attr('controls', controls)} preload="none"><source src="${src}">${t('support.noAudio')}</audio>`;
     case 'pdf': return html`<object data="${src}" type="application/pdf"${attr('width', width ?? 320)}${attr('height', height ?? 240)}>${icon(ctx, 'file-pdf-o')} ${item.filename}</object>`;
+    case 'text': { // a rendered preview when the source offers one (HTML-66c); the icon otherwise, which the element may replace with a worker-rendered thumbnail
+      const mode = state.config.thumbnails;
+      const preview = mode !== 'none' && item.absolutePreviewURL && item.absolutePreviewURL !== item.absoluteURL ? item.absolutePreviewURL : mode === 'client' ? ctx.textThumbnails?.get(item.path) ?? null : null;
+      if (preview) return html`<img class="eureka__media-text" src="${preview}" alt="" loading="lazy" decoding="async" width="320" height="400">`;
+      return html`<p class="eureka__file-placeholder eureka__text-placeholder"${attr('data-text-path', mode === 'client' ? item.path : null)}>${icon(ctx, iconForExtension(extname(item.filename)))} <span>${item.filename}</span></p>`;
+    }
     default: return html`<p class="eureka__file-placeholder">${icon(ctx, iconForExtension(extname(item.filename)))} <span>${item.filename}</span></p>`;
   }
 }

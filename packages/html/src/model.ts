@@ -36,6 +36,8 @@ export interface Ctx {
   contextMenu?: { path: string };
   /** Animated items the user asked to play (02 HTML-66b); element-local. `view.animate` plays them all. */
   playing?: ReadonlySet<string>;
+  /** Worker-rendered text thumbnails by path (blob URLs), for text files the API gives no preview (02 HTML-66c); element-local. */
+  textThumbnails?: ReadonlyMap<string, string>;
   /**
    * Row markup memo for incremental client renders (10 PERF-11): `previous` holds the markup of each row
    * as last rendered, keyed by path; the listing fills `next` and emits a keep-placeholder

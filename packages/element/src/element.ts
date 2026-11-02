@@ -50,6 +50,9 @@ export class EurekaBrowser extends HTMLElement {
   #keyboard = false; // keyboard navigation seen since the last pointer use (06 A11Y-55)
   #contextTarget: string | null = null; // row path whose popover menu is open (02 HTML-71)
   #playing = new Set<string>(); // animated items the user asked to play (02 HTML-66b)
+  #textThumbs = new Map<string, string>(); // worker-rendered text thumbnails, path → blob URL (02 HTML-66c, thumbnails: 'client')
+  #thumbPending = new Set<string>();
+  #thumbObserver: IntersectionObserver | null = null;
   #mediaBound = new WeakSet<Element>();
   #contextOrigin: { x: number; y: number } | null = null; // pointer position for engines without anchor positioning
   #contextDismiss: AbortController | null = null;
@@ -103,6 +106,9 @@ export class EurekaBrowser extends HTMLElement {
   }
 
   #teardown(): void {
+    this.#thumbObserver?.disconnect(); this.#thumbObserver = null;
+    for (const url of this.#textThumbs.values()) URL.revokeObjectURL(url);
+    this.#textThumbs.clear(); this.#thumbPending.clear();
     this.#contextDismiss?.abort(); this.#contextDismiss = null; this.#contextTarget = null;
     this.#abort?.abort(); this.#abort = null;
     for (const t of this.#timers) clearTimeout(t); this.#timers.clear();
@@ -212,7 +218,7 @@ export class EurekaBrowser extends HTMLElement {
     if (!this.#started) return;
     const state = this.#store.getState();
     const next = new Map<string, string>();
-    const ctx: Ctx = { state, t: this.#t, ids: this.#ids, level: 1, iconSprite: this.#iconSprite, rowMemo: { previous: this.#rowMarkup, next }, keymap: this.#keymap, platform: /Mac|iPhone|iPad/.test(navigator.platform) ? 'mac' : 'other', ...(this.#contextTarget ? { contextMenu: { path: this.#contextTarget } } : {}), playing: this.#playing };
+    const ctx: Ctx = { state, t: this.#t, ids: this.#ids, level: 1, iconSprite: this.#iconSprite, rowMemo: { previous: this.#rowMarkup, next }, keymap: this.#keymap, platform: /Mac|iPhone|iPad/.test(navigator.platform) ? 'mac' : 'other', ...(this.#contextTarget ? { contextMenu: { path: this.#contextTarget } } : {}), playing: this.#playing, textThumbnails: this.#textThumbs };
     const byId = new Map<string, string>();
     morphChildren(this, fragmentFrom(instance(ctx).value), { resolveKeep: (id) => { if (!byId.size) for (const [p, m] of next) byId.set(this.#ids.item('row', basename(p)), m); return byId.get(id); } });
     this.#rowMarkup = next;
@@ -222,6 +228,7 @@ export class EurekaBrowser extends HTMLElement {
   #afterRender(state: State): void {
     this.#applyKeyboard();
     this.#syncAnimations();
+    this.#observeTextPlaceholders();
     if (this.#contextTarget && !this.#menu()) this.#closeContextMenu(false); // the row left the listing
     const dialog = this.querySelector<HTMLDialogElement>('dialog.eureka__modal');
     if (dialog && !dialog.open) { try { dialog.showModal(); } catch { dialog.setAttribute('open', ''); } }
@@ -486,6 +493,33 @@ export class EurekaBrowser extends HTMLElement {
     void this.#upload(files.map((f, i) => (/^(image|file)\.\w+$/i.test(f.name) ? new File([f], `paste-image.${stamp}${files.length > 1 ? `-${i + 1}` : ''}.${f.name.split('.').pop()}`, { type: f.type }) : f)));
   }
   #setDragging(on: boolean): void { if (this.#dragging !== on) { this.#dragging = on; this.#applyDragging(on); } }
+  // ---- text thumbnails rendered in the worker (02 HTML-66c, thumbnails: 'client') -----------------------------
+  // Only for text files the API gave no preview, only once they scroll into view, a few at a time, never when the
+  // visitor asked for less data. The result is a small SVG blob, not a bitmap, so a long listing stays cheap.
+  #observeTextPlaceholders(): void {
+    const placeholders = this.querySelectorAll<HTMLElement>('.eureka__text-placeholder[data-text-path]');
+    if (!placeholders.length || this.#config.thumbnails !== 'client' || typeof IntersectionObserver === 'undefined') return;
+    if ((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData || matchMedia('(prefers-reduced-data: reduce)').matches) return;
+    this.#thumbObserver ??= new IntersectionObserver((entries) => {
+      for (const e of entries) if (e.isIntersecting) { this.#thumbObserver?.unobserve(e.target); void this.#renderTextThumbnail((e.target as HTMLElement).dataset.textPath ?? ''); }
+    }, { root: this, rootMargin: '200px' });
+    for (const p of placeholders) this.#thumbObserver.observe(p);
+  }
+  async #renderTextThumbnail(path: string): Promise<void> {
+    if (!path || this.#textThumbs.has(path) || this.#thumbPending.has(path)) return;
+    const item = this.#fileAt(path);
+    if (!item) return;
+    while (this.#thumbPending.size >= 4) await new Promise((r) => setTimeout(r, 50)); // concurrency cap
+    this.#thumbPending.add(path);
+    try {
+      const { result } = await this.#engine.request({ type: 'textThumbnail', url: item.absoluteURL, filename: item.filename });
+      const url = URL.createObjectURL(new Blob([result.svg], { type: 'image/svg+xml' }));
+      this.#textThumbs.set(path, url);
+      this.#queueRender();
+    } catch { /* binary, cross-origin without CORS, or a fetch error: the icon stays */ }
+    finally { this.#thumbPending.delete(path); }
+  }
+
   // ---- animated media (02 HTML-66b): still until played; the markup declares the state, this applies it ----
   #toggleAnimation(path: string): void {
     if (this.#playing.has(path)) this.#playing.delete(path); else this.#playing.add(path);

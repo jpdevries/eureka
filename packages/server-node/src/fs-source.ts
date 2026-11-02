@@ -5,7 +5,7 @@ import path from 'node:path';
 import { imageSize } from 'image-size';
 import { ZipFile } from 'yazl';
 import type { Readable } from 'node:stream';
-import { encodePathForURL, normalizePath, isWithin, joinPath, parentPath, basename, mediaKind } from '@mrktps/eureka-core';
+import { encodePathForURL, normalizePath, isWithin, joinPath, parentPath, basename, mediaKind, isTextLike, looksBinary, renderTextThumbnail } from '@mrktps/eureka-core';
 import type { Entry, Source, TreeNode } from '@mrktps/eureka-core';
 import { sanitizeFilename } from './multipart.js';
 
@@ -18,8 +18,10 @@ export interface MediaSource extends Source {
   remove(p: string): Promise<void>;
   removeMany(dir: string, filenames: string[]): Promise<Entry[]>;
   zip(dir: string, filenames: string[]): Promise<Readable>;
-  /** Serve a file for `absoluteURL` requests, or null when outside the source. */
-  open(p: string): Promise<{ stream: Readable; size: number; contentType: string } | null>;
+  /** Serve a file for `absoluteURL` requests (optionally a byte range), or null when outside the source. */
+  open(p: string, range?: { start: number; end?: number }): Promise<{ stream: Readable; size: number; contentType: string; start?: number; end?: number } | null>;
+  /** The text thumbnail of a text-like file (02 HTML-66c), or null for other files. Cached by size and mtime. */
+  thumbnail?(p: string): Promise<{ svg: string; etag: string } | null>;
 }
 
 export interface FilesystemSourceOptions {
@@ -72,6 +74,7 @@ export function createFilesystemSource(opts: FilesystemSourceOptions): MediaSour
     return { rel, abs };
   }
   const urlFor = (rel: string) => `${urlPrefix}/${encodePathForURL(rel)}`;
+  const thumbs = new Map<string, { svg: string; etag: string }>(); // text thumbnails, LRU by insertion order
 
   async function entryFor(dirRel: string, name: string, saveData = false): Promise<Entry | null> {
     const rel = joinPath(dirRel, name);
@@ -87,7 +90,8 @@ export function createFilesystemSource(opts: FilesystemSourceOptions): MediaSour
       try { const d = imageSize(abs); if (d.width && d.height) e.dimensions = [d.width, d.height]; } catch { /* not a decodable image */ }
       if (await isAnimated(abs, name)) e.animated = true;
     }
-    e.absolutePreviewURL = opts.previewUrl ? opts.previewUrl(e, saveData) : e.absoluteURL;
+    // text-like files preview as a rendered thumbnail (HTML-66c); everything else previews as itself unless the host says otherwise
+    e.absolutePreviewURL = opts.previewUrl ? opts.previewUrl(e, saveData) : isTextLike(name) ? `${urlPrefix}/__thumb/${encodePathForURL(rel)}` : e.absoluteURL;
     return e;
   }
 
@@ -143,12 +147,34 @@ export function createFilesystemSource(opts: FilesystemSourceOptions): MediaSour
       zip.end();
       return zip.outputStream as unknown as Readable;
     },
-    async open(p) {
+    async open(p, range) {
       let r; try { r = resolve(p); } catch { return null; }
       let st; try { st = await fs.stat(r.abs); } catch { return null; }
       if (!st.isFile()) return null;
-      const ext = path.extname(r.abs).toLowerCase();
-      return { stream: createReadStream(r.abs), size: st.size, contentType: MIME[ext] ?? 'application/octet-stream' };
+      const contentType = MIME[path.extname(r.abs).toLowerCase()] ?? 'application/octet-stream';
+      if (range) { // a byte range (the worker reads the head of text files for thumbnails, HTML-66c)
+        const start = Math.max(0, range.start); const end = Math.min(st.size - 1, range.end ?? st.size - 1);
+        if (start > end) return { stream: createReadStream(r.abs, { start: 0, end: -1 }), size: st.size, contentType, start, end };
+        return { stream: createReadStream(r.abs, { start, end }), size: st.size, contentType, start, end };
+      }
+      return { stream: createReadStream(r.abs), size: st.size, contentType };
+    },
+    async thumbnail(p) { // 02 HTML-66c: the first 8 KB of a text-like file as an SVG, cached by size and mtime
+      let r; try { r = resolve(p); } catch { return null; }
+      if (!isTextLike(r.rel)) return null;
+      let st; try { st = await fs.stat(r.abs); } catch { return null; }
+      if (!st.isFile()) return null;
+      const key = `${r.rel}:${st.size}:${Math.round(st.mtimeMs)}`;
+      const hit = thumbs.get(key);
+      if (hit) { thumbs.delete(key); thumbs.set(key, hit); return hit; }
+      const fh = await fs.open(r.abs, 'r');
+      let buf: Buffer;
+      try { buf = Buffer.alloc(Math.min(st.size, 8192)); await fh.read(buf, 0, buf.length, 0); } finally { await fh.close(); }
+      if (looksBinary(buf)) return null;
+      const entry = { svg: renderTextThumbnail(buf.toString('utf8'), { filename: basename(r.rel) }), etag: `"t-${st.size.toString(16)}-${Math.round(st.mtimeMs).toString(16)}"` };
+      thumbs.set(key, entry);
+      if (thumbs.size > 500) thumbs.delete(thumbs.keys().next().value as string);
+      return entry;
     }
   };
 }

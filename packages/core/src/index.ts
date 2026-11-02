@@ -6,6 +6,8 @@ export * from './store.js';
 export * from './persistence.js';
 export * from './keymap.js';
 export * from './i18n.js';
+export * from './thumbs/kinds.js';
+export { renderTextThumbnail, tokenizeLine, type Token, type TokenClass, type TextThumbnailOptions } from './thumbs/text.js';
 export * from './api/client.js';
 export * from './worker/protocol.js';
 export { createEngine, type Engine, type EngineOptions, type ListingCache } from './worker/engine.js';
