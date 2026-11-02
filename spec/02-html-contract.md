@@ -229,7 +229,8 @@ DOM order is the reading order and the tab order.
 
 - **HTML-90** The choose bar is a `<div class="eureka__button-bar
   eureka__choose-bar">` containing, in order: Cancel (button, class
-  `dangerous`, accessible name "Close Media Browser"); when two or more
+  `dangerous`, visible text "Cancel", accessible name beginning with it
+  and including "Close Media Browser"); when two or more
   items are selected and bulk download is allowed, a form posting to the
   attachments endpoint with hidden `cd`, `cs` and `zip_file[]` inputs and
   a submit "Download {n} items"; when two or more are selected and delete

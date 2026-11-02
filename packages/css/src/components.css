@@ -1,0 +1,99 @@
+@layer eureka.components {
+  /* Buttons and controls */
+  .eureka :is(button, .button, input[type="file"]::file-selector-button), .eureka label[for*="upload"] {
+    font: inherit; background: var(--button-bg); color: var(--button-color); border: 0; border-radius: 3px;
+    box-shadow: 0 0 0 var(--border-width) var(--border-color); padding: 0.5em 0.75em; cursor: pointer; text-decoration: none; display: inline-block; line-height: 1.2;
+    min-block-size: 24px; min-inline-size: 24px;
+  }
+  .eureka :is(button, .button):hover { background: var(--active-darker); color: #fff; box-shadow: 0 0 0 var(--border-width) var(--active-darker); }
+  .eureka :is(button, .button):disabled { opacity: 0.5; cursor: not-allowed; background: var(--button-bg); color: var(--button-color); }
+  .eureka :is(button, .button).eureka__primary { background: var(--active-darker); color: #fff; box-shadow: 0 0 0 var(--border-width) var(--active-darker); }
+  .eureka :is(button, .button).eureka__primary:hover { background: color-mix(in srgb, var(--active-darker), black 18%); }
+  .eureka :is(button, .button).dangerous { color: var(--dangerous); }
+  .eureka :is(button, .button).dangerous:hover { background: var(--dangerous); color: #fff; box-shadow: 0 0 0 var(--border-width) var(--border-color-dangerous); }
+  .eureka :is(select, input[type="text"], input[type="search"], input[type="number"], textarea) {
+    font: inherit; color: var(--color); background: var(--light-bg); border: var(--border-width) var(--border-style) var(--border-color); border-radius: 3px; padding: 0.4em 0.5em; min-block-size: 24px;
+  }
+  .eureka input[type="file"] { max-inline-size: 100%; }
+  .eureka label { cursor: pointer; }
+  @media (pointer: coarse) { .eureka :is(button, .button, select, input, .eureka__tree-link, summary) { min-block-size: 44px; } .eureka__tree { --tree-line-height: var(--tree-course-line-height); } }
+
+  /* Button bars */
+  .eureka__button-bar, .flex-bar { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+  .eureka__choose-bar { justify-content: flex-end; margin-block-start: 0.5rem; }
+  .eureka__choose-bar > .dangerous { margin-inline-end: auto; }
+  .eureka__bulk-form { display: contents; }
+  .eureka__choose-radio { display: inline-flex; gap: 0.25rem 0.5rem; align-items: center; border: 0; padding: 0; margin: 0; }
+  .eureka__choose-radio legend { float: inline-start; padding: 0; margin-inline-end: 0.5rem; }
+  .eureka__search-bar { display: inline-flex; gap: 0.5rem; align-items: center; }
+  .eureka__sort-select { display: inline-flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+  .eureka__layout-chooser fieldset { border: 0; padding: 0; margin: 0; }
+  .eureka__icon-radio-btns { display: inline-flex; gap: 0.25rem; }
+  .eureka__icon-radio-btns input { position: absolute; opacity: 0; inline-size: 1px; block-size: 1px; pointer-events: none; }
+  .eureka__icon-radio-btns label { display: inline-grid; place-items: center; inline-size: 2.25rem; block-size: 2.25rem; border-radius: 3px; color: var(--subtle); font-size: 1.25rem; }
+  .eureka__icon-radio-btns input:checked + label { color: var(--active); box-shadow: inset 0 0 0 2px var(--active); }
+  .eureka__icon-radio-btns input:focus-visible + label { outline: 2px solid var(--active); outline-offset: 2px; }
+  .eureka__upload-form form { display: inline-flex; align-items: center; gap: 0.5rem; }
+  .eureka__upload-form input[type="file"]:not([disabled]) { position: absolute; opacity: 0; inline-size: 1px; block-size: 1px; }
+  .eureka[data-level="0"] .eureka__upload-form input[type="file"] { position: static; opacity: 1; inline-size: auto; block-size: auto; }
+  .eureka__upload-form input[type="file"]:focus-visible + label { outline: 2px solid var(--active); outline-offset: 2px; }
+
+  /* Panels */
+  .eureka__pathbrowser, .eureka__table-wrapper > .eureka__table, .eureka__pathbar, .eureka__notification { background: var(--light-bg); border: var(--border-width) var(--border-style) var(--panel-border-color); border-radius: 0.25rem; }
+  .eureka__pathbrowser { padding: 0.5rem; gap: 0.5rem; display: flex; flex-direction: column; }
+  .eureka__media-source-selector select { inline-size: 100%; }
+  .eureka__tree { line-height: var(--tree-line-height); color: var(--subtle); }
+  .eureka__tree summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 0.25rem; }
+  .eureka__tree summary::-webkit-details-marker { display: none; }
+  .eureka__tree summary::before { content: ""; inline-size: 0.6em; block-size: 0.6em; border-inline-end: 2px solid currentColor; border-block-end: 2px solid currentColor; transform: rotate(-45deg); margin-inline-end: 0.25rem; flex: none; transition: transform 120ms; }
+  .eureka__tree details[open] > summary::before { transform: rotate(45deg); }
+  .eureka__tree details:not([open]) > summary .eureka__icon-open, .eureka__tree details[open] > summary .eureka__icon-closed { display: none; }
+  .eureka__tree-children { padding-inline-start: 1rem; }
+  .eureka__tree-link { background: none; border: 0; box-shadow: none; padding: 0.1em 0.25em; color: inherit; font: inherit; min-block-size: 0; }
+  .eureka__tree-link:hover { color: var(--active); background: none; box-shadow: none; }
+  .eureka__tree summary.active { color: var(--active); font-weight: 700; }
+  .eureka__drop-area { border: 2px dashed var(--very-subtle); border-radius: 0.25rem; display: grid; place-items: center; min-block-size: 6rem; font-size: 3rem; color: var(--very-subtle); }
+  .eureka__drop-area .icon { opacity: var(--very-subtle-icon-opacity); }
+  .eureka__drop-area.eureka__drop-area--active, .eureka__drop-area:focus-visible { border-color: var(--active); color: var(--active); }
+  .eureka__tree-bar { justify-content: space-between; }
+  .eureka__tree-bar > * { flex: 1 1 0; text-align: center; }
+
+  /* Path bar */
+  .eureka__pathbar { padding: 0.5rem; margin-block-start: 0.5rem; }
+  .eureka__pathbar textarea { inline-size: 100%; resize: none; margin-block-start: 0.5rem; }
+  .eureka__pathbar__preview :is(img, video, picture, object) { max-block-size: 30vh; }
+  @container eureka (min-width: 40em) { .eureka__hide-for-mobile-up { display: none; } }
+
+  /* Notifications */
+  .eureka__notification-wrapper { display: grid; gap: 0.5rem; }
+  .eureka__notification-wrapper:not(:has(.eureka__notification)) { display: none; }
+  .eureka__notifications { display: grid; gap: 0.5rem; }
+  .eureka__notification { position: relative; padding: 0.5rem 2.5rem 0.5rem 1rem; background: var(--notification-background); color: var(--notification-color); border-color: var(--notification-border-color); margin-block-end: 0.5rem; }
+  .eureka__notification p { margin: 0; }
+  .eureka__notification a { color: currentColor; }
+  .eureka__notification button { position: absolute; inset-block-start: 0.25rem; inset-inline-end: 0.25rem; background: transparent; box-shadow: none; color: currentColor; padding: 0.25rem; }
+  .eureka__notification button:hover, .eureka__notification button:focus-visible { color: var(--notification-focus-color); background: transparent; box-shadow: none; }
+  .eureka__notification.eureka__dangerous { --notification-background: #f7a2a2; --notification-color: #911912; --notification-border-color: #911912; --notification-focus-color: #911912; }
+
+  /* Empty state and spinner */
+  .eureka__notice { padding: 1rem; color: var(--subtle); }
+  @keyframes eureka-spin { to { transform: rotate(360deg); } }
+  .eureka .spinner .icon { animation: eureka-spin 1s linear infinite; }
+
+  /* Dialogs */
+  .eureka__modal { border: var(--border-width) var(--border-style) var(--panel-border-color); border-radius: 0.25rem; padding: 0; color: var(--color); background: var(--light-bg); inline-size: min(32rem, 90vw); }
+  .eureka__modal::backdrop { background: rgb(0 0 0 / 0.4); }
+  .eureka__modal.eureka__greedy { inline-size: min(64rem, 95vw); }
+  .eureka__modal-panel { padding: 1rem; display: grid; gap: 0.75rem; }
+  .eureka__modal-panel form { display: grid; gap: 0.5rem; }
+  .eureka__modal-panel input[type="text"] { inline-size: 100%; }
+  .eureka__modal-panel .flex-bar > .growable { flex: 1 1 0; }
+  .eureka__modal label.dangerous { color: var(--dangerous); }
+  .eureka__crop-stage { min-block-size: 40vh; background: #222; display: grid; place-items: center; }
+  .eureka__crop-stage img { max-block-size: 60vh; }
+
+  /* Filename placeholders for non-image media */
+  .eureka__file-placeholder { margin: 0; display: inline-flex; gap: 0.5rem; align-items: center; min-inline-size: 0; }
+  .eureka__file-placeholder .icon { font-size: 1.5em; flex: none; }
+  .eureka__file-placeholder span { overflow-wrap: anywhere; }
+}

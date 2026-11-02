@@ -1,0 +1,19 @@
+@layer eureka.theme {
+  /* Dark scheme defaults (08 THEME-05). Hosts override these the same way as the light set. */
+  @media (prefers-color-scheme: dark) {
+    :where(.eureka-root:not(.black-on-white, .white-on-black, .black-on-white *, .white-on-black *)) {
+      --bg-color: #1b1f23; --color: #e6e8ea; --light-bg: #24292e; --panel-border-color: #3a4048; --border-color: #3a4048; --border-shadow-color: #3a4048;
+      --button-bg: #2d333b; --button-color: #d7dde3; --subtle: #9aa4ae; --very-subtle: #4b535c; --link-color: #6cb6ff; --active: #4aa3e0; --active-darker: #1f6aa5;
+      --dangerous: #ff8a80; --border-color-dangerous: #ff8a80;
+      --media-cell-background: #1f2428; --notification-background: #1d3a4f; --notification-color: #bfe3ff; --notification-border-color: #2a5a7a; --notification-focus-color: #e6f4ff;
+    }
+  }
+  /* Forced colors (08 THEME-04): keep borders, use system highlight for focus and selection. */
+  @media (forced-colors: active) {
+    .eureka :is(button, .button, select, input, textarea, .eureka__pathbrowser, .eureka__table, .eureka__pathbar, .eureka__notification, .eureka__modal) { border: 1px solid; forced-color-adjust: none; }
+    .eureka :focus-visible { outline: 3px solid Highlight; }
+    .eureka__icon-radio-btns input:checked + label { outline: 2px solid Highlight; box-shadow: none; }
+    .eureka__tree summary.active { outline: 1px solid Highlight; }
+    .eureka :is(button, .button):hover { background: Highlight; color: HighlightText; }
+  }
+}

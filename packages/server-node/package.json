@@ -6,8 +6,13 @@
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "bin": { "eureka-server": "./dist/cli.js" },
-  "files": ["dist", "src"],
+  "bin": {
+    "eureka-server": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
     "build": "tsc -b",
     "start": "node dist/cli.js",
@@ -15,7 +20,9 @@
   },
   "dependencies": {
     "image-size": "^1.2.0",
-    "yazl": "^3.3.1"
+    "yazl": "^3.3.1",
+    "@eureka/html": "3.0.0-alpha.0",
+    "@eureka/css": "3.0.0-alpha.0"
   },
   "devDependencies": {
     "@types/yazl": "^2.4.6"

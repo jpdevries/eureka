@@ -1,0 +1,67 @@
+@layer eureka.layout {
+  /* Rows as grids (04 §3). Cells map to named areas by class; a cell with no area in the current template is hidden. */
+  .eureka__table > thead > tr, .eureka__table > tbody > tr { display: grid; gap: 0; align-items: center; }
+  .eureka__table > tbody > tr.eureka__empty-row { display: block; }
+  .eureka__table > tbody.empty { display: flex; justify-content: center; align-items: center; text-align: center; min-block-size: 8rem; }
+  .eureka__table > tbody.empty td { display: block; }
+
+  .eureka__table .eureka__choose, .eureka__table th.eureka__choose { grid-area: choose; }
+  .eureka__table .eureka__select, .eureka__table th.eureka__select { grid-area: radio; }
+  .eureka__table .eureka__td-media, .eureka__table .eureka__th-media { grid-area: media; }
+  .eureka__table .eureka__td-filename, .eureka__table .eureka__th-filename { grid-area: name; }
+  .eureka__table .eureka__context-row { grid-area: actions; }
+  .eureka__table .eureka__th-actions { grid-area: none; }
+  .eureka__table .eureka__dimensions, .eureka__table .eureka__th-dimensions { grid-area: dimensions; }
+  .eureka__table .eureka__file-size, .eureka__table .eureka__th-file-size { grid-area: file-size; }
+  .eureka__table .eureka__edited-on, .eureka__table .eureka__th-edited-on { grid-area: edited-on; }
+
+  .eureka__table td, .eureka__table th { padding: 0.25rem 0.5rem; min-inline-size: 0; overflow-wrap: anywhere; }
+  .eureka__table td.eureka__td-media { display: flex; align-items: center; gap: 0.5rem; min-block-size: 2rem; background: var(--media-cell-background); }
+  .eureka__table tbody > tr { border-block-end: var(--border-width) var(--border-style) var(--border-color); content-visibility: auto; contain-intrinsic-block-size: auto 4rem; }
+  .eureka__table tbody > tr:focus-within .eureka__td-filename, .eureka__focused-media-item .eureka__td-filename { font-weight: 700; }
+  .eureka__table tbody > tr:target .eureka__td-media > * { outline: 3px solid #32ab9a; }
+
+  /* Table and list modes: wide (LAY-20) */
+  @container eureka (min-width: 40em) {
+    .eureka:is([data-view="table"], [data-view="list"]) .eureka__table > :is(thead, tbody) > tr {
+      grid-template-columns: 40% 24% 12% 12% 12%;
+      grid-template-areas: "media name dimensions file-size edited-on";
+    }
+    .eureka:is([data-view="table"], [data-view="list"]) .eureka__table > tbody > tr {
+      grid-template-areas: "media name dimensions file-size edited-on" "actions actions actions actions actions";
+    }
+    .eureka:is([data-view="table"], [data-view="list"])[data-choose="multiple"] .eureka__table > :is(thead, tbody) > tr {
+      grid-template-columns: 2rem auto 24% 12% 12% 12%;
+      grid-template-areas: "choose media name dimensions file-size edited-on";
+    }
+    .eureka:is([data-view="table"], [data-view="list"])[data-choose="multiple"] .eureka__table > tbody > tr {
+      grid-template-areas: "choose media name dimensions file-size edited-on" "actions actions actions actions actions actions";
+    }
+    .eureka[data-level="0"]:is([data-view="table"], [data-view="list"]) .eureka__table > :is(thead, tbody) > tr {
+      grid-template-columns: 2rem 40% 24% auto auto auto;
+      grid-template-areas: "radio media name dimensions file-size edited-on";
+    }
+    .eureka:is([data-view="table"], [data-view="list"]) .eureka__table :is(td, th):not(.eureka__td-media, .eureka__th-media, .eureka__choose, .eureka__select, .eureka__context-row) { text-align: end; }
+    .eureka[data-view="table"] .eureka__table .eureka__td-media img, .eureka[data-view="table"] .eureka__table .eureka__td-media picture { max-block-size: 20vh; }
+    .eureka[data-view="table"].eureka__enlarge-focused-rows .eureka__table tr:focus-within .eureka__td-media img { max-block-size: 30vh; }
+  }
+  /* Table and list modes: narrow (LAY-23) */
+  @container eureka (max-width: 39.99em) {
+    .eureka:is([data-view="table"], [data-view="list"]) .eureka__table > thead {
+      position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); margin: -1px;
+    }
+    .eureka[data-view="table"] .eureka__table > tbody > tr { grid-template-areas: "media" "name" "actions"; grid-template-columns: 1fr; }
+    .eureka[data-view="list"] .eureka__table > tbody > tr { grid-template-areas: "name" "actions"; grid-template-columns: 1fr; }
+    .eureka:is([data-view="table"], [data-view="list"])[data-choose="multiple"] .eureka__table > tbody > tr { grid-template-areas: "choose media" "name name" "actions actions"; grid-template-columns: 2rem 1fr; }
+    .eureka[data-level="0"]:is([data-view="table"], [data-view="list"]) .eureka__table > tbody > tr { grid-template-areas: "radio media" "name name"; grid-template-columns: 2rem 1fr; }
+    .eureka[data-view="list"] .eureka__table .eureka__td-media { display: none; }
+    .eureka:is([data-view="table"], [data-view="list"]) .eureka__table :is(.eureka__dimensions, .eureka__file-size, .eureka__edited-on) { display: none; }
+    .eureka:is([data-view="table"], [data-view="list"]) .eureka__table .eureka__td-media { justify-content: center; }
+    .eureka:is([data-view="table"], [data-view="list"]) .eureka__table .eureka__td-filename { text-align: center; }
+  }
+
+  /* Actions row (LAY-21): shown for the row that has focus within. */
+  .eureka__table .eureka__context-row { display: none; padding-block: 0.5rem; }
+  .eureka__table tbody > tr:focus-within > .eureka__context-row, .eureka__table tbody > tr.eureka__focused-media-item > .eureka__context-row { display: block; }
+  .eureka__table .eureka__context-row .eureka__context-buttons { inline-size: 100%; display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: space-between; }
+}

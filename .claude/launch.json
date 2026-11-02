@@ -4,8 +4,29 @@
     {
       "name": "v2-baseline",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["spec/conformance/fixture-server.mjs", "--port", "3101", "--static", "client/build", "--nojs", "spec/fixtures/snapshots/v2-nojs-table.html"],
+      "runtimeArgs": [
+        "spec/conformance/fixture-server.mjs",
+        "--port",
+        "3101",
+        "--static",
+        "client/build",
+        "--nojs",
+        "spec/fixtures/snapshots/v2-nojs-table.html"
+      ],
       "port": 3101
+    },
+    {
+      "name": "v3-level0",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "spec/conformance/fixture-server.mjs",
+        "--port",
+        "3102",
+        "--render",
+        "v3"
+      ],
+      "port": 3102,
+      "url": "http://localhost:3102"
     }
   ]
 }

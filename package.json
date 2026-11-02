@@ -20,7 +20,7 @@
     "build": "npm run build --workspaces --if-present",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc -b packages/core packages/server-node",
+    "typecheck": "tsc -b packages/core packages/html packages/server-node",
     "conformance": "npm run test:v2 --workspace spec/conformance",
     "validate:schemas": "npm run validate:schemas --workspace spec/conformance",
     "sync:spec-data": "node scripts/sync-spec-data.mjs"

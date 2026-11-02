@@ -6,6 +6,18 @@ test('axe: Level 0 form', async ({ page }) => {
   await axeCheck(page, 'level0');
 });
 
+test('axe: Level 0 form, dark scheme (THEME-05/07)', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.goto('/nojs');
+  await axeCheck(page, 'level0-dark');
+});
+
+test('axe: enhanced table, dark scheme', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await openDirectory(page, 'assets/img');
+  await axeCheck(page, 'table-dark');
+});
+
 test('axe: enhanced table', async ({ page }) => {
   await openDirectory(page, 'assets/img');
   await axeCheck(page, 'table');

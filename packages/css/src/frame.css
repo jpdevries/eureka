@@ -1,0 +1,39 @@
+@layer eureka.layout {
+  /* Wide frame (04 LAY-10..13): the instance fills its container's block size; the listing body scrolls. */
+  .eureka { display: flex; flex-direction: column; min-block-size: 0; }
+  .eureka > .eureka__browse-content { display: flex; flex-direction: column; gap: 0.5rem; min-block-size: 0; flex: 1 1 auto; }
+  .eureka__stage { display: flex; flex-direction: column; min-inline-size: 0; min-block-size: 0; flex: 1 1 100%; }
+  .eureka__stage__filter-view { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.5rem 1rem; margin-block-end: 0.5rem; }
+  .eureka__stage__filter-view > h2 { margin: 0; margin-inline-end: auto; }
+  .eureka__toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; padding-block-end: 0.5rem; }
+  .eureka__toolbar > .eureka__layout-chooser { margin-inline-start: auto; }
+  /* flex-basis auto + min-size 0: fills and scrolls inside a bounded root, grows with content in an unbounded one */
+  .eureka__table-wrapper { display: flex; flex-direction: column; min-block-size: 0; flex: 1 1 auto; }
+
+  @container eureka (min-width: 40em) {
+    .eureka-root:has(> .eureka) { display: flex; flex-direction: column; }
+    .eureka { flex: 1 1 auto; min-block-size: 0; }
+    .eureka > .eureka__browse-content { flex-direction: row; }
+    .eureka__pathbrowser { flex: 0 0 14rem; display: flex; flex-direction: column; min-block-size: 0; }
+    .eureka__pathbrowser .eureka__tree { flex: 1 1 0; overflow: auto; min-block-size: 0; }
+    .eureka__pathbrowser .eureka__drop-area { flex: 0 1 12rem; }
+    .eureka__table-wrapper > .eureka__table { display: flex; flex-direction: column; min-block-size: 0; flex: 1 1 auto; }
+    .eureka__table > thead { flex: 0 0 auto; display: block; scrollbar-gutter: stable; }
+    .eureka__table > tbody { flex: 1 1 auto; display: block; min-block-size: 0; overflow-y: auto; scrollbar-gutter: stable; overscroll-behavior: contain; }
+  }
+  /* The wide frame needs a bounded block size to scroll inside; a host gives .eureka-root a height (100vh in the demo). */
+  .eureka-root.eureka-root--fill, .eureka-root:fullscreen { block-size: 100vh; block-size: 100dvh; overflow: auto; display: flex; flex-direction: column; }
+  .eureka-root:fullscreen { inline-size: 100vw; background: var(--bg-color); }
+
+  /* Narrow frame (LAY-14/15) */
+  @container eureka (max-width: 39.99em) {
+    .eureka__pathbrowser { margin-block-end: 0.5rem; }
+    .eureka__notification-wrapper.eureka__sticky-bar { position: sticky; inset-block-start: 0; z-index: 10; }
+    .eureka__toolbar { flex-direction: column; align-items: stretch; }
+    .eureka__toolbar > * { inline-size: 100%; }
+    .eureka__toolbar label { display: block; margin-block-end: 0.25rem; }
+    .eureka__toolbar select, .eureka__toolbar input[type="search"] { inline-size: 100%; }
+    .eureka__toolbar > .eureka__layout-chooser { margin-inline-start: 0; }
+    .eureka__stage__filter-view > h2 { flex-basis: 100%; }
+  }
+}

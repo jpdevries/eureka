@@ -36,6 +36,8 @@ export interface HandlerOptions {
   onChoose?: (ctx: ChooseContext, req: IncomingMessage, res: ServerResponse) => Promise<void> | void;
   /** Directory served for everything else (the page's assets). */
   staticDir?: string;
+  /** Individual files served at fixed URL paths, e.g. { '/assets/css/eureka.css': '/abs/path/eureka.css' }. */
+  assetFiles?: Record<string, string>;
   maxUploadBytes?: number;
   /** Extra headers on API responses (CORS for a separate front end, for example). */
   responseHeaders?: Record<string, string>;
@@ -166,6 +168,11 @@ export function createEurekaHandler(opts: HandlerOptions): NodeHandler {
           res.writeHead(200, { 'content-type': file.contentType, 'content-length': file.size, 'cache-control': 'private, max-age=60' });
           file.stream.pipe(res); return true;
         }
+      }
+      const asset = opts.assetFiles?.[url.pathname];
+      if (asset) {
+        let st; try { st = await fs.stat(asset); } catch { st = null; }
+        if (st?.isFile()) { res.writeHead(200, { 'content-type': MIME[path.extname(asset).toLowerCase()] ?? 'application/octet-stream', 'content-length': st.size, 'cache-control': 'public, max-age=300' }); createReadStream(asset).pipe(res); return true; }
       }
       if (url.pathname === basePath || url.pathname === basePath + '/') {
         if (req.method === 'POST') { await formPost(req, res, url); return true; }

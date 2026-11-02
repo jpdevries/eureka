@@ -35,6 +35,17 @@ Object.assign(en, {
   'deleted.nItems': 'Deleted {n, plural, one {# item} other {# items}}',
   'uploaded.nFiles': 'Uploaded {n, plural, one {# file} other {# files}} to {cd}',
   'renamed.item': 'Renamed {from} to {to}',
-  'media.browser': 'Media Browser'
+  'media.browser': 'Media Browser',
+  'chooseItems': 'Choose Items',
+  'choose.single': 'Single',
+  'choose.multiple': 'Multiple',
+  'invert': 'Invert',
+  'selection': 'Selection',
+  'sort.direction': 'Sort Direction',
+  'sort.ascending': 'Ascending',
+  'sort.descending': 'Descending',
+  'details': 'Details',
+  'selectedPaths': 'Selected Paths',
+  'directory.untitled': 'untitled folder'
 });
 emit('messages.en', 'spec/fixtures/locale-en.json (+ v3 additions in this script)', en, 'MessagesEn');

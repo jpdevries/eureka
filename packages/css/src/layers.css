@@ -1,0 +1,6 @@
+/* Eureka 3 stylesheet. Layer order: base (resets, typography), layout (frame, row grids, modes),
+   components (controls, panels, dialogs), theme (tokens, accessible themes, forced colors).
+   Hosts override anything by writing unlayered CSS, which always wins over layered rules (08 THEME-02). */
+@layer eureka.base, eureka.layout, eureka.components, eureka.theme;
+
+/* @tokens */

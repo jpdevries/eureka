@@ -347,6 +347,20 @@ Taken on 2026-11-01:
   implementing the OpenAPI document and the Level 0 protocol with a
   pluggable `renderPage`; CLI. 11 contract tests validating responses
   against the spec schemas.
-- Next: Phase 3, the HTML layer (`packages/html`) and the stylesheet
-  (`packages/css`), rendered by the server's `renderPage` and checked by the
-  Level 0 conformance project.
+### Phase 3 progress
+
+- `packages/html`: escaping template tag, render context from state,
+  Level 0 form and enhanced DOM region by region (notifications, source
+  panel, stage header, toolbar, listing with roving tabindex and sort
+  buttons, path bar, choose bar, native dialogs), hydration script,
+  document shell. 14 render tests.
+- `packages/css`: cascade layers, generated token defaults, container-query
+  frame with a graceful unbounded fallback, row grids for every mode and
+  state, CSS-only masonry tiers, components, dark scheme, forced colors.
+- Server `--render` serves the real Level 0 page with the stylesheet; the
+  fixture server's `--render v3` does the same over fixture data, which is
+  what `CONFORMANCE_TARGET=v3` drives. Level 0 conformance and the Level 0
+  axe check pass on v3 with zero violations (after fixing two contrast
+  tokens and the Cancel button's name that the check caught).
+- Next: Phase 4, the `<eureka-browser>` element on top of html + core, then
+  the enhanced conformance projects against it.

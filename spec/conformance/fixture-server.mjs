@@ -12,6 +12,7 @@
 // --static  directory served at /            (the page under test)
 // --index   file served for GET /            (default <static>/index.html)
 // --nojs    HTML fragment injected into #root for GET /nojs (the Level 0 page)
+// --render  "v3": render /nojs and the POST / protocol live with @eureka/html (needs `npm run build`)
 // --api     API prefix, default /assets/components/eureka/media
 //
 // Dev endpoints (never part of the spec):
@@ -32,6 +33,8 @@ const STATIC = args.static ? path.resolve(args.static) : null;
 const INDEX = args.index ? path.resolve(args.index) : null;
 const NOJS = args.nojs ? path.resolve(args.nojs) : null;
 const API = args.api ?? '/assets/components/eureka/media';
+const RENDER = args.render === 'v3' ? await import('@eureka/html').catch((e) => { console.error('cannot load @eureka/html; run `npm run build` first:', e.message); process.exit(1); }) : null;
+const cssPkg = RENDER ? path.resolve(here, '../../packages/css') : null;
 
 // ---- fixture data -----------------------------------------------------------
 const sources = [
@@ -137,6 +140,13 @@ function nojsHtml(fragment) {
   // The Level 0 page: the index shell with every script removed and the server-rendered form in #root.
   return indexHtml().replace(/<script[\s\S]*?<\/script>/g, '').replace('<div id="root" class="eureka-root"></div>', `<div id="root" class="eureka-root">${fragment}</div>`);
 }
+/** v3: the real Level 0 page from the in-memory listings (03). */
+function renderV3Page({ sourceId = '0', dir = '/', lang = 'en', uploaded } = {}) {
+  const source = sources.find((s) => String(s.id) === String(sourceId)) ?? sources[0];
+  const entries = listings[norm(dir)] ?? [];
+  const body = RENDER.renderLevel0({ sources, source, path: norm(dir), entries, tree: tree('/'), lang, basePath: '/', timeZone: 'UTC', config: { assetsBasePath: '/assets/' }, ...(uploaded ? { uploaded } : {}) });
+  return RENDER.renderDocument({ lang, title: 'Eureka Media Browser', stylesheets: ['/assets/css/eureka.css'], bodyClass: 'modal-section', body });
+}
 function echoPage(title, data) {
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>${esc(title)}</title></head><body><h1>${esc(title)}</h1><pre id="echo">${esc(JSON.stringify(data, null, 2))}</pre></body></html>`;
 }
@@ -209,7 +219,10 @@ http.createServer(async (req, res) => {
       fs.writeFileSync(out, body); return json(res, { saved: out, bytes: body.length });
     }
     // Level 0 page and its POST protocol (spec/03-no-js-protocol.md)
+    if (RENDER && p === '/assets/css/eureka.css') { res.writeHead(200, { 'content-type': 'text/css' }); return fs.createReadStream(path.join(cssPkg, 'dist/eureka.css')).pipe(res); }
+    if (RENDER && p === '/assets/img/icons.svg') { res.writeHead(200, { 'content-type': 'image/svg+xml' }); return fs.createReadStream(path.join(cssPkg, 'assets/icons.svg')).pipe(res); }
     if (p === '/nojs' && req.method === 'GET') {
+      if (RENDER) return html(res, renderV3Page({ dir: url.searchParams.get('path') ?? 'assets/img', lang: url.searchParams.get('ln') ?? 'en' }));
       if (!NOJS) return html(res, echoPage('No --nojs fragment configured', {}), 404);
       return html(res, nojsHtml(fs.readFileSync(NOJS, 'utf8')));
     }
@@ -224,6 +237,7 @@ http.createServer(async (req, res) => {
       // fixture server cannot render an implementation, so it echoes what it
       // understood; the Level 0 tests assert on this echo.
       if (chosen) return html(res, echoPage('Eureka!', { action: 'choose', source: first(fields.eureka__mediaSourceId), directory: uploadDir, chosen, uploaded: files.map(f => f.filename) }));
+      if (RENDER) return html(res, renderV3Page({ sourceId: cs || first(fields.eureka__mediaSourceId), dir: browsing ? cd : uploadDir, uploaded: files.length ? files.map(f => f.filename) : undefined }));
       return html(res, echoPage('Eureka', { action: 'navigate', source: cs, directory: cd, uploaded: files.map(f => f.filename), fields }));
     }
     if (STATIC) {

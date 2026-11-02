@@ -78,9 +78,9 @@ const data = {
       "description": "Button text colour"
     },
     "--dangerous": {
-      "default": "red",
+      "default": "#b80000",
       "documented": true,
-      "description": "Colour for warnings, errors, destructive buttons"
+      "description": "Colour for warnings, errors, destructive buttons (v2 default was pure red, 3.99:1 on white; #b80000 meets AA)"
     },
     "--subtle": {
       "default": "#556c88",

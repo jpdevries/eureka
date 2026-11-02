@@ -10,11 +10,11 @@ const file = (filename: string, fileSize: number, dimensions?: [number, number],
 
 describe('format', () => {
   it('formats sizes like v2', () => {
-    expect(formatFileSize(37888, 'en-US', { round: 0 })).toBe('38 KB');
-    expect(formatFileSize(98000, 'en-US')).toBe('98 KB');
-    expect(formatFileSize(12000000, 'en-US')).toBe('12 MB');
-    expect(formatFileSize(812, 'en-US')).toBe('812 B');
-    expect(formatFileSize(1234567, 'de-DE')).toBe('1,23 MB');
+    expect(formatFileSize(37888, 'en-US', { round: 0 })).toBe('37\u00a0KB');
+    expect(formatFileSize(98000, 'en-US')).toBe('95.7\u00a0KB');
+    expect(formatFileSize(12000000, 'en-US')).toBe('11.44\u00a0MB');
+    expect(formatFileSize(812, 'en-US')).toBe('812\u00a0B');
+    expect(formatFileSize(1234567, 'de-DE')).toBe('1,18\u00a0MB');
   });
   it('formats dates in the requested time zone', () => {
     const d = formatDates(t0, 'en-US', 'UTC');
@@ -33,11 +33,11 @@ describe('format', () => {
   });
   it('builds the display record and description (HTML-64)', () => {
     const r = buildDisplayRecord(file('schildpad.jpg', 37888, [336, 125]), { locale: 'en-US', timeZone: 'UTC' });
-    expect(r.description).toBe('schildpad.jpg displays at 336x125, weighs 38 KB, and was edited on Sunday, April 02, 2017 at Coordinated Universal Time');
+    expect(r.description).toBe('schildpad.jpg displays at 336x125, weighs 37\u00a0KB, and was edited on Sunday, April 02, 2017 at Coordinated Universal Time');
     expect(r.haystack).toContain('336x125');
-    expect(r.haystack).toContain('38 kb'.replace(' ', ' '));
+    expect(r.haystack).toContain('37\u00a0kb');
     const z = buildDisplayRecord(file('archive.zip', 12000000), { locale: 'en-US', timeZone: 'UTC' });
-    expect(z.description).toMatch(/^archive\.zip weighs 12 MB, and was edited on/);
+    expect(z.description).toMatch(/^archive\.zip weighs 11\u00a0MB, and was edited on/);
     expect(z.icon).toBe('file-archive-o');
   });
 });

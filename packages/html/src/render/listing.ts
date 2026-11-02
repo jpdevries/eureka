@@ -1,0 +1,51 @@
+// The listing table (02 §6) with its header and empty states.
+import { selectVisibleFiles, type SortBy } from '@eureka/core';
+import { attr, classes, html, type Raw } from '../html.js';
+import type { Ctx } from '../model.js';
+import { hidden, icon } from './icon.js';
+import { row } from './row.js';
+
+const COLUMNS: Array<{ key: string; sort?: SortBy; label: string; cls: string }> = [
+  { key: 'media', label: 'media', cls: 'eureka__th-media' },
+  { key: 'name', sort: 'filename', label: 'name', cls: 'eureka__th-filename' },
+  { key: 'actions', label: 'actions', cls: 'eureka__th-actions visually-hidden' },
+  { key: 'dimensions', sort: 'dimensions', label: 'dimensions', cls: 'eureka__th-dimensions' },
+  { key: 'fileSize', sort: 'fileSize', label: 'fileSize', cls: 'eureka__th-file-size' },
+  { key: 'editedOn', sort: 'editedOn', label: 'editedOn', cls: 'eureka__th-edited-on' }
+];
+
+function header(ctx: Ctx): Raw {
+  const { state, t, level } = ctx;
+  const multiple = level > 0 && state.view.chooseMode === 'multiple';
+  const cells = COLUMNS.filter((c) => !(level === 0 && c.key === 'actions')).map((c) => {
+    const sorted = c.sort && state.view.sort.by === c.sort;
+    const content = c.sort && level > 0
+      ? html`<button type="button" class="eureka__sort-button" data-sort-by="${c.sort}" aria-pressed="${String(!!sorted)}">${t(c.label)} ${icon(ctx, sorted ? (state.view.sort.dir === 'ascending' ? 'sort-asc' : 'sort-desc') : 'sort')}${hidden(sorted ? ` (${t(state.view.sort.dir === 'ascending' ? 'sort.ascending' : 'sort.descending')})` : '')}</button>`
+      : html`${t(c.label)}`;
+    return html`<th scope="col" class="${c.cls}"${attr('aria-sort', sorted ? state.view.sort.dir : null)}>${content}</th>`;
+  });
+  return html`<thead><tr>${multiple ? html`<th scope="col" class="eureka__choose">${hidden(t('choose'))}</th>` : ''}${level === 0 ? html`<th scope="col" class="eureka__select">${hidden(t('select'))}</th>` : ''}${cells}</tr></thead>`;
+}
+
+function emptyState(ctx: Ctx, colSpan: number): Raw {
+  const { state, t, ids } = ctx;
+  const cd = state.listing.path;
+  let body: Raw;
+  if (state.listing.status === 'loading') body = html`<span class="spinner">${icon(ctx, 'circle-o-notch')}</span><br>${t('contents.fetchingContents', { cd })}`;
+  else if (state.listing.status === 'error') body = html`${state.listing.error ?? 'Error'}`;
+  else if (state.view.filter) body = html`${t('search.noResults', { filter: state.view.filter })}. <a href="#${ids.id('filter')}" data-action="focus-filter">${t('search.tryAnother')}</a> ${t('grammar.or')} <a href="#${ids.id('filter')}" data-action="clear-filter">${t('search.clearFilter')}</a>.`;
+  else body = html`${t('directory.appearsToBeEmpty', { cd })}${ctx.level > 0 && state.config.allowUploads ? html`<br>${t('perhapsYouWouldLikeTo')} <a href="#${ids.id('upload')}" data-action="upload">${t('upload.someFiles')}${hidden(' ' + t('grammar.to') + ' ' + cd)}</a>?` : ''}`;
+  return html`<tr class="eureka__empty-row"><td colspan="${colSpan}" class="comfortable"><p class="alert-info eureka__notice" role="status">${body}</p></td></tr>`;
+}
+
+export function listing(ctx: Ctx): Raw {
+  const { state, t, ids, level } = ctx;
+  const files = selectVisibleFiles(state);
+  const multiple = level > 0 && state.view.chooseMode === 'multiple';
+  const colSpan = COLUMNS.length - (level === 0 ? 1 : 0) + (multiple ? 1 : 0) + (level === 0 ? 1 : 0);
+  return html`<table class="eureka__table" id="${ids.id('table')}" data-count="${files.length}">
+    <caption class="visually-hidden" id="${ids.id('caption')}">${t('listing.caption', { cd: state.listing.path })}, ${t('listing.count', { n: files.length })}</caption>
+    ${header(ctx)}
+    <tbody class="${classes({ empty: files.length === 0 })}">${files.length ? files.map((f, i) => row(ctx, f, i)) : emptyState(ctx, colSpan)}</tbody>
+  </table>`;
+}

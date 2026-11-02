@@ -1,0 +1,43 @@
+@layer eureka.layout {
+  /* Thumb, grid and masonry (04 LAY-30..34): only the media (and choose) cells show; rows flow as items. */
+  .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__table > thead { display: none !important; }
+  .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__table td:not(.eureka__td-media, .eureka__choose, [colspan]) { display: none; }
+  .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__table > tbody:not(.empty) { display: flex !important; flex-wrap: wrap; justify-content: center; align-content: flex-start; gap: 0.5rem; padding: 0.25rem; }
+  .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__table > tbody > tr { display: block; border: 0; flex: 0 1 auto; position: relative; }
+  .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__table td.eureka__td-media { display: flex; justify-content: center; inline-size: 100%; padding: 0; }
+  .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__table td.eureka__choose { display: block; position: absolute; inset-block-start: 0.25rem; inset-inline-start: 0.25rem; z-index: 1; padding: 0; }
+  .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__table .eureka__td-media > * { inline-size: 100%; }
+
+  .eureka[data-view="thumb"] .eureka__table > tbody > tr { flex-basis: 42cqi; max-inline-size: 42cqi; }
+  .eureka[data-view="grid"] .eureka__table > tbody > tr { flex-basis: 100%; max-inline-size: 100%; }
+  @container eureka (min-width: 40em) {
+    .eureka[data-view="thumb"] .eureka__table > tbody > tr { flex-basis: 16cqi; max-inline-size: 16cqi; }
+    .eureka[data-view="grid"] .eureka__table > tbody > tr { flex-basis: 25cqi; max-inline-size: 25cqi; }
+    .eureka[data-view="masonry"] .eureka__table > tbody > tr { flex-basis: 20cqi; max-inline-size: 20cqi; }
+  }
+
+  /* Masonry tier 2 (LAY-34): dense grid with spans from the item's aspect ratio. Rows carry --eureka-aspect via style. */
+  @supports (grid-row: span round(up, 1.5)) {
+    @container eureka (min-width: 40em) {
+      .eureka[data-view="masonry"] .eureka__table > tbody:not(.empty) { display: grid !important; grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr)); grid-auto-rows: 8px; grid-auto-flow: dense; gap: 0.5rem; }
+      .eureka[data-view="masonry"] .eureka__table > tbody > tr { max-inline-size: none; grid-row: span round(up, calc(var(--eureka-aspect, 1) * 10rem / 8px + 1)); }
+      .eureka[data-view="masonry"] .eureka__table .eureka__td-media > * { block-size: 100%; object-fit: cover; }
+    }
+  }
+  /* Masonry tier 1: native, either syntax. */
+  @supports (grid-template-rows: masonry) {
+    @container eureka (min-width: 40em) {
+      .eureka[data-view="masonry"] .eureka__table > tbody:not(.empty) { display: grid !important; grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr)); grid-template-rows: masonry; grid-auto-rows: auto; gap: 0.5rem; }
+      .eureka[data-view="masonry"] .eureka__table > tbody > tr { grid-row: auto; }
+    }
+  }
+  @supports (display: masonry) {
+    @container eureka (min-width: 40em) {
+      .eureka[data-view="masonry"] .eureka__table > tbody:not(.empty) { display: masonry !important; masonry-template-tracks: repeat(auto-fill, minmax(10rem, 1fr)); gap: 0.5rem; }
+    }
+  }
+
+  /* List mode media size (LAY-22) */
+  .eureka[data-view="list"] .eureka__table .eureka__td-media :is(img, video, picture) { max-inline-size: 10vh; max-block-size: 10vh; }
+  .eureka[data-view="list"] .eureka__table > tbody > tr { padding-block: 0.25rem; }
+}

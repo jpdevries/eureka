@@ -1,0 +1,10 @@
+{
+  "name": "@eureka/css",
+  "version": "3.0.0-alpha.0",
+  "description": "Stylesheet and icon sprite of the Eureka media browser: cascade layers, container queries, the five layout modes, themes",
+  "license": "BSD-3-Clause",
+  "type": "module",
+  "files": ["dist", "src", "assets"],
+  "exports": { "./eureka.css": "./dist/eureka.css", "./icons.svg": "./assets/icons.svg" },
+  "scripts": { "build": "node build.mjs" }
+}

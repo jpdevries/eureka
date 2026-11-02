@@ -1,0 +1,14 @@
+{
+  "name": "@eureka/html",
+  "version": "3.0.0-alpha.0",
+  "description": "HTML layer of the Eureka media browser: pure functions from state to markup, for the server (Level 0) and the element",
+  "license": "BSD-3-Clause",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": { ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" } },
+  "files": ["dist", "src"],
+  "sideEffects": false,
+  "scripts": { "build": "tsc -b", "test": "vitest run --root ../.." },
+  "dependencies": { "@eureka/core": "3.0.0-alpha.0" }
+}

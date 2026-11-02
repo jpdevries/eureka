@@ -1,0 +1,31 @@
+@layer eureka.base {
+  .eureka-root {
+    container: eureka / inline-size;
+    box-sizing: border-box;
+    font: 400 0.8125rem/1.375 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--color);
+    background: var(--bg-color);
+    accent-color: var(--active);
+    padding: 0.5rem;
+    min-inline-size: 0;
+  }
+  .eureka-root *, .eureka-root *::before, .eureka-root *::after { box-sizing: inherit; }
+  .eureka :is(h2, h3) { font-size: 1.25em; font-weight: 400; margin: 0 0 0.5rem; color: var(--color); }
+  .eureka a { color: var(--link-color); }
+  .eureka a[role="presentation"] { color: currentColor; text-decoration: none; }
+  .eureka img, .eureka video, .eureka object, .eureka picture { max-inline-size: 100%; block-size: auto; object-fit: contain; }
+  .eureka table { border-collapse: collapse; border-spacing: 0; inline-size: 100%; }
+  .eureka th { font-weight: 700; }
+  .eureka [hidden] { display: none !important; }
+  .eureka svg.icon { inline-size: 1em; block-size: 1em; fill: currentColor; vertical-align: -0.125em; }
+  .visually-hidden, .eureka .visually-hidden {
+    position: absolute !important; inline-size: 1px !important; block-size: 1px !important;
+    padding: 0 !important; margin: -1px !important; border: 0 !important;
+    overflow: hidden !important; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+  }
+  .eureka :focus-visible { outline: 2px solid var(--active); outline-offset: 2px; }
+  .eureka tr:focus-visible, .eureka [role="toolbar"]:focus-visible { outline-offset: -2px; }
+  @media (prefers-reduced-motion: reduce) {
+    .eureka-root *, .eureka-root *::before, .eureka-root *::after { transition: none !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+  }
+}

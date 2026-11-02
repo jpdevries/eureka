@@ -10,8 +10,8 @@ import { defineConfig, devices } from '@playwright/test';
 export const TARGET = process.env.CONFORMANCE_TARGET ?? 'v2';
 const PORT = Number(process.env.PORT ?? 3101);
 const targets = {
-  v2: { static: '../../client/build', nojs: '../fixtures/snapshots/v2-nojs-table.html' },
-  v3: { static: '../../packages/element/demo', nojs: '../fixtures/snapshots/v3-nojs-table.html' }
+  v2: { args: '--static ../../client/build --nojs ../fixtures/snapshots/v2-nojs-table.html' },
+  v3: { args: '--static ../../packages/element/demo --render v3' }
 };
 const t = targets[TARGET];
 
@@ -32,7 +32,7 @@ export default defineConfig({
     timezoneId: 'UTC'
   },
   webServer: {
-    command: `node fixture-server.mjs --port ${PORT} --static ${t.static} --nojs ${t.nojs}`,
+    command: `node fixture-server.mjs --port ${PORT} ${t.args}`,
     url: `http://localhost:${PORT}/__fixtures/listings`,
     reuseExistingServer: true,
     timeout: 10000

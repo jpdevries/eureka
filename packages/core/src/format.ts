@@ -39,13 +39,14 @@ export function iconForExtension(ext: string): string {
 
 const UNITS = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
 /**
- * Decimal file sizes like v2's `filesize` ("95.7 KB", "11.44 MB", "812 B"),
+ * File sizes as v2's `filesize` produced them: binary multiples (1024) with the
+ * familiar KB/MB labels ("37 KB" for 37,888 bytes, "95.7 KB", "11.44 MB", "812 B"),
  * localised digits, non-breaking space before the unit (09 I18N-21).
  */
 export function formatFileSize(bytes: number, locale: string, { round = 2 }: { round?: number } = {}): string {
   if (!Number.isFinite(bytes) || bytes < 0) bytes = 0;
   let value = bytes, unit = 0;
-  while (value >= 1000 && unit < UNITS.length - 1) { value /= 1000; unit++; }
+  while (value >= 1024 && unit < UNITS.length - 1) { value /= 1024; unit++; }
   const digits = unit === 0 ? 0 : round;
   const num = new Intl.NumberFormat(locale, { maximumFractionDigits: digits, minimumFractionDigits: 0 }).format(value);
   return `${num} ${UNITS[unit]}`;
