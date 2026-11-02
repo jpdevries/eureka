@@ -299,10 +299,11 @@ DOM order is the reading order and the tab order.
   and Delete; the upload control and the panel's upload and new-directory
   buttons; the filter (hint in its label); the panel toggle. Hints are
   not rendered until something in the instance has visible focus or the
-  instance has seen keyboard use, rest knocked back under visible focus
-  that did not come through the instance's own keys (the first Tab in
-  from the page), come to full opacity with keyboard use (06 A11Y-55), and
-  are not shown on narrow layouts.
+  instance has seen keyboard use (never on hover, which would shift the
+  control), rest knocked back under visible focus that did not come
+  through the instance's own keys (the first Tab in from the page), come
+  to full opacity with keyboard use (06 A11Y-55), and are not shown on
+  narrow layouts.
 - **HTML-92** Create directory form: a text input labelled "Create a new
   Directory in {cd}". Rename form: a text input labelled "New name"
   prefilled with the current name. Crop form: see 06 for its controls;

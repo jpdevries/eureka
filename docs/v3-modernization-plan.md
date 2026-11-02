@@ -532,7 +532,8 @@ Taken on 2026-11-01:
   (⌥⇧U on a Mac). They rest at `--hint-text-opacity` (0.82 light, 0.65
   dark: text, so 4.5:1 rather than the icon's 3:1, measured as axe does,
   blended over the control), fade in with keyboard
-  use, hover or focus, are not rendered until something in the
+  use or visible focus (no hover reveal: it widened the control under
+  the pointer), are not rendered until something in the
   instance has visible focus (`:has(:focus-visible)`, so a pointer tap
   does not count) or the instance has seen the keyboard, fading in and
   out of `display: none` via `@starting-style` and a discrete `display`

@@ -117,7 +117,7 @@ Covered by 05. In addition:
   State (checked, focused, current directory) is conveyed by borders,
   outlines or text, never by background colour alone.
 - **A11Y-55** Keyboard hints rest at reduced opacity and return to full
-  opacity on hover, on focus, while the shortcuts dialog is open, and as
+  opacity on focus, while the shortcuts dialog is open, and as
   soon as the instance sees keyboard navigation (Tab, arrows, Home/End,
   Enter, Space, Escape or `?`): the element sets `data-keyboard="true"`
   on the root and clears it on the next pointer use. Two resting levels,
