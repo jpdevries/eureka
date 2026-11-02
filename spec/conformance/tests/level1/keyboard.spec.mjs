@@ -128,6 +128,41 @@ test('KEY-A5 ? and the help button open the shortcuts reference generated from t
   await expect(filterBox(page)).toHaveValue('?');
 });
 
+test('KEY-29 Shift+F10 opens the row menu as a popover; arrows, typeahead, Enter and Escape work', async ({ page }) => {
+  v3only('popover context menu');
+  const row = await focusRow(page, 'schildpad.jpg');
+  await page.keyboard.press(chord('openContextMenu'));
+  const menu = page.getByRole('menu', { name: 'Actions for schildpad.jpg' });
+  await expect(menu).toBeVisible();
+  await expect(menu).toHaveAttribute('popover', 'manual');
+  await expect(menu.getByRole('menuitem')).toHaveText([/^Expand/, /^Choose/, /^Crop/, /^Rename/, /^Delete/, /^Download/]);
+  await expect(menu.getByRole('menuitem', { name: 'Expand schildpad.jpg' })).toBeFocused();
+  await page.keyboard.press('ArrowDown');
+  await expect(menu.getByRole('menuitem', { name: 'Choose schildpad.jpg' })).toBeFocused();
+  await page.keyboard.press('ArrowUp');
+  await page.keyboard.press('ArrowUp'); // wraps
+  await expect(menu.getByRole('menuitem', { name: 'Download schildpad.jpg' })).toBeFocused();
+  await page.keyboard.press('r'); // typeahead
+  await expect(menu.getByRole('menuitem', { name: 'Rename schildpad.jpg' })).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(menu).toHaveCount(0);
+  await expect(row).toBeFocused();
+  // Enter on an item acts and closes the menu; a dialog it opens returns focus to the row (KEY-B5)
+  await page.keyboard.press(chord('openContextMenu'));
+  await page.keyboard.press('r');
+  await page.keyboard.press('Enter');
+  const dialog = page.getByRole('dialog');
+  await expect(dialog.getByRole('heading')).toHaveText(/schildpad\.jpg/);
+  await expect(page.getByRole('menu')).toHaveCount(0);
+  await page.keyboard.press('Escape');
+  await expect(row).toBeFocused();
+  // right-click opens it too
+  await row.click({ button: 'right' });
+  await expect(page.getByRole('menu', { name: 'Actions for schildpad.jpg' })).toBeVisible();
+  await page.mouse.click(5, 5); // pointer down outside closes
+  await expect(page.getByRole('menu')).toHaveCount(0);
+});
+
 test('KEY-30 the download shortcut downloads the focused item', async ({ page }) => {
   v3only('download binding');
   await focusRow(page, 'schildpad.jpg');

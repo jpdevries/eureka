@@ -30,6 +30,8 @@ export interface Ctx {
   platform?: 'mac' | 'other';
   /** Non-English catalog the page was rendered with, embedded for the element (09 I18N-12). */
   catalog?: Catalog;
+  /** The row whose context menu is open (02 HTML-71); element-local, never in State. */
+  contextMenu?: { path: string };
   /**
    * Row markup memo for incremental client renders (10 PERF-11): `previous` holds the markup of each row
    * as last rendered, keyed by path; the listing fills `next` and emits a keep-placeholder

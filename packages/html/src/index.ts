@@ -2,7 +2,8 @@ export { html, raw, attr, classes, escapeHtml, jsonForScript, Raw } from './html
 export { createIds, contextFromPage, hydrationState, type Ctx, type Ids, type Level, type PageInput } from './model.js';
 export { instance } from './render/instance.js';
 export { listing } from './render/listing.js';
-export { row, actions, media, breakableName } from './render/row.js';
+export { row, actions, rowActions, media, breakableName, type RowAction } from './render/row.js';
+export { contextMenu } from './render/menu.js';
 export { sourcePanel } from './render/panel.js';
 export { stageHeader, toolbar, directorySelector, uploadControl } from './render/toolbar.js';
 export { notifications, pathBar, chooseBar } from './render/bars.js';

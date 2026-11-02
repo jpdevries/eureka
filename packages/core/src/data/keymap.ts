@@ -316,7 +316,7 @@ const data = {
         "ContextMenu"
       ],
       "v2": [],
-      "when": "a custom context menu is implemented (HTML-71)"
+      "notes": "Opens the row's popover menu (HTML-71); right-click does the same"
     },
     {
       "id": "KEY-30",

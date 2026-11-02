@@ -79,7 +79,7 @@ function shortcuts(ctx: Ctx, footer: Raw): Raw {
   const { state: { config }, t } = ctx;
   const mac = ctx.platform === 'mac';
   const keymap = ctx.keymap ?? defaultKeymap;
-  const hide = new Set<string>(['openContextMenu']); // not implemented (HTML-71)
+  const hide = new Set<string>();
   if (!config.handlers.createFile) hide.add('createFile');
   if (!config.allowUploads) hide.add('upload');
   if (!config.allowRename) hide.add('renameItem');

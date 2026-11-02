@@ -543,6 +543,18 @@ Taken on 2026-11-01:
   (KEY-30, `Alt+Shift+D`, row scope, when downloads are allowed): it
   activates the row's Download link so the browser's download handling
   applies.
+- Row context menu (HTML-71, KEY-29), handed over from a side session:
+  one `popover="manual"` `role="menu"` per instance, rendered only while
+  open for the row the element marks as its target, with the row's
+  actions as menuitems (shared `rowActions()` list with the toolbar, same
+  `data-action`/`data-path`, `aria-keyshortcuts` and hints). Opens on
+  right-click or Shift+F10, anchored to the row with CSS anchor
+  positioning (pointer position where unsupported), fades through
+  `@starting-style`; arrows wrap, Home/End, typeahead, Escape and Tab
+  return focus to the row, outside pointer-down, resize and navigation
+  close it; a dialog opened from the menu returns focus to the row. Spec
+  HTML-71 (MUST at Level 1+), KEY-B9, A11Y-75; conformance test and an
+  axe state. KEY-29 lost its `when`, so the shortcuts dialog lists it.
 - Package names: the `@eureka` npm scope belongs to an existing npm user,
   so the packages are `@mrktps/eureka` (the element, what most people
   install) and `@mrktps/eureka-core`, `-html`, `-css`, `-react`,

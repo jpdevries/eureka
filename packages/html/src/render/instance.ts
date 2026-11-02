@@ -3,6 +3,7 @@ import { attr, classes, html, jsonForScript, type Raw } from '../html.js';
 import { hydrationState, type Ctx } from '../model.js';
 import { notifications, pathBar, chooseBar } from './bars.js';
 import { dialogs } from './dialogs.js';
+import { contextMenu } from './menu.js';
 import { listing } from './listing.js';
 import { sourcePanel } from './panel.js';
 import { stageHeader, toolbar } from './toolbar.js';
@@ -39,6 +40,7 @@ export function instance(ctx: Ctx): Raw {
     ${pathBar(ctx)}
     ${chooseBar(ctx)}
     ${dialogs(ctx)}
+    ${contextMenu(ctx)}
     ${hidden(html`<span aria-live="polite" id="${ids.id('announcer')}" data-announcer></span>`)}
   </div>`;
 }

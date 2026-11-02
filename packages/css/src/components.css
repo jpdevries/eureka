@@ -114,6 +114,20 @@
   .black-on-white .eureka__help-button, .white-on-black .eureka__help-button { opacity: 1; }
   @media (forced-colors: active) { .eureka .eureka__help-button { opacity: 1; } }
   @media (prefers-reduced-motion: reduce) { .eureka .eureka__help-button { transition: none; } }
+  /* Row context menu (02 HTML-71): a manual popover anchored to its row. */
+  .eureka__context-anchor { anchor-name: --eureka-context-row; }
+  .eureka .eureka__context-menu { margin: 0; padding: 0.25rem; inline-size: max-content; min-inline-size: 12rem; max-inline-size: min(20rem, 90vw); border: var(--border-width) var(--border-style) var(--panel-border-color); border-radius: 0.375rem; background: var(--light-bg); color: var(--color); box-shadow: 0 8px 24px rgb(0 0 0 / 0.25); opacity: 1; transition: opacity 150ms ease, display 150ms allow-discrete, overlay 150ms allow-discrete; }
+  .eureka .eureka__context-menu:not(:popover-open) { display: none; opacity: 0; }
+  @supports (anchor-name: --a) {
+    .eureka .eureka__context-menu { position-anchor: --eureka-context-row; position-area: block-end span-inline-end; position-try-fallbacks: flip-block, flip-inline; margin-block-start: 0.25rem; margin-inline-start: 1rem; }
+  }
+  .eureka .eureka__context-menu .eureka__menuitem { display: flex; align-items: center; justify-content: space-between; gap: 1rem; inline-size: 100%; box-sizing: border-box; text-align: start; background: none; border: 0; box-shadow: none; border-radius: 0.25rem; padding: 0.4rem 0.6rem; color: inherit; font: inherit; text-decoration: none; min-block-size: 24px; cursor: default; }
+  .eureka .eureka__context-menu .eureka__menuitem:is(:hover, :focus-visible) { background: var(--button-bg); outline: 2px solid var(--active); outline-offset: -2px; }
+  .eureka .eureka__context-menu .eureka__menuitem.dangerous { color: var(--dangerous); }
+  @media (forced-colors: active) { .eureka .eureka__context-menu { border: 1px solid CanvasText; } .eureka .eureka__context-menu .eureka__menuitem:is(:hover, :focus-visible) { outline-color: Highlight; } }
+  @media (prefers-reduced-motion: reduce) { .eureka .eureka__context-menu { transition: none; } }
+  @starting-style { .eureka .eureka__context-menu:popover-open { opacity: 0; } } /* after the visible-state rule: starting styles cascade like any other */
+
   /* <kbd> shortcut hints on controls (02 HTML-96): text, so the resting level keeps 4.5:1 (WCAG 1.4.3). */
   .eureka kbd.eureka__kbd { display: inline-block; font-size: 0.8em; line-height: 1.3; padding: 0 0.3em; margin-inline-start: 0.5em; vertical-align: 0.1em; color: var(--color); background: var(--light-bg); border-color: var(--subtle); opacity: var(--hint-text-opacity, 0.82); transition: opacity 300ms ease, display 300ms allow-discrete; } /* its own colours (body text on the panel background), so the resting contrast does not depend on the control's text colour */
   .eureka[data-keyboard="true"] kbd.eureka__kbd, .eureka :is(button, .button):focus-visible > kbd.eureka__kbd { opacity: 1; }
@@ -122,6 +136,7 @@
      reveal: a hint appearing under the pointer would widen the control. opacity: 0 alongside display: none lets the discrete display
      transition hold the box until the fade-out ends. */
   .eureka:not(:has(:focus-visible)):not([data-keyboard="true"]) kbd.eureka__kbd { display: none; opacity: 0; }
+  .eureka .eureka__context-menu[role="menu"] kbd.eureka__kbd { display: inline-block; opacity: 1; margin-inline-start: auto; } /* a keyboard surface: its hints are always shown (after the gating rule, which ties on specificity) */
   /* Fade in from display: none where the engine supports discrete display transitions. @starting-style rules cascade with the normal rules by specificity and
      source order, so this block repeats the selectors of every visible state and comes after them; earlier in the file it lost to them. */
   @starting-style {

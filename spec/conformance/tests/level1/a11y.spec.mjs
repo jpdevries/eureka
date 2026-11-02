@@ -1,5 +1,5 @@
 // axe-core on each major state. Fails for v3, reports for the v2 baseline (see helpers.axeCheck).
-import { test, expect, openDirectory, focusRow, control, setView, chooseModeRadio, axeCheck } from '../helpers.mjs';
+import { test, expect, openDirectory, focusRow, control, setView, chooseModeRadio, axeCheck, v3only } from '../helpers.mjs';
 
 test('axe: Level 0 form', async ({ page }) => {
   await page.goto('/nojs');
@@ -27,6 +27,15 @@ test('axe: focused row with actions', async ({ page }) => {
   await openDirectory(page, 'assets/img');
   await focusRow(page, 'schildpad.jpg');
   await axeCheck(page, 'row-focused');
+});
+
+test('axe: row context menu open (HTML-71)', async ({ page }) => {
+  v3only('popover context menu');
+  await openDirectory(page, 'assets/img');
+  await focusRow(page, 'schildpad.jpg');
+  await page.keyboard.press('Shift+F10');
+  await expect(page.getByRole('menu')).toBeVisible();
+  await axeCheck(page, 'context-menu');
 });
 
 test('axe: grid mode', async ({ page }) => {

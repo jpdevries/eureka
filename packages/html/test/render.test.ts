@@ -148,6 +148,17 @@ describe('enhanced render (02)', () => {
     expect(renderLevel0(input)).not.toContain('eureka__kbd');
     expect(renderLevel0(input)).not.toContain('aria-keyshortcuts');
   });
+  it('renders the row context menu as a manual popover with the row actions when a target is set (HTML-71)', () => {
+    const ctx = contextFromPage(input, 1);
+    expect(instance(ctx).value).not.toContain('popover=');
+    const open = instance({ ...ctx, contextMenu: { path: 'assets/img/schildpad.jpg' } }).value;
+    expect(open).toContain('<div popover="manual" role="menu" id="eureka__context-menu" class="eureka__context-menu" aria-label="Actions for schildpad.jpg" data-context-for="assets/img/schildpad.jpg">');
+    expect(open).toMatch(/<a role="menuitem" tabindex="-1" class="eureka__menuitem" data-action="expand" data-path="assets\/img\/schildpad\.jpg" aria-keyshortcuts="Alt\+Space" href="[^"]+" target="_blank" rel="noopener">/);
+    expect(open).toMatch(/<button type="button" role="menuitem" tabindex="-1" class="eureka__menuitem dangerous" data-action="delete" data-path="assets\/img\/schildpad\.jpg" aria-keyshortcuts="Delete Backspace">/);
+    expect(open).toContain('class="eureka__row eureka__context-anchor"');
+    expect(open).toContain('<span class="eureka__menuitem-label">Rename<span class="visually-hidden"> schildpad.jpg</span></span><kbd class="eureka__kbd" aria-hidden="true">F2</kbd>');
+    expect(instance({ ...contextFromPage(input, 0), contextMenu: { path: 'assets/img/schildpad.jpg' } }).value).not.toContain('popover='); // Level 0 has no menu
+  });
   it('puts the shortcuts button beside the heading at Level 1 only', () => {
     expect(renderEnhanced(input)).toContain('Media Content</h2><button type="button" class="eureka__help-button"');
     expect(renderEnhanced(input)).toMatch(/eureka__help-button[^>]*title="Keyboard Shortcuts"><span class="visually-hidden">Keyboard Shortcuts<\/span><svg[^>]*class="icon icon-keyboard"/);

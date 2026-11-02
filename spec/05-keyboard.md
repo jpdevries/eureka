@@ -70,6 +70,13 @@ around it.
 - **KEY-B6** Activating "Try another search" focuses the filter;
   activating "upload some files" opens the file picker; activating the
   source panel toggle leaves focus on the toggle.
+- **KEY-B9** The row menu (KEY-29, Shift+F10 or the ContextMenu key;
+  right-click does the same): opens with focus on the first item;
+  ArrowUp/ArrowDown move with wrap, Home/End jump, a letter moves to the
+  next item starting with it, Enter and Space activate, Escape and Tab
+  close and return focus to the row. An item that opens a dialog returns
+  focus to the row when the dialog closes (KEY-B5 treats the row as the
+  opener).
 - **KEY-B8** Download (KEY-30, `Alt+Shift+D`, when `allowDownload`)
   activates the focused row's Download link, so the browser's own
   download handling applies (the `download` attribute, HTML-68).

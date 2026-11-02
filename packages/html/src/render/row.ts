@@ -38,21 +38,34 @@ export function media(ctx: Ctx, item: FileEntry, { controls = true, width, heigh
   }
 }
 
+/** One action a row offers (HTML-68): the toolbar and the context menu (HTML-71) render the same list. */
+export interface RowAction { kind: string; label: string; action?: string; cls?: string; href?: string; external?: boolean; download?: boolean }
+
+export function rowActions(ctx: Ctx, item: FileEntry): RowAction[] {
+  const { t, state: { config } } = ctx;
+  const n = item.filename;
+  const list: RowAction[] = [{ kind: 'expand', label: t('expand'), action: 'expandItem', href: item.absoluteURL, external: true }];
+  if (config.allowChoose) list.push({ kind: 'choose', label: t('choose'), action: 'chooseItem' });
+  if (config.allowCrop && isCroppable(n)) list.push({ kind: 'crop', label: t('crop'), cls: 'eureka__crop-btn' });
+  if (config.allowRename) list.push({ kind: 'rename', label: t('rename'), action: 'renameItem' });
+  if (config.allowDelete) list.push({ kind: 'delete', label: t('delete'), action: 'deleteItem', cls: 'dangerous' });
+  if (config.allowDownload) list.push({ kind: 'download', label: t('download'), action: 'downloadItem', href: item.absoluteURL, download: true });
+  return list;
+}
+
 export function actions(ctx: Ctx, item: FileEntry, idPrefix = ''): Raw {
-  const { t, state: { config }, ids, level } = ctx;
+  const { t, ids, level } = ctx;
   const n = item.filename;
   // One tab stop per toolbar (05 KEY-B2): the first control is tabbable, the rest are reached with the arrow keys.
   const roving = (i: number) => (level > 0 ? ` tabindex="${i === 0 ? 0 : -1}"` : '');
-  const controls: Array<(i: number) => Raw> = [];
-  const btn = (kind: string, label: string, hiddenText: string, cls = '', action = '') => (i: number) => html`<button type="button" class="${classes('eureka__action', cls)}" id="${ids.item(idPrefix + kind, item.filename)}" data-action="${kind}" data-path="${item.path}"${raw(roving(i))}${action ? keyshortcuts(ctx, action) : ''}>${label}${hidden(' ' + hiddenText)}${action ? kbdHint(ctx, action) : ''}</button>`;
-  controls.push((i) => html`<a class="button eureka__action" id="${ids.item(idPrefix + 'expand', item.filename)}" href="${item.absoluteURL}" target="_blank" rel="noopener" data-action="expand"${raw(roving(i))}${keyshortcuts(ctx, 'expandItem')}>${t('expand')}${hidden(' ' + n)}${kbdHint(ctx, 'expandItem')}</a>`);
-  if (config.allowChoose) controls.push(btn('choose', t('choose'), n, '', 'chooseItem'));
-  if (config.allowCrop && isCroppable(n)) controls.push(btn('crop', t('crop'), n, 'eureka__crop-btn'));
-  if (config.allowRename) controls.push(btn('rename', t('rename'), n, '', 'renameItem'));
-  if (config.allowDelete) controls.push(btn('delete', t('delete'), n, 'dangerous', 'deleteItem'));
-  if (config.allowDownload) controls.push((i) => html`<a class="button eureka__action" id="${ids.item(idPrefix + 'download', item.filename)}" href="${item.absoluteURL}" download="${n}" data-action="download"${raw(roving(i))}${keyshortcuts(ctx, 'downloadItem')}>${t('download')}${hidden(' ' + n)}${kbdHint(ctx, 'downloadItem')}</a>`);
+  const controls = rowActions(ctx, item).map((a, i) => {
+    const keys = a.action ? keyshortcuts(ctx, a.action) : '';
+    const body = html`${a.label}${hidden(' ' + n)}${a.action ? kbdHint(ctx, a.action) : ''}`;
+    if (a.href) return html`<a class="button eureka__action" id="${ids.item(idPrefix + a.kind, item.filename)}" href="${a.href}"${attr('target', a.external ? '_blank' : null)}${attr('rel', a.external ? 'noopener' : null)}${attr('download', a.download ? n : null)} data-action="${a.kind}"${raw(roving(i))}${keys}>${body}</a>`;
+    return html`<button type="button" class="${classes('eureka__action', a.cls)}" id="${ids.item(idPrefix + a.kind, item.filename)}" data-action="${a.kind}" data-path="${item.path}"${raw(roving(i))}${keys}>${body}</button>`;
+  });
   return html`<div class="eureka__button-bar eureka__context-buttons" role="toolbar" aria-label="${t('actions.for', { filename: n })}" data-row-actions>
-    ${controls.map((c, i) => c(i))}
+    ${controls}
   </div>`;
 }
 
@@ -74,7 +87,7 @@ export function row(ctx: Ctx, item: FileEntry, index: number): Raw {
     : media(ctx, item);
   const dateTitle = rec?.dateLong ?? '';
   const datetime = new Date(item.editedOn).toISOString();
-  return html`<tr id="${rowId}" class="${classes('eureka__row', { 'eureka__focused-media-item': focused })}" aria-label="${description}" data-path="${item.path}" data-kind="${mediaKind(item.filename)}"${raw(tabindex)}${attr('aria-selected', multiple ? String(checked) : null)}>
+  return html`<tr id="${rowId}" class="${classes('eureka__row', { 'eureka__focused-media-item': focused, 'eureka__context-anchor': ctx.contextMenu?.path === item.path })}" aria-label="${description}" data-path="${item.path}" data-kind="${mediaKind(item.filename)}"${raw(tabindex)}${attr('aria-selected', multiple ? String(checked) : null)}>
     ${multiple ? html`<td class="eureka__choose"><input type="checkbox" id="${checkboxId}" name="eureka__chosen_items" value="${item.filename}" aria-label="${t('choose.item', { filename: item.filename })}"${attr('checked', checked)} data-path="${item.path}"></td>` : ''}
     ${level === 0 ? html`<td class="eureka__select"><input type="radio" id="${radioId}" name="eureka__chosen_item" value="${item.filename}" aria-describedby="${mediaId}"></td>` : ''}
     <td class="eureka__td-media" id="${mediaId}">${mediaCell}</td>

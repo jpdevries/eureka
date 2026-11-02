@@ -159,6 +159,12 @@ Covered by 05. In addition:
   Crop as (Save as name), Download. Pointer-only cropper gestures are
   mirrored by these controls.
 
+- **A11Y-75** The row context menu (02 HTML-71) is a `popover="manual"`
+  in the top layer, not a dialog: the page stays interactive and nothing
+  is made `inert`. Light dismiss is off, so the element itself closes it
+  on pointer down outside, Escape, Tab, item activation and navigation.
+  Focus moves into the menu on open and back to the row on close.
+
 ## 9. Screen reader walkthrough (informative)
 
 Tabbing into an instance: "Media Browser, region" → "Browse Media

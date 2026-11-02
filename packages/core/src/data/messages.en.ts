@@ -210,7 +210,8 @@ const data = {
   "key.arrowLeft": "Left arrow",
   "key.arrowRight": "Right arrow",
   "key.to": "to",
-  "shortcut.downloadItem": "Download the item"
+  "shortcut.downloadItem": "Download the item",
+  "shortcut.openContextMenu": "Open the item menu"
 } as const;
 export default data;
 export type MessagesEn = typeof data;

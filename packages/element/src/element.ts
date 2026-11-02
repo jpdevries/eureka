@@ -46,6 +46,9 @@ export class EurekaBrowser extends HTMLElement {
   #announcement = '';
   #dragging = false;
   #keyboard = false; // keyboard navigation seen since the last pointer use (06 A11Y-55)
+  #contextTarget: string | null = null; // row path whose popover menu is open (02 HTML-71)
+  #contextOrigin: { x: number; y: number } | null = null; // pointer position for engines without anchor positioning
+  #contextDismiss: AbortController | null = null;
   #storage: Storage | null = null;
   #restartQueued = false;
   #rowMarkup = new Map<string, string>(); // last rendered row markup by path (PERF-11)
@@ -96,6 +99,7 @@ export class EurekaBrowser extends HTMLElement {
   }
 
   #teardown(): void {
+    this.#contextDismiss?.abort(); this.#contextDismiss = null; this.#contextTarget = null;
     this.#abort?.abort(); this.#abort = null;
     for (const t of this.#timers) clearTimeout(t); this.#timers.clear();
     this.#engine?.terminate();
@@ -204,7 +208,7 @@ export class EurekaBrowser extends HTMLElement {
     if (!this.#started) return;
     const state = this.#store.getState();
     const next = new Map<string, string>();
-    const ctx: Ctx = { state, t: this.#t, ids: this.#ids, level: 1, iconSprite: this.#iconSprite, rowMemo: { previous: this.#rowMarkup, next }, keymap: this.#keymap, platform: /Mac|iPhone|iPad/.test(navigator.platform) ? 'mac' : 'other' };
+    const ctx: Ctx = { state, t: this.#t, ids: this.#ids, level: 1, iconSprite: this.#iconSprite, rowMemo: { previous: this.#rowMarkup, next }, keymap: this.#keymap, platform: /Mac|iPhone|iPad/.test(navigator.platform) ? 'mac' : 'other', ...(this.#contextTarget ? { contextMenu: { path: this.#contextTarget } } : {}) };
     const byId = new Map<string, string>();
     morphChildren(this, fragmentFrom(instance(ctx).value), { resolveKeep: (id) => { if (!byId.size) for (const [p, m] of next) byId.set(this.#ids.item('row', basename(p)), m); return byId.get(id); } });
     this.#rowMarkup = next;
@@ -213,6 +217,7 @@ export class EurekaBrowser extends HTMLElement {
 
   #afterRender(state: State): void {
     this.#applyKeyboard();
+    if (this.#contextTarget && !this.#menu()) this.#closeContextMenu(false); // the row left the listing
     const dialog = this.querySelector<HTMLDialogElement>('dialog.eureka__modal');
     if (dialog && !dialog.open) { try { dialog.showModal(); } catch { dialog.setAttribute('open', ''); } }
     if (this.#focusNext) {
@@ -244,6 +249,7 @@ export class EurekaBrowser extends HTMLElement {
     on('focusin', (e) => this.#onFocusIn(e));
     on('keydown', (e) => { if (NAVIGATION_KEYS.has(e.key)) this.#setKeyboard(true); }, { capture: true });
     on('pointerdown', () => this.#setKeyboard(false), { capture: true });
+    on('contextmenu', (e) => this.#onContextMenu(e));
     on('keydown', (e) => this.#onKeyDown(e));
     on('dblclick', (e) => this.#onDblClick(e));
     on('toggle', (e) => this.#onToggle(e), { capture: true });
@@ -277,6 +283,7 @@ export class EurekaBrowser extends HTMLElement {
     if (textarea) { textarea.select(); return; }
     const el = target.closest<HTMLElement>('[data-action]');
     if (!el) return;
+    if (el.closest('.eureka__context-menu')) queueMicrotask(() => this.#closeContextMenu(!this.#store.getState().dialog)); // the action ran; the menu goes, focus to the row unless a dialog took it
     const state = this.#store.getState();
     switch (el.dataset.action) {
       case 'toggle-panel': this.#store.dispatch({ type: 'view/togglePanel' }); break;
@@ -376,6 +383,7 @@ export class EurekaBrowser extends HTMLElement {
   #onKeyDown(e: KeyboardEvent): void {
     const target = e.target as HTMLElement;
     if (target.closest('dialog.eureka__modal')) return; // our dialogs own their keys; Escape is native. A host dialog around the whole browser does not count
+    if (target.closest('.eureka__context-menu')) { this.#onMenuKeyDown(e); return; }
     const row = target.closest<HTMLTableRowElement>('tr[data-path]');
     const toolbar = target.closest<HTMLElement>('[data-row-actions]');
     if (toolbar && (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Home' || e.key === 'End')) { // KEY-B2 (APG toolbar)
@@ -421,6 +429,7 @@ export class EurekaBrowser extends HTMLElement {
       // row scope
       case 'chooseItem': if (item && target === row) this.#choose([item]); else handled = false; break;
       case 'expandItem': if (item) window.open(item.absoluteURL, '_blank', 'noopener'); else handled = false; break;
+      case 'openContextMenu': if (row && item) this.#openContextMenu(row); else handled = false; break;
       case 'downloadItem': { const link = item && this.#config.allowDownload ? row?.querySelector<HTMLAnchorElement>('a[data-action="download"]') : null; if (link) link.click(); else handled = false; break; }
       case 'deleteItem': if (item && (target === row || !!toolbar)) this.#requestDelete([item.path], row); else handled = false; break;
       case 'renameItem': if (item) this.#openDialog('rename', item.path, row ?? target); else handled = false; break;
@@ -468,6 +477,78 @@ export class EurekaBrowser extends HTMLElement {
     void this.#upload(files.map((f, i) => (/^(image|file)\.\w+$/i.test(f.name) ? new File([f], `paste-image.${stamp}${files.length > 1 ? `-${i + 1}` : ''}.${f.name.split('.').pop()}`, { type: f.type }) : f)));
   }
   #setDragging(on: boolean): void { if (this.#dragging !== on) { this.#dragging = on; this.#applyDragging(on); } }
+  // ---- context menu (02 HTML-71, 05 KEY-29): a manual popover anchored to the row ---------------
+  #menu(): HTMLElement | null { return this.querySelector<HTMLElement>(`#${CSS.escape(this.#ids.id('context-menu'))}`); }
+  #rowFor(path: string | null): HTMLTableRowElement | null { return path === null ? null : Array.from(this.#rows()).find((r) => r.dataset.path === path) ?? null; }
+  #menuItems(): HTMLElement[] { return Array.from(this.#menu()?.querySelectorAll<HTMLElement>('[role="menuitem"]') ?? []); }
+
+  #onContextMenu(e: MouseEvent): void {
+    const target = e.target as HTMLElement;
+    if (target.closest('.eureka__context-menu') || target.matches(TEXT_FIELD)) return;
+    const row = target.closest<HTMLTableRowElement>('tr[data-path]');
+    if (!row || !this.#fileAt(row.dataset.path)) return;
+    e.preventDefault();
+    row.focus();
+    this.#openContextMenu(row, { x: e.clientX, y: e.clientY });
+  }
+
+  #openContextMenu(row: HTMLTableRowElement, origin: { x: number; y: number } | null = null): void {
+    if (this.#contextTarget === row.dataset.path && this.#menu()?.matches(':popover-open')) return;
+    this.#closeContextMenu(false);
+    this.#contextTarget = row.dataset.path ?? null;
+    this.#contextOrigin = origin;
+    this.#render();
+    const menu = this.#menu();
+    if (!menu || typeof menu.showPopover !== 'function') { this.#contextTarget = null; return; }
+    if (!CSS.supports('anchor-name', '--eureka-context-row')) { // place it by hand where the engine cannot anchor
+      const rect = row.getBoundingClientRect();
+      const x = origin?.x ?? rect.left + 16; const y = origin?.y ?? rect.bottom;
+      menu.style.insetInlineStart = `${Math.max(8, Math.min(x, window.innerWidth - 240))}px`;
+      menu.style.insetBlockStart = `${Math.max(8, Math.min(y, window.innerHeight - 8 - 48 * Math.max(1, this.#menuItems().length)))}px`;
+    }
+    menu.showPopover();
+    this.#menuItems()[0]?.focus();
+    this.#contextDismiss = new AbortController();
+    const signal = this.#contextDismiss.signal;
+    document.addEventListener('pointerdown', (ev) => { if (!(ev.target instanceof Node) || !menu.contains(ev.target)) this.#closeContextMenu(false); }, { capture: true, signal });
+    menu.addEventListener('toggle', (ev) => { if ((ev as ToggleEvent).newState === 'closed' && this.#contextTarget) this.#closeContextMenu(false); }, { signal });
+    window.addEventListener('resize', () => this.#closeContextMenu(false), { signal });
+  }
+
+  #closeContextMenu(refocusRow: boolean): void {
+    if (this.#contextTarget === null) return;
+    const row = this.#rowFor(this.#contextTarget);
+    const menu = this.#menu();
+    this.#contextDismiss?.abort(); this.#contextDismiss = null;
+    this.#contextTarget = null; this.#contextOrigin = null;
+    if (menu?.matches(':popover-open')) menu.hidePopover();
+    this.#render();
+    if (refocusRow) row?.focus();
+  }
+
+  #onMenuKeyDown(e: KeyboardEvent): void {
+    const items = this.#menuItems();
+    const target = e.target as HTMLElement;
+    const i = items.indexOf(target);
+    const go = (n: number) => { e.preventDefault(); items[(n + items.length) % items.length]?.focus(); };
+    switch (e.key) {
+      case 'ArrowDown': go(i + 1); return;
+      case 'ArrowUp': go(i - 1); return;
+      case 'Home': go(0); return;
+      case 'End': go(items.length - 1); return;
+      case 'Escape': e.preventDefault(); e.stopPropagation(); this.#closeContextMenu(true); return;
+      case 'Tab': e.preventDefault(); this.#closeContextMenu(true); return;
+      case ' ': if (target instanceof HTMLAnchorElement) { e.preventDefault(); target.click(); } return; // buttons activate on Space natively
+      default: {
+        if (e.key.length !== 1 || e.altKey || e.ctrlKey || e.metaKey) return;
+        const letter = e.key.toLowerCase();
+        const order = [...items.slice(i + 1), ...items.slice(0, i + 1)];
+        const hit = order.find((el) => (el.querySelector('.eureka__menuitem-label')?.textContent ?? el.textContent ?? '').trim().toLowerCase().startsWith(letter));
+        if (hit) { e.preventDefault(); hit.focus(); }
+      }
+    }
+  }
+
   #setKeyboard(on: boolean): void { if (this.#keyboard !== on) { this.#keyboard = on; this.#applyKeyboard(); } }
   #applyKeyboard(): void { const root = this.#root(); if (!root) return; if (this.#keyboard) root.setAttribute('data-keyboard', 'true'); else root.removeAttribute('data-keyboard'); }
   #applyDragging(on: boolean): void {
@@ -497,6 +578,7 @@ export class EurekaBrowser extends HTMLElement {
   #openDialog(kind: DialogKind, target: string | undefined, opener: Element | null | undefined): void {
     if (kind === 'rename' && !this.#config.allowRename) return;
     if (kind === 'crop' && !this.#config.allowCrop) return;
+    if (opener?.closest('.eureka__context-menu')) opener = this.#rowFor(this.#contextTarget) ?? opener; // the menu closes; focus returns to its row
     this.#dialogOpener = opener ?? document.activeElement;
     this.#store.dispatch({ type: 'dialog/open', kind, ...(target !== undefined ? { target } : {}) });
   }
