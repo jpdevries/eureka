@@ -87,6 +87,12 @@ describe('documents and videos (02 HTML-66d)', () => {
     const without = page([{ filename: 'deck.pdf', directory: '/', path: 'deck.pdf', absoluteURL: '/s/deck.pdf', absolutePreviewURL: '/s/deck.pdf', editedOn: 0, fileSize: 9 }]);
     expect(without).not.toContain('<object'); expect(without).toContain('eureka__pdf-placeholder'); expect(without).toContain('deck.pdf</span>');
   });
+  it('an image the browser cannot decode is a skeleton tile in its own proportions, never an <img> of the original (HTML-66e)', () => {
+    const tiff = page([{ filename: 'scan.tif', directory: '/', path: 'scan.tif', absoluteURL: '/s/scan.tif', absolutePreviewURL: '/s/scan.tif', editedOn: 0, fileSize: 9, dimensions: [4000, 3000] }]);
+    expect(tiff).not.toContain('<img'); expect(tiff).toContain('class="eureka__file-placeholder eureka__media-skeleton" style="--eureka-media-ratio: 4000 / 3000"');
+    const previewed = page([{ filename: 'scan.tif', directory: '/', path: 'scan.tif', absoluteURL: '/s/scan.tif', absolutePreviewURL: '/s/__preview/scan.tif', editedOn: 0, fileSize: 9, dimensions: [4000, 3000] }]);
+    expect(previewed).toContain('<img src="/s/__preview/scan.tif"'); expect(previewed).not.toContain('eureka__media-skeleton');
+  });
   it('a video takes a poster and preload="none" only when the source offers a preview', () => {
     const posterless = page([{ filename: 'clip.mp4', directory: '/', path: 'clip.mp4', absoluteURL: '/s/clip.mp4', editedOn: 0, fileSize: 9 }]);
     expect(/<video[^>]*>/.exec(posterless)![0]).toContain('preload="metadata"'); expect(posterless).not.toContain('poster=');

@@ -98,7 +98,8 @@ function makeListings() {
       file('assets/img', 'archive.zip', 12000000, undefined, 90)
     ],
     'assets/img/redwoods': Array.from({ length: 24 }, (_, i) => file('assets/img/redwoods', `redwood-${String(i + 1).padStart(2, '0')}.jpg`, 200000 + i * 7919, [800 + (i % 3) * 200, 600 + (i % 4) * 150], i)),
-    'assets/docs': [file('assets/docs', 'spec.pdf', 150000, undefined, 2), file('assets/docs', 'budget.xlsx', 44000, undefined, 4)],
+    'assets/docs': [folder('assets/docs', 'scans'), file('assets/docs', 'spec.pdf', 150000, undefined, 2), file('assets/docs', 'budget.xlsx', 44000, undefined, 4)],
+    'assets/docs/scans': [file('assets/docs/scans', 'scan.tif', 9100000, [4000, 3000], 5)], // an original no browser decodes (HTML-66e)
     'uploads': [],
     // 5,000 mixed files for the performance budget (spec/10-performance.md)
     'large': Array.from({ length: 5000 }, (_, i) => {

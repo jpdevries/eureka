@@ -139,6 +139,19 @@ column), `media`, `name`, `actions`, `dimensions`, `file-size`,
   the current mode, so off-screen rows cost no layout or paint. Images
   are `loading="lazy"` and `decoding="async"` (02 HTML-66). See 10 for
   budgets.
+- **LAY-51** Media cells reserve their space before the picture arrives,
+  so loading never shifts the listing. An `<img>` carries `width` and
+  `height` from the entry's `dimensions` (02 HTML-66), which gives the
+  browser the aspect ratio; one without them gets `aspect-ratio: auto 4 /
+  3` and the mode's media height (20vh in table, 10vh in list, the tile
+  width elsewhere), so the box exists at once and takes the natural ratio
+  once known. Until the image paints the box shows a quiet tone
+  (`--media-skeleton-background`, by default 7% of the text colour), which
+  the element clears by marking the image `.eureka__loaded`; Level 0 keeps
+  the tone, so a transparent image sits on it there. An image no browser
+  decodes keeps its proportions the same way (02 HTML-66e). Sources SHOULD
+  report `dimensions` even when they have no preview yet (11 MS-04) so the
+  reserved box is the right shape.
 
 ## 6. Reference images
 

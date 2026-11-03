@@ -795,6 +795,17 @@ Taken on 2026-11-01:
   at the top of the README. The component itself stays on `system-ui`: a
   media browser inside a CMS inherits the host's type. There is no spec
   site yet, so nothing to apply there.
+- Reserved media space and undecodable originals (LAY-51, HTML-66e):
+  media cells keep their shape before the picture arrives (width/height
+  from `dimensions`, else a 4:3 box at the mode's height) under a quiet
+  tone the element clears on load, and an image no browser decodes (TIFF)
+  renders as a skeleton tile in the item's proportions instead of an
+  `<img>` of the original, which Chrome downloaded whole and could not
+  show (59 MB for one Cassini TIFF; Drive makes no thumbnail and no
+  `imageMediaMetadata` above about 50 MB, a ceiling, not a delay, so the
+  four largest NASA originals stay tiles until a driver reads the TIFF
+  header for their dimensions).
+  Fixture `assets/docs/scans/scan.tif`; renderer and conformance tests.
 - Package names: the `@eureka` npm scope belongs to an existing npm user,
   so the packages are `@mrktps/eureka` (the element, what most people
   install) and `@mrktps/eureka-core`, `-html`, `-css`, `-react`,

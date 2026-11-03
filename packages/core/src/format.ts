@@ -7,6 +7,7 @@ export type Translate = (id: string, values?: Record<string, unknown>) => string
 
 const IMAGE = new Set(['.jpg', '.jpeg', '.gif', '.png', '.png8', '.png24', '.svg', '.bmp', '.tiff', '.tif', '.webp', '.avif']);
 const RASTER = new Set(['.jpg', '.jpeg', '.png', '.gif', '.webp', '.avif', '.bmp', '.tiff', '.tif']);
+const BROWSER_IMAGE = new Set(['.jpg', '.jpeg', '.gif', '.png', '.png8', '.png24', '.svg', '.bmp', '.webp', '.avif']);
 const VIDEO = new Set(['.mp4', '.mov', '.webm', '.wbm', '.ogv', '.m4v']);
 const AUDIO = new Set(['.mp3', '.wav', '.ogg', '.flac', '.m4a', '.aac']);
 
@@ -21,6 +22,8 @@ export function mediaKind(nameOrUrl: string): MediaKind {
 }
 /** Raster images are the ones the crop tool accepts (02 HTML-68). */
 export function isCroppable(nameOrUrl: string): boolean { return RASTER.has(extname(nameOrUrl)); }
+/** Can a browser decode this image itself? TIFF is an image for listing and cropping (the server reads it) but never an <img> source (02 HTML-66e). */
+export function browserDecodes(nameOrUrl: string): boolean { return BROWSER_IMAGE.has(extname(nameOrUrl)); }
 
 /** Icon name in the sprite, by extension (v2 utility.getIconByExtension, extended). */
 export function iconForExtension(ext: string): string {

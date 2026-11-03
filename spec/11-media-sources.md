@@ -37,7 +37,10 @@ Everything below holds for every driver.
 - **MS-04** A file entry SHOULD carry `dimensions` and `animated` (02
   HTML-66b) when the backend can know them for the cost of the listing or
   a bounded read; a driver documents what that read costs and lets the
-  host turn it off. Text-like files (`isTextLike`) SHOULD set
+  host turn it off. A large original the source has no preview for yet
+  SHOULD still report `dimensions`, so the row reserves a box of the
+  right shape (04 LAY-51) instead of an `<img>` the browser cannot
+  decode (02 HTML-66e). Text-like files (`isTextLike`) SHOULD set
   `absolutePreviewURL` to the thumbnail route `/sources/{name}/__thumb/{path}`
   unless the host supplies a preview URL (02 HTML-66c).
 - **MS-04a** A backend that can picture a file (a thumbnail service, a
@@ -245,7 +248,10 @@ general cloud-drive rules; MS-50..MS-55 are Drive's).
   `'{id}' in parents and trashed = false` (and the folder MIME type for
   the tree), `supportsAllDrives`, following `nextPageToken`. `fileSize`
   is `size`, `editedOn` is `modifiedTime`, `dimensions` is
-  `imageMediaMetadata` (free), `animated` is a 64 KB head probe of
+  `imageMediaMetadata` (free; Drive computes neither it nor a thumbnail
+  for images above about 50 MB, so such originals list without
+  `dimensions` and render as the skeleton tile of 02 HTML-66e at 4:3
+  unless a driver reads the header itself), `animated` is a 64 KB head probe of
   GIF/SVG/PNG/WebP only, cached by id and checksum. Listings are cached
   `cacheTtl` (30 s) and dropped by mutations.
 - **MS-52 Native documents.** Docs, Sheets, Slides, Drawings, Forms, Jams,

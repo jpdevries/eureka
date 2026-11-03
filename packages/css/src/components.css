@@ -152,6 +152,18 @@
   .eureka .eureka__folder-tile .icon { inline-size: 40%; block-size: 40%; max-inline-size: 4rem; max-block-size: 4rem; opacity: 0.8; }
   .eureka:is([data-view="table"], [data-view="list"]) .eureka__folder-tile { inline-size: 4rem; aspect-ratio: 1; min-block-size: 0; padding: 0; gap: 0; }
   .eureka .eureka__folder-tile:hover, .eureka .eureka__folder-tile:focus-visible { background: var(--subtle); }
+  /* Reserved media space (04 LAY-51): the box keeps its shape before the picture arrives. width/height attributes give the ratio; without them
+     a 4:3 box at the mode's media height. A quiet tone fills the box until the image paints; the element marks painted images, Level 0 keeps the tone. */
+  .eureka .eureka__td-media img:not(.eureka__loaded, .eureka__media-text, .eureka__media-preview) { background: var(--media-skeleton-background, color-mix(in srgb, var(--color) 7%, transparent)); }
+  .eureka .eureka__td-media img:not([width], .eureka__media-text, .eureka__media-preview) { aspect-ratio: auto 4 / 3; inline-size: 100%; }
+  .eureka[data-view="table"] .eureka__td-media img:not([width], .eureka__media-text, .eureka__media-preview) { inline-size: auto; block-size: 20vh; max-inline-size: 100%; }
+  .eureka[data-view="list"] .eureka__td-media img:not([width], .eureka__media-text, .eureka__media-preview) { inline-size: auto; block-size: 10vh; max-inline-size: 100%; }
+  /* An image no browser can show (02 HTML-66e): a tile in the item's own proportions with the type icon; the name column repeats the name in table and list. */
+  .eureka .eureka__media-skeleton { display: flex; flex-direction: column; gap: 0.5rem; align-items: center; justify-content: center; inline-size: 100%; max-inline-size: 100%; aspect-ratio: var(--eureka-media-ratio, 4 / 3); min-block-size: 3rem; margin: 0; padding: 0.5rem; border-radius: 0.25rem; background: var(--media-skeleton-background, color-mix(in srgb, var(--color) 7%, transparent)); color: var(--subtle); }
+  .eureka .eureka__media-skeleton .icon { font-size: 1em; inline-size: 40%; block-size: 40%; max-inline-size: 4rem; max-block-size: 4rem; opacity: 0.8; }
+  .eureka .eureka__media-skeleton__name { max-inline-size: 100%; overflow-wrap: anywhere; text-align: center; font-size: 0.9em; line-height: 1.25; }
+  .eureka:is([data-view="table"], [data-view="list"]) .eureka__media-skeleton { inline-size: auto; block-size: 4rem; min-block-size: 0; padding: 0; gap: 0; }
+  .eureka:is([data-view="table"], [data-view="list"]) .eureka__media-skeleton__name { display: none; }
   .eureka .eureka__badge--animated { position: absolute; inset-block-end: 0.35rem; inset-inline-end: 0.35rem; display: inline-flex; align-items: center; justify-content: center; inline-size: 1.75rem; block-size: 1.75rem; min-inline-size: 24px; min-block-size: 24px; padding: 0; border-radius: 999px; background: var(--light-bg); color: var(--color); border: 1px solid var(--subtle); box-shadow: none; font: inherit; }
   .eureka span.eureka__badge--animated { pointer-events: none; } /* Level 0: a marker only */
   .eureka button.eureka__badge--animated { cursor: pointer; }

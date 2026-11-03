@@ -212,6 +212,26 @@ test('HTML-66d a PDF row shows an icon or a preview image, never an inline viewe
   await expect(page.locator('object[type="application/pdf"]')).toHaveCount(0);
 });
 
+test('HTML-66e an image the browser cannot decode is a skeleton tile, never an <img> of the original', async ({ page }) => {
+  v3only('undecodable originals (HTML-66e)');
+  await openDirectory(page, 'assets/docs/scans');
+  const row = rowNamed(page, 'scan.tif');
+  await expect(row).toBeVisible();
+  await expect(row.locator('img')).toHaveCount(0);
+  const tile = row.locator('.eureka__media-skeleton');
+  await expect(tile).toHaveCount(1);
+  expect(await tile.evaluate((el) => getComputedStyle(el).aspectRatio)).toBe('4000 / 3000');
+});
+
+test('LAY-51 media cells reserve their space before images load', async ({ page }) => {
+  v3only('reserved media space (LAY-51)');
+  await openDirectory(page, 'assets/img');
+  const unsized = await page.locator('.eureka__td-media img').evaluateAll((imgs) => imgs
+    .filter((img) => !(img.hasAttribute('width') && img.hasAttribute('height')) && getComputedStyle(img).aspectRatio === 'auto')
+    .map((img) => img.getAttribute('src')));
+  expect(unsized).toEqual([]);
+});
+
 test('STATE-10a the filter understands qualifiers, negation and comparisons; unknown ones are plain text', async ({ page }) => {
   v3only('filter query syntax (07 STATE-10a)');
   const all = await rows(page).count();

@@ -306,6 +306,19 @@ DOM order is the reading order and the tab order.
   costs one small image per row until Play. Expand opens the file itself
   in its own browsing context, where the browser's viewer belongs. The
   only `<object>` left in a row is the animated SVG of HTML-66b.
+- **HTML-66e** An image no browser can decode (`tif`, `tiff`; the
+  formats a browser shows are the ones `@mrktps/eureka-core`'s
+  `browserDecodes` accepts) is never an `<img>` of the original. A row
+  without `renditions` whose `absolutePreviewURL` is the file itself
+  renders `p.eureka__media-skeleton` in the item's own proportions
+  (`--eureka-media-ratio` from `dimensions`, 4:3 when unknown) holding the
+  type icon and the filename (`.eureka__media-skeleton__name`, hidden in
+  table and list, where the name column shows it). A 60 MB TIFF a cloud
+  source will not thumbnail (Drive renders no preview above about 50 MB,
+  11 MS-51) then costs the row nothing, where an `<img>` fetched the
+  whole file and showed a blank; a source that does offer a preview
+  shows it like any other image. The space a
+  loading image takes is 04 LAY-51.
 - **HTML-67** Name cell: the filename with a `<wbr>` after every 8
   characters so long names wrap. When renaming inline it becomes
   editable; Enter commits, Escape cancels, empty names are rejected.
@@ -463,6 +476,8 @@ Informative mapping used by the stylesheet. Hosts MAY style these.
 | `.eureka__table-wrapper`, `.eureka__table` | listing |
 | `.eureka__th-media`, `.eureka__th-filename`, `.eureka__th-actions`, `.eureka__th-dimensions`, `.eureka__th-file-size`, `.eureka__th-edited-on`, `.eureka__choose` (th and td) | header cells |
 | `.eureka__td-media`, `.eureka__td-filename`, `.eureka__context-row`, `.eureka__dimensions`, `.eureka__file-size`, `.eureka__edited-on` | row cells |
+| `.eureka__media-skeleton`, `.eureka__media-skeleton__name` | an undecodable image's tile and its name (HTML-66e) |
+| `.eureka__loaded` | an image that has painted; the element sets it (04 LAY-51) |
 | `.eureka__focused-media-item` | the focused row (v2 also toggled this by hand; v3 relies on `:focus-within`) |
 | `.eureka__context-buttons`, `.eureka__button-bar` | action toolbars |
 | `.eureka__pathbar`, `#{p}selected_file_names` | path bar |

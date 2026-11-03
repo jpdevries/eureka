@@ -1,5 +1,5 @@
 // One listing row (02 HTML-62..69).
-import { extname, iconForExtension, isCroppable, mediaKind, selectIsChecked, selectRecord, type FileEntry, selectCan, type FolderEntry } from '@mrktps/eureka-core';
+import { browserDecodes, extname, iconForExtension, isCroppable, mediaKind, selectIsChecked, selectRecord, type FileEntry, selectCan, type FolderEntry } from '@mrktps/eureka-core';
 import { attr, classes, html, raw, type Raw } from '../html.js';
 import type { Ctx } from '../model.js';
 import { hidden, icon } from './icon.js';
@@ -26,6 +26,8 @@ export function media(ctx: Ctx, item: FileEntry, { controls = true, width, heigh
   switch (kind) {
     case 'image': {
       const rends = item.renditions ?? [];
+      // an original the browser cannot decode (TIFF) never becomes an <img>: the row keeps the item's shape as a skeleton tile (HTML-66e)
+      if (!rends.length && (!item.absolutePreviewURL || item.absolutePreviewURL === item.absoluteURL) && !browserDecodes(item.filename)) return skeleton(ctx, item);
       // the <img> carries the fallback format: the last type listed (hosts list modern formats first, HTML-66a)
       const fallbackType = rends.length ? rends[rends.length - 1]!.type : undefined;
       const img = html`<img src="${src}" alt="${alt}" loading="lazy" decoding="async"${raw(dims)}${rends.length ? attr('sizes', IMAGE_SIZES[state.view.mode] ?? '100cqi') : ''}${rends.length ? attr('srcset', rends.filter((r) => !r.type || r.type === fallbackType).map((r) => `${r.url} ${r.width}w`).join(', ')) : ''}>`;
@@ -64,6 +66,12 @@ export function media(ctx: Ctx, item: FileEntry, { controls = true, width, heigh
     }
     default: return html`<p class="eureka__file-placeholder">${icon(ctx, iconForExtension(extname(item.filename)))} <span>${item.filename}</span></p>`;
   }
+}
+
+/** A tile for an image no browser can show (HTML-66e): the item's own proportions, the type icon and the name; table and list hide the name, which their name column shows. */
+function skeleton(ctx: Ctx, item: FileEntry): Raw {
+  const ratio = item.dimensions ? ` style="--eureka-media-ratio: ${item.dimensions[0]} / ${item.dimensions[1]}"` : '';
+  return html`<p class="eureka__file-placeholder eureka__media-skeleton"${raw(ratio)}>${icon(ctx, iconForExtension(extname(item.filename)))} <span class="eureka__media-skeleton__name">${breakableName(item.filename)}</span></p>`;
 }
 
 /** One action a row offers (HTML-68): the toolbar and the context menu (HTML-71) render the same list. */

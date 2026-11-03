@@ -231,8 +231,14 @@ export class EurekaBrowser extends HTMLElement {
     this.#afterRender(state);
   }
 
+  /** Images already complete after a render (cached, or nodes the render re-created) get the loaded mark at once (04 LAY-51). */
+  #markLoadedMedia(): void {
+    for (const img of this.querySelectorAll<HTMLImageElement>('.eureka__td-media img:not(.eureka__loaded)')) if (img.complete && img.naturalWidth > 0) img.classList.add('eureka__loaded');
+  }
+
   #afterRender(state: State): void {
     this.#applyKeyboard();
+    this.#markLoadedMedia();
     this.#syncAnimations();
     this.#observeTextPlaceholders();
     if (this.#contextTarget && !this.#menu()) this.#closeContextMenu(false); // the row left the listing
@@ -277,6 +283,7 @@ export class EurekaBrowser extends HTMLElement {
     on('dragleave', (e) => { if (!(e.relatedTarget instanceof Node) || !this.contains(e.relatedTarget)) this.#setDragging(false); });
     on('drop', (e) => this.#onDrop(e));
     on('paste', (e) => this.#onPaste(e));
+    on('load', (e) => { const t = e.target; if (t instanceof HTMLImageElement && t.closest('.eureka__td-media')) t.classList.add('eureka__loaded'); }, { capture: true }); // the skeleton tone goes once the picture paints (04 LAY-51)
     document.addEventListener('fullscreenchange', () => this.#onFullscreenChange(), { signal });
   }
 
