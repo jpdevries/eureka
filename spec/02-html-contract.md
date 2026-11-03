@@ -369,8 +369,10 @@ DOM order is the reading order and the tab order.
   row menu of HTML-71. It is shown on hover, on focus within the row and
   on the focused row, and only the focused row's button is in the tab
   order (`tabindex="0"`, others `-1`), so a tile is one tab stop plus one
-  for its menu. Table and list hide it: the row toolbar (HTML-65) is the
-  extra stop there.
+  for its menu. The menu it opens hangs from the button's bottom edge,
+  end-aligned to it and kept inside the viewport, not from the row like a
+  keyboard-opened menu. Table and list hide it: the row toolbar (HTML-65)
+  is the extra stop there.
 - **HTML-80** When a row is focused or items are selected, a path bar
   renders between the listing and the choose bar with `role="status"`,
   id `{p}selected_file_names`. For a single item it shows a type icon and

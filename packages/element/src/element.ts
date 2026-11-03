@@ -310,7 +310,7 @@ export class EurekaBrowser extends HTMLElement {
       case 'toggle-panel': this.#store.dispatch({ type: 'view/togglePanel' }); break;
       case 'shortcuts': this.#openDialog('shortcuts', undefined, el); break;
       case 'play': { const p = el.dataset.path; if (p) this.#toggleAnimation(p); break; }
-      case 'menu': { const row = el.closest<HTMLTableRowElement>('tr[data-path]'); if (row) { this.#openContextMenu(row); } break; } // the tile menu (02 HTML-71a)
+      case 'menu': { const row = el.closest<HTMLTableRowElement>('tr[data-path]'); if (row) { const r = el.getBoundingClientRect(); this.#openContextMenu(row, { x: r.right, y: r.bottom + 4, align: 'end' }); } break; } // the tile menu (02 HTML-71a) drops from its button
       case 'navigate': e.preventDefault(); void this.navigate(el.dataset.source ?? state.listing.source ?? '', el.dataset.cd ?? '/'); break;
       case 'create-directory': this.#openDialog('createDirectory', undefined, el); break;
       case 'upload': e.preventDefault(); this.#pickFiles(); break;
@@ -581,7 +581,7 @@ export class EurekaBrowser extends HTMLElement {
     this.#openContextMenu(row, { x: e.clientX, y: e.clientY });
   }
 
-  #openContextMenu(row: HTMLTableRowElement, origin: { x: number; y: number } | null = null): void {
+  #openContextMenu(row: HTMLTableRowElement, origin: { x: number; y: number; align?: 'start' | 'end' } | null = null): void {
     if (this.#contextTarget === row.dataset.path && this.#menu()?.matches(':popover-open')) return;
     this.#closeContextMenu(false);
     this.#contextTarget = row.dataset.path ?? null;
@@ -601,6 +601,7 @@ export class EurekaBrowser extends HTMLElement {
     menu.showPopover();
     if (menu.classList.contains('eureka__context-menu--placed')) { // keep it inside the viewport now that it has a size
       const m = menu.getBoundingClientRect();
+      if (origin?.align === 'end') menu.style.left = `${origin.x - m.width}px`; // a menu button: hang from its end edge
       const x = Math.max(8, Math.min(parseFloat(menu.style.left), window.innerWidth - m.width - 8));
       const y = Math.max(8, Math.min(parseFloat(menu.style.top), window.innerHeight - m.height - 8));
       menu.style.left = `${x}px`; menu.style.top = `${y}px`;

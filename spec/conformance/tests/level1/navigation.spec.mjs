@@ -191,3 +191,23 @@ test('HTML-44 the toolbar does not claim menubar semantics', async ({ page }) =>
   await expect(page.getByRole('menubar')).toHaveCount(0);
   await expect(page.getByRole('toolbar', { name: 'Listing controls' })).toHaveCount(1);
 });
+
+test('HTML-71a the tile menu button is the focused tile\'s extra tab stop and its menu hangs from the button', async ({ page }) => {
+  v3only('tile menu button (02 HTML-71a)');
+  await openDirectory(page);
+  await setView(page, 'grid');
+  const second = rows(page).nth(1);
+  await second.focus();
+  await page.keyboard.press('Tab');
+  const button = second.locator('.eureka__tile-menu');
+  await expect(button).toBeFocused();
+  await expect(rows(page).first().locator('.eureka__tile-menu')).toHaveAttribute('tabindex', '-1');
+  await page.keyboard.press('Enter');
+  const menu = page.locator('.eureka__context-menu');
+  await expect(menu).toBeVisible();
+  const b = await button.boundingBox(); const m = await menu.boundingBox();
+  expect(m.y).toBeGreaterThanOrEqual(b.y + b.height - 1); // below the button
+  expect(Math.abs(m.x + m.width - (b.x + b.width))).toBeLessThan(2); // end-aligned to it
+  await page.keyboard.press('Escape');
+  await expect(second).toBeFocused();
+});
