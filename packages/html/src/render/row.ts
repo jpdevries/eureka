@@ -26,7 +26,9 @@ export function media(ctx: Ctx, item: FileEntry, { controls = true, width, heigh
   switch (kind) {
     case 'image': {
       const rends = item.renditions ?? [];
-      const img = html`<img src="${src}" alt="${alt}" loading="lazy" decoding="async"${raw(dims)}${rends.length ? attr('sizes', IMAGE_SIZES[state.view.mode] ?? '100cqi') : ''}${rends.length ? attr('srcset', rends.filter((r) => !r.type || r.type === rends[0]!.type).map((r) => `${r.url} ${r.width}w`).join(', ')) : ''}>`;
+      // the <img> carries the fallback format: the last type listed (hosts list modern formats first, HTML-66a)
+      const fallbackType = rends.length ? rends[rends.length - 1]!.type : undefined;
+      const img = html`<img src="${src}" alt="${alt}" loading="lazy" decoding="async"${raw(dims)}${rends.length ? attr('sizes', IMAGE_SIZES[state.view.mode] ?? '100cqi') : ''}${rends.length ? attr('srcset', rends.filter((r) => !r.type || r.type === fallbackType).map((r) => `${r.url} ${r.width}w`).join(', ')) : ''}>`;
       if (item.animated && level > 0) { // still until played (02 HTML-66b); the element pauses or plays what the markup declares
         const playing = isPlaying(ctx, item);
         const ratio = item.dimensions ? ` style="aspect-ratio: ${item.dimensions[0]} / ${item.dimensions[1]}"` : '';
@@ -38,6 +40,7 @@ export function media(ctx: Ctx, item: FileEntry, { controls = true, width, heigh
       for (const r of rends) { const k = r.type ?? 'fallback'; byType.set(k, [...(byType.get(k) ?? []), r]); }
       const sources = [...byType.entries()].filter(([type]) => type.startsWith('image/') && (type === 'image/avif' || type === 'image/webp'))
         .map(([type, rs]) => html`<source type="${type}" sizes="${IMAGE_SIZES[state.view.mode] ?? '100cqi'}" srcset="${rs.map((r) => `${r.url} ${r.width}w`).join(', ')}">`);
+      if (!sources.length) return img; // one format: a plain <img srcset> (HTML-66a)
       return html`<picture>${sources}${img}</picture>`;
     }
     case 'video': return html`<video${attr('width', width ?? 320)}${attr('height', height ?? 240)}${attr('controls', controls)} preload="metadata"><source src="${src}">${t('support.noVideo')}</video>`;

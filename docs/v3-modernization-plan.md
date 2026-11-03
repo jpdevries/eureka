@@ -343,7 +343,7 @@ Taken on 2026-11-01:
   filter, the store with events and selectors, persistence, keymap, ICU
   i18n, REST client, worker engine with inline fallback. 37 unit tests.
   Spec data is synced into `src/data` by `scripts/sync-spec-data.mjs`.
-- `packages/server-node`: filesystem and S3-compatible media sources and HTTP handler
+- `packages/server-node`: filesystem, S3-compatible and Google Drive media sources and HTTP handler
   implementing the OpenAPI document and the Level 0 protocol with a
   pluggable `renderPage`; CLI. 11 contract tests validating responses
   against the spec schemas.
@@ -650,6 +650,40 @@ Taken on 2026-11-01:
   after a 403 from the bucket, and the element re-reads the source list
   after any 403 on a mutation so the controls follow. Prompted by the
   read-only R2 token: the demo's pantry source now shows no Delete.
+- Google Drive driver (spec 11 §4, MS-40..44 and MS-50..55):
+  `createGoogleDriveSource` over the Drive v3 REST API with two token
+  providers and no Google library (service-account RS256 JWT via
+  `node:crypto`, or a refresh token). The path model is a cached
+  path ↔ id map; duplicate names get ` (2)`, a `/` in a name shows as
+  `∕`, native documents list as `.gdoc`/`.gsheet`/… and export as PDF
+  when opened, shortcuts show their target, rename is a metadata patch,
+  delete is the trash, an upload over a same-named file replaces its
+  bytes, dimensions come free from `imageMediaMetadata`. Read-only on
+  declaration or after a 403. `test/fake-gdrive.ts` is an in-memory
+  Drive whose token endpoint verifies the JWT signature against the
+  test's public key; eight contract tests. CLI `--gdrive-folder` /
+  `--gdrive-drive` with `GOOGLE_*` credentials; the demo takes a
+  `.env.<name>` naming `EUREKA_GDRIVE_FOLDER`. Not yet run against a
+  live Drive.
+- Previews (MS-04a, MS-56): a `preview(p, { width, format, ifNoneMatch })`
+  hook on `MediaSource` and a `/sources/{name}/__preview/{path}?w=&f=`
+  route with ETag and 304. The Drive source serves Drive's own thumbnail
+  through it (the signed link resized by `=s{n}`, never carrying the
+  bearer token, refreshed once when expired) as JPEG at quality 80 via
+  Google's `-rj-l80` flags (Drive's default PNG was four times the size;
+  its WebP is lossless and heavier still, so no WebP rendition and no
+  `<picture>`, though `?f=webp` and `?f=png` stay on the route), and lists
+  JPEG renditions at 220/440/880 px so the row's existing `srcset`
+  (HTML-66a) picks the size. Verified live on the NASA folder shared
+  read-only with a service account: ten of fourteen files had Drive
+  thumbnails within minutes, a 35 MB TIFF row is a 30 KB JPEG at 220 px,
+  ETag/304 hold, a byte range on a 192 MB TIFF answers 206, a write
+  answers 403. The four TIFFs over 60 MB had no Drive thumbnail or
+  dimensions yet. Fixed on the way: the row's fallback `<img>` took the
+  first rendition format's `srcset` instead of the last (HTML-66a), and
+  wrapped a single format in `<picture>`. The filesystem and S3 sources
+  still preview images as themselves; a resizer there is a separate
+  decision.
 - Package names: the `@eureka` npm scope belongs to an existing npm user,
   so the packages are `@mrktps/eureka` (the element, what most people
   install) and `@mrktps/eureka-core`, `-html`, `-css`, `-react`,

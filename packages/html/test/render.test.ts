@@ -17,6 +17,21 @@ const input: PageInput = {
   lang: 'en-US', basePath: '/assets/components/eureka/', timeZone: 'UTC'
 };
 
+describe('renditions (02 HTML-66a)', () => {
+  it('puts modern formats in <source> and the last-listed format in the fallback <img> srcset', () => {
+    const entry = { filename: 'big.tif', directory: '/', path: 'big.tif', absoluteURL: '/s/big.tif', absolutePreviewURL: '/s/__preview/big.tif', editedOn: 0, fileSize: 1, dimensions: [3000, 2000] as [number, number],
+      renditions: [{ url: '/p?w=220&f=webp', width: 220, type: 'image/webp' }, { url: '/p?w=220&f=jpeg', width: 220, type: 'image/jpeg' }, { url: '/p?w=440&f=jpeg', width: 440, type: 'image/jpeg' }] };
+    const out = renderLevel0({ sources: [{ id: 0, name: 's' }], source: { id: 0, name: 's' }, path: '/', entries: [entry], tree: [], lang: 'en', basePath: '/' });
+    const source = /<source[^>]*>/.exec(out)![0];
+    expect(source).toContain('type="image/webp"'); expect(source).toContain('f=webp 220w'); expect(source).not.toContain('f=jpeg');
+    const img = /<img[^>]*big\.tif[^>]*>/.exec(out)![0];
+    expect(img).toContain('f=jpeg 220w'); expect(img).toContain('f=jpeg 440w'); expect(img).not.toContain('f=webp');
+    const jpegOnly = renderLevel0({ sources: [{ id: 0, name: 's' }], source: { id: 0, name: 's' }, path: '/', entries: [{ ...entry, renditions: entry.renditions.slice(1) }], tree: [], lang: 'en', basePath: '/' });
+    expect(jpegOnly).not.toContain('<picture>'); // one format: a plain <img srcset>
+    expect(/<img[^>]*big\.tif[^>]*>/.exec(jpegOnly)![0]).toContain('srcset=');
+  });
+});
+
 describe('html templating', () => {
   it('escapes interpolations and keeps raw', () => {
     expect(html`<b>${'<i>&"'}</b>`.value).toBe('<b>&lt;i&gt;&amp;&quot;</b>');

@@ -26,7 +26,14 @@ export interface MediaSource extends Source {
   open(p: string, range?: { start: number; end?: number }): Promise<{ stream: Readable; size: number; contentType: string; start?: number; end?: number } | null>;
   /** The text thumbnail of a text-like file (02 HTML-66c), or null for other files. Cached by size and mtime. */
   thumbnail?(p: string): Promise<{ svg: string; etag: string } | null>;
+  /**
+   * A rendered preview of any file the backend can picture (11 MS-04a): a raster at about `width` pixels in `format`
+   * (JPEG by default), served at `/sources/{name}/__preview/{path}?w=&f=`. Returns `{ notModified }` when `ifNoneMatch` equals the current etag, null when
+   * the backend has no preview for the file.
+   */
+  preview?(p: string, opts: { width: number; format?: 'jpeg' | 'webp' | 'png'; ifNoneMatch?: string }): Promise<PreviewResult | null>;
 }
+export type PreviewResult = { etag: string; notModified: true } | { etag: string; notModified?: false; stream: Readable; contentType: string; size?: number };
 
 export interface FilesystemSourceOptions {
   id: Source['id'];

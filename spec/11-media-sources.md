@@ -1,7 +1,8 @@
 # 11. Media sources
 
 Status: draft. The contract a storage backend satisfies to appear as a
-media source (01 §1), the two drivers the reference server ships, and the
+media source (01 §1), the three drivers the reference server ships
+(filesystem, S3-compatible storage, Google Drive), and the
 considerations for the ones it does not yet.
 
 The REST API (`api/openapi.yaml`) and the Level 0 protocol (03) say what
@@ -39,6 +40,14 @@ Everything below holds for every driver.
   host turn it off. Text-like files (`isTextLike`) SHOULD set
   `absolutePreviewURL` to the thumbnail route `/sources/{name}/__thumb/{path}`
   unless the host supplies a preview URL (02 HTML-66c).
+- **MS-04a** A backend that can picture a file (a thumbnail service, a
+  drive's own renderer) SHOULD serve that picture at
+  `/sources/{name}/__preview/{path}?w={width}` through `preview(p,
+  { width, ifNoneMatch })` with a strong ETag and 304s, point
+  `absolutePreviewURL` at it, and offer the same picture at a few widths
+  in `renditions` so the row renders `srcset` (02 HTML-66a). This is how
+  a 200 MB TIFF becomes a 30 KB row: the browser never sees the
+  original until Expand. Text files keep their SVG thumbnail (MS-04).
 - **MS-05** `listTree(cd, depth)` returns the subfolders of `cd` (default
   the root) `depth` levels deep (`tree-node.json`); the handler's
   `treeDepth` (default 3) applies when the request names none. A node at
@@ -191,60 +200,103 @@ MS-27 says). The other rows come from each provider's documentation.
 
 Azure Blob Storage is not S3-compatible and needs a driver of its own.
 
-## 4. Cloud drives: Google Drive, Dropbox, Box (not yet built)
+## 4. Google Drive (`createGoogleDriveSource`)
 
-The same `MediaSource` contract fits them; what differs is identity,
-authentication and what a listing gives for free. These are the design
-decisions a driver makes, recorded before any is written.
-
-| | Google Drive | Dropbox | Box |
-|---|---|---|---|
-| Addressing | opaque file ids; names not unique in a folder | paths (`path_display`, case-insensitive `path_lower`) | ids; names unique per folder, case-insensitive |
-| Path → item | resolve segment by segment with `'{parent}' in parents and name = …`, cache ids by path | direct | resolve by walking folder items, cache ids by path |
-| Auth | OAuth 2.0 user consent, or a service account (domain-wide delegation for Workspace) | OAuth 2.0 app with refresh token | OAuth 2.0, or JWT server authentication for an app user |
-| Listing | `files.list` with `q`, `pageToken`, `fields` incl. `imageMediaMetadata`, `size`, `modifiedTime` | `files/list_folder` + `/continue`, `include_media_info` for photo dimensions | `GET /folders/{id}/items` with `offset`/`marker`, `fields` |
-| Dimensions | free (`imageMediaMetadata.width/height`) | free for photos (`media_info`) | not in the listing: representations API or a probe (MS-23) |
-| Thumbnails | `thumbnailLink` (expires, needs auth) → proxy | `files/get_thumbnail_batch` → proxy | `GET /files/{id}/thumbnail.png` → proxy |
-| Bytes | `files.get?alt=media`, `Range` honoured | `files/download`, `Range` honoured | `GET /files/{id}/content` (302 to an expiring URL), `Range` honoured |
-| Rename | `files.update { name }` | `files/move_v2` | `PUT /files/{id} { name }` |
-| Delete | `files.update { trashed: true }` (trash) | `files/delete_v2` (recoverable 30–180 days) | `DELETE /files/{id}` (trash) |
-| Folder delete | one call (trash the folder) | one call | `DELETE /folders/{id}?recursive=true` |
-| Rate limits | per-user and per-project quotas; batch endpoint | per-app, `Retry-After` | ~1 000 req/min per user, `Retry-After` |
-| Native documents | Docs/Sheets/Slides have no bytes: `export` (PDF) or list as `document` kind without a URL | Paper docs similar | none |
-
-What follows from the table, as proposed rules for those drivers:
+Drive is the first cloud drive driver. It addresses files by opaque id,
+allows several items with one name in a folder, has documents with no
+bytes of their own, and hands out expiring download links, so most of
+the work is holding the path model together (MS-40..MS-44 below are the
+general cloud-drive rules; MS-50..MS-55 are Drive's).
 
 - **MS-40** A drive driver keeps its own path ↔ id map, populated by the
-  listings it performs and invalidated by its own mutations, and never
-  exposes provider ids in `Entry.path`; two items with the same name in
-  one Drive folder are disambiguated deterministically (the later one
-  gets ` (2)` appended in the listing, the id map remembers which is
-  which) so the path model stays total.
+  listings it performs and dropped by its own mutations, and never
+  exposes provider ids in `Entry.path`. Two items with the same display
+  name in one folder are disambiguated deterministically: sorted by
+  creation time then id, the second gets ` (2)` before its extension,
+  the third ` (3)`, so the path model stays total and stable between
+  listings.
 - **MS-41** `absoluteURL` is always the proxy route (MS-03): every drive
   hands out expiring, credentialed download links. `open` forwards
   `Range`.
-- **MS-42** Delete uses the provider's trash where one exists (Drive,
-  Box) rather than permanent deletion; the API's `DELETE` remains
-  `remove`.
-- **MS-43** (built, for every driver) The tree is loaded by level.
-  `GET sources/{id}?depth=n` returns `n` levels from the root (default
-  the server's `treeDepth`, 3, the number MODX settled on) and
-  `GET sources/{id}?tree={cd}&depth=n` the levels below one folder. A
-  node past the cut-off omits `children`; the client renders it
-  expandable and fetches its level when it is opened
-  (`tree/branchLoaded`, 07 §4), and after every navigation loads the
-  branch down to the current directory. The server-rendered page does the
-  same before rendering (`treeAlong`), so Level 0 always shows the branch
-  to where the visitor is. `Config.treeDepth` (element attribute
-  `tree-depth`) sets the client's `n`.
-- **MS-44** Tokens are refreshed by the driver and stored by the host
-  (the driver takes `getToken(): Promise<string>`), never written by the
-  reference server to disk.
+- **MS-42** Delete uses the provider's trash where one exists rather than
+  permanent deletion (Drive: `trashed: true`); `permanentDelete: true`
+  opts out. The API's `DELETE` remains `remove`.
+- **MS-43** (built) the depth-limited tree, §1 MS-05.
+- **MS-44** The driver takes `getToken(): Promise<string>` and never sees
+  a refresh token or key file; the host builds the provider. The
+  reference server ships two without a client library: a service
+  account (RS256 JWT bearer grant signed with `node:crypto`, optional
+  `subject` for domain-wide delegation) and a user's refresh token.
+  Tokens are cached until a minute before they expire; a refused grant
+  is a 403.
+- **MS-50 Names.** A `/` in a Drive name shows as U+2215 DIVISION SLASH
+  in paths and filenames; a rename containing `/` is refused (400). An
+  upload with such a name is stored with the slash replaced.
+- **MS-51 Listing.** One `files.list` per 1 000 children with
+  `'{id}' in parents and trashed = false` (and the folder MIME type for
+  the tree), `supportsAllDrives`, following `nextPageToken`. `fileSize`
+  is `size`, `editedOn` is `modifiedTime`, `dimensions` is
+  `imageMediaMetadata` (free), `animated` is a 64 KB head probe of
+  GIF/SVG/PNG/WebP only, cached by id and checksum. Listings are cached
+  `cacheTtl` (30 s) and dropped by mutations.
+- **MS-52 Native documents.** Docs, Sheets, Slides, Drawings, Forms, Jams,
+  Sites and Apps Script files have no bytes. They list with `fileSize: 0`
+  and the extension Drive for desktop uses (`.gdoc`, `.gsheet`,
+  `.gslides`, `.gdraw`, `.gform`, `.gjam`, `.gsite`, `.gscript`), which
+  never reaches Drive on rename. `open` exports them (PDF; PNG for a
+  drawing; JSON for a script) whole, without `Range`, within Google's
+  10 MB export limit. They have no text thumbnail.
+- **MS-53 Shortcuts.** A shortcut lists as its target: a folder shortcut
+  is a folder, a file shortcut shows the target's size, dimensions and
+  bytes. Rename and delete act on the shortcut itself. A dangling
+  shortcut is not shown.
+- **MS-54 Mutations.** Upload is a multipart create into the folder; an
+  upload whose name matches an existing ordinary file replaces that
+  file's bytes (one id, no duplicate), as a filesystem would. Create
+  directory is idempotent. Rename is a metadata patch and refuses an
+  occupied name with 409. Delete trashes (MS-42). Shortcuts and native
+  documents are never overwritten by an upload.
+- **MS-56 Previews.** Drive renders a thumbnail for most images (TIFF,
+  PSD and RAW included), videos, PDFs and its own documents, exposed as
+  `hasThumbnail`, a short-lived signed `thumbnailLink` sized by its
+  `=s{n}` suffix, and `thumbnailVersion`. The source serves it through
+  the preview route (MS-04a) at 64–1600 px as JPEG (quality 80, Google's
+  `-rj-l80` flags; Drive's default PNG is four times the size) or WebP
+  (`?f=webp`) or PNG (`?f=png`), with `"p-{version}-{width}-{format}"`
+  as the ETag, and lists JPEG renditions at 220, 440 and 880 px, never
+  wider than the picture itself, for the row's `srcset` (02 HTML-66a).
+  WebP is not offered as a rendition: Google renders it lossless, about
+  four times the JPEG, so a `<picture>` would cost more than it saves. The link is on another host, so the bearer
+  token is never sent with it; an expired link (403) is replaced once
+  from fresh metadata. Files Drive has not pictured preview as
+  themselves.
+- **MS-55 Scope.** The root is `rootFolderId` (default `root`, the
+  account's My Drive) or a shared drive (`driveId`, `corpora=drive`).
+  A `drive.readonly` scope or a refused write turns the source read-only
+  (MS-09); `readOnly: true` declares it up front. A service account sees
+  only what is shared with it, which is the recommended way to expose
+  one folder: share the folder with the service account's address.
 
-Which to build first: Dropbox is the cheapest (path-based, free
-dimensions, Range on download) and proves the OAuth plumbing; Google
-Drive has the most users and the hardest identity model; Box is Drive's
-model with unique names. None is scheduled.
+### 4.1 Dropbox and Box (not yet built)
+
+The same contract fits them; what differs is identity, authentication
+and what a listing gives for free.
+
+| | Dropbox | Box |
+|---|---|---|
+| Addressing | paths (`path_display`, case-insensitive `path_lower`) | ids; names unique per folder, case-insensitive |
+| Path → item | direct | resolve by walking folder items, cache ids by path (MS-40) |
+| Auth | OAuth 2.0 app with refresh token | OAuth 2.0, or JWT server authentication for an app user |
+| Listing | `files/list_folder` + `/continue`, `include_media_info` for photo dimensions | `GET /folders/{id}/items` with `offset`/`marker`, `fields` |
+| Dimensions | free for photos (`media_info`) | not in the listing: representations API or a probe (MS-23) |
+| Bytes | `files/download`, `Range` honoured | `GET /files/{id}/content` (302 to an expiring URL), `Range` honoured |
+| Rename | `files/move_v2` | `PUT /files/{id} { name }` |
+| Delete | `files/delete_v2` (recoverable 30–180 days) | `DELETE /files/{id}` (trash) |
+| Folder delete | one call | `DELETE /folders/{id}?recursive=true` |
+| Rate limits | per-app, `Retry-After` | ~1 000 req/min per user, `Retry-After` |
+
+Dropbox is the cheaper of the two (path-based, free dimensions, Range on
+download); Box is Drive's model with unique names. Neither is scheduled.
 
 ## 5. Open items
 
@@ -254,6 +306,11 @@ model with unique names. None is scheduled.
   `node:crypto`) so a host-supplied API client (07 STATE-51) can talk to
   a bucket directly with scoped, short-lived STS credentials; the
   `thumbnails: "client"` path already covers previews in that setup.
-- Live verification of §3.2 against MinIO (R2 and AWS done).
+- Live verification of §3.2 against MinIO (R2 and AWS done). §4 was run
+  against a real folder (service account, read-only share): listing,
+  tree, previews, ranges, 403; Drive had not yet pictured four TIFFs over
+  60 MB, so whether it ever does for files that size is open.
+- Drive change notifications (`changes.list`) to refresh listings; today
+  the 30 s cache and mutations are the only refresh.
 - Google Cloud Storage lacks `DeleteObjects`: fall back per key when the
   provider answers 400/501.

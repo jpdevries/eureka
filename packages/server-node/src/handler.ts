@@ -183,6 +183,16 @@ export function createEurekaHandler(opts: HandlerOptions): NodeHandler {
           res.writeHead(200, { 'content-type': 'image/svg+xml', 'content-length': Buffer.byteLength(thumb.svg), etag: thumb.etag, 'cache-control': 'private, max-age=3600', 'x-content-type-options': 'nosniff' });
           res.end(thumb.svg); return true;
         }
+        if (url.pathname.startsWith(prefix + '__preview/')) { // rendered previews from the backend (11 MS-04a)
+          const width = Math.min(1600, Math.max(64, Number(url.searchParams.get('w')) || 320));
+          const ifNoneMatch = typeof req.headers['if-none-match'] === 'string' ? req.headers['if-none-match'] : undefined;
+          const f = url.searchParams.get('f'); const format = f === 'webp' || f === 'png' ? f : 'jpeg';
+          const pv = s.preview ? await s.preview(url.pathname.slice((prefix + '__preview/').length), { width, format, ...(ifNoneMatch ? { ifNoneMatch } : {}) }) : null;
+          if (!pv) { json(res, { error: 'not found' }, 404); return true; }
+          if (pv.notModified) { res.writeHead(304, { etag: pv.etag }); res.end(); return true; }
+          res.writeHead(200, { 'content-type': pv.contentType, ...(pv.size !== undefined ? { 'content-length': pv.size } : {}), etag: pv.etag, 'cache-control': 'private, max-age=3600', 'x-content-type-options': 'nosniff' });
+          pv.stream.pipe(res); return true;
+        }
         if (url.pathname.startsWith(prefix)) {
           const m = /^bytes=(\d*)-(\d*)$/.exec(req.headers.range ?? '');
           const range = m && (m[1] || m[2]) ? { start: m[1] ? Number(m[1]) : 0, ...(m[2] ? { end: Number(m[2]) } : {}) } : undefined;

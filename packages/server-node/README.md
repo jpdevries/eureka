@@ -1,8 +1,8 @@
 # @mrktps/eureka-server
 
 Reference implementation of the Eureka REST API (`spec/api/openapi.yaml`)
-over directories on disk or an S3-compatible bucket (spec 11, media
-sources), plus the Level 0 form protocol (`spec/03`) with a pluggable page
+over directories on disk, an S3-compatible bucket or a Google Drive
+folder (spec 11, media sources), plus the Level 0 form protocol (`spec/03`) with a pluggable page
 renderer. Plain `node:http`; no framework, no cloud SDK.
 
 ```bash
@@ -55,7 +55,24 @@ await startServer({
   every mutation; `dimensions` and `animated` come from the first 64 KB of
   each image, once per ETag. See `spec/11-media-sources.md` for the model
   and what it costs.
-- Both sources take `readOnly: true` (or `capabilities: { delete: false, … }`),
+- `createGoogleDriveSource({ getToken, rootFolderId | driveId, readOnly, permanentDelete })`
+  browses a Drive folder or shared drive through the Drive v3 REST API with
+  `createServiceAccountToken` (RS256 JWT, `node:crypto`) or
+  `createRefreshTokenProvider`; no Google client library. Drive's ids and
+  duplicate names become a path model (later duplicates get ` (2)`, a `/`
+  in a name shows as `∕`), Docs/Sheets/Slides appear as `.gdoc`/`.gsheet`/
+  `.gslides` and export as PDF when opened, shortcuts show their target,
+  rename is a metadata patch, delete goes to the trash, uploads over a
+  same-named file replace its bytes. CLI: `--gdrive-folder <id|root>` or
+  `--gdrive-drive <id>`, `--gdrive-name`, `--gdrive-read-only`, credentials
+  from `GOOGLE_APPLICATION_CREDENTIALS` (service-account JSON),
+  `GOOGLE_SERVICE_ACCOUNT_EMAIL` + `GOOGLE_PRIVATE_KEY`, or `GOOGLE_CLIENT_ID`
+  + `GOOGLE_CLIENT_SECRET` + `GOOGLE_REFRESH_TOKEN`. Drive's own thumbnails
+  (TIFF, video, PDF, documents) are served at
+  `/sources/{name}/__preview/{path}?w=` with renditions at 220/440/880 px
+  for `srcset`, so rows never load the original. Tested against
+  `test/fake-gdrive.ts`, which verifies the JWT's signature.
+- All three sources take `readOnly: true` (or `capabilities: { delete: false, … }`),
   listed with the source so clients drop the controls (spec 01 CON-04);
   the handler answers 403 to anything a source does not allow. The S3
   source also turns read-only by itself after the bucket's first 403.
