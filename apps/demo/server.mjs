@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { createEurekaHandler, createFilesystemSource, createS3Source, createGoogleDriveSource, createServiceAccountToken, createRefreshTokenProvider, DRIVE_SCOPE, DRIVE_READONLY_SCOPE, cssAssets, elementAssets, escapeHtml, i18nAssets, loadCatalog } from '@mrktps/eureka-server';
+import { createEurekaHandler, createFilesystemSource, createS3Source, createGoogleDriveSource, createWebDavSource, createServiceAccountToken, createRefreshTokenProvider, DRIVE_SCOPE, DRIVE_READONLY_SCOPE, cssAssets, elementAssets, escapeHtml, i18nAssets, loadCatalog } from '@mrktps/eureka-server';
 import { renderLevel0 } from '@mrktps/eureka-html';
 import { MEDIA_ROOT, seed } from './scripts/seed-media.mjs';
 
@@ -80,6 +80,14 @@ for (const e of envSets) {
     else if (e.GOOGLE_CLIENT_ID && e.GOOGLE_CLIENT_SECRET && e.GOOGLE_REFRESH_TOKEN) getToken = createRefreshTokenProvider({ clientId: e.GOOGLE_CLIENT_ID, clientSecret: e.GOOGLE_CLIENT_SECRET, refreshToken: e.GOOGLE_REFRESH_TOKEN });
     if (getToken) sources.push(createGoogleDriveSource({ id: sources.length, name: e.EUREKA_GDRIVE_NAME || 'drive', getToken, ...(e.EUREKA_GDRIVE_FOLDER ? { rootFolderId: e.EUREKA_GDRIVE_FOLDER } : {}), ...(e.EUREKA_GDRIVE_DRIVE ? { driveId: e.EUREKA_GDRIVE_DRIVE } : {}), ...(readOnly ? { readOnly: true } : {}) }));
     else console.error(`[demo] ${e.EUREKA_GDRIVE_NAME || 'drive'}: a Drive folder is named but no Google credentials are set`);
+  }
+  // WebDAV (spec 11 §5): EUREKA_WEBDAV_URL with WEBDAV_USERNAME + WEBDAV_PASSWORD (an app password) or WEBDAV_TOKEN
+  if (e.EUREKA_WEBDAV_URL && !sources.some((s) => s.name === (e.EUREKA_WEBDAV_NAME || 'webdav'))) {
+    sources.push(createWebDavSource({
+      id: sources.length, name: e.EUREKA_WEBDAV_NAME || 'webdav', url: e.EUREKA_WEBDAV_URL,
+      ...(e.WEBDAV_USERNAME !== undefined ? { username: e.WEBDAV_USERNAME } : {}), ...(e.WEBDAV_PASSWORD !== undefined ? { password: e.WEBDAV_PASSWORD } : {}), ...(e.WEBDAV_TOKEN ? { token: e.WEBDAV_TOKEN } : {}),
+      ...(/^(1|true|yes)$/i.test(e.EUREKA_WEBDAV_READ_ONLY ?? '') ? { readOnly: true } : {})
+    }));
   }
   if (!e.EUREKA_S3_BUCKET || !e.AWS_ACCESS_KEY_ID || !e.AWS_SECRET_ACCESS_KEY) continue;
   if (sources.some((s) => s.name === (e.EUREKA_S3_NAME || 'bucket'))) continue; // the shell and a file describing the same source

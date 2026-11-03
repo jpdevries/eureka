@@ -343,7 +343,7 @@ Taken on 2026-11-01:
   filter, the store with events and selectors, persistence, keymap, ICU
   i18n, REST client, worker engine with inline fallback. 37 unit tests.
   Spec data is synced into `src/data` by `scripts/sync-spec-data.mjs`.
-- `packages/server-node`: filesystem, S3-compatible and Google Drive media sources and HTTP handler
+- `packages/server-node`: filesystem, S3-compatible, Google Drive and WebDAV media sources and HTTP handler
   implementing the OpenAPI document and the Level 0 protocol with a
   pluggable `renderPage`; CLI. 11 contract tests validating responses
   against the spec schemas.
@@ -684,6 +684,19 @@ Taken on 2026-11-01:
   wrapped a single format in `<picture>`. The filesystem and S3 sources
   still preview images as themselves; a resizer there is a separate
   decision.
+- WebDAV driver (spec 11 §5, MS-60..65): `createWebDavSource` over
+  RFC 4918 with fetch, for Nextcloud, ownCloud, Synology, Fastmail Files,
+  Apache and the rest. `PROPFIND Depth: 1` is the listing and one tree
+  level, `MOVE` with `Overwrite: F` is rename (412 → 409), `DELETE`
+  removes a collection whole, `Range` is native; the multistatus parser
+  strips namespace prefixes and reads the 200 propstat; dimensions and
+  `animated` come from the 64 KB head probe shared with S3. On a
+  Nextcloud files URL the preview route serves `index.php/core/preview`
+  with JPEG renditions, so the second backend of MS-04a arrived with the
+  driver. Basic auth (app password) or bearer; 401/403 on a write flips
+  it read-only. `test/fake-webdav.ts` rotates the namespace prefix per
+  response; seven contract tests. CLI `--webdav-url`, demo
+  `EUREKA_WEBDAV_URL`. Not yet run against a live Nextcloud.
 - Package names: the `@eureka` npm scope belongs to an existing npm user,
   so the packages are `@mrktps/eureka` (the element, what most people
   install) and `@mrktps/eureka-core`, `-html`, `-css`, `-react`,

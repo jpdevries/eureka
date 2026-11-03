@@ -1,8 +1,8 @@
 # @mrktps/eureka-server
 
 Reference implementation of the Eureka REST API (`spec/api/openapi.yaml`)
-over directories on disk, an S3-compatible bucket or a Google Drive
-folder (spec 11, media sources), plus the Level 0 form protocol (`spec/03`) with a pluggable page
+over directories on disk, an S3-compatible bucket, a Google Drive
+folder or a WebDAV collection (spec 11, media sources), plus the Level 0 form protocol (`spec/03`) with a pluggable page
 renderer. Plain `node:http`; no framework, no cloud SDK.
 
 ```bash
@@ -72,7 +72,17 @@ await startServer({
   `/sources/{name}/__preview/{path}?w=` with renditions at 220/440/880 px
   for `srcset`, so rows never load the original. Tested against
   `test/fake-gdrive.ts`, which verifies the JWT's signature.
-- All three sources take `readOnly: true` (or `capabilities: { delete: false, … }`),
+- `createWebDavSource({ url, username, password | token, readOnly, probe, nextcloudPreviews })`
+  browses any WebDAV collection (Nextcloud, ownCloud, Synology, Fastmail
+  Files, Apache mod_dav, …): `PROPFIND Depth: 1` is the listing and one
+  tree level, `MOVE` is rename, `DELETE` removes a folder whole, `Range`
+  is native; the multistatus parser ignores namespace prefixes. On a
+  Nextcloud files URL, thumbnails come from its preview endpoint through
+  the preview route. CLI: `--webdav-url`, `--webdav-name`,
+  `--webdav-read-only`, credentials from `WEBDAV_USERNAME` +
+  `WEBDAV_PASSWORD` (an app password) or `WEBDAV_TOKEN`. Tested against
+  `test/fake-webdav.ts`.
+- All four sources take `readOnly: true` (or `capabilities: { delete: false, … }`),
   listed with the source so clients drop the controls (spec 01 CON-04);
   the handler answers 403 to anything a source does not allow. The S3
   source also turns read-only by itself after the bucket's first 403.

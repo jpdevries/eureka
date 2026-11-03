@@ -8,3 +8,5 @@ export { createDefaultRenderer, cssAssets, elementAssets, i18nAssets, i18nDir, l
 export { createGoogleDriveSource, type GoogleDriveSourceOptions } from './gdrive-source.js';
 export { createServiceAccountToken, createRefreshTokenProvider, staticToken, GoogleAuthError, DRIVE_SCOPE, DRIVE_READONLY_SCOPE, type TokenProvider, type ServiceAccountOptions, type RefreshTokenOptions } from './google/auth.js';
 export { DriveClient, DriveError, sizedThumbnailLink, type DriveClientOptions, type DriveFile, type PreviewFormat } from './google/drive-client.js';
+export { createWebDavSource, type WebDavSourceOptions } from './webdav-source.js';
+export { DavClient, DavError, parseMultistatus, encodeDavPath, type DavClientOptions, type DavResource } from './webdav/client.js';

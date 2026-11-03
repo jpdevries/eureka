@@ -4,12 +4,15 @@
 // --render serves the Level 0 page (and its stylesheet) at --base-path; --enhance adds the <eureka-browser> element bundle.
 // An S3-compatible source (spec 11) reads its credentials from AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY (/ AWS_SESSION_TOKEN).
 //               [--gdrive-folder <folderId|root> --gdrive-drive <sharedDriveId> --gdrive-name drive --gdrive-read-only]
+//               [--webdav-url https://cloud.example.org/remote.php/dav/files/jp/Photos/ --webdav-name cloud --webdav-read-only]
+// A WebDAV source (spec 11 §5) authenticates with WEBDAV_USERNAME + WEBDAV_PASSWORD (an app password) or WEBDAV_TOKEN.
 // A Google Drive source (spec 11 §4) authenticates with GOOGLE_APPLICATION_CREDENTIALS (a service-account JSON file),
 // GOOGLE_SERVICE_ACCOUNT_EMAIL + GOOGLE_PRIVATE_KEY, or GOOGLE_CLIENT_ID + GOOGLE_CLIENT_SECRET + GOOGLE_REFRESH_TOKEN.
 import fs from 'node:fs';
 import { createFilesystemSource, type MediaSource } from './fs-source.js';
 import { createS3Source } from './s3-source.js';
 import { createGoogleDriveSource } from './gdrive-source.js';
+import { createWebDavSource } from './webdav-source.js';
 import { createServiceAccountToken, createRefreshTokenProvider, DRIVE_READONLY_SCOPE, DRIVE_SCOPE, type TokenProvider } from './google/auth.js';
 import { startServer } from './server.js';
 import { createDefaultRenderer, cssAssets, elementAssets, i18nAssets } from './render.js';
@@ -45,7 +48,16 @@ if (args['gdrive-folder'] || args['gdrive-drive']) {
     ...(readOnly ? { readOnly: true } : {}), ...(args['gdrive-no-probe'] ? { probe: false } : {})
   }));
 }
-if (!sources.length) { console.error('nothing to serve: pass --root, --s3-bucket and/or --gdrive-folder'); process.exit(2); }
+if (typeof args['webdav-url'] === 'string') {
+  const { WEBDAV_USERNAME: username, WEBDAV_PASSWORD: password, WEBDAV_TOKEN: token } = process.env;
+  if (!token && username === undefined) console.error('--webdav-url without WEBDAV_USERNAME/WEBDAV_PASSWORD or WEBDAV_TOKEN: connecting anonymously');
+  sources.push(createWebDavSource({
+    id: sources.length, name: String(args['webdav-name'] ?? 'webdav'), url: args['webdav-url'],
+    ...(username !== undefined ? { username } : {}), ...(password !== undefined ? { password } : {}), ...(token ? { token } : {}),
+    ...(args['webdav-read-only'] ? { readOnly: true } : {}), ...(args['webdav-no-probe'] ? { probe: false } : {}), ...(args['webdav-no-previews'] ? { nextcloudPreviews: false } : {})
+  }));
+}
+if (!sources.length) { console.error('nothing to serve: pass --root, --s3-bucket, --gdrive-folder and/or --webdav-url'); process.exit(2); }
 
 /** A Google token provider from the environment, or undefined when nothing is configured. */
 export function googleTokenFromEnv(readOnly: boolean, env: NodeJS.ProcessEnv = process.env): TokenProvider | undefined {

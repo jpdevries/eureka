@@ -1,8 +1,8 @@
 # 11. Media sources
 
 Status: draft. The contract a storage backend satisfies to appear as a
-media source (01 §1), the three drivers the reference server ships
-(filesystem, S3-compatible storage, Google Drive), and the
+media source (01 §1), the four drivers the reference server ships
+(filesystem, S3-compatible storage, Google Drive, WebDAV), and the
 considerations for the ones it does not yet.
 
 The REST API (`api/openapi.yaml`) and the Level 0 protocol (03) say what
@@ -298,7 +298,44 @@ and what a listing gives for free.
 Dropbox is the cheaper of the two (path-based, free dimensions, Range on
 download); Box is Drive's model with unique names. Neither is scheduled.
 
-## 5. Open items
+## 5. WebDAV (`createWebDavSource`)
+
+One driver for every server that speaks RFC 4918: Nextcloud and ownCloud,
+Synology and QNAP, Fastmail Files, Apache `mod_dav`, nginx, SabreDAV,
+Box's and Dropbox's legacy WebDAV bridges. The protocol already has
+folders, so there is no model to impose; the work is tolerance.
+
+- **MS-60 Addressing.** The source is confined to one collection URL;
+  paths are relative to it and hrefs outside it in a multistatus are
+  dropped (MS-01). Collections are requested with a trailing slash, as
+  servers expect. Dotfiles are hidden.
+- **MS-61 Listing and tree.** `PROPFIND` with `Depth: 1` asking for
+  `resourcetype`, `getcontentlength`, `getlastmodified`, `getetag`,
+  `getcontenttype` and `displayname` is the listing of a directory and
+  one level of the tree; a `Depth: 0` request is a stat. The parser
+  ignores namespace prefixes (`D:`, `d:`, a default namespace) and reads
+  the `200` propstat. No server gives image dimensions, so the 64 KB
+  head probe of MS-23 applies, cached by ETag. Tree levels are cached
+  `treeTtl` (30 s) and dropped by mutations.
+- **MS-62 Mutations.** Upload is `PUT` into an existing collection (404
+  before any byte when it is missing); create directory is `MKCOL`, with
+  the server's 405 for "exists" accepted (MS-06); rename is `MOVE` with
+  `Overwrite: F`, so a 412 is the 409 conflict; delete is `DELETE`,
+  which removes a collection and everything in it in one request.
+- **MS-63 Auth.** Basic auth (a username and, on Nextcloud and friends,
+  an app password rather than the account password) or a bearer token.
+  A 401 or 403 on a mutation turns the source read-only (MS-09).
+- **MS-64 Errors.** 405/409/412/423 map to 409, 507 stays 507 (quota),
+  401/403 to 403, other 4xx to 400, 5xx to 502; the server's response
+  body is reduced to one line of text in the message.
+- **MS-65 Previews.** On a Nextcloud files URL
+  (`/remote.php/dav/files/{user}/…`, detected, or `nextcloudPreviews`
+  set) images, videos, PDFs, TIFF, PSD and HEIC preview through
+  `index.php/core/preview` via the preview route (MS-04a), with JPEG
+  renditions at 220/440/880 px; the ETag derives from the file's
+  `getetag`. Other servers preview images as themselves.
+
+## 6. Open items
 
 - The tree's polling interval (`intervals.updateSourceTree`) re-fetches
   the root levels only; branches opened by hand are not refreshed.
@@ -306,7 +343,8 @@ download); Box is Drive's model with unique names. Neither is scheduled.
   `node:crypto`) so a host-supplied API client (07 STATE-51) can talk to
   a bucket directly with scoped, short-lived STS credentials; the
   `thumbnails: "client"` path already covers previews in that setup.
-- Live verification of §3.2 against MinIO (R2 and AWS done). §4 was run
+- Live verification of §5 against a Nextcloud or Synology instance, and of
+  §3.2 against MinIO (R2 and AWS done). §4 was run
   against a real folder (service account, read-only share): listing,
   tree, previews, ranges, 403; Drive had not yet pictured four TIFFs over
   60 MB, so whether it ever does for files that size is open.
