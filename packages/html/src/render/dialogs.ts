@@ -97,5 +97,7 @@ function shortcuts(ctx: Ctx, footer: Raw): Raw {
   return html`<p>${t('shortcuts.intro')}</p>
     <table class="eureka__shortcuts"><caption>${t('shortcuts.scope.instance')}</caption><tbody>${rowsFor('instance')}</tbody></table>
     <table class="eureka__shortcuts"><caption>${t('shortcuts.scope.row')}</caption><tbody>${rowsFor('row')}${extra}</tbody></table>
+    <section class="eureka__filter-syntax" aria-labelledby="${ctx.ids.id('filter-syntax')}"><h3 id="${ctx.ids.id('filter-syntax')}">${t('filter.syntax')}</h3><p>${t('filter.syntax.intro')}</p>
+      <ul>${['type', 'ext', 'is', 'size', 'modified', 'created', 'pixels', 'location'].map((k) => html`<li><code>${k === 'pixels' ? 'width: height: px: min: orientation: ratio:' : k === 'location' ? 'has: near: within:' : k + ':'}</code> ${t('filter.q.' + k)}</li>`)}</ul></section>
     ${footer}`;
 }

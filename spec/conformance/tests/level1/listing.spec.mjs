@@ -211,3 +211,42 @@ test('HTML-66d a PDF row shows an icon or a preview image, never an inline viewe
   await expect(row.locator('.eureka__pdf-placeholder')).toHaveCount(1); // the fixture offers no preview for it
   await expect(page.locator('object[type="application/pdf"]')).toHaveCount(0);
 });
+
+test('STATE-10a the filter understands qualifiers, negation and comparisons; unknown ones are plain text', async ({ page }) => {
+  v3only('filter query syntax (07 STATE-10a)');
+  const all = await rows(page).count();
+  const images = await page.locator('tbody tr[data-kind="image"]').count();
+  expect(images).toBeGreaterThan(0); expect(images).toBeLessThan(all);
+  await filterBox(page).fill('type:image');
+  await expect(rows(page)).toHaveCount(images);
+  await filterBox(page).fill('-type:image');
+  await expect(rows(page)).toHaveCount(all - images);
+  await filterBox(page).fill('type:image size:>100kb');
+  const big = await rows(page).count(); expect(big).toBeGreaterThan(0); expect(big).toBeLessThan(images);
+  await filterBox(page).fill('width:>500 orientation:portrait');
+  await expect(rowNamed(page, 'tall-tree.png')).toHaveCount(1);
+  await filterBox(page).fill('bogus:thing');
+  await expect(page.locator('tbody tr[data-path]')).toHaveCount(0); // an unknown qualifier is searched as text, and nothing is called that
+  await expect(page.locator('.eureka__empty-row')).toContainText('bogus:thing');
+  await filterBox(page).fill('is:animated');
+  await expect(rows(page)).toHaveCount(await page.locator('tbody tr[data-path] .eureka__badge--animated').count() || 0);
+  await filterBox(page).fill('');
+  await expect(rows(page)).toHaveCount(all);
+});
+
+test('HTML-40a the filter teaches its syntax: an example placeholder, a hidden description and a Filter syntax section', async ({ page }) => {
+  v3only('filter query syntax (07 STATE-10a)');
+  const box = filterBox(page);
+  const describedBy = await box.getAttribute('aria-describedby');
+  expect(describedBy).toBeTruthy();
+  const help = page.locator('#' + describedBy);
+  await expect(help).toContainText('type:'); await expect(help).toContainText('size:'); await expect(help).not.toContainText('near:'); // no location capability on the fixture
+  await page.locator('eureka-browser').evaluate((el) => { el.config = { ...(el.config ?? {}), intervals: { searchBarPlaceholder: 50 } }; });
+  await page.waitForTimeout(400);
+  const seen = new Set(); for (let i = 0; i < 12; i++) { seen.add(await filterBox(page).getAttribute('placeholder')); await page.waitForTimeout(60); }
+  expect([...seen].some((p) => /^(type|size|modified|width|ext):/.test(p ?? ''))).toBe(true);
+  await page.getByRole('button', { name: 'Keyboard Shortcuts' }).click(); // the ? key is inert while the filter box has focus
+  const dialog = page.getByRole('dialog');
+  await expect(dialog.getByRole('heading', { name: 'Filter syntax' })).toBeVisible();
+  await expect(dialog.locator('.eureka__filter-syntax')).toContainText('size:');
+});

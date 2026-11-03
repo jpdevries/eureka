@@ -24,7 +24,7 @@ function header(ctx: Ctx): Raw {
       : html`${t(c.label)}`;
     return html`<th scope="col" class="${c.cls}"${attr('aria-sort', sorted ? state.view.sort.dir : null)}>${content}</th>`;
   });
-  return html`<thead><tr>${multiple ? html`<th scope="col" class="eureka__choose">${hidden(t('choose'))}</th>` : ''}${level === 0 ? html`<th scope="col" class="eureka__select">${hidden(t('select'))}</th>` : ''}${cells}</tr></thead>`;
+  return html`<thead><tr>${multiple ? html`<th scope="col" class="eureka__choose">${hidden(t('choose'))}</th>` : ''}${!multiple ? html`<th scope="col" class="eureka__select">${hidden(t('select'))}</th>` : ''}${cells}</tr></thead>`;
 }
 
 function emptyState(ctx: Ctx, colSpan: number): Raw {
@@ -53,7 +53,7 @@ export function listing(ctx: Ctx): Raw {
   const files = selectVisibleFiles(state);
   const items = selectVisibleItems(state); // folders first when listFolders (02 HTML-62)
   const multiple = level > 0 && state.view.chooseMode === 'multiple';
-  const colSpan = COLUMNS.length - (level === 0 ? 1 : 0) + (multiple ? 1 : 0) + (level === 0 ? 1 : 0);
+  const colSpan = COLUMNS.length - (level === 0 ? 1 : 0) + 1; // one selection column: the radio in single mode, the checkbox in multiple
   // Level 1+: the rows are a keyboard widget (arrow keys, one tab stop), which ARIA calls a grid (02 HTML-60). Screen readers
   // switch to focus mode on a grid, so the arrow keys reach the browser instead of the virtual cursor.
   const grid = level > 0 ? raw(` role="grid" aria-describedby="${ids.id('listing-help')}"${multiple ? ' aria-multiselectable="true"' : ''}`) : '';

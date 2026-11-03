@@ -9,6 +9,7 @@ import { encodePathForURL, normalizePath, isWithin, joinPath, parentPath, basena
 import type { Entry, Source, SourceCapabilities, TreeNode } from '@mrktps/eureka-core';
 import { READ_ONLY } from '@mrktps/eureka-core';
 import { sanitizeFilename } from './multipart.js';
+import { readExifGps, type GpsLocation } from './exif-gps.js';
 
 export interface MediaSource extends Source {
   /** What clients may change (11 MS-09); the handler refuses anything false with 403 and lists it with the source. Drivers may set it later (the S3 source does after a 403). */
@@ -49,6 +50,8 @@ export interface FilesystemSourceOptions {
   /** Offer no mutations (11 MS-09). */
   readOnly?: boolean;
   capabilities?: SourceCapabilities;
+  /** Read EXIF GPS from image heads and expose `location` on entries (01 CON-05). Off by default: never read, never sent. */
+  location?: boolean;
 }
 
 export const MIME: Record<string, string> = { '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.gif': 'image/gif', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.avif': 'image/avif', '.bmp': 'image/bmp', '.tiff': 'image/tiff', '.mp4': 'video/mp4', '.webm': 'video/webm', '.mov': 'video/quicktime', '.mp3': 'audio/mpeg', '.wav': 'audio/wav', '.ogg': 'audio/ogg', '.pdf': 'application/pdf', '.txt': 'text/plain; charset=utf-8', '.json': 'application/json', '.zip': 'application/zip' };
@@ -84,7 +87,19 @@ export async function isAnimated(abs: string, name: string): Promise<boolean> {
 export const DEFAULT_TREE_DEPTH = 3;
 export const clampDepth = (d: number | undefined): number => (Number.isFinite(d) && (d as number) >= 1 ? Math.min(Math.floor(d as number), 64) : DEFAULT_TREE_DEPTH);
 
+/** The capabilities a source declares from its options: read-only or explicit ones, plus `location` when opted in (01 CON-04/05). */
+export function capabilitiesFor(opts: { readOnly?: boolean; capabilities?: SourceCapabilities; location?: boolean }): { capabilities?: SourceCapabilities } {
+  const base: SourceCapabilities | undefined = opts.readOnly ? { ...READ_ONLY } : opts.capabilities ? { ...opts.capabilities } : undefined;
+  if (!opts.location) return base ? { capabilities: base } : {};
+  return { capabilities: { ...(base ?? {}), location: true } };
+}
+
 export class PathError extends Error { constructor(message: string, public readonly status: number) { super(message); this.name = 'PathError'; } }
+
+/** EXIF GPS from the first 64 KB of a file, only for sources that opted in. */
+async function gpsOf(abs: string): Promise<GpsLocation | null> {
+  try { const fh = await fs.open(abs, 'r'); try { const st = await fh.stat(); const buf = Buffer.alloc(Math.min(st.size, 64 * 1024)); await fh.read(buf, 0, buf.length, 0); return readExifGps(buf); } finally { await fh.close(); } } catch { return null; }
+}
 
 export function createFilesystemSource(opts: FilesystemSourceOptions): MediaSource {
   const root = path.resolve(opts.root);
@@ -108,13 +123,15 @@ export function createFilesystemSource(opts: FilesystemSourceOptions): MediaSour
     let st; try { st = await fs.stat(abs); } catch { return null; }
     const base: Entry = {
       directory: st.isDirectory() ? rel : dirRel,
-      path: rel, absoluteURL: urlFor(rel), editedOn: Math.round(st.mtimeMs), fileSize: st.size
+      path: rel, absoluteURL: urlFor(rel), editedOn: Math.round(st.mtimeMs), fileSize: st.size,
+      ...(st.birthtimeMs > 0 ? { createdOn: Math.round(st.birthtimeMs) } : {})
     };
     if (st.isDirectory()) return { ...base, foldername: name };
     const e: Entry = { ...base, filename: name };
     if (mediaKind(name) === 'image') {
       try { const d = imageSize(abs); if (d.width && d.height) e.dimensions = [d.width, d.height]; } catch { /* not a decodable image */ }
       if (await isAnimated(abs, name)) e.animated = true;
+      if (opts.location && /\.(jpe?g|tiff?)$/i.test(name)) { const loc = await gpsOf(abs); if (loc) e.location = loc; }
     }
     // text-like files preview as a rendered thumbnail (HTML-66c); everything else previews as itself unless the host says otherwise
     e.absolutePreviewURL = opts.previewUrl ? opts.previewUrl(e, saveData) : isTextLike(name) ? `${urlPrefix}/__thumb/${encodePathForURL(rel)}` : e.absoluteURL;
@@ -143,7 +160,7 @@ export function createFilesystemSource(opts: FilesystemSourceOptions): MediaSour
 
   return {
     id: opts.id, name: opts.name,
-    ...(opts.readOnly ? { capabilities: { ...READ_ONLY } } : opts.capabilities ? { capabilities: { ...opts.capabilities } } : {}),
+    ...capabilitiesFor(opts),
     async listTree(cd = '/', depth = DEFAULT_TREE_DEPTH) {
       const { rel, abs } = resolve(cd);
       if (rel !== '/') { let st; try { st = await fs.stat(abs); } catch { throw new PathError(`no such directory: ${rel}`, 404); } if (!st.isDirectory()) throw new PathError(`no such directory: ${rel}`, 404); }

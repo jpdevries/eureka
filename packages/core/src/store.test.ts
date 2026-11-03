@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { createStore, initialState, reduce, selectChosen, selectVisibleFiles, selectCurrentTree, type State, findTreeNode, graftBranch, selectCan, selectVisibleItems } from './store.js';
+import { createStore, initialState, reduce, selectChosen, selectVisibleFiles, selectCurrentTree, type State, findTreeNode, graftBranch, selectCan, selectVisibleItems, selectSelected } from './store.js';
 import { resolveConfig, type Entry } from './types.js';
 import { loadPersisted, persist } from './persistence.js';
 
@@ -129,6 +129,24 @@ describe('store', () => {
     expect(selectVisibleFiles(s)).toEqual([]); // the count and the chosen set see files only
     const off = at(resolveConfig({ listFolders: false }));
     expect(selectVisibleItems(off).map((e) => e.filename)).toEqual(['a.png', 'b.png']);
+  });
+  it('single-mode selection: Space-style select, chosen resolves to it, cleared on navigation and mode switch (STATE-11)', () => {
+    let s = loaded();
+    const [a, b] = selectVisibleFiles(s);
+    s = reduce(s, { type: 'selection/focus', path: a!.path });
+    expect(selectChosen(s).map((f) => f.path)).toEqual([a!.path]); // nothing selected: the focused item
+    s = reduce(s, { type: 'selection/select', path: b!.path });
+    expect(selectChosen(s).map((f) => f.path)).toEqual([b!.path]); // the selected item wins over focus
+    expect(selectSelected(s)?.path).toBe(b!.path);
+    s = reduce(s, { type: 'selection/select', path: null });
+    expect(selectChosen(s).map((f) => f.path)).toEqual([a!.path]);
+    s = reduce(s, { type: 'selection/select', path: b!.path });
+    const multi = reduce(s, { type: 'view/setChooseMode', mode: 'multiple' });
+    expect(multi.selection.selected).toBeNull();
+    const moved = reduce(s, { type: 'directory/navigate', source: 0, path: 'd' });
+    expect(moved.selection.selected).toBeNull();
+    const reloaded = reduce(s, { type: 'listing/loaded', source: s.listing.source!, path: s.listing.path, entries: [a!], records: {} });
+    expect(reloaded.selection.selected).toBeNull(); // the selected item left the listing
   });
   it('notifications push and dismiss', () => {
     let s = loaded();

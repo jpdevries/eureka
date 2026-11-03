@@ -40,6 +40,10 @@
         },
         "delete": {
           "type": "boolean"
+        },
+        "location": {
+          "type": "boolean",
+          "description": "Entries may carry `location` and the location filter qualifiers are live (01 CON-05)."
         }
       },
       "additionalProperties": false

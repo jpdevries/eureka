@@ -217,5 +217,16 @@
   "animate.previews": "Animate previews",
   "shortcut.toggleAnimation": "Play or pause an animated item",
   "folder": "folder",
-  "folder.open": "Open folder {name}"
+  "folder.open": "Open folder {name}",
+  "filter.syntax": "Filter syntax",
+  "filter.syntax.intro": "Plain words match names; qualifiers narrow one field. Prefix a token with - to exclude it, use > >= < <= = or a..b for ranges, and quotes for values with spaces. An unknown qualifier is searched as text.",
+  "filter.describe": "Plain words match names. Qualifiers: {list}. Prefix - to exclude; > < and a..b for ranges.",
+  "filter.q.type": "type: image, video, audio, pdf or text",
+  "filter.q.ext": "ext: a file extension",
+  "filter.q.is": "is: animated, folder or chosen",
+  "filter.q.size": "size: bytes with kb, mb or gb, e.g. size:>10mb or size:1mb..5mb",
+  "filter.q.modified": "modified: an ISO date, month or year, e.g. modified:>2026-01",
+  "filter.q.created": "created: like modified, for the creation time",
+  "filter.q.pixels": "width:, height:, px:3000x2000, min:4k|1080p|720p, orientation: landscape, portrait or square, ratio:16:9",
+  "filter.q.location": "has:location, near:lat,lng,25km or within:south,west,north,east"
 }

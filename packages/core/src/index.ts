@@ -13,3 +13,4 @@ export * from './worker/protocol.js';
 export { createEngine, type Engine, type EngineOptions, type ListingCache } from './worker/engine.js';
 export { createEngineClient, supportsWorker, type EngineClient, type BridgeOptions, type ClientRequest } from './worker/bridge.js';
 export { default as themeTokens } from './data/theme-tokens.js';
+export * from './filter-query.js';

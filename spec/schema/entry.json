@@ -4,37 +4,155 @@
   "title": "Entry",
   "description": "One entry of a directory listing: a file (filename) or a folder (foldername). Exactly one of the two is present.",
   "type": "object",
-  "required": ["directory", "path", "absoluteURL", "editedOn", "fileSize"],
+  "required": [
+    "directory",
+    "path",
+    "absoluteURL",
+    "editedOn",
+    "fileSize"
+  ],
   "properties": {
-    "filename": { "type": "string", "minLength": 1 },
-    "foldername": { "type": "string", "minLength": 1 },
-    "directory": { "type": "string" },
-    "path": { "type": "string", "minLength": 1 },
-    "absoluteURL": { "type": "string", "format": "uri-reference" },
-    "absolutePreviewURL": { "type": "string", "format": "uri-reference" },
-    "editedOn": { "oneOf": [{ "type": "integer", "minimum": 0 }, { "type": "string", "format": "date-time" }] },
-    "dimensions": { "type": "array", "items": { "type": "integer", "minimum": 0 }, "minItems": 2, "maxItems": 2 },
-    "fileSize": { "type": "integer", "minimum": 0 },
-    "alt": { "type": "string" },
-    "animated": { "type": "boolean", "description": "The media moves on its own (SMIL or CSS animation in an SVG, multi-frame GIF/APNG/WebP). Clients show it still until asked to play (02 HTML-66b)." },
+    "filename": {
+      "type": "string",
+      "minLength": 1
+    },
+    "foldername": {
+      "type": "string",
+      "minLength": 1
+    },
+    "directory": {
+      "type": "string"
+    },
+    "path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "absoluteURL": {
+      "type": "string",
+      "format": "uri-reference"
+    },
+    "absolutePreviewURL": {
+      "type": "string",
+      "format": "uri-reference"
+    },
+    "editedOn": {
+      "oneOf": [
+        {
+          "type": "integer",
+          "minimum": 0
+        },
+        {
+          "type": "string",
+          "format": "date-time"
+        }
+      ]
+    },
+    "dimensions": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "fileSize": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "alt": {
+      "type": "string"
+    },
+    "animated": {
+      "type": "boolean",
+      "description": "The media moves on its own (SMIL or CSS animation in an SVG, multi-frame GIF/APNG/WebP). Clients show it still until asked to play (02 HTML-66b)."
+    },
     "renditions": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["url", "width"],
+        "required": [
+          "url",
+          "width"
+        ],
         "properties": {
-          "url": { "type": "string", "format": "uri-reference" },
-          "width": { "type": "integer", "minimum": 1 },
-          "height": { "type": "integer", "minimum": 1 },
-          "type": { "type": "string", "pattern": "^image/" }
+          "url": {
+            "type": "string",
+            "format": "uri-reference"
+          },
+          "width": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "height": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "type": {
+            "type": "string",
+            "pattern": "^image/"
+          }
         },
         "additionalProperties": false
       }
+    },
+    "createdOn": {
+      "oneOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "description": "Creation time, same shape as editedOn (ms since the epoch or an ISO string). Absent when the backend has none."
+    },
+    "location": {
+      "type": "object",
+      "required": [
+        "lat",
+        "lng"
+      ],
+      "properties": {
+        "lat": {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "lng": {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        },
+        "alt": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Capture location in decimal degrees; only when the source lists capabilities.location (01 CON-05)."
     }
   },
   "oneOf": [
-    { "required": ["filename"], "not": { "required": ["foldername"] } },
-    { "required": ["foldername"], "not": { "required": ["filename"] } }
+    {
+      "required": [
+        "filename"
+      ],
+      "not": {
+        "required": [
+          "foldername"
+        ]
+      }
+    },
+    {
+      "required": [
+        "foldername"
+      ],
+      "not": {
+        "required": [
+          "filename"
+        ]
+      }
+    }
   ],
   "additionalProperties": true
 }

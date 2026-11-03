@@ -3,10 +3,11 @@
 export type SourceId = number | string;
 
 /** What a source lets clients change (01 CON-04, 11 MS-09). A field left out means allowed; `readOnly` is every field false. */
-export interface SourceCapabilities { upload?: boolean; createDirectory?: boolean; rename?: boolean; delete?: boolean }
-export type MutationKind = keyof SourceCapabilities;
+export interface MutationCapabilities { upload?: boolean; createDirectory?: boolean; rename?: boolean; delete?: boolean }
+export interface SourceCapabilities extends MutationCapabilities { /** Entries may carry `location` and the location qualifiers are live (01 CON-05). */ location?: boolean }
+export type MutationKind = keyof MutationCapabilities;
 export const MUTATIONS: readonly MutationKind[] = ['upload', 'createDirectory', 'rename', 'delete'];
-export const READ_ONLY: Readonly<Required<SourceCapabilities>> = Object.freeze({ upload: false, createDirectory: false, rename: false, delete: false });
+export const READ_ONLY: Readonly<Required<MutationCapabilities>> = Object.freeze({ upload: false, createDirectory: false, rename: false, delete: false });
 export interface Source { id: SourceId; name: string; capabilities?: SourceCapabilities }
 /** Does the source allow this mutation? Absent capabilities allow everything. */
 export const sourceAllows = (source: Source | undefined, kind: MutationKind): boolean => source?.capabilities?.[kind] !== false;
@@ -29,6 +30,10 @@ export interface Entry {
   renditions?: Rendition[];
   /** The media moves on its own (SVG SMIL/CSS animation, multi-frame GIF/APNG/WebP); shown still until played (02 HTML-66b). */
   animated?: boolean;
+  /** Creation time, same shape as `editedOn`; absent when the backend has none (S3) (01, 11). */
+  createdOn?: number | string;
+  /** Where the media was captured, decimal degrees; only when the source opted in (`capabilities.location`, 01 CON-05). */
+  location?: { lat: number; lng: number; alt?: number };
 }
 export type FileEntry = Entry & { filename: string };
 export type FolderEntry = Entry & { foldername: string };

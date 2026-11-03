@@ -54,3 +54,4 @@ dialog.demo-modal::backdrop { background: #0008; }
 dialog.demo-modal .eureka-root { block-size: 100%; display: flex; flex-direction: column; overflow: hidden; }
 .demo-preview img { max-inline-size: 100%; block-size: auto; }
 .visually-hidden { position: absolute !important; inline-size: 1px; block-size: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+.demo-choose-result { display: block; margin: .5rem 1rem; padding: .5rem .75rem; border: 1px solid #2f3b45; border-radius: .25rem; background: #141a20; color: #e6edf3; font: .9rem/1.4 system-ui, sans-serif; overflow-wrap: anywhere; }

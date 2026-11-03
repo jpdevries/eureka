@@ -721,6 +721,55 @@ Taken on 2026-11-01:
   reachable from the tree. `rows()` in the conformance helpers now counts
   file rows only; store, renderer, React and conformance tests cover both
   levels and the off switch.
+- Item states (A11Y-56): the listing had no focused styling beyond the
+  browser's keyboard outline, which never shows for pointer focus. Table
+  and list now mark the focused row's leading edge; thumb, grid and
+  masonry ring the media cell; forced-colors maps to Highlight;
+  transitions respect reduced motion. Selection is shown by native
+  controls (see below). The folder tile shows the folder name in the
+  thumbnail modes, where the name column is hidden.
+- Single-mode selection and the keyboard contract (STATE-11, KEY-24,
+  KEY-B7, HTML-63, HTML-71a, A11Y-56): the grid stays one tab stop with
+  arrows inside, and single mode gains an explicit selection: Space or a
+  click selects the focused item (`selection.selected`,
+  `selection/select`), Enter on a row selects and commits it, Choose
+  commits the selected item or, with none, the focused one; the selection
+  clears on navigation, on a listing that drops it and on switching to
+  multiple mode. Every file row carries `aria-selected` and a native
+  control that shows it: a 1.5 rem radio (`eureka__selected_item`) in
+  single mode, the checkbox in multiple, both `tabindex="-1"` so the grid
+  stays one tab stop while a click on the control still selects. A first
+  cut drew custom check badges and tinted selected rows and tiles; that
+  read as too much and was replaced by the browser's own controls with
+  `accent-color`, on a translucent backing in the thumbnail modes. Focus
+  keeps its ring (tiles) or leading edge (rows), with no fill.
+  Thumb, grid and masonry hide the row toolbar, so each file tile gains a
+  menu button (`.eureka__tile-menu`, shown on hover and focus, only the
+  focused row's in the tab order) that opens the existing row menu: one
+  stop for the tile, one for its menu. Prompted by a keyboard test on the
+  server-rendered demo, which also had no choose callback and so no
+  Choose bar and no visible result; the demo page now configures one and
+  shows what was chosen. New `icon-ellipsis-h` in the sprite.
+- Filter query syntax (STATE-10a, HTML-40a, CON-05, MS-04b), from a
+  design JP settled with a side session: GitHub/Gmail-style qualifiers
+  beside plain words, parsed in core (`filter-query.ts`: tokenizer with
+  quotes and `-`, comparisons and `a..b` ranges, a predicate per
+  qualifier, unknown or unavailable qualifiers degrade to text, a query
+  with no live qualifier keeps the old substring path). Qualifiers:
+  `type:`, `ext:`, `is:animated|folder|chosen`, `size:` in the size
+  column's binary units, `modified:`/`created:` with ISO periods,
+  `width:`/`height:`/`px:`/`min:4k|1080p|720p`/`orientation:`/`ratio:`
+  from dimensions, and with a source's `capabilities.location` the
+  opt-in `has:location`/`near:`/`within:`. New entry fields `createdOn`
+  (filesystem birth time, Drive `createdTime`, WebDAV `creationdate`; S3
+  has none) and `location` (only with the source option `location`, which
+  makes Drive ask for `imageMediaMetadata.location` and the other drivers
+  read the EXIF GPS block from the probe head with a dependency-free
+  reader). The filter placeholder shows examples that can match the
+  current listing and rotates on `intervals.searchBarPlaceholder`, the
+  input is described by a hidden sentence naming the live qualifiers, and
+  the shortcuts dialog gained a Filter syntax section. Level 0's filter
+  is unchanged. Unit tests for the grammar; two conformance tests.
 - Package names: the `@eureka` npm scope belongs to an existing npm user,
   so the packages are `@mrktps/eureka` (the element, what most people
   install) and `@mrktps/eureka-core`, `-html`, `-css`, `-react`,

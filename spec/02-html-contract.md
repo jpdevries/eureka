@@ -120,6 +120,15 @@ DOM order is the reading order and the tab order.
 - **HTML-40** The stage begins with an `<h2>` whose accessible name is
   "Browse Media Content" (visible "Media Content", visually-hidden
   "Browse").
+- **HTML-40a** The filter input's placeholder teaches the query syntax
+  (07 STATE-10a): a sample value from the listing, then example tokens
+  for qualifiers that can match something in the current listing
+  (`created:` only when an entry has `createdOn`, pixel tokens only with
+  dimensions, location tokens only with `capabilities.location`), one at a
+  time, advanced on `intervals.searchBarPlaceholder` when set. The input
+  is described (`aria-describedby`) by a visually-hidden sentence naming
+  the live qualifiers, and the shortcuts dialog (HTML-95) has a "Filter
+  syntax" section.
 - **HTML-41** When multiple choice is allowed, a `<fieldset>` with
   `<legend>` "Choose Items" holds two radios labelled "Single" and
   "Multiple". v2 used `role="radiogroup"` on a div with a stray
@@ -191,7 +200,13 @@ DOM order is the reading order and the tab order.
   in the chosen set. The listing's count and caption count files only.
   With `listFolders` off, folders appear only in the tree and the
   directory selector, as in v2.
-- **HTML-63** Rows are focusable with a roving tabindex: the current row
+- **HTML-63** Rows are focusable with a roving tabindex (the focused row also
+  carries `eureka__focused-media-item`; every file row carries
+  `aria-selected`, true for the single-mode selection or a checked item,
+  and a native control that shows it, a radio `eureka__selected_item` in
+  single mode or the checkbox in multiple, both `tabindex="-1"` so the
+  grid stays one tab stop while a click on the control still selects;
+  06 A11Y-56): the current row
   `tabindex="0"`, all others `tabindex="-1"`, Arrow Up/Down move between
   rows. v2 gave every row `tabindex="0"`; v3 adopts roving tabindex so a
   5,000 row listing is one tab stop.
@@ -348,6 +363,14 @@ DOM order is the reading order and the tab order.
 
 ## 7. Path bar
 
+- **HTML-71a** In thumb, grid and masonry each file's media cell ends with
+  a tile menu button (`.eureka__tile-menu`, `data-action="menu"`,
+  `aria-haspopup="menu"`, named "Actions for {filename}") that opens the
+  row menu of HTML-71. It is shown on hover, on focus within the row and
+  on the focused row, and only the focused row's button is in the tab
+  order (`tabindex="0"`, others `-1`), so a tile is one tab stop plus one
+  for its menu. Table and list hide it: the row toolbar (HTML-65) is the
+  extra stop there.
 - **HTML-80** When a row is focused or items are selected, a path bar
   renders between the listing and the choose bar with `role="status"`,
   id `{p}selected_file_names`. For a single item it shows a type icon and

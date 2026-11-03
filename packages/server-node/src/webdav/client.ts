@@ -12,6 +12,8 @@ export interface DavResource {
   modified: number;
   etag: string;
   contentType: string;
+  /** ms since the epoch from `creationdate`, 0 when absent. */
+  created: number;
 }
 
 export interface DavClientOptions {
@@ -28,7 +30,7 @@ export class DavError extends Error {
   constructor(message: string, public readonly status: number) { super(message); this.name = 'DavError'; }
 }
 
-const PROPFIND_BODY = '<?xml version="1.0" encoding="utf-8"?><D:propfind xmlns:D="DAV:"><D:prop><D:resourcetype/><D:getcontentlength/><D:getlastmodified/><D:getetag/><D:getcontenttype/><D:displayname/></D:prop></D:propfind>';
+const PROPFIND_BODY = '<?xml version="1.0" encoding="utf-8"?><D:propfind xmlns:D="DAV:"><D:prop><D:resourcetype/><D:getcontentlength/><D:getlastmodified/><D:getetag/><D:getcontenttype/><D:displayname/><D:creationdate/></D:prop></D:propfind>';
 
 /** Percent-encode a path for a URL, keeping the slashes. */
 export const encodeDavPath = (p: string) => p.split('/').map((seg) => encodeURIComponent(seg).replace(/[!'()*]/g, (c) => '%' + c.charCodeAt(0).toString(16).toUpperCase())).join('/');
@@ -55,9 +57,10 @@ export function parseMultistatus(xml: string, basePath: string): DavResource[] {
     const prop = inner(ok, 'prop') ?? ok;
     const collection = /<collection\s*\/?>/i.test(inner(prop, 'resourcetype') ?? '');
     const modified = Date.parse((inner(prop, 'getlastmodified') ?? '').trim()) || 0;
+    const created = Date.parse((inner(prop, 'creationdate') ?? '').trim()) || 0;
     out.push({
       path: rel, name: rel === '/' ? '' : rel.slice(rel.lastIndexOf('/') + 1), collection,
-      size: Number((inner(prop, 'getcontentlength') ?? '0').trim()) || 0, modified,
+      size: Number((inner(prop, 'getcontentlength') ?? '0').trim()) || 0, modified, created,
       etag: decodeXml((inner(prop, 'getetag') ?? '').trim()), contentType: decodeXml((inner(prop, 'getcontenttype') ?? '').trim())
     });
   }

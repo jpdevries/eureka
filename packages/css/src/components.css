@@ -121,6 +121,30 @@
   /* Animated media (02 HTML-66b): still until played. Nothing here moves by itself; motion comes from the file, which should gate
      its own animation on prefers-reduced-motion, and from the user's explicit play. */
   .eureka__table td.eureka__td-media { position: relative; }
+  /* Item states (02 HTML-63, 06 A11Y-56): focus is a ring (tiles) or a leading edge (rows); selection is the row's native
+     control, a radio in single mode and a checkbox in multiple, so the browser draws it. */
+  .eureka .eureka__table :is(td.eureka__choose, td.eureka__select) input { margin: 0; inline-size: 1.5rem; block-size: 1.5rem; cursor: pointer; accent-color: var(--active); }
+  .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__table :is(td.eureka__choose, td.eureka__select) { display: block; position: absolute; inset-block-start: 0.35rem; inset-inline-start: 0.35rem; z-index: 1; padding: 0.2rem; border-radius: 50%; background: color-mix(in srgb, var(--bg-color) 75%, transparent); line-height: 0; }
+  .eureka .eureka__table > tbody > tr.eureka__row { transition: background-color 120ms, box-shadow 120ms; }
+  .eureka .eureka__row.eureka__focused-media-item { box-shadow: inset 3px 0 0 var(--active); }
+  .eureka .eureka__row:focus-visible { outline: 2px solid var(--active); outline-offset: -2px; }
+  .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__row.eureka__focused-media-item { box-shadow: none; }
+  .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__row > .eureka__td-media { border-radius: 0.25rem; transition: box-shadow 120ms, background-color 120ms; }
+  .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__row:hover > .eureka__td-media { box-shadow: 0 0 0 2px var(--subtle); }
+  .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__row.eureka__focused-media-item > .eureka__td-media { box-shadow: 0 0 0 2px var(--bg-color), 0 0 0 5px var(--active); }
+  .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__row:focus-visible { outline: none; } /* the ring on the tile is the focus indicator */
+  /* The tile menu (02 HTML-71a): the one extra tab stop of a focused tile in the thumbnail modes, opening the row menu.
+     Table and list have the toolbar instead. */
+  .eureka .eureka__tile-menu { display: none; position: absolute; inset-block-start: 0.25rem; inset-inline-end: 0.25rem; z-index: 1; inline-size: 2rem; block-size: 2rem; padding: 0; border: 1px solid var(--very-subtle); border-radius: 50%; background: color-mix(in srgb, var(--bg-color) 80%, transparent); color: var(--color); cursor: pointer; }
+  .eureka .eureka__tile-menu .icon { inline-size: 1rem; block-size: 1rem; }
+  .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__row:is(:hover, :focus-within, .eureka__focused-media-item) .eureka__tile-menu { display: inline-flex; align-items: center; justify-content: center; }
+  .eureka .eureka__tile-menu:is(:hover, :focus-visible) { background: var(--button-bg); border-color: var(--active); }
+  @media (forced-colors: active) {
+    .eureka .eureka__tile-menu { border-color: ButtonText; }
+    .eureka .eureka__row.eureka__focused-media-item { box-shadow: inset 3px 0 0 Highlight; }
+    .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__row.eureka__focused-media-item > .eureka__td-media { box-shadow: 0 0 0 2px Canvas, 0 0 0 5px Highlight; }
+  }
+  @media (prefers-reduced-motion: reduce) { .eureka .eureka__table > tbody > tr.eureka__row, .eureka .eureka__row > .eureka__td-media { transition: none; } }
   /* a subfolder as an item (02 HTML-62): the folder icon fills the media cell and opens the folder */
   .eureka .eureka__folder-tile { display: flex; flex-direction: column; gap: 0.5rem; align-items: center; justify-content: center; inline-size: 100%; aspect-ratio: 4 / 3; min-block-size: 3rem; padding: 0.5rem; border: 1px solid var(--very-subtle); border-radius: 0.25rem; background: var(--light-bg); color: var(--color); font: inherit; cursor: pointer; }
   .eureka .eureka__folder-tile__name { max-inline-size: 100%; overflow-wrap: anywhere; text-align: center; font-size: 0.9em; line-height: 1.25; }

@@ -4,9 +4,10 @@
 import path from 'node:path';
 import { Readable } from 'node:stream';
 import { ZipFile } from 'yazl';
-import { encodePathForURL, normalizePath, joinPath, parentPath, basename, isTextLike, looksBinary, renderTextThumbnail, READ_ONLY } from '@mrktps/eureka-core';
+import { encodePathForURL, normalizePath, joinPath, parentPath, basename, isTextLike, looksBinary, renderTextThumbnail } from '@mrktps/eureka-core';
 import type { Entry, Source, SourceCapabilities, TreeNode } from '@mrktps/eureka-core';
-import { ANIMATABLE, DEFAULT_TREE_DEPTH, MIME, PathError, clampDepth, sniffAnimated, type MediaSource, type PreviewResult } from './fs-source.js';
+import { READ_ONLY } from '@mrktps/eureka-core';
+import { ANIMATABLE, DEFAULT_TREE_DEPTH, MIME, PathError, capabilitiesFor, clampDepth, sniffAnimated, type MediaSource, type PreviewResult } from './fs-source.js';
 import { sanitizeFilename } from './multipart.js';
 import { DriveClient, DriveError, FOLDER, NATIVE, SHORTCUT, sizedThumbnailLink, type DriveClientOptions, type DriveFile } from './google/drive-client.js';
 import type { TokenProvider } from './google/auth.js';
@@ -27,6 +28,8 @@ export interface GoogleDriveSourceOptions {
   permanentDelete?: boolean;
   readOnly?: boolean;
   capabilities?: SourceCapabilities;
+  /** Ask Drive for the capture location and expose `location` on entries (01 CON-05). Off by default. */
+  location?: boolean;
   /** How long listings are reused, in ms (default 30 000); mutations drop the cache. */
   cacheTtl?: number;
   fetch?: typeof fetch;
@@ -53,7 +56,7 @@ const THUMB_BYTES = 8192;
 const SLASH = '∕';
 
 export function createGoogleDriveSource(opts: GoogleDriveSourceOptions): MediaSource {
-  const clientOpts: DriveClientOptions = { getToken: opts.getToken, ...(opts.driveId ? { driveId: opts.driveId } : {}), ...(opts.fetch ? { fetch: opts.fetch } : {}), ...(opts.apiBase ? { apiBase: opts.apiBase } : {}), ...(opts.uploadBase ? { uploadBase: opts.uploadBase } : {}) };
+  const clientOpts: DriveClientOptions = { getToken: opts.getToken, ...(opts.location ? { location: true } : {}), ...(opts.driveId ? { driveId: opts.driveId } : {}), ...(opts.fetch ? { fetch: opts.fetch } : {}), ...(opts.apiBase ? { apiBase: opts.apiBase } : {}), ...(opts.uploadBase ? { uploadBase: opts.uploadBase } : {}) };
   const client = new DriveClient(clientOpts);
   const rootId = opts.rootFolderId ?? opts.driveId ?? 'root';
   const urlPrefix = (opts.urlPrefix ?? `/sources/${encodeURIComponent(opts.name)}`).replace(/\/+$/, '');
@@ -144,10 +147,12 @@ export function createGoogleDriveSource(opts: GoogleDriveSourceOptions): MediaSo
   async function entryFor(node: Node, dirRel: string, saveData: boolean): Promise<Entry> {
     const rel = joinPath(dirRel, node.displayName);
     const edited = Date.parse(node.file.modifiedTime ?? node.content.modifiedTime ?? '') || 0;
-    if (node.isFolder) return { directory: rel, path: rel, foldername: node.displayName, absoluteURL: urlFor(rel), editedOn: edited, fileSize: 0 };
-    const e: Entry = { directory: dirRel, path: rel, filename: node.displayName, absoluteURL: urlFor(rel), editedOn: edited, fileSize: Number(node.content.size ?? 0) };
+    if (node.isFolder) return { directory: rel, path: rel, foldername: node.displayName, absoluteURL: urlFor(rel), editedOn: edited, fileSize: 0, ...(Date.parse(node.file.createdTime ?? '') ? { createdOn: Date.parse(node.file.createdTime!) } : {}) };
+    const created = Date.parse(node.file.createdTime ?? node.content.createdTime ?? '') || 0;
+    const e: Entry = { directory: dirRel, path: rel, filename: node.displayName, absoluteURL: urlFor(rel), editedOn: edited, fileSize: Number(node.content.size ?? 0), ...(created ? { createdOn: created } : {}) };
     const d = node.content.imageMediaMetadata;
     if (d?.width && d?.height) e.dimensions = [d.width, d.height];
+    if (opts.location && typeof d?.location?.latitude === 'number' && typeof d.location.longitude === 'number') e.location = { lat: d.location.latitude, lng: d.location.longitude, ...(typeof d.location.altitude === 'number' ? { alt: d.location.altitude } : {}) };
     if (probe && ANIMATABLE.includes(path.extname(node.displayName).toLowerCase()) && (await animatedOf(node))) e.animated = true;
     // text keeps the SVG thumbnail (HTML-66c); anything Drive has pictured (TIFF, video, PDF, its own documents) gets
     // Drive's rendering through the preview route (MS-56); the rest previews as itself
@@ -187,12 +192,12 @@ export function createGoogleDriveSource(opts: GoogleDriveSourceOptions): MediaSo
   }
 
   const contentTypeFor = (name: string) => MIME[path.extname(name).toLowerCase()] ?? 'application/octet-stream';
-  const refused = (err: unknown): never => { if (err instanceof DriveError && err.status === 403) source.capabilities = { ...READ_ONLY }; throw err; };
+  const refused = (err: unknown): never => { if (err instanceof DriveError && err.status === 403) source.capabilities = { ...READ_ONLY, ...(source.capabilities?.location ? { location: true } : {}) }; throw err; };
   const guarded = <A extends unknown[], R>(fn: (...a: A) => Promise<R>) => async (...a: A): Promise<R> => { try { return await fn(...a); } catch (err) { return refused(err); } };
 
   const source: MediaSource = {
     id: opts.id, name: opts.name,
-    ...(opts.readOnly ? { capabilities: { ...READ_ONLY } } : opts.capabilities ? { capabilities: { ...opts.capabilities } } : {}),
+    ...capabilitiesFor(opts),
     listTree,
     listDirectory: (dir) => listDirectory(dir),
     upload: guarded(async (dir, files) => {

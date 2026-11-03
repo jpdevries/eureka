@@ -250,6 +250,7 @@ components:
             createDirectory: { type: boolean }
             rename: { type: boolean }
             delete: { type: boolean }
+            location: { type: boolean, description: 'Entries may carry location and the location filter qualifiers are live.' }
     TreeNode:
       type: object
       required: [name, cd]
@@ -271,6 +272,14 @@ components:
         path: { type: string, description: 'Source-relative path of the entry; the value sent back on rename and delete.' }
         absoluteURL: { type: string, format: uri-reference, description: 'Where the file can be fetched or opened.' }
         absolutePreviewURL: { type: string, format: uri-reference, description: 'A smaller rendition for thumbnails. Defaults to absoluteURL.' }
+        createdOn:
+          oneOf: [{ type: integer }, { type: string }]
+          description: 'Creation time, same shape as editedOn. Absent when the backend has none (S3-compatible storage).'
+        location:
+          type: object
+          required: [lat, lng]
+          properties: { lat: { type: number }, lng: { type: number }, alt: { type: number } }
+          description: 'Capture location in decimal degrees; only when the source lists capabilities.location (spec 01 CON-05).'
         editedOn:
           oneOf: [{ type: integer }, { type: string, format: date-time }]
           description: 'Last modification time, epoch milliseconds (v2) or ISO 8601 (v3 MAY).'

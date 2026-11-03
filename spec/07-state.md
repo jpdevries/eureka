@@ -25,7 +25,7 @@ interface State {
   sources: { all: Source[]; current: SourceId | null; status: Status };
   tree:    { bySource: Record<SourceId, TreeNode[]>; open: string[]; status: Status };
   listing: { source: SourceId | null; path: string; entries: Entry[]; status: Status; error?: string; receivedAt?: number };
-  selection: { focused: string | null; checked: string[]; inverted: boolean };
+  selection: { focused: string | null; selected: string | null; checked: string[]; inverted: boolean };
   view:    { mode: 'table'|'thumb'|'grid'|'list'|'masonry'; sort: { by: 'filename'|'dimensions'|'fileSize'|'editedOn'; dir: 'ascending'|'descending' };
              filter: string; panelOpen: boolean; chooseMode: 'single'|'multiple'; fullscreen: boolean };
   pending: { uploading: boolean; deleting: string[]; renaming: string | null; creating: boolean; cropping: boolean };
@@ -48,9 +48,38 @@ Computed, never stored:
   (filename, dimensions text, size text, the date strings), then sorted
   by `view.sort` (collation rules in 09 I18N-22; `dimensions` sorts by
   area; `editedOn` by time; unknown values sort last).
-- **STATE-11** `chosenEntries`: in single mode, `[focused]` when set; in
-  multiple mode, `checked` or, when `inverted`, every visible file not in
-  `checked`. This is what `callbacks.choose` receives.
+- **STATE-10a** The filter text is a query (Level 1+ only; the Level 0
+  filter is a plain `<input>` the server may ignore, 03 NOJS-20). Grammar,
+  the Lucene/Gmail/GitHub convention: whitespace separates tokens; quotes
+  group a value with spaces (`name:"Wide Banner"`); `key:value` restricts
+  one field; a value may start with `>`, `>=`, `<`, `<=` or `=`, or be a
+  range `a..b`; a leading `-` negates the token; every token must match.
+  A token whose qualifier is unknown, malformed, or unavailable for the
+  current source is matched as plain text, never an error. A query with
+  no live qualifier keeps the pre-existing behaviour: the whole string is
+  one case-insensitive substring of the display record's haystack.
+  Qualifiers: `type:image|video|audio|pdf|text|other` (media kind),
+  `ext:jpg`; `is:animated|folder|chosen` (states only, never formats);
+  `size:` with `b kb mb gb tb` in binary multiples, the size column's
+  units; `modified:` and `created:` with ISO dates at year, month or day
+  precision, where `>` means after the period, `<` before it, a bare date
+  within it and `a..b` spans both, against `editedOn` and `createdOn`
+  (an entry without `createdOn` never matches `created:`); from
+  `dimensions`: `width:`, `height:`, `px:WxH` (both axes), `min:4k|1080p|
+  720p|<n>` (long edge; other `k`/`p` suffixes are refused), `orientation:
+  landscape|portrait|square` and `ratio:16:9|1.5` with a 2 % tolerance,
+  where an entry without dimensions never matches; with
+  `capabilities.location` (01 CON-05): `has:location`, `near:lat,lng,
+  25km|mi` (haversine) and `within:south,west,north,east`, otherwise plain
+  text. `is:chosen` reads the chosen set of STATE-11.
+- **STATE-11** `chosenEntries`: in single mode, `[selected]` when an item
+  is selected, else `[focused]` when set; in multiple mode, `checked` or,
+  when `inverted`, every visible file not in `checked`. This is what
+  `callbacks.choose` receives. `selection.selected` is set by Space on
+  the focused row or a click on a file row, cleared by Space again, by
+  navigation, by a listing that no longer holds it, and by switching to
+  multiple mode; Enter on a row selects and commits that row, Choose
+  commits the selected item or, with none, the focused one.
 - **STATE-12** `displayRecord(entry)`: the per-item strings (sizes, dates,
   icon, description) produced once per entry per locale, in the worker
   when available (10 PERF-01), memoised by `(path, editedOn, fileSize,
@@ -74,6 +103,7 @@ Event names are `area/verb`. Payloads in `schema/state.json#/$defs/events`.
 | `listing/failed {error}` | `status: error`, push a danger notification |
 | `view/setMode {mode}` · `view/setSort {by?, dir?}` · `view/setFilter {text}` · `view/togglePanel {open?}` · `view/setChooseMode {mode}` · `view/setFullscreen {on}` | set the field; `setSort` keeps the other half (v2 lost `dir`, KEY-10 defect); switching to single clears `checked` and `inverted` |
 | `selection/focus {path|null}` | set `focused` |
+| `selection/select {path|null}` | set `selected` (single mode, STATE-11) |
 | `selection/toggle {path, checked}` | add/remove in `checked` (multiple mode only) |
 | `selection/invert {on?}` | toggle `inverted` |
 | `selection/clear` | `checked = []`, `inverted = false` |

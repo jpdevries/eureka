@@ -8,7 +8,8 @@ import { ZipFile } from 'yazl';
 import { encodePathForURL, normalizePath, joinPath, parentPath, basename, mediaKind, isTextLike, looksBinary, renderTextThumbnail } from '@mrktps/eureka-core';
 import type { Entry, Source, SourceCapabilities, TreeNode } from '@mrktps/eureka-core';
 import { READ_ONLY } from '@mrktps/eureka-core';
-import { ANIMATABLE, DEFAULT_TREE_DEPTH, MIME, PathError, clampDepth, sniffAnimated, type MediaSource } from './fs-source.js';
+import { ANIMATABLE, DEFAULT_TREE_DEPTH, MIME, PathError, capabilitiesFor, clampDepth, sniffAnimated, type MediaSource } from './fs-source.js';
+import { readExifGps, type GpsLocation } from './exif-gps.js';
 import { sanitizeFilename } from './multipart.js';
 import { S3Client, S3Error, type S3Credentials, type S3Object } from './s3/client.js';
 
@@ -42,6 +43,8 @@ export interface S3SourceOptions {
   /** Offer no mutations (11 MS-09): the token can only read. Without it the source still turns read-only after the first 403. */
   readOnly?: boolean;
   capabilities?: SourceCapabilities;
+  /** Read EXIF GPS from the 64 KB image probe and expose `location` (01 CON-05). Off by default. */
+  location?: boolean;
   /** How long a folder-tree level is reused, in ms (default 30 000); mutations drop the cache anyway. */
   treeTtl?: number;
   fetch?: typeof fetch;
@@ -58,7 +61,7 @@ export function createS3Source(opts: S3SourceOptions): MediaSource {
   const hideDot = opts.hideDotfiles ?? true;
   const probe = opts.probe ?? true;
   const treeTtl = opts.treeTtl ?? 30_000;
-  const probes = new Map<string, { dimensions?: [number, number]; animated?: boolean }>(); // by key + etag, LRU
+  const probes = new Map<string, { dimensions?: [number, number]; animated?: boolean; location?: GpsLocation }>(); // by key + etag, LRU
   const thumbs = new Map<string, { svg: string; etag: string }>();
   const treeCache = new Map<string, { at: number; nodes: TreeNode[] }>(); // by cd and depth
 
@@ -76,11 +79,11 @@ export function createS3Source(opts: S3SourceOptions): MediaSource {
   const remember = <V>(map: Map<string, V>, key: string, value: V, max: number) => { map.set(key, value); if (map.size > max) map.delete(map.keys().next().value as string); };
 
   /** Dimensions and animation from the head of an image, once per key + ETag. */
-  async function probeImage(o: S3Object): Promise<{ dimensions?: [number, number]; animated?: boolean }> {
+  async function probeImage(o: S3Object): Promise<{ dimensions?: [number, number]; animated?: boolean; location?: GpsLocation }> {
     const cacheKey = `${o.key}:${o.etag}`;
     const hit = probes.get(cacheKey);
     if (hit) { probes.delete(cacheKey); probes.set(cacheKey, hit); return hit; }
-    const out: { dimensions?: [number, number]; animated?: boolean } = {};
+    const out: { dimensions?: [number, number]; animated?: boolean; location?: GpsLocation } = {};
     if (o.size === 0) return out;
     try {
       const res = await client.get(o.key, { start: 0, end: Math.min(o.size, PROBE_BYTES) - 1 });
@@ -88,6 +91,7 @@ export function createS3Source(opts: S3SourceOptions): MediaSource {
         const buf = Buffer.from(await res.arrayBuffer());
         try { const d = imageSize(buf); if (d.width && d.height) out.dimensions = [d.width, d.height]; } catch { /* not decodable from the head */ }
         if (ANIMATABLE.includes(path.extname(o.key).toLowerCase()) && sniffAnimated(buf, o.key)) out.animated = true;
+        if (opts.location && /\.(jpe?g|tiff?)$/i.test(o.key)) { const loc = readExifGps(buf); if (loc) out.location = loc; }
       }
     } catch { /* a probe never fails a listing */ }
     remember(probes, cacheKey, out, 5000);
@@ -150,12 +154,12 @@ export function createS3Source(opts: S3SourceOptions): MediaSource {
   }
 
   /** A write refused with 403 means the credentials are read-only: say so from now on (11 MS-09, "retroactive"). */
-  const refused = (err: unknown): never => { if (err instanceof S3Error && err.status === 403) source.capabilities = { ...READ_ONLY }; throw err; };
+  const refused = (err: unknown): never => { if (err instanceof S3Error && err.status === 403) source.capabilities = { ...READ_ONLY, ...(source.capabilities?.location ? { location: true } : {}) }; throw err; };
   const guarded = <A extends unknown[], R>(fn: (...a: A) => Promise<R>) => async (...a: A): Promise<R> => { try { return await fn(...a); } catch (err) { return refused(err); } };
 
   const source: MediaSource = {
     id: opts.id, name: opts.name,
-    ...(opts.readOnly ? { capabilities: { ...READ_ONLY } } : opts.capabilities ? { capabilities: { ...opts.capabilities } } : {}),
+    ...capabilitiesFor(opts),
     listTree,
     listDirectory: (dir) => listDirectory(dir),
     upload: guarded(async (dir, files) => {

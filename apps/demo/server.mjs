@@ -47,6 +47,13 @@ ${nav('/browser/')}
 <h1 class="visually-hidden">Eureka Media Browser</h1>
 <div id="root" class="eureka-root">
 <eureka-browser api="${escapeHtml(basePath)}" assets="/assets/" lang="${escapeHtml(ctx.lang)}">${form}</eureka-browser>
+<output class="demo-choose-result" id="demo-chosen" aria-live="polite" hidden></output>
+<script type="module">
+  // The host's side of Choose: a callback (which also makes the Choose bar render, spec 01 CON-12) and the event.
+  const el = document.querySelector('eureka-browser'), out = document.getElementById('demo-chosen');
+  const show = (items) => { const list = [].concat(items); out.hidden = false; out.textContent = 'Chose ' + (list.length === 1 ? list[0].path : list.length + ' items: ' + list.map((i) => i.path).join(', ')); };
+  el.config = { callbacks: { choose: show } };
+</script>
 </div>
 </main>
 <script type="module" src="/assets/js/eureka-browser.js"></script>

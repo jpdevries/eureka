@@ -1,7 +1,7 @@
 @layer eureka.layout {
   /* Thumb, grid and masonry (04 LAY-30..34): only the media (and choose) cells show; rows flow as items. */
   .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__table > thead { display: none !important; }
-  .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__table td:not(.eureka__td-media, .eureka__choose, [colspan]) { display: none; }
+  .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__table td:not(.eureka__td-media, .eureka__choose, .eureka__select, [colspan]) { display: none; }
   .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__table > tbody:not(.empty) { display: flex !important; flex-wrap: wrap; justify-content: center; align-content: flex-start; gap: 0.5rem; padding: 0.25rem; }
   .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__table > tbody > tr { display: block; border: 0; flex: 0 1 auto; position: relative; }
   .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__table td.eureka__td-media { display: flex; justify-content: center; inline-size: 100%; padding: 0; }

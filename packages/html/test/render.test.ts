@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { reduce } from '@mrktps/eureka-core';
 import { html, raw, escapeHtml, jsonForScript, renderLevel0, renderEnhanced, renderDocument, contextFromPage, instance, type PageInput } from '../src/index.js';
 
 const t0 = Date.UTC(2017, 3, 2, 14, 25);
@@ -16,6 +17,33 @@ const input: PageInput = {
   tree: [{ name: 'assets', cd: 'assets', children: [{ name: 'img', cd: 'assets/img', children: [{ name: 'redwoods', cd: 'assets/img/redwoods', children: [] }] }] }, { name: 'uploads', cd: 'uploads', children: [] }],
   lang: 'en-US', basePath: '/assets/components/eureka/', timeZone: 'UTC'
 };
+
+describe('single-mode selection and the tile menu (07 STATE-11, 02 HTML-63, HTML-71a)', () => {
+  const entries: PageInput['entries'] = [
+    { filename: 'a.png', directory: '/', path: 'a.png', absoluteURL: '/s/a.png', editedOn: 0, fileSize: 1 },
+    { filename: 'b.png', directory: '/', path: 'b.png', absoluteURL: '/s/b.png', editedOn: 0, fileSize: 1 }
+  ];
+  const input: PageInput = { sources: [{ id: 0, name: 's' }], source: { id: 0, name: 's' }, path: '/', entries, tree: [], lang: 'en', basePath: '/' };
+  it('every file row carries aria-selected; the selected one is true and the choose bar names it', () => {
+    const ctx = contextFromPage({ ...input, config: { callbacks: { choose: () => {} } } }, 1);
+    ctx.state = reduce(reduce(ctx.state, { type: 'selection/focus', path: 'a.png' }), { type: 'selection/select', path: 'b.png' });
+    const out = instance(ctx).value;
+    expect(/<tr[^>]*data-path="a\.png"[^>]*>/.exec(out)![0]).toContain('aria-selected="false"');
+    expect(/<tr[^>]*data-path="b\.png"[^>]*>/.exec(out)![0]).toContain('aria-selected="true"');
+    expect(/<button[^>]*id="eureka__choose-button"[^>]*>[\s\S]*?<\/button>/.exec(out)![0]).toContain('b.png'); // Choose commits the selected item, not the focused one
+    expect(out).toContain('data-choose="single"');
+  });
+  it('each file tile has a menu button; only the focused row\'s is in the tab order; Level 0 has none', () => {
+    const ctx = contextFromPage(input, 1);
+    ctx.state = reduce(ctx.state, { type: 'selection/focus', path: 'b.png' });
+    const out = instance(ctx).value;
+    const menus = [...out.matchAll(/<button[^>]*class="eureka__tile-menu"[^>]*>/g)].map((m) => m[0]);
+    expect(menus).toHaveLength(2);
+    expect(menus[0]).toContain('data-path="a.png"'); expect(menus[0]).toContain('tabindex="-1"');
+    expect(menus[1]).toContain('data-path="b.png"'); expect(menus[1]).toContain('tabindex="0"'); expect(menus[1]).toContain('aria-haspopup="menu"'); expect(menus[1]).toContain('aria-label="Actions for b.png"');
+    expect(renderLevel0(input)).not.toContain('eureka__tile-menu');
+  });
+});
 
 describe('folders as items (02 HTML-62, 03 NOJS-32a)', () => {
   const entries: PageInput['entries'] = [

@@ -31,9 +31,10 @@ configuration surface of an instance.
 - **Focused item.** The file whose row has keyboard focus or was focused
   last. It drives the path bar, the actions toolbar and the Choose button
   in single mode.
-- **Chosen items.** In multiple mode, the set of checked files. With the
-  selection **inverted**, the chosen set is every visible file except the
-  checked ones.
+- **Chosen items.** In single mode, the **selected** file (Space or a
+  click) or, with none selected, the focused one. In multiple mode, the
+  set of checked files; with the selection **inverted**, every visible
+  file except the checked ones.
 - **Choose.** The act of handing items to the host: the `choose` callback
   (Level 1+) or the form POST with `eureka__chosen_item` (Level 0). Eureka
   does not navigate away or close itself; the host decides.
@@ -112,6 +113,15 @@ defaults live in `schema/config.json`; the table is the human index.
   the backend (11 MS-09), and a client that receives 403 for a mutation
   re-reads the source list so capabilities a backend discovered late
   take effect without a reload.
+- **CON-05** Location is opt-in. A source exposes `location` on entries
+  (`{ lat, lng, alt? }`, decimal degrees, nothing else) only when the host
+  set `location: true` on it, and then lists `capabilities.location`.
+  Off, drivers neither request the field (Drive
+  `imageMediaMetadata.location`) nor parse EXIF GPS from image heads, so
+  nothing is read, stored or sent. Level 0 never renders location; the
+  client uses it for the `near:`, `within:` and `has:location` filter
+  qualifiers (07 STATE-10a). `createdOn` is an optional creation time of
+  the same shape as `editedOn`, present where the backend has one.
 - **CON-10** Unknown options MUST be ignored, not rejected, so hosts can
   share one configuration object across spec versions.
 - **CON-11** When `useLocalStorage` is on, persisted view state wins over

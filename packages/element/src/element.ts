@@ -53,6 +53,7 @@ export class EurekaBrowser extends HTMLElement {
   #textThumbs = new Map<string, string>(); // worker-rendered text thumbnails, path → blob URL (02 HTML-66c, thumbnails: 'client')
   #thumbPending = new Set<string>();
   #branchesLoading = new Set<string>(); // tree branches being fetched (11 MS-43)
+  #placeholderIndex = 0; // which filter example the placeholder shows (02 HTML-40a)
   #thumbObserver: IntersectionObserver | null = null;
   #mediaBound = new WeakSet<Element>();
   #contextOrigin: { x: number; y: number } | null = null; // pointer position for engines without anchor positioning
@@ -156,6 +157,8 @@ export class EurekaBrowser extends HTMLElement {
     this.#started = true; this.#starting = false;
     this.#render();
     this.#store.subscribe((s) => { this.#queueRender(); persist(this.#storage, prefix, s); });
+    const every = config.intervals.searchBarPlaceholder;
+    if (typeof every === 'number' && every > 0) { const t = setInterval(() => { this.#placeholderIndex++; this.#queueRender(); }, Math.max(every, 50)); this.#timers.add(t as unknown as ReturnType<typeof setTimeout>); } // 02 HTML-40a
 
     if (init?.listing) this.#store.dispatch({ type: 'listing/records', records: this.#recordsFor(init.listing.entries, locale) });
     if (config.welcome && (config.alwaysWelcome || !persisted.welcomed)) this.#notify(`${this.#t('welcomeToEureka')} ${this.#t('shortcuts.hint')}`, 'info', { sticky: true, learnMore: config.learnMore, id: 'welcome' });
@@ -219,7 +222,7 @@ export class EurekaBrowser extends HTMLElement {
     if (!this.#started) return;
     const state = this.#store.getState();
     const next = new Map<string, string>();
-    const ctx: Ctx = { state, t: this.#t, ids: this.#ids, level: 1, iconSprite: this.#iconSprite, rowMemo: { previous: this.#rowMarkup, next }, keymap: this.#keymap, platform: /Mac|iPhone|iPad/.test(navigator.platform) ? 'mac' : 'other', ...(this.#contextTarget ? { contextMenu: { path: this.#contextTarget } } : {}), playing: this.#playing, textThumbnails: this.#textThumbs };
+    const ctx: Ctx = { state, t: this.#t, ids: this.#ids, level: 1, iconSprite: this.#iconSprite, rowMemo: { previous: this.#rowMarkup, next }, keymap: this.#keymap, placeholderIndex: this.#placeholderIndex, platform: /Mac|iPhone|iPad/.test(navigator.platform) ? 'mac' : 'other', ...(this.#contextTarget ? { contextMenu: { path: this.#contextTarget } } : {}), playing: this.#playing, textThumbnails: this.#textThumbs };
     const byId = new Map<string, string>();
     morphChildren(this, fragmentFrom(instance(ctx).value), { resolveKeep: (id) => { if (!byId.size) for (const [p, m] of next) byId.set(this.#ids.item('row', basename(p)), m); return byId.get(id); } });
     this.#rowMarkup = next;
@@ -296,13 +299,18 @@ export class EurekaBrowser extends HTMLElement {
     const textarea = target.closest<HTMLTextAreaElement>('textarea[data-select-all]');
     if (textarea) { textarea.select(); return; }
     const el = target.closest<HTMLElement>('[data-action]');
-    if (!el) return;
+    if (!el) { // a plain click on a file row selects it in single mode (STATE-11); focus follows through focusin
+      const row = target.closest<HTMLTableRowElement>('tr[data-path]:not([data-kind="folder"])');
+      if (row?.dataset.path && this.#store.getState().view.chooseMode === 'single' && !target.closest('a, button, input, select, textarea, label, details')) this.#store.dispatch({ type: 'selection/select', path: row.dataset.path });
+      return;
+    }
     if (el.closest('.eureka__context-menu')) queueMicrotask(() => this.#closeContextMenu(!this.#store.getState().dialog)); // the action ran; the menu goes, focus to the row unless a dialog took it
     const state = this.#store.getState();
     switch (el.dataset.action) {
       case 'toggle-panel': this.#store.dispatch({ type: 'view/togglePanel' }); break;
       case 'shortcuts': this.#openDialog('shortcuts', undefined, el); break;
       case 'play': { const p = el.dataset.path; if (p) this.#toggleAnimation(p); break; }
+      case 'menu': { const row = el.closest<HTMLTableRowElement>('tr[data-path]'); if (row) { this.#openContextMenu(row); } break; } // the tile menu (02 HTML-71a)
       case 'navigate': e.preventDefault(); void this.navigate(el.dataset.source ?? state.listing.source ?? '', el.dataset.cd ?? '/'); break;
       case 'create-directory': this.#openDialog('createDirectory', undefined, el); break;
       case 'upload': e.preventDefault(); this.#pickFiles(); break;
@@ -341,6 +349,7 @@ export class EurekaBrowser extends HTMLElement {
     if (t.name === 'eureka__fullscreen') { this.#toggleFullscreen(t.checked); return; }
     if (t.name === 'eureka__animate') { this.#store.dispatch({ type: 'view/setAnimate', on: t.checked }); return; }
     if (t.name === 'eureka__chosen_items') { if (t.dataset.path) this.#store.dispatch({ type: 'selection/toggle', path: t.dataset.path, checked: t.checked }); return; }
+    if (t.name === 'eureka__selected_item') { if (t.dataset.path && t.checked) this.#store.dispatch({ type: 'selection/select', path: t.dataset.path }); return; } // the single-mode radio (STATE-11)
     if (t.name === 'eureka__uploadFiles') { const files = Array.from(t.files ?? []); t.value = ''; void this.#upload(files); return; }
   }
 
@@ -448,7 +457,7 @@ export class EurekaBrowser extends HTMLElement {
         if (state.dialog || (e.key === 'Escape' && (state.view.filter || inTextField))) { handled = false; break; }
         this.#store.dispatch({ type: 'selection/clear' }); break;
       // row scope
-      case 'chooseItem': if (item && target === row) this.#choose([item]); else if (folder && target === row && state.listing.source !== null) void this.navigate(state.listing.source, folder.path); else handled = false; break; // Enter opens a folder (05 KEY-B7)
+      case 'chooseItem': if (item && target === row) { if (state.view.chooseMode === 'single') this.#store.dispatch({ type: 'selection/select', path: item.path }); this.#choose([item]); } else if (folder && target === row && state.listing.source !== null) void this.navigate(state.listing.source, folder.path); else handled = false; break; // Enter opens a folder (05 KEY-B7)
       case 'expandItem': if (item) { const name = this.#ids.item('row', item.filename); window.open(item.absoluteURL, name.startsWith('_') ? `e${name}` : name); } else handled = false; break; // the row's named context (HTML-68): a repeat Expand reuses the tab, which `noopener` would prevent
       case 'openContextMenu': if (row && item && MENU_MODES.has(state.view.mode)) this.#openContextMenu(row); else handled = false; break;
       case 'toggleAnimation': if (item?.animated) this.#toggleAnimation(item.path); else handled = false; break;
@@ -456,7 +465,8 @@ export class EurekaBrowser extends HTMLElement {
       case 'deleteItem': if ((item ?? folder) && (target === row || !!toolbar)) this.#requestDelete([(item ?? folder)!.path], row); else handled = false; break;
       case 'renameItem': if (item ?? folder) this.#openDialog('rename', (item ?? folder)!.path, row ?? target); else handled = false; break;
       case 'toggleItemChecked':
-        if (item && target === row && state.view.chooseMode === 'multiple') this.#store.dispatch({ type: 'selection/toggle', path: item.path, checked: !(state.selection.inverted !== state.selection.checked.includes(item.path)) });
+        if (item && target === row && state.view.chooseMode === 'single') this.#store.dispatch({ type: 'selection/select', path: state.selection.selected === item.path ? null : item.path }); // Space selects in single mode (STATE-11)
+        else if (item && target === row && state.view.chooseMode === 'multiple') this.#store.dispatch({ type: 'selection/toggle', path: item.path, checked: !(state.selection.inverted !== state.selection.checked.includes(item.path)) });
         else handled = false; break;
       case 'nextRow': handled = this.#focusRow(rows[index + 1]); break;
       case 'previousRow': handled = this.#focusRow(rows[index - 1]); break;

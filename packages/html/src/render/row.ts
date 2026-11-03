@@ -124,6 +124,7 @@ export function row(ctx: Ctx, item: FileEntry, index: number): Raw {
   const multiple = level > 0 && state.view.chooseMode === 'multiple';
   const focused = state.selection.focused === item.path;
   const checked = multiple && selectIsChecked(state, item.path);
+  const selected = !multiple && level > 0 && state.selection.selected === item.path; // single-mode selection (STATE-11)
   const rowId = ids.item('row', item.filename);
   const mediaId = ids.item('media', item.filename);
   const nameId = ids.item('filename', item.filename);
@@ -135,12 +136,13 @@ export function row(ctx: Ctx, item: FileEntry, index: number): Raw {
     : media(ctx, item);
   const dateTitle = rec?.dateLong ?? '';
   const datetime = new Date(item.editedOn).toISOString();
-  return html`<tr id="${rowId}" class="${classes('eureka__row', { 'eureka__focused-media-item': focused, 'eureka__context-anchor': ctx.contextMenu?.path === item.path })}" aria-label="${description}" data-path="${item.path}" data-kind="${mediaKind(item.filename)}"${raw(tabindex)}${attr('aria-selected', multiple ? String(checked) : null)}>
-    ${multiple ? html`<td class="eureka__choose"><input type="checkbox" id="${checkboxId}" name="eureka__chosen_items" value="${item.filename}" aria-label="${t('choose.item', { filename: item.filename })}"${attr('checked', checked)} data-path="${item.path}"></td>` : ''}
-    ${level === 0 ? html`<td class="eureka__select"><input type="radio" id="${radioId}" name="eureka__chosen_item" value="${item.filename}" aria-describedby="${mediaId}"></td>` : ''}
+  return html`<tr id="${rowId}" class="${classes('eureka__row', { 'eureka__focused-media-item': focused, 'eureka__context-anchor': ctx.contextMenu?.path === item.path })}" aria-label="${description}" data-path="${item.path}" data-kind="${mediaKind(item.filename)}"${raw(tabindex)}${attr('aria-selected', multiple ? String(checked) : level > 0 ? String(selected) : null)}>
+    ${multiple ? html`<td class="eureka__choose"><input type="checkbox" id="${checkboxId}" name="eureka__chosen_items" value="${item.filename}" aria-label="${t('choose.item', { filename: item.filename })}"${attr('checked', checked)} data-path="${item.path}" tabindex="-1"></td>` : ''}
+    ${level === 0 ? html`<td class="eureka__select"><input type="radio" id="${radioId}" name="eureka__chosen_item" value="${item.filename}" aria-describedby="${mediaId}"></td>`
+      : !multiple ? html`<td class="eureka__select"><input type="radio" id="${radioId}" name="eureka__selected_item" value="${item.filename}" aria-label="${t('choose.item', { filename: item.filename })}"${attr('checked', selected)} data-path="${item.path}" tabindex="-1"></td>` : ''}
     <td class="eureka__td-media" id="${mediaId}">${mediaCell}${item.animated ? (level > 0
       ? html`<button type="button" class="eureka__badge eureka__badge--animated" data-action="play" data-path="${item.path}" tabindex="-1" aria-pressed="${String(isPlaying(ctx, item))}" aria-label="${t(isPlaying(ctx, item) ? 'animation.pause' : 'animation.play')} ${item.filename}">${icon(ctx, isPlaying(ctx, item) ? 'pause' : 'caret-right')}</button>`
-      : html`<span class="eureka__badge eureka__badge--animated">${icon(ctx, 'caret-right')}${hidden(t('media.animated'))}</span>`) : ''}</td>
+      : html`<span class="eureka__badge eureka__badge--animated">${icon(ctx, 'caret-right')}${hidden(t('media.animated'))}</span>`) : ''}${level > 0 ? html`<button type="button" class="eureka__tile-menu" data-action="menu" data-path="${item.path}" aria-haspopup="menu" aria-label="${t('actions.for', { filename: item.filename })}"${attr('tabindex', focused ? 0 : -1)}>${icon(ctx, 'ellipsis-h')}</button>` : ''}</td>
     <td class="eureka__td-filename" id="${nameId}">${level === 0 ? html`<label for="${radioId}">${breakableName(item.filename)}</label>` : breakableName(item.filename)}</td>
     ${level > 0 ? html`<td class="eureka__context-row"${attr('hidden', !focused)}>${actions(ctx, item)}</td>` : ''}
     <td class="eureka__dimensions">${rec?.dimensionsText ?? ''}</td>
@@ -166,8 +168,7 @@ export function folderRow(ctx: Ctx, item: FolderEntry, index: number): Raw {
     : html`<button type="button" class="eureka__folder-tile" data-action="navigate" data-cd="${item.path}" aria-label="${label}" tabindex="-1">${tileBody}</button>`;
   const datetime = Number.isFinite(new Date(item.editedOn).getTime()) && item.editedOn ? new Date(item.editedOn).toISOString() : '';
   return html`<tr id="${rowId}" class="${classes('eureka__row eureka__row--folder', { 'eureka__focused-media-item': focused })}" aria-label="${name}, ${t('folder')}" data-path="${item.path}" data-kind="folder"${raw(tabindex)}${attr('aria-selected', multiple ? 'false' : null)}>
-    ${multiple ? html`<td class="eureka__choose"></td>` : ''}
-    ${level === 0 ? html`<td class="eureka__select"></td>` : ''}
+    ${multiple ? html`<td class="eureka__choose"></td>` : html`<td class="eureka__select"></td>`}
     <td class="eureka__td-media" id="${mediaId}">${tile}</td>
     <td class="eureka__td-filename" id="${nameId}">${breakableName(name)}</td>
     ${level > 0 ? html`<td class="eureka__context-row"${attr('hidden', !focused)}>${renderActions(ctx, name, item.path, folderActions(ctx, item))}</td>` : ''}

@@ -48,6 +48,15 @@ Everything below holds for every driver.
   in `renditions` so the row renders `srcset` (02 HTML-66a). This is how
   a 200 MB TIFF becomes a 30 KB row: the browser never sees the
   original until Expand. Text files keep their SVG thumbnail (MS-04).
+- **MS-04b** `createdOn` comes from the backend where it has one: the
+  filesystem's birth time, Drive's `createdTime`, WebDAV's `creationdate`
+  (requested in the PROPFIND). S3-compatible storage keeps no creation
+  time, so its entries carry none and a `created:` filter never matches
+  them: not a bug. `location` (01 CON-05) is read only when the source
+  option `location` is set: Drive asks for `imageMediaMetadata.location`,
+  the filesystem, S3 and WebDAV parse the EXIF GPS block of JPEG and TIFF
+  heads inside the 64 KB probe with a dependency-free reader; the source
+  then lists `capabilities.location`.
 - **MS-05** `listTree(cd, depth)` returns the subfolders of `cd` (default
   the root) `depth` levels deep (`tree-node.json`); the handler's
   `treeDepth` (default 3) applies when the request names none. A node at

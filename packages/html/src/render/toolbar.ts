@@ -1,5 +1,5 @@
 // Stage header (heading, choose mode, filter) and the listing toolbar (02 §5).
-import { combineSourcePath, selectFiles, VIEW_MODES, type ViewMode, selectCan } from '@mrktps/eureka-core';
+import { combineSourcePath, selectFiles, VIEW_MODES, type ViewMode, selectCan, filterExamples, selectFilterContext } from '@mrktps/eureka-core';
 import { attr, classes, html, type Raw } from '../html.js';
 import type { Ctx } from '../model.js';
 import { hidden, icon } from './icon.js';
@@ -20,9 +20,9 @@ export function stageHeader(ctx: Ctx): Raw {
     </fieldset>` : '';
   const filter = level > 0 ? html`<search><form class="eureka__search-bar" role="search" data-form="filter">
       <label for="${ids.id('filter')}">${t('filter')}${hidden(' ' + t('contents.ofby', { cd }))}:${kbdHint(ctx, 'focusFilter')}</label>
-      <input type="search" id="${ids.id('filter')}" name="eureka__filter" list="${ids.id('datalist')}" autocomplete="off" value="${state.view.filter}"${attr('placeholder', placeholder(ctx))}${keyshortcuts(ctx, 'focusFilter')}>
+      <input type="search" id="${ids.id('filter')}" name="eureka__filter" list="${ids.id('datalist')}" autocomplete="off" value="${state.view.filter}"${attr('placeholder', placeholder(ctx))} aria-describedby="${ids.id('filter-help')}"${keyshortcuts(ctx, 'focusFilter')}>
       <datalist id="${ids.id('datalist')}">${selectFiles(state).map((f) => html`<option value="${f.filename}"></option>`)}</datalist>
-    </form></search>` : '';
+    <span class="visually-hidden" id="${ids.id('filter-help')}">${filterDescription(ctx)}</span></form></search>` : '';
   return html`<header class="eureka__stage__filter-view">
     <div class="eureka__heading"><h2 id="${ids.id('heading')}">${hidden(t('media.browse') + ' ')}${t('media.contents')}</h2>${level > 0 ? html`<button type="button" class="eureka__help-button" id="${ids.id('shortcuts')}" data-action="shortcuts" aria-haspopup="dialog" title="${t('shortcuts')}">${hidden(t('shortcuts'))}${icon(ctx, 'keyboard')}</button>` : ''}</div>
     ${chooseRadios}
@@ -30,12 +30,30 @@ export function stageHeader(ctx: Ctx): Raw {
   </header>`;
 }
 
-function placeholder(ctx: Ctx): string {
+/** The filter's examples (02 HTML-40a): a sample from the listing, then the qualifiers that can match something in it. */
+export function filterPlaceholders(ctx: Ctx): string[] {
   const files = selectFiles(ctx.state);
   const f = files[Math.floor(files.length / 2)];
-  if (!f) return '';
-  const rec = ctx.state.listing.records[f.path];
-  return rec?.dimensionsText || rec?.sizeText || f.filename;
+  const rec = f ? ctx.state.listing.records[f.path] : undefined;
+  const sample = f ? rec?.dimensionsText || rec?.sizeText || f.filename : '';
+  const examples = filterExamples(ctx.state.listing.entries, selectFilterContext(ctx.state));
+  return [...(sample ? [sample] : []), ...examples];
+}
+function placeholder(ctx: Ctx): string {
+  const list = filterPlaceholders(ctx);
+  if (!list.length) return '';
+  return list[(ctx.placeholderIndex ?? 0) % list.length]!;
+}
+/** Visually-hidden description of the syntax for the filter input, naming only the qualifiers live for this listing. */
+function filterDescription(ctx: Ctx): string {
+  const { t, state } = ctx;
+  const fctx = selectFilterContext({ ...state, view: { ...state.view, filter: 'x:y' } }); // force the context on
+  const files = selectFiles(state);
+  const parts = [t('filter.q.type'), t('filter.q.ext'), t('filter.q.is'), t('filter.q.size'), t('filter.q.modified')];
+  if (fctx.created) parts.push(t('filter.q.created'));
+  if (files.some((x) => x.dimensions)) parts.push(t('filter.q.pixels'));
+  if (fctx.location) parts.push(t('filter.q.location'));
+  return t('filter.describe', { list: parts.join('; ') });
 }
 
 export function directorySelector(ctx: Ctx): Raw {

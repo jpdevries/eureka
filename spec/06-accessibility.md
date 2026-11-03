@@ -123,6 +123,16 @@ Covered by 05. In addition:
 - **A11Y-54** Forced colors and high contrast themes: 08 THEME-03/04.
   State (checked, focused, current directory) is conveyed by borders,
   outlines or text, never by background colour alone.
+- **A11Y-56** The focused item and the chosen items are indicated in
+  every layout mode and for pointer as well as keyboard focus (WCAG
+  2.4.7, 2.4.11, 1.4.11). Focus: table and list mark the focused row's
+  leading edge with `--active`, thumb, grid and masonry ring the media
+  cell. Selection: the row's native control, a 1.5 rem radio in single
+  mode and checkbox in multiple, drawn by the browser with
+  `accent-color: var(--active)`, on a small translucent backing in the
+  thumbnail modes so it reads on any image. Row backgrounds are never
+  tinted for selection. The controls keep their native look under
+  `forced-colors`; transitions obey `prefers-reduced-motion`.
 - **A11Y-55** Keyboard hints rest at reduced opacity and return to full
   opacity on focus, while the shortcuts dialog is open, and as
   soon as the instance sees keyboard navigation (Tab, arrows, Home/End,

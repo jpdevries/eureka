@@ -36,6 +36,8 @@ export interface Ctx {
   contextMenu?: { path: string };
   /** Animated items the user asked to play (02 HTML-66b); element-local. `view.animate` plays them all. */
   playing?: ReadonlySet<string>;
+  /** Which filter example the placeholder shows (02 HTML-40a); the element advances it on `intervals.searchBarPlaceholder`. */
+  placeholderIndex?: number;
   /** Worker-rendered text thumbnails by path (blob URLs), for text files the API gives no preview (02 HTML-66c); element-local. */
   textThumbnails?: ReadonlyMap<string, string>;
   /**

@@ -1,6 +1,7 @@
 // Sorting and filtering of listings (07 STATE-10, 09 I18N-22/23).
 import { toDate } from './format.js';
 import { isFile, isFolder, type DisplayRecord, type Entry, type FileEntry, type FolderEntry, type Sort } from './types.js';
+import { compileFilter, type FilterContext } from './filter-query.js';
 
 const collators = new Map<string, Intl.Collator>();
 function collator(locale: string): Intl.Collator {
@@ -41,19 +42,22 @@ export function matchesFilter(entry: Entry, text: string, record?: DisplayRecord
   return hay.includes(q) || hay.replace(/\s+/g, '').includes(q.replace(/\s+/g, ''));
 }
 
-export function filterEntries<T extends Entry>(entries: readonly T[], text: string, records: Readonly<Record<string, DisplayRecord>> = {}): T[] {
+/** Plain text keeps the substring match; a query with a live qualifier (07 STATE-10a) filters by its predicates. */
+export function filterEntries<T extends Entry>(entries: readonly T[], text: string, records: Readonly<Record<string, DisplayRecord>> = {}, ctx: FilterContext = {}): T[] {
   if (!text.trim()) return [...entries];
-  return entries.filter((e) => matchesFilter(e, text, records[e.path]));
+  const compiled = compileFilter(text, ctx);
+  if (!compiled.structured) return entries.filter((e) => matchesFilter(e, text, records[e.path]));
+  return entries.filter((e) => compiled.test(e, records[e.path]));
 }
 
 /** Folders, filtered by name and sorted by name in the sort's direction: the items above the files (02 HTML-62). */
-export function visibleFolders(entries: readonly Entry[], view: { filter: string; sort: Sort }, locale: string, records: Readonly<Record<string, DisplayRecord>> = {}): FolderEntry[] {
+export function visibleFolders(entries: readonly Entry[], view: { filter: string; sort: Sort }, locale: string, records: Readonly<Record<string, DisplayRecord>> = {}, ctx: FilterContext = {}): FolderEntry[] {
   const folders = entries.filter(isFolder);
-  return sortEntries(filterEntries(folders, view.filter, records), { by: 'filename', dir: view.sort.dir }, locale);
+  return sortEntries(filterEntries(folders, view.filter, records, ctx), { by: 'filename', dir: view.sort.dir }, locale);
 }
 
 /** Files only, filtered then sorted: what the listing shows (07 STATE-10). */
-export function visibleFiles(entries: readonly Entry[], view: { filter: string; sort: Sort }, locale: string, records: Readonly<Record<string, DisplayRecord>> = {}): FileEntry[] {
+export function visibleFiles(entries: readonly Entry[], view: { filter: string; sort: Sort }, locale: string, records: Readonly<Record<string, DisplayRecord>> = {}, ctx: FilterContext = {}): FileEntry[] {
   const files = entries.filter(isFile);
-  return sortEntries(filterEntries(files, view.filter, records), view.sort, locale);
+  return sortEntries(filterEntries(files, view.filter, records, ctx), view.sort, locale);
 }

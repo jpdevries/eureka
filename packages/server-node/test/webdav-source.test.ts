@@ -22,11 +22,11 @@ describe('multistatus parsing (11 MS-61)', () => {
       <d:response><d:href>/dav/files/jp/Other/x.jpg</d:href><d:propstat><d:prop><d:resourcetype/></d:prop><d:status>HTTP/1.1 200 OK</d:status></d:propstat></d:response></d:multistatus>`;
     const out = parseMultistatus(xml, '/dav/files/jp/Photos');
     expect(out).toEqual([
-      { path: '/', name: '', collection: true, size: 0, modified: 0, etag: '', contentType: '' },
-      { path: 'a b.jpg', name: 'a b.jpg', collection: false, size: 12, modified: Date.parse('2026-11-02T12:00:00Z'), etag: '"x1"', contentType: 'image/jpeg' }
+      { path: '/', name: '', collection: true, size: 0, modified: 0, created: 0, etag: '', contentType: '' },
+      { path: 'a b.jpg', name: 'a b.jpg', collection: false, size: 12, modified: Date.parse('2026-11-02T12:00:00Z'), created: 0, etag: '"x1"', contentType: 'image/jpeg' }
     ]);
     const plain = parseMultistatus('<multistatus xmlns="DAV:"><response><href>/dav/files/jp/Photos/sub/</href><propstat><prop><resourcetype><collection/></resourcetype></prop><status>HTTP/1.1 200 OK</status></propstat></response></multistatus>', '/dav/files/jp/Photos');
-    expect(plain).toEqual([{ path: 'sub', name: 'sub', collection: true, size: 0, modified: 0, etag: '', contentType: '' }]);
+    expect(plain).toEqual([{ path: 'sub', name: 'sub', collection: true, size: 0, modified: 0, created: 0, etag: '', contentType: '' }]);
   });
 });
 

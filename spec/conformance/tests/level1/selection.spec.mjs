@@ -1,5 +1,5 @@
 // Level 1: focusing rows, the actions toolbar, choosing, multiple selection (spec/02 §6-8).
-import { test, expect, openDirectory, rowNamed, focusRow, control, chooseModeRadio, dialogMessage, baselineDefect } from '../helpers.mjs';
+import { test, expect, openDirectory, rows, rowNamed, focusRow, control, chooseModeRadio, dialogMessage, baselineDefect, v3only } from '../helpers.mjs';
 
 test.beforeEach(async ({ page }) => { await openDirectory(page, 'assets/img'); });
 
@@ -95,4 +95,29 @@ test('switching back to single choice removes the checkboxes', async ({ page }) 
   await expect(page.getByRole('checkbox', { name: 'Choose schildpad.jpg' })).toBeVisible();
   await chooseModeRadio(page, 'single').check();
   await expect(page.getByRole('checkbox', { name: /^Choose / })).toHaveCount(0);
+});
+
+test('STATE-11 single mode: Tab enters the grid once, arrows move, Space selects with a visible state, Choose commits the selected item', async ({ page }) => {
+  v3only('explicit single-mode selection (07 STATE-11, 06 A11Y-56)');
+  await openDirectory(page);
+  await page.evaluate(() => { const el = document.querySelector('eureka-browser'); window.__chosen = []; el.addEventListener('eureka-choose', (e) => window.__chosen.push(e.detail.items.map((i) => i.path))); });
+  const first = rows(page).first();
+  await first.focus();
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('ArrowDown');
+  const third = rows(page).nth(2);
+  await expect(third).toBeFocused();
+  await expect(third).toHaveAttribute('aria-selected', 'false');
+  await page.keyboard.press('Space');
+  await expect(third).toHaveAttribute('aria-selected', 'true');
+  await expect(third).toHaveClass(/eureka__focused-media-item/);
+  await page.keyboard.press('ArrowDown'); // focus moves on, the selection stays
+  await expect(third).toHaveAttribute('aria-selected', 'true');
+  await expect(rows(page).nth(3)).toBeFocused();
+  const thirdPath = await third.getAttribute('data-path');
+  await page.keyboard.press('Tab'); // one stop out of the grid lands on the focused row's toolbar, not on another row
+  await expect(page.locator(':focus')).not.toHaveAttribute('data-path', /./);
+  await page.getByRole('button', { name: /^Choose(?! Items)/ }).last().click();
+  const chosen = await page.evaluate(() => window.__chosen);
+  expect(chosen).toEqual([[thirdPath]]); // the selected item, not the focused fourth row
 });

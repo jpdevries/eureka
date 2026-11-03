@@ -18,7 +18,7 @@ export const NATIVE: Record<string, { ext: string; exportAs: string }> = {
 export interface DriveFile {
   id: string; name: string; mimeType: string;
   size?: string; modifiedTime?: string; createdTime?: string; md5Checksum?: string;
-  imageMediaMetadata?: { width?: number; height?: number };
+  imageMediaMetadata?: { width?: number; height?: number; location?: { latitude?: number; longitude?: number; altitude?: number } };
   shortcutDetails?: { targetId: string; targetMimeType: string };
   trashed?: boolean;
   /** Drive renders a thumbnail for most images (TIFF included), videos, PDFs and its own documents; the link is short-lived and sized by its `=s{n}` suffix. */
@@ -26,7 +26,9 @@ export interface DriveFile {
   thumbnailLink?: string;
   thumbnailVersion?: string;
 }
-const FIELDS = 'id,name,mimeType,size,modifiedTime,createdTime,md5Checksum,imageMediaMetadata(width,height),shortcutDetails(targetId,targetMimeType),hasThumbnail,thumbnailLink,thumbnailVersion';
+const BASE_FIELDS = 'id,name,mimeType,size,modifiedTime,createdTime,md5Checksum,shortcutDetails(targetId,targetMimeType),hasThumbnail,thumbnailLink,thumbnailVersion';
+/** The file fields asked for; `imageMediaMetadata.location` only when the host opted into location (01 CON-05). */
+const fieldsFor = (location: boolean) => `${BASE_FIELDS},imageMediaMetadata(width,height${location ? ',location' : ''})`;
 
 export type PreviewFormat = 'jpeg' | 'webp' | 'png';
 /** Google image-serving flags: `rj` JPEG, `rw` WebP, `rp` PNG, `l{q}` quality. Drive's own default is PNG, four times the JPEG. */
@@ -42,6 +44,8 @@ export interface DriveClientOptions {
   getToken: TokenProvider;
   /** A shared drive to work in (`corpora=drive`); otherwise My Drive and anything shared with the account. */
   driveId?: string;
+  /** Ask Drive for `imageMediaMetadata.location` (01 CON-05). Off by default: the field is not requested. */
+  location?: boolean;
   /** API base, injected for tests. */
   apiBase?: string;
   uploadBase?: string;
@@ -56,7 +60,9 @@ export class DriveClient {
   private readonly api: string;
   private readonly upload: string;
   private readonly f: typeof fetch;
+  private readonly FIELDS: string;
   constructor(private readonly opts: DriveClientOptions) {
+    this.FIELDS = fieldsFor(!!opts.location);
     this.api = (opts.apiBase ?? 'https://www.googleapis.com/drive/v3').replace(/\/$/, '');
     this.upload = (opts.uploadBase ?? 'https://www.googleapis.com/upload/drive/v3').replace(/\/$/, '');
     this.f = opts.fetch ?? fetch;
@@ -89,7 +95,7 @@ export class DriveClient {
     const out: DriveFile[] = [];
     let pageToken: string | undefined;
     do {
-      const params = this.common({ q, fields: `nextPageToken,files(${FIELDS})`, pageSize: '1000', orderBy: 'folder,name,createdTime', includeItemsFromAllDrives: 'true', ...(this.opts.driveId ? { corpora: 'drive', driveId: this.opts.driveId } : {}), ...(pageToken ? { pageToken } : {}) });
+      const params = this.common({ q, fields: `nextPageToken,files(${this.FIELDS})`, pageSize: '1000', orderBy: 'folder,name,createdTime', includeItemsFromAllDrives: 'true', ...(this.opts.driveId ? { corpora: 'drive', driveId: this.opts.driveId } : {}), ...(pageToken ? { pageToken } : {}) });
       const page = await this.json<{ files?: DriveFile[]; nextPageToken?: string }>('GET', `${this.api}/files?${params}`);
       out.push(...(page.files ?? []));
       pageToken = page.nextPageToken;
@@ -98,7 +104,7 @@ export class DriveClient {
   }
 
   async get(id: string): Promise<DriveFile | null> {
-    try { return await this.json<DriveFile>('GET', `${this.api}/files/${encodeURIComponent(id)}?${this.common({ fields: FIELDS })}`); }
+    try { return await this.json<DriveFile>('GET', `${this.api}/files/${encodeURIComponent(id)}?${this.common({ fields: this.FIELDS })}`); }
     catch (err) { if (err instanceof DriveError && err.status === 404) return null; throw err; }
   }
 
@@ -121,20 +127,20 @@ export class DriveClient {
     const body = Buffer.concat([
       Buffer.from(`--${boundary}\r\ncontent-type: application/json; charset=UTF-8\r\n\r\n${meta}\r\n--${boundary}\r\ncontent-type: ${contentType}\r\n\r\n`), data, Buffer.from(`\r\n--${boundary}--`)
     ]);
-    return this.json<DriveFile>('POST', `${this.upload}/files?${this.common({ uploadType: 'multipart', fields: FIELDS })}`, { headers: { 'content-type': `multipart/related; boundary=${boundary}` }, body: new Uint8Array(body) });
+    return this.json<DriveFile>('POST', `${this.upload}/files?${this.common({ uploadType: 'multipart', fields: this.FIELDS })}`, { headers: { 'content-type': `multipart/related; boundary=${boundary}` }, body: new Uint8Array(body) });
   }
 
   /** Replace the bytes of an existing file (an upload over a file of the same name, like a filesystem would). */
   async replaceContent(id: string, data: Buffer, contentType: string): Promise<DriveFile> {
-    return this.json<DriveFile>('PATCH', `${this.upload}/files/${encodeURIComponent(id)}?${this.common({ uploadType: 'media', fields: FIELDS })}`, { headers: { 'content-type': contentType }, body: new Uint8Array(data) });
+    return this.json<DriveFile>('PATCH', `${this.upload}/files/${encodeURIComponent(id)}?${this.common({ uploadType: 'media', fields: this.FIELDS })}`, { headers: { 'content-type': contentType }, body: new Uint8Array(data) });
   }
 
   async createFolder(parentId: string, name: string): Promise<DriveFile> {
-    return this.json<DriveFile>('POST', `${this.api}/files?${this.common({ fields: FIELDS })}`, { headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name, mimeType: FOLDER, parents: [parentId] }) });
+    return this.json<DriveFile>('POST', `${this.api}/files?${this.common({ fields: this.FIELDS })}`, { headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name, mimeType: FOLDER, parents: [parentId] }) });
   }
 
   async patch(id: string, metadata: Record<string, unknown>): Promise<DriveFile> {
-    return this.json<DriveFile>('PATCH', `${this.api}/files/${encodeURIComponent(id)}?${this.common({ fields: FIELDS })}`, { headers: { 'content-type': 'application/json' }, body: JSON.stringify(metadata) });
+    return this.json<DriveFile>('PATCH', `${this.api}/files/${encodeURIComponent(id)}?${this.common({ fields: this.FIELDS })}`, { headers: { 'content-type': 'application/json' }, body: JSON.stringify(metadata) });
   }
 
   /**

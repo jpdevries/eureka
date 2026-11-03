@@ -1,14 +1,16 @@
 // The instance store (07). Pure transitions, no framework, no effects.
 import { ancestors, normalizePath, parentPath } from './paths.js';
 import { visibleFiles, visibleFolders } from './sort-filter.js';
-import { isFile, sourceAllows, type SourceCapabilities, type ChooseMode, type Config, type DialogKind, type DisplayRecord, type Entry, type FileEntry, type Notification, type Sort, type SortBy, type SortDir, type Source, type SourceId, type Status, type TreeNode, type ViewMode } from './types.js';
+import type { FilterContext } from './filter-query.js';
+import { isFile, sourceAllows, type MutationCapabilities, type ChooseMode, type Config, type DialogKind, type DisplayRecord, type Entry, type FileEntry, type Notification, type Sort, type SortBy, type SortDir, type Source, type SourceId, type Status, type TreeNode, type ViewMode } from './types.js';
 
 export interface State {
   config: Config;
   sources: { all: Source[]; current: SourceId | null; status: Status };
   tree: { bySource: Record<string, TreeNode[]>; open: string[]; status: Status };
   listing: { source: SourceId | null; path: string; entries: Entry[]; records: Record<string, DisplayRecord>; status: Status; error?: string; receivedAt?: number; requestId: number };
-  selection: { focused: string | null; checked: string[]; inverted: boolean };
+  /** `selected` is the single-mode selection (STATE-11): Space or a click on an item sets it; Enter or Choose commits it. */
+  selection: { focused: string | null; selected: string | null; checked: string[]; inverted: boolean };
   view: { mode: ViewMode; sort: Sort; filter: string; panelOpen: boolean; chooseMode: ChooseMode; fullscreen: boolean; animate: boolean };
   pending: { uploading: boolean; deleting: string[]; renaming: string | null; creating: boolean; cropping: boolean };
   dialog: null | { kind: DialogKind; target?: string; input?: string };
@@ -36,6 +38,7 @@ export type Event =
   | { type: 'view/setFullscreen'; on: boolean }
   | { type: 'view/setAnimate'; on: boolean }
   | { type: 'selection/focus'; path: string | null }
+  | { type: 'selection/select'; path: string | null }
   | { type: 'selection/toggle'; path: string; checked: boolean }
   | { type: 'selection/invert'; on?: boolean }
   | { type: 'selection/clear' }
@@ -83,7 +86,7 @@ export function initialState({ config, locale = config.lang ?? 'en', persisted, 
     sources: hydrated?.sources ?? { all: [], current: source, status: 'idle' },
     tree: hydrated?.tree ?? { bySource: {}, open: openWith(persisted?.treeOpen ?? [], path), status: 'idle' },
     listing: { source, path, entries: [], records: {}, status: 'idle', requestId: 0, ...(hydrated?.listing ?? {}) },
-    selection: { focused: null, checked: [], inverted: false },
+    selection: { focused: null, selected: null, checked: [], inverted: false },
     view,
     pending: { uploading: false, deleting: [], renaming: null, creating: false, cropping: false },
     dialog: null,
@@ -93,7 +96,7 @@ export function initialState({ config, locale = config.lang ?? 'en', persisted, 
 }
 
 let notificationSeq = 0;
-const clearedSelection = (): State['selection'] => ({ focused: null, checked: [], inverted: false });
+const clearedSelection = (): State['selection'] => ({ focused: null, selected: null, checked: [], inverted: false });
 /** The tree disclosures that must be open to show `path` (its ancestors and itself), merged into `open`. */
 const openWith = (open: string[], path: string): string[] => [...new Set([...open, ...ancestors(path)])];
 
@@ -129,7 +132,8 @@ export function reduce(s: State, e: Event): State {
     case 'listing/loaded': {
       if (String(e.source) !== String(s.listing.source) || normalizePath(e.path) !== s.listing.path) return s; // stale (STATE-20)
       if (e.fromCache && s.listing.status === 'ready') return s;
-      return { ...s, listing: { ...s.listing, entries: e.entries, records: e.records ?? {}, status: e.fromCache ? 'loading' : 'ready', error: undefined, receivedAt: Date.now() } };
+      const selected = s.selection.selected && e.entries.some((x) => x.path === s.selection.selected) ? s.selection.selected : null;
+      return { ...s, selection: selected === s.selection.selected ? s.selection : { ...s.selection, selected }, listing: { ...s.listing, entries: e.entries, records: e.records ?? {}, status: e.fromCache ? 'loading' : 'ready', error: undefined, receivedAt: Date.now() } };
     }
     case 'listing/records': return { ...s, listing: { ...s.listing, records: { ...s.listing.records, ...e.records } } };
     case 'listing/failed': return { ...s, listing: { ...s.listing, status: 'error', error: e.error } };
@@ -139,10 +143,11 @@ export function reduce(s: State, e: Event): State {
     case 'view/togglePanel': return { ...s, view: { ...s.view, panelOpen: e.open ?? !s.view.panelOpen } };
     case 'view/setChooseMode':
       if (s.view.chooseMode === e.mode) return s;
-      return { ...s, view: { ...s.view, chooseMode: e.mode }, selection: e.mode === 'single' ? { ...s.selection, checked: [], inverted: false } : s.selection };
+      return { ...s, view: { ...s.view, chooseMode: e.mode }, selection: e.mode === 'single' ? { ...s.selection, checked: [], inverted: false } : { ...s.selection, selected: null } };
     case 'view/setFullscreen': return { ...s, view: { ...s.view, fullscreen: e.on } };
     case 'view/setAnimate': return { ...s, view: { ...s.view, animate: e.on } }; // every animated item plays (02 HTML-66b); persisted
     case 'selection/focus': return s.selection.focused === e.path ? s : { ...s, selection: { ...s.selection, focused: e.path } };
+    case 'selection/select': return s.selection.selected === e.path ? s : { ...s, selection: { ...s.selection, selected: e.path } }; // single-mode selection (STATE-11)
     case 'selection/toggle': {
       if (s.view.chooseMode !== 'multiple') return s;
       const without = s.selection.checked.filter((p) => p !== e.path);
@@ -211,22 +216,36 @@ export function reduce(s: State, e: Event): State {
 // Sorting 5,000 entries with a collator costs tens of milliseconds, and the listing is re-read on every render,
 // so the visible list is cached per entries array for the last (sort, filter, locale, records) seen (10 PERF-02).
 const visibleCache = new WeakMap<Entry[], { key: string; records: Record<string, DisplayRecord>; result: FileEntry[] }>();
+/** What the filter predicates read from state (07 STATE-10a): the chosen set for `is:chosen`, the source's location capability. */
+export function selectFilterContext(s: State): FilterContext {
+  const structured = /(^|\s)-?[a-z]+:\S/i.test(s.view.filter);
+  if (!structured) return {};
+  const files = s.listing.entries.filter(isFile);
+  const checked = new Set(s.selection.checked);
+  const chosen = s.view.chooseMode === 'multiple'
+    ? new Set(files.filter((f) => s.selection.inverted !== checked.has(f.path)).map((f) => f.path))
+    : new Set([s.selection.selected ?? s.selection.focused].filter((p): p is string => !!p));
+  return { chosen, location: selectCurrentSource(s)?.capabilities?.location === true, created: s.listing.entries.some((e) => e.createdOn !== undefined) };
+}
 export const selectVisibleFiles = (s: State): FileEntry[] => {
-  const key = `${s.view.sort.by}|${s.view.sort.dir}|${s.view.filter}|${s.locale.tag}`;
+  const ctx = selectFilterContext(s);
+  const key = `${s.view.sort.by}|${s.view.sort.dir}|${s.view.filter}|${s.locale.tag}|${ctx.location ? 'L' : ''}|${ctx.chosen ? [...ctx.chosen].join(',') : ''}`;
   const hit = visibleCache.get(s.listing.entries);
   if (hit && hit.key === key && hit.records === s.listing.records) return hit.result;
-  const result = visibleFiles(s.listing.entries, s.view, s.locale.tag, s.listing.records);
+  const result = visibleFiles(s.listing.entries, s.view, s.locale.tag, s.listing.records, ctx);
   visibleCache.set(s.listing.entries, { key, records: s.listing.records, result });
   return result;
 };
 /** Everything the listing shows (02 HTML-62): the subfolders first when `listFolders`, then the visible files. */
-export const selectVisibleItems = (s: State): Entry[] => (s.config.listFolders ? [...visibleFolders(s.listing.entries, s.view, s.locale.tag, s.listing.records), ...selectVisibleFiles(s)] : selectVisibleFiles(s));
+export const selectVisibleItems = (s: State): Entry[] => (s.config.listFolders ? [...visibleFolders(s.listing.entries, s.view, s.locale.tag, s.listing.records, selectFilterContext(s)), ...selectVisibleFiles(s)] : selectVisibleFiles(s));
 export const selectFiles = (s: State): FileEntry[] => s.listing.entries.filter(isFile);
 export const selectFolders = (s: State): Entry[] => s.listing.entries.filter((e) => !isFile(e));
 export const selectFocused = (s: State): FileEntry | null => (s.selection.focused ? (selectFiles(s).find((f) => f.path === s.selection.focused) ?? null) : null);
+/** The single-mode selection (STATE-11), or null. */
+export const selectSelected = (s: State): FileEntry | null => (s.selection.selected ? (selectFiles(s).find((f) => f.path === s.selection.selected) ?? null) : null);
 /** Effective chosen set (STATE-11): single → focused; multiple → checked, or visible minus checked when inverted. */
 export function selectChosen(s: State): FileEntry[] {
-  if (s.view.chooseMode === 'single') { const f = selectFocused(s); return f ? [f] : []; }
+  if (s.view.chooseMode === 'single') { const f = selectSelected(s) ?? selectFocused(s); return f ? [f] : []; } // the selected item, else the focused one
   const checked = new Set(s.selection.checked);
   const visible = selectVisibleFiles(s);
   return s.selection.inverted ? visible.filter((f) => !checked.has(f.path)) : visible.filter((f) => checked.has(f.path));
@@ -235,7 +254,7 @@ export const selectIsChecked = (s: State, path: string): boolean => s.selection.
 export const selectCurrentTree = (s: State): TreeNode[] => s.tree.bySource[String(s.listing.source)] ?? [];
 export const selectCurrentSource = (s: State): Source | undefined => s.sources.all.find((x) => String(x.id) === String(s.listing.source));
 /** The mutations offered right now: the instance's config AND the current source's capabilities (01 CON-04). */
-export function selectCan(s: State): Readonly<Required<SourceCapabilities>> {
+export function selectCan(s: State): Readonly<Required<MutationCapabilities>> {
   const src = selectCurrentSource(s), c = s.config;
   return {
     upload: c.allowUploads && sourceAllows(src, 'upload'),

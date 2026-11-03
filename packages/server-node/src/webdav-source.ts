@@ -4,9 +4,11 @@ import path from 'node:path';
 import { Readable } from 'node:stream';
 import { ZipFile } from 'yazl';
 import { imageSize } from 'image-size';
-import { encodePathForURL, normalizePath, joinPath, parentPath, basename, mediaKind, isTextLike, looksBinary, renderTextThumbnail, READ_ONLY } from '@mrktps/eureka-core';
+import { encodePathForURL, normalizePath, joinPath, parentPath, basename, mediaKind, isTextLike, looksBinary, renderTextThumbnail } from '@mrktps/eureka-core';
 import type { Entry, Source, SourceCapabilities, TreeNode } from '@mrktps/eureka-core';
-import { ANIMATABLE, DEFAULT_TREE_DEPTH, MIME, PathError, clampDepth, sniffAnimated, type MediaSource, type PreviewResult } from './fs-source.js';
+import { READ_ONLY } from '@mrktps/eureka-core';
+import { ANIMATABLE, DEFAULT_TREE_DEPTH, MIME, PathError, capabilitiesFor, clampDepth, sniffAnimated, type MediaSource, type PreviewResult } from './fs-source.js';
+import { readExifGps, type GpsLocation } from './exif-gps.js';
 import { sanitizeFilename } from './multipart.js';
 import { DavClient, DavError, type DavResource } from './webdav/client.js';
 
@@ -29,6 +31,8 @@ export interface WebDavSourceOptions {
   nextcloudPreviews?: boolean | string;
   readOnly?: boolean;
   capabilities?: SourceCapabilities;
+  /** Read EXIF GPS from the 64 KB image probe and expose `location` (01 CON-05). Off by default. */
+  location?: boolean;
   /** How long a tree level is reused, in ms (default 30 000); mutations drop the cache. */
   treeTtl?: number;
   fetch?: typeof fetch;
@@ -44,7 +48,7 @@ export function createWebDavSource(opts: WebDavSourceOptions): MediaSource {
   const probe = opts.probe ?? true;
   const treeTtl = opts.treeTtl ?? 30_000;
   const f = opts.fetch ?? fetch;
-  const probes = new Map<string, { dimensions?: [number, number]; animated?: boolean }>();
+  const probes = new Map<string, { dimensions?: [number, number]; animated?: boolean; location?: GpsLocation }>();
   const thumbs = new Map<string, { svg: string; etag: string }>();
   const treeCache = new Map<string, { at: number; nodes: TreeNode[] }>();
 
@@ -74,15 +78,15 @@ export function createWebDavSource(opts: WebDavSourceOptions): MediaSource {
     return rs.filter((r) => r.path !== rel && parentPath(r.path) === rel && !r.name.startsWith('.')).sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
   }
   async function stat(rel: string): Promise<DavResource | null> {
-    if (rel === '/') return { path: '/', name: '', collection: true, size: 0, modified: 0, etag: '', contentType: '' };
+    if (rel === '/') return { path: '/', name: '', collection: true, size: 0, modified: 0, created: 0, etag: '', contentType: '' };
     const rs = await client.propfind(rel, 0);
     return rs?.find((r) => r.path === rel) ?? rs?.[0] ?? null;
   }
 
-  async function probeImage(r: DavResource): Promise<{ dimensions?: [number, number]; animated?: boolean }> {
+  async function probeImage(r: DavResource): Promise<{ dimensions?: [number, number]; animated?: boolean; location?: GpsLocation }> {
     const key = `${r.path}:${r.etag || r.modified}:${r.size}`;
     const hit = probes.get(key); if (hit) return hit;
-    const out: { dimensions?: [number, number]; animated?: boolean } = {};
+    const out: { dimensions?: [number, number]; animated?: boolean; location?: GpsLocation } = {};
     if (r.size > 0) {
       try {
         const res = await client.get(r.path, { start: 0, end: Math.min(r.size, PROBE_BYTES) - 1 });
@@ -90,6 +94,7 @@ export function createWebDavSource(opts: WebDavSourceOptions): MediaSource {
           const buf = Buffer.from(await res.arrayBuffer());
           try { const d = imageSize(buf); if (d.width && d.height) out.dimensions = [d.width, d.height]; } catch { /* not decodable from the head */ }
           if (ANIMATABLE.includes(path.extname(r.name).toLowerCase()) && sniffAnimated(buf, r.name)) out.animated = true;
+          if (opts.location && /\.(jpe?g|tiff?)$/i.test(r.name)) { const loc = readExifGps(buf); if (loc) out.location = loc; }
         }
       } catch { /* a probe never fails a listing */ }
     }
@@ -98,8 +103,8 @@ export function createWebDavSource(opts: WebDavSourceOptions): MediaSource {
   }
 
   async function entryFor(r: DavResource, dirRel: string, saveData: boolean): Promise<Entry> {
-    if (r.collection) return { directory: r.path, path: r.path, foldername: r.name, absoluteURL: urlFor(r.path), editedOn: r.modified, fileSize: 0 };
-    const e: Entry = { directory: dirRel, path: r.path, filename: r.name, absoluteURL: urlFor(r.path), editedOn: r.modified, fileSize: r.size };
+    if (r.collection) return { directory: r.path, path: r.path, foldername: r.name, absoluteURL: urlFor(r.path), editedOn: r.modified, fileSize: 0, ...(r.created ? { createdOn: r.created } : {}) };
+    const e: Entry = { directory: dirRel, path: r.path, filename: r.name, absoluteURL: urlFor(r.path), editedOn: r.modified, fileSize: r.size, ...(r.created ? { createdOn: r.created } : {}) };
     const image = mediaKind(r.name) === 'image';
     if (probe && image) Object.assign(e, await probeImage(r));
     const pictured = picturable(r.name);
@@ -139,12 +144,12 @@ export function createWebDavSource(opts: WebDavSourceOptions): MediaSource {
     return nodes;
   }
 
-  const refused = (err: unknown): never => { if (err instanceof DavError && err.status === 403) source.capabilities = { ...READ_ONLY }; throw err; };
+  const refused = (err: unknown): never => { if (err instanceof DavError && err.status === 403) source.capabilities = { ...READ_ONLY, ...(source.capabilities?.location ? { location: true } : {}) }; throw err; };
   const guarded = <A extends unknown[], R>(fn: (...a: A) => Promise<R>) => async (...a: A): Promise<R> => { try { return await fn(...a); } catch (err) { return refused(err); } };
 
   const source: MediaSource = {
     id: opts.id, name: opts.name,
-    ...(opts.readOnly ? { capabilities: { ...READ_ONLY } } : opts.capabilities ? { capabilities: { ...opts.capabilities } } : {}),
+    ...capabilitiesFor(opts),
     listTree,
     listDirectory: (dir) => listDirectory(dir),
     upload: guarded(async (dir, files) => {

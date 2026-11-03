@@ -1,4 +1,4 @@
-export { createFilesystemSource, isAnimated, sniffAnimated, PathError, DEFAULT_TREE_DEPTH, clampDepth, type MediaSource, type PreviewResult, type FilesystemSourceOptions } from './fs-source.js';
+export { createFilesystemSource, isAnimated, sniffAnimated, PathError, DEFAULT_TREE_DEPTH, clampDepth, capabilitiesFor, type MediaSource, type PreviewResult, type FilesystemSourceOptions } from './fs-source.js';
 export { createS3Source, type S3SourceOptions } from './s3-source.js';
 export { S3Client, S3Error, signV4, uriEncode, type S3ClientOptions, type S3Credentials } from './s3/client.js';
 export { createEurekaHandler, escapeHtml, treeAlong, requestLanguage, type HandlerOptions, type PageContext, type ChooseContext, type NodeHandler } from './handler.js';
@@ -10,3 +10,4 @@ export { createServiceAccountToken, createRefreshTokenProvider, staticToken, Goo
 export { DriveClient, DriveError, sizedThumbnailLink, type DriveClientOptions, type DriveFile, type PreviewFormat } from './google/drive-client.js';
 export { createWebDavSource, type WebDavSourceOptions } from './webdav-source.js';
 export { DavClient, DavError, parseMultistatus, encodeDavPath, type DavClientOptions, type DavResource } from './webdav/client.js';
+export { readExifGps, type GpsLocation } from './exif-gps.js';

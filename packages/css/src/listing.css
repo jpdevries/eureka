@@ -37,9 +37,12 @@
     .eureka:is([data-view="table"], [data-view="list"])[data-choose="multiple"] .eureka__table > tbody > tr {
       grid-template-areas: "choose media name dimensions file-size edited-on" "actions actions actions actions actions actions";
     }
-    .eureka[data-level="0"]:is([data-view="table"], [data-view="list"]) .eureka__table > :is(thead, tbody) > tr {
-      grid-template-columns: 2rem minmax(0, 5fr) minmax(0, 3fr) var(--eureka-col-dimensions, 6.5rem) var(--eureka-col-size, 6rem) var(--eureka-col-date, 6rem);
+    .eureka:is([data-view="table"], [data-view="list"])[data-choose="single"] .eureka__table > :is(thead, tbody) > tr {
+      grid-template-columns: 2.25rem minmax(0, 5fr) minmax(0, 3fr) var(--eureka-col-dimensions, 6.5rem) var(--eureka-col-size, 6rem) var(--eureka-col-date, 6rem);
       grid-template-areas: "radio media name dimensions file-size edited-on";
+    }
+    .eureka:is([data-view="table"], [data-view="list"])[data-choose="single"] .eureka__table > tbody > tr {
+      grid-template-areas: "radio media name dimensions file-size edited-on" "actions actions actions actions actions actions";
     }
     .eureka:is([data-view="table"], [data-view="list"]) .eureka__table :is(td, th):not(.eureka__td-media, .eureka__th-media, .eureka__choose, .eureka__select, .eureka__context-row) { text-align: end; }
     .eureka[data-view="table"] .eureka__table .eureka__td-media img, .eureka[data-view="table"] .eureka__table .eureka__td-media picture { max-block-size: 20vh; }
@@ -52,8 +55,8 @@
     }
     .eureka[data-view="table"] .eureka__table > tbody > tr { grid-template-areas: "media" "name" "actions"; grid-template-columns: 1fr; }
     .eureka[data-view="list"] .eureka__table > tbody > tr { grid-template-areas: "name" "actions"; grid-template-columns: 1fr; }
-    .eureka:is([data-view="table"], [data-view="list"])[data-choose="multiple"] .eureka__table > tbody > tr { grid-template-areas: "choose media" "name name" "actions actions"; grid-template-columns: 2rem 1fr; }
-    .eureka[data-level="0"]:is([data-view="table"], [data-view="list"]) .eureka__table > tbody > tr { grid-template-areas: "radio media" "name name"; grid-template-columns: 2rem 1fr; }
+    .eureka:is([data-view="table"], [data-view="list"])[data-choose="multiple"] .eureka__table > tbody > tr { grid-template-areas: "choose media" "name name" "actions actions"; grid-template-columns: 2.25rem 1fr; }
+    .eureka:is([data-view="table"], [data-view="list"])[data-choose="single"] .eureka__table > tbody > tr { grid-template-areas: "radio media" "name name" "actions actions"; grid-template-columns: 2.25rem 1fr; }
     .eureka[data-view="list"] .eureka__table .eureka__td-media { display: none; }
     .eureka:is([data-view="table"], [data-view="list"]) .eureka__table :is(.eureka__dimensions, .eureka__file-size, .eureka__edited-on) { display: none; }
     .eureka:is([data-view="table"], [data-view="list"]) .eureka__table .eureka__td-media { justify-content: center; }

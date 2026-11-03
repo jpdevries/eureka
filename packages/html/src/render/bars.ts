@@ -1,5 +1,5 @@
 // Notifications, the path bar and the choose bar (02 §3, §7, §8).
-import { selectChosen, selectFocused, type FileEntry, selectCan } from '@mrktps/eureka-core';
+import { selectChosen, selectFocused, type FileEntry, selectCan, selectSelected } from '@mrktps/eureka-core';
 import { attr, html, raw, type Raw } from '../html.js';
 import type { Ctx } from '../model.js';
 import { hidden, icon } from './icon.js';
@@ -18,7 +18,7 @@ export function notifications(ctx: Ctx): Raw {
 
 export function pathBar(ctx: Ctx): Raw {
   const { state, t, ids } = ctx;
-  const focused = selectFocused(state);
+  const focused = selectSelected(state) ?? selectFocused(state); // single mode: the selected item, else the focused one (STATE-11)
   const chosen = state.view.chooseMode === 'multiple' ? selectChosen(state) : [];
   const item: FileEntry | null = focused ?? chosen[0] ?? null;
   const show = item !== null || chosen.length > 0;
@@ -42,7 +42,7 @@ export function chooseBar(ctx: Ctx): Raw {
   const config = state.config;
   if (level > 0 && !config.callbacks.choose && !config.callbacks.close) return html``;
   const chosen = level > 0 ? selectChosen(state) : [];
-  const focused = selectFocused(state);
+  const focused = selectSelected(state) ?? selectFocused(state);
   const n = chosen.length;
   const many = state.view.chooseMode === 'multiple' && n > 1;
   const chooseLabel = many ? t('choose.nItems', { n }) : html`${t('choose')}${hidden(' ' + (focused?.filename ?? t('mediaItem')))}`;
