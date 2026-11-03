@@ -772,6 +772,17 @@ Taken on 2026-11-01:
   input is described by a hidden sentence naming the live qualifiers, and
   the shortcuts dialog gained a Filter syntax section. Level 0's filter
   is unchanged. Unit tests for the grammar; two conformance tests.
+- Side-loaded filter parser (PERF-29): the query parser and predicates
+  ship as `eureka-filter.js`, loaded when the filter input gains focus,
+  when a qualifier is typed or pasted, or at start when the filter already
+  holds one; until then qualifiers read as plain text. The chunk is built
+  separately and cannot share module state with the element, so it only
+  exports `compileFilter` and the element registers it in core's small
+  compiler registry. The placeholder's examples, the registry and the
+  filter context stay in the main bundle; `endpoints.filter` names the
+  chunk's URL. Measured: the element went from 39.0 to 37.4 kB gzip and
+  the chunk is 3.2 kB, fetched only by people who use the filter. PERF-25
+  now counts what loads before first interaction.
 - Package names: the `@eureka` npm scope belongs to an existing npm user,
   so the packages are `@mrktps/eureka` (the element, what most people
   install) and `@mrktps/eureka-core`, `-html`, `-css`, `-react`,

@@ -76,5 +76,5 @@ export function cssAssets(): Record<string, string> {
 export function elementAssets(): Record<string, string> {
   const require = createRequire(import.meta.url);
   const dist = path.join(path.dirname(require.resolve('@mrktps/eureka/package.json')), 'dist');
-  return Object.fromEntries(['eureka-browser.js', 'eureka-browser.js.map', 'eureka-worker.js', 'eureka-worker.js.map'].map((f) => [`/assets/js/${f}`, path.join(dist, f)]));
+  return Object.fromEntries(['eureka-browser.js', 'eureka-browser.js.map', 'eureka-worker.js', 'eureka-worker.js.map', 'eureka-filter.js', 'eureka-filter.js.map'].map((f) => [`/assets/js/${f}`, path.join(dist, f)]));
 }

@@ -1,7 +1,8 @@
 // Sorting and filtering of listings (07 STATE-10, 09 I18N-22/23).
 import { toDate } from './format.js';
 import { isFile, isFolder, type DisplayRecord, type Entry, type FileEntry, type FolderEntry, type Sort } from './types.js';
-import { compileFilter, type FilterContext } from './filter-query.js';
+import { getFilterCompiler } from './filter-registry.js';
+import type { FilterContext } from './filter-examples.js';
 
 const collators = new Map<string, Intl.Collator>();
 function collator(locale: string): Intl.Collator {
@@ -45,8 +46,8 @@ export function matchesFilter(entry: Entry, text: string, record?: DisplayRecord
 /** Plain text keeps the substring match; a query with a live qualifier (07 STATE-10a) filters by its predicates. */
 export function filterEntries<T extends Entry>(entries: readonly T[], text: string, records: Readonly<Record<string, DisplayRecord>> = {}, ctx: FilterContext = {}): T[] {
   if (!text.trim()) return [...entries];
-  const compiled = compileFilter(text, ctx);
-  if (!compiled.structured) return entries.filter((e) => matchesFilter(e, text, records[e.path]));
+  const compiled = getFilterCompiler()?.(text, ctx); // the side-loaded parser (10 PERF-29); absent, plain text
+  if (!compiled?.structured) return entries.filter((e) => matchesFilter(e, text, records[e.path]));
   return entries.filter((e) => compiled.test(e, records[e.path]));
 }
 

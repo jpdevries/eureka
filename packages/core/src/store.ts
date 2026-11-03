@@ -1,7 +1,8 @@
 // The instance store (07). Pure transitions, no framework, no effects.
 import { ancestors, normalizePath, parentPath } from './paths.js';
 import { visibleFiles, visibleFolders } from './sort-filter.js';
-import type { FilterContext } from './filter-query.js';
+import type { FilterContext } from './filter-examples.js';
+import { filterCompilerVersion, looksStructured } from './filter-registry.js';
 import { isFile, sourceAllows, type MutationCapabilities, type ChooseMode, type Config, type DialogKind, type DisplayRecord, type Entry, type FileEntry, type Notification, type Sort, type SortBy, type SortDir, type Source, type SourceId, type Status, type TreeNode, type ViewMode } from './types.js';
 
 export interface State {
@@ -218,8 +219,7 @@ export function reduce(s: State, e: Event): State {
 const visibleCache = new WeakMap<Entry[], { key: string; records: Record<string, DisplayRecord>; result: FileEntry[] }>();
 /** What the filter predicates read from state (07 STATE-10a): the chosen set for `is:chosen`, the source's location capability. */
 export function selectFilterContext(s: State): FilterContext {
-  const structured = /(^|\s)-?[a-z]+:\S/i.test(s.view.filter);
-  if (!structured) return {};
+  if (!looksStructured(s.view.filter)) return {};
   const files = s.listing.entries.filter(isFile);
   const checked = new Set(s.selection.checked);
   const chosen = s.view.chooseMode === 'multiple'
@@ -229,7 +229,7 @@ export function selectFilterContext(s: State): FilterContext {
 }
 export const selectVisibleFiles = (s: State): FileEntry[] => {
   const ctx = selectFilterContext(s);
-  const key = `${s.view.sort.by}|${s.view.sort.dir}|${s.view.filter}|${s.locale.tag}|${ctx.location ? 'L' : ''}|${ctx.chosen ? [...ctx.chosen].join(',') : ''}`;
+  const key = `${s.view.sort.by}|${s.view.sort.dir}|${s.view.filter}|${s.locale.tag}|${ctx.location ? 'L' : ''}|${ctx.chosen ? [...ctx.chosen].join(',') : ''}|${filterCompilerVersion()}`;
   const hit = visibleCache.get(s.listing.entries);
   if (hit && hit.key === key && hit.records === s.listing.records) return hit.result;
   const result = visibleFiles(s.listing.entries, s.view, s.locale.tag, s.listing.records, ctx);

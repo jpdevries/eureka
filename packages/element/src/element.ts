@@ -4,8 +4,8 @@
 // re-renders the instance markup from state through a keyed morph, so focus,
 // scroll position and media playback survive updates.
 import {
-  ancestors, basename, buildDisplayRecord, catalogCandidates, createEngineClient, createKeymap, createStore, createTranslator, findTreeNode, initialState, selectCan, joinPath, loadPersisted, markWelcomed, normalizePath, persist, resolveLocale, selectChosen, selectFocused, selectVisibleFiles, splitSourcePath, VIEW_MODES,
-  type Catalog, type Config, type DialogKind, type DisplayRecord, type EngineClient, type Entry, type Event as EurekaEvent, type FileEntry, type Keymap, type MutationKind, type PartialConfig, type SortBy, type SortDir, type SourceId, type State, type Store, type Translator, type ViewMode
+  ancestors, basename, buildDisplayRecord, catalogCandidates, createEngineClient, createKeymap, createStore, createTranslator, findTreeNode, getFilterCompiler, initialState, looksStructured, selectCan, setFilterCompiler, joinPath, loadPersisted, markWelcomed, normalizePath, persist, resolveLocale, selectChosen, selectFocused, selectVisibleFiles, splitSourcePath, VIEW_MODES,
+  type Catalog, type Config, type DialogKind, type DisplayRecord, type EngineClient, type Entry, type Event as EurekaEvent, type FileEntry, type FilterCompiler, type Keymap, type MutationKind, type PartialConfig, type SortBy, type SortDir, type SourceId, type State, type Store, type Translator, type ViewMode
 } from '@mrktps/eureka-core';
 import { createIds, instance, type Ctx, type Ids } from '@mrktps/eureka-html';
 import { ATTRIBUTES, buildConfig } from './config.js';
@@ -54,6 +54,7 @@ export class EurekaBrowser extends HTMLElement {
   #thumbPending = new Set<string>();
   #branchesLoading = new Set<string>(); // tree branches being fetched (11 MS-43)
   #placeholderIndex = 0; // which filter example the placeholder shows (02 HTML-40a)
+  #filterChunk: Promise<void> | null = null; // the side-loaded query parser (10 PERF-29)
   #thumbObserver: IntersectionObserver | null = null;
   #mediaBound = new WeakSet<Element>();
   #contextOrigin: { x: number; y: number } | null = null; // pointer position for engines without anchor positioning
@@ -157,6 +158,7 @@ export class EurekaBrowser extends HTMLElement {
     this.#started = true; this.#starting = false;
     this.#render();
     this.#store.subscribe((s) => { this.#queueRender(); persist(this.#storage, prefix, s); });
+    if (looksStructured(state.view.filter) && !getFilterCompiler()) void this.#loadFilterParser(); // a remembered or hydrated query (10 PERF-29)
     const every = config.intervals.searchBarPlaceholder;
     if (typeof every === 'number' && every > 0) { const t = setInterval(() => { this.#placeholderIndex++; this.#queueRender(); }, Math.max(every, 50)); this.#timers.add(t as unknown as ReturnType<typeof setTimeout>); } // 02 HTML-40a
 
@@ -355,7 +357,7 @@ export class EurekaBrowser extends HTMLElement {
 
   #onInput(e: Event): void {
     const t = e.target as HTMLInputElement;
-    if (t.name === 'eureka__filter') { this.#store.dispatch({ type: 'view/setFilter', text: t.value }); this.#announceCount(); return; }
+    if (t.name === 'eureka__filter') { if (looksStructured(t.value)) void this.#loadFilterParser(); this.#store.dispatch({ type: 'view/setFilter', text: t.value }); this.#announceCount(); return; } // a qualifier typed or pasted loads the parser even if focus never fired (10 PERF-29)
     if (t.id === this.#ids.id('dialog-input')) { this.#store.dispatch({ type: 'dialog/input', value: t.value }); return; }
   }
 
@@ -381,6 +383,7 @@ export class EurekaBrowser extends HTMLElement {
   }
 
   #onFocusIn(e: FocusEvent): void {
+    if ((e.target as Element).matches?.('input[name="eureka__filter"]')) void this.#loadFilterParser(); // 10 PERF-29
     const row = (e.target as Element).closest<HTMLTableRowElement>('tr[data-path]');
     if (row?.dataset.path) this.#store.dispatch({ type: 'selection/focus', path: row.dataset.path });
   }
@@ -728,6 +731,17 @@ export class EurekaBrowser extends HTMLElement {
   #can(kind: MutationKind): boolean { return selectCan(this.#store.getState())[kind]; }
   /** A 403 on a mutation: the backend is read-only after all (11 MS-09). Re-read the sources so their capabilities, and the controls, follow. */
   #refusedMutation(err: unknown): void { if ((err as { status?: number })?.status === 403) void this.#loadSources(); }
+  /** Fetch eureka-filter.js once; it registers the compiler on import, after which the listing re-renders (10 PERF-29). */
+  #loadFilterParser(): Promise<void> {
+    if (getFilterCompiler()) return Promise.resolve();
+    this.#filterChunk ??= (async () => {
+      const url = this.#config.endpoints.filter ?? new URL('./eureka-filter.js', import.meta.url).href; // a non-literal import stays a real network import in the bundle
+      const mod = (await import(/* @vite-ignore */ url)) as { compileFilter: FilterCompiler };
+      setFilterCompiler(mod.compileFilter); // in this bundle's registry: the chunk has its own copy of core
+      this.#queueRender();
+    })().catch((err) => { this.#filterChunk = null; this.#fail(errorMessage(err), err); });
+    return this.#filterChunk;
+  }
   async #loadSources(): Promise<void> {
     try {
       const { result } = await this.#engine.request({ type: 'listSources' });

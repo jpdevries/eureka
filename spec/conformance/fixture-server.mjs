@@ -267,7 +267,7 @@ http.createServer(async (req, res) => {
     // Level 0 page and its POST protocol (spec/03-no-js-protocol.md)
     if (RENDER && p === '/assets/css/eureka.css') { res.writeHead(200, { 'content-type': 'text/css' }); return fs.createReadStream(path.join(cssPkg, 'dist/eureka.css')).pipe(res); }
     if (RENDER && p === '/assets/img/icons.svg') { res.writeHead(200, { 'content-type': 'image/svg+xml' }); return fs.createReadStream(path.join(cssPkg, 'assets/icons.svg')).pipe(res); }
-    if (RENDER && /^\/assets\/js\/eureka-(browser|worker)\.js(\.map)?$/.test(p)) {
+    if (RENDER && /^\/assets\/js\/eureka-(browser|worker|filter)\.js(\.map)?$/.test(p)) {
       const f = path.join(elementPkg, 'dist', path.posix.basename(p));
       if (!fs.existsSync(f)) return html(res, echoPage('element bundle missing; run npm run build', { file: f }), 404);
       res.writeHead(200, { 'content-type': p.endsWith('.map') ? 'application/json' : 'text/javascript' }); return fs.createReadStream(f).pipe(res);

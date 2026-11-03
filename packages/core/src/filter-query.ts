@@ -1,25 +1,19 @@
 // The filter bar's query syntax (07 STATE-10a): GitHub/Gmail-style qualifiers beside plain words. Nothing invented:
+// Shipped as its own chunk (eureka-filter.js) that the element registers through filter-registry.ts when the filter is focused
+// (10 PERF-29); the examples the placeholder shows live in filter-examples.ts so they need no chunk.
 // `key:value` restricts one field, `>` `>=` `<` `<=` `=` and `a..b` compare or range, a leading `-` negates, quotes
 // group a value with spaces, and an unknown or unavailable qualifier degrades to plain text, never an error.
 import { extname } from './paths.js';
 import { mediaKind } from './format.js';
 import { toDate } from './format.js';
 import { isFile, isFolder, type DisplayRecord, type Entry } from './types.js';
+import type { FilterContext } from './filter-examples.js';
+export type { FilterContext } from './filter-examples.js';
 
 export type Op = '>' | '>=' | '<' | '<=' | '=' | 'range' | 'eq';
 export type QueryToken =
   | { kind: 'text'; value: string; negate: boolean }
   | { kind: 'qualifier'; key: string; op: Op; value: string; to?: string; negate: boolean; raw: string };
-
-/** What the surrounding state lends the predicates. */
-export interface FilterContext {
-  /** Paths of the chosen items, for `is:chosen`. */
-  chosen?: ReadonlySet<string>;
-  /** The current source lists `capabilities.location`: `near:`, `within:` and `has:location` are live. */
-  location?: boolean;
-  /** Whether any entry carries `createdOn`; only affects which examples are offered, never matching. */
-  created?: boolean;
-}
 
 export const QUALIFIERS = ['type', 'ext', 'is', 'has', 'size', 'modified', 'created', 'width', 'height', 'px', 'min', 'orientation', 'ratio', 'near', 'within'] as const;
 const LOCATION_QUALIFIERS = new Set(['near', 'within']);
@@ -164,11 +158,8 @@ export function textMatches(entry: Entry, word: string, record?: DisplayRecord):
   return hay.includes(q);
 }
 
-export interface CompiledFilter {
-  /** True when at least one token is a live qualifier; false means the text is plain and the old substring path applies. */
-  structured: boolean;
-  test: Predicate;
-}
+export type { CompiledFilter } from './filter-registry.js';
+import type { CompiledFilter } from './filter-registry.js';
 
 /** Compile a filter string. Plain text (no live qualifier) returns `structured: false` so callers keep the substring match. */
 export function compileFilter(text: string, ctx: FilterContext = {}): CompiledFilter {
@@ -185,21 +176,3 @@ export function compileFilter(text: string, ctx: FilterContext = {}): CompiledFi
   return { structured, test: (e, r) => parts.every((p) => p.test(e, r) !== p.negate) };
 }
 
-/** Example tokens worth showing for a listing: only qualifiers that can match something in it (02 HTML-40a). */
-export function filterExamples(entries: readonly Entry[], ctx: FilterContext = {}): string[] {
-  const files = entries.filter(isFile);
-  const kinds = new Set(files.map((f) => mediaKind(f.filename)));
-  const out: string[] = [];
-  const firstKind = ['image', 'video', 'pdf', 'audio', 'text'].find((k) => kinds.has(k as ReturnType<typeof mediaKind>));
-  if (firstKind) out.push(`type:${firstKind}`);
-  if (files.some((f) => f.fileSize > 1024 ** 2)) out.push('size:>1mb'); else if (files.length) out.push('size:<500kb');
-  const dated = files.filter((f) => Number.isFinite(toDate(f.editedOn).getTime()));
-  if (dated.length) { const newest = new Date(Math.max(...dated.map((f) => toDate(f.editedOn).getTime()))); out.push(`modified:>${newest.getUTCFullYear()}-${String(newest.getUTCMonth() + 1).padStart(2, '0')}`.replace(/-(\d{2})$/, (_, m) => `-${String(Math.max(1, Number(m) - 1)).padStart(2, '0')}`)); }
-  if (files.some((f) => f.dimensions)) { out.push('width:>2000', 'orientation:landscape', 'min:1080p'); }
-  if (files.some((f) => f.animated)) out.push('is:animated');
-  if (ctx.created || files.some((f) => f.createdOn !== undefined)) out.push(`created:${new Date().getUTCFullYear()}`);
-  if (ctx.location) out.push('has:location', 'near:37.77,-122.42,25km');
-  if (firstKind && kinds.size > 1) out.push(`-type:${firstKind}`);
-  if (files.length) { const ext = extname(files[0]!.filename).slice(1); if (ext) out.push(`ext:${ext}`); }
-  return out;
-}

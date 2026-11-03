@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { parseFilter, compileFilter, parseSize, parseDatePeriod, parsePixels, parseRatio, filterExamples } from './filter-query.js';
+import { parseFilter, compileFilter, parseSize, parseDatePeriod, parsePixels, parseRatio } from './filter-query.js';
+import { filterExamples } from './filter-examples.js';
 import type { Entry } from './types.js';
 
 const file = (filename: string, extra: Partial<Entry> = {}): Entry => ({ filename, directory: '/', path: filename, absoluteURL: '/' + filename, editedOn: Date.UTC(2026, 10, 2), fileSize: 1000, ...extra });

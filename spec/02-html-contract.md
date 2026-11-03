@@ -128,7 +128,8 @@ DOM order is the reading order and the tab order.
   from the listing. Examples appear only when they can match: `created:`
   with an entry that has `createdOn`, pixel tokens with dimensions,
   location tokens with `capabilities.location`. Level 0 shows the sample
-  only, its filter being plain text. The input
+  only, its filter being plain text. The parser itself is side-loaded on
+  focus (10 PERF-29); the examples are not. The input
   is described (`aria-describedby`) by a visually-hidden sentence naming
   the live qualifiers, and the shortcuts dialog (HTML-95) has a "Filter
   syntax" section.
