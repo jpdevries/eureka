@@ -43,9 +43,19 @@ export function media(ctx: Ctx, item: FileEntry, { controls = true, width, heigh
       if (!sources.length) return img; // one format: a plain <img srcset> (HTML-66a)
       return html`<picture>${sources}${img}</picture>`;
     }
-    case 'video': return html`<video${attr('width', width ?? 320)}${attr('height', height ?? 240)}${attr('controls', controls)} preload="metadata"><source src="${src}">${t('support.noVideo')}</video>`;
+    case 'video': { // a poster from the source's preview route when it has one; the file's header is fetched only then (HTML-66d)
+      const poster = item.absolutePreviewURL && item.absolutePreviewURL !== item.absoluteURL ? item.absolutePreviewURL : null;
+      return html`<video${attr('width', width ?? 320)}${attr('height', height ?? 240)}${attr('controls', controls)}${attr('poster', poster)} preload="${poster ? 'none' : 'metadata'}"><source src="${item.absoluteURL}">${t('support.noVideo')}</video>`;
+    }
     case 'audio': return html`<audio${attr('controls', controls)} preload="none"><source src="${src}">${t('support.noAudio')}</audio>`;
-    case 'pdf': return html`<object data="${src}" type="application/pdf"${attr('width', width ?? 320)}${attr('height', height ?? 240)}>${icon(ctx, 'file-pdf-o')} ${item.filename}</object>`;
+    case 'pdf': { // never an inline viewer in a row (HTML-66d): the source's first-page preview, lazy like any thumbnail, else the icon
+      const preview = item.absolutePreviewURL && item.absolutePreviewURL !== item.absoluteURL ? item.absolutePreviewURL : null;
+      if (preview) {
+        const rends = item.renditions ?? [];
+        return html`<img class="eureka__media-preview eureka__media-pdf" src="${preview}" alt="" loading="lazy" decoding="async"${rends.length ? attr('sizes', IMAGE_SIZES[state.view.mode] ?? '100cqi') : ''}${rends.length ? attr('srcset', rends.filter((r) => !r.type || r.type === rends[rends.length - 1]!.type).map((r) => `${r.url} ${r.width}w`).join(', ')) : ''}>`;
+      }
+      return html`<p class="eureka__file-placeholder eureka__pdf-placeholder">${icon(ctx, 'file-pdf-o')} <span>${item.filename}</span></p>`;
+    }
     case 'text': { // a rendered preview when the source offers one (HTML-66c); the icon otherwise, which the element may replace with a worker-rendered thumbnail
       const mode = state.config.thumbnails;
       const preview = mode !== 'none' && item.absolutePreviewURL && item.absolutePreviewURL !== item.absoluteURL ? item.absolutePreviewURL : mode === 'client' ? ctx.textThumbnails?.get(item.path) ?? null : null;

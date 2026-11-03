@@ -263,6 +263,17 @@ DOM order is the reading order and the tab order.
   which is the shape for a bucket-backed source. Its colours follow
   `prefers-color-scheme` and forced colors from inside the SVG, and it
   carries a `<title>` ("Preview of {filename}") for direct viewing.
+- **HTML-66d** Documents and videos never embed a viewer in a row. A
+  PDF row is the source's first-page preview as a lazy `<img
+  class="eureka__media-preview eureka__media-pdf">` (with `srcset` when
+  renditions exist, 02 HTML-66a) when `absolutePreviewURL` differs from
+  the file, else the PDF icon and filename in a
+  `.eureka__file-placeholder`; no `<object>`. A video row carries
+  `poster` from `absolutePreviewURL` and `preload="none"` when the source
+  offers a preview, `preload="metadata"` otherwise, so a folder of videos
+  costs one small image per row until Play. Expand opens the file itself
+  in its own browsing context, where the browser's viewer belongs. The
+  only `<object>` left in a row is the animated SVG of HTML-66b.
 - **HTML-67** Name cell: the filename with a `<wbr>` after every 8
   characters so long names wrap. When renaming inline it becomes
   editable; Enter commits, Escape cancels, empty names are rejected.

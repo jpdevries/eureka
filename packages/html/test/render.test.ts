@@ -17,6 +17,25 @@ const input: PageInput = {
   lang: 'en-US', basePath: '/assets/components/eureka/', timeZone: 'UTC'
 };
 
+describe('documents and videos (02 HTML-66d)', () => {
+  const page = (entries: PageInput['entries']) => renderLevel0({ sources: [{ id: 0, name: 's' }], source: { id: 0, name: 's' }, path: '/', entries, tree: [], lang: 'en', basePath: '/' });
+  it('a PDF with a preview is a lazy image, without one the icon; never an inline viewer', () => {
+    const withPreview = page([{ filename: 'deck.pdf', directory: '/', path: 'deck.pdf', absoluteURL: '/s/deck.pdf', absolutePreviewURL: '/s/__preview/deck.pdf', editedOn: 0, fileSize: 9, renditions: [{ url: '/s/__preview/deck.pdf?w=220', width: 220, type: 'image/jpeg' }] }]);
+    expect(withPreview).not.toContain('<object'); expect(withPreview).not.toContain('application/pdf');
+    const img = /<img class="eureka__media-preview eureka__media-pdf"[^>]*>/.exec(withPreview)![0];
+    expect(img).toContain('loading="lazy"'); expect(img).toContain('src="/s/__preview/deck.pdf"'); expect(img).toContain('srcset="/s/__preview/deck.pdf?w=220 220w"');
+    const without = page([{ filename: 'deck.pdf', directory: '/', path: 'deck.pdf', absoluteURL: '/s/deck.pdf', absolutePreviewURL: '/s/deck.pdf', editedOn: 0, fileSize: 9 }]);
+    expect(without).not.toContain('<object'); expect(without).toContain('eureka__pdf-placeholder'); expect(without).toContain('deck.pdf</span>');
+  });
+  it('a video takes a poster and preload="none" only when the source offers a preview', () => {
+    const posterless = page([{ filename: 'clip.mp4', directory: '/', path: 'clip.mp4', absoluteURL: '/s/clip.mp4', editedOn: 0, fileSize: 9 }]);
+    expect(/<video[^>]*>/.exec(posterless)![0]).toContain('preload="metadata"'); expect(posterless).not.toContain('poster=');
+    const withPoster = page([{ filename: 'clip.mp4', directory: '/', path: 'clip.mp4', absoluteURL: '/s/clip.mp4', absolutePreviewURL: '/s/__preview/clip.mp4', editedOn: 0, fileSize: 9 }]);
+    const video = /<video[^>]*>/.exec(withPoster)![0];
+    expect(video).toContain('poster="/s/__preview/clip.mp4"'); expect(video).toContain('preload="none"'); expect(withPoster).toContain('<source src="/s/clip.mp4">');
+  });
+});
+
 describe('renditions (02 HTML-66a)', () => {
   it('puts modern formats in <source> and the last-listed format in the fallback <img> srcset', () => {
     const entry = { filename: 'big.tif', directory: '/', path: 'big.tif', absoluteURL: '/s/big.tif', absolutePreviewURL: '/s/__preview/big.tif', editedOn: 0, fileSize: 1, dimensions: [3000, 2000] as [number, number],

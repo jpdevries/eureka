@@ -200,3 +200,13 @@ test('HTML-71 no obsolete context menu elements', async ({ page }) => {
   baselineDefect('v2 renders <menu type="context"> per row');
   await expect(page.locator('menu[type="context"]')).toHaveCount(0);
 });
+
+test('HTML-66d a PDF row shows an icon or a preview image, never an inline viewer', async ({ page }) => {
+  v3only('preview-first documents (HTML-66d)');
+  await openDirectory(page, 'assets/docs');
+  const row = rowNamed(page, 'spec.pdf');
+  await expect(row).toBeVisible();
+  await expect(row.locator('object, embed, iframe')).toHaveCount(0);
+  await expect(row.locator('.eureka__pdf-placeholder')).toHaveCount(1); // the fixture offers no preview for it
+  await expect(page.locator('object[type="application/pdf"]')).toHaveCount(0);
+});

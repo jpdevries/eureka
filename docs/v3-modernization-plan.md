@@ -697,6 +697,16 @@ Taken on 2026-11-01:
   it read-only. `test/fake-webdav.ts` rotates the namespace prefix per
   response; seven contract tests. CLI `--webdav-url`, demo
   `EUREKA_WEBDAV_URL`. Not yet run against a live Nextcloud.
+- Documents and videos preview-first (HTML-66d): a PDF row is the
+  source's first-page preview as a lazy `<img>` with `srcset`, or the PDF
+  icon and filename; the inline `<object>` viewer that v2 inherited is
+  gone from rows (it downloaded the whole document per row and started a
+  viewer plugin, with no lazy loading). A video row takes `poster` from
+  the preview route and `preload="none"` when the source offers one,
+  `metadata` otherwise. Drive and Nextcloud supply both PDF and video
+  previews already; filesystem and S3 fall back to the icon. The only
+  `<object>` left in a row is the animated SVG of HTML-66b. Renderer
+  tests and a conformance test on the fixture's `spec.pdf`.
 - Package names: the `@eureka` npm scope belongs to an existing npm user,
   so the packages are `@mrktps/eureka` (the element, what most people
   install) and `@mrktps/eureka-core`, `-html`, `-css`, `-react`,
