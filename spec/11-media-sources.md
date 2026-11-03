@@ -37,10 +37,10 @@ Everything below holds for every driver.
 - **MS-04** A file entry SHOULD carry `dimensions` and `animated` (02
   HTML-66b) when the backend can know them for the cost of the listing or
   a bounded read; a driver documents what that read costs and lets the
-  host turn it off. A large original the source has no preview for yet
-  SHOULD still report `dimensions`, so the row reserves a box of the
-  right shape (04 LAY-51) instead of an `<img>` the browser cannot
-  decode (02 HTML-66e). Text-like files (`isTextLike`) SHOULD set
+  host turn it off. A large original the source has no preview for
+  SHOULD still report `dimensions`, read from the file head (MS-74), so
+  the row reserves a box of the right shape (04 LAY-51) instead of an
+  `<img>` the browser cannot decode (02 HTML-66e). Text-like files (`isTextLike`) SHOULD set
   `absolutePreviewURL` to the thumbnail route `/sources/{name}/__thumb/{path}`
   unless the host supplies a preview URL (02 HTML-66c).
 - **MS-04a** A backend that can picture a file (a thumbnail service, a
@@ -350,7 +350,76 @@ folders, so there is no model to impose; the work is tolerance.
   renditions at 220/440/880 px; the ETag derives from the file's
   `getetag`. Other servers preview images as themselves.
 
-## 6. Open items
+## 6. Previews the server renders (`thumbnails`)
+
+A source that cannot picture a file hands the row the original (MS-04a),
+which for a TIFF, a HEIC or a 40 MB JPEG means a blank or a very slow
+cell (02 HTML-66e, 04 LAY-51). The reference server can render those
+pictures itself through an adapter the host installs. Off unless set.
+
+- **MS-70 Opt-in adapter.** `createEurekaHandler({ thumbnails: {
+  thumbnailer, ... } })` wraps every source with `withThumbnails`. A
+  `Thumbnailer` is two functions: `accepts(filename)` says which files it
+  can decode, and `render(file, jobs)` returns every requested `{ width,
+  format }` rendition from one decode of the original on disk, `width`
+  bounding the long edge and never enlarging. The server package carries
+  no decoder of its own: Node has none, a pure-JS one would not survive a
+  183 MB TIFF, and a native one is the host's choice (MS-75).
+- **MS-71 Advertised, not rendered, at listing time.** A listing marks a
+  file for server rendering only when the adapter accepts it, the file is
+  not animated (02 HTML-66b), no source preview exists
+  (`absolutePreviewURL` is the file), and its size sits within
+  `minSourceBytes`..`maxSourceBytes` (default 0..512 MB). Such an entry
+  gets `absolutePreviewURL` on the preview route and `renditions` at the
+  configured widths (default 220, 440, 880 on the long edge) in each
+  configured format, modern first (default WebP then JPEG, the last being
+  the `<img>` fallback of 02 HTML-66a), widths never wider than the
+  picture when `dimensions` are known. Listing costs nothing: no original
+  is read for a file nobody looks at.
+- **MS-72 One original, once, on first request.** The preview route
+  (`__preview/{path}?w=&f=`) first asks the source for its own picture
+  (MS-04a). Failing that, for a file the adapter accepts, it snaps `w` up
+  to the nearest configured width, keys the renditions by source, path,
+  size and `editedOn`, and serves from the cache directory (default
+  `{tmpdir}/eureka-thumbnails`) when present. Otherwise it streams the
+  original from the source to a temporary file, renders every width in
+  every format from that one decode, writes them atomically, deletes the
+  temporary file and serves the one asked for. Requests for the same
+  original coalesce; at most `concurrency` (default 2) originals are
+  decoded at once; fetching and decoding one original is bounded by
+  `timeoutMs` (default 120 s); a failure is remembered for a minute so a
+  broken file is not retried per row. The ETag is strong and derived from
+  the key, width and format; `If-None-Match` answers 304. A changed file
+  (new size or `editedOn`) gets a new key, so stale renditions are never
+  served; the cache is not pruned by the server.
+- **MS-73 What stays as it was.** Text files keep their SVG thumbnail
+  (MS-04), animated media its original (02 HTML-66b), sources that
+  picture files themselves (Drive, Nextcloud) their own renderings, and
+  Level 0 markup is unchanged: the row simply receives an entry with a
+  preview URL and renditions, as from any source (02 HTML-66a).
+- **MS-74 Dimensions from the file head.** Every driver that probes image
+  heads (S3, WebDAV, and Drive for files it has not measured, which is
+  every image above about 50 MB, MS-51) reads width and height with
+  `readImageDimensions`: formats whose size sits in the first bytes
+  decode from the 64 KB probe; a TIFF whose directory lies past it costs
+  one ranged read at the directory's offset (classic and BigTIFF, both
+  byte orders); a JPEG whose frame header follows large APP segments is
+  walked segment by segment, fetching more by range as needed, never more
+  than 4 MB. A file with no `dimensions` after that is one the reader
+  does not know, and the row falls back to a 4:3 box (04 LAY-51).
+- **MS-75 Reference adapter.** `createSharpThumbnailer()` wraps `sharp`
+  (libvips), an optional peer dependency the host installs; the function
+  rejects with a plain message when it is missing. It accepts TIFF, JPEG,
+  PNG, WebP, AVIF, HEIC/HEIF, JPEG 2000 and JPEG XL, applies EXIF
+  orientation, takes the first page of a multi-page file, and encodes at
+  quality 80 by default. SVG and GIF are left out: a raster rendition
+  would lose their animation, and the browser shows them well as they
+  are. The CLI switches it on with `--thumbnails sharp` and takes
+  `--thumbnail-cache DIR`, `--thumbnail-max-mb N` and
+  `--thumbnail-min-kb N`; the demo reads `EUREKA_THUMBNAILS=sharp` with
+  `EUREKA_THUMBNAIL_CACHE` and `EUREKA_THUMBNAIL_MIN_KB`.
+
+## 7. Open items
 
 - The tree's polling interval (`intervals.updateSourceTree`) re-fetches
   the root levels only; branches opened by hand are not refreshed.
@@ -361,8 +430,10 @@ folders, so there is no model to impose; the work is tolerance.
 - Live verification of §5 against a Nextcloud or Synology instance, and of
   §3.2 against MinIO (R2 and AWS done). §4 was run
   against a real folder (service account, read-only share): listing,
-  tree, previews, ranges, 403; Drive had not yet pictured four TIFFs over
-  60 MB, so whether it ever does for files that size is open.
+  tree, previews, ranges, 403. Drive never pictures images above about
+  50 MB (four NASA TIFFs, checked against the API three hours after
+  upload): they get header dimensions (MS-74) and, with the adapter on,
+  server renditions (§6).
 - Drive change notifications (`changes.list`) to refresh listings; today
   the 30 s cache and mutations are the only refresh.
 - Google Cloud Storage lacks `DeleteObjects`: fall back per key when the

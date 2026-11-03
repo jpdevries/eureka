@@ -3,7 +3,7 @@
 import path from 'node:path';
 import { Readable } from 'node:stream';
 import { ZipFile } from 'yazl';
-import { imageSize } from 'image-size';
+import { readImageDimensions } from './image-dimensions.js';
 import { encodePathForURL, normalizePath, joinPath, parentPath, basename, mediaKind, isTextLike, looksBinary, renderTextThumbnail } from '@mrktps/eureka-core';
 import type { Entry, Source, SourceCapabilities, TreeNode } from '@mrktps/eureka-core';
 import { READ_ONLY } from '@mrktps/eureka-core';
@@ -92,7 +92,8 @@ export function createWebDavSource(opts: WebDavSourceOptions): MediaSource {
         const res = await client.get(r.path, { start: 0, end: Math.min(r.size, PROBE_BYTES) - 1 });
         if (res) {
           const buf = Buffer.from(await res.arrayBuffer());
-          try { const d = imageSize(buf); if (d.width && d.height) out.dimensions = [d.width, d.height]; } catch { /* not decodable from the head */ }
+          const d = await readImageDimensions(buf, async (s, e) => { const rr = await client.get(r.path, { start: s, end: e }); return rr ? Buffer.from(await rr.arrayBuffer()) : Buffer.alloc(0); }, r.size); // MS-74
+          if (d) out.dimensions = d;
           if (ANIMATABLE.includes(path.extname(r.name).toLowerCase()) && sniffAnimated(buf, r.name)) out.animated = true;
           if (opts.location && /\.(jpe?g|tiff?)$/i.test(r.name)) { const loc = readExifGps(buf); if (loc) out.location = loc; }
         }

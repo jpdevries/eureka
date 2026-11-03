@@ -11,3 +11,6 @@ export { DriveClient, DriveError, sizedThumbnailLink, type DriveClientOptions, t
 export { createWebDavSource, type WebDavSourceOptions } from './webdav-source.js';
 export { DavClient, DavError, parseMultistatus, encodeDavPath, type DavClientOptions, type DavResource } from './webdav/client.js';
 export { readExifGps, type GpsLocation } from './exif-gps.js';
+export { readImageDimensions, dimensionsOf, isTiff, type RangeReader } from './image-dimensions.js';
+export { withThumbnails, type Thumbnailer, type ThumbnailOptions, type RenderJob, type PreviewFormat as ThumbnailFormat } from './thumbs/thumbnailer.js';
+export { createSharpThumbnailer, SHARP_EXTENSIONS, type SharpThumbnailerOptions } from './thumbs/sharp.js';

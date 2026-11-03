@@ -3,7 +3,7 @@
 // object named "{prefix}/"; rename is copy + delete; listing and the tree are ListObjectsV2 with a delimiter, one per folder.
 import path from 'node:path';
 import { Readable } from 'node:stream';
-import { imageSize } from 'image-size';
+import { readImageDimensions } from './image-dimensions.js';
 import { ZipFile } from 'yazl';
 import { encodePathForURL, normalizePath, joinPath, parentPath, basename, mediaKind, isTextLike, looksBinary, renderTextThumbnail } from '@mrktps/eureka-core';
 import type { Entry, Source, SourceCapabilities, TreeNode } from '@mrktps/eureka-core';
@@ -89,7 +89,8 @@ export function createS3Source(opts: S3SourceOptions): MediaSource {
       const res = await client.get(o.key, { start: 0, end: Math.min(o.size, PROBE_BYTES) - 1 });
       if (res) {
         const buf = Buffer.from(await res.arrayBuffer());
-        try { const d = imageSize(buf); if (d.width && d.height) out.dimensions = [d.width, d.height]; } catch { /* not decodable from the head */ }
+        const d = await readImageDimensions(buf, async (s, e) => { const r = await client.get(o.key, { start: s, end: e }); return r ? Buffer.from(await r.arrayBuffer()) : Buffer.alloc(0); }, o.size); // a TIFF directory at the end of the file costs one more range (MS-74)
+        if (d) out.dimensions = d;
         if (ANIMATABLE.includes(path.extname(o.key).toLowerCase()) && sniffAnimated(buf, o.key)) out.animated = true;
         if (opts.location && /\.(jpe?g|tiff?)$/i.test(o.key)) { const loc = readExifGps(buf); if (loc) out.location = loc; }
       }

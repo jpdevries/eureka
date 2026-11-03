@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { createEurekaHandler, createFilesystemSource, createS3Source, createGoogleDriveSource, createWebDavSource, createServiceAccountToken, createRefreshTokenProvider, DRIVE_SCOPE, DRIVE_READONLY_SCOPE, cssAssets, elementAssets, escapeHtml, i18nAssets, loadCatalog } from '@mrktps/eureka-server';
+import { createEurekaHandler, createFilesystemSource, createS3Source, createGoogleDriveSource, createWebDavSource, createServiceAccountToken, createRefreshTokenProvider, createSharpThumbnailer, DRIVE_SCOPE, DRIVE_READONLY_SCOPE, cssAssets, elementAssets, escapeHtml, i18nAssets, loadCatalog } from '@mrktps/eureka-server';
 import { renderLevel0 } from '@mrktps/eureka-html';
 import { MEDIA_ROOT, seed } from './scripts/seed-media.mjs';
 
@@ -107,8 +107,18 @@ for (const e of envSets) {
   }));
 }
 
+// EUREKA_THUMBNAILS=sharp (in the shell or any env file): the server renders WebP/JPEG previews for originals no source
+// pictures, lazily per file into EUREKA_THUMBNAIL_CACHE (spec 11 MS-70..MS-75); EUREKA_THUMBNAIL_MIN_KB leaves small files alone
+const thumbEnv = envSets.find((e) => /^sharp$/i.test(e.EUREKA_THUMBNAILS ?? ''));
+const thumbnails = thumbEnv ? {
+  thumbnailer: await createSharpThumbnailer(),
+  ...(thumbEnv.EUREKA_THUMBNAIL_CACHE ? { cacheDir: path.resolve(here, thumbEnv.EUREKA_THUMBNAIL_CACHE) } : {}),
+  ...(thumbEnv.EUREKA_THUMBNAIL_MIN_KB ? { minSourceBytes: Number(thumbEnv.EUREKA_THUMBNAIL_MIN_KB) * 1024 } : {})
+} : undefined;
+
 const eureka = createEurekaHandler({
   sources,
+  ...(thumbnails ? { thumbnails } : {}),
   basePath: BASE,
   renderPage,
   staticDir: PUBLIC,

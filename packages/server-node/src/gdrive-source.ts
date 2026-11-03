@@ -4,7 +4,8 @@
 import path from 'node:path';
 import { Readable } from 'node:stream';
 import { ZipFile } from 'yazl';
-import { encodePathForURL, normalizePath, joinPath, parentPath, basename, isTextLike, looksBinary, renderTextThumbnail } from '@mrktps/eureka-core';
+import { encodePathForURL, normalizePath, joinPath, parentPath, basename, isTextLike, looksBinary, mediaKind, renderTextThumbnail } from '@mrktps/eureka-core';
+import { readImageDimensions } from './image-dimensions.js';
 import type { Entry, Source, SourceCapabilities, TreeNode } from '@mrktps/eureka-core';
 import { READ_ONLY } from '@mrktps/eureka-core';
 import { ANIMATABLE, DEFAULT_TREE_DEPTH, MIME, PathError, capabilitiesFor, clampDepth, sniffAnimated, type MediaSource, type PreviewResult } from './fs-source.js';
@@ -64,6 +65,7 @@ export function createGoogleDriveSource(opts: GoogleDriveSourceOptions): MediaSo
   const ttl = opts.cacheTtl ?? 30_000;
   const children = new Map<string, { at: number; nodes: Node[] }>(); // by directory path
   const probes = new Map<string, boolean>();
+  const dims = new Map<string, [number, number] | null>(); // header dimensions for files Drive has not measured (MS-74)
   const thumbs = new Map<string, { svg: string; etag: string }>();
   const rootNode: Node = { file: { id: rootId, name: '', mimeType: FOLDER }, content: { id: rootId, name: '', mimeType: FOLDER }, displayName: '', isFolder: true };
 
@@ -144,6 +146,19 @@ export function createGoogleDriveSource(opts: GoogleDriveSourceOptions): MediaSo
     return out;
   }
 
+  /** Width and height from the file's head when Drive reports none (it computes no imageMediaMetadata above about 50 MB; MS-74). */
+  async function dimensionsOf(node: Node): Promise<[number, number] | null> {
+    const key = `dims:${node.content.id}:${node.content.md5Checksum ?? node.content.modifiedTime ?? ''}`;
+    const hit = dims.get(key); if (hit !== undefined) return hit;
+    let out: [number, number] | null = null;
+    try {
+      const res = await client.media(node.content.id, { start: 0, end: PROBE_BYTES - 1 });
+      if (res) out = await readImageDimensions(Buffer.from(await res.arrayBuffer()), async (s, e) => { const r = await client.media(node.content.id, { start: s, end: e }); return r ? Buffer.from(await r.arrayBuffer()) : Buffer.alloc(0); }, Number(node.content.size ?? Infinity));
+    } catch { /* a probe never fails a listing */ }
+    remember(dims, key, out, 5000);
+    return out;
+  }
+
   async function entryFor(node: Node, dirRel: string, saveData: boolean): Promise<Entry> {
     const rel = joinPath(dirRel, node.displayName);
     const edited = Date.parse(node.file.modifiedTime ?? node.content.modifiedTime ?? '') || 0;
@@ -152,6 +167,7 @@ export function createGoogleDriveSource(opts: GoogleDriveSourceOptions): MediaSo
     const e: Entry = { directory: dirRel, path: rel, filename: node.displayName, absoluteURL: urlFor(rel), editedOn: edited, fileSize: Number(node.content.size ?? 0), ...(created ? { createdOn: created } : {}) };
     const d = node.content.imageMediaMetadata;
     if (d?.width && d?.height) e.dimensions = [d.width, d.height];
+    else if (probe && mediaKind(node.displayName) === 'image' && Number(node.content.size ?? 0) > 0) { const dd = await dimensionsOf(node); if (dd) e.dimensions = dd; }
     if (opts.location && typeof d?.location?.latitude === 'number' && typeof d.location.longitude === 'number') e.location = { lat: d.location.latitude, lng: d.location.longitude, ...(typeof d.location.altitude === 'number' ? { alt: d.location.altitude } : {}) };
     if (probe && ANIMATABLE.includes(path.extname(node.displayName).toLowerCase()) && (await animatedOf(node))) e.animated = true;
     // text keeps the SVG thumbnail (HTML-66c); anything Drive has pictured (TIFF, video, PDF, its own documents) gets

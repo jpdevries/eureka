@@ -8,6 +8,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { normalizePath, sourceAllows, splitSourcePath, type Entry, type MutationKind, type Source, type TreeNode } from '@mrktps/eureka-core';
 import { PathError, clampDepth, DEFAULT_TREE_DEPTH, type MediaSource } from './fs-source.js';
+import { withThumbnails, type ThumbnailOptions } from './thumbs/thumbnailer.js';
 import { first, parseMultipart, readBody } from './multipart.js';
 
 export interface PageContext {
@@ -46,6 +47,8 @@ export interface HandlerOptions {
   /** Extra headers on API responses (CORS for a separate front end, for example). */
   responseHeaders?: Record<string, string>;
   log?: (line: string) => void;
+  /** Render previews for files no source can picture, through an adapter such as `createSharpThumbnailer()` (11 MS-70). Off unless set. */
+  thumbnails?: ThumbnailOptions;
 }
 
 export type NodeHandler = (req: IncomingMessage, res: ServerResponse) => Promise<boolean>;
@@ -58,8 +61,9 @@ export function createEurekaHandler(opts: HandlerOptions): NodeHandler {
   const treeDepth = clampDepth(opts.treeDepth ?? DEFAULT_TREE_DEPTH);
   const maxUpload = opts.maxUploadBytes ?? 256 * 1024 * 1024;
   const log = opts.log ?? (() => {});
-  const bySourceId = (id: string) => opts.sources.find((s) => String(s.id) === id);
-  const sourceList = (): Source[] => opts.sources.map((s) => ({ id: s.id, name: s.name, ...(s.capabilities ? { capabilities: s.capabilities } : {}) }));
+  const sources = opts.thumbnails ? opts.sources.map((s) => withThumbnails(s, { log, ...opts.thumbnails! })) : opts.sources; // 11 MS-70
+  const bySourceId = (id: string) => sources.find((s) => String(s.id) === id);
+  const sourceList = (): Source[] => sources.map((s) => ({ id: s.id, name: s.name, ...(s.capabilities ? { capabilities: s.capabilities } : {}) }));
   /** The source declared it does not allow this (11 MS-09): refuse before the driver is asked. */
   const allow = (source: MediaSource, kind: MutationKind) => { if (!sourceAllows(source, kind)) throw new PathError(`the ${source.name} source does not allow ${kind}`, 403); };
 
@@ -175,7 +179,7 @@ export function createEurekaHandler(opts: HandlerOptions): NodeHandler {
     try {
       if (url.pathname === apiRoot || url.pathname.startsWith(apiRoot + '/')) { await api(req, res, url); return true; }
       // files of each source, at their urlPrefix
-      for (const s of opts.sources) {
+      for (const s of sources) {
         const prefix = `/sources/${encodeURIComponent(s.name)}/`;
         if (url.pathname.startsWith(prefix + '__thumb/')) { // text thumbnails (02 HTML-66c)
           const thumb = s.thumbnail ? await s.thumbnail(url.pathname.slice((prefix + '__thumb/').length)) : null;

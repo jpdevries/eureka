@@ -68,6 +68,14 @@
     "@mrktps/eureka": "3.0.0-alpha.1",
     "@mrktps/eureka-css": "3.0.0-alpha.1"
   },
+  "peerDependencies": {
+    "sharp": ">=0.33"
+  },
+  "peerDependenciesMeta": {
+    "sharp": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@types/yazl": "^2.4.6"
   }

@@ -796,6 +796,22 @@ Taken on 2026-11-01:
   at the top of the README. The component itself stays on `system-ui`: a
   media browser inside a CMS inherits the host's type. There is no spec
   site yet, so nothing to apply there.
+- Server-rendered previews (spec 11 §6, MS-70..MS-75): an opt-in
+  `thumbnails` handler option wraps every source so a file no source
+  pictures (TIFF, HEIC, a 40 MB JPEG) is advertised with a preview URL
+  and WebP + JPEG renditions at 220/440/880, rendered on the first
+  request for that one file into a disk cache (one fetch of the original,
+  every width and format from one decode, coalesced, two at a time,
+  120 s bound, failures remembered a minute, strong ETags keyed by size
+  and mtime). The server package stays decoder-free: `Thumbnailer` is a
+  two-function interface and `createSharpThumbnailer()` wraps `sharp` as
+  an optional peer. Drivers read dimensions from file heads with
+  `readImageDimensions` (TIFF directories anywhere in the file, BigTIFF,
+  JPEG after big APP segments, by ranged reads), which gives the four
+  oversized NASA TIFFs their shape even before a rendition exists. CLI
+  `--thumbnails sharp`, demo `EUREKA_THUMBNAILS=sharp`. JP's steer: the
+  server pulls one original independently when its preview is asked for,
+  never the whole drive.
 - Outline selection in the thumbnail modes (A11Y-56, HTML-63): in single
   mode, thumb, grid and masonry no longer float the radio over the
   artwork at Level 1+; it is clipped out of view (still in the tree) and

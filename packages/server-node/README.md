@@ -7,6 +7,8 @@ renderer. Plain `node:http`; no framework, no cloud SDK.
 
 ```bash
 eureka-server --root ./media --name filesystem --port 3000 --base-path / --static ./public
+# with server-rendered previews for TIFF, HEIC and large JPEGs (needs `npm install sharp`; spec 11 §6)
+eureka-server --root ./media --thumbnails sharp --thumbnail-cache ./.thumbnails --thumbnail-min-kb 512
 ```
 
 An S3-compatible bucket (AWS S3, Cloudflare R2, MinIO, Backblaze B2,
