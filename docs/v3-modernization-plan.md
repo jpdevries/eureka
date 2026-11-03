@@ -783,6 +783,18 @@ Taken on 2026-11-01:
   chunk's URL. Measured: the element went from 39.0 to 37.4 kB gzip and
   the chunk is 3.2 kB, fetched only by people who use the filter. PERF-25
   now counts what loads before first interaction.
+- Branding (JP, via a side session): the Eureka wordmark takes a Victorian
+  wood-type look from system fonts only, no webfont: `"Playbill",
+  "Rockwell Extra Bold", "Rockwell", "Clarendon", "American Typewriter",
+  serif`, heavy, mixed case (JP: no all caps) with light tracking, and the
+  nav brand reads "Eureka" without the version; the companion text face for
+  taglines and document headings is `"Hoefler Text", "Baskerville",
+  "Georgia", "Times New Roman", serif`. Applied to the demo nav brand and
+  prose headings through `--eureka-brand-font` / `--eureka-brand-text-font`
+  tokens in the demo stylesheet, and to a new `docs/brand/wordmark.svg`
+  at the top of the README. The component itself stays on `system-ui`: a
+  media browser inside a CMS inherits the host's type. There is no spec
+  site yet, so nothing to apply there.
 - Package names: the `@eureka` npm scope belongs to an existing npm user,
   so the packages are `@mrktps/eureka` (the element, what most people
   install) and `@mrktps/eureka-core`, `-html`, `-css`, `-react`,

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="96" viewBox="0 0 420 96" role="img" aria-labelledby="t d">
+  <title id="t">Eureka</title>
+  <desc id="d">The Eureka wordmark in Victorian wood type: heavy condensed slab letters drawn with system fonts.</desc>
+  <style>
+    text { font-family: "Playbill", "Rockwell Extra Bold", "Rockwell", "Clarendon", "American Typewriter", serif; font-weight: 900; letter-spacing: 0.04em; fill: #1f4d2b; }
+    .tag { font-family: "Hoefler Text", "Baskerville", "Georgia", "Times New Roman", serif; font-weight: 400; letter-spacing: 0.02em; fill: #4a5a63; }
+    @media (prefers-color-scheme: dark) { text { fill: #f1faee; } .tag { fill: #b8c4cc; } }
+  </style>
+  <text x="50%" y="58" font-size="56" text-anchor="middle" dominant-baseline="middle">Eureka</text>
+  <text class="tag" x="50%" y="86" font-size="15" text-anchor="middle">a media browser for the web, since the Gold Rush of 2013</text>
+</svg>

@@ -1,4 +1,7 @@
 /* The demo site's own chrome. The browser itself is styled by eureka.css. */
+/* Brand type (docs/v3-modernization-plan.md, branding): Victorian wood type for the wordmark and a book face for taglines and
+   document headings, system fonts only, no webfont. The component itself stays on system-ui and inherits the host's type. */
+:root { --eureka-brand-font: "Playbill", "Rockwell Extra Bold", "Rockwell", "Clarendon", "American Typewriter", serif; --eureka-brand-text-font: "Hoefler Text", "Baskerville", "Georgia", "Times New Roman", serif; }
 :root { color-scheme: light dark; --demo-bg: #ececec; --demo-fg: #081922; --demo-accent: #1f6aa5; --demo-nav-bg: #1f4d2b; --demo-nav-fg: #f1faee; --demo-card: #fff; --demo-border: #cfd6dc; }
 @media (prefers-color-scheme: dark) { :root { --demo-bg: #15191c; --demo-fg: #e6ebee; --demo-accent: #8ec5ff; --demo-nav-bg: #0f2a18; --demo-card: #1e2429; --demo-border: #38434b; } }
 html, body { margin: 0; }
@@ -9,7 +12,11 @@ body.demo-page { background: var(--demo-bg); color: var(--demo-fg); font: 400 1r
 .demo-nav a:hover, .demo-nav a:focus-visible { background: #ffffff22; }
 .demo-nav a[aria-current="page"] { background: #ffffff33; font-weight: 600; }
 .demo-nav a:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
-.demo-brand { font-weight: 700; font-size: 1.1rem; }
+/* Playbill's cap height overshoots its ascent metric, so a line box centres the glyphs too high. Trim the box to the caps (text-box) so flex centring lands on the ink; where text-box is unsupported, nudge by the measured offset. */
+.demo-nav a.demo-brand { font-family: var(--eureka-brand-font); font-weight: 900; font-size: 1.35rem; letter-spacing: 0.04em; line-height: 1; min-block-size: 0; text-box: trim-both cap alphabetic; }
+@supports not (text-box: trim-both cap alphabetic) { .demo-nav a.demo-brand { padding-block: calc(.35rem + .25em) calc(.35rem - .25em); } }
+.demo-prose h1, .demo-prose h2, .demo-prose h3 { font-family: var(--eureka-brand-text-font); font-weight: 600; letter-spacing: 0.01em; }
+.demo-prose h1 { font-family: var(--eureka-brand-font); font-weight: 900; letter-spacing: 0.03em; }
 .demo-nav-link { margin-inline-start: auto; }
 .demo-main { display: flex; flex-direction: column; flex: 1 1 auto; min-block-size: 0; }
 .demo-page--browser .eureka-root { flex: 1 1 auto; min-block-size: 0; display: flex; flex-direction: column; overflow: hidden; }

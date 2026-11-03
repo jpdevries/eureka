@@ -23,7 +23,7 @@ fs.mkdirSync(path.join(MEDIA_ROOT, 'uploads'), { recursive: true });
 
 const nav = (active) => {
   const items = [['/', 'Home'], ['/browser/', 'Server-rendered'], ['/client.html', 'Client-only'], ['/react.html', 'React'], ['/embed.html', 'Embed']];
-  return `<nav class="demo-nav" aria-label="Demo pages"><a class="demo-brand" href="/">Eureka 3</a><ul>${items.map(([href, label]) => `<li><a href="${href}"${href === active ? ' aria-current="page"' : ''}>${label}</a></li>`).join('')}</ul><a class="demo-nav-link" href="https://github.com/mrktps/eureka/tree/v3">Source</a></nav>`;
+  return `<nav class="demo-nav" aria-label="Demo pages"><a class="demo-brand" href="/">Eureka</a><ul>${items.map(([href, label]) => `<li><a href="${href}"${href === active ? ' aria-current="page"' : ''}>${label}</a></li>`).join('')}</ul><a class="demo-nav-link" href="https://github.com/mrktps/eureka/tree/v3">Source</a></nav>`;
 };
 
 /** The server-rendered page: the Level 0 form inside the demo shell, wrapped in <eureka-browser> so the bundle enhances it. */

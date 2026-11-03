@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/brand/wordmark.svg" alt="Eureka" width="420" height="96"></p>
+
 > **Eureka 3 is being built on the `v3` branch.** The plan is in
 > [docs/v3-modernization-plan.md](docs/v3-modernization-plan.md), the
 > framework-agnostic specification in [spec/](spec/README.md), the code
