@@ -1,5 +1,5 @@
 // axe-core on each major state. Fails for v3, reports for the v2 baseline (see helpers.axeCheck).
-import { test, expect, openDirectory, focusRow, control, setView, chooseModeRadio, axeCheck, v3only, setAnimatePreviews } from '../helpers.mjs';
+import { test, expect, openDirectory, focusRow, control, setView, chooseModeRadio, axeCheck, v3only } from '../helpers.mjs';
 
 test('axe: Level 0 form', async ({ page }) => {
   await page.goto('/nojs');
@@ -32,10 +32,9 @@ test('axe: focused row with actions', async ({ page }) => {
 test('axe: animated previews playing (HTML-66b)', async ({ page }) => {
   v3only('animated media');
   await openDirectory(page, 'assets');
-  await setAnimatePreviews(page, true);
   await focusRow(page, 'logo.svg');
+  await page.keyboard.press('Alt+P');
   await axeCheck(page, 'animated-playing');
-  await setAnimatePreviews(page, false);
 });
 
 test('axe: row context menu open (HTML-71)', async ({ page }) => {

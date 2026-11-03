@@ -1,5 +1,5 @@
 // Level 1: focusing rows, the actions toolbar, choosing, multiple selection (spec/02 §6-8).
-import { test, expect, openDirectory, rows, rowNamed, focusRow, control, chooseModeRadio, dialogMessage, baselineDefect, v3only } from '../helpers.mjs';
+import { test, expect, openDirectory, rows, rowNamed, focusRow, control, chooseModeRadio, dialogMessage, baselineDefect, v3only, setView, isVisuallyHidden } from '../helpers.mjs';
 
 test.beforeEach(async ({ page }) => { await openDirectory(page, 'assets/img'); });
 
@@ -95,6 +95,24 @@ test('switching back to single choice removes the checkboxes', async ({ page }) 
   await expect(page.getByRole('checkbox', { name: 'Choose schildpad.jpg' })).toBeVisible();
   await chooseModeRadio(page, 'single').check();
   await expect(page.getByRole('checkbox', { name: /^Choose / })).toHaveCount(0);
+});
+
+test('A11Y-56 single mode in a thumbnail mode rings the selected tile and keeps the radio off the artwork', async ({ page }) => {
+  v3only('outline selection in the thumbnail modes (06 A11Y-56)');
+  await setView(page, 'thumb');
+  await focusRow(page, 'hawaii-sunset.jpg');
+  await page.keyboard.press('Space');
+  const selected = rowNamed(page, 'hawaii-sunset.jpg');
+  await expect(selected).toHaveAttribute('aria-selected', 'true');
+  expect(await isVisuallyHidden(selected.locator('td.eureka__select'))).toBe(true);
+  await expect(selected.locator('input[name="eureka__selected_item"]')).toHaveCount(1); // still in the tree
+  const ring = (row) => row.locator('.eureka__td-media').evaluate((el) => getComputedStyle(el).boxShadow);
+  await focusRow(page, 'tall-tree.png'); // focus moves on: the selected tile keeps its ring, the focused one shows the focus ring only
+  const [sel, foc, plain] = await Promise.all([ring(selected), ring(rowNamed(page, 'tall-tree.png')), ring(rowNamed(page, 'icon-16.png'))]);
+  expect(sel).not.toBe('none'); expect(foc).not.toBe('none'); expect(plain).toBe('none'); expect(sel).not.toBe(foc);
+  await setView(page, 'table');
+  await expect(page.locator('.eureka')).toHaveAttribute('data-view', 'table'); // the re-render follows the radio change
+  await expect.poll(() => selected.locator('td.eureka__select').evaluate((td) => getComputedStyle(td).clipPath === 'none' && td.getBoundingClientRect().width > 1)).toBe(true); // the radio column is laid out again in table mode (a hit test could land under the sticky header)
 });
 
 test('STATE-11 single mode: Tab enters the grid once, arrows move, Space selects with a visible state, Choose commits the selected item', async ({ page }) => {

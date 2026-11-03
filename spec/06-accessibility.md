@@ -113,8 +113,7 @@ Covered by 05. In addition:
   rows grow with content.
 - **A11Y-53** Motion: respects `prefers-reduced-motion` (04 LAY-41). No
   content flashes. Animated media never autoplays (02 HTML-66b): it is
-  still until the user plays it or turns on "Animate previews", which
-  satisfies WCAG 2.2.2 (Pause, Stop, Hide) without a timer, and keeps a
+  still until the user plays that item, which satisfies WCAG 2.2.2 (Pause, Stop, Hide) without a timer, and keeps a
   5,000-item listing from moving. The browser's own transitions live
   under `@media (prefers-reduced-motion: no-preference)` or are switched
   off under `reduce`; demo and fixture SVGs are authored the same way, so
@@ -130,8 +129,16 @@ Covered by 05. In addition:
   cell. Selection: the row's native control, a 1.5 rem radio in single
   mode and checkbox in multiple, drawn by the browser with
   `accent-color: var(--active)`, on a small translucent backing in the
-  thumbnail modes so it reads on any image. Row backgrounds are never
-  tinted for selection. The controls keep their native look under
+  thumbnail modes so it reads on any image; except that single mode's
+  thumbnail modes at Level 1+ keep the artwork clear: the radio is
+  visually hidden (clipped, still in the tree) and the selected tile
+  carries a 3 px `--active` ring inside its edge; the focus ring (a 2 px
+  gap and 2 px of `--active` outside the tile) surrounds it when the item
+  is both. Tiles keep 0.25 rem of padding so the outer rings are not
+  clipped by the rows' paint containment (`content-visibility: auto`
+  implies it); forced colors, which drop box shadows, draw the same
+  states as Highlight outlines. Level 0 keeps the radio there, being the
+  only way to select without script. Row backgrounds are never tinted for selection. The controls keep their native look under
   `forced-colors`; transitions obey `prefers-reduced-motion`.
 - **A11Y-55** Keyboard hints rest at reduced opacity and return to full
   opacity on focus, while the shortcuts dialog is open, and as

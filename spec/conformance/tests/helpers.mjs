@@ -72,13 +72,6 @@ export async function setView(page, mode) {
 }
 /** The media source <select> ("Choose a Media Source"); by role, since the panel itself is labelled "Media Source Panel". */
 export const sourceSelect = page => page.getByRole('combobox', { name: 'Media Source' });
-/** The "Animate previews" switch (HTML-66b): a visually hidden checkbox behind an icon label; set it through the label. */
-export const animateSwitch = page => page.getByRole('checkbox', { name: 'Animate previews' });
-export async function setAnimatePreviews(page, on) {
-  const box = animateSwitch(page);
-  if ((await box.isChecked()) !== on) await page.locator('label[for$="__animate"]').click();
-  await expect(box).toHaveJSProperty('checked', on);
-}
 
 /** True when an element is removed from the visual layout (display:none or clipped to 1px), whatever its a11y exposure. */
 export async function isVisuallyHidden(locator) {

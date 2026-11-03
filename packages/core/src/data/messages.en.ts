@@ -215,7 +215,6 @@ const data = {
   "animation.play": "Play",
   "animation.pause": "Pause",
   "media.animated": "Animated",
-  "animate.previews": "Animate previews",
   "shortcut.toggleAnimation": "Play or pause an animated item",
   "folder": "folder",
   "folder.open": "Open folder {name}",

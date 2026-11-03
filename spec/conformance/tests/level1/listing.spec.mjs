@@ -1,5 +1,5 @@
 // Level 1: the listing, sorting and filtering (spec/02 §6, §5).
-import { test, expect, openDirectory, rows, rowNamed, listing, filterBox, v3only, baselineDefect, TARGET, setAnimatePreviews } from '../helpers.mjs';
+import { test, expect, openDirectory, rows, rowNamed, listing, filterBox, v3only, baselineDefect, TARGET, focusRow } from '../helpers.mjs';
 
 test.beforeEach(async ({ page }) => { await openDirectory(page, 'assets/img'); });
 
@@ -43,7 +43,7 @@ test('HTML-66 media cells render images lazily and other types by icon', async (
   await expect(rowNamed(page, 'archive.zip')).toContainText('archive.zip');
 });
 
-test('HTML-66b animated media is still until played; Alt+P and "Animate previews" play it', async ({ page }) => {
+test('HTML-66b animated media is still until played; Alt+P plays and pauses it, per item', async ({ page }) => {
   v3only('animated media');
   await openDirectory(page, 'assets'); // logo.svg is the fixture's animated SVG; animation.gif (assets/img) its animated raster
   const row = rowNamed(page, 'logo.svg');
@@ -64,14 +64,13 @@ test('HTML-66b animated media is still until played; Alt+P and "Animate previews
   await page.keyboard.press('Alt+P');
   await expect(object).toHaveAttribute('data-playing', 'false');
   await expect.poll(paused).toEqual({ smil: true, css: true });
-  // the listing-level switch plays every animated item and persists
-  await setAnimatePreviews(page, true);
-  await expect(object).toHaveAttribute('data-playing', 'true');
-  await page.reload();
-  await expect(rowNamed(page, 'logo.svg').locator('object.eureka__media-object')).toHaveAttribute('data-playing', 'true');
-  await openDirectory(page, 'assets/img');
-  await expect(rowNamed(page, 'animation.gif').locator('.eureka__media-animated')).toHaveAttribute('data-playing', 'true');
-  await setAnimatePreviews(page, false);
+  await expect(page.getByRole('checkbox', { name: 'Animate previews' })).toHaveCount(0); // no listing-wide switch (STATE-41 withdrawn)
+  await openDirectory(page, 'assets/img'); // the raster animation plays the same way
+  const gif = rowNamed(page, 'animation.gif');
+  await expect(gif.locator('.eureka__media-animated')).toHaveAttribute('data-playing', 'false');
+  await focusRow(page, 'animation.gif');
+  await page.keyboard.press('Alt+P');
+  await expect(gif.locator('.eureka__media-animated')).toHaveAttribute('data-playing', 'true');
 });
 
 test('HTML-66b with reduced motion the animated SVG itself holds its CSS animation; the still is the default either way', async ({ page }) => {
@@ -80,12 +79,12 @@ test('HTML-66b with reduced motion the animated SVG itself holds its CSS animati
   await openDirectory(page, 'assets');
   const object = rowNamed(page, 'logo.svg').locator('object.eureka__media-object');
   await expect(object).toHaveAttribute('data-playing', 'false');
-  await setAnimatePreviews(page, true);
+  await focusRow(page, 'logo.svg');
+  await page.keyboard.press('Alt+P');
   await expect(object).toHaveAttribute('data-playing', 'true');
   // the file's own @media (prefers-reduced-motion: no-preference) gate keeps the CSS spinner static even while "playing"
   const running = await object.evaluate((o) => { const el = o.contentDocument.querySelector('.spin'); return el ? getComputedStyle(el).animationName : null; });
   expect(running).toBe('none');
-  await setAnimatePreviews(page, false);
 });
 
 test('HTML-66c text files preview as server-rendered SVG thumbnails', async ({ page }) => {

@@ -356,7 +356,6 @@ export class EurekaBrowser extends HTMLElement {
     if (t.name === this.#ids.id('choose-mode')) { if (t.checked) this.#store.dispatch({ type: 'view/setChooseMode', mode: t.value === 'multiple' ? 'multiple' : 'single' }); return; }
     if (t.id === this.#ids.id('invert')) { this.#store.dispatch({ type: 'selection/invert', on: t.checked }); return; }
     if (t.name === 'eureka__fullscreen') { this.#toggleFullscreen(t.checked); return; }
-    if (t.name === 'eureka__animate') { this.#store.dispatch({ type: 'view/setAnimate', on: t.checked }); return; }
     if (t.name === 'eureka__chosen_items') { if (t.dataset.path) this.#store.dispatch({ type: 'selection/toggle', path: t.dataset.path, checked: t.checked }); return; }
     if (t.name === 'eureka__selected_item') { if (t.dataset.path && t.checked) this.#store.dispatch({ type: 'selection/select', path: t.dataset.path }); return; } // the single-mode radio (STATE-11)
     if (t.name === 'eureka__uploadFiles') { const files = Array.from(t.files ?? []); t.value = ''; void this.#upload(files); return; }

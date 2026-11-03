@@ -14,8 +14,8 @@ export function breakableName(name: string): Raw {
   return raw(parts.map((p) => html`${p}`.value).join('<wbr>'));
 }
 
-/** Is this animated item playing? Either asked for by the user or because every preview animates (view.animate). */
-export function isPlaying(ctx: Ctx, item: FileEntry): boolean { return !!item.animated && ctx.level > 0 && (ctx.state.view.animate || !!ctx.playing?.has(item.path)); }
+/** Is this animated item playing? Only when the user asked for it (02 HTML-66b): nothing plays by default. */
+export function isPlaying(ctx: Ctx, item: FileEntry): boolean { return !!item.animated && ctx.level > 0 && !!ctx.playing?.has(item.path); }
 
 export function media(ctx: Ctx, item: FileEntry, { controls = true, width, height }: { controls?: boolean; width?: number; height?: number } = {}): Raw {
   const { t, state, level } = ctx;

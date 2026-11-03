@@ -52,7 +52,7 @@ ${nav('/browser/')}
   // The host's side of Choose: a callback (which also makes the Choose bar render, spec 01 CON-12) and the event.
   const el = document.querySelector('eureka-browser'), out = document.getElementById('demo-chosen');
   const show = (items) => { const list = [].concat(items); out.hidden = false; out.textContent = 'Chose ' + (list.length === 1 ? list[0].path : list.length + ' items: ' + list.map((i) => i.path).join(', ')); };
-  el.config = { callbacks: { choose: show }, intervals: { searchBarPlaceholder: 4000 } }; // rotate the filter's syntax hints (02 HTML-40a)
+  el.config = { callbacks: { choose: show }, intervals: { searchBarPlaceholder: 42000 } }; // rotate the filter's syntax hints every 42 s (02 HTML-40a)
 </script>
 </div>
 </main>

@@ -29,7 +29,6 @@ export function loadPersisted(storage: StorageLike | null | undefined, prefix: s
     if (o.sort && typeof o.sort === 'object') { const so = o.sort as Record<string, unknown>; if (typeof so.by === 'string' && SORT_BY.has(so.by) && (so.dir === 'ascending' || so.dir === 'descending')) view.sort = { by: so.by as never, dir: so.dir }; }
     if (typeof o.panelOpen === 'boolean') view.panelOpen = o.panelOpen;
     if (o.chooseMode === 'single' || o.chooseMode === 'multiple') view.chooseMode = o.chooseMode;
-    if (typeof o.animate === 'boolean') view.animate = o.animate;
     if (Object.keys(view).length) out.view = view;
   }
   const loc = readJSON(storage, prefix + KEYS.location);
@@ -44,9 +43,9 @@ export function loadPersisted(storage: StorageLike | null | undefined, prefix: s
 /** Write the persisted subset of state. Call from a store subscriber; cheap enough to run on every change. */
 export function persist(storage: StorageLike | null | undefined, prefix: string, state: State): void {
   if (!storage || !state.config.useLocalStorage) return;
-  const { mode, sort, panelOpen, chooseMode, animate } = state.view;
+  const { mode, sort, panelOpen, chooseMode } = state.view;
   try {
-    storage.setItem(prefix + KEYS.view, JSON.stringify({ mode, sort, panelOpen, chooseMode, animate }));
+    storage.setItem(prefix + KEYS.view, JSON.stringify({ mode, sort, panelOpen, chooseMode }));
     if (state.listing.source !== null) storage.setItem(prefix + KEYS.location, JSON.stringify({ source: state.listing.source, path: state.listing.path }));
     storage.setItem(prefix + KEYS.treeOpen, JSON.stringify(state.tree.open));
   } catch { /* quota or privacy mode: persistence is best effort */ }

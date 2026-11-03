@@ -3,7 +3,7 @@
   .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__table > thead { display: none !important; }
   .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__table td:not(.eureka__td-media, .eureka__choose, .eureka__select, [colspan]) { display: none; }
   .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__table > tbody:not(.empty) { display: flex !important; flex-wrap: wrap; justify-content: center; align-content: flex-start; gap: 0.5rem; padding: 0.25rem; }
-  .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__table > tbody > tr { display: block; border: 0; flex: 0 1 auto; position: relative; }
+  .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__table > tbody > tr { display: block; border: 0; flex: 0 1 auto; position: relative; padding: 0.25rem; } /* room for the rings: content-visibility: auto clips paint to the row (06 A11Y-56) */
   .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__table td.eureka__td-media { display: flex; justify-content: center; inline-size: 100%; padding: 0; }
   .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__table td.eureka__choose { display: block; position: absolute; inset-block-start: 0.25rem; inset-inline-start: 0.25rem; z-index: 1; padding: 0; }
   .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__table .eureka__td-media > * { inline-size: 100%; }

@@ -12,7 +12,7 @@ export interface State {
   listing: { source: SourceId | null; path: string; entries: Entry[]; records: Record<string, DisplayRecord>; status: Status; error?: string; receivedAt?: number; requestId: number };
   /** `selected` is the single-mode selection (STATE-11): Space or a click on an item sets it; Enter or Choose commits it. */
   selection: { focused: string | null; selected: string | null; checked: string[]; inverted: boolean };
-  view: { mode: ViewMode; sort: Sort; filter: string; panelOpen: boolean; chooseMode: ChooseMode; fullscreen: boolean; animate: boolean };
+  view: { mode: ViewMode; sort: Sort; filter: string; panelOpen: boolean; chooseMode: ChooseMode; fullscreen: boolean };
   pending: { uploading: boolean; deleting: string[]; renaming: string | null; creating: boolean; cropping: boolean };
   dialog: null | { kind: DialogKind; target?: string; input?: string };
   notifications: Notification[];
@@ -37,7 +37,6 @@ export type Event =
   | { type: 'view/togglePanel'; open?: boolean }
   | { type: 'view/setChooseMode'; mode: ChooseMode }
   | { type: 'view/setFullscreen'; on: boolean }
-  | { type: 'view/setAnimate'; on: boolean }
   | { type: 'selection/focus'; path: string | null }
   | { type: 'selection/select'; path: string | null }
   | { type: 'selection/toggle'; path: string; checked: boolean }
@@ -76,7 +75,7 @@ export interface InitialStateOptions {
 export function initialState({ config, locale = config.lang ?? 'en', persisted, hydrated }: InitialStateOptions): State {
   // explicit host options beat persisted values (01 CON-11); we treat an option as explicit when it differs from the default
   const view: State['view'] = {
-    mode: config.mode, sort: { ...config.sort }, filter: '', panelOpen: !config.treeHidden, chooseMode: 'single', fullscreen: false, animate: false,
+    mode: config.mode, sort: { ...config.sort }, filter: '', panelOpen: !config.treeHidden, chooseMode: 'single', fullscreen: false,
     ...(persisted?.view ?? {}), ...(hydrated?.view ?? {})
   };
   if (config.allowMasonry === false && view.mode === 'masonry') view.mode = 'table';
@@ -146,7 +145,6 @@ export function reduce(s: State, e: Event): State {
       if (s.view.chooseMode === e.mode) return s;
       return { ...s, view: { ...s.view, chooseMode: e.mode }, selection: e.mode === 'single' ? { ...s.selection, checked: [], inverted: false } : { ...s.selection, selected: null } };
     case 'view/setFullscreen': return { ...s, view: { ...s.view, fullscreen: e.on } };
-    case 'view/setAnimate': return { ...s, view: { ...s.view, animate: e.on } }; // every animated item plays (02 HTML-66b); persisted
     case 'selection/focus': return s.selection.focused === e.path ? s : { ...s, selection: { ...s.selection, focused: e.path } };
     case 'selection/select': return s.selection.selected === e.path ? s : { ...s, selection: { ...s.selection, selected: e.path } }; // single-mode selection (STATE-11)
     case 'selection/toggle': {

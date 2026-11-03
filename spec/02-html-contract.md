@@ -209,8 +209,9 @@ DOM order is the reading order and the tab order.
   `aria-selected`, true for the single-mode selection or a checked item,
   and a native control that shows it, a radio `eureka__selected_item` in
   single mode or the checkbox in multiple, both `tabindex="-1"` so the
-  grid stays one tab stop while a click on the control still selects;
-  06 A11Y-56): the current row
+  grid stays one tab stop while a click on the control still selects; in
+  single mode's thumbnail modes at Level 1+ the radio is visually hidden
+  and the selected tile is ringed instead, 06 A11Y-56): the current row
   `tabindex="0"`, all others `tabindex="-1"`, Arrow Up/Down move between
   rows. v2 gave every row `tabindex="0"`; v3 adopts roving tabindex so a
   5,000 row listing is one tab stop.
@@ -266,9 +267,8 @@ DOM order is the reading order and the tab order.
   data-playing>` holding the `<img>` and, while paused, a `<canvas
   class="eureka__media-still">` the element paints with the current
   frame. Playback is per item (the row's Play/Pause action, HTML-68, and
-  KEY-31) or for every item through the toolbar's "Animate previews"
-  switch (`input[name="eureka__animate"]`, persisted as `view.animate`,
-  default off). Nothing autoplays, so a reduced-motion preference needs
+  KEY-31); there is no listing-wide switch, so a folder never starts
+  moving as a whole. Nothing autoplays, so a reduced-motion preference needs
   no special case here; files SHOULD still gate their own animation on
   `@media (prefers-reduced-motion: no-preference)` for every other
   context they are shown in. Level 0 renders the plain `<img>`.

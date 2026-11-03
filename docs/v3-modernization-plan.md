@@ -574,8 +574,9 @@ Taken on 2026-11-01:
   `data-playing` (an injected `animation-play-state: paused` style plus
   `pauseAnimations()`), a raster animation shows a canvas snapshot of its
   current frame while paused. A play badge marks them; the row toolbar and
-  context menu gain Play/Pause (`Alt+P`); the toolbar gains an "Animate
-  previews" switch persisted as `view.animate`, default off. Nothing
+  context menu gain Play/Pause (`Alt+P`). The toolbar's "Animate
+  previews" switch shipped first and was removed again at JP's request
+  (STATE-41 withdrawn): playback is per item only. Nothing
   autoplays, which is how WCAG 2.2.2 is met without a timer, and the demo
   and fixture files gate their own animation on
   `@media (prefers-reduced-motion: no-preference)`: `bluff-trail.svg` is
@@ -768,7 +769,7 @@ Taken on 2026-11-01:
   reader). The filter placeholder shows examples that can match the
   current listing (at rest a three-token hint such as `type:image
   size:>1mb modified:>2026-10`, then each example in turn when
-  `intervals.searchBarPlaceholder` is set, which the demo sets to 4 s), the
+  `intervals.searchBarPlaceholder` is set, which the demo sets to 42 s), the
   input is described by a hidden sentence naming the live qualifiers, and
   the shortcuts dialog gained a Filter syntax section. Level 0's filter
   is unchanged. Unit tests for the grammar; two conformance tests.
@@ -795,6 +796,17 @@ Taken on 2026-11-01:
   at the top of the README. The component itself stays on `system-ui`: a
   media browser inside a CMS inherits the host's type. There is no spec
   site yet, so nothing to apply there.
+- Outline selection in the thumbnail modes (A11Y-56, HTML-63): in single
+  mode, thumb, grid and masonry no longer float the radio over the
+  artwork at Level 1+; it is clipped out of view (still in the tree) and
+  the selected tile carries a 3 px `--active` ring inside its edge, with
+  the focus ring outside when both apply, Highlight outlines under forced
+  colors. Multiple mode keeps its checkbox, Level 0 keeps the radio. JP's
+  call after seeing the turtles grid. Found on the way: rows have
+  `content-visibility: auto`, whose paint containment had been clipping
+  the tile hover and focus rings all along, and forced colors drop box
+  shadows entirely; tiles now carry 0.25 rem padding for the rings and
+  forced colors use outlines.
 - Reserved media space and undecodable originals (LAY-51, HTML-66e):
   media cells keep their shape before the picture arrives (width/height
   from `dimensions`, else a 4:3 box at the mode's height) under a quiet

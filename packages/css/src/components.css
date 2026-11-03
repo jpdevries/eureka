@@ -124,15 +124,20 @@
   /* Item states (02 HTML-63, 06 A11Y-56): focus is a ring (tiles) or a leading edge (rows); selection is the row's native
      control, a radio in single mode and a checkbox in multiple, so the browser draws it. */
   .eureka .eureka__table :is(td.eureka__choose, td.eureka__select) input { margin: 0; inline-size: 1.5rem; block-size: 1.5rem; cursor: pointer; accent-color: var(--active); }
-  .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__table :is(td.eureka__choose, td.eureka__select) { display: block; position: absolute; inset-block-start: 0.35rem; inset-inline-start: 0.35rem; z-index: 1; padding: 0.2rem; border-radius: 50%; background: color-mix(in srgb, var(--bg-color) 75%, transparent); line-height: 0; }
+  .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__table :is(td.eureka__choose, td.eureka__select) { display: block; position: absolute; inset-block-start: 0.5rem; inset-inline-start: 0.5rem; z-index: 1; padding: 0.2rem; border-radius: 50%; background: color-mix(in srgb, var(--bg-color) 75%, transparent); line-height: 0; }
   .eureka .eureka__table > tbody > tr.eureka__row { transition: background-color 120ms, box-shadow 120ms; }
   .eureka .eureka__row.eureka__focused-media-item { box-shadow: inset 3px 0 0 var(--active); }
   .eureka .eureka__row:focus-visible { outline: 2px solid var(--active); outline-offset: -2px; }
   .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__row.eureka__focused-media-item { box-shadow: none; }
   .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__row > .eureka__td-media { border-radius: 0.25rem; transition: box-shadow 120ms, background-color 120ms; }
   .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__row:hover > .eureka__td-media { box-shadow: 0 0 0 2px var(--subtle); }
-  .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__row.eureka__focused-media-item > .eureka__td-media { box-shadow: 0 0 0 2px var(--bg-color), 0 0 0 5px var(--active); }
+  .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__row.eureka__focused-media-item > .eureka__td-media { box-shadow: 0 0 0 2px var(--bg-color), 0 0 0 4px var(--active); } /* fits the row's 0.25rem padding */
   .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__row:focus-visible { outline: none; } /* the ring on the tile is the focus indicator */
+  /* Single mode in the thumbnail modes (06 A11Y-56): the selected tile carries an inset ring and the radio leaves the artwork. It stays in
+     the tree (clipped, not display:none) for assistive tech; Level 0 keeps it visible, being the only way to select without script. */
+  .eureka[data-level="1"][data-choose="single"]:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__table td.eureka__select { inline-size: 1px; block-size: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; background: none; }
+  .eureka[data-choose="single"]:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__row[aria-selected="true"] > .eureka__td-media { box-shadow: inset 0 0 0 3px var(--active); }
+  .eureka[data-choose="single"]:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__row[aria-selected="true"].eureka__focused-media-item > .eureka__td-media { box-shadow: inset 0 0 0 3px var(--active), 0 0 0 2px var(--bg-color), 0 0 0 4px var(--active); }
   /* The tile menu (02 HTML-71a): the one extra tab stop of a focused tile in the thumbnail modes, opening the row menu.
      Table and list have the toolbar instead. */
   .eureka .eureka__tile-menu { display: none; position: absolute; inset-block-start: 0.25rem; inset-inline-end: 0.25rem; z-index: 1; inline-size: 2rem; block-size: 2rem; padding: 0; border: 1px solid var(--very-subtle); border-radius: 50%; background: color-mix(in srgb, var(--bg-color) 80%, transparent); color: var(--color); cursor: pointer; }
@@ -142,7 +147,10 @@
   @media (forced-colors: active) {
     .eureka .eureka__tile-menu { border-color: ButtonText; }
     .eureka .eureka__row.eureka__focused-media-item { box-shadow: inset 3px 0 0 Highlight; }
-    .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__row.eureka__focused-media-item > .eureka__td-media { box-shadow: 0 0 0 2px Canvas, 0 0 0 5px Highlight; }
+    /* forced colors drop box-shadow, so the tile rings become outlines: focus outside, selection inside, a double line for both */
+    .eureka:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__row.eureka__focused-media-item > .eureka__td-media { box-shadow: none; outline: 3px solid Highlight; outline-offset: 1px; }
+    .eureka[data-choose="single"]:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__row[aria-selected="true"] > .eureka__td-media { box-shadow: none; outline: 3px solid Highlight; outline-offset: -3px; }
+    .eureka[data-choose="single"]:is([data-view="thumb"], [data-view="grid"], [data-view="masonry"]) .eureka__row[aria-selected="true"].eureka__focused-media-item > .eureka__td-media { outline: 6px double Highlight; outline-offset: -2px; }
   }
   @media (prefers-reduced-motion: reduce) { .eureka .eureka__table > tbody > tr.eureka__row, .eureka .eureka__row > .eureka__td-media { transition: none; } }
   /* a subfolder as an item (02 HTML-62): the folder icon fills the media cell and opens the folder */
@@ -175,7 +183,6 @@
   .eureka .eureka__media-animated > img { display: block; inline-size: 100%; block-size: auto; }
   .eureka .eureka__media-animated[data-playing="false"] > img { position: absolute; inset: 0; opacity: 0; pointer-events: none; } /* keeps loading so the still can be drawn */
   .eureka .eureka__media-still { display: block; inline-size: 100%; block-size: auto; }
-  .eureka .eureka__animate-switch label { cursor: pointer; }
 
   /* Row context menu (02 HTML-71): a manual popover anchored to its row. */
   .eureka__context-anchor { anchor-name: --eureka-context-row; }
