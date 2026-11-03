@@ -49,9 +49,10 @@ test('LAY-21 the actions row appears only on the focused row and spans the row',
 
 test('LAY-31 thumb mode lays rows out side by side when wide', async ({ page }, testInfo) => {
   await setView(page, 'thumb');
-  // the first two rows in sort order sit side by side in thumb mode at every width (two across when narrow)
-  const a = await rows(page).nth(0).boundingBox();
-  const b = await rows(page).nth(1).boundingBox();
+  // the first two items in sort order sit side by side in thumb mode at every width (two across when narrow); in v3 the first is the subfolder
+  const items = page.getByRole('row').filter({ hasNot: page.getByRole('columnheader') });
+  const a = await items.nth(0).boundingBox();
+  const b = await items.nth(1).boundingBox();
   expect(Math.abs(a.y - b.y)).toBeLessThan(Math.max(a.height, b.height));
   expect(b.x).toBeGreaterThan(a.x);
 });

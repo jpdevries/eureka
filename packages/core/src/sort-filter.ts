@@ -1,6 +1,6 @@
 // Sorting and filtering of listings (07 STATE-10, 09 I18N-22/23).
 import { toDate } from './format.js';
-import { isFile, type DisplayRecord, type Entry, type FileEntry, type Sort } from './types.js';
+import { isFile, isFolder, type DisplayRecord, type Entry, type FileEntry, type FolderEntry, type Sort } from './types.js';
 
 const collators = new Map<string, Intl.Collator>();
 function collator(locale: string): Intl.Collator {
@@ -44,6 +44,12 @@ export function matchesFilter(entry: Entry, text: string, record?: DisplayRecord
 export function filterEntries<T extends Entry>(entries: readonly T[], text: string, records: Readonly<Record<string, DisplayRecord>> = {}): T[] {
   if (!text.trim()) return [...entries];
   return entries.filter((e) => matchesFilter(e, text, records[e.path]));
+}
+
+/** Folders, filtered by name and sorted by name in the sort's direction: the items above the files (02 HTML-62). */
+export function visibleFolders(entries: readonly Entry[], view: { filter: string; sort: Sort }, locale: string, records: Readonly<Record<string, DisplayRecord>> = {}): FolderEntry[] {
+  const folders = entries.filter(isFolder);
+  return sortEntries(filterEntries(folders, view.filter, records), { by: 'filename', dir: view.sort.dir }, locale);
 }
 
 /** Files only, filtered then sorted: what the listing shows (07 STATE-10). */

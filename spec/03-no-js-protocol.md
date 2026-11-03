@@ -83,6 +83,10 @@ fields are present, in this order:
   `eureka__media-browser_{uid}__browsing` as `{sourceId}||{directory}`
   (split on the first `||`), and re-render the form for that source and
   directory with HTTP 200.
+- **NOJS-32a Open a folder.** A folder item's button (02 HTML-62) submits
+  `eureka__open` with `{sourceId}||{path}`. When it is present the server
+  navigates there exactly as for NOJS-32, ignoring the directory
+  selector's value, since only a click on the folder adds the field.
 - **NOJS-33** Rendering after any POST MUST produce the same markup the
   initial GET would produce for that state, so the page can be enhanced
   identically whether reached by GET or POST.

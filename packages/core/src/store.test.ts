@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { createStore, initialState, reduce, selectChosen, selectVisibleFiles, selectCurrentTree, type State, findTreeNode, graftBranch, selectCan } from './store.js';
+import { createStore, initialState, reduce, selectChosen, selectVisibleFiles, selectCurrentTree, type State, findTreeNode, graftBranch, selectCan, selectVisibleItems } from './store.js';
 import { resolveConfig, type Entry } from './types.js';
 import { loadPersisted, persist } from './persistence.js';
 
@@ -111,6 +111,24 @@ describe('store', () => {
     expect(selectCan(s)).toEqual({ upload: true, createDirectory: true, rename: true, delete: false });
     const noUploads = reduce(initialState({ config: resolveConfig({ allowUploads: false }) }), { type: 'sources/loaded', sources: [{ id: 0, name: 'rw' }] });
     expect(selectCan(noUploads).upload).toBe(false);
+  });
+  it('selectVisibleItems puts folders first, filtered and sorted by name, unless listFolders is off (02 HTML-62)', () => {
+    const entries: Entry[] = [
+      { filename: 'b.png', directory: '/', path: 'b.png', absoluteURL: '/b.png', editedOn: 2, fileSize: 2 },
+      { foldername: 'zeta', directory: 'zeta', path: 'zeta', absoluteURL: '/zeta', editedOn: 0, fileSize: 0 },
+      { filename: 'a.png', directory: '/', path: 'a.png', absoluteURL: '/a.png', editedOn: 1, fileSize: 1 },
+      { foldername: 'alpha', directory: 'alpha', path: 'alpha', absoluteURL: '/alpha', editedOn: 0, fileSize: 0 }
+    ];
+    const at = (config: ReturnType<typeof resolveConfig>) => { let st = reduce(initialState({ config }), { type: 'sources/loaded', sources: [{ id: 0, name: 's' }] }); st = reduce(st, { type: 'directory/navigate', source: 0, path: '/' }); return reduce(st, { type: 'listing/loaded', source: 0, path: '/', entries, records: {} }); };
+    let s = at(resolveConfig({}));
+    expect(selectVisibleItems(s).map((e) => e.filename ?? e.foldername)).toEqual(['alpha', 'zeta', 'a.png', 'b.png']);
+    s = reduce(s, { type: 'view/setSort', dir: 'descending' });
+    expect(selectVisibleItems(s).map((e) => e.filename ?? e.foldername)).toEqual(['zeta', 'alpha', 'b.png', 'a.png']);
+    s = reduce(s, { type: 'view/setFilter', text: 'al' });
+    expect(selectVisibleItems(s).map((e) => e.filename ?? e.foldername)).toEqual(['alpha']);
+    expect(selectVisibleFiles(s)).toEqual([]); // the count and the chosen set see files only
+    const off = at(resolveConfig({ listFolders: false }));
+    expect(selectVisibleItems(off).map((e) => e.filename)).toEqual(['a.png', 'b.png']);
   });
   it('notifications push and dismiss', () => {
     let s = loaded();

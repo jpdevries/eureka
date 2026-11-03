@@ -83,6 +83,8 @@ export interface Config {
   mode: ViewMode;
   sort: Sort;
   treeHidden: boolean;
+  /** Subfolders appear as items at the top of the listing, opening on activation (02 HTML-62). Off: folders live only in the tree. */
+  listFolders: boolean;
   /** Levels of the folder tree requested at once; deeper nodes load when opened (11 MS-43). */
   treeDepth: number;
   useLocalStorage: boolean;
@@ -126,6 +128,7 @@ export const defaultConfig: Config = Object.freeze({
   mode: 'table',
   sort: { by: 'filename', dir: 'ascending' },
   treeHidden: true,
+  listFolders: true,
   treeDepth: 3,
   useLocalStorage: true,
   allowChoose: true,

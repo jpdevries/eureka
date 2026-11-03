@@ -89,7 +89,7 @@ around it.
   context, the same name the Expand link targets (02 HTML-68), so the
   keyboard and the link share one tab per item.
 - **KEY-B7** Double-click or double-tap on a media cell chooses the item;
-  Enter on the focused row does the same. There MUST be no action that
+  Enter on the focused row does the same; on a folder row (02 HTML-62) Enter opens the folder instead, since a folder is never chosen. There MUST be no action that
   is available only by double-click.
 
 ## 3. Visible focus

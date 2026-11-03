@@ -1,9 +1,9 @@
 // The listing table (02 §6) with its header and empty states.
-import { selectVisibleFiles, type FileEntry, type SortBy, selectCan } from '@mrktps/eureka-core';
+import { selectVisibleFiles, selectVisibleItems, isFile, type FileEntry, type FolderEntry, type SortBy, selectCan } from '@mrktps/eureka-core';
 import { attr, classes, html, raw, type Raw } from '../html.js';
 import type { Ctx } from '../model.js';
 import { hidden, icon } from './icon.js';
-import { row } from './row.js';
+import { row, folderRow } from './row.js';
 
 const COLUMNS: Array<{ key: string; sort?: SortBy; label: string; cls: string }> = [
   { key: 'media', label: 'media', cls: 'eureka__th-media' },
@@ -51,6 +51,7 @@ function memoRow(ctx: Ctx, f: FileEntry, i: number): Raw {
 export function listing(ctx: Ctx): Raw {
   const { state, t, ids, level } = ctx;
   const files = selectVisibleFiles(state);
+  const items = selectVisibleItems(state); // folders first when listFolders (02 HTML-62)
   const multiple = level > 0 && state.view.chooseMode === 'multiple';
   const colSpan = COLUMNS.length - (level === 0 ? 1 : 0) + (multiple ? 1 : 0) + (level === 0 ? 1 : 0);
   // Level 1+: the rows are a keyboard widget (arrow keys, one tab stop), which ARIA calls a grid (02 HTML-60). Screen readers
@@ -60,6 +61,6 @@ export function listing(ctx: Ctx): Raw {
   return html`${help}<table class="eureka__table" id="${ids.id('table')}" data-count="${files.length}"${grid}>
     <caption class="visually-hidden" id="${ids.id('caption')}">${t('listing.caption', { cd: state.listing.path })}, ${t('listing.count', { n: files.length })}</caption>
     ${header(ctx)}
-    <tbody class="${classes({ empty: files.length === 0 })}">${files.length ? files.map((f, i) => memoRow(ctx, f, i)) : emptyState(ctx, colSpan)}</tbody>
+    <tbody class="${classes({ empty: items.length === 0 })}">${items.length ? items.map((it, i) => (isFile(it) ? memoRow(ctx, it, i) : folderRow(ctx, it as FolderEntry, i))) : emptyState(ctx, colSpan)}</tbody>
   </table>`;
 }

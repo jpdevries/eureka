@@ -151,7 +151,8 @@ export function createEurekaHandler(opts: HandlerOptions): NodeHandler {
       if (opts.onChoose) return opts.onChoose(ctx, req, res);
       return html(res, `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Eureka!</title></head><body><h1>Eureka!</h1><p>You chose <code>${escapeHtml(entry?.path ?? chosen)}</code> of the ${escapeHtml(source.name)} media source.</p>${entry ? `<p><a href="${escapeHtml(entry.absoluteURL)}">${escapeHtml(entry.absoluteURL)}</a></p>` : ''}</body></html>`);
     }
-    const browsing = Object.entries(fields).find(([k]) => /^eureka__media-browser_.*__browsing$/.test(k))?.[1]?.[0];
+    const open = first(fields.eureka__open); // a folder item's button (03 NOJS-32a) wins over the directory selector
+    const browsing = open ?? Object.entries(fields).find(([k]) => /^eureka__media-browser_.*__browsing$/.test(k))?.[1]?.[0];
     const target = browsing ? splitSourcePath(browsing) : { sourceId: String(source.id), path: uploadDir };
     return page(req, res, url, { sourceId: target.sourceId, path: target.path, requested: true, ...(uploaded ? { uploaded } : {}) });
   }

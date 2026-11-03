@@ -707,6 +707,20 @@ Taken on 2026-11-01:
   previews already; filesystem and S3 fall back to the icon. The only
   `<object>` left in a row is the animated SVG of HTML-66b. Renderer
   tests and a conformance test on the fixture's `spec.pdf`.
+- Folders as items (HTML-62 rewritten, NOJS-32a, KEY-B7, `listFolders`
+  default on, attribute `no-list-folders`, React `noListFolders`): the
+  listing shows subfolders first, sorted by name in the sort direction
+  and filtered with the files, as rows with `data-kind="folder"`, the
+  folder icon in a tile that opens the folder (Level 0: a submit button
+  named `eureka__open` carrying `{sourceId}||{path}`, honoured by the
+  handler and the fixture; Level 1+: `data-action="navigate"`), a toolbar
+  of Open, Rename and Delete subject to capabilities, Enter or
+  double-click to open, no checkbox or radio, never in the chosen set;
+  counts and captions still count files. Prompted by the turtles and
+  pantry roots, which showed "appears to be empty" above a folder only
+  reachable from the tree. `rows()` in the conformance helpers now counts
+  file rows only; store, renderer, React and conformance tests cover both
+  levels and the off switch.
 - Package names: the `@eureka` npm scope belongs to an existing npm user,
   so the packages are `@mrktps/eureka` (the element, what most people
   install) and `@mrktps/eureka-core`, `-html`, `-css`, `-react`,

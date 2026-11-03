@@ -18,9 +18,10 @@ test('HTML-60 the enhanced listing is a grid that explains its keys', async ({ p
   await expect(grid.getByRole('row').first()).toBeVisible();
 });
 
-test('HTML-62 one row per file, folders are not rows', async ({ page }) => {
+test('HTML-62 one row per file; the subfolder is an item in v3 and absent in v2', async ({ page }) => {
   await expect(rows(page)).toHaveCount(11); // assets/img has 11 files and 1 folder
-  await expect(page.getByRole('row', { name: /^redwoods/ })).toHaveCount(0);
+  if (TARGET === 'v2') await expect(page.getByRole('row', { name: /^redwoods/ })).toHaveCount(0);
+  else { const folder = page.getByRole('row', { name: /^redwoods, folder/ }); await expect(folder).toHaveCount(1); await expect(folder).toHaveAttribute('data-kind', 'folder'); }
 });
 
 test('HTML-64 rows expose the generated description', async ({ page }) => {

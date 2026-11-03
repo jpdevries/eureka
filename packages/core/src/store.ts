@@ -1,6 +1,6 @@
 // The instance store (07). Pure transitions, no framework, no effects.
 import { ancestors, normalizePath, parentPath } from './paths.js';
-import { visibleFiles } from './sort-filter.js';
+import { visibleFiles, visibleFolders } from './sort-filter.js';
 import { isFile, sourceAllows, type SourceCapabilities, type ChooseMode, type Config, type DialogKind, type DisplayRecord, type Entry, type FileEntry, type Notification, type Sort, type SortBy, type SortDir, type Source, type SourceId, type Status, type TreeNode, type ViewMode } from './types.js';
 
 export interface State {
@@ -219,6 +219,8 @@ export const selectVisibleFiles = (s: State): FileEntry[] => {
   visibleCache.set(s.listing.entries, { key, records: s.listing.records, result });
   return result;
 };
+/** Everything the listing shows (02 HTML-62): the subfolders first when `listFolders`, then the visible files. */
+export const selectVisibleItems = (s: State): Entry[] => (s.config.listFolders ? [...visibleFolders(s.listing.entries, s.view, s.locale.tag, s.listing.records), ...selectVisibleFiles(s)] : selectVisibleFiles(s));
 export const selectFiles = (s: State): FileEntry[] => s.listing.entries.filter(isFile);
 export const selectFolders = (s: State): Entry[] => s.listing.entries.filter((e) => !isFile(e));
 export const selectFocused = (s: State): FileEntry | null => (s.selection.focused ? (selectFiles(s).find((f) => f.path === s.selection.focused) ?? null) : null);

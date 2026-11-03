@@ -6,7 +6,7 @@ import type { EurekaBrowserAttributes, EurekaBrowserProps } from './types.js';
 /** React prop → element attribute. Strings are written as given; `true` writes an empty attribute; `false`/undefined write nothing. */
 const ATTRIBUTE_OF: Record<keyof EurekaBrowserAttributes, string> = {
   api: 'api', assets: 'assets', lang: 'lang', source: 'source', path: 'path', mode: 'mode', storagePrefix: 'storage-prefix', uid: 'uid', basePath: 'base-path', worker: 'worker', i18n: 'i18n', learnMore: 'learn-more',
-  treeOpen: 'tree-open', noStorage: 'no-storage', noUploads: 'no-uploads', noDnd: 'no-dnd', noRename: 'no-rename', noDelete: 'no-delete', noDownload: 'no-download', noCrop: 'no-crop', noMasonry: 'no-masonry', noFullscreen: 'no-fullscreen', noWelcome: 'no-welcome', noChoose: 'no-choose', noChooseMultiple: 'no-choose-multiple', confirmDelete: 'confirm-delete', alwaysWelcome: 'always-welcome', thumbnails: 'thumbnails', treeDepth: 'tree-depth'
+  treeOpen: 'tree-open', noStorage: 'no-storage', noUploads: 'no-uploads', noDnd: 'no-dnd', noRename: 'no-rename', noDelete: 'no-delete', noDownload: 'no-download', noCrop: 'no-crop', noMasonry: 'no-masonry', noFullscreen: 'no-fullscreen', noWelcome: 'no-welcome', noChoose: 'no-choose', noChooseMultiple: 'no-choose-multiple', confirmDelete: 'confirm-delete', alwaysWelcome: 'always-welcome', thumbnails: 'thumbnails', treeDepth: 'tree-depth', noListFolders: 'no-list-folders'
 };
 
 export function attributesFromProps(props: EurekaBrowserAttributes): Record<string, string> {

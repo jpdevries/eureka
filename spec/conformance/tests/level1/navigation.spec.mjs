@@ -1,5 +1,5 @@
 // Level 1: source panel, tree, directory selector, view modes, persistence (spec/02 §2, §4, §5).
-import { test, expect, openDirectory, rows, control, sourcePanelToggle, sourceSelect, directoryTree, viewRadio, viewRadioName, setView, baselineDefect, v3only, dismissNotification, TARGET } from '../helpers.mjs';
+import { test, expect, openDirectory, rows, folderRows, control, sourcePanelToggle, sourceSelect, directoryTree, viewRadio, viewRadioName, setView, baselineDefect, v3only, dismissNotification, TARGET } from '../helpers.mjs';
 
 test('HTML-10 the source panel toggle exposes and controls its state', async ({ page }) => {
   await openDirectory(page);
@@ -106,6 +106,39 @@ test('CON-04 the no-script page of a read-only source renders without mutation c
   await expect(page.getByRole('button', { name: /^Choose/ })).toHaveCount(1); // the choose bar stays
   await page.goto('/nojs?source=0&path=/');
   await expect(page.locator('input[name="eureka__uploadFiles"]')).toHaveCount(1); // the writable source keeps its upload control
+});
+
+test('HTML-62 subfolders are items at the top of the listing that open on activation and are never chosen', async ({ page }) => {
+  v3only('folders as items (02 HTML-62)');
+  await openDirectory(page, 'assets');
+  const folders = folderRows(page);
+  await expect(folders).toHaveCount(2); // docs, img
+  const first = page.locator('tbody > tr[data-path]').first();
+  await expect(first).toHaveAttribute('data-kind', 'folder'); // folders come before files
+  await expect(folders.first()).toHaveAccessibleName(/docs, folder/);
+  await expect(folders.first().locator('input')).toHaveCount(0); // no checkbox, no radio
+  await folders.first().focus();
+  await expect(folders.first().getByRole('button', { name: 'Open docs', exact: true })).toBeVisible(); // the toolbar's Open; the tile is "Open folder docs"
+  await expect(control(folders.first(), /^Choose/)).toHaveCount(0);
+  await page.keyboard.press('Enter'); // Enter opens (05 KEY-B7)
+  await expect(page.getByLabel('Browse Directory')).toHaveValue('0||assets/docs');
+  await expect(rows(page)).toHaveCount(2);
+  await page.goBack().catch(() => {});
+  await openDirectory(page, 'assets');
+  await page.locator('tr[data-kind="folder"][data-path="assets/img"] .eureka__folder-tile').click(); // the tile opens too
+  await expect(page.getByLabel('Browse Directory')).toHaveValue('0||assets/img');
+  await expect(rows(page)).toHaveCount(11);
+});
+
+test('HTML-62 the no-script page lists folders as items whose button navigates (NOJS-32a)', async ({ page }) => {
+  v3only('folders as items (02 HTML-62)');
+  await page.goto('/nojs?path=assets');
+  const button = page.locator('button[name="eureka__open"][value="0||assets/img"]');
+  await expect(button).toHaveAccessibleName('Open folder img');
+  await expect(page.locator('tr[data-kind="folder"] input[type="radio"]')).toHaveCount(0);
+  await button.click(); // the fixture re-renders the page for assets/img (NOJS-32a)
+  await expect(page.getByLabel('Browse Directory')).toHaveValue('0||assets/img');
+  await expect(rows(page)).toHaveCount(11);
 });
 
 test('HTML-47 the view chooser offers the five modes and keeps the rows', async ({ page }) => {

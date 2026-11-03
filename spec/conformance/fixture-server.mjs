@@ -287,7 +287,7 @@ http.createServer(async (req, res) => {
       const { fields, files } = parseMultipart(await readBody(req), req.headers['content-type']);
       const uploadDir = norm(first(fields['eureka__upload-dir']));
       for (const f of files) if (f.field === 'eureka__uploadFiles') { listings[uploadDir] ??= []; listings[uploadDir].push(file(uploadDir, f.filename, f.data.length, guessDims(f.filename), 0)); }
-      const browsing = first(Object.entries(fields).find(([k]) => /^eureka__media-browser_.*__browsing$/.test(k))?.[1]);
+      const browsing = first(fields.eureka__open) ?? first(Object.entries(fields).find(([k]) => /^eureka__media-browser_.*__browsing$/.test(k))?.[1]); // a folder item (NOJS-32a) wins
       const [cs, ...cdParts] = (browsing ?? '').split('||'); const cd = cdParts.join('||');
       const chosen = first(fields.eureka__chosen_item);
       // The v2 reference server re-rendered the form here (NOJS-32). This

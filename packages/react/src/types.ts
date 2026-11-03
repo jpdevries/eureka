@@ -36,6 +36,8 @@ export interface EurekaBrowserAttributes {
   noDownload?: boolean;
   noCrop?: boolean;
   noMasonry?: boolean;
+  /** Folders only in the tree, not as items in the listing. */
+  noListFolders?: boolean;
   noFullscreen?: boolean;
   noWelcome?: boolean;
   noChoose?: boolean;

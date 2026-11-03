@@ -176,8 +176,21 @@ DOM order is the reading order and the tab order.
   sort and carry `aria-sort="ascending|descending"` on the sorted column.
   v2 attached a click handler to the `<th>` itself, unreachable by
   keyboard; v3 requires the button.
-- **HTML-62** `<tbody>` holds one `<tr>` per file. Folders in the listing
-  are not rows; they appear in the tree and the directory selector.
+- **HTML-62** `<tbody>` holds one `<tr>` per item: with `listFolders`
+  (default) the subfolders first, sorted by name in the current sort
+  direction, then the files in the current sort; filtering applies to
+  both. A folder row has `data-kind="folder"`, an accessible name of the
+  folder name plus "folder", the folder icon in the media cell inside a
+  control that opens the folder (Level 0: a submit button named
+  `eureka__open` whose value is `{sourceId}||{path}`, 03 NOJS-32a; Level
+  1+: a button with `data-action="navigate"`), the name in the name cell,
+  the modified date, and empty dimension and size cells. It takes part in
+  the roving tabindex (HTML-63) and Enter opens it (05 KEY-20); its row
+  toolbar offers Open, Rename and Delete (subject to 01 CON-04), never
+  Choose, Download, Crop or Play; it has no checkbox or radio and is never
+  in the chosen set. The listing's count and caption count files only.
+  With `listFolders` off, folders appear only in the tree and the
+  directory selector, as in v2.
 - **HTML-63** Rows are focusable with a roving tabindex: the current row
   `tabindex="0"`, all others `tabindex="-1"`, Arrow Up/Down move between
   rows. v2 gave every row `tabindex="0"`; v3 adopts roving tabindex so a

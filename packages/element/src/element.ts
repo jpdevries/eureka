@@ -278,6 +278,7 @@ export class EurekaBrowser extends HTMLElement {
   #root(): HTMLElement | null { return this.querySelector<HTMLElement>(':scope > .eureka'); }
   #rows(): HTMLTableRowElement[] { return Array.from(this.querySelectorAll<HTMLTableRowElement>('tbody > tr[data-path]')); }
   #filterInput(): HTMLInputElement | null { return this.querySelector<HTMLInputElement>('input[name="eureka__filter"]'); }
+  #folderAt(path: string | undefined): Entry | undefined { return path === undefined ? undefined : this.#store.getState().listing.entries.find((e) => e.path === path && !(typeof e.filename === 'string' && e.filename.length > 0)); }
   #fileAt(path: string | undefined): FileEntry | undefined { return path === undefined ? undefined : (this.#store.getState().listing.entries.find((e) => e.path === path && typeof e.filename === 'string') as FileEntry | undefined); }
   #sourceId(v: SourceId | string): SourceId {
     const s = this.#store.getState().sources.all.find((x) => String(x.id) === String(v));
@@ -376,6 +377,8 @@ export class EurekaBrowser extends HTMLElement {
   }
 
   #onDblClick(e: MouseEvent): void {
+    const folderRow = (e.target as Element).closest<HTMLTableRowElement>('tr[data-kind="folder"]');
+    if (folderRow?.dataset.path) { const st = this.#store.getState(); if (st.listing.source !== null) void this.navigate(st.listing.source, folderRow.dataset.path); return; }
     if ((e.target as Element).closest('.eureka__badge--animated')) return; // the play badge toggles; it does not choose
     const cell = (e.target as Element).closest<HTMLElement>('.eureka__td-media');
     const row = cell?.closest<HTMLTableRowElement>('tr[data-path]');
@@ -422,6 +425,7 @@ export class EurekaBrowser extends HTMLElement {
     if (!m) return;
     const state = this.#store.getState();
     const item = this.#fileAt(row?.dataset.path);
+    const folder = row?.dataset.kind === 'folder' ? this.#folderAt(row.dataset.path) : undefined; // a subfolder item (02 HTML-62)
     const rows = this.#rows();
     const index = row ? rows.indexOf(row) : -1;
     let handled = true;
@@ -444,13 +448,13 @@ export class EurekaBrowser extends HTMLElement {
         if (state.dialog || (e.key === 'Escape' && (state.view.filter || inTextField))) { handled = false; break; }
         this.#store.dispatch({ type: 'selection/clear' }); break;
       // row scope
-      case 'chooseItem': if (item && target === row) this.#choose([item]); else handled = false; break;
+      case 'chooseItem': if (item && target === row) this.#choose([item]); else if (folder && target === row && state.listing.source !== null) void this.navigate(state.listing.source, folder.path); else handled = false; break; // Enter opens a folder (05 KEY-B7)
       case 'expandItem': if (item) { const name = this.#ids.item('row', item.filename); window.open(item.absoluteURL, name.startsWith('_') ? `e${name}` : name); } else handled = false; break; // the row's named context (HTML-68): a repeat Expand reuses the tab, which `noopener` would prevent
       case 'openContextMenu': if (row && item && MENU_MODES.has(state.view.mode)) this.#openContextMenu(row); else handled = false; break;
       case 'toggleAnimation': if (item?.animated) this.#toggleAnimation(item.path); else handled = false; break;
       case 'downloadItem': { const link = item && this.#config.allowDownload ? row?.querySelector<HTMLAnchorElement>('a[data-action="download"]') : null; if (link) link.click(); else handled = false; break; }
-      case 'deleteItem': if (item && (target === row || !!toolbar)) this.#requestDelete([item.path], row); else handled = false; break;
-      case 'renameItem': if (item) this.#openDialog('rename', item.path, row ?? target); else handled = false; break;
+      case 'deleteItem': if ((item ?? folder) && (target === row || !!toolbar)) this.#requestDelete([(item ?? folder)!.path], row); else handled = false; break;
+      case 'renameItem': if (item ?? folder) this.#openDialog('rename', (item ?? folder)!.path, row ?? target); else handled = false; break;
       case 'toggleItemChecked':
         if (item && target === row && state.view.chooseMode === 'multiple') this.#store.dispatch({ type: 'selection/toggle', path: item.path, checked: !(state.selection.inverted !== state.selection.checked.includes(item.path)) });
         else handled = false; break;

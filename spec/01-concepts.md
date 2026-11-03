@@ -17,9 +17,11 @@ configuration surface of an instance.
 - **Directory.** A path inside a source, relative to the source root, `/`
   separated, with no leading slash; the root is `/`. The **current
   directory** (`cd`) is the one being listed.
-- **Entry.** One row of a listing: a **file** (has `filename`) or a
-  **folder** (has `foldername`). Files are listing rows; folders feed the
-  tree and the directory selector and are never rows (02 HTML-62).
+- **Entry.** One item of a listing: a **file** (has `filename`) or a
+  **folder** (has `foldername`). Files are listing rows that can be
+  chosen; folders feed the tree and the directory selector and, with
+  `listFolders` (the default), also appear as items at the top of the
+  listing that open on activation and are never chosen (02 HTML-62).
 - **Listing.** The entries of the current directory as returned by the API
   plus derived display fields (07 §3). **Visible entries** are the listing
   after filter and sort.
@@ -69,6 +71,7 @@ defaults live in `schema/config.json`; the table is the human index.
 | `mode` | `"table"` | Initial layout mode |
 | `sort` | `{by:"filename",dir:"ascending"}` | Initial sort |
 | `treeHidden` | `true` | Source panel initially collapsed |
+| `listFolders` | `true` | Subfolders as items at the top of the listing (02 HTML-62); off, folders live only in the tree |
 | `treeDepth` | `3` | Levels of the folder tree fetched at once; deeper folders load when opened (11 MS-43) |
 | `useLocalStorage` | `true` | Persist view preferences and remember location |
 | `allowChoose` | `true` | Offer Choose |

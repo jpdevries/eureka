@@ -17,6 +17,38 @@ const input: PageInput = {
   lang: 'en-US', basePath: '/assets/components/eureka/', timeZone: 'UTC'
 };
 
+describe('folders as items (02 HTML-62, 03 NOJS-32a)', () => {
+  const entries: PageInput['entries'] = [
+    { filename: 'pic.png', directory: 'photos', path: 'photos/pic.png', absoluteURL: '/s/photos/pic.png', editedOn: 0, fileSize: 1 },
+    { foldername: 'trips', directory: 'photos/trips', path: 'photos/trips', absoluteURL: '/s/photos/trips', editedOn: 1700000000000, fileSize: 0 }
+  ];
+  const input: PageInput = { sources: [{ id: 0, name: 's' }], source: { id: 0, name: 's' }, path: 'photos', entries, tree: [], lang: 'en', basePath: '/' };
+  it('Level 0: the folder row comes first and its tile is a submit button carrying eureka__open', () => {
+    const out = renderLevel0(input);
+    const rows = [...out.matchAll(/<tr [^>]*data-path="([^"]+)"[^>]*data-kind="([^"]+)"/g)].map((m) => [m[1], m[2]]);
+    expect(rows).toEqual([['photos/trips', 'folder'], ['photos/pic.png', 'image']]);
+    const folder = /<tr[^>]*data-kind="folder"[^>]*>[\s\S]*?<\/tr>/.exec(out)![0];
+    expect(folder).toContain('aria-label="trips, folder"');
+    expect(folder).toContain('<button type="submit" class="eureka__folder-tile" name="eureka__open" value="0||photos/trips" aria-label="Open folder trips">');
+    expect(folder).not.toContain('type="radio"'); expect(folder).not.toContain('eureka__chosen');
+    expect(out).toContain('data-count="1"'); // files only
+  });
+  it('Level 1: the tile navigates, the toolbar offers Open, Rename and Delete only, and a read-only source drops the last two', () => {
+    const out = renderEnhanced(input);
+    const folder = /<tr[^>]*data-kind="folder"[^>]*>[\s\S]*?<\/tr>/.exec(out)![0];
+    expect(folder).toContain('data-action="navigate" data-cd="photos/trips"');
+    expect(folder).toContain('tabindex="0"'); // first row: the roving tab stop
+    const actions = [...folder.matchAll(/data-action="([^"]+)"/g)].map((m) => m[1]);
+    expect(actions).toEqual(['navigate', 'navigate', 'rename', 'delete']); // the tile and the Open button both navigate
+    expect(folder).not.toContain('chooseItem'); expect(folder).not.toContain('download');
+    const ro = renderEnhanced({ ...input, sources: [{ id: 0, name: 's', capabilities: { rename: false, delete: false } }], source: { id: 0, name: 's', capabilities: { rename: false, delete: false } } });
+    const roFolder = /<tr[^>]*data-kind="folder"[^>]*>[\s\S]*?<\/tr>/.exec(ro)![0];
+    expect([...roFolder.matchAll(/data-action="([^"]+)"/g)].map((m) => m[1])).toEqual(['navigate', 'navigate']);
+    const off = renderEnhanced({ ...input, config: { listFolders: false } });
+    expect(off).not.toContain('data-kind="folder"');
+  });
+});
+
 describe('documents and videos (02 HTML-66d)', () => {
   const page = (entries: PageInput['entries']) => renderLevel0({ sources: [{ id: 0, name: 's' }], source: { id: 0, name: 's' }, path: '/', entries, tree: [], lang: 'en', basePath: '/' });
   it('a PDF with a preview is a lazy image, without one the icon; never an inline viewer', () => {

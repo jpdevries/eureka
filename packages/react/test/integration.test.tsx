@@ -39,7 +39,8 @@ describe('EurekaBrowser with the real element', () => {
     expect(onError).not.toHaveBeenCalled();
     expect(ref.current!.engineMode).toBe('inline');
     expect(onNavigate).toHaveBeenCalledWith({ source: 0, path: 'img' }, expect.any(CustomEvent));
-    await until(() => host.querySelectorAll('tr[data-path]').length === 2); // files are rows; the folder is offered by the directory selector
+    await until(() => host.querySelectorAll('tr[data-path]').length === 3); // two files and the subfolder as an item (02 HTML-62)
+    expect(host.querySelectorAll('tr[data-kind="folder"]').length).toBe(1);
     expect(host.querySelector('.eureka')).not.toBeNull();
     expect(host.querySelector('select[data-control="browsing"] option[value$="img/sub"]')).not.toBeNull();
     expect(fetchMock.mock.calls.some(([u]) => String(u).includes('/api/media/sources/0?path=img'))).toBe(true);

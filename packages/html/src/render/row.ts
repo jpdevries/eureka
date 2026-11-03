@@ -1,5 +1,5 @@
 // One listing row (02 HTML-62..69).
-import { extname, iconForExtension, isCroppable, mediaKind, selectIsChecked, selectRecord, type FileEntry, selectCan } from '@mrktps/eureka-core';
+import { extname, iconForExtension, isCroppable, mediaKind, selectIsChecked, selectRecord, type FileEntry, selectCan, type FolderEntry } from '@mrktps/eureka-core';
 import { attr, classes, html, raw, type Raw } from '../html.js';
 import type { Ctx } from '../model.js';
 import { hidden, icon } from './icon.js';
@@ -87,14 +87,29 @@ export function rowActions(ctx: Ctx, item: FileEntry): RowAction[] {
 }
 
 export function actions(ctx: Ctx, item: FileEntry, idPrefix = ''): Raw {
+  return renderActions(ctx, item.filename, item.path, rowActions(ctx, item), idPrefix);
+}
+
+/** The folder item's toolbar (02 HTML-62): Open, Rename and Delete, subject to capabilities; never Choose, Download or Crop. */
+export function folderActions(ctx: Ctx, item: FolderEntry): RowAction[] {
+  const { t } = ctx;
+  const can = selectCan(ctx.state);
+  const list: RowAction[] = [{ kind: 'open', label: t('open'), action: 'chooseItem', cls: 'eureka__open-btn' }];
+  if (can.rename) list.push({ kind: 'rename', label: t('rename'), action: 'renameItem' });
+  if (can.delete) list.push({ kind: 'delete', label: t('delete'), action: 'deleteItem', cls: 'dangerous' });
+  return list;
+}
+
+function renderActions(ctx: Ctx, n: string, path: string, list: RowAction[], idPrefix = ''): Raw {
   const { t, ids, level } = ctx;
-  const n = item.filename;
+  const item = { filename: n, path };
   // One tab stop per toolbar (05 KEY-B2): the first control is tabbable, the rest are reached with the arrow keys.
   const roving = (i: number) => (level > 0 ? ` tabindex="${i === 0 ? 0 : -1}"` : '');
-  const controls = rowActions(ctx, item).map((a, i) => {
+  const controls = list.map((a, i) => {
     const keys = a.action ? keyshortcuts(ctx, a.action) : '';
     const body = html`${a.label}${hidden(' ' + n)}${a.action ? kbdHint(ctx, a.action) : ''}`;
     if (a.href) return html`<a class="button eureka__action" id="${ids.item(idPrefix + a.kind, item.filename)}" href="${a.href}"${attr('target', a.target ?? null)}${attr('download', a.download ? n : null)} data-action="${a.kind}"${raw(roving(i))}${keys}>${body}</a>`;
+    if (a.kind === 'open') return html`<button type="button" class="${classes('eureka__action', a.cls)}" id="${ids.item(idPrefix + a.kind, item.filename)}" data-action="navigate" data-cd="${item.path}" data-path="${item.path}"${raw(roving(i))}${keys}>${body}</button>`;
     return html`<button type="button" class="${classes('eureka__action', a.cls)}" id="${ids.item(idPrefix + a.kind, item.filename)}" data-action="${a.kind}" data-path="${item.path}"${raw(roving(i))}${keys}>${body}</button>`;
   });
   return html`<div class="eureka__button-bar eureka__context-buttons" role="toolbar" aria-label="${t('actions.for', { filename: n })}" data-row-actions>
@@ -131,5 +146,33 @@ export function row(ctx: Ctx, item: FileEntry, index: number): Raw {
     <td class="eureka__dimensions">${rec?.dimensionsText ?? ''}</td>
     <td class="eureka__file-size">${rec?.sizeText ?? ''}</td>
     <td class="eureka__edited-on"><time datetime="${datetime}"${attr('title', dateTitle)}>${rec?.dateShort ?? ''}</time></td>
+  </tr>`;
+}
+
+/** A subfolder as an item (02 HTML-62): opens on activation, never chosen; Level 0 submits `eureka__open` (03 NOJS-32a). */
+export function folderRow(ctx: Ctx, item: FolderEntry, index: number): Raw {
+  const { state, t, ids, level } = ctx;
+  const name = item.foldername;
+  const rec = selectRecord(state, item.path);
+  const multiple = level > 0 && state.view.chooseMode === 'multiple';
+  const focused = state.selection.focused === item.path;
+  const rowId = ids.item('row', name), mediaId = ids.item('media', name), nameId = ids.item('filename', name);
+  const tabindex = level === 0 ? '' : attr('tabindex', focused || (index === 0 && !state.selection.focused) ? 0 : -1).value;
+  const label = t('folder.open', { name });
+  // the name sits inside the tile for the thumbnail modes, where the name column is hidden; the stylesheet hides it in table and list
+  const tileBody = html`${icon(ctx, 'folder')}<span class="eureka__folder-tile__name" aria-hidden="true">${breakableName(name)}</span>`;
+  const tile = level === 0
+    ? html`<button type="submit" class="eureka__folder-tile" name="eureka__open" value="${String(state.listing.source ?? '')}||${item.path}" aria-label="${label}">${tileBody}</button>`
+    : html`<button type="button" class="eureka__folder-tile" data-action="navigate" data-cd="${item.path}" aria-label="${label}" tabindex="-1">${tileBody}</button>`;
+  const datetime = Number.isFinite(new Date(item.editedOn).getTime()) && item.editedOn ? new Date(item.editedOn).toISOString() : '';
+  return html`<tr id="${rowId}" class="${classes('eureka__row eureka__row--folder', { 'eureka__focused-media-item': focused })}" aria-label="${name}, ${t('folder')}" data-path="${item.path}" data-kind="folder"${raw(tabindex)}${attr('aria-selected', multiple ? 'false' : null)}>
+    ${multiple ? html`<td class="eureka__choose"></td>` : ''}
+    ${level === 0 ? html`<td class="eureka__select"></td>` : ''}
+    <td class="eureka__td-media" id="${mediaId}">${tile}</td>
+    <td class="eureka__td-filename" id="${nameId}">${breakableName(name)}</td>
+    ${level > 0 ? html`<td class="eureka__context-row"${attr('hidden', !focused)}>${renderActions(ctx, name, item.path, folderActions(ctx, item))}</td>` : ''}
+    <td class="eureka__dimensions"></td>
+    <td class="eureka__file-size"></td>
+    <td class="eureka__edited-on">${datetime ? html`<time datetime="${datetime}"${attr('title', rec?.dateLong ?? null)}>${rec?.dateShort ?? ''}</time>` : ''}</td>
   </tr>`;
 }

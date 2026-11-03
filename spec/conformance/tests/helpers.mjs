@@ -34,7 +34,9 @@ export { expect };
 
 // ---- locators --------------------------------------------------------------
 export const listing = page => page.getByRole('table').or(page.getByRole('grid'));
-export const rows = page => page.getByRole('row').filter({ hasNot: page.getByRole('columnheader') });
+// file rows only: v3 lists subfolders as rows too (02 HTML-62), which the counts in these tests never include
+export const rows = page => page.getByRole('row').filter({ hasNot: page.getByRole('columnheader') }).filter({ hasNot: page.locator('.eureka__folder-tile') });
+export const folderRows = page => page.locator('tr[data-kind="folder"]');
 export const rowNamed = (page, filename) => page.getByRole('row', { name: new RegExp('^' + filename.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')) });
 /** A control by accessible name regardless of whether it is a button, link or (v2) option. */
 export const control = (scope, name) => scope.getByRole('button', { name }).or(scope.getByRole('link', { name })).or(scope.getByRole('option', { name }));
