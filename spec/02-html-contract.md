@@ -121,11 +121,14 @@ DOM order is the reading order and the tab order.
   "Browse Media Content" (visible "Media Content", visually-hidden
   "Browse").
 - **HTML-40a** The filter input's placeholder teaches the query syntax
-  (07 STATE-10a): a sample value from the listing, then example tokens
-  for qualifiers that can match something in the current listing
-  (`created:` only when an entry has `createdOn`, pixel tokens only with
-  dimensions, location tokens only with `capabilities.location`), one at a
-  time, advanced on `intervals.searchBarPlaceholder` when set. The input
+  (07 STATE-10a). At rest it is a hint of up to three example tokens that
+  can match something in the current listing, e.g. `type:image size:>1mb
+  modified:>2026-10`; when `intervals.searchBarPlaceholder` is set the
+  placeholder advances through each example on its own and a sample value
+  from the listing. Examples appear only when they can match: `created:`
+  with an entry that has `createdOn`, pixel tokens with dimensions,
+  location tokens with `capabilities.location`. Level 0 shows the sample
+  only, its filter being plain text. The input
   is described (`aria-describedby`) by a visually-hidden sentence naming
   the live qualifiers, and the shortcuts dialog (HTML-95) has a "Filter
   syntax" section.

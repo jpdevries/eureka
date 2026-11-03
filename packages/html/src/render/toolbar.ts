@@ -30,14 +30,21 @@ export function stageHeader(ctx: Ctx): Raw {
   </header>`;
 }
 
-/** The filter's examples (02 HTML-40a): a sample from the listing, then the qualifiers that can match something in it. */
+/**
+ * The filter's placeholders (02 HTML-40a). Level 1+: first a hint made of up to three qualifier examples that can match
+ * something in this listing (`type:image size:>1mb modified:>2026-10`), then each example on its own, then a sample value
+ * from the listing; the element advances through them on `intervals.searchBarPlaceholder`. Level 0: the sample only,
+ * since its filter is plain text (07 STATE-10a).
+ */
 export function filterPlaceholders(ctx: Ctx): string[] {
   const files = selectFiles(ctx.state);
   const f = files[Math.floor(files.length / 2)];
   const rec = f ? ctx.state.listing.records[f.path] : undefined;
   const sample = f ? rec?.dimensionsText || rec?.sizeText || f.filename : '';
+  if (ctx.level === 0) return sample ? [sample] : [];
   const examples = filterExamples(ctx.state.listing.entries, selectFilterContext(ctx.state));
-  return [...(sample ? [sample] : []), ...examples];
+  const hint = examples.filter((e) => !e.startsWith('-')).slice(0, 3).join(' ');
+  return [...(hint ? [hint] : []), ...examples, ...(sample ? [sample] : [])];
 }
 function placeholder(ctx: Ctx): string {
   const list = filterPlaceholders(ctx);

@@ -766,7 +766,9 @@ Taken on 2026-11-01:
   makes Drive ask for `imageMediaMetadata.location` and the other drivers
   read the EXIF GPS block from the probe head with a dependency-free
   reader). The filter placeholder shows examples that can match the
-  current listing and rotates on `intervals.searchBarPlaceholder`, the
+  current listing (at rest a three-token hint such as `type:image
+  size:>1mb modified:>2026-10`, then each example in turn when
+  `intervals.searchBarPlaceholder` is set, which the demo sets to 4 s), the
   input is described by a hidden sentence naming the live qualifiers, and
   the shortcuts dialog gained a Filter syntax section. Level 0's filter
   is unchanged. Unit tests for the grammar; two conformance tests.
