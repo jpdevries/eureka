@@ -543,7 +543,11 @@ Taken on 2026-11-01:
   its link were given a shared `--tree-row-size` of `max(24px,
   --tree-line-height × 1em)` and the tree took Transmit's list rhythm
   (12px text, 16px icons, 7px icon-to-name) inside that 24px floor,
-  since Transmit's own 20px pitch fails WCAG 2.5.8 (A11Y-40). A download binding was added
+  since Transmit's own 20px pitch fails WCAG 2.5.8 (A11Y-40). Selects
+  draw their own chevron caret (two gradient strokes in `currentColor`,
+  `appearance: none`, inset 0.75em, mirrored under `:dir(rtl)`, the system
+  caret again under forced colours), since the native caret hugs the edge
+  and no padding moves it. A download binding was added
   (KEY-30, `Alt+Shift+D`, row scope, when downloads are allowed): it
   activates the row's Download link so the browser's download handling
   applies.

@@ -11,9 +11,15 @@
   .eureka :is(button, .button).eureka__primary:hover { background: color-mix(in srgb, var(--active-darker), black 18%); }
   .eureka :is(button, .button).dangerous { color: var(--dangerous); }
   .eureka :is(button, .button).dangerous:hover { background: var(--dangerous); color: #fff; box-shadow: 0 0 0 var(--border-width) var(--border-color-dangerous); }
-  .eureka :is(select, input[type="text"], input[type="search"], input[type="number"], textarea) {
+  .eureka :where(select, input[type="text"], input[type="search"], input[type="number"], textarea) { /* :where, so a plain `.eureka select` (and a host) can override these without matching the attribute selector's specificity */
     font: inherit; color: var(--color); background: var(--light-bg); border: var(--border-width) var(--border-style) var(--border-color); border-radius: 3px; padding: 0.4em 0.5em; min-block-size: 24px;
   }
+  /* Our own caret on selects: the native one hugs the edge and no padding moves it. Two gradient strokes form a chevron in currentColor, so every theme keeps its text colour. */
+  .eureka select { --select-caret: 0.35em; appearance: none; padding-inline-end: calc(1.25em + 2 * var(--select-caret)); background-repeat: no-repeat; background-size: var(--select-caret) var(--select-caret);
+    background-image: linear-gradient(45deg, transparent calc(50% - 0.75px), currentColor calc(50% - 0.75px) calc(50% + 0.75px), transparent calc(50% + 0.75px)), linear-gradient(-45deg, transparent calc(50% - 0.75px), currentColor calc(50% - 0.75px) calc(50% + 0.75px), transparent calc(50% + 0.75px));
+    background-position: right calc(0.75em + var(--select-caret)) center, right 0.75em center; }
+  .eureka select:dir(rtl) { background-position: left 0.75em center, left calc(0.75em + var(--select-caret)) center; }
+  @media (forced-colors: active) { .eureka select { appearance: auto; background-image: none; padding-inline-end: 0.5em; } } /* the system caret, in system colours */
   .eureka input[type="file"] { max-inline-size: 100%; }
   .eureka label { cursor: pointer; }
   @media (pointer: coarse) { .eureka :is(button, .button, select, input, .eureka__tree-link, summary) { min-block-size: 44px; } .eureka__tree { --tree-line-height: var(--tree-course-line-height); } }
