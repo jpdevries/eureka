@@ -105,12 +105,12 @@ const data = {
     "--tree-line-height": {
       "default": "1.6",
       "documented": false,
-      "description": "Line height of tree nodes"
+      "description": "Line height of tree nodes; a row is max(24px, this × 1em), so values below ~2 only tighten the text, never the target (06 A11Y-40)"
     },
     "--tree-course-line-height": {
       "default": "2.75",
       "documented": false,
-      "description": "Line height of tree nodes in coarse-pointer (touch) mode"
+      "description": "Line height of tree nodes in coarse-pointer (touch) mode; rows are max(44px, this × 1em)"
     },
     "--notification-background": {
       "default": "#d9edf7",
@@ -135,12 +135,7 @@ const data = {
     "--hint-opacity": {
       "default": "0.65",
       "documented": false,
-      "description": "Resting opacity of keyboard hints such as the Keyboard Shortcuts button (06 A11Y-55): knocked back until keyboard use, hover or focus, but never below 3:1 for the icon (the light default needs 0.62; the dark scheme sets 0.5)"
-    },
-    "--hint-text-opacity": {
-      "default": "0.82",
-      "documented": false,
-      "description": "Resting opacity of textual keyboard hints (the <kbd> shortcut labels on controls, 02 HTML-96): knocked back until keyboard use, hover or focus, but never below 4.5:1 for the text blended over its control (axe-measured; the light default needs 0.81; the dark scheme sets 0.65)"
+      "description": "Resting opacity of keyboard hints, the Keyboard Shortcuts button and the <kbd> shortcut labels alike (06 A11Y-55): knocked back until keyboard use, hover or focus, never below 3:1 for the icon or 4.5:1 for the text blended over the control (light 0.65: 3.3:1 and 5.6:1; dark 0.55: 3.9:1 and 4.7:1)"
     }
   },
   "variants": {

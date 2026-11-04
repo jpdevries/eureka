@@ -80,12 +80,30 @@ test('HTML-92 crop opens a dialog named for the item', async ({ page }) => {
 test('HTML-20 notifications are announced from a live region with a dismiss control', async ({ page }) => {
   await page.evaluate(() => localStorage.clear()); // the welcome shows once per visitor (STATE-30 "welcomed"); beforeEach dismissed it
   await page.goto('/');
-  const note = page.getByText('Welcome to Eureka. You found it.');
+  const note = page.getByText(/Welcome to Eureka\./);
   await expect(note).toBeVisible();
   const region = note.locator('xpath=ancestor::*[@aria-live or @role="status" or @role="alert"][1]');
   await expect(region).toHaveCount(1);
   await page.locator('[aria-label="Dismiss Notification"]').click();
   await expect(note).toBeHidden();
+});
+
+test('HTML-96 the welcome banner lets the user switch keyboard hints off, and that sticks', async ({ page }) => {
+  v3only('the hints checkbox (HTML-96)');
+  await page.evaluate(() => localStorage.clear());
+  await page.goto('/');
+  const toggle = page.getByRole('checkbox', { name: 'Show keyboard hints.' });
+  await expect(toggle).toBeChecked();
+  const panelKbd = page.getByRole('button', { name: 'Toggle Source Panel' }).locator('kbd');
+  await expect(panelKbd).toHaveCSS('display', 'inline-block');
+  await toggle.uncheck();
+  await expect(page.locator('.eureka')).toHaveAttribute('data-hints', 'false');
+  await expect(panelKbd).toHaveCSS('display', 'none');
+  await page.keyboard.press('Tab'); // keyboard use would normally bring hints to full opacity; off means off
+  await expect(panelKbd).toHaveCSS('display', 'none');
+  await page.reload();
+  await expect(page.getByRole('button', { name: 'Toggle Source Panel' }).locator('kbd')).toHaveCSS('display', 'none'); // persisted with the view (STATE-30)
+  await expect(page.getByRole('checkbox', { name: 'Show keyboard hints.' })).not.toBeChecked();
 });
 
 test('HTML-21 the dismiss control is exposed to assistive technology', async ({ page }) => {

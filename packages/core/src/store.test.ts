@@ -166,6 +166,7 @@ describe('store', () => {
 });
 
 describe('persistence', () => {
+  const persistAndLoad = (st: ReturnType<typeof mem>, s: ReturnType<typeof loaded>) => { persist(st, 'p__', s); return loadPersisted(st, 'p__'); };
   const mem = () => { const m = new Map<string, string>(); return { getItem: (k: string) => m.get(k) ?? null, setItem: (k: string, v: string) => void m.set(k, v), removeItem: (k: string) => void m.delete(k), m }; };
   it('round-trips view, location and open tree nodes, ignoring garbage', () => {
     const st = mem();
@@ -173,7 +174,9 @@ describe('persistence', () => {
     s = reduce(s, { type: 'view/setMode', mode: 'list' });
     s = reduce(s, { type: 'tree/toggle', path: 'd', open: true });
     persist(st, 'p__', s);
-    expect(loadPersisted(st, 'p__')).toEqual({ view: { mode: 'list', sort: { by: 'filename', dir: 'ascending' }, panelOpen: false, chooseMode: 'single' }, location: { source: 0, path: 'd' }, treeOpen: ['d'] });
+    expect(loadPersisted(st, 'p__')).toEqual({ view: { mode: 'list', sort: { by: 'filename', dir: 'ascending' }, panelOpen: false, chooseMode: 'single', hints: true }, location: { source: 0, path: 'd' }, treeOpen: ['d'] });
+    const off = persistAndLoad(st, reduce(s, { type: 'view/setHints', on: false })); // the welcome banner's checkbox (HTML-96)
+    expect(off.view?.hints).toBe(false);
     st.setItem('p__view', '{"mode":"carousel","sort":{"by":"x"}}');
     expect(loadPersisted(st, 'p__').view).toBeUndefined();
     st.setItem('p__view', 'not json');

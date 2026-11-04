@@ -27,7 +27,8 @@ interface State {
   listing: { source: SourceId | null; path: string; entries: Entry[]; status: Status; error?: string; receivedAt?: number };
   selection: { focused: string | null; selected: string | null; checked: string[]; inverted: boolean };
   view:    { mode: 'table'|'thumb'|'grid'|'list'|'masonry'; sort: { by: 'filename'|'dimensions'|'fileSize'|'editedOn'; dir: 'ascending'|'descending' };
-             filter: string; panelOpen: boolean; chooseMode: 'single'|'multiple'; fullscreen: boolean };
+             filter: string; panelOpen: boolean; chooseMode: 'single'|'multiple'; fullscreen: boolean;
+             hints: boolean };
   pending: { uploading: boolean; deleting: string[]; renaming: string | null; creating: boolean; cropping: boolean };
   dialog:  null | { kind: 'createDirectory'|'rename'|'crop'|'confirmDelete'; target?: string };
   notifications: Notification[];                    // { id, message, kind: 'info'|'danger', sticky, learnMore?, createdAt }
@@ -127,7 +128,7 @@ Event names are `area/verb`. Payloads in `schema/state.json#/$defs/events`.
 ## 5. Persistence
 
 - **STATE-30** With `useLocalStorage`, these keys are written under
-  `{p}`: `view` (`mode`, `sort`, `panelOpen`, `chooseMode`), `location`
+  `{p}`: `view` (`mode`, `sort`, `panelOpen`, `chooseMode`, `hints`), `location`
   (`source`, `path`), `tree.open`, and `welcomed`. Nothing else: not
   selection, not filter, not pending, not entries. v2 also cached the
   listing and tree in `localStorage`; v3 moves that cache to IndexedDB in

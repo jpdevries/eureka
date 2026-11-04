@@ -462,13 +462,22 @@ DOM order is the reading order and the tab order.
   plus its object; the binding is exposed through `aria-keyshortcuts` and
   the shortcuts dialog. Hinted controls: the row's Expand, Choose, Rename
   and Delete; the upload control and the panel's upload and new-directory
-  buttons; the filter (hint in its label); the panel toggle. Hints are
-  not rendered until something in the instance has visible focus or the
-  instance has seen keyboard use (never on hover, which would shift the
-  control), rest knocked back under visible focus that did not come
-  through the instance's own keys (the first Tab in from the page), come
-  to full opacity with keyboard use (06 A11Y-55), and are not shown on
-  narrow layouts.
+  buttons; the filter (hint in its label); the panel toggle. Hints
+  always occupy their space and rest faintly visible at the lowest
+  opacity that keeps 4.5:1 (06 A11Y-55), so nothing moves and nothing
+  appears on a click (one that appeared under the pointer once widened
+  the control, slid the select beside it away and closed its open list);
+  they come to full opacity with keyboard use, on hover or visible focus
+  of their control, and while the shortcuts dialog is open, like the
+  Keyboard Shortcuts button, and are not shown on narrow layouts. The
+  user decides whether they appear at all: the welcome notification
+  (`data-notification="welcome"`, Level 1+) reads "Welcome to Eureka."
+  followed by `label.eureka__hints-toggle` holding `<input type="checkbox"
+  data-control="hints">`, ticked by default, with the text "Show keyboard
+  hints.", then the Learn more link; unticking it sets
+  `view.hints` false (persisted, 07 STATE-30), the instance root carries
+  `data-hints="false"`, and every `<kbd>` hint is `display: none` in
+  every state, the context menu included, until it is ticked again.
 - **HTML-92** Create directory form: a text input labelled "Create a new
   Directory in {cd}". Rename form: a text input labelled "New name"
   prefilled with the current name. Crop form: see 06 for its controls;
@@ -500,5 +509,6 @@ Informative mapping used by the stylesheet. Hosts MAY style these.
 | `.eureka__choose-bar`, `#{p}choose-button`, `.eureka__primary`, `.dangerous` | choose bar |
 | `.eureka__modal`, `.eureka__modal-panel`, `.eureka__crop-modal` | dialogs |
 | `.eureka__notification-wrapper`, `.eureka__sticky-bar`, `.eureka__dangerous` | notifications |
+| `.eureka__hints-toggle` | the welcome banner's "Show keyboard hints" checkbox label (HTML-96) |
 | `.visually-hidden` | screen-reader-only text |
 | `svg.icon.icon-{name}` | inline SVG icons via `<use href="{sprite}#icon-{name}">`, always `aria-hidden="true"` |

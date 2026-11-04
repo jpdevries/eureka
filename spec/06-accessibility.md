@@ -151,23 +151,25 @@ Covered by 05. In addition:
   opacity on focus, while the shortcuts dialog is open, and as
   soon as the instance sees keyboard navigation (Tab, arrows, Home/End,
   Enter, Space, Escape or `?`): the element sets `data-keyboard="true"`
-  on the root and clears it on the next pointer use. Two resting levels,
-  both tokens: `--hint-opacity` for non-text hints such as the Keyboard
-  Shortcuts icon (HTML-95), which MUST keep 3:1 against the button (WCAG
-  2.2 1.4.11; default 0.65 measured at 3.3:1, dark scheme 0.5 at 3.6:1),
-  and `--hint-text-opacity` for the `<kbd>` labels (HTML-96), which are
-  text and MUST keep 4.5:1 (1.4.3) with the text blended over its own
-  control, which is how axe measures it (default 0.82 at 4.6:1, dark
-  scheme 0.65 at 4.8:1). The `<kbd>` labels use the body text colour on the panel background
-  (`--color` on `--light-bg`) rather than inheriting the control's, so a
-  muted label cannot pull them under the floor. They go further: until
-  something inside the instance has visible focus (`:has(:focus-visible)`
-  on the root; a pointer tap focuses without showing focus, so it does not
-  count) or the instance has seen the keyboard, they are not rendered
-  (`display: none`), except on the control under the pointer, so a
-  pointer-only session never shows them; engines with discrete `display`
-  transitions fade them in and out of that state. The high contrast themes and forced colors show
-  hints at full opacity; the transition honours `prefers-reduced-motion`.
+  on the root and clears it on the next pointer use. One resting level,
+  the `--hint-opacity` token, for both kinds of hint: the Keyboard
+  Shortcuts icon (HTML-95) MUST keep 3:1 against the button (WCAG 2.2
+  1.4.11) and the `<kbd>` labels (HTML-96), being text, MUST keep 4.5:1
+  (1.4.3) with the text blended over its own control, which is how axe
+  measures it; the token rests as low as the stricter of the two allows:
+  the default 0.65 measures 3.3:1 and 5.6:1, the dark scheme's 0.55
+  measures 3.9:1 and 4.7:1 (0.535 is the text's floor there). Both come
+  to full opacity on hover and visible focus of their control, while the
+  shortcuts dialog is open, and under `data-keyboard`. The `<kbd>` labels
+  use the body text colour on the panel background (`--color` on
+  `--light-bg`) rather than inheriting the control's, so a muted label
+  cannot pull them under the floor. A hint always occupies its space and
+  is always faintly there: nothing is gated on focus elsewhere in the
+  instance, so a pointer click on a select beside a hint changes nothing
+  (a hint that appeared only then once widened its control, slid the
+  select from under the pointer and closed its open list). The high
+  contrast themes and forced colors show hints at full opacity; the
+  transition honours `prefers-reduced-motion`.
 
 ## 7. Timing
 

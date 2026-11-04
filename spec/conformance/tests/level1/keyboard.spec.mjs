@@ -91,16 +91,21 @@ test('KEY-A5 ? and the help button open the shortcuts reference generated from t
   expect(resting).toBeLessThan(1);
   expect(resting).toBeGreaterThanOrEqual(0.5);
   await expect(page.locator('.eureka')).not.toHaveAttribute('data-keyboard', 'true');
-  // HTML-96: with no focus inside the instance and no keyboard use yet, the <kbd> hints are invisible
+  // HTML-96: with no focus inside the instance and no keyboard use yet, the <kbd> hints rest faint (at least the 4.5:1 floor, 0.55) and keep their space, so revealing them shifts nothing
   const panelKbd = page.getByRole('button', { name: 'Toggle Source Panel' }).locator('kbd');
   await page.evaluate(() => document.activeElement?.blur());
-  await expect(panelKbd).toBeHidden();
+  const kbdResting = Number(await panelKbd.evaluate((el) => getComputedStyle(el).opacity));
+  expect(kbdResting).toBeLessThan(1);
+  expect(kbdResting).toBeGreaterThanOrEqual(0.55);
+  const restingWidth = await panelKbd.evaluate((el) => el.getBoundingClientRect().width);
+  expect(restingWidth).toBeGreaterThan(0);
   await page.getByRole('heading', { name: 'Browse Media Content' }).click(); // focus back inside the instance (KEY-A2)
   await page.keyboard.press(chord('showShortcuts'));
   const dialog = page.getByRole('dialog', { name: 'Keyboard Shortcuts' });
   await expect(dialog).toBeVisible();
   await expect(page.locator('.eureka')).toHaveAttribute('data-keyboard', 'true');
   await expect(hint).toHaveCSS('opacity', '1');
+  expect(await panelKbd.evaluate((el) => el.getBoundingClientRect().width)).toBe(restingWidth); // same box, only the opacity moved
   await page.keyboard.press('Escape');
   await expect(dialog).toHaveCount(0);
   // HTML-96: the Choose action carries its shortcut as aria-keyshortcuts and an inline <kbd> hint, now at full opacity

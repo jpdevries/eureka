@@ -163,7 +163,7 @@ export class EurekaBrowser extends HTMLElement {
     if (typeof every === 'number' && every > 0) { const t = setInterval(() => { this.#placeholderIndex++; this.#queueRender(); }, Math.max(every, 50)); this.#timers.add(t as unknown as ReturnType<typeof setTimeout>); } // 02 HTML-40a
 
     if (init?.listing) this.#store.dispatch({ type: 'listing/records', records: this.#recordsFor(init.listing.entries, locale) });
-    if (config.welcome && (config.alwaysWelcome || !persisted.welcomed)) this.#notify(`${this.#t('welcomeToEureka')} ${this.#t('shortcuts.hint')}`, 'info', { sticky: true, learnMore: config.learnMore, id: 'welcome' });
+    if (config.welcome && (config.alwaysWelcome || !persisted.welcomed)) this.#notify(this.#t('welcomeToEureka'), 'info', { sticky: true, learnMore: config.learnMore, id: 'welcome' }); // the renderer adds the hints checkbox and the ? hint (02 HTML-96)
 
     if (embedded) this.#store.dispatch({ type: 'locale/catalogLoaded' }); else void this.#loadCatalog(locale);
     state = this.#store.getState();
@@ -349,6 +349,7 @@ export class EurekaBrowser extends HTMLElement {
       case 'source': void this.navigate(t.value, '/'); return;
       case 'sort-by': this.#setSort(t.value as SortBy); return;
       case 'sort-dir': this.#setSort(undefined, t.value as SortDir); return;
+      case 'hints': this.#store.dispatch({ type: 'view/setHints', on: (t as HTMLInputElement).checked }); return;
       default: break;
     }
     if (!(t instanceof HTMLInputElement)) return;

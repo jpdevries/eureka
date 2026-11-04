@@ -166,6 +166,10 @@
         },
         "fullscreen": {
           "type": "boolean"
+        },
+        "hints": {
+          "type": "boolean",
+          "description": "Whether <kbd> shortcut hints are shown; the welcome banner's checkbox, persisted (02 HTML-96, STATE-30)"
         }
       }
     },

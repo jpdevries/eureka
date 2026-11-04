@@ -34,7 +34,7 @@ export function instance(ctx: Ctx): Raw {
     <script type="application/json" id="${ids.id('state')}">${jsonForScript(hydrationState(state, { requested: ctx.locationRequested ?? false }))}</script>${ctx.catalog ? html`
     <script type="application/json" id="${ids.id('catalog')}" lang="${state.locale.tag}">${jsonForScript(ctx.catalog)}</script>` : ''}`;
   }
-  return html`<div class="${cls}" lang="${textLang}" data-view="${mode}" data-choose="${state.view.chooseMode}" data-level="1" tabindex="-1" role="region" aria-label="${t('media.browser')}">
+  return html`<div class="${cls}" lang="${textLang}" data-view="${mode}" data-choose="${state.view.chooseMode}" data-level="1"${attr('data-hints', state.view.hints ? null : 'false')} tabindex="-1" role="region" aria-label="${t('media.browser')}">
     ${notifications(ctx)}
     ${body}
     ${pathBar(ctx)}

@@ -529,15 +529,29 @@ Taken on 2026-11-01:
   new-directory controls, the filter and the panel toggle show their
   first chord as an `aria-hidden` `<kbd>` and expose every chord as
   `aria-keyshortcuts`; the name stays the verb. Platform-compact labels
-  (⌥⇧U on a Mac). They rest at `--hint-text-opacity` (0.82 light, 0.65
+  (⌥⇧U on a Mac). They rested at `--hint-text-opacity` (0.82 light, 0.65
   dark: text, so 4.5:1 rather than the icon's 3:1, measured as axe does,
-  blended over the control), fade in with keyboard
+  blended over the control; later folded into `--hint-opacity`, one level
+  for icon and text, 0.65 light and 0.55 dark), fade in with keyboard
   use or visible focus (no hover reveal: it widened the control under
   the pointer), are not rendered until something in the
   instance has visible focus (`:has(:focus-visible)`, so a pointer tap
   does not count) or the instance has seen the keyboard, fading in and
   out of `display: none` via `@starting-style` and a discrete `display`
-  transition where supported, and are hidden on narrow layouts. Tree rows pack
+  transition where supported, and are hidden on narrow layouts. That
+  `display: none` was later dropped: a hint appearing beside a clicked
+  select widened its button, slid the select from under the pointer and
+  closed its open list, so hints now always occupy their space and rest
+  faintly visible at `--hint-opacity`, the same token and the same
+  reveal rules (keyboard, hover, focus, the dialog) as the Keyboard
+  Shortcuts button, with the dark value raised from 0.5 to 0.55 so the
+  text keeps 4.5:1; the focus-visible gate is gone (HTML-96, A11Y-55).
+  The welcome banner then put the user in charge: "You found it." became
+  a ticked "Show keyboard hints." checkbox (`view.hints`, persisted with
+  the view), and unticking it hides every `<kbd>` in every state through
+  `data-hints="false"` on the root; the "Press ? for keyboard shortcuts."
+  sentence left the banner with it (the help button and the hints say
+  the same). Tree rows pack
   tighter (`--tree-line-height` 1.6, smaller chevrons) and grow to 44px
   targets under `(pointer: coarse)`; later the row, its disclosure and
   its link were given a shared `--tree-row-size` of `max(24px,
@@ -545,7 +559,7 @@ Taken on 2026-11-01:
   (12px text, 16px icons, 7px icon-to-name) inside that 24px floor,
   since Transmit's own 20px pitch fails WCAG 2.5.8 (A11Y-40). Selects
   draw their own chevron caret (two gradient strokes in `currentColor`,
-  `appearance: none`, inset 0.75em, mirrored under `:dir(rtl)`, the system
+  `appearance: none`, inset 0.5em (0.75em overshot), mirrored under `:dir(rtl)`, the system
   caret again under forced colours), since the native caret hugs the edge
   and no padding moves it. A download binding was added
   (KEY-30, `Alt+Shift+D`, row scope, when downloads are allowed): it

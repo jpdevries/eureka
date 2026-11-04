@@ -15,10 +15,10 @@
     font: inherit; color: var(--color); background: var(--light-bg); border: var(--border-width) var(--border-style) var(--border-color); border-radius: 3px; padding: 0.4em 0.5em; min-block-size: 24px;
   }
   /* Our own caret on selects: the native one hugs the edge and no padding moves it. Two gradient strokes form a chevron in currentColor, so every theme keeps its text colour. */
-  .eureka select { --select-caret: 0.35em; appearance: none; padding-inline-end: calc(1.25em + 2 * var(--select-caret)); background-repeat: no-repeat; background-size: var(--select-caret) var(--select-caret);
+  .eureka select { --select-caret: 0.35em; appearance: none; padding-inline-end: calc(1em + 2 * var(--select-caret)); background-repeat: no-repeat; background-size: var(--select-caret) var(--select-caret);
     background-image: linear-gradient(45deg, transparent calc(50% - 0.75px), currentColor calc(50% - 0.75px) calc(50% + 0.75px), transparent calc(50% + 0.75px)), linear-gradient(-45deg, transparent calc(50% - 0.75px), currentColor calc(50% - 0.75px) calc(50% + 0.75px), transparent calc(50% + 0.75px));
-    background-position: right calc(0.75em + var(--select-caret)) center, right 0.75em center; }
-  .eureka select:dir(rtl) { background-position: left 0.75em center, left calc(0.75em + var(--select-caret)) center; }
+    background-position: right calc(0.5em + var(--select-caret) - 1px) center, right 0.5em center; } /* the boxes overlap by a pixel so the two strokes meet in a point instead of two clipped ends */
+  .eureka select:dir(rtl) { background-position: left 0.5em center, left calc(0.5em + var(--select-caret) - 1px) center; }
   @media (forced-colors: active) { .eureka select { appearance: auto; background-image: none; padding-inline-end: 0.5em; } } /* the system caret, in system colours */
   .eureka input[type="file"] { max-inline-size: 100%; }
   .eureka label { cursor: pointer; }
@@ -84,11 +84,12 @@
   .eureka__notification-wrapper { display: grid; gap: 0.5rem; }
   .eureka__notification-wrapper:not(:has(.eureka__notification)) { display: none; }
   .eureka__notifications { display: grid; gap: 0.5rem; }
-  .eureka__notification { position: relative; padding: 0.5rem 2.5rem 0.5rem 1rem; background: var(--notification-background); color: var(--notification-color); border-color: var(--notification-border-color); margin-block-end: 0.5rem; }
+  .eureka__notification { position: relative; padding: 0.5rem 2.5rem; text-align: center; background: var(--notification-background); color: var(--notification-color); border-color: var(--notification-border-color); margin-block-end: 0.5rem; }
   .eureka__notification p { margin: 0; }
   .eureka__notification a { color: currentColor; }
-  .eureka__notification button { position: absolute; inset-block-start: 0.25rem; inset-inline-end: 0.25rem; background: transparent; box-shadow: none; color: currentColor; padding: 0.25rem; }
-  .eureka__notification button:hover, .eureka__notification button:focus-visible { color: var(--notification-focus-color); background: transparent; box-shadow: none; }
+  /* The dismiss button is bare: no fill, no ring, just the glyph; its padding and the 24px minimum keep the hit area. `.eureka` is needed to outrank the generic button rule. */
+  .eureka .eureka__notification button { position: absolute; inset-block-start: 0.25rem; inset-inline-end: 0.25rem; background: transparent; box-shadow: none; color: currentColor; padding: 0.25rem; }
+  .eureka .eureka__notification button:hover, .eureka .eureka__notification button:focus-visible { color: var(--notification-focus-color); background: transparent; box-shadow: none; }
   .eureka__notification.eureka__dangerous { --notification-background: #f7a2a2; --notification-color: #911912; --notification-border-color: #911912; --notification-focus-color: #911912; }
 
   /* Empty state and spinner */
@@ -208,24 +209,22 @@
   @media (prefers-reduced-motion: reduce) { .eureka .eureka__context-menu { transition: none; } }
   @starting-style { .eureka .eureka__context-menu:popover-open { opacity: 0; } } /* after the visible-state rule: starting styles cascade like any other */
 
-  /* <kbd> shortcut hints on controls (02 HTML-96): text, so the resting level keeps 4.5:1 (WCAG 1.4.3). */
-  .eureka kbd.eureka__kbd { display: inline-block; font-size: 0.8em; line-height: 1.3; padding: 0 0.3em; margin-inline-start: 0.5em; vertical-align: 0.1em; color: var(--color); background: var(--light-bg); border-color: var(--subtle); opacity: var(--hint-text-opacity, 0.82); transition: opacity 300ms ease, display 300ms allow-discrete; } /* its own colours (body text on the panel background), so the resting contrast does not depend on the control's text colour */
-  .eureka[data-keyboard="true"] kbd.eureka__kbd, .eureka :is(button, .button):focus-visible > kbd.eureka__kbd { opacity: 1; }
-  /* Until something inside the instance has *visible* focus (keyboard focus, not a pointer tap: there is no :focus-visible-within, but
-     :has(:focus-visible) on the root is the same thing), or the instance has seen the keyboard, the hints are not rendered at all. No hover
-     reveal: a hint appearing under the pointer would widen the control. opacity: 0 alongside display: none lets the discrete display
-     transition hold the box until the fade-out ends. */
-  .eureka:not(:has(:focus-visible)):not([data-keyboard="true"]) kbd.eureka__kbd { display: none; opacity: 0; }
-  .eureka .eureka__context-menu[role="menu"] kbd.eureka__kbd { display: inline-block; opacity: 1; margin-inline-start: auto; } /* a keyboard surface: its hints are always shown (after the gating rule, which ties on specificity) */
-  /* Fade in from display: none where the engine supports discrete display transitions. @starting-style rules cascade with the normal rules by specificity and
-     source order, so this block repeats the selectors of every visible state and comes after them; earlier in the file it lost to them. */
-  @starting-style {
-    .eureka kbd.eureka__kbd, .eureka[data-keyboard="true"] kbd.eureka__kbd, .eureka :is(button, .button):focus-visible > kbd.eureka__kbd { opacity: 0; }
-  }
+  /* <kbd> shortcut hints on controls (02 HTML-96): text, so the resting level keeps 4.5:1 (WCAG 1.4.3); its own colours, body text on the panel background. */
+  .eureka kbd.eureka__kbd { display: inline-block; font-size: 0.8em; line-height: 1.3; padding: 0 0.3em; margin-inline-start: 0.5em; vertical-align: 0.1em; color: var(--color); background: var(--light-bg); border-color: var(--subtle); opacity: var(--hint-opacity, 0.65); transition: opacity 300ms ease; } /* its own colours (body text on the panel background), so the resting contrast does not depend on the control's text colour */
+  /* The same treatment as the Keyboard Shortcuts button above: a hint always occupies its space and rests at --hint-opacity (the dark
+     scheme's 0.55 is the floor for text, 4.5:1 blended over the control, 06 A11Y-55), coming to full opacity with keyboard use, on
+     hover or visible focus of its own control, and while the shortcuts dialog is open. Nothing is gated on focus elsewhere, so a
+     pointer click on a select beside it changes nothing: a hint that once appeared there widened the control, slid the select from
+     under the pointer and closed its open list. */
+  .eureka[data-keyboard="true"] kbd.eureka__kbd, .eureka :is(button, .button, label):is(:hover, :focus-visible) > kbd.eureka__kbd, .eureka:has(dialog.eureka__shortcuts-modal) kbd.eureka__kbd { opacity: 1; }
+  .eureka .eureka__context-menu[role="menu"] kbd.eureka__kbd { opacity: 1; margin-inline-start: auto; } /* a keyboard surface: its hints are always shown (after the gating rule, which ties on specificity) */
   .black-on-white kbd.eureka__kbd, .white-on-black kbd.eureka__kbd { opacity: 1; }
   @media (forced-colors: active) { .eureka kbd.eureka__kbd { opacity: 1; } }
   @media (prefers-reduced-motion: reduce) { .eureka kbd.eureka__kbd { transition: none; } }
   @container eureka (max-width: 40em) { .eureka kbd.eureka__kbd { display: none; } } /* no room, and rarely a keyboard, on narrow layouts */
+  .eureka[data-hints="false"] kbd.eureka__kbd { display: none; } /* the user unticked "Show keyboard hints" in the welcome banner: gone everywhere, menus included, until ticked again (02 HTML-96) */
+  .eureka__hints-toggle { cursor: pointer; } /* inline, so its text shares the sentence's baseline; an inline-flex label took its baseline from the checkbox and sat the text 2px high */
+  .eureka__hints-toggle input { vertical-align: -0.125em; margin: 0 0.35em 0 0.25em; }
   .eureka__crop-stage { min-block-size: 40vh; background: #222; display: grid; place-items: center; }
   .eureka__crop-stage img { max-block-size: 60vh; }
 

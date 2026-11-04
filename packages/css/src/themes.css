@@ -4,8 +4,7 @@
     :where(.eureka-root:not(.black-on-white, .white-on-black, .black-on-white *, .white-on-black *)) {
       --bg-color: #1b1f23; --color: #e6e8ea; --light-bg: #24292e; --panel-border-color: #3a4048; --border-color: #3a4048; --border-shadow-color: #3a4048;
       --button-bg: #2d333b; --button-color: #d7dde3; --subtle: #9aa4ae; --very-subtle: #4b535c; --link-color: #6cb6ff; --active: #4aa3e0; --active-darker: #1f6aa5;
-      --hint-opacity: 0.5; /* the dark button keeps 3.6:1 for the hint icon at this level (06 A11Y-55) */
-      --hint-text-opacity: 0.65; /* and 5.0:1 for the <kbd> hint text */
+      --hint-opacity: 0.55; /* one level for the hint icon (3.9:1, needs 3:1) and the <kbd> hint text (4.7:1, needs 4.5:1; 0.535 is its floor) (06 A11Y-55) */
       --dangerous: #ff8a80; --border-color-dangerous: #ff8a80;
       --media-cell-background: #1f2428; --notification-background: #1d3a4f; --notification-color: #bfe3ff; --notification-border-color: #2a5a7a; --notification-focus-color: #e6f4ff;
     }
