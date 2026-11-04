@@ -67,3 +67,27 @@ test('axe: rename dialog', async ({ page }) => {
   await expect(page.getByRole('dialog')).toBeVisible();
   await axeCheck(page, 'dialog');
 });
+
+for (const scheme of ['dark', 'light']) test(`A11Y-57 hovering a folder tile never lowers its contrast (${scheme} scheme)`, async ({ page }) => {
+  v3only('hover keeps contrast (A11Y-57)');
+  await page.emulateMedia({ colorScheme: scheme });
+  await openDirectory(page, 'assets');
+  await setView(page, 'grid');
+  const tile = page.locator('tr[data-kind="folder"][data-path="assets/img"] .eureka__folder-tile');
+  await expect(tile).toBeVisible();
+  const contrast = () => tile.evaluate((el) => {
+    const parse = (c) => c.match(/[\d.]+/g).slice(0, 3).map(Number);
+    const lum = ([r, g, b]) => { const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }; return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b); };
+    const name = el.querySelector('.eureka__folder-tile__name');
+    const text = parse(getComputedStyle(name).color), bg = parse(getComputedStyle(el).backgroundColor);
+    const [hi, lo] = [lum(text), lum(bg)].sort((a, b) => b - a);
+    return (hi + 0.05) / (lo + 0.05);
+  });
+  const resting = await contrast();
+  await tile.hover();
+  await expect(tile).toHaveCSS('border-color', /rgb/); // the hover state has applied
+  const hovered = await contrast();
+  expect(hovered).toBeGreaterThanOrEqual(4.5);
+  expect(hovered).toBeGreaterThanOrEqual(resting - 1e-9); // never lower than at rest
+  expect(await tile.locator('.icon').evaluate((el) => getComputedStyle(el).opacity)).toBe('1');
+});

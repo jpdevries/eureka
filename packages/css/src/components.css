@@ -168,7 +168,12 @@
   .eureka:is([data-view="table"], [data-view="list"]) .eureka__folder-tile__name { display: none; } /* the name column shows it there */
   .eureka .eureka__folder-tile .icon { inline-size: 40%; block-size: 40%; max-inline-size: 4rem; max-block-size: 4rem; opacity: 0.8; }
   .eureka:is([data-view="table"], [data-view="list"]) .eureka__folder-tile { inline-size: 4rem; aspect-ratio: 1; min-block-size: 0; padding: 0; gap: 0; }
-  .eureka .eureka__folder-tile:hover, .eureka .eureka__folder-tile:focus-visible { background: var(--subtle); }
+  /* Interest strengthens, never weakens (06 A11Y-57): the surface and text colour stay exactly as at rest (the generic button hover would
+     turn the text white and a lifted surface costs contrast in the dark scheme), the border turns active and the icon comes to full
+     opacity. The old --subtle fill put the name at 2:1 in the dark scheme. */
+  .eureka .eureka__folder-tile:is(:hover, :focus-visible) { background: var(--light-bg); border-color: var(--active); color: var(--color); }
+  .eureka .eureka__folder-tile:is(:hover, :focus-visible) .icon { opacity: 1; }
+  @media (forced-colors: active) { .eureka .eureka__folder-tile:is(:hover, :focus-visible) { outline: 2px solid Highlight; outline-offset: -2px; } }
   /* Reserved media space (04 LAY-51): the box keeps its shape before the picture arrives. width/height attributes give the ratio; without them
      a 4:3 box at the mode's media height. A quiet tone fills the box until the image paints; the element marks painted images, Level 0 keeps the tone. */
   .eureka .eureka__td-media img:not(.eureka__loaded, .eureka__media-text, .eureka__media-preview) { background: var(--media-skeleton-background, color-mix(in srgb, var(--color) 7%, transparent)); }

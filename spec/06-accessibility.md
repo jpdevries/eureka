@@ -171,6 +171,21 @@ Covered by 05. In addition:
   contrast themes and forced colors show hints at full opacity; the
   transition honours `prefers-reduced-motion`.
 
+- **A11Y-57** Hover and focus never lower contrast. A pointer over a
+  control, or focus on it, is the user expressing interest, so the state
+  that answers it MUST keep every text and icon at or above its resting
+  contrast and MUST add its signal elsewhere: a border or outline in the
+  active colour, an icon brought to full opacity, a surface change only
+  where it moves the text further from the background. Folder tiles
+  (02 HTML-62a) once filled with `--subtle` on hover, which took the
+  name from 11.9:1 to 2.1:1 in the dark scheme and from 17.9:1 to 3.3:1
+  in the light; they now keep the panel surface, turn their border
+  `--active` and lift the icon to full opacity. Buttons invert to white
+  on `--active-darker` (5.7:1 dark, 4.7:1 light), which also satisfies
+  this. Conformance measures a hovered folder tile's name against its
+  background, in both schemes, and expects at least 4.5:1 and no less
+  than at rest.
+
 ## 7. Timing
 
 - **A11Y-60** Nothing times out. Non-sticky notifications auto-dismiss no

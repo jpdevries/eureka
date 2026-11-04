@@ -905,3 +905,9 @@ decode (`CODER:file[0]` input, `-auto-orient`, clones with `-write`),
 the coder list read from `-list format` so the adapter never promises
 what the install cannot read. The pipeline keeps the original's
 extension on its temporary file so adapters can pick by it.
+
+Folder tiles stopped dimming on hover: the `--subtle` fill dropped the
+name to 2:1 in the dark scheme; they keep the panel surface, turn the
+border active and lift the icon to full opacity instead, and A11Y-57 now
+states the principle (hover and focus never lower contrast) with a
+conformance check that measures it.
