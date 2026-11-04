@@ -22,6 +22,25 @@ export interface Thumbnailer {
   render(file: string, jobs: RenderJob[]): Promise<Array<RenderJob & { data: Buffer }>>;
 }
 
+/**
+ * Several adapters as one (11 MS-77): accepts what any of them accepts and renders with the first that does, in the order
+ * given, so `composeThumbnailers(sharp, magick)` lets sharp take every format its build decodes and ImageMagick the rest.
+ */
+export function composeThumbnailers(...adapters: Thumbnailer[]): Thumbnailer {
+  const list = adapters.filter(Boolean);
+  if (list.length === 1) return list[0]!;
+  return {
+    extensions: [...new Set(list.flatMap((a) => a.extensions ?? []))],
+    accepts: (filename) => list.some((a) => a.accepts(filename)),
+    render(file, jobs) {
+      const name = path.basename(file);
+      const adapter = list.find((a) => a.accepts(name));
+      if (!adapter) return Promise.reject(new Error(`no adapter accepts ${name}`));
+      return adapter.render(file, jobs);
+    }
+  };
+}
+
 export interface ThumbnailOptions {
   thumbnailer: Thumbnailer;
   /** Where renditions live between runs (default `{tmpdir}/eureka-thumbnails`). */
@@ -93,7 +112,7 @@ export function withThumbnails(source: MediaSource, opts: ThumbnailOptions): Med
     const running = inflight.get(key); if (running) return running;
     const job = (async () => {
       await acquire();
-      const tmp = path.join(cacheDir, `tmp-${key}-${process.pid}-${Date.now()}`);
+      const tmp = path.join(cacheDir, `tmp-${key}-${process.pid}-${Date.now()}${path.extname(p).toLowerCase()}`); // the extension stays: composed adapters and ImageMagick pick by it
       try {
         await fsp.mkdir(cacheDir, { recursive: true });
         const opened = await source.open(p);

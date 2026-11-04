@@ -883,3 +883,11 @@ but not HEIC, JPEG XL or JPEG 2000, so those rows stay tiles with correct
 dimensions until a host installs a fuller libvips. Fixtures under
 `packages/server-node/test/fixtures` (a libheif HEIC, an OpenJPEG JP2, a
 three-page TIFF) and a hand-built JPEG XL container in the test.
+
+Then the ImageMagick adapter (MS-78) and `composeThumbnailers` (MS-77):
+`--thumbnails sharp,magick` lets sharp render what its build decodes and
+ImageMagick the rest, HEIC on this machine, each rendition set from one
+decode (`CODER:file[0]` input, `-auto-orient`, clones with `-write`),
+the coder list read from `-list format` so the adapter never promises
+what the install cannot read. The pipeline keeps the original's
+extension on its temporary file so adapters can pick by it.

@@ -2,7 +2,9 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { createFilesystemSource, withThumbnails, sharpDecodes, type Thumbnailer, type RenderJob } from '../src/index.js';
+import { readFileSync } from 'node:fs';
+import { imageSize } from 'image-size';
+import { createFilesystemSource, withThumbnails, sharpDecodes, composeThumbnailers, readableCoders, type Thumbnailer, type RenderJob } from '../src/index.js';
 
 const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==', 'base64');
 const read = async (s: NodeJS.ReadableStream) => { const parts: Buffer[] = []; for await (const c of s) parts.push(c as Buffer); return Buffer.concat(parts); };
@@ -84,5 +86,35 @@ describe('the sharp adapter (11 MS-75)', () => {
     const out = await t.render(file, [{ width: 220, format: 'webp' }, { width: 880, format: 'jpeg' }, { width: 4000, format: 'jpeg' }]);
     const meta = await Promise.all(out.map((o) => sharp(o.data).metadata()));
     expect(meta.map((m) => [m.format, m.width, m.height])).toEqual([['webp', 220, 110], ['jpeg', 880, 440], ['jpeg', 1200, 600]]); // never enlarged
+  });
+});
+
+describe('composed adapters and ImageMagick (11 MS-77, MS-78)', () => {
+  const fake = (exts: string[], tag: string): Thumbnailer => ({ extensions: exts, accepts: (f) => exts.includes(path.extname(f).toLowerCase()), render: async (_f, jobs) => jobs.map((j) => ({ ...j, data: Buffer.from(tag) })) });
+  it('accepts what any adapter accepts and renders with the first that does, in order', async () => {
+    const both = composeThumbnailers(fake(['.tif', '.jpg'], 'sharp'), fake(['.heic', '.tif'], 'magick'));
+    expect(both.extensions).toEqual(['.tif', '.jpg', '.heic']);
+    expect(both.accepts('a.heic')).toBe(true); expect(both.accepts('a.svg')).toBe(false);
+    expect((await both.render('/tmp/x.tif', [{ width: 220, format: 'webp' }]))[0]!.data.toString()).toBe('sharp');
+    expect((await both.render('/tmp/x.heic', [{ width: 220, format: 'webp' }]))[0]!.data.toString()).toBe('magick');
+    await expect(both.render('/tmp/x.svg', [{ width: 220, format: 'webp' }])).rejects.toThrow(/no adapter/);
+    expect(composeThumbnailers(fake(['.tif'], 'only'))).toBeDefined();
+  });
+  it('reads the coders ImageMagick can decode from its format listing', () => {
+    const listing = '   Format  Module    Mode  Description\n-------------------------------------\n     HEIC* HEIC      rw+   High Efficiency Image Format (1.23.6)\n      JXL  JXL       ---   JPEG XL (no delegate)\n      PSD* PSD       rw+   Adobe Photoshop bitmap\n      MVG  MVG       -w-   Magick Vector Graphics\n';
+    const coders = readableCoders(listing);
+    expect([...coders]).toEqual(['HEIC', 'PSD']);
+  });
+  it('renders a HEIC through ImageMagick into WebP and JPEG, one decode, never enlarged', async () => {
+    const { execFile } = await import('node:child_process');
+    const have = await new Promise<boolean>((resolve) => execFile('magick', ['-version'], (err) => resolve(!err)));
+    if (!have) return; // optional: skip where ImageMagick is not installed
+    const { createMagickThumbnailer } = await import('../src/thumbs/magick.js');
+    const t = await createMagickThumbnailer();
+    if (!t.accepts('x.heic')) return; // an ImageMagick without libheif
+    const file = path.join(root, 'photo.heic');
+    await fs.writeFile(file, readFileSync(new URL('./fixtures/photo.heic', import.meta.url))); // 48×32
+    const out = await t.render(file, [{ width: 24, format: 'webp' }, { width: 880, format: 'jpeg' }]);
+    expect(out.map((o) => { const d = imageSize(o.data); return [d.type, d.width, d.height]; })).toEqual([['webp', 24, 16], ['jpg', 48, 32]]);
   });
 });

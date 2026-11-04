@@ -16,7 +16,7 @@ import { createWebDavSource } from './webdav-source.js';
 import { createServiceAccountToken, createRefreshTokenProvider, DRIVE_READONLY_SCOPE, DRIVE_SCOPE, type TokenProvider } from './google/auth.js';
 import { startServer } from './server.js';
 import { createDefaultRenderer, cssAssets, elementAssets, i18nAssets } from './render.js';
-import { createSharpThumbnailer } from './thumbs/sharp.js';
+import { createNamedThumbnailer } from './thumbs/named.js';
 
 const argv = process.argv.slice(2);
 const args: Record<string, string | true> = {};
@@ -71,9 +71,9 @@ export function googleTokenFromEnv(readOnly: boolean, env: NodeJS.ProcessEnv = p
   if (env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET && env.GOOGLE_REFRESH_TOKEN) return createRefreshTokenProvider({ clientId: env.GOOGLE_CLIENT_ID, clientSecret: env.GOOGLE_CLIENT_SECRET, refreshToken: env.GOOGLE_REFRESH_TOKEN });
   return undefined;
 }
-// --thumbnails sharp: previews for files no source pictures, rendered by sharp into --thumbnail-cache (11 MS-70, MS-75)
-const thumbnails = args.thumbnails === 'sharp' || args.thumbnails === true ? {
-  thumbnailer: await createSharpThumbnailer(),
+// --thumbnails sharp | magick | sharp,magick: previews for files no source pictures, rendered into --thumbnail-cache (11 MS-70, MS-75, MS-78)
+const thumbnails = typeof args.thumbnails === 'string' || args.thumbnails === true ? {
+  thumbnailer: await createNamedThumbnailer(args.thumbnails === true ? 'sharp' : args.thumbnails),
   ...(typeof args['thumbnail-cache'] === 'string' ? { cacheDir: args['thumbnail-cache'] } : {}),
   ...(typeof args['thumbnail-max-mb'] === 'string' ? { maxSourceBytes: Number(args['thumbnail-max-mb']) * 1024 * 1024 } : {}),
   ...(typeof args['thumbnail-min-kb'] === 'string' ? { minSourceBytes: Number(args['thumbnail-min-kb']) * 1024 } : {})

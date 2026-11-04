@@ -14,3 +14,6 @@ export { readExifGps, type GpsLocation } from './exif-gps.js';
 export { readImageDimensions, dimensionsOf, isTiff, isHeif, heifDimensions, readPageCount, type RangeReader } from './image-dimensions.js';
 export { withThumbnails, type Thumbnailer, type ThumbnailOptions, type RenderJob, type PreviewFormat as ThumbnailFormat } from './thumbs/thumbnailer.js';
 export { createSharpThumbnailer, sharpDecodes, SHARP_EXTENSIONS, type SharpThumbnailerOptions } from './thumbs/sharp.js';
+export { createMagickThumbnailer, readableCoders, MAGICK_EXTENSIONS, type MagickThumbnailerOptions } from './thumbs/magick.js';
+export { composeThumbnailers } from './thumbs/thumbnailer.js';
+export { createNamedThumbnailer, THUMBNAILER_NAMES, type ThumbnailerName } from './thumbs/named.js';

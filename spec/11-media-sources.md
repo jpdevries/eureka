@@ -413,9 +413,9 @@ pictures itself through an adapter the host installs. Off unless set.
   installed build decodes, read from `sharp.format` at start: the prebuilt
   binaries read TIFF, JPEG, PNG, WebP and AVIF, while HEIC/HEIF (HEVC),
   JPEG 2000 and JPEG XL need a libvips built with libde265, OpenJPEG or
-  libjxl, and until the host installs one such files list with their
-  header dimensions as skeleton tiles (02 HTML-66e), never as a rendition
-  that fails. It applies EXIF orientation, takes the first page of a
+  libjxl, and until the host installs one, or composes the ImageMagick
+  adapter behind it (MS-78), such files list with their header dimensions
+  as skeleton tiles (02 HTML-66e), never as a rendition that fails. It applies EXIF orientation, takes the first page of a
   multi-page file, and encodes at quality 80 by default. SVG and GIF are left out: a raster rendition
   would lose their animation, and the browser shows them well as they
   are. The CLI switches it on with `--thumbnails sharp` and takes
@@ -425,7 +425,8 @@ pictures itself through an adapter the host installs. Off unless set.
 
 ### 6.1 More formats, more adapters (3.0)
 
-MS-76 is implemented; MS-77 onwards are planned.
+MS-76, the composition of MS-77 and the ImageMagick adapter of MS-78 are
+implemented; the rest is planned.
 
 The adapter of MS-70 was shaped for one decoder. What follows widens it
 to every picture a media library holds, in tiers of cost, and keeps the
@@ -455,21 +456,28 @@ original is read once (MS-72).
   preview, and that is the picture. `createRawThumbnailer()` extracts it
   with `exiftool -b -PreviewImage` (fallback `-JpgFromRaw`, then
   `dcraw -e`), whichever the host has, and hands the JPEG to the next
-  adapter for sizing. Adapters compose: `composeThumbnailers(a, b)`
-  accepts what either accepts and renders with the first that does, and
-  an adapter MAY return a decoded intermediate for the next to size, so
-  the raw adapter needs no encoder of its own. Dimensions come from the
+  adapter for sizing. Adapters compose (implemented): `composeThumbnailers(a,
+  b)` accepts what either accepts and renders with the first that does,
+  judged by the extension, which the pipeline keeps on the temporary
+  original; planned: an adapter MAY return a decoded intermediate for the
+  next to size, so the raw adapter needs no encoder of its own. Dimensions come from the
   raw head where it is a TIFF (DNG, CR2, NEF, ARW, ORF: the largest
   image directory, since IFD0 is often the thumbnail), from the JPEG at
   byte 84 for RAF, and from the embedded preview for CR3. Media kind
   `raw` (MS-83).
-- **MS-78 Flattened composites: PSD, PSB, AI, EPS.** `createMagickThumbnailer()`
-  spawns ImageMagick (`magick input[0] -flatten`) for PSD and PSB, which
-  libvips reads only when built against it, and for AI and EPS through
-  Ghostscript, which treats them as PDF: an AI file is a PDF with a
-  Illustrator header, so the PDF path of MS-80 applies and this adapter is
-  only the renderer behind it. PSD dimensions are bytes 14..22 of the
-  header. Media kind `design` (MS-83).
+- **MS-78 ImageMagick behind sharp.** `createMagickThumbnailer()` spawns
+  `magick` (ImageMagick 7) or `convert` (6) for the formats the installed
+  sharp cannot decode, HEIC first: it reads `-list format` once and
+  accepts only coders marked readable, names the input `CODER:file[0]`
+  so a file is never sniffed as another coder, applies `-auto-orient`,
+  and writes every rendition from one decode (clones with `-write`).
+  Composed behind sharp (`composeThumbnailers(sharp, magick)`, the CLI's
+  `--thumbnails sharp,magick`, the demo's `EUREKA_THUMBNAILS`) it only
+  sees what sharp declined. Planned on the same adapter: PSD and PSB
+  through `[0]`, the flattened composite, and AI and EPS through
+  Ghostscript, which treats them as PDF, so the PDF path of MS-80 applies
+  and this adapter is only the renderer behind it; PSD dimensions are
+  bytes 14..22 of the header; media kind `design` (MS-83).
 - **MS-79 Animated WebP and APNG.** These are already animated media in
   the contract (02 HTML-66b); what was missing is detection. The probe
   sets `animated` from the WebP `VP8X` animation flag and from an APNG
