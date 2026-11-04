@@ -539,7 +539,11 @@ Taken on 2026-11-01:
   out of `display: none` via `@starting-style` and a discrete `display`
   transition where supported, and are hidden on narrow layouts. Tree rows pack
   tighter (`--tree-line-height` 1.6, smaller chevrons) and grow to 44px
-  targets under `(pointer: coarse)`. A download binding was added
+  targets under `(pointer: coarse)`; later the row, its disclosure and
+  its link were given a shared `--tree-row-size` of `max(24px,
+  --tree-line-height × 1em)` and the tree took Transmit's list rhythm
+  (12px text, 16px icons, 7px icon-to-name) inside that 24px floor,
+  since Transmit's own 20px pitch fails WCAG 2.5.8 (A11Y-40). A download binding was added
   (KEY-30, `Alt+Shift+D`, row scope, when downloads are allowed): it
   activates the row's Download link so the browser's download handling
   applies.

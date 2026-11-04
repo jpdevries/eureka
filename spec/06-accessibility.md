@@ -96,7 +96,14 @@ Covered by 05. In addition:
   44×44 under `(pointer: coarse)`. The v2 icon radios and tree bar
   buttons fail this (axe `target-size`); the `--tree-course-line-height`
   token exists for exactly this and v3 applies it under the media query
-  rather than on touch detection.
+  rather than on touch detection. Tree rows, their disclosure `<summary>`
+  and their link are all at least `--tree-row-size`, which the stylesheet
+  derives as `max(24px, --tree-line-height × 1em)` (`max(44px, …)` under
+  coarse pointers), so no host value of `--tree-line-height` can shrink
+  the target below the floor. Inside that row the tree takes the rhythm
+  of native Mac file browsers (Transmit, Finder): text at 12/13 of the
+  instance font, 16px folder icons, about 7px from icon to name. Their
+  20px row pitch is not followed, since it sits below the floor.
 - **A11Y-41** Double-tap to choose on touch is an enhancement only; a
   single tap focuses the row and reveals the actions, which include
   Choose.

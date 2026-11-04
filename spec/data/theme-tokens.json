@@ -104,12 +104,12 @@
     "--tree-line-height": {
       "default": "1.6",
       "documented": false,
-      "description": "Line height of tree nodes"
+      "description": "Line height of tree nodes; a row is max(24px, this \u00d7 1em), so values below ~2 only tighten the text, never the target (06 A11Y-40)"
     },
     "--tree-course-line-height": {
       "default": "2.75",
       "documented": false,
-      "description": "Line height of tree nodes in coarse-pointer (touch) mode"
+      "description": "Line height of tree nodes in coarse-pointer (touch) mode; rows are max(44px, this \u00d7 1em)"
     },
     "--notification-background": {
       "default": "#d9edf7",
