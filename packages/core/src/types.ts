@@ -25,6 +25,8 @@ export interface Entry {
   absolutePreviewURL?: string;
   editedOn: number | string;
   dimensions?: [number, number];
+  /** Pages of a multi-page original (TIFF directories; later PDF pages), shown next to the dimensions; absent or 1 for one picture (11 MS-76). */
+  pages?: number;
   fileSize: number;
   alt?: string;
   renditions?: Rendition[];
@@ -65,6 +67,8 @@ export interface DisplayRecord {
   icon: string;
   sizeText: string;
   dimensionsText: string;
+  /** "3 pages" for a multi-page original, else empty (11 MS-76). */
+  pagesText: string;
   dateShort: string;
   dateLong: string;
   dateVerbose: string;

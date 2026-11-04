@@ -2,7 +2,7 @@
 import fs from 'node:fs/promises';
 import { createReadStream } from 'node:fs';
 import path from 'node:path';
-import { imageSize } from 'image-size';
+import { readImageDimensions, readPageCount, isTiff } from './image-dimensions.js';
 import { ZipFile } from 'yazl';
 import type { Readable } from 'node:stream';
 import { encodePathForURL, normalizePath, isWithin, joinPath, parentPath, basename, mediaKind, isTextLike, looksBinary, renderTextThumbnail } from '@mrktps/eureka-core';
@@ -117,6 +117,21 @@ export function createFilesystemSource(opts: FilesystemSourceOptions): MediaSour
   const urlFor = (rel: string) => `${urlPrefix}/${encodePathForURL(rel)}`;
   const thumbs = new Map<string, { svg: string; etag: string }>(); // text thumbnails, LRU by insertion order
 
+  /** Dimensions and page count from the file's head, with ranged reads where the header points elsewhere (11 MS-74, MS-76). */
+  async function probeImage(abs: string, size: number): Promise<{ dimensions?: [number, number]; pages?: number }> {
+    const out: { dimensions?: [number, number]; pages?: number } = {};
+    let fh: fs.FileHandle | undefined;
+    try {
+      fh = await fs.open(abs, 'r');
+      const handle = fh;
+      const range = async (s: number, e: number) => { const b = Buffer.alloc(e - s + 1); const { bytesRead } = await handle.read(b, 0, b.length, s); return b.subarray(0, bytesRead); };
+      const head = await range(0, Math.min(size, 64 * 1024) - 1);
+      const d = await readImageDimensions(head, range, size); if (d) out.dimensions = d;
+      if (isTiff(head)) { const pages = await readPageCount(head, range, size); if (pages > 1) out.pages = pages; }
+    } catch { /* not a readable image */ } finally { await fh?.close().catch(() => undefined); }
+    return out;
+  }
+
   async function entryFor(dirRel: string, name: string, saveData = false): Promise<Entry | null> {
     const rel = joinPath(dirRel, name);
     const abs = path.join(root, rel);
@@ -129,7 +144,7 @@ export function createFilesystemSource(opts: FilesystemSourceOptions): MediaSour
     if (st.isDirectory()) return { ...base, foldername: name };
     const e: Entry = { ...base, filename: name };
     if (mediaKind(name) === 'image') {
-      try { const d = imageSize(abs); if (d.width && d.height) e.dimensions = [d.width, d.height]; } catch { /* not a decodable image */ }
+      const probed = await probeImage(abs, st.size); if (probed.dimensions) e.dimensions = probed.dimensions; if (probed.pages) e.pages = probed.pages;
       if (await isAnimated(abs, name)) e.animated = true;
       if (opts.location && /\.(jpe?g|tiff?)$/i.test(name)) { const loc = await gpsOf(abs); if (loc) e.location = loc; }
     }

@@ -92,6 +92,9 @@ describe('documents and videos (02 HTML-66d)', () => {
     expect(tiff).not.toContain('<img'); expect(tiff).toContain('class="eureka__file-placeholder eureka__media-skeleton" style="--eureka-media-ratio: 4000 / 3000"');
     const previewed = page([{ filename: 'scan.tif', directory: '/', path: 'scan.tif', absoluteURL: '/s/scan.tif', absolutePreviewURL: '/s/__preview/scan.tif', editedOn: 0, fileSize: 9, dimensions: [4000, 3000] }]);
     expect(previewed).toContain('<img src="/s/__preview/scan.tif"'); expect(previewed).not.toContain('eureka__media-skeleton');
+    const paged = page([{ filename: 'scan.tif', directory: '/', path: 'scan.tif', absoluteURL: '/s/scan.tif', absolutePreviewURL: '/s/scan.tif', editedOn: 0, fileSize: 9, dimensions: [4000, 3000], pages: 3 }]);
+    expect(paged).toContain('<td class="eureka__dimensions">4000x3000 <small class="eureka__pages">3 pages</small></td>'); // a multi-page original (11 MS-76)
+    expect(tiff).not.toContain('eureka__pages');
   });
   it('a video takes a poster and preload="none" only when the source offers a preview', () => {
     const posterless = page([{ filename: 'clip.mp4', directory: '/', path: 'clip.mp4', absoluteURL: '/s/clip.mp4', editedOn: 0, fileSize: 9 }]);

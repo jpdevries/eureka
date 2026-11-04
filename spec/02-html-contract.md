@@ -306,9 +306,9 @@ DOM order is the reading order and the tab order.
   costs one small image per row until Play. Expand opens the file itself
   in its own browsing context, where the browser's viewer belongs. The
   only `<object>` left in a row is the animated SVG of HTML-66b.
-- **HTML-66e** An image no browser can decode (`tif`, `tiff`; the
-  formats a browser shows are the ones `@mrktps/eureka-core`'s
-  `browserDecodes` accepts) is never an `<img>` of the original. A row
+- **HTML-66e** An image no browser can decode (`tif`, `tiff`, `heic`,
+  `heif`, `jxl`, `jp2`; the formats a browser shows are the ones
+  `@mrktps/eureka-core`'s `browserDecodes` accepts) is never an `<img>` of the original. A row
   without `renditions` whose `absolutePreviewURL` is the file itself
   renders `p.eureka__media-skeleton` in the item's own proportions
   (`--eureka-media-ratio` from `dimensions`, 4:3 when unknown) holding the
@@ -319,6 +319,20 @@ DOM order is the reading order and the tab order.
   whole file and showed a blank; a source that does offer a preview
   shows it like any other image. The space a
   loading image takes is 04 LAY-51.
+- **HTML-66f** Link rows (entries with `link`, 11 MS-84). The media cell
+  holds `a.eureka__media-link` with `href` from `link.href`,
+  `target="_blank"`, `rel="noopener noreferrer"` and the host as its
+  visible text (`.eureka__media-link__host`), preceded by the favicon
+  rendition as `img.eureka__media-favicon` when the entry has one, else
+  the link glyph. Expand is the same link. With `inlinePreviews` on, at
+  Level 1+ and only in thumb, grid and masonry, the element adds, once
+  the tile is near the viewport, `<iframe class="eureka__media-embed"
+  sandbox="" loading="lazy" referrerpolicy="no-referrer" tabindex="-1"
+  aria-hidden="true" title="Preview of {host}">` behind the link; the
+  empty `sandbox` runs no script, submits no form and shares no origin,
+  and a page that refuses framing leaves the favicon showing. Table and
+  list never embed. The accessible name of the row stays the filename;
+  the link's own name is "{host}, opens in a new tab" (hidden text).
 - **HTML-67** Name cell: the filename with a `<wbr>` after every 8
   characters so long names wrap. When renaming inline it becomes
   editable; Enter commits, Escape cancels, empty names are rejected.
@@ -477,7 +491,9 @@ Informative mapping used by the stylesheet. Hosts MAY style these.
 | `.eureka__th-media`, `.eureka__th-filename`, `.eureka__th-actions`, `.eureka__th-dimensions`, `.eureka__th-file-size`, `.eureka__th-edited-on`, `.eureka__choose` (th and td) | header cells |
 | `.eureka__td-media`, `.eureka__td-filename`, `.eureka__context-row`, `.eureka__dimensions`, `.eureka__file-size`, `.eureka__edited-on` | row cells |
 | `.eureka__media-skeleton`, `.eureka__media-skeleton__name` | an undecodable image's tile and its name (HTML-66e) |
+| `.eureka__pages` | the page count after the dimensions of a multi-page original (11 MS-76) |
 | `.eureka__loaded` | an image that has painted; the element sets it (04 LAY-51) |
+| `.eureka__media-link`, `.eureka__media-link__host`, `.eureka__media-favicon`, `.eureka__media-embed` | a web link's row: the link, its host, its favicon, its inline preview (HTML-66f, planned) |
 | `.eureka__focused-media-item` | the focused row (v2 also toggled this by hand; v3 relies on `:focus-within`) |
 | `.eureka__context-buttons`, `.eureka__button-bar` | action toolbars |
 | `.eureka__pathbar`, `#{p}selected_file_names` | path bar |

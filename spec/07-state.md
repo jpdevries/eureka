@@ -58,7 +58,8 @@ Computed, never stored:
   current source is matched as plain text, never an error. A query with
   no live qualifier keeps the pre-existing behaviour: the whole string is
   one case-insensitive substring of the display record's haystack.
-  Qualifiers: `type:image|video|audio|pdf|text|other` (media kind),
+  Qualifiers: `type:image|video|audio|pdf|text|raw|design|document|link|
+  other` (media kind; the last four are 11 MS-83, planned),
   `ext:jpg`; `is:animated|folder|chosen` (states only, never formats);
   `size:` with `b kb mb gb tb` in binary multiples, the size column's
   units; `modified:` and `created:` with ISO dates at year, month or day

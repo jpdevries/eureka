@@ -124,6 +124,8 @@ const data = {
   "crop.upload": "Upload",
   "item.description": "{filename} displays at {width}x{height}, weighs {size}, and was edited on {date}",
   "item.descriptionNoDimensions": "{filename} weighs {size}, and was edited on {date}",
+  "item.pages": "{n, plural, one {# page} other {# pages}}",
+  "item.descriptionPages": "{description}, {pages}",
   "listing.caption": "Contents of {cd}",
   "listing.count": "{n, plural, =0 {No items} one {# item} other {# items}}",
   "actions.for": "Actions for {filename}",

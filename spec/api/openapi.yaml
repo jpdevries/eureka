@@ -293,6 +293,7 @@ components:
         alt: { type: string, description: 'Alternative text for the media. When absent the client generates a description from the other fields.' }
         absolutePreviewURLNote: { type: string, readOnly: true, description: 'Documentation only: for text-like files, absolutePreviewURL, when present and different from absoluteURL, is an image rendered from the text (02 HTML-66c), typically the server route /sources/{name}/__thumb/{path} or a pre-rendered file beside the original.' }
         animated: { type: boolean, description: 'True when the media moves on its own: an SVG with SMIL or CSS animation, or a multi-frame GIF, APNG or WebP. Clients render such items still until the user asks for playback (HTML-66b). Optional; absent means unknown and is treated as false.' }
+        pages: { type: integer, minimum: 1, description: 'Pages of a multi-page original (TIFF directories; later PDF pages), shown next to the dimensions. Optional; absent means one (11 MS-76).' }
         renditions:
           type: array
           description: 'Optional alternative encodings and sizes of an image, for responsive `<picture>` markup (HTML-66a). Order is free; the client groups by `type` and sorts by `width`.'

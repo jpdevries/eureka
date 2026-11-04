@@ -409,15 +409,145 @@ pictures itself through an adapter the host installs. Off unless set.
   does not know, and the row falls back to a 4:3 box (04 LAY-51).
 - **MS-75 Reference adapter.** `createSharpThumbnailer()` wraps `sharp`
   (libvips), an optional peer dependency the host installs; the function
-  rejects with a plain message when it is missing. It accepts TIFF, JPEG,
-  PNG, WebP, AVIF, HEIC/HEIF, JPEG 2000 and JPEG XL, applies EXIF
-  orientation, takes the first page of a multi-page file, and encodes at
-  quality 80 by default. SVG and GIF are left out: a raster rendition
+  rejects with a plain message when it is missing. It accepts what the
+  installed build decodes, read from `sharp.format` at start: the prebuilt
+  binaries read TIFF, JPEG, PNG, WebP and AVIF, while HEIC/HEIF (HEVC),
+  JPEG 2000 and JPEG XL need a libvips built with libde265, OpenJPEG or
+  libjxl, and until the host installs one such files list with their
+  header dimensions as skeleton tiles (02 HTML-66e), never as a rendition
+  that fails. It applies EXIF orientation, takes the first page of a
+  multi-page file, and encodes at quality 80 by default. SVG and GIF are left out: a raster rendition
   would lose their animation, and the browser shows them well as they
   are. The CLI switches it on with `--thumbnails sharp` and takes
   `--thumbnail-cache DIR`, `--thumbnail-max-mb N` and
   `--thumbnail-min-kb N`; the demo reads `EUREKA_THUMBNAILS=sharp` with
   `EUREKA_THUMBNAIL_CACHE` and `EUREKA_THUMBNAIL_MIN_KB`.
+
+### 6.1 More formats, more adapters (3.0)
+
+MS-76 is implemented; MS-77 onwards are planned.
+
+The adapter of MS-70 was shaped for one decoder. What follows widens it
+to every picture a media library holds, in tiers of cost, and keeps the
+two invariants: a listing never reads an original (MS-71), and an
+original is read once (MS-72).
+
+- **MS-76 Tier one, the decoder already installed.** `sharp` reads
+  HEIC/HEIF, AVIF, JPEG XL, JPEG 2000 and multi-page TIFF when its libvips
+  is built for them (MS-75), so these need no new adapter, only the rest
+  of the contract: `browserDecodes`
+  stays false for HEIC/HEIF, JPEG XL (Safari alone decodes it), JPEG 2000
+  and TIFF, so a row without renditions is a skeleton tile (02 HTML-66e)
+  and never an `<img>` of the original; AVIF stays true, every current
+  browser decodes it. `readImageDimensions` learns their heads: ISO BMFF
+  for HEIC and AVIF (the primary item's `ispe`, cropped by `clap` and
+  turned by `irot`, since the coded size is padded: a 48×32 photo encodes
+  as 64×64, which is all image-size reports), the JPEG XL codestream
+  signature and `jxlc` box, the JP2 `ihdr` box. A multi-page file's page
+  count is read from the TIFF directory chain (at most 64 links, each a
+  ranged read) and carried as `pages`, a new optional entry field the row
+  shows after the dimensions (`small.eureka__pages`, "3 pages") and in
+  its description; the rendition is page one. The filesystem driver now
+  probes heads the way the remote ones do, so every driver measures the
+  same way. Fixtures: one of each, small, with a page count on the TIFF.
+- **MS-77 Embedded previews: camera raw.** CR2, CR3, NEF, ARW, DNG, RAF
+  and ORF are never demosaiced: every one carries a camera-made JPEG
+  preview, and that is the picture. `createRawThumbnailer()` extracts it
+  with `exiftool -b -PreviewImage` (fallback `-JpgFromRaw`, then
+  `dcraw -e`), whichever the host has, and hands the JPEG to the next
+  adapter for sizing. Adapters compose: `composeThumbnailers(a, b)`
+  accepts what either accepts and renders with the first that does, and
+  an adapter MAY return a decoded intermediate for the next to size, so
+  the raw adapter needs no encoder of its own. Dimensions come from the
+  raw head where it is a TIFF (DNG, CR2, NEF, ARW, ORF: the largest
+  image directory, since IFD0 is often the thumbnail), from the JPEG at
+  byte 84 for RAF, and from the embedded preview for CR3. Media kind
+  `raw` (MS-83).
+- **MS-78 Flattened composites: PSD, PSB, AI, EPS.** `createMagickThumbnailer()`
+  spawns ImageMagick (`magick input[0] -flatten`) for PSD and PSB, which
+  libvips reads only when built against it, and for AI and EPS through
+  Ghostscript, which treats them as PDF: an AI file is a PDF with a
+  Illustrator header, so the PDF path of MS-80 applies and this adapter is
+  only the renderer behind it. PSD dimensions are bytes 14..22 of the
+  header. Media kind `design` (MS-83).
+- **MS-79 Animated WebP and APNG.** These are already animated media in
+  the contract (02 HTML-66b); what was missing is detection. The probe
+  sets `animated` from the WebP `VP8X` animation flag and from an APNG
+  `acTL` chunk before the first `IDAT`, both within the 64 KB head. An
+  animated file is never server-rendered (MS-71): a still rendition would
+  lose the animation, and the row's paused `<canvas>` already costs no
+  more than one frame.
+- **MS-80 Posters for video and pages for documents.** Two adapters that
+  render a frame rather than a file. `createFfmpegThumbnailer({ at })`
+  takes one frame at `at` (a time in seconds or a fraction of the
+  duration, default `0.1`) with `ffmpeg`, sizes it through the next
+  adapter, and reads `duration` with `ffprobe`, a new optional entry
+  field in seconds the row shows as `m:ss` in its description; the row
+  already takes `poster` from `absolutePreviewURL` (02 HTML-66d). Video
+  dimensions come from the head: the `tkhd` box of MP4 and MOV (one
+  ranged read of the tail when `moov` is last), the EBML `PixelWidth`
+  of WebM and MKV. `createPdfThumbnailer()` renders page one with
+  `pdftoppm` (or libvips with poppler) and reads the page count from the
+  `/Count` of the page tree, so a PDF row from a source with no preview
+  of its own gets the same first-page image Drive and Nextcloud give
+  (02 HTML-66d); the AI and EPS of MS-78 arrive here as PDF.
+- **MS-81 Documents through a converter.** `createOfficeThumbnailer()`
+  converts DOCX, XLSX, PPTX, ODT, ODS, ODP, RTF, Pages, Numbers and
+  Keynote to PDF with LibreOffice headless, then renders page one through
+  MS-80. Conversion is slow and memory-hungry, so it sits behind the same
+  opt-in with its own budget: `documents: { maxSourceBytes, concurrency
+  (default 1), timeoutMs (default 60 s) }`, a converter failure is
+  remembered for an hour, and the PDF is cached beside the renditions so
+  a width the client has not asked for yet costs no second conversion.
+  EPUB skips the converter: the cover is the item the OPF manifest marks
+  `cover-image`, read from the zip and sized through the next adapter.
+  Media kind `document` (MS-83).
+- **MS-82 Text and SVG, refined.** The text thumbnail (02 HTML-66c) MAY
+  render Markdown as its headings and paragraphs and MAY colour source
+  by token class; both come from the same `renderTextThumbnail` and stay
+  one small SVG, the colours taken from the SVG's own scheme rules. SVG
+  MAY be rasterised through the adapter when a source is marked
+  `untrusted` (a shared bucket, an upload folder): `rasterizeSvg:
+  'untrusted' | 'always' | 'never'` (default `untrusted`), after which a
+  row shows a raster rendition and never the document, so an SVG from a
+  stranger paints but runs nothing; an animated one keeps its badge, and
+  Play loads the live `<object>` of 02 HTML-66b on demand, same-origin
+  only.
+- **MS-83 Media kinds grow.** `MediaKind` gains `raw`, `design`,
+  `document` and `link`, so the filter's `type:` (07 STATE-10a) finds
+  them and `other` is left to what nothing names: `raw` is the camera
+  formats of MS-77; `design` is PSD, PSB, AI, EPS, Sketch, XD, Figma
+  (`.fig`), InDesign and the Affinity suite; `document` is the office,
+  ODF, Apple and EPUB formats of MS-81 (PDF keeps its own kind); `link`
+  is MS-84. `filterExamples` offers each kind present in the listing.
+  The icon sprite gains a glyph per kind.
+- **MS-84 Web links.** A link is a file that names a URL: `.url` (an
+  `[InternetShortcut]` section with `URL=`), `.webloc` (a plist with a
+  `URL` key) and `.desktop` (`Type=Link`, `URL=`), or an entry a source
+  exposes as one. The server parses the first 8 KB on first listing,
+  caches by size and `editedOn`, and carries `link: { href, host }` on
+  the entry; the client never parses or fetches the file. `href` is
+  `http(s)` only: anything else lists as a plain file. Pictures, each
+  opt-in under `thumbnails.links`: `favicons: true` has the server fetch
+  the site's icon once per origin (the page's `<link rel="icon">` from
+  its first 64 KB, else `/favicon.ico`), cached like a rendition for a
+  day (a miss for a day too), sized to the configured widths on a
+  padded tile, and served as `absolutePreviewURL` with `renditions`, so
+  the row needs nothing new; without it, or on a miss, the row shows the
+  link glyph. `inlinePreviews: true` lets Level 1+ tile views embed the
+  page itself (02 HTML-66f). Privacy stance: the server fetches a
+  third-party origin only for favicons, only when told to, with no
+  cookies and no referrer, and the client fetches one only for an inline
+  preview, only when told to, since that reveals the viewer's address to
+  the site; neither is on by default. Expand opens `href` in a new
+  browsing context with `rel="noopener noreferrer"`.
+
+Deferred unless asked for: a ZIP's entry listing in the details; poster
+renders for glTF, GLB, OBJ and STL; font specimens for TTF, OTF and WOFF
+through `opentype.js` (cheap, and useful for a design library).
+
+Order for 3.0: MS-76, MS-77, MS-80 video, MS-84, each its own commit
+with spec, fixtures and a demo check; the rest follow.
 
 ## 7. Open items
 

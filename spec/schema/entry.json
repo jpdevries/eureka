@@ -63,6 +63,11 @@
     "alt": {
       "type": "string"
     },
+    "pages": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Pages of a multi-page original (TIFF directories; later PDF pages). Absent or 1 for a single picture (11 MS-76)."
+    },
     "animated": {
       "type": "boolean",
       "description": "The media moves on its own (SMIL or CSS animation in an SVG, multi-frame GIF/APNG/WebP). Clients show it still until asked to play (02 HTML-66b)."

@@ -3,7 +3,7 @@
 import path from 'node:path';
 import { Readable } from 'node:stream';
 import { ZipFile } from 'yazl';
-import { readImageDimensions } from './image-dimensions.js';
+import { readImageDimensions, readPageCount, isTiff } from './image-dimensions.js';
 import { encodePathForURL, normalizePath, joinPath, parentPath, basename, mediaKind, isTextLike, looksBinary, renderTextThumbnail } from '@mrktps/eureka-core';
 import type { Entry, Source, SourceCapabilities, TreeNode } from '@mrktps/eureka-core';
 import { READ_ONLY } from '@mrktps/eureka-core';
@@ -86,14 +86,16 @@ export function createWebDavSource(opts: WebDavSourceOptions): MediaSource {
   async function probeImage(r: DavResource): Promise<{ dimensions?: [number, number]; animated?: boolean; location?: GpsLocation }> {
     const key = `${r.path}:${r.etag || r.modified}:${r.size}`;
     const hit = probes.get(key); if (hit) return hit;
-    const out: { dimensions?: [number, number]; animated?: boolean; location?: GpsLocation } = {};
+    const out: { dimensions?: [number, number]; pages?: number; animated?: boolean; location?: GpsLocation } = {};
     if (r.size > 0) {
       try {
         const res = await client.get(r.path, { start: 0, end: Math.min(r.size, PROBE_BYTES) - 1 });
         if (res) {
           const buf = Buffer.from(await res.arrayBuffer());
-          const d = await readImageDimensions(buf, async (s, e) => { const rr = await client.get(r.path, { start: s, end: e }); return rr ? Buffer.from(await rr.arrayBuffer()) : Buffer.alloc(0); }, r.size); // MS-74
+          const range = async (s: number, e: number) => { const rr = await client.get(r.path, { start: s, end: e }); return rr ? Buffer.from(await rr.arrayBuffer()) : Buffer.alloc(0); };
+          const d = await readImageDimensions(buf, range, r.size); // MS-74
           if (d) out.dimensions = d;
+          if (isTiff(buf)) { const pages = await readPageCount(buf, range, r.size); if (pages > 1) out.pages = pages; } // MS-76
           if (ANIMATABLE.includes(path.extname(r.name).toLowerCase()) && sniffAnimated(buf, r.name)) out.animated = true;
           if (opts.location && /\.(jpe?g|tiff?)$/i.test(r.name)) { const loc = readExifGps(buf); if (loc) out.location = loc; }
         }

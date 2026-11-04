@@ -853,3 +853,33 @@ Taken on 2026-11-01:
   measurements, the PERF-25 decision, live verification of the S3 driver
   against R2/MinIO, the cloud-drive drivers, and the React demo bundle is 100 kB gzip because it carries
   React itself.
+
+### 3.0 preview formats (planned)
+
+Spec 11 §6.1 (MS-76..MS-84), 02 HTML-66f and 07 STATE-10a now describe
+the next round: HEIC/HEIF, JPEG XL, JPEG 2000 and multi-page TIFF through
+the installed `sharp` (page count as `pages`); camera raw by extracting
+the embedded JPEG rather than demosaicing, with composable adapters;
+PSD/PSB and AI/EPS through ImageMagick and Ghostscript; animated WebP and
+APNG detected in the probe; ffmpeg posters with `duration`, and a PDF
+page-one adapter; office and ODF documents through LibreOffice headless
+under their own budget, EPUB covers from the manifest; Markdown and
+source colouring in the text thumbnail, SVG rasterised for untrusted
+sources; media kinds `raw`, `design`, `document`, `link` for the filter;
+and web links (`.url`, `.webloc`, `.desktop`) with server-fetched
+favicons and an opt-in inert iframe preview. Order: MS-76, MS-77, MS-80
+video, MS-84; each its own commit with fixtures and a demo check, on an
+explicit go-ahead.
+
+MS-76 landed first: HEIC/HEIF, JPEG XL and JPEG 2000 are image kinds the
+row treats like TIFF (skeleton tiles until a rendition exists), `pages`
+is a new entry field read from the TIFF directory chain and shown after
+the dimensions, HEIF dimensions come from a parser of our own because
+image-size reports the padded coded size (64×64 for a 48×32 photo) and
+ignores the clean aperture, the filesystem driver probes heads like the
+remote drivers, and the sharp adapter accepts only what its build
+decodes (`sharpDecodes(sharp.format)`): the prebuilt binaries read AVIF
+but not HEIC, JPEG XL or JPEG 2000, so those rows stay tiles with correct
+dimensions until a host installs a fuller libvips. Fixtures under
+`packages/server-node/test/fixtures` (a libheif HEIC, an OpenJPEG JP2, a
+three-page TIFF) and a hand-built JPEG XL container in the test.

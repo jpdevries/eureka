@@ -153,7 +153,7 @@ export function row(ctx: Ctx, item: FileEntry, index: number): Raw {
       : html`<span class="eureka__badge eureka__badge--animated">${icon(ctx, 'caret-right')}${hidden(t('media.animated'))}</span>`) : ''}${level > 0 ? html`<button type="button" class="eureka__tile-menu" data-action="menu" data-path="${item.path}" aria-haspopup="menu" aria-label="${t('actions.for', { filename: item.filename })}"${attr('tabindex', focused ? 0 : -1)}>${icon(ctx, 'ellipsis-h')}</button>` : ''}</td>
     <td class="eureka__td-filename" id="${nameId}">${level === 0 ? html`<label for="${radioId}">${breakableName(item.filename)}</label>` : breakableName(item.filename)}</td>
     ${level > 0 ? html`<td class="eureka__context-row"${attr('hidden', !focused)}>${actions(ctx, item)}</td>` : ''}
-    <td class="eureka__dimensions">${rec?.dimensionsText ?? ''}</td>
+    <td class="eureka__dimensions">${rec?.dimensionsText ?? ''}${rec?.pagesText ? html` <small class="eureka__pages">${rec.pagesText}</small>` : ''}</td>
     <td class="eureka__file-size">${rec?.sizeText ?? ''}</td>
     <td class="eureka__edited-on"><time datetime="${datetime}"${attr('title', dateTitle)}>${rec?.dateShort ?? ''}</time></td>
   </tr>`;

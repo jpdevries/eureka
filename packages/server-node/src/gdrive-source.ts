@@ -5,7 +5,7 @@ import path from 'node:path';
 import { Readable } from 'node:stream';
 import { ZipFile } from 'yazl';
 import { encodePathForURL, normalizePath, joinPath, parentPath, basename, isTextLike, looksBinary, mediaKind, renderTextThumbnail } from '@mrktps/eureka-core';
-import { readImageDimensions } from './image-dimensions.js';
+import { readImageDimensions, readPageCount, isTiff } from './image-dimensions.js';
 import type { Entry, Source, SourceCapabilities, TreeNode } from '@mrktps/eureka-core';
 import { READ_ONLY } from '@mrktps/eureka-core';
 import { ANIMATABLE, DEFAULT_TREE_DEPTH, MIME, PathError, capabilitiesFor, clampDepth, sniffAnimated, type MediaSource, type PreviewResult } from './fs-source.js';
@@ -66,6 +66,7 @@ export function createGoogleDriveSource(opts: GoogleDriveSourceOptions): MediaSo
   const children = new Map<string, { at: number; nodes: Node[] }>(); // by directory path
   const probes = new Map<string, boolean>();
   const dims = new Map<string, [number, number] | null>(); // header dimensions for files Drive has not measured (MS-74)
+  const pageCounts = new Map<string, number>(); // TIFF page counts (MS-76)
   const thumbs = new Map<string, { svg: string; etag: string }>();
   const rootNode: Node = { file: { id: rootId, name: '', mimeType: FOLDER }, content: { id: rootId, name: '', mimeType: FOLDER }, displayName: '', isFolder: true };
 
@@ -159,6 +160,19 @@ export function createGoogleDriveSource(opts: GoogleDriveSourceOptions): MediaSo
     return out;
   }
 
+  /** Pages of a TIFF from its directory chain (MS-76); Drive reports none. */
+  async function pagesOf(node: Node): Promise<number> {
+    const key = `pages:${node.content.id}:${node.content.md5Checksum ?? node.content.modifiedTime ?? ''}`;
+    const hit = pageCounts.get(key); if (hit !== undefined) return hit;
+    let out = 1;
+    try {
+      const res = await client.media(node.content.id, { start: 0, end: PROBE_BYTES - 1 });
+      if (res) { const head = Buffer.from(await res.arrayBuffer()); if (isTiff(head)) out = await readPageCount(head, async (s, e) => { const r = await client.media(node.content.id, { start: s, end: e }); return r ? Buffer.from(await r.arrayBuffer()) : Buffer.alloc(0); }, Number(node.content.size ?? Infinity)); }
+    } catch { /* a probe never fails a listing */ }
+    remember(pageCounts, key, out, 5000);
+    return out;
+  }
+
   async function entryFor(node: Node, dirRel: string, saveData: boolean): Promise<Entry> {
     const rel = joinPath(dirRel, node.displayName);
     const edited = Date.parse(node.file.modifiedTime ?? node.content.modifiedTime ?? '') || 0;
@@ -170,6 +184,7 @@ export function createGoogleDriveSource(opts: GoogleDriveSourceOptions): MediaSo
     else if (probe && mediaKind(node.displayName) === 'image' && Number(node.content.size ?? 0) > 0) { const dd = await dimensionsOf(node); if (dd) e.dimensions = dd; }
     if (opts.location && typeof d?.location?.latitude === 'number' && typeof d.location.longitude === 'number') e.location = { lat: d.location.latitude, lng: d.location.longitude, ...(typeof d.location.altitude === 'number' ? { alt: d.location.altitude } : {}) };
     if (probe && ANIMATABLE.includes(path.extname(node.displayName).toLowerCase()) && (await animatedOf(node))) e.animated = true;
+    if (probe && /\.tiff?$/i.test(node.displayName) && Number(node.content.size ?? 0) > 0) { const pages = await pagesOf(node); if (pages > 1) e.pages = pages; } // MS-76
     // text keeps the SVG thumbnail (HTML-66c); anything Drive has pictured (TIFF, video, PDF, its own documents) gets
     // Drive's rendering through the preview route (MS-56); the rest previews as itself
     e.absolutePreviewURL = opts.previewUrl ? opts.previewUrl(e, saveData)

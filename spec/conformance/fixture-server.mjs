@@ -99,7 +99,12 @@ function makeListings() {
     ],
     'assets/img/redwoods': Array.from({ length: 24 }, (_, i) => file('assets/img/redwoods', `redwood-${String(i + 1).padStart(2, '0')}.jpg`, 200000 + i * 7919, [800 + (i % 3) * 200, 600 + (i % 4) * 150], i)),
     'assets/docs': [folder('assets/docs', 'scans'), file('assets/docs', 'spec.pdf', 150000, undefined, 2), file('assets/docs', 'budget.xlsx', 44000, undefined, 4)],
-    'assets/docs/scans': [file('assets/docs/scans', 'scan.tif', 9100000, [4000, 3000], 5)], // an original no browser decodes (HTML-66e)
+    'assets/docs/scans': [ // originals no browser decodes (HTML-66e, 11 MS-76); the TIFF has three pages
+      { ...file('assets/docs/scans', 'scan.tif', 9100000, [4000, 3000], 5), pages: 3 },
+      file('assets/docs/scans', 'photo.heic', 2400000, [4032, 3024], 4),
+      file('assets/docs/scans', 'art.jxl', 820000, [1024, 768], 3),
+      file('assets/docs/scans', 'map.jp2', 5200000, [2048, 2048], 2)
+    ],
     'uploads': [],
     // 5,000 mixed files for the performance budget (spec/10-performance.md)
     'large': Array.from({ length: 5000 }, (_, i) => {

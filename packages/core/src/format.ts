@@ -5,7 +5,7 @@ import type { DisplayRecord, Entry, MediaKind } from './types.js';
 
 export type Translate = (id: string, values?: Record<string, unknown>) => string;
 
-const IMAGE = new Set(['.jpg', '.jpeg', '.gif', '.png', '.png8', '.png24', '.svg', '.bmp', '.tiff', '.tif', '.webp', '.avif']);
+const IMAGE = new Set(['.jpg', '.jpeg', '.gif', '.png', '.png8', '.png24', '.svg', '.bmp', '.tiff', '.tif', '.webp', '.avif', '.heic', '.heif', '.jxl', '.jp2', '.j2k', '.jpx', '.j2c']); // HEIC, JPEG XL and JPEG 2000 are images the server measures and may render; no browser shows them (11 MS-76)
 const RASTER = new Set(['.jpg', '.jpeg', '.png', '.gif', '.webp', '.avif', '.bmp', '.tiff', '.tif']);
 const BROWSER_IMAGE = new Set(['.jpg', '.jpeg', '.gif', '.png', '.png8', '.png24', '.svg', '.bmp', '.webp', '.avif']);
 const VIDEO = new Set(['.mp4', '.mov', '.webm', '.wbm', '.ogv', '.m4v']);
@@ -28,7 +28,7 @@ export function browserDecodes(nameOrUrl: string): boolean { return BROWSER_IMAG
 /** Icon name in the sprite, by extension (v2 utility.getIconByExtension, extended). */
 export function iconForExtension(ext: string): string {
   switch (ext.toLowerCase()) {
-    case '.jpg': case '.jpeg': case '.gif': case '.png': case '.png8': case '.png24': case '.svg': case '.bmp': case '.tiff': case '.tif': case '.webp': case '.avif': return 'file-image-o';
+    case '.jpg': case '.jpeg': case '.gif': case '.png': case '.png8': case '.png24': case '.svg': case '.bmp': case '.tiff': case '.tif': case '.webp': case '.avif': case '.heic': case '.heif': case '.jxl': case '.jp2': case '.j2k': case '.jpx': case '.j2c': return 'file-image-o';
     case '.pdf': return 'file-pdf-o';
     case '.zip': case '.tar': case '.gz': case '.7z': case '.rar': return 'file-archive-o';
     case '.ppt': case '.pot': case '.pps': case '.pptx': return 'file-powerpoint-o';
@@ -98,6 +98,8 @@ export const englishTranslate: Translate = (id, v = {}) => {
   switch (id) {
     case 'item.description': return `${v.filename} displays at ${v.width}x${v.height}, weighs ${v.size}, and was edited on ${v.date}`;
     case 'item.descriptionNoDimensions': return `${v.filename} weighs ${v.size}, and was edited on ${v.date}`;
+    case 'item.pages': return `${v.n} ${v.n === 1 ? 'page' : 'pages'}`;
+    case 'item.descriptionPages': return `${v.description}, ${v.pages}`;
     default: return id;
   }
 };
@@ -112,15 +114,17 @@ export function buildDisplayRecord(entry: Entry, { locale, timeZone, t = english
   const sizeText = formatFileSize(entry.fileSize, locale);
   const sizeRounded = formatFileSize(entry.fileSize, locale, { round: 0 });
   const dims = dimensionsText(entry);
-  const description = entry.dimensions
+  const pagesText = entry.pages && entry.pages > 1 ? t('item.pages', { n: entry.pages }) : ''; // a multi-page original (11 MS-76)
+  const described = entry.dimensions
     ? t('item.description', { filename: name, width: entry.dimensions[0], height: entry.dimensions[1], size: sizeRounded, date: dates.long })
     : t('item.descriptionNoDimensions', { filename: name, size: sizeRounded, date: dates.long });
-  const haystack = [name, dims, sizeText, sizeText.replace(/\s+/g, ''), sizeRounded, sizeRounded.replace(/\s+/g, ''), dates.short, dates.long, dates.verbose].join(' ').toLowerCase();
+  const description = pagesText ? t('item.descriptionPages', { description: described, pages: pagesText }) : described;
+  const haystack = [name, dims, pagesText, sizeText, sizeText.replace(/\s+/g, ''), sizeRounded, sizeRounded.replace(/\s+/g, ''), dates.short, dates.long, dates.verbose].join(' ').toLowerCase();
   return {
     path: entry.path,
     kind: entry.filename ? mediaKind(entry.filename) : 'other',
     icon: entry.filename ? iconForExtension(ext) : 'folder',
-    sizeText, dimensionsText: dims,
+    sizeText, dimensionsText: dims, pagesText,
     dateShort: dates.short, dateLong: dates.long, dateVerbose: dates.verbose,
     description, haystack
   };

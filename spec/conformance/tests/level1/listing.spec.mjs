@@ -222,6 +222,19 @@ test('HTML-66e an image the browser cannot decode is a skeleton tile, never an <
   expect(await tile.evaluate((el) => getComputedStyle(el).aspectRatio)).toBe('4000 / 3000');
 });
 
+test('MS-76 HEIC, JPEG XL and JPEG 2000 originals are skeleton tiles too, and a multi-page TIFF shows its page count', async ({ page }) => {
+  v3only('more undecodable originals (11 MS-76)');
+  await openDirectory(page, 'assets/docs/scans');
+  for (const name of ['photo.heic', 'art.jxl', 'map.jp2']) {
+    const row = rowNamed(page, name);
+    await expect(row).toBeVisible();
+    await expect(row.locator('img')).toHaveCount(0);
+    await expect(row.locator('.eureka__media-skeleton')).toHaveCount(1);
+  }
+  await expect(rowNamed(page, 'scan.tif').locator('.eureka__dimensions')).toContainText('3 pages');
+  await expect(rowNamed(page, 'photo.heic').locator('.eureka__dimensions')).not.toContainText('page');
+});
+
 test('LAY-51 media cells reserve their space before images load', async ({ page }) => {
   v3only('reserved media space (LAY-51)');
   await openDirectory(page, 'assets/img');

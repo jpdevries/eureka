@@ -16,6 +16,8 @@ export interface RenderJob { width: number; format: PreviewFormat }
 export interface Thumbnailer {
   /** Can this adapter decode the file? Judged by filename (extension). */
   accepts(filename: string): boolean;
+  /** The extensions `accepts` says yes to, when the adapter can list them (for logs and the demo). */
+  extensions?: readonly string[];
   /** Every rendition asked for, from one decode of the original on disk at `file`. `width` bounds the long edge; never enlarge. */
   render(file: string, jobs: RenderJob[]): Promise<Array<RenderJob & { data: Buffer }>>;
 }

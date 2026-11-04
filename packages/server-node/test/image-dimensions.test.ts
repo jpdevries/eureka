@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { readImageDimensions, dimensionsOf, isTiff } from '../src/image-dimensions.js';
+import { readFileSync } from 'node:fs';
+import { readImageDimensions, dimensionsOf, isTiff, isHeif, heifDimensions, readPageCount } from '../src/image-dimensions.js';
 
 /** A TIFF whose only IFD carries ImageWidth/ImageLength and sits at `ifdOffset`, padded to `total` bytes. */
 function tiff({ le = true, big = false, ifdOffset, w, h, total }: { le?: boolean; big?: boolean; ifdOffset: number; w: number; h: number; total: number }): Buffer {
@@ -50,5 +51,34 @@ describe('image dimensions from file heads (11 MS-74)', () => {
   });
   it('is null for bytes that are not an image', async () => {
     expect(await readImageDimensions(Buffer.from('hello world, not an image at all'))).toBeNull();
+  });
+});
+
+const fixture = (name: string) => readFileSync(new URL(`./fixtures/${name}`, import.meta.url));
+// A JPEG XL container (signature, ftyp, jxlc) whose codestream header says 64×48 in the small-size form.
+const JXL = Buffer.from('0000000c4a584c200d0a870a00000014667479706a786c20000000006a786c200000000c6a786c63ff0a0b0e', 'hex');
+
+describe('more heads (11 MS-76)', () => {
+  it('reads a HEIC through its clean aperture, not the padded coded size image-size reports', async () => {
+    const heic = fixture('photo.heic'); // 48×32 encoded by libheif: ispe says 64×64, clap crops it
+    expect(isHeif(heic)).toBe(true);
+    expect(dimensionsOf(heic)).toEqual([64, 64]);
+    expect(heifDimensions(heic)).toEqual([48, 32]);
+    expect(await readImageDimensions(heic)).toEqual([48, 32]);
+    expect(heifDimensions(heic.subarray(0, 40))).toBeNull(); // meta not within the bytes
+  });
+  it('reads JPEG 2000 and JPEG XL heads from the first bytes', async () => {
+    expect(await readImageDimensions(fixture('map.jp2'))).toEqual([36, 24]);
+    expect(await readImageDimensions(JXL)).toEqual([64, 48]);
+  });
+  it('counts the directories of a multi-page TIFF with one ranged read per page', async () => {
+    const pages = fixture('pages.tif'); // three 40×30 pages
+    expect(await readImageDimensions(pages)).toEqual([40, 30]);
+    expect(await readPageCount(pages)).toBe(3);
+    const calls: Array<[number, number]> = [];
+    expect(await readPageCount(pages.subarray(0, 16), reader(pages, calls), pages.length)).toBe(3);
+    expect(calls.length).toBeGreaterThanOrEqual(3);
+    expect(await readPageCount(tiff({ ifdOffset: 8, w: 2, h: 2, total: 64 }))).toBe(1);
+    expect(await readPageCount(PNG)).toBe(1);
   });
 });

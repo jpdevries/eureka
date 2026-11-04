@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { createFilesystemSource, withThumbnails, type Thumbnailer, type RenderJob } from '../src/index.js';
+import { createFilesystemSource, withThumbnails, sharpDecodes, type Thumbnailer, type RenderJob } from '../src/index.js';
 
 const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==', 'base64');
 const read = async (s: NodeJS.ReadableStream) => { const parts: Buffer[] = []; for await (const c of s) parts.push(c as Buffer); return Buffer.concat(parts); };
@@ -66,6 +66,13 @@ describe('server-rendered previews (11 MS-70..MS-73)', () => {
 });
 
 describe('the sharp adapter (11 MS-75)', () => {
+  it('accepts only what the installed build decodes: prebuilt sharp reads AVIF but not HEIC, JPEG XL or JPEG 2000', () => {
+    const prebuilt = { heif: { input: { file: true, fileSuffix: ['.avif'] } }, jxl: { input: { file: false } }, jp2: { input: { file: false } } };
+    expect(sharpDecodes(prebuilt)).toEqual(['.tif', '.tiff', '.jpg', '.jpeg', '.png', '.webp', '.avif']);
+    const full = { heif: { input: { file: true, fileSuffix: ['.avif', '.heic', '.heif'] } }, jxl: { input: { file: true } }, jp2: { input: { file: true } } };
+    expect(sharpDecodes(full)).toEqual(expect.arrayContaining(['.heic', '.heif', '.jxl', '.jp2', '.j2k']));
+    expect(sharpDecodes({})).toEqual(['.tif', '.tiff', '.jpg', '.jpeg', '.png', '.webp']);
+  });
   it('renders a TIFF into WebP and JPEG renditions no wider than asked, from one decode', async () => {
     let sharp: typeof import('sharp').default;
     try { sharp = (await import('sharp')).default; } catch { return; } // optional: skip where sharp is not installed

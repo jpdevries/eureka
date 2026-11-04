@@ -27,6 +27,7 @@ describe('format', () => {
     expect(mediaKind('clip.mp4')).toBe('video');
     expect(mediaKind('x.pdf')).toBe('pdf');
     expect(mediaKind('archive.zip')).toBe('other');
+    expect(mediaKind('IMG_0001.HEIC')).toBe('image'); expect(mediaKind('art.jxl')).toBe('image'); expect(mediaKind('map.jp2')).toBe('image'); // measured and maybe rendered by the server (11 MS-76)
     expect(iconForExtension('.zip')).toBe('file-archive-o');
     expect(isCroppable('logo.svg')).toBe(false);
     expect(isCroppable('photo.png')).toBe(true);
@@ -39,6 +40,9 @@ describe('format', () => {
     const z = buildDisplayRecord(file('archive.zip', 12000000), { locale: 'en-US', timeZone: 'UTC' });
     expect(z.description).toMatch(/^archive\.zip weighs 11\u00a0MB, and was edited on/);
     expect(z.icon).toBe('file-archive-o');
+    const paged = buildDisplayRecord({ ...file('scan.tif', 9100000, [4000, 3000]), pages: 3 }, { locale: 'en-US', timeZone: 'UTC' });
+    expect(paged.pagesText).toBe('3 pages'); expect(paged.description).toMatch(/Coordinated Universal Time, 3 pages$/); expect(paged.haystack).toContain('3 pages');
+    expect(buildDisplayRecord({ ...file('scan.tif', 9100000, [4000, 3000]), pages: 1 }, { locale: 'en-US', timeZone: 'UTC' }).pagesText).toBe('');
   });
 });
 
